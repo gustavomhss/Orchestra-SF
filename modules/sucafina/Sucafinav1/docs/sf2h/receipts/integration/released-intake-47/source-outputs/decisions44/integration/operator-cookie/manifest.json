@@ -1,0 +1,114 @@
+{
+  "mission": 44,
+  "id": "M44-OPERATOR-COOKIE-TRANSPORT",
+  "status": "EXTERNAL_FIXTURE_NOT_APPLIED_OWNED_CONTRACT_PASS",
+  "owner": "session42",
+  "candidate": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+  "observedRun": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649103661",
+  "jobId": 132613359447,
+  "finding": "All five nominal cases fail in startPlannerInstallation after real CLI readiness and the production enrollment 303, before browser cookie installation. The fixture's regex incorrectly requires the producer's attribute serialization order.",
+  "cause": "The pinned Effect HttpServerResponse.fromWeb parses Set-Cookie via Cookies.fromSetCookie; its serializer writes Max-Age before Path, HttpOnly and SameSite. The attributes and values survive, but the old regex expects Max-Age last.",
+  "evidence": [
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "path": "bun.lock",
+      "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "fact": "effect and @effect/platform-node are pinned at 4.0.0-beta.83"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "fact": "cookie generator: Path=/sucafina; HttpOnly; SameSite=Lax; Max-Age=28800"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "fact": "production route returns HttpServerResponse.fromWeb(response)"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "tag": "effect@4.0.0-beta.83",
+      "tagObject": "fd729130449b07247a4df21bbcb7c8b6671356a6",
+      "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+      "path": "packages/effect/src/unstable/http/HttpServerResponse.ts",
+      "blob": "ef9d4343daac814c5802dd06fe8fb2d47414eb5c",
+      "symbols": [
+        "fromWeb",
+        "toWeb"
+      ],
+      "fact": "fromWeb lines1357-1365 reads getSetCookie and parses; toWeb lines965-977 serializes cookies"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+      "path": "packages/effect/src/unstable/http/Cookies.ts",
+      "blob": "2da2fe004af0476eb2539134c1252421eba630ce",
+      "symbols": [
+        "fromSetCookie",
+        "parseSetCookie",
+        "serializeCookie"
+      ],
+      "fact": "serializeCookie lines778-845 emits Max-Age; Path; HttpOnly; SameSite for these options"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+      "path": "packages/platform-node/src/NodeHttpServer.ts",
+      "blob": "f6838fb329942f4db1f3894eecf5e3d3ee57b28a",
+      "fact": "Actual Node transport uses the same Cookies.toSetCookieHeaders serializer; reviewed independently, not run as part of this contract."
+    }
+  ],
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "preimageBlob": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+      "postimageBlob": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+      "preimage": "preimages/installation-fixture.ts.txt",
+      "postimage": "postimages/installation-fixture.ts.txt"
+    }
+  ],
+  "behavior": "Read exactly one Set-Cookie header; validate exact opaque name/value shape and exact four unique required attributes independent of serialization order. Reject duplicates, missing/changed/extra attributes and extra cookies. Return the original opaque value; do not log headers, token, enrollment URL or decoded secrets.",
+  "contractTest": {
+    "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+    "status": "PASS_ACTIONS_43650131734",
+    "positive": "Real createOperatorIdentity + real private SQLite secrets -> real Web/Effect/Web transport; old fixture regex accepts direct response and rejects transported response; the same proposed fixture parser accepts both without changing the opaque handle. Real identity accepts parsed cookie, refuses absent cookie, enrollment replay403; real logout204 revokes session.",
+    "negative": "Missing attributes; wrong path, SameSite and Max-Age; malformed Max-Age suffix; duplicates; Domain/Secure additions; wrong namespace/handle; no cookie; duplicate cookies. Errors omit values.",
+    "executionBoundary": "Can run against intact C11 plus these two owned files before Session42 applies the external fixture patch. This proves parser/transport/identity contract only; the untouched shared fixture and browser nominals remain blocked until42 consumes the patch.",
+    "evidence": "../../cookie-contract-01.json",
+    "executed_W": "953b7ba287d466488f661b6ed27e983668b13b42",
+    "executed_S": "343199d4c7dd533656731eecd7227b27c40df391"
+  },
+  "validation": {
+    "localProductTests": "NOT_RUN_FORBIDDEN",
+    "localServers": "NOT_RUN_FORBIDDEN",
+    "additionalActions": {
+      "id": 43650131734,
+      "job": 132616525066,
+      "result": "2 pass / 0 fail / 29 expect"
+    },
+    "artifactCheck": "Preimage and postimage Git blob hashes calculated; fixture-only patch applicability checked against C11; no test execution or product edit by this subagent."
+  },
+  "proofLimit": "The actual C11 five-journey run failed before UI; the pinned Effect normalization mismatch is now reproduced by the focused real contract. Parser positive/security negatives/authentication/replay/logout passed; shared fixture patch remains unapplied, downstream UI/native/provider/Apply/restart proof is NOT_RUN.",
+  "ownerNextStep": "Session42 is the sole integrator: consume the three owned source deltas from PRODUCT-MANIFEST.json, reconcile fixture preimage, apply complete.patch by CAS and publish a new immutable material candidate. Session42's observed authority explicitly forbids test/check dispatch and source/workflow ref moves. S0 or a subsequently authorized qualification actor must run the unchanged five-case Playwright request on that candidate. All five remain nominal; Procurement37 separately owns producer/financial approval. Reuse published C12 recovery; no new Apply.",
+  "ownedDependencies": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "preimageBlob": null,
+      "postimageBlob": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+      "postimage": "postimages/operator-session-cookie.ts.txt",
+      "owner": "mission44"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+      "preimageBlob": null,
+      "postimageBlob": "a8865d50f22248d172f106030516e67ec8ee833e",
+      "postimage": "postimages/operator-session-cookie.test.ts.txt",
+      "owner": "mission44"
+    }
+  ]
+}

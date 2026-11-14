@@ -1,0 +1,74 @@
+{
+  "schema": "sf2-mission44-owned-manifest-v1",
+  "mission": 44,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp11",
+  "pr": 40,
+  "authority": "6c73001613e678e44a77f81b853b1a0ab1b86208",
+  "source_parent": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+  "source_product": {
+    "sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+    "tree": "d87e641ebd9cc8aded6c416c9fd5f9f30b4c9b1e"
+  },
+  "composed_base": {
+    "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712"
+  },
+  "composed_W1": {
+    "sha": "12d627f16ab5a83e55e72a1bf5c085133e65ddba",
+    "tree": "73f05222e706daf7e9c0ad4ca4b8bf1dfd1ec5f1",
+    "delta": [
+      "packages/app-shell/e2e/sucafina/decisions.spec.ts"
+    ]
+  },
+  "composed_W2": {
+    "sha": "953b7ba287d466488f661b6ed27e983668b13b42",
+    "tree": "f1de897f772474401cca38443808dd1c822f172a",
+    "delta": [
+      "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts"
+    ]
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+      "postimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "source": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+      "purpose": "Align lost-creation assertions with the locked original-request contract already shipped in C11; add disabled field assertions."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "preimage": null,
+      "postimage": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+      "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "purpose": "Validate exact session policy without relying on Set-Cookie attribute order."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+      "preimage": null,
+      "postimage": "a8865d50f22248d172f106030516e67ec8ee833e",
+      "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "purpose": "Real operator/SQLite/Effect transport contract with security negatives and revocation."
+    }
+  ],
+  "shared_writes": [],
+  "fixture_patch": {
+    "status": "NOT_APPLIED",
+    "target": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+    "preimage": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+    "postimage": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+    "owner": 42,
+    "manifest": "integration/operator-cookie/manifest.json"
+  },
+  "preservation": {
+    "all_five_nominals": true,
+    "all_83_criteria": true,
+    "source_history": true,
+    "C11_five_shared_patches": true,
+    "C12_existing_recovery": true,
+    "exclusive_paths_other_owners": true
+  },
+  "proof_caveat": "W2 adds two contract-only files; W1 browser result remains a failure before UI. W2 is not a passing five-journey result; future fixture consumption requires new composition and exact supported Actions run."
+}

@@ -1,0 +1,873 @@
+{
+  "schema": "sf2-mission44-dependency-review-v1",
+  "mission": 44,
+  "repository": "gustavomhss/Orchestra-SF",
+  "prepared_by": "/root/dependency_review",
+  "purpose": "Evidence for the terminal Mission44 handoff to session42; bounded read-only review, not a release or acceptance.",
+  "compiled_at": "2026-11-14T22:53:30.727Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_policy": {
+    "remote_source": "GitHub MCP only",
+    "cached_sources_only_for_this_artifact": true,
+    "new_remote_reads_for_this_artifact": 0,
+    "new_procurement37_polling": 0,
+    "remote_mutations_by_reviewer": 0,
+    "ci_dispatches_by_reviewer": 0,
+    "local_product_tests": 0,
+    "local_servers": 0,
+    "local_operation": "Write this JSON evidence artifact; no product execution.",
+    "temporal_limit": "PR metadata below describes a single earlier bounded observation. Commit/PR timestamps are source metadata, not invented retrieval timestamps. Later head or authority changes are not inferred.",
+    "source_results_transferred": false,
+    "artifact_claims_human_journey_pass": false,
+    "artifact_claims_native_proof": false
+  },
+  "composition_input": {
+    "symbol": "C11",
+    "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712",
+    "source31_terminal": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+    "terminal31": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/HANDOFF.md",
+      "blob": "71e6a7b8652e62aead68f264f681cc76c36667d7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137/modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/HANDOFF.md"
+    },
+    "findings31": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/FINDINGS.json",
+      "blob": "072a7a530d2588739e740d53f4caa058beec1577",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137/modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/FINDINGS.json"
+    },
+    "published_intake": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/increment-07.json",
+      "blob": "5afe11a1bbd0d9c90d4d5371f1cb53a33764eaee",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bf81f9776b6ba5fb6267828a9a029d7e8d6f5587/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/increment-07.json"
+    },
+    "intake_counts": {
+      "owned_material": 16,
+      "unique_shared_targets": 8,
+      "total_material": 24,
+      "existing_preimages": 11,
+      "new_material_paths": 13,
+      "source_receipts": 63,
+      "total_tree_elements": 87
+    },
+    "shared_patch_order": [
+      [
+        "router-mount"
+      ],
+      [
+        "coverage-read",
+        "procurement-read"
+      ],
+      [
+        "comparison-rule"
+      ],
+      [
+        "history-read"
+      ]
+    ],
+    "already_consumed": "16 owned material paths and 5 ordered complete shared patchsets across 8 unique shared targets, as recorded by increment07; do not recreate these patches or substitute the old C3 tree.",
+    "composition_execution_at_intake": {
+      "tests": "NOT_RUN",
+      "typecheck": "NOT_RUN",
+      "guards": "NOT_RUN",
+      "CI": "NOT_RUN",
+      "epic": "NOT_RUN",
+      "AM": "NOT_RUN"
+    },
+    "source_PASS_transferred": false,
+    "functional_acceptance": false,
+    "global_release": false
+  },
+  "authority42": {
+    "observation_kind": "SINGLE_BOUNDED_READ",
+    "pr": 65,
+    "branch": "sf2-stack",
+    "observed_head": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "observed_tree": "8da2223f2809a08b2c7169981c1d815ad0d7453a",
+    "parent": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "base_branch": "dev",
+    "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "pr_updated_at": "2026-11-14T22:31:04Z",
+    "commit_at": "2026-11-14T22:30:57Z",
+    "pr_comments_observed": 0,
+    "head_changed_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/authority-ack.json",
+        "blob": "3033ac3c98b4bf0bac07a44ff78708a6c071cc6e",
+        "status": "added"
+      }
+    ],
+    "ack": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/authority-ack.json",
+      "blob": "3033ac3c98b4bf0bac07a44ff78708a6c071cc6e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c5ab23fd7c9b231917bf70123958c9ff03e7d420/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/authority-ack.json",
+      "source_read_method": "Complete added JSON reconstructed from the already-read GitHub commit patch; not a new remote fetch.",
+      "observed_at_declared_by_session42": "2026-11-14 22:30:22 UTC",
+      "lease_epoch": "S0-C-e8-browser42",
+      "control_sha": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "expected_head": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "received_tree": "f2027afd2be824ad1bb1a4116044fd1be0760039",
+      "predecessor": {
+        "mission": 33,
+        "handoff_blob": "68531a8e0b819699b29bbb83d4a2244218d3791f",
+        "authority_reconciliation_blob": "b441a69f5250462319545dea193fb18089d68520",
+        "status": "TERMINAL_BOUNDED_INTEGRATED_HANDOFF_TO_S0",
+        "lease_closed_explicitly": true,
+        "head_matched": true,
+        "later_integrator_observed": false
+      },
+      "authority": "User mission42 plus pinned rolling COMMON grant sole sf2-stack integration writer for selective explicitly released outputs. Root alone writes remote. S0 retains final dispatcher and acceptance; source leases are not transferred.",
+      "reconciliation": "40 owns C17 original/replay reauthorization;41 owns native owner registry;42 explicitly succeeds closed33 as sole integrator;43 owns Portfolio held P02-P04. Earlier mentions of consumer33 are reconciled by later explicit42 authority. No control tree is consumed.",
+      "constraints": {
+        "tests": "NOT_RUN_FORBIDDEN",
+        "typecheck": "NOT_RUN_FORBIDDEN",
+        "guards": "NOT_RUN_FORBIDDEN",
+        "CI": "NOT_RUN_FORBIDDEN",
+        "AM": "NOT_RUN_FORBIDDEN",
+        "workflow_ref_moves": false,
+        "source_ref_moves": false,
+        "dev_merge": false,
+        "deploy": false,
+        "Azure": false,
+        "credentials": false,
+        "engines": false,
+        "restart": false,
+        "external_messages": false
+      },
+      "candidate_policy": {
+        "prior": {
+          "symbol": "C11",
+          "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+          "tree": "ab936df4784ad81deacec756af1cee69f739f712"
+        },
+        "each_material_delta_new_candidate": true,
+        "source_pass_transferred": false,
+        "proposal35_runtime": "INERT_UNTIL_QUALIFIED_MEMORY40_RELEASE",
+        "global_release": false
+      }
+    },
+    "determination": "Explicit session42 authority succeeds the explicitly closed session33 lease. Older source handoffs naming consumer23 or33 must be routed to42. Source writer leases remain separate.",
+    "observed_post_C11_material_status": "The observed PR65 tip changes only authority-ack.json and declares C11 as the prior candidate. This review does not assert any later material candidate or an exhaustive absence of later commits.",
+    "source_authority_transfer": false,
+    "silence_is_not_abandonment": true,
+    "final_dispatcher_and_acceptance_owner": "S0",
+    "resume_requirements": [
+      "Before consuming a released patch, session42 reconciles its current head/authority and checks exact current preimages under CAS without force.",
+      "Any material integration receives a new candidate identity and per-path/blob ACK; a documentation head is not a new executed product.",
+      "Session42's ACK forbids its tests/typecheck/guards/CI/AM; execution remains with the separately authorized lane/owner. Do not turn this evidence file into dispatch authority."
+    ]
+  },
+  "procurement37": {
+    "observation_kind": "SINGLE_BOUNDED_READ_NO_WAITING_FOR_RELEASE",
+    "owner": 37,
+    "lease_epoch": "procurement-decision-browser37",
+    "pr": 23,
+    "branch": "astra-wp04",
+    "observed_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+    "observed_tree": "2361ca558a7bc96341ff5b364e33e9753132a934",
+    "parent": "2616cd9c3e97ec0a48d632edbbccf28678a83bba",
+    "base_branch": "sf2-stack",
+    "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "pr_updated_at": "2026-11-14T22:28:30Z",
+    "commit_at": "2026-11-14T22:28:28Z",
+    "observed_commit_message": "fix(procurement): preserve asset persistence in scenario proof fixtures",
+    "pr_comments_observed": 0,
+    "mission": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "acd92cb0cb6a931bfb2a6d33ef13ae572334a209",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/procurement-decision-producer.json",
+      "blob": "508aa3694c44720de43d0a10253de3527df571ac",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/acd92cb0cb6a931bfb2a6d33ef13ae572334a209/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/procurement-decision-producer.json"
+    },
+    "start": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/START.json",
+      "blob": "ee805409343b374472bd38074ca205a72fb6445e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/START.json"
+    },
+    "start_state": "IN_PROGRESS",
+    "start_source_head": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+    "start_source_tree": "9b18919a7bab9510dde3ead0176ed007ce13dd78",
+    "receipt_directory": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer",
+    "observed_receipt_entries": [
+      {
+        "name": "START.json",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/START.json",
+        "blob": "ee805409343b374472bd38074ca205a72fb6445e"
+      }
+    ],
+    "release_or_terminal_observed": false,
+    "absence_scope": "Only START.json was listed in the designated receipt directory at the pinned observed head; PR body still described terminal24 and no PR comments were observed. This does not establish absence of work elsewhere or any later release.",
+    "state_interpretation": "IN_PROGRESS writer; no authority transfer, no abandonment inference, and no permission for Decisions to write Procurement37 files.",
+    "material_in_progress_observed": true,
+    "material_examples": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts",
+        "blob": "6b60d7536aed70f515e9f41311de606ed7915168",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+        "blob": "9d13396a7eed76a9cc32378e9afcb17fd37c1c89",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+        "blob": "3c37f7868a62182658adf2b22d88e66869de8d73",
+        "status": "modified"
+      }
+    ],
+    "read_only_dossier_preparation": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "blob": "454524fc49ec61c1b8984e7bfe8c1e0a765a242b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
+    },
+    "financial_preparation": {
+      "source": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "blob": "7fce64e7e213693d505f9bc6e08835468b7ead41",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts"
+      },
+      "method": "createProcurementScenarioPreparation",
+      "nominal_rejection": {
+        "status": "needs-input",
+        "reason": "financial-approval-command-unavailable"
+      },
+      "transaction_commit": false,
+      "observed_static_checks": [
+        "Requires an explicit finite nonnegative replacement amount, currency and period, and the exact operation in the frozen choice.",
+        "Revalidates current authority and a real read-only Procurement source; source/evidence/currency/period must match the choice.",
+        "Authenticates the principal with current Procurement roles inside the persistence transaction.",
+        "Constructs canonical Requests/save for pr.estAmount at the current requests version, checks procurementPreparationIssue, then refuses unavailable financial approval without committing.",
+        "Re-reads the source and authority after the transaction; source drift remains stale."
+      ],
+      "policy_contradiction": "Requests/save edits are admitted for draft/pr_rejected. Formal Approve requires a pending submitted request and approves that submitted amount; approval leaves the editable PR stages. Existing policy exposes no detached approval for the unwritten replacement proposal, and re-saving the approved amount is inadmissible or a no-op.",
+      "positive_approval_path_observed": false,
+      "test_source": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+        "blob": "3c37f7868a62182658adf2b22d88e66869de8d73",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650/modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts"
+      },
+      "static_test_expectations": [
+        "Repeated preparation remains needs-input/financial-approval-command-unavailable and preserves snapshot/write count.",
+        "An operation different from the chosen operation is denied; another actor does not receive ok.",
+        "Source edit after choice produces stale without additional mutation.",
+        "Legacy-shaped unapproved financial preparation/review cannot bypass the low-level policy boundary."
+      ],
+      "executed_by_this_reviewer": false
+    },
+    "blockers": [
+      {
+        "id": "M31-PRECHOICE-PROCUREMENT",
+        "status": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+        "owner": "session23 coordinating Procurement/Portfolio21/C10/persistence owners",
+        "finding": "No mounted pre-choice Procurement scenario producer or typed operation UI produces the frozen replacement operation required by the existing C12 scenario preparation. Initial alternative UI still correctly emits operations=[] for its current Planner path.",
+        "evidence": [
+          "coverage-owner-review.json",
+          "e2e-static-audit.json"
+        ],
+        "complete_patch": null,
+        "reason_not_fabricated": "The existing composite wrapper deliberately leaves external-operation-cost-unresolved and total null; swapping that wrapper alone does not create a truthful financial producer. Calling the post-choice prepared executor before choice would bypass the required contract.",
+        "remaining": "A complete owner implementation must supply the read-only scenario producer, true producer identity and source witness, result persistence/replay, C10 reconciliation and typed controls. The five delivered patches do not satisfy this mandatory missing patch.",
+        "current_owner_reconciled": "Procurement37 source, session42 integration"
+      },
+      {
+        "id": "M31-FINANCIAL-APPROVAL",
+        "status": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+        "owner": "session23 coordinating Procurement/C12 owner",
+        "finding": "The published scenario preparation maps a chosen amount replacement to Requests/save on a draft or pr_rejected request. Formal Procurement Approve requires a pending stage; after approval that prepared save is no longer admissible. The fifth test requires a real approval of the proposed amount before Apply and rejects stale/incompatible review.",
+        "evidence": [
+          "INPUTS.json",
+          "e2e-code-review.json",
+          "e2e-static-audit.json"
+        ],
+        "complete_patch": null,
+        "remaining": "Owner must publish a financial proposal/approval/prepared-command contract compatible with existing domain policies and the existing C12 Apply/recovery. This delivery does not implement another Apply, alter engines, treat choice as financial approval or approve an old amount to pass the gate.",
+        "current_owner_reconciled": "Procurement37 source, session42 integration"
+      },
+      {
+        "id": "M31-C12-PROOF",
+        "status": "NOT_RUN",
+        "owner": "session23 + S4-A continuation after producer composition",
+        "finding": "The fifth nominal test calls applyRecoveryJourney, but no Apply/recovery runtime stage was reached. Connectivity of a helper is not execution evidence.",
+        "remaining": "Demonstrate a single actual effect and authoritative receipt after original response loss, concurrent case edit and fresh legitimate admission; demonstrate wrong actor, incarnation and revoked-access negatives. The current CDP boundary is after handler return, so the internal domain-commit/case-reconciliation gap and AM01-AM06 need their own real proof.",
+        "current_owner_reconciled": "Decisions qualification owner after released Procurement37 integration by42"
+      }
+    ],
+    "fifth_journey_disposition": "BLOCKED_DEPENDENCY until a consumable true pre-choice producer and compatible approval of the exact chosen amount/operation are released and integrated. Source code in progress is not a released production composition or proof.",
+    "independent_work": "Creation, editing, reopening, authorized evidence linking, existing Planner alternatives, comparison/coverage, numeric rule, choice/history and uncertain-creation recovery can advance on C11 where their own dependencies permit. This is an availability assessment, not a PASS claim; current shared bootstrap/auth fixture failures remain separate.",
+    "prohibited_substitutions": [
+      "No post-choice executor invoked before choice as a pre-choice simulation.",
+      "No direct POST, seed or pasted internal reference replacing human actions.",
+      "No choice/Apply checkbox counted as formal financial approval.",
+      "No approval of an old/different amount to admit the desired replacement.",
+      "No new Apply executor, policy threshold/state/role changes, skipped nominal scenario or relabelled PASS."
+    ],
+    "resume_conditions": [
+      {
+        "owner": 37,
+        "condition": "Publish explicit terminal/release identifying source commit/tree, complete owned implementation, per-path/blob metadata, surgical W/S/run results and complete assembly patch preimages/postimages."
+      },
+      {
+        "owner": 37,
+        "condition": "Release a read-only pre-choice producer with actual producer/source identities, canonical calculations and C10 basis/assessment, truthful pending coverage, persistence/replay and typed human controls for target/amount/currency/period."
+      },
+      {
+        "owner": 37,
+        "condition": "Provide a prepared command whose exact proposed amount/operation was reviewed and financially approved under existing canonical policy with compatible target/version/source/actor/incarnation. If impossible, publish the precise policy contradiction and the minimum owner decision; do not invent approval."
+      },
+      {
+        "owner": 42,
+        "condition": "Reconcile the later release and current composition once, selectively consume complete released patches with exact preimages, preserve other owners and C12, and publish a new candidate plus path/blob ACK."
+      },
+      {
+        "owner": "Decisions qualification lane",
+        "condition": "Resume the preserved fifth nominal human journey on the exact integrated candidate: real approval, one actual effect/original receipt, response-loss recovery, current-authority and stale/wrong-actor/incarnation negatives. Attribute results only to the executed W/S."
+      }
+    ],
+    "polling_resume_policy": "Do not poll or wait for37 during independent Mission44 work. Resume from the explicit release/candidate inputs above."
+  },
+  "c12": {
+    "source_owner": 32,
+    "source_branch": "procurement-apply",
+    "source_pr": 60,
+    "terminal_source": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+    "handoff": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/HANDOFF.md",
+      "blob": "5057835c483ac04fbff0d5c85d6c12324c1e7c51",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/fd36f14b042f59dbace36f50a698c66f80f98abf/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/HANDOFF.md"
+    },
+    "patch_manifest": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/patches/manifest.json",
+      "blob": "637284e7e94f1f0dd29154d4fdcbb985a04d0b42",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/fd36f14b042f59dbace36f50a698c66f80f98abf/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/patches/manifest.json"
+    },
+    "composed_closure": {
+      "base_commit": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+      "base_tree": "2dba7fd244afcd39b837b1e61406de1e43450bb5",
+      "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+      "W_tree": "c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04",
+      "S": "114b1c3ff83a038b515f4afcf5db0fc795d59b6d",
+      "S_tree": "3978a370af7a9da7ffee4db1eaf8ba137162df60",
+      "S_delta": ".ci-run.json only",
+      "run": 43646007759,
+      "job": 132603819490,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646007759",
+      "result": "PASS",
+      "passed": 22,
+      "failed": 0,
+      "assertions": 570,
+      "files": 9,
+      "breakdown": {
+        "C12": 15,
+        "OPS_REV_02": 7
+      },
+      "evidence_origin": "Recorded terminal32 W4 result on its pinned C9-derived closure; not executed by this reviewer and not transferred to C11 or Mission44.",
+      "separate_WP04_alias": "Historical separate result reused by32 for its unchanged direct closure; not a single 23-test green run.",
+      "guards_or_typecheck_on_W4": "NOT_RUN; source checks are a distinct input and include aggregate failure from the inherited WP14 TS2741.",
+      "native_or_restart_proof": false
+    },
+    "actual_C11_product": [
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "blob": "65d2a0518427b1454aa665ef744bce7564ed8049",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "composed_postimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
+        "match": true
+      },
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "composed_postimage": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+        "match": true
+      },
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+        "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+      },
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts"
+      }
+    ],
+    "consumed_product_disposition": "C11 already carries both qualified composed C12 product postimages. Preserve them; do not create another Apply or copy the source branch executor over the composed one.",
+    "forbidden_whole_file_source_apply_blob": "605ad1fbd9167b8234aa614a01638724e87f36f5",
+    "preservation_reasons": [
+      "The composed executor retains Finance application-attempt reservations, defensive clones, authoritative receipt rereads, fresh reconciliation and final receipt retention.",
+      "Public prepare/review/apply/recover names, request fields and reviewDigest contract remain unchanged.",
+      "Unique choice/prepared-change identity and exact choice digest reject replaced/duplicated intent at admission and reconciliation.",
+      "Current authority, CAS, idempotency, target incarnation and original authoritative receipt remain mandatory.",
+      "Receipt absence never grants a new dispatch."
+    ],
+    "planner_compatibility": {
+      "status": "PRESERVE_PARTIAL_EXECUTION_SEMANTICS",
+      "behavior": "Procurement recovery may recover its original receipt while a Planner change remains planned. No Planner receipt/effect/approval is fabricated and the overall partial state remains true.",
+      "coverage_limit": "Terminal32's fixture-driven HTTP/renderer and same-process Bun/SQLite reopen proof is not a native provider, human desktop, complete Workbench navigation or Orchestra restart proof.",
+      "source": "Terminal32 HANDOFF sections Correção efetiva and Execução parcial; current composed apply/host postimages and increment07 C10 dependency reconciliation.",
+      "additional_Apply_required": false
+    },
+    "current_C11_fixture_delta": {
+      "source": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+        "blob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts"
+      },
+      "required_source32_postimage": "33650407123163ea881eca9d4940fde364b27c54",
+      "source32_patch_preimage": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+      "equal_to_source32_final": false,
+      "change": "Forward the original C08 callback when the final hook is unarmed, preserving selector identity; retain the wrapper and real revocation point when armed.",
+      "complete_patch": {
+        "name": "bundle-tests.patch",
+        "sha256": "32c2af29218e696992d42a67884d4b8d7ac64f68a2868872fe26642644c816ca",
+        "gitBlob": "0a0a0fadd3497f710dd0d38f9521a360bf8fdb61",
+        "bytes": 42379,
+        "paths": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+            "preimage": null,
+            "postimage": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+            "preimage": null,
+            "postimage": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+            "preimage": null,
+            "postimage": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+            "preimage": null,
+            "postimage": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+            "preimage": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+            "postimage": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+            "preimage": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+            "postimage": "33650407123163ea881eca9d4940fde364b27c54",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+            "preimage": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+            "postimage": "4528a2c390110b3bf010cc77884e204139b50c09",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+            "preimage": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+            "postimage": "76bf7963d30dde72eb369616dfcd0fee61948803",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+            "preimage": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+            "postimage": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+            "status": "modified"
+          }
+        ]
+      },
+      "disposition": "Final source32 fixture delta was not present in the observed C11 fixture. Session42 must reconcile and consume it if qualifying the complete source32 C12 test closure.",
+      "limitation": "Matching C12 production blobs does not establish full test-closure identity or transfer the22/22 result.",
+      "blocks_independent_Decisions_four": "Not itself a dependency of the four independent nominal Decisions journeys; no claim of completed C12 fifth journey follows."
+    },
+    "eight_other_test_postimages_preserved_in_intake": {
+      "method": "Root exact Git blob and destination-set check",
+      "source_candidate": "C10",
+      "source_commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "actual_parent": "9b51c8ee132541ed837eac909611b70c1b991bc3",
+      "count": 8,
+      "entries": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+          "expected_blob": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+          "current_blob": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+          "expected_blob": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+          "current_blob": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+          "expected_blob": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+          "current_blob": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+          "expected_blob": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+          "current_blob": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+          "expected_blob": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+          "current_blob": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "expected_blob": "4528a2c390110b3bf010cc77884e204139b50c09",
+          "current_blob": "4528a2c390110b3bf010cc77884e204139b50c09",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "expected_blob": "76bf7963d30dde72eb369616dfcd0fee61948803",
+          "current_blob": "76bf7963d30dde72eb369616dfcd0fee61948803",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+          "expected_blob": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+          "current_blob": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        }
+      ],
+      "execution": "NOT_RUN"
+    },
+    "patches_available": [
+      {
+        "name": "bundle-product.patch",
+        "sha256": "7b28a6edce5627d7eb14b5865e414805e0cc96a5fc45b764c67165568af77bb8",
+        "gitBlob": "3a0b18e0cd1e2c36af5bab659e0154623eb0edc0",
+        "paths": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+            "preimage": "6ad51e47b22eca073a0a81731575c463d98673e4",
+            "postimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+            "preimage": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+            "postimage": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+            "status": "modified"
+          }
+        ]
+      },
+      {
+        "name": "bundle-tests.patch",
+        "sha256": "32c2af29218e696992d42a67884d4b8d7ac64f68a2868872fe26642644c816ca",
+        "gitBlob": "0a0a0fadd3497f710dd0d38f9521a360bf8fdb61",
+        "paths": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+            "preimage": null,
+            "postimage": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+            "preimage": null,
+            "postimage": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+            "preimage": null,
+            "postimage": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+            "preimage": null,
+            "postimage": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+            "preimage": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+            "postimage": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+            "preimage": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+            "postimage": "33650407123163ea881eca9d4940fde364b27c54",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+            "preimage": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+            "postimage": "4528a2c390110b3bf010cc77884e204139b50c09",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+            "preimage": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+            "postimage": "76bf7963d30dde72eb369616dfcd0fee61948803",
+            "status": "modified"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+            "preimage": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+            "postimage": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+            "status": "modified"
+          }
+        ]
+      }
+    ],
+    "execution_transferred": false,
+    "global_release": false
+  },
+  "effect_cookie_boundary": {
+    "classification": "STATIC_SOURCE_INFERENCE_SUPPORTED_BY_HOSTED_FAILURE",
+    "package_version": "4.0.0-beta.83",
+    "package_pin": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "path": "package.json",
+      "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/package.json"
+    },
+    "repo_patch": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "path": "patches/effect@4.0.0-beta.83.patch",
+      "blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/patches/effect@4.0.0-beta.83.patch"
+    },
+    "repo_patch_cookie_override": false,
+    "upstream": {
+      "repository": "Effect-TS/effect-smol",
+      "tag": "effect@4.0.0-beta.83",
+      "annotated_tag_object": "fd729130449b07247a4df21bbcb7c8b6671356a6",
+      "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+      "tag_date": "2026-06-12T16:27:19Z",
+      "sources": [
+        {
+          "repository": "Effect-TS/effect-smol",
+          "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+          "path": "packages/effect/src/unstable/http/HttpServerResponse.ts",
+          "blob": "ef9d4343daac814c5802dd06fe8fb2d47414eb5c",
+          "url": "https://github.com/Effect-TS/effect-smol/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/effect/src/unstable/http/HttpServerResponse.ts"
+        },
+        {
+          "repository": "Effect-TS/effect-smol",
+          "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+          "path": "packages/effect/src/unstable/http/Cookies.ts",
+          "blob": "2da2fe004af0476eb2539134c1252421eba630ce",
+          "url": "https://github.com/Effect-TS/effect-smol/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/effect/src/unstable/http/Cookies.ts"
+        },
+        {
+          "repository": "Effect-TS/effect-smol",
+          "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+          "path": "packages/platform-node/src/NodeHttpServer.ts",
+          "blob": "f6838fb329942f4db1f3894eecf5e3d3ee57b28a",
+          "url": "https://github.com/Effect-TS/effect-smol/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/platform-node/src/NodeHttpServer.ts"
+        }
+      ]
+    },
+    "C11_sources": [
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+        "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
+      },
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/modules/sucafina/Sucafinav1/local/entry.ts"
+      },
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/apps/cli/src/sucafina-product/installation.ts"
+      },
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit_or_ref": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3df1bb05f2404056547504fcd84ca6a43a78bda9/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts"
+      }
+    ],
+    "chain": [
+      "The real operator identity emits Path, HttpOnly, SameSite=Lax, then Max-Age=28800, and persists the generated session after one-use code consumption.",
+      "The real local entry returns the authentication response before localChrome; installation.ts converts it with HttpServerResponse.fromWeb.",
+      "fromWeb reads Headers.getSetCookie(), removes the textual header and parses it with Cookies.fromSetCookie.",
+      "Cookies retains value and maxAge/path/httpOnly/sameSite options. Its serializer writes Max-Age before Path, followed by HttpOnly and SameSite.",
+      "NodeHttpServer.handleResponse uses Cookies.toSetCookieHeaders for its actual network response, the same serializer used by HttpServerResponse.toWeb.",
+      "The shared installation fixture regex requires Max-Age last; it therefore rejects the source-derived canonical transport ordering."
+    ],
+    "issued_header_shape": "sucafina_operator_<24hex>=<64hex>; Path=/sucafina; HttpOnly; SameSite=Lax; Max-Age=28800",
+    "serialized_header_shape": "sucafina_operator_<24hex>=<64hex>; Max-Age=28800; Path=/sucafina; HttpOnly; SameSite=Lax",
+    "sensitive_values_recorded": false,
+    "security_semantics_lost_in_inspected_sources": false,
+    "hosted_observation": {
+      "run": 43649103661,
+      "job": 132613359447,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649103661/job/132613359447",
+      "nominal_tests": 5,
+      "failed": 5,
+      "passed": 0,
+      "failure_path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "failure_line": 106,
+      "error": "Production enrollment did not issue its scoped HttpOnly session",
+      "CLI_listening_observed": true,
+      "enrollment_status_and_location_checks_preceded_failure": true,
+      "raw_set_cookie_logged": false,
+      "cause_confirmed_by_runtime_contract_in_this_review": false,
+      "evidence_scope": "Already-read hosted job logs. Root owns the exact Mission44 W/S/run ledger."
+    },
+    "recommended_discriminating_contract": {
+      "status": "PARENT_REPORTED_ACTIONS_PASS_NOT_INDEPENDENTLY_REFETCHED",
+      "allowed_path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/",
+      "label": "Real authentication/framework contract; not human journey or native proof.",
+      "components": [
+        "openLocalStore",
+        "createOperatorIdentity.enroll",
+        "createOperatorIdentity.handle",
+        "HttpServerResponse.fromWeb",
+        "HttpServerResponse.toWeb",
+        "identity.person",
+        "real logout/revocation"
+      ],
+      "storage_requirements": "Absolute canonical temporary directory, current UID ownership, mode0700, real SQLite secrets, dispose/remove after completion.",
+      "assertions": [
+        "303 plus exact dashboard location and security/cache headers; exactly one session cookie.",
+        "Name and token shapes and exact token preservation across the real Effect conversion.",
+        "Order-independent attributes retain Path=/sucafina, HttpOnly, SameSite=Lax, Max-Age=28800 and host-only/no Secure properties of explicit loopback HTTP.",
+        "Normalized cookie authenticates the expected person; missing cookie does not.",
+        "One-use enrollment replay is403; valid-origin logout204 revokes subsequent use.",
+        "Negative parser controls reject invalid token/name, missing/changed/duplicated attributes, duplicate session cookies and unexpected scope."
+      ],
+      "no_token_logging": true,
+      "execution_channel": "Only the existing authorized deduplicated surgical GitHub Actions interface.",
+      "parent_run_state": "Parent reported completion in Actions43650131734/job132616525066:2 tests,29 assertions,0 failures. The old regex accepts the direct response and rejects the Effect roundtrip; the new parser authenticates and revokes the real session. No new query was performed by this reviewer.",
+      "parent_reported_result": {
+        "run": 43650131734,
+        "job": 132616525066,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650131734/job/132616525066",
+        "result": "PASS",
+        "passed": 2,
+        "failed": 0,
+        "assertions": 29,
+        "source": "Root agent message during terminal evidence preparation; root owns exact W/S and result receipt.",
+        "independently_refetched_by_this_reviewer": false,
+        "human_journey_pass": false,
+        "native_proof": false
+      }
+    },
+    "patch_ownership": {
+      "shared_fixture_owner": 42,
+      "shared_host_edit_required_by_this_evidence": false,
+      "recommended_fix": "A complete minimal semantic parser/fixture patch with preimages, postimages and contract evidence, delivered to42; preserve all security assertions and five nominal bodies.",
+      "production_cookie_or_effect_change_recommended": false
+    }
+  },
+  "normative_limits": {
+    "WP11_criteria": 83,
+    "preserved": true,
+    "no_global_acceptance": true,
+    "no_green_transfer": true,
+    "no_new_Apply": true,
+    "no_engine_or_normative_contract_edits": true,
+    "source_owned_paths_exclusive": [
+      "Procurement37",
+      "Memory40",
+      "Reports36",
+      "BI38",
+      "Agenda39",
+      "Portfolio43"
+    ],
+    "assigned_planning_reads": {
+      "pack": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+        "blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13"
+      },
+      "sections_read_complete": [
+        "contracts",
+        "resident",
+        "resident_handoff_interfaces",
+        "reference_context_rule",
+        "resident_gate_requirements"
+      ],
+      "appendix": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "read": "complete"
+      },
+      "caveats": [
+        "Pending, null, omitted and explicitly confirmed zero remain distinct; conditioned comparison is not complete coverage.",
+        "Choice freezes basis/source/currency/period/operation and remains distinct from financial approval.",
+        "C12 recovery requires current authority and original authoritative receipt; C17 output/history recall requires current source authorization.",
+        "Reference reading does not transfer source ownership or execution evidence.",
+        "Helpers, reload or a new page do not prove native provider, critique or process restart."
+      ]
+    }
+  }
+}

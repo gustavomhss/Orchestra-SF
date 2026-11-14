@@ -1,0 +1,124 @@
+{
+  "schema": "sf2-mission44-terminal-release-v1",
+  "mission": 44,
+  "actor": "S4-A",
+  "state": "TERMINAL_PARTIAL_RELEASE_BLOCKED_NOT_DONE",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp11",
+  "pr": 40,
+  "lease_epoch": "decisions-composed-browser44",
+  "authority": {
+    "start_commit": "6c73001613e678e44a77f81b853b1a0ab1b86208",
+    "terminal_commit": "The commit containing this file, published to astra-wp11 by compare-and-swap.",
+    "authority_ends_on_terminal_publication": true,
+    "pending_work": false,
+    "waiting_for_Procurement37": false
+  },
+  "source_product": {
+    "sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+    "tree": "d87e641ebd9cc8aded6c416c9fd5f9f30b4c9b1e"
+  },
+  "owned_material": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+      "postimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "source": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+      "purpose": "Align lost-creation assertions with the locked original-request contract already shipped in C11; add disabled field assertions."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "preimage": null,
+      "postimage": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+      "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "purpose": "Validate exact session policy without relying on Set-Cookie attribute order."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+      "preimage": null,
+      "postimage": "a8865d50f22248d172f106030516e67ec8ee833e",
+      "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "purpose": "Real operator/SQLite/Effect transport contract with security negatives and revocation."
+    }
+  ],
+  "composed_inputs": {
+    "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712",
+    "record": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "intake": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/increment-07.json",
+      "blob": "5afe11a1bbd0d9c90d4d5371f1cb53a33764eaee"
+    }
+  },
+  "external_patch": {
+    "status": "NOT_APPLIED",
+    "target": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+    "preimage": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+    "postimage": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+    "owner": 42,
+    "manifest": "integration/operator-cookie/manifest.json"
+  },
+  "release_semantics": "Explicit selective release of three owned files and one complete unapplied shared fixture patch; integration42 only. This is not acceptance, not whole-tree replacement and not a passing browser qualification.",
+  "consumer": {
+    "session": 42,
+    "lease": "S0-C-e8-browser42",
+    "observed_authority_commit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "allowed": "Selective integration with preimage reconciliation and new immutable material candidate.",
+    "test_dispatch": "FORBIDDEN_BY_OBSERVED_42_AUTHORITY",
+    "future_qualification": "S0 or explicitly authorized actor; use the preserved existing nominal request after material fixture change.",
+    "acceptance_owner": "S0"
+  },
+  "runs": [
+    {
+      "id": 43649103661,
+      "selection": "five original nominal Decisions tests",
+      "W": "12d627f16ab5a83e55e72a1bf5c085133e65ddba",
+      "S": "dfcf10bf76982dc6cea651732f6c27dd82d8d7a0",
+      "result": "0 pass / 5 fail / 0 skip; before UI",
+      "receipt": "nominal-01.json"
+    },
+    {
+      "id": 43650131734,
+      "selection": "operator cookie transport contract",
+      "W": "953b7ba287d466488f661b6ed27e983668b13b42",
+      "S": "343199d4c7dd533656731eecd7227b27c40df391",
+      "result": "2 pass / 0 fail / 29 expect",
+      "receipt": "cookie-contract-01.json"
+    },
+    {
+      "id": 43650398020,
+      "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "selection": "existing source package typecheck + guards",
+      "result": "FAILURE:130 TS /43 GATE /18 WARN; no new own findings",
+      "receipt": "checks/checks44.json"
+    }
+  ],
+  "criteria": {
+    "literal_count": 83,
+    "literal_text_preserved": true,
+    "original_file_unchanged": true,
+    "new_pass": 0,
+    "acceptance": "NOT_GRANTED"
+  },
+  "unresolved": [
+    "M44-OPERATOR-COOKIE-TRANSPORT: external fixture patch unapplied, blocks all five before UI.",
+    "Procurement37 pre-choice producer and compatible financial approval unreleased at bounded observation; additional financial-journey dependency.",
+    "Inherited source check failures; composed/CLI/app-shell independent typecheck NOT_RUN.",
+    "Native provider/reviewer/restart/AM01–AM06 and full WP11 criteria not qualified."
+  ],
+  "C12": "Consume already published recovery through exact composed blobs; no new Apply and no transfer of historical22/22. DEPENDENCIES.json records final32 fixture delta for42.",
+  "checks_scope": "Code/tests at source_product were checked. Terminal commit adds documentation only; terminal receipt changes have no new gate.",
+  "preserved_owners": [
+    "Procurement37",
+    "Memory40",
+    "Reports36",
+    "BI38",
+    "Agenda39",
+    "Portfolio43",
+    "C12-32",
+    "shared host/router/engines/normative contracts"
+  ],
+  "handoff": "HANDOFF.md"
+}

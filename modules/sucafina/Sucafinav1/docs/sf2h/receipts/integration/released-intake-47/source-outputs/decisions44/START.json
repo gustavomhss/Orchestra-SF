@@ -1,0 +1,84 @@
+{
+  "schema": "sf2-mission44-authority-v1",
+  "mission": 44,
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S4-A",
+  "lease_epoch": "decisions-composed-browser44",
+  "state": "IN_PROGRESS",
+  "recorded_at": "2026-11-14T22:36:18Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp11",
+  "pr": 40,
+  "observed_head": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+  "authority": {
+    "basis": "Explicit user instruction executing mission44",
+    "mission_sha": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+    "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-composed-qualification.json",
+    "mission_blob": "2b57f9dc70c8325fb8685ee9bd9c0f47a1931fe4",
+    "predecessor_handoff": {
+      "sha": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/HANDOFF.md",
+      "blob": "71e6a7b8652e62aead68f264f681cc76c36667d7",
+      "authority_ended": true
+    },
+    "newer_source_authority_observed": false,
+    "source_ref_rechecked": true,
+    "sole_source_writer": "This mission root; delegated agents read only"
+  },
+  "composition": {
+    "C11": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712",
+    "record": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "consumer_observed": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "consumer_delta": "session42 authority receipt only; no material delta from recorded C11",
+    "shared31_patches": "Already consumed in C11; preserve eight postimages, no duplicate patch",
+    "C12_source": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+    "C12_product_consumed": true,
+    "C12_full_test_closure_claimed": false
+  },
+  "read_scope": {
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "app_agents_blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+    "e2e_agents_blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+    "pack_path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+    "pack_blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+    "method": "Complete structured pack read across root and three read-only delegates, all sections and two mandatory appendices; no headings-only substitute",
+    "criteria": 83
+  },
+  "write_paths": [
+    "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "packages/app-shell/e2e/sucafina/decisions-support/",
+    "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+    "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+    "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+    "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+    "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/"
+  ],
+  "boundaries": {
+    "shared_host_router": "Complete minimal proposals only to session42",
+    "Procurement37": "Producer/preparation/approval paths exclusive; head observed a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650 has no terminal release",
+    "C12": "Consume existing Apply/recovery only",
+    "other_owners": [
+      "Memory40",
+      "Reports36",
+      "BI38",
+      "Agenda39",
+      "Portfolio43"
+    ],
+    "native_proof": "NOT_RUN; no native provider/reviewer/restart resource"
+  },
+  "validation": {
+    "remote": "GitHub MCP only; CAS expected head and force=false",
+    "tests": "Existing hosted Actions only; one nonduplicate surgical selection at a time",
+    "playwright_selection": "Validator supports exact spec filenames only; all five positive nominal tests remain. No title/line filter, skip/xfail or synthetic spec",
+    "local_tests": 0,
+    "local_servers": 0,
+    "epic": false,
+    "budget_changes": false
+  },
+  "acceptance": "HOLD_NOT_GRANTED"
+}

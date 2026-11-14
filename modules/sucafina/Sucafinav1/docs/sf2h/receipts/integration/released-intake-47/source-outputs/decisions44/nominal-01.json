@@ -1,0 +1,248 @@
+{
+  "schema": "sf2-mission44-hosted-observation-v1",
+  "mission": 44,
+  "selection": "all five preserved Decisions nominal tests",
+  "source": {
+    "sha": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+    "tree": "922c412d219a605c0f771dcdb7b0225c2e383b79"
+  },
+  "composed": {
+    "base": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "W": "12d627f16ab5a83e55e72a1bf5c085133e65ddba",
+    "tree": "73f05222e706daf7e9c0ad4ca4b8bf1dfd1ec5f1"
+  },
+  "snapshot": {
+    "S": "dfcf10bf76982dc6cea651732f6c27dd82d8d7a0",
+    "tree": "409c04b21306a28183cc37256e5e7abad4303acd",
+    "branch": "ci-run-linux-astra-wp11-12d627f1-m44-browser-01",
+    "only_difference_from_W": ".ci-run.json",
+    "compare": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ]
+  },
+  "request": {
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "packages/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/decisions.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "platform": "linux",
+    "arch": "x64",
+    "sha": "dfcf10bf76982dc6cea651732f6c27dd82d8d7a0"
+  },
+  "run": {
+    "id": 43649103661,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649103661",
+    "job_id": 132613359447,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "platform": "ubuntu-24.04",
+    "omni_control": "NOT_APPLICABLE_PLAYWRIGHT"
+  },
+  "result": {
+    "selected": 5,
+    "executed": 5,
+    "passed": 0,
+    "failed": 5,
+    "skipped": 0,
+    "flaky": 0,
+    "retries": 0,
+    "runtime_stats": {
+      "startTime": "2026-11-14T22:39:51.015Z",
+      "duration": 62917.909,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 5,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+        "line": 12,
+        "column": 1,
+        "file": "sucafina/decisions.spec.ts",
+        "status": "unexpected",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "failed",
+            "duration_ms": 5711,
+            "retry": 0,
+            "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+              "column": 24,
+              "line": 106
+            }
+          }
+        ]
+      },
+      {
+        "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+        "line": 21,
+        "column": 1,
+        "file": "sucafina/decisions.spec.ts",
+        "status": "unexpected",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "failed",
+            "duration_ms": 3812,
+            "retry": 0,
+            "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+              "column": 24,
+              "line": 106
+            }
+          }
+        ]
+      },
+      {
+        "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+        "line": 35,
+        "column": 1,
+        "file": "sucafina/decisions.spec.ts",
+        "status": "unexpected",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "failed",
+            "duration_ms": 4503,
+            "retry": 0,
+            "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+              "column": 24,
+              "line": 106
+            }
+          }
+        ]
+      },
+      {
+        "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+        "line": 87,
+        "column": 1,
+        "file": "sucafina/decisions.spec.ts",
+        "status": "unexpected",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "failed",
+            "duration_ms": 4505,
+            "retry": 0,
+            "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+              "column": 24,
+              "line": 106
+            }
+          }
+        ]
+      },
+      {
+        "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+        "line": 135,
+        "column": 1,
+        "file": "sucafina/decisions.spec.ts",
+        "status": "unexpected",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "failed",
+            "duration_ms": 4301,
+            "retry": 0,
+            "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+              "column": 24,
+              "line": 106
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "bootstrap": {
+    "real_CLI_listening": "OBSERVED_IN_ALL_FIVE_LOGS_http://::1:4110",
+    "duplicate_ACL": "NOT_OBSERVED_ON_C11",
+    "status_local_operator": "REACHED_BY_FIXTURE_CONTROL_FLOW_BEFORE_FAILURE",
+    "enrollment_303_dashboard": "REACHED_BY_FIXTURE_CONTROL_FLOW_BEFORE_FAILURE",
+    "cookie_admission": "FAILED_BEFORE_CONTEXT_ADDCOOKIES",
+    "Dashboard_UI": "NOT_REACHED",
+    "Workbench_UI": "NOT_REACHED",
+    "human_journeys": "NOT_REACHED"
+  },
+  "failure": {
+    "id": "M44-OPERATOR-COOKIE-TRANSPORT",
+    "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+    "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+    "line": 106,
+    "message": "Production enrollment did not issue its scoped HttpOnly session",
+    "owner": 42,
+    "patch": "integration/operator-cookie/complete.patch"
+  },
+  "artifacts": {
+    "id": 14135621936,
+    "name": "playwright-ubuntu-24.04-1",
+    "size": 265876,
+    "sha256": "44e79ed317efd4d0e68bfa0df93c4304eb8689680e117e60b32e34ebec2e5258",
+    "expires_at": "2026-11-21",
+    "members_sha256": {
+      "playwright-runtime.json": "d988322b73b0159480cc7cba0dd8386a55fd08abd45bc08ada96d63eb17b7835",
+      "playwright-selection.json": "930246d486855b40126369c512f5efeabb78cf016fd4af72bbc16972cbec0200",
+      "request.json": "2e769ba1fd36ad6eae98eb2e2ec7f358820c7a5b7f643419e875f9150e455a0b"
+    }
+  },
+  "nominal_preservation": {
+    "source_preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+    "original_test_titles": [
+      "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+    ],
+    "updated_test_titles": [
+      "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+    ],
+    "count": 5,
+    "change": "Two assertions aligned to the C11 creation contract; two disabled-state assertions added",
+    "timeouts_unchanged": true,
+    "human_actions_unchanged": true,
+    "request_loss_and_reopen_unchanged": true,
+    "no_test_skip_only_xfail_added": true,
+    "static_only": true
+  },
+  "filters": {
+    "supported": "Exact existing .spec.ts paths only",
+    "four_of_five_title_filter": "UNSUPPORTED_BY_CURRENT_REQUEST_VALIDATOR",
+    "decision": "All five remain in exact file selection; no skip/xfail/only/new synthetic spec."
+  },
+  "acceptance": "NOT_GRANTED",
+  "native": {
+    "provider": "NOT_RUN",
+    "critique": "NOT_RUN",
+    "restart": "NOT_RUN"
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "schema": "sf2-mission44-input-provenance-v1",
+  "mission": 44,
+  "actor": "S4-A",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "authority_record": {
+    "sha": "6c73001613e678e44a77f81b853b1a0ab1b86208",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/START.json"
+  },
+  "source_reconciled": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+  "composition": {
+    "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712",
+    "record": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "intake": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/increment-07.json",
+      "blob": "5afe11a1bbd0d9c90d4d5371f1cb53a33764eaee"
+    }
+  },
+  "normative_reads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-composed-qualification.json",
+      "sha": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+      "blob": "2b57f9dc70c8325fb8685ee9bd9c0f47a1931fe4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/COMMON.json",
+      "sha": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+      "blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "sha": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "sha": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "sha": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+    },
+    {
+      "path": ".orchestra/skills/guardrail-usage/SKILL.md",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "c2333f8b46d780f6b52bba2ae9f6696e840d18a0"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+    },
+    {
+      "path": ".github/workflows/astra-wp11-check.yml",
+      "sha": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+      "blob": "3b361b6b22c7c5628d6b149321f73934ea5f9a84"
+    }
+  ],
+  "appendices": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "read": "complete"
+    }
+  ],
+  "full_pack": {
+    "sections": [
+      "provenance",
+      "job_id",
+      "actor",
+      "session",
+      "assignment",
+      "branch_provenance",
+      "common",
+      "write_authority",
+      "allocation",
+      "physical_slot",
+      "work_packages",
+      "contracts",
+      "incoming_outgoing_handoffs",
+      "task_output_dependencies",
+      "consumer_edges",
+      "coverage",
+      "dependency_context",
+      "proof_bindings",
+      "evidence",
+      "execution_proofs",
+      "review_assignment",
+      "review_sources_read_only",
+      "resident",
+      "reference_context_rule",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_ui",
+      "mandatory_appendices",
+      "code_sources",
+      "source_receipt_index",
+      "workflow",
+      "coverage_source",
+      "numeric_oracles",
+      "selection_pointers",
+      "criterion_ids",
+      "completion"
+    ],
+    "method": "Root plus three read-only delegated readers, all sections complete. Repetitive resident scalar text deduplicated while association paths remained read; scope and 83 criteria unchanged.",
+    "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "product_dependency_closure": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "e1392759f00d6d42477249823bbb6b3cec51601c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "c469187a2e04d49d157cf9d3830145ca845f4064"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "cf61bf000836c0a7cd257366a30708f9e1000d9e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "1c4bd231075bf149a31924cf651063bf1c3ef6d3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "596512b4e12c094fd178ea845f4b560bbf23a348"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "cfbff030208adb764f392f637ff7b903c0c64199"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "65d2a0518427b1454aa665ef744bce7564ed8049"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "da41f148e5b3592d700cdfb81d72ea23d8774500"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "f6e3d0473338553dc71340fe632d3de59b08deb9"
+    },
+    {
+      "path": "apps/cli/test/sucafina-installation.test.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "6360d706352ec7e4fab097cb9e9152dc2ed5a101"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-installation.ts",
+      "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "blob": "5c43c84dde0f44fbc51dffc3d53a5176bda5e900"
+    }
+  ],
+  "creation_contract": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+    "sha": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "blob": "1c3bf805fed4d0cf186964b4631def5b0161d9ef"
+  },
+  "native_limits": {
+    "provider": "NOT_RUN",
+    "native_critic": "NOT_RUN",
+    "restart": "NOT_RUN",
+    "text_agents_are_native_critique": false
+  },
+  "remote_repository_channel": "GitHub MCP only",
+  "local_product_tests": 0,
+  "local_servers": 0,
+  "five_patches31": {
+    "status": "CONSUMED_ALREADY_IN_C11_UNMODIFIED",
+    "intake_commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "patches": [
+      {
+        "name": "router-mount",
+        "manifest_blob": "111e335e65d68591fcd4f3dd34484b193a38fb44",
+        "patch_blob": "cfe4d6c9012bff6581b92aeeb73a6c898fe112e5"
+      },
+      {
+        "name": "coverage-read",
+        "manifest_blob": "3f11633255e641c7b8794daca065c26c4462bc3e",
+        "patch_blob": "43ad2f1719426bf7aa9a4c35424c58d2a72ee871"
+      },
+      {
+        "name": "procurement-read",
+        "manifest_blob": "709478f6728fe2fb3b4827dcc318983e86c5f133",
+        "patch_blob": "2e63be3de3af7d37e6c6f928e1481f4c7a425877"
+      },
+      {
+        "name": "comparison-rule",
+        "manifest_blob": "53ba835411c0976f9661931c55f2916b56d3fc6b",
+        "patch_blob": "57dae287195d0ef9953cd353bf159c6de6c61abc"
+      },
+      {
+        "name": "history-read",
+        "manifest_blob": "88ecd2dadc9e3069516196c42665927b8880354f",
+        "patch_blob": "ee8e22c408efcc64d4c38dfd8a14117d2c27c92e"
+      }
+    ],
+    "C11_targets": [
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "patch_set": "router-mount",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/postimages/apps/cli/src/sucafina-product/installation.ts.txt",
+        "delivered_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "C11_blob": "e1392759f00d6d42477249823bbb6b3cec51601c"
+      },
+      {
+        "path": "apps/cli/test/sucafina-installation.test.ts",
+        "patch_set": "router-mount",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/postimages/apps/cli/test/sucafina-installation.test.ts.txt",
+        "delivered_blob": "6360d706352ec7e4fab097cb9e9152dc2ed5a101",
+        "C11_blob": "6360d706352ec7e4fab097cb9e9152dc2ed5a101"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-installation.ts",
+        "patch_set": "router-mount",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/postimages/apps/cli/test/fixture/sucafina-installation.ts.txt",
+        "delivered_blob": "5c43c84dde0f44fbc51dffc3d53a5176bda5e900",
+        "C11_blob": "5c43c84dde0f44fbc51dffc3d53a5176bda5e900"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+        "patch_set": "procurement-read",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/procurement-read/postimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+        "delivered_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+        "C11_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+        "ordered_chain": [
+          {
+            "name": "coverage-read",
+            "preimage": "77563520dbfa9cab5876c0312eba294cb579e11d",
+            "postimage": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+            "source_patch_blob": "43ad2f1719426bf7aa9a4c35424c58d2a72ee871"
+          },
+          {
+            "name": "procurement-read",
+            "preimage": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+            "postimage": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+            "source_patch_blob": "2e63be3de3af7d37e6c6f928e1481f4c7a425877"
+          }
+        ]
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "patch_set": "comparison-rule",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/comparison-rule/postimages/apps/cli/src/sucafina-product/decision-domain-services.ts.txt",
+        "delivered_blob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93",
+        "C11_blob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+        "patch_set": "history-read",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/postimages/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts.txt",
+        "delivered_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500",
+        "C11_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+        "patch_set": "history-read",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/postimages/modules/sucafina/Sucafinav1/product/decisions/case-management.ts.txt",
+        "delivered_blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585",
+        "C11_blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+        "patch_set": "history-read",
+        "source_commit": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+        "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/postimages/modules/sucafina/Sucafinav1/product/decisions/host-product.ts.txt",
+        "delivered_blob": "f6e3d0473338553dc71340fe632d3de59b08deb9",
+        "C11_blob": "f6e3d0473338553dc71340fe632d3de59b08deb9"
+      }
+    ],
+    "no_recreation": true,
+    "no_old_C3_snapshot": true
+  }
+}

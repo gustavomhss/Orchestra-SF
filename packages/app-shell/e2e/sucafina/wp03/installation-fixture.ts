@@ -6,6 +6,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { promisify } from "node:util"
+import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
 
 const run = promisify(execFile)
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -102,10 +103,8 @@ export async function startPlannerInstallation(info: TestInfo) {
     const admitted = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10_000) })
     if (admitted.status !== 303 || admitted.headers.get("location") !== "/sucafina/dashboard")
       throw new Error(`Production local enrollment failed with HTTP ${admitted.status}`)
-    const issued = admitted.headers.get("set-cookie")?.match(/^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=\/sucafina; HttpOnly; SameSite=Lax; Max-Age=28800$/)
-    if (!issued) throw new Error("Production enrollment did not issue its scoped HttpOnly session")
-    state.secrets.push(issued[2]!)
-    const cookie = { name: issued[1]!, value: issued[2]!, domain: "localhost", path: "/sucafina", httpOnly: true, secure: false, sameSite: "Lax" as const }
+    const cookie = readOperatorSessionCookie(admitted.headers)
+    state.secrets.push(cookie.value)
     return { origin, cookie, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, stop }
   } catch (error) {
     await stop()

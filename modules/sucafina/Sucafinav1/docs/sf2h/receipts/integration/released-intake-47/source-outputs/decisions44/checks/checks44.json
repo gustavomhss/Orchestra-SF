@@ -1,0 +1,3351 @@
+{
+  "schema": "sf2h.mission44.checks-analysis.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "FAILURE_RETAINED_NO_WAIVER",
+  "analysis_method": {
+    "kind": "Read-only comparison of complete hosted Actions logs and repository source text.",
+    "local_tests": 0,
+    "local_typechecks": 0,
+    "local_guard_runs": 0,
+    "product_execution": 0,
+    "remote_mutations": 0,
+    "dispatches_by_this_agent": 0,
+    "normalization": [
+      "Remove timestamps, ANSI and diagnostic annotation prefixes.",
+      "Parse each TS diagnostic start once and preserve all continuation lines.",
+      "Normalize paths relative to modules/sucafina/Sucafinav1, the nested package invoked by the package script.",
+      "Parse guard findings only from literal GATE/WARN lines, excluding annotation echoes.",
+      "Compare exact sites/codes and separately full messages; directly fetch unchanged source blobs for representation variants."
+    ]
+  },
+  "run": {
+    "id": 43650398020,
+    "job_id": 132617339891,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650398020",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650398020/job/132617339891",
+    "branch": "astra-check-wp11",
+    "head_sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T22:53:06Z",
+    "updated_at": "2026-11-14T22:54:26Z",
+    "workflow": ".github/workflows/astra-wp11-check.yml",
+    "workflow_blob": "3b361b6b22c7c5628d6b149321f73934ea5f9a84",
+    "source": {
+      "productSha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "productTree": "d87e641ebd9cc8aded6c416c9fd5f9f30b4c9b1e",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+    },
+    "source_json_log_line": 326,
+    "log_file": null,
+    "log_sha256": "3f21be216604966e24e5e6d7fc6747ba8170986bd404e09f3f5ecbd27f15ddd7",
+    "source_file": "source.json",
+    "source_sha256": "aa17d402ccc5bda06f75ddf3e1edd737105c3e3050313b787760c3d2cb65fc73",
+    "artifact": {
+      "id": 14135439428,
+      "name": "astra-wp11-checks-ff0bd96d1303ef55204d498f286ba0da8543419d-1",
+      "size_in_bytes": 8512,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135439428",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135439428/zip",
+      "expired": false,
+      "created_at": "2026-11-14T22:54:23Z",
+      "expires_at": "2026-11-28T22:54:22Z",
+      "updated_at": "2026-11-14T22:54:23Z",
+      "digest": "sha256:d87c2c91a3c57427e6e30e76ff2e5bb5aaa6a02c80cf9d74393589d8f11170fd",
+      "workflow_run": {
+        "id": 43650398020,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp11",
+        "head_sha": "ff0bd96d1303ef55204d498f286ba0da8543419d"
+      }
+    },
+    "artifact_integrity": "Root downloaded ZIP through GitHub MCP and hydrated its issued file URL; SHA256 matches API digest d87c2c91a3c57427e6e30e76ff2e5bb5aaa6a02c80cf9d74393589d8f11170fd. Extracted source.json equals recorded source byte-for-byte.",
+    "log_retention": "Full source job log was inspected via GitHub MCP; fetch job_id 132617339891 to reproduce raw SHA256. Exact diagnostics and log-line pointers are retained below.",
+    "artifact_members_sha256": {
+      "source.json": "aa17d402ccc5bda06f75ddf3e1edd737105c3e3050313b787760c3d2cb65fc73",
+      "typecheck.log": "5a7e2134901935a8a940e1d907c4d1e667c20379309769972657a72fbb799ef4",
+      "guards.log": "c25ba7f23d5e630d446aebd465c3d428d89f44396d928fa09e35ccd561ca9986"
+    }
+  },
+  "baseline": {
+    "run_id": 43643267543,
+    "job_id": 132595283896,
+    "source": {
+      "productSha": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+      "productTree": "3fc1bd258bb05ffd7ec6e05618961633fff253ce",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+    },
+    "receipt": {
+      "ref": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/checks-W2.json",
+      "blob": "10c855672b975b064e6743e499d9434818ae4a43"
+    },
+    "raw_log_sha256": "9eaa48524e1642b46d79ed75b2c3d6492804ae8d76f10859ca77ef35b466f940",
+    "refetched_log_matches_receipt_sha256": true,
+    "workflow_blob_equal": true,
+    "guard_base_equal": true,
+    "merge_base_equal": true,
+    "complete_compare": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+      "head": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "status": "ahead",
+      "ahead_by": 4,
+      "behind_by": 0,
+      "total_commits": 4,
+      "too_large": null,
+      "base_commit": {
+        "sha": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/386d1f9f52ba720e994f9d8feedfca8aa9c9e270"
+      },
+      "merge_base_commit": {
+        "sha": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/386d1f9f52ba720e994f9d8feedfca8aa9c9e270"
+      },
+      "files": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/START.json",
+          "status": "added",
+          "additions": 84,
+          "deletions": 0,
+          "changes": 84,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/FINDINGS.json",
+          "status": "added",
+          "additions": 128,
+          "deletions": 0,
+          "changes": 128,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/HANDOFF.md",
+          "status": "added",
+          "additions": 100,
+          "deletions": 0,
+          "changes": 100,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/INPUTS.json",
+          "status": "added",
+          "additions": 362,
+          "deletions": 0,
+          "changes": 362,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/OUTPUT.json",
+          "status": "added",
+          "additions": 201,
+          "deletions": 0,
+          "changes": 201,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/PRODUCT.json",
+          "status": "added",
+          "additions": 159,
+          "deletions": 0,
+          "changes": 159,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/README.md",
+          "status": "added",
+          "additions": 16,
+          "deletions": 0,
+          "changes": 16,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/RECEIPT-INDEX.json",
+          "status": "added",
+          "additions": 379,
+          "deletions": 0,
+          "changes": 379,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/TARGET-OBSERVATION.json",
+          "status": "added",
+          "additions": 430,
+          "deletions": 0,
+          "changes": 430,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/baseline-C3.json",
+          "status": "added",
+          "additions": 61,
+          "deletions": 0,
+          "changes": 61,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/checks-W2.json",
+          "status": "added",
+          "additions": 3376,
+          "deletions": 0,
+          "changes": 3376,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/choice-code-review.json",
+          "status": "added",
+          "additions": 80,
+          "deletions": 0,
+          "changes": 80,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/coverage-owner-review.json",
+          "status": "added",
+          "additions": 315,
+          "deletions": 0,
+          "changes": 315,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/criteria.json",
+          "status": "added",
+          "additions": 8530,
+          "deletions": 0,
+          "changes": 8530,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/e2e-code-review.json",
+          "status": "added",
+          "additions": 152,
+          "deletions": 0,
+          "changes": 152,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/e2e-static-audit.json",
+          "status": "added",
+          "additions": 134,
+          "deletions": 0,
+          "changes": 134,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/baseline-C3-cli.txt",
+          "status": "added",
+          "additions": 12,
+          "deletions": 0,
+          "changes": 12,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/baseline-C3-playwright-runtime.json",
+          "status": "added",
+          "additions": 475,
+          "deletions": 0,
+          "changes": 475,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/baseline-C3-playwright-selection.json",
+          "status": "added",
+          "additions": 154,
+          "deletions": 0,
+          "changes": 154,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/baseline-C3-request.json",
+          "status": "added",
+          "additions": 1,
+          "deletions": 0,
+          "changes": 1,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/checks-W2-source.json",
+          "status": "added",
+          "additions": 7,
+          "deletions": 0,
+          "changes": 7,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/composition-check.json",
+          "status": "added",
+          "additions": 340,
+          "deletions": 0,
+          "changes": 340,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/final-E2E-benchmark-runtime.json",
+          "status": "added",
+          "additions": 1,
+          "deletions": 0,
+          "changes": 1,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/final-E2E-cli.txt",
+          "status": "added",
+          "additions": 12,
+          "deletions": 0,
+          "changes": 12,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/final-E2E-playwright-runtime.json",
+          "status": "added",
+          "additions": 572,
+          "deletions": 0,
+          "changes": 572,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/final-E2E-playwright-selection.json",
+          "status": "added",
+          "additions": 174,
+          "deletions": 0,
+          "changes": 174,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/final-E2E-request.json",
+          "status": "added",
+          "additions": 13,
+          "deletions": 0,
+          "changes": 13,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/final-E2E-runner-request.json",
+          "status": "added",
+          "additions": 1,
+          "deletions": 0,
+          "changes": 1,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/unit-Wc1-request.json",
+          "status": "added",
+          "additions": 15,
+          "deletions": 0,
+          "changes": 15,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/unit-Wc1-tests.json",
+          "status": "added",
+          "additions": 50,
+          "deletions": 0,
+          "changes": 50,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/unit-Wc2-request.json",
+          "status": "added",
+          "additions": 12,
+          "deletions": 0,
+          "changes": 12,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/evidence/unit-Wc2-tests.json",
+          "status": "added",
+          "additions": 30,
+          "deletions": 0,
+          "changes": 30,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/INDEX.json",
+          "status": "added",
+          "additions": 125,
+          "deletions": 0,
+          "changes": 125,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/comparison-rule/comparison-rule.patch",
+          "status": "added",
+          "additions": 40,
+          "deletions": 0,
+          "changes": 40,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/comparison-rule/manifest.json",
+          "status": "added",
+          "additions": 58,
+          "deletions": 0,
+          "changes": 58,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/comparison-rule/postimages/apps/cli/src/sucafina-product/decision-domain-services.ts.txt",
+          "status": "added",
+          "additions": 186,
+          "deletions": 0,
+          "changes": 186,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/comparison-rule/preimages/apps/cli/src/sucafina-product/decision-domain-services.ts.txt",
+          "status": "added",
+          "additions": 170,
+          "deletions": 0,
+          "changes": 170,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/coverage-read/coverage-read.patch",
+          "status": "added",
+          "additions": 30,
+          "deletions": 0,
+          "changes": 30,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/coverage-read/manifest.json",
+          "status": "added",
+          "additions": 29,
+          "deletions": 0,
+          "changes": 29,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/coverage-read/postimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+          "status": "added",
+          "additions": 299,
+          "deletions": 0,
+          "changes": 299,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/coverage-read/preimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+          "status": "added",
+          "additions": 297,
+          "deletions": 0,
+          "changes": 297,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/history-read.patch",
+          "status": "added",
+          "additions": 74,
+          "deletions": 0,
+          "changes": 74,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/manifest.json",
+          "status": "added",
+          "additions": 49,
+          "deletions": 0,
+          "changes": 49,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/postimages/modules/sucafina/Sucafinav1/product/decisions/case-management.ts.txt",
+          "status": "added",
+          "additions": 76,
+          "deletions": 0,
+          "changes": 76,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/postimages/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts.txt",
+          "status": "added",
+          "additions": 47,
+          "deletions": 0,
+          "changes": 47,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/postimages/modules/sucafina/Sucafinav1/product/decisions/host-product.ts.txt",
+          "status": "added",
+          "additions": 84,
+          "deletions": 0,
+          "changes": 84,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/preimages/modules/sucafina/Sucafinav1/product/decisions/case-management.ts.txt",
+          "status": "added",
+          "additions": 74,
+          "deletions": 0,
+          "changes": 74,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/preimages/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts.txt",
+          "status": "added",
+          "additions": 29,
+          "deletions": 0,
+          "changes": 29,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/preimages/modules/sucafina/Sucafinav1/product/decisions/host-product.ts.txt",
+          "status": "added",
+          "additions": 84,
+          "deletions": 0,
+          "changes": 84,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/procurement-read/manifest.json",
+          "status": "added",
+          "additions": 35,
+          "deletions": 0,
+          "changes": 35,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/procurement-read/postimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+          "status": "added",
+          "additions": 396,
+          "deletions": 0,
+          "changes": 396,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/procurement-read/preimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+          "status": "added",
+          "additions": 299,
+          "deletions": 0,
+          "changes": 299,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/procurement-read/procurement-read.patch",
+          "status": "added",
+          "additions": 134,
+          "deletions": 0,
+          "changes": 134,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/manifest.json",
+          "status": "added",
+          "additions": 66,
+          "deletions": 0,
+          "changes": 66,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/postimages/apps/cli/src/sucafina-product/installation.ts.txt",
+          "status": "added",
+          "additions": 34,
+          "deletions": 0,
+          "changes": 34,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/postimages/apps/cli/test/fixture/sucafina-installation.ts.txt",
+          "status": "added",
+          "additions": 10,
+          "deletions": 0,
+          "changes": 10,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/postimages/apps/cli/test/sucafina-installation.test.ts.txt",
+          "status": "added",
+          "additions": 35,
+          "deletions": 0,
+          "changes": 35,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/preimages/apps/cli/src/sucafina-product/installation.ts.txt",
+          "status": "added",
+          "additions": 33,
+          "deletions": 0,
+          "changes": 33,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/router-mount.patch",
+          "status": "added",
+          "additions": 70,
+          "deletions": 0,
+          "changes": 70,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/journey-matrix.json",
+          "status": "added",
+          "additions": 130,
+          "deletions": 0,
+          "changes": 130,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/nominal-Wc2.json",
+          "status": "added",
+          "additions": 251,
+          "deletions": 0,
+          "changes": 251,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/owned-C3.patch",
+          "status": "added",
+          "additions": 1754,
+          "deletions": 0,
+          "changes": 1754,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/unit-Wc1.json",
+          "status": "added",
+          "additions": 85,
+          "deletions": 0,
+          "changes": 85,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/unit-Wc2.json",
+          "status": "added",
+          "additions": 120,
+          "deletions": 0,
+          "changes": 120,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+          "status": "added",
+          "additions": 80,
+          "deletions": 0,
+          "changes": 80,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+          "status": "added",
+          "additions": 13,
+          "deletions": 0,
+          "changes": 13,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "status": "modified",
+          "additions": 4,
+          "deletions": 2,
+          "changes": 6,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "typescript": {
+    "command": "bun typecheck",
+    "working_directory": "modules/sucafina",
+    "expanded_command": "bun --cwd Sucafinav1 typecheck -> tsgo --noEmit",
+    "result": "FAILURE",
+    "exit_code": 2,
+    "exit_log_line": 831,
+    "diagnostics": 130,
+    "files": 44,
+    "count_by_code": {
+      "TS18046": 2,
+      "TS18048": 1,
+      "TS2304": 2,
+      "TS2305": 1,
+      "TS2307": 3,
+      "TS2322": 29,
+      "TS2339": 27,
+      "TS2345": 6,
+      "TS2349": 3,
+      "TS2352": 1,
+      "TS2353": 1,
+      "TS2366": 1,
+      "TS2367": 5,
+      "TS2554": 2,
+      "TS2638": 1,
+      "TS2722": 2,
+      "TS2724": 1,
+      "TS2739": 1,
+      "TS2741": 11,
+      "TS2769": 3,
+      "TS7006": 27
+    },
+    "count_by_path": {
+      "apps/cli/src/sucafina-product/business-services.ts": 4,
+      "apps/cli/src/sucafina-product/host-context.ts": 7,
+      "apps/cli/src/sucafina-product/import-services.ts": 2,
+      "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts": 2,
+      "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts": 1,
+      "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts": 1,
+      "modules/sucafina/Sucafinav1/product/collaboration/relations.ts": 3,
+      "modules/sucafina/Sucafinav1/product/collaboration/threads.ts": 4,
+      "modules/sucafina/Sucafinav1/product/contracts/host-context.ts": 1,
+      "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts": 9,
+      "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts": 2,
+      "modules/sucafina/Sucafinav1/product/documents/capabilities.ts": 1,
+      "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts": 4,
+      "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts": 2,
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts": 17,
+      "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts": 4,
+      "modules/sucafina/Sucafinav1/product/interface/http.ts": 2,
+      "modules/sucafina/Sucafinav1/product/interface/import-http.ts": 1,
+      "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts": 1,
+      "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts": 2,
+      "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts": 2,
+      "modules/sucafina/Sucafinav1/product/portfolio/port.ts": 1,
+      "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts": 1,
+      "modules/sucafina/Sucafinav1/product/portfolio/verification.ts": 2,
+      "modules/sucafina/Sucafinav1/product/ui/components.ts": 1,
+      "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts": 3,
+      "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts": 9,
+      "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts": 2,
+      "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts": 4,
+      "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts": 3,
+      "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts": 10,
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts": 2,
+      "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts": 4,
+      "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts": 1,
+      "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts": 6
+    },
+    "matched_sites_and_codes": 130,
+    "exact_full_matches": 128,
+    "new_sites": [],
+    "removed_sites": [],
+    "text_variations": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 38,
+        "column": 75,
+        "code": "TS2345",
+        "before": {
+          "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+          "line": 38,
+          "column": 75,
+          "code": "TS2345",
+          "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.",
+          "continuations": [
+            "  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.",
+            "    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.",
+            "      Type '{ commit: false; value: { format: \"backup\" | DashboardImportFormat; result: { status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.",
+            "        The types of 'value.result' are incompatible between these types.",
+            "          Type '{ status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ warnings?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.",
+            "            Type '{ status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ warnings?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.",
+            "              Types of property 'warnings' are incompatible.",
+            "                Type 'string[]' is not assignable to type 'undefined'."
+          ],
+          "log_line": 691
+        },
+        "after": {
+          "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+          "line": 38,
+          "column": 75,
+          "code": "TS2345",
+          "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+          "continuations": [
+            "  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+            "    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.",
+            "      Type '{ commit: false; value: { format: \"backup\" | DashboardImportFormat; result: { reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.",
+            "        The types of 'value.result' are incompatible between these types.",
+            "          Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.",
+            "            Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.",
+            "              Types of property 'baseDigest' are incompatible.",
+            "                Type 'string' is not assignable to type 'undefined'."
+          ],
+          "log_line": 690
+        },
+        "old_source_blob": "1ef975cc87f5ee31b3b8c742cd073035fa0b7ed9",
+        "new_source_blob": "1ef975cc87f5ee31b3b8c742cd073035fa0b7ed9",
+        "source_bytes_equal": true,
+        "disposition": "Existing identical TS2345 site on byte-identical source. Full inferred-type presentation differs. Cause of display variation not established; not counted as a new site and not claimed as an exact message match."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+        "line": 56,
+        "column": 72,
+        "code": "TS2345",
+        "before": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "line": 56,
+          "column": 72,
+          "code": "TS2345",
+          "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+          "continuations": [
+            "  Type 'Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+            "    Type '{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }' is not assignable to type '{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+            "      Type '{ commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; ... 5 more ...; projectionDigest: string; }; }; }; }; }' is not assignable to type '{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+            "        The types of 'value.value' are incompatible between these types.",
+            "          Type '{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }' is not assignable to type 'undefined'."
+          ],
+          "log_line": 764
+        },
+        "after": {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "line": 56,
+          "column": 72,
+          "code": "TS2345",
+          "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+          "continuations": [
+            "  Type 'Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+            "    Type '{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+            "      Type '{ commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; ... 5 more ...; projectionDigest: string; }; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+            "        The types of 'value.value' are incompatible between these types.",
+            "          Type '{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }' is not assignable to type 'undefined'."
+          ],
+          "log_line": 763
+        },
+        "old_source_blob": "a52f968be176a250436e89eb19f61ec7728cba5c",
+        "new_source_blob": "a52f968be176a250436e89eb19f61ec7728cba5c",
+        "source_bytes_equal": true,
+        "disposition": "Existing identical TS2345 site on byte-identical source. Full inferred-type presentation differs. Cause of display variation not established; not counted as a new site and not claimed as an exact message match."
+      }
+    ],
+    "changed_paths_with_diagnostics": [],
+    "diagnostic_index": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "line": 85,
+        "column": 30,
+        "code": "TS7006",
+        "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 540,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 541
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "line": 85,
+        "column": 40,
+        "code": "TS7006",
+        "message": "Parameter 'evidence' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 541,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 542
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "line": 102,
+        "column": 40,
+        "code": "TS2741",
+        "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextServi...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "continuations": [],
+        "log_line": 542,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 543
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "line": 188,
+        "column": 20,
+        "code": "TS2322",
+        "message": "Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+        "continuations": [],
+        "log_line": 543,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 544
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "line": 158,
+        "column": 128,
+        "code": "TS2345",
+        "message": "Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.",
+        "continuations": [
+          "  Type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is missing the following properties from type '{ replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }': imports, selectedPreviewRef"
+        ],
+        "log_line": 544,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 545
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "line": 185,
+        "column": 136,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type '{ status: \"ok\"; value: { runRef: string; }; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 546,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 547
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "line": 217,
+        "column": 138,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: { runRef: string; }; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 552,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 553
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "line": 273,
+        "column": 138,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: SfNativeRunRecord; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 558,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 559
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "line": 396,
+        "column": 5,
+        "code": "TS2322",
+        "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+        "continuations": [
+          "  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }>' is not assignable to type 'Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }' is not assignable to type 'PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>'.",
+          "      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type 'PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>'.",
+          "        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type '{ status: \"ok\"; value: readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }'.",
+          "          Types of property 'status' are incompatible.",
+          "            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "              Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 564,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 565
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "line": 412,
+        "column": 5,
+        "code": "TS2322",
+        "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+        "continuations": [
+          "  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...;...' is not assignable to type 'Promise<PortResult<SfNativeRunRecord>>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ....' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: SfNativeRunRecord; }'.",
+          "          Types of property 'status' are incompatible.",
+          "            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "              Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 572,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 573
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "line": 551,
+        "column": 5,
+        "code": "TS2322",
+        "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+        "continuations": [
+          "  Types of parameters 'context' and 'context' are incompatible.",
+          "    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.",
+          "      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.",
+          "        Types of property 'kind' are incompatible.",
+          "          Type '\"native\"' is not assignable to type '\"ui\"'."
+        ],
+        "log_line": 580,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 581
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/import-services.ts",
+        "line": 85,
+        "column": 101,
+        "code": "TS2304",
+        "message": "Cannot find name 'Period'.",
+        "continuations": [],
+        "log_line": 586,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 587
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/import-services.ts",
+        "line": 115,
+        "column": 21,
+        "code": "TS2304",
+        "message": "Cannot find name 'isSfPeriod'.",
+        "continuations": [],
+        "log_line": 587,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 588
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+        "line": 79,
+        "column": 34,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type '{ status: \"ok\"; value: ConfirmationRecord; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 588,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 589
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+        "line": 91,
+        "column": 34,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type '{ status: \"ok\"; value: ConfirmationValidityProjection; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 594,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 595
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+        "line": 16,
+        "column": 9,
+        "code": "TS2322",
+        "message": "Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.",
+        "continuations": [
+          "  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: \"ok\"; value: T; } | { status: \"conflict\" | ... 5 more ... | \"unavailable\"; reason: string; }>' is not assignable to type 'Promise<PortResult<T>>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: \"ok\"; value: T; } | { status: \"conflict\" | ... 6 more ... | \"unavailable\"; reason: string; }' is not assignable to type 'PortResult<T>'.",
+          "      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type 'PortResult<T>'.",
+          "        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type '{ status: \"ok\"; value: T; }'.",
+          "          Types of property 'status' are incompatible.",
+          "            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "              Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 600,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 601
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "line": 50,
+        "column": 32,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type 'PortResult<RecipientThread>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type '{ status: \"ok\"; value: RecipientThread; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 608,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 609
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+        "line": 70,
+        "column": 66,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: \"ok\"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 614,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 615
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+        "line": 116,
+        "column": 35,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: \"ok\"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 620,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 621
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+        "line": 127,
+        "column": 35,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type '{ status: \"ok\"; value: { relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 626,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 627
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "line": 57,
+        "column": 34,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 632,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 633
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "line": 68,
+        "column": 33,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 638,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 639
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "line": 86,
+        "column": 31,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 644,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 645
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "line": 101,
+        "column": 32,
+        "code": "TS2322",
+        "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "continuations": [
+          "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+          "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+          "      Types of property 'status' are incompatible.",
+          "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+          "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+        ],
+        "log_line": 650,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 651
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "line": 14,
+        "column": 45,
+        "code": "TS2307",
+        "message": "Cannot find module '../routines/factory.ts' or its corresponding type declarations.",
+        "continuations": [],
+        "log_line": 656,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 657
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 66,
+        "column": 474,
+        "code": "TS7006",
+        "message": "Parameter 'field' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 657,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 658
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 104,
+        "column": 41,
+        "code": "TS2345",
+        "message": "Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+        "continuations": [
+          "  Type 'Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+          "    Type '{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.",
+          "      Type '{ commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.",
+          "        The types of 'value.state' are incompatible between these types.",
+          "          Type '\"same\"' is not assignable to type '\"replaced\" | \"unavailable\"'."
+        ],
+        "log_line": 658,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 659
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 118,
+        "column": 16,
+        "code": "TS2339",
+        "message": "Property 'state' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 664,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 665
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 118,
+        "column": 52,
+        "code": "TS2339",
+        "message": "Property 'index' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 665,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 666
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 119,
+        "column": 16,
+        "code": "TS2339",
+        "message": "Property 'state' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 666,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 667
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 120,
+        "column": 77,
+        "code": "TS2339",
+        "message": "Property 'fingerprints' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 667,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 668
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 121,
+        "column": 163,
+        "code": "TS2339",
+        "message": "Property 'fingerprints' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 668,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 669
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 123,
+        "column": 61,
+        "code": "TS2339",
+        "message": "Property 'fingerprints' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 669,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 670
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "line": 128,
+        "column": 126,
+        "code": "TS2339",
+        "message": "Property 'physicalIncarnations' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 670,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 671
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "line": 216,
+        "column": 35,
+        "code": "TS2349",
+        "message": "This expression is not callable.",
+        "continuations": [
+          "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+        ],
+        "log_line": 671,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 672
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "line": 222,
+        "column": 33,
+        "code": "TS2349",
+        "message": "This expression is not callable.",
+        "continuations": [
+          "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+        ],
+        "log_line": 673,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 674
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+        "line": 71,
+        "column": 172,
+        "code": "TS2339",
+        "message": "Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.",
+        "continuations": [
+          "  Property 'reason' does not exist on type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: SfDocumentAssetCatalogEntry | undefined; }'."
+        ],
+        "log_line": 675,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 676
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "line": 170,
+        "column": 71,
+        "code": "TS2353",
+        "message": "Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.",
+        "continuations": [],
+        "log_line": 677,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 678
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "line": 170,
+        "column": 153,
+        "code": "TS7006",
+        "message": "Parameter 'refs' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 678,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 679
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "line": 170,
+        "column": 159,
+        "code": "TS7006",
+        "message": "Parameter 'call' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 679,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 680
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "line": 212,
+        "column": 5,
+        "code": "TS2322",
+        "message": "Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.",
+        "continuations": [
+          "  Type 'Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type 'Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]>'.",
+          "    Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]' is not assignable to type 'readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]'.",
+          "      Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }' is not assignable to type '{ envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }'.",
+          "        Types of property 'entry' are incompatible.",
+          "          Type 'MemoryEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'.",
+          "            Type 'LogbookEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'."
+        ],
+        "log_line": 680,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 681
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "line": 37,
+        "column": 128,
+        "code": "TS2345",
+        "message": "Argument of type 'SfStateNamespace' is not assignable to parameter of type '\"atlas\" | \"cases\" | \"confirmations\" | \"contributions\" | \"documents\" | \"outbox\" | \"preferences\" | \"receipts\" | \"relations\" | \"reviews\" | \"threads\"'.",
+        "continuations": [
+          "  Type '\"bi-artifacts\"' is not assignable to type '\"atlas\" | \"cases\" | \"confirmations\" | \"contributions\" | \"documents\" | \"outbox\" | \"preferences\" | \"receipts\" | \"relations\" | \"reviews\" | \"threads\"'."
+        ],
+        "log_line": 687,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 688
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "line": 113,
+        "column": 43,
+        "code": "TS2741",
+        "message": "Property '\"bi-artifacts\"' is missing in type '{ preferences: number; reviews: number; relations: number; threads: number; confirmations: number; cases: number; contributions: number; documents: number; receipts: number; atlas: number; outbox: number; }' but required in type 'Record<SfStateNamespace, number>'.",
+        "continuations": [],
+        "log_line": 689,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 690
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 38,
+        "column": 75,
+        "code": "TS2345",
+        "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+        "continuations": [
+          "  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+          "    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.",
+          "      Type '{ commit: false; value: { format: \"backup\" | DashboardImportFormat; result: { reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.",
+          "        The types of 'value.result' are incompatible between these types.",
+          "          Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.",
+          "            Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.",
+          "              Types of property 'baseDigest' are incompatible.",
+          "                Type 'string' is not assignable to type 'undefined'."
+        ],
+        "log_line": 690,
+        "mission44_changed_path": false,
+        "comparison": "SAME_SITE_CODE_MESSAGE_VARIANT",
+        "baseline_log_line": 691
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 60,
+        "column": 17,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 699,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 700
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 60,
+        "column": 71,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 700,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 701
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 60,
+        "column": 119,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type '{}'.",
+        "continuations": [],
+        "log_line": 701,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 702
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 62,
+        "column": 29,
+        "code": "TS2638",
+        "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+        "continuations": [],
+        "log_line": 702,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 703
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 74,
+        "column": 251,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 703,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 704
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 74,
+        "column": 306,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 704,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 705
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 74,
+        "column": 353,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 705,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 706
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 74,
+        "column": 457,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 706,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 707
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 297,
+        "code": "TS2322",
+        "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+        "continuations": [],
+        "log_line": 707,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 708
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 445,
+        "code": "TS2322",
+        "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+        "continuations": [],
+        "log_line": 708,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 709
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 469,
+        "code": "TS2322",
+        "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+        "continuations": [],
+        "log_line": 709,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 710
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 545,
+        "code": "TS2339",
+        "message": "Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 710,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 711
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 573,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 711,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 712
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 592,
+        "code": "TS2322",
+        "message": "Type '{}' is not assignable to type 'string'.",
+        "continuations": [],
+        "log_line": 712,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 713
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 674,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 713,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 714
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+        "line": 75,
+        "column": 848,
+        "code": "TS2339",
+        "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+        "continuations": [],
+        "log_line": 714,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 715
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "line": 30,
+        "column": 114,
+        "code": "TS2339",
+        "message": "Property 'runRef' does not exist on type 'ContributionEnvelope'.",
+        "continuations": [
+          "  Property 'runRef' does not exist on type 'ContributionBase & { kind: \"AlternativeDraft\"; state: \"ready\"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'."
+        ],
+        "log_line": 715,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 716
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "line": 30,
+        "column": 171,
+        "code": "TS2339",
+        "message": "Property 'version' does not exist on type 'ContributionEnvelope'.",
+        "continuations": [
+          "  Property 'version' does not exist on type 'ContributionBase & { kind: \"AlternativeDraft\"; state: \"ready\"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'."
+        ],
+        "log_line": 717,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 718
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "line": 30,
+        "column": 197,
+        "code": "TS2339",
+        "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+        "continuations": [
+          "  Property 'outputRef' does not exist on type 'ContributionBase & { kind: \"AlternativeDraft\"; state: \"ready\"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'."
+        ],
+        "log_line": 719,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 720
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "line": 30,
+        "column": 235,
+        "code": "TS2339",
+        "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+        "continuations": [
+          "  Property 'outputRef' does not exist on type 'ContributionBase & { kind: \"AlternativeDraft\"; state: \"ready\"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'."
+        ],
+        "log_line": 721,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 722
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "line": 148,
+        "column": 82,
+        "code": "TS7006",
+        "message": "Parameter 'run' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 723,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 724
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "line": 148,
+        "column": 87,
+        "code": "TS7006",
+        "message": "Parameter 'index' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 724,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 725
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+        "line": 54,
+        "column": 249,
+        "code": "TS2345",
+        "message": "Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.",
+        "continuations": [
+          "  Types of property 'surface' are incompatible.",
+          "    Type 'string' is not assignable to type '\"dashboard\" | \"planner\"'."
+        ],
+        "log_line": 725,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 726
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+        "line": 13,
+        "column": 20,
+        "code": "TS2367",
+        "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "continuations": [],
+        "log_line": 728,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 729
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "line": 41,
+        "column": 18,
+        "code": "TS2367",
+        "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "continuations": [],
+        "log_line": 729,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 730
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "line": 78,
+        "column": 18,
+        "code": "TS2367",
+        "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "continuations": [],
+        "log_line": 730,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 731
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "line": 80,
+        "column": 106,
+        "code": "TS2339",
+        "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+        "continuations": [
+          "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+        ],
+        "log_line": 731,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 732
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "line": 80,
+        "column": 171,
+        "code": "TS2339",
+        "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+        "continuations": [
+          "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+        ],
+        "log_line": 733,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 734
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "line": 36,
+        "column": 20,
+        "code": "TS2367",
+        "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "continuations": [],
+        "log_line": 735,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 736
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+        "line": 25,
+        "column": 19,
+        "code": "TS2367",
+        "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "continuations": [],
+        "log_line": 736,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 737
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "line": 119,
+        "column": 106,
+        "code": "TS2339",
+        "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+        "continuations": [
+          "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+        ],
+        "log_line": 737,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 738
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "line": 119,
+        "column": 171,
+        "code": "TS2339",
+        "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+        "continuations": [
+          "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+        ],
+        "log_line": 739,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 740
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "line": 49,
+        "column": 9,
+        "code": "TS2741",
+        "message": "Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+        "continuations": [],
+        "log_line": 741,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 742
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "line": 7,
+        "column": 65,
+        "code": "TS2366",
+        "message": "Function lacks ending return statement and return type does not include 'undefined'.",
+        "continuations": [],
+        "log_line": 742,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 743
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "line": 36,
+        "column": 40,
+        "code": "TS2741",
+        "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContex...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "continuations": [],
+        "log_line": 743,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 744
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "line": 35,
+        "column": 137,
+        "code": "TS2322",
+        "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+        "continuations": [
+          "  Types of parameters 'context' and 'context' are incompatible.",
+          "    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.",
+          "      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.",
+          "        Types of property 'kind' are incompatible.",
+          "          Type '\"native\"' is not assignable to type '\"ui\"'."
+        ],
+        "log_line": 744,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 745
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "line": 6,
+        "column": 38,
+        "code": "TS2307",
+        "message": "Cannot find module '@orchestra/server/routes' or its corresponding type declarations.",
+        "continuations": [],
+        "log_line": 750,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 751
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "line": 208,
+        "column": 41,
+        "code": "TS2554",
+        "message": "Expected 0 arguments, but got 1.",
+        "continuations": [],
+        "log_line": 751,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 752
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "line": 220,
+        "column": 107,
+        "code": "TS2554",
+        "message": "Expected 0 arguments, but got 1.",
+        "continuations": [],
+        "log_line": 752,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 753
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "line": 274,
+        "column": 39,
+        "code": "TS2741",
+        "message": "Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: { requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }; ... 10 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'.",
+        "continuations": [],
+        "log_line": 753,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 754
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 25,
+        "column": 40,
+        "code": "TS2307",
+        "message": "Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.",
+        "continuations": [],
+        "log_line": 754,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 755
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 101,
+        "column": 227,
+        "code": "TS7006",
+        "message": "Parameter '_' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 755,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 756
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 101,
+        "column": 230,
+        "code": "TS7006",
+        "message": "Parameter 'call' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 756,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 757
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 114,
+        "column": 229,
+        "code": "TS7006",
+        "message": "Parameter '_' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 757,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 758
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 114,
+        "column": 232,
+        "code": "TS7006",
+        "message": "Parameter 'call' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 758,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 759
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 253,
+        "column": 225,
+        "code": "TS7006",
+        "message": "Parameter '_' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 759,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 760
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 253,
+        "column": 228,
+        "code": "TS7006",
+        "message": "Parameter 'call' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 760,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 761
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 263,
+        "column": 227,
+        "code": "TS7006",
+        "message": "Parameter '_' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 761,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 762
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "line": 263,
+        "column": 230,
+        "code": "TS7006",
+        "message": "Parameter 'call' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 762,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 763
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+        "line": 56,
+        "column": 72,
+        "code": "TS2345",
+        "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+        "continuations": [
+          "  Type 'Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+          "    Type '{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+          "      Type '{ commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; ... 5 more ...; projectionDigest: string; }; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+          "        The types of 'value.value' are incompatible between these types.",
+          "          Type '{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }' is not assignable to type 'undefined'."
+        ],
+        "log_line": 763,
+        "mission44_changed_path": false,
+        "comparison": "SAME_SITE_CODE_MESSAGE_VARIANT",
+        "baseline_log_line": 764
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+        "line": 65,
+        "column": 590,
+        "code": "TS2322",
+        "message": "Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'.",
+        "continuations": [
+          "  Type 'Promise<unknown>' is not assignable to type 'Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>>'.",
+          "    Type 'unknown' is not assignable to type 'PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>'."
+        ],
+        "log_line": 769,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 770
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+        "line": 41,
+        "column": 76,
+        "code": "TS2322",
+        "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+        "continuations": [
+          "  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+          "    Type '{ commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+          "      The types of 'value.changedFields' are incompatible between these types.",
+          "        Type 'number' is not assignable to type 'undefined'."
+        ],
+        "log_line": 772,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 773
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+        "line": 42,
+        "column": 12,
+        "code": "TS18046",
+        "message": "'applied' is of type 'unknown'.",
+        "continuations": [],
+        "log_line": 777,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 778
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+        "line": 46,
+        "column": 74,
+        "code": "TS2322",
+        "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+        "continuations": [
+          "  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+          "    Type '{ commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+          "      The types of 'value.changedFields' are incompatible between these types.",
+          "        Type 'number' is not assignable to type 'undefined'."
+        ],
+        "log_line": 778,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 779
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+        "line": 47,
+        "column": 12,
+        "code": "TS18046",
+        "message": "'stale' is of type 'unknown'.",
+        "continuations": [],
+        "log_line": 783,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 784
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "line": 106,
+        "column": 64,
+        "code": "TS2769",
+        "message": "No overload matches this call.",
+        "continuations": [
+          "  The last overload gave the following error.",
+          "    Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.",
+          "      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.",
+          "        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength"
+        ],
+        "log_line": 784,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 785
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "line": 113,
+        "column": 122,
+        "code": "TS2769",
+        "message": "No overload matches this call.",
+        "continuations": [
+          "  The last overload gave the following error.",
+          "    Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.",
+          "      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.",
+          "        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength"
+        ],
+        "log_line": 789,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 790
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "line": 124,
+        "column": 64,
+        "code": "TS2769",
+        "message": "No overload matches this call.",
+        "continuations": [
+          "  The last overload gave the following error.",
+          "    Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.",
+          "      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.",
+          "        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength"
+        ],
+        "log_line": 794,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 795
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+        "line": 63,
+        "column": 289,
+        "code": "TS2739",
+        "message": "Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection",
+        "continuations": [],
+        "log_line": 799,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 800
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 13,
+        "column": 112,
+        "code": "TS7006",
+        "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 800,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 801
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 13,
+        "column": 122,
+        "code": "TS7006",
+        "message": "Parameter 'blobs' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 801,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 802
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 31,
+        "column": 58,
+        "code": "TS7006",
+        "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 802,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 803
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 31,
+        "column": 68,
+        "code": "TS7006",
+        "message": "Parameter 'blobs' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 803,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 804
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 40,
+        "column": 63,
+        "code": "TS7006",
+        "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 804,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 805
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 40,
+        "column": 73,
+        "code": "TS7006",
+        "message": "Parameter 'blobs' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 805,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 806
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 51,
+        "column": 49,
+        "code": "TS7006",
+        "message": "Parameter '_snapshot' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 806,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 807
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 51,
+        "column": 60,
+        "code": "TS7006",
+        "message": "Parameter 'blobs' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 807,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 808
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 68,
+        "column": 69,
+        "code": "TS7006",
+        "message": "Parameter '_snapshot' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 808,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 809
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "line": 68,
+        "column": 80,
+        "code": "TS7006",
+        "message": "Parameter 'blobs' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 809,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 810
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "line": 24,
+        "column": 47,
+        "code": "TS7006",
+        "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 810,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 811
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "line": 24,
+        "column": 57,
+        "code": "TS7006",
+        "message": "Parameter 'blobs' implicitly has an 'any' type.",
+        "continuations": [],
+        "log_line": 811,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 812
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+        "line": 32,
+        "column": 26,
+        "code": "TS2352",
+        "message": "Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+        "continuations": [
+          "  Type '{ id: string; incarnation: string; version: number; participants: string[]; }' is missing the following properties from type 'DecisionCase': state, objective, horizon, currency, and 10 more."
+        ],
+        "log_line": 812,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 813
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+        "line": 27,
+        "column": 42,
+        "code": "TS2741",
+        "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "continuations": [],
+        "log_line": 814,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 815
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+        "line": 41,
+        "column": 42,
+        "code": "TS2741",
+        "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "continuations": [],
+        "log_line": 815,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 816
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "line": 117,
+        "column": 42,
+        "code": "TS2741",
+        "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: () => Promise<...>; evidence: BusinessContextService; createId: () => string; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "continuations": [],
+        "log_line": 816,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 817
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "line": 218,
+        "column": 211,
+        "code": "TS2722",
+        "message": "Cannot invoke an object which is possibly 'undefined'.",
+        "continuations": [],
+        "log_line": 817,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 818
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "line": 230,
+        "column": 25,
+        "code": "TS2722",
+        "message": "Cannot invoke an object which is possibly 'undefined'.",
+        "continuations": [],
+        "log_line": 818,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 819
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "line": 230,
+        "column": 25,
+        "code": "TS18048",
+        "message": "'store.transactionAll' is possibly 'undefined'.",
+        "continuations": [],
+        "log_line": 819,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 820
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+        "line": 32,
+        "column": 42,
+        "code": "TS2741",
+        "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "continuations": [],
+        "log_line": 820,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 821
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "line": 55,
+        "column": 42,
+        "code": "TS2741",
+        "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${stri...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "continuations": [],
+        "log_line": 821,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 822
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "line": 10,
+        "column": 43,
+        "code": "TS2305",
+        "message": "Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'.",
+        "continuations": [],
+        "log_line": 822,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 823
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "line": 11,
+        "column": 33,
+        "code": "TS2724",
+        "message": "'\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?",
+        "continuations": [],
+        "log_line": 823,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 824
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "line": 31,
+        "column": 54,
+        "code": "TS2741",
+        "message": "Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.",
+        "continuations": [],
+        "log_line": 824,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 825
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "line": 32,
+        "column": 51,
+        "code": "TS2322",
+        "message": "Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+        "continuations": [
+          "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+        ],
+        "log_line": 825,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 826
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "line": 32,
+        "column": 83,
+        "code": "TS2322",
+        "message": "Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+        "continuations": [
+          "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+        ],
+        "log_line": 827,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 828
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "line": 33,
+        "column": 25,
+        "code": "TS2349",
+        "message": "This expression is not callable.",
+        "continuations": [
+          "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+        ],
+        "log_line": 829,
+        "mission44_changed_path": false,
+        "comparison": "EXACT_FULL_DIAGNOSTIC_MATCH",
+        "baseline_log_line": 830
+      }
+    ],
+    "scope_note": "Sucafina package compiler, including its transitive imports. Separate apps/cli and packages/app-shell/E2E package typechecks were not run by this lane."
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "result": "FAILURE",
+    "exit_code": 1,
+    "exit_log_line": 964,
+    "gates": 43,
+    "warnings": 18,
+    "exact_gate_matches": 43,
+    "exact_warning_matches": 18,
+    "new_findings": [],
+    "removed_findings": [],
+    "source_line_movements": [],
+    "source_timeout_verification": {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "baseline_blob": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+      "current_blob": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "statements": [
+        {
+          "old_line": 13,
+          "new_line": 13,
+          "old_source_line": "test.setTimeout(180_000)",
+          "new_source_line": "test.setTimeout(180_000)",
+          "same_statement": true
+        },
+        {
+          "old_line": 22,
+          "new_line": 22,
+          "old_source_line": "test.setTimeout(180_000)",
+          "new_source_line": "test.setTimeout(180_000)",
+          "same_statement": true
+        },
+        {
+          "old_line": 36,
+          "new_line": 36,
+          "old_source_line": "test.setTimeout(180_000)",
+          "new_source_line": "test.setTimeout(180_000)",
+          "same_statement": true
+        },
+        {
+          "old_line": 88,
+          "new_line": 88,
+          "old_source_line": "test.setTimeout(180_000)",
+          "new_source_line": "test.setTimeout(180_000)",
+          "same_statement": true
+        },
+        {
+          "old_line": 136,
+          "new_line": 136,
+          "old_source_line": "test.setTimeout(180_000)",
+          "new_source_line": "test.setTimeout(180_000)",
+          "same_statement": true
+        }
+      ],
+      "budgets_unchanged": true
+    },
+    "all_findings": [
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W1-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 840,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 841
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-H4-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 841,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 842
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-checks.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 842,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 843
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 843,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 844
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt2-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 844,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 845
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-F1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 845,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 846
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 846,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 847
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-F2-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 847,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 848
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-H5-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 848,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 849
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 849,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 850
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-C2-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 850,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 851
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-F3-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 851,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 852
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 852,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 853
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-B1A-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 853,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 854
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-R1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 854,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 855
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-checks.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 855,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 856
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-H6-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 856,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 857
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 857,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 858
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-R2Q-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 858,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 859
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 859,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 860
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-B1B-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 860,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 861
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-H7-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 861,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 862
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 862,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 863
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-E1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 863,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 864
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 864,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 865
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-E2-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 865,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 866
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 866,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 867
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 867,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 868
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 868,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 869
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W3-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 869,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 870
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W4-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 870,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 871
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-A1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 871,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 872
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 872,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 873
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-AR1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 873,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 874
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-C1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 874,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 875
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-H1-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 875,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 876
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 876,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 877
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W7-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 877,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 878
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-H2-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 878,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 879
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 879,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 880
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-AR2-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 880,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 881
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-H3-tests.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 881,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 882
+      },
+      {
+        "level": "GATE",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-check.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 882,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 883
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/candidate-audit.raw.json.gz",
+        "rule": "binary-added",
+        "message": "Binary file added outside the usual media and fixture locations. Check it belongs in git.",
+        "log_line": 883,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 884
+      },
+      {
+        "level": "WARN",
+        "location": "apps/cli/package.json:37",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 884,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 885
+      },
+      {
+        "level": "WARN",
+        "location": "modules/atlas/boundary/package.json:66",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 885,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 886
+      },
+      {
+        "level": "WARN",
+        "location": "modules/atlas/boundary/package.json:67",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 886,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 887
+      },
+      {
+        "level": "WARN",
+        "location": "modules/atlas/boundary/package.json:68",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 887,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 888
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/package.json:17",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 888,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 889
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/package.json:18",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 889,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 890
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/package.json:19",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 890,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 891
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/package.json:20",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 891,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 892
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/package.json:21",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 892,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 893
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/package.json:22",
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "log_line": 893,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 894
+      },
+      {
+        "level": "WARN",
+        "location": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts:38",
+        "rule": "test-timeout-raised",
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "log_line": 894,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 895
+      },
+      {
+        "level": "WARN",
+        "location": "packages/app-shell/e2e/sucafina/decisions.spec.ts:13",
+        "rule": "test-timeout-raised",
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "log_line": 895,
+        "mission44_changed_path": true,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 896
+      },
+      {
+        "level": "WARN",
+        "location": "packages/app-shell/e2e/sucafina/decisions.spec.ts:22",
+        "rule": "test-timeout-raised",
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "log_line": 896,
+        "mission44_changed_path": true,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 897
+      },
+      {
+        "level": "WARN",
+        "location": "packages/app-shell/e2e/sucafina/decisions.spec.ts:36",
+        "rule": "test-timeout-raised",
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "log_line": 897,
+        "mission44_changed_path": true,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 898
+      },
+      {
+        "level": "WARN",
+        "location": "packages/app-shell/e2e/sucafina/decisions.spec.ts:88",
+        "rule": "test-timeout-raised",
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "log_line": 898,
+        "mission44_changed_path": true,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 899
+      },
+      {
+        "level": "WARN",
+        "location": "packages/app-shell/e2e/sucafina/decisions.spec.ts:136",
+        "rule": "test-timeout-raised",
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "log_line": 899,
+        "mission44_changed_path": true,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 900
+      },
+      {
+        "level": "WARN",
+        "location": "packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts:12",
+        "rule": "test-timeout-raised",
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "log_line": 900,
+        "mission44_changed_path": false,
+        "classification": "EXACT_MATCH_TO_MISSION31",
+        "baseline_log_line": 901
+      }
+    ],
+    "waiver_added": false
+  },
+  "own_source_paths": [
+    "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+    "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+    "packages/app-shell/e2e/sucafina/decisions.spec.ts"
+  ],
+  "own_result": {
+    "typescript_diagnostics": 0,
+    "new_blocking_guard_gates": 0,
+    "new_advisories": 0,
+    "existing_spec_advisories": 5,
+    "warning_disposition": "Preserved five existing 180000ms nominal budgets at identical source lines. No skip, weakened oracle, budget increase or ignore added by this analysis."
+  },
+  "observed_job_steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout exact product commit",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Record product and guard base",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Typecheck Sucafina package",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 5
+    },
+    {
+      "name": "Guardrails against origin/dev",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 6
+    },
+    {
+      "name": "Upload exact check evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Post Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 13
+    },
+    {
+      "name": "Post Checkout exact product commit",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 14
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    }
+  ],
+  "conclusion": {
+    "check_pass": false,
+    "check_scope": "source branch astra-wp11 only",
+    "new_own_typescript_sites": 0,
+    "new_own_guard_gates": 0,
+    "new_own_advisories": 0,
+    "retained_failure": true,
+    "not_Wcomp_C11_check": true,
+    "CI_nominal_acceptance": "NOT_GRANTED_BY_THIS_CHECK",
+    "full_campaign_acceptance": "NOT_GRANTED",
+    "patches_for_unrelated_findings": 0
+  },
+  "scope_boundary": "Hosted source check on ff0bd96d1303ef55204d498f286ba0da8543419d, not the C11-based Wcomp. The unchanged 130 sites and 43 GATE remain failures without waiver. No CLI/app-shell/E2E independent typecheck, epic/full suite, native provider/reviewer/restart or AM proof is implied. Other owners retain their diagnostic paths."
+}

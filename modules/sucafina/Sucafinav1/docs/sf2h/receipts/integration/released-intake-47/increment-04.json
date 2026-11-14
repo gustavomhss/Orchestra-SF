@@ -1,0 +1,830 @@
+{
+  "schema": "sf2h.released-intake-47.increment.v1",
+  "mission": 47,
+  "epoch": "S0-C-e9-browser47",
+  "increment": 4,
+  "candidate_symbol": "C16",
+  "candidate_identity": "Containing commit/tree; exact resolved identity in following checkpoint/PR65.",
+  "expected_parent": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364",
+  "prior_material": {
+    "symbol": "C15",
+    "sha": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364",
+    "tree": "272ee66e2ae582723d54f3c7cdaf5677ef175aa0",
+    "parent": "03ce926754d7ac0039fbb38470229f13c1623696",
+    "increment": 3,
+    "sources": [
+      37
+    ]
+  },
+  "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "input": {
+    "branch": "astra-wp11",
+    "pr": 40,
+    "commit": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+    "product": {
+      "sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "tree": "d87e641ebd9cc8aded6c416c9fd5f9f30b4c9b1e"
+    },
+    "epoch": "decisions-composed-browser44",
+    "state": "TERMINAL_PARTIAL_RELEASE_BLOCKED_NOT_DONE",
+    "releaseFileBlob": "2b8bdfe3706e103fb81fc75dd5e991e92ffe2a7a",
+    "sourceConsumer": 42,
+    "currentConsumer": 47,
+    "rule": "Mission47 explicitly succeeds42; retain original release metadata. Selective intake only, no whole producer branch, no runtime acceptance."
+  },
+  "decision": "ACCEPTED_COMPLETE_FOUR_PATH_DECISIONS44_UNIT",
+  "material_paths": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+      "postimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "sourceRef": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "sourcePath": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "observedPreimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+      "observedPostimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "preimageMatches": true,
+      "postimageMatches": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+      "sourceRef": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "sourcePath": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "observedPreimage": null,
+      "observedPostimage": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+      "preimageMatches": true,
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "a8865d50f22248d172f106030516e67ec8ee833e",
+      "sourceRef": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+      "sourcePath": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+      "observedPreimage": null,
+      "observedPostimage": "a8865d50f22248d172f106030516e67ec8ee833e",
+      "preimageMatches": true,
+      "postimageMatches": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+      "postimage": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+      "sourceRef": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+      "sourcePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/postimages/installation-fixture.ts.txt",
+      "observedPreimage": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+      "observedPostimage": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+      "preimageMatches": true,
+      "postimageMatches": true
+    }
+  ],
+  "source_receipts": {
+    "source_commit": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+    "source_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/",
+    "source_tree": "267d1254df03e348894425c2cbb80128638df0ab",
+    "target_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/decisions44",
+    "count": 20,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/DEPENDENCIES.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5048802abc74b22e5f8fa9525201650b2ea32c45"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/FINDINGS.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0e484338d86281f7f18850cb15653a7e16d0904a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/HANDOFF.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "85ad6d7eef836b04424c6c94474977dff88a41ce"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/INDEX.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b8513d0a4f13ca8d5deb0afef1bd8e4c3383c6d8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/INPUTS.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fa8d66b2874846217337cd3f1d0f075bedbd9928"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/PRODUCT-MANIFEST.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "01840cd8edaf98b25dd9200a6ca3f2b8888ab34e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/RELEASE.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2b8bdfe3706e103fb81fc75dd5e991e92ffe2a7a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/START.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "48de0567262d437957a85f3f3a340c580b02a995"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/checks/checks44.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "26fc15dc7b767c34bd70b7860bd4063a5e2e3d41"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/checks/source.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b00956dbb3fd40ff014a71e78c295335d8aca03b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/cookie-contract-01.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fbdcf97de6254f128224b034684d11c13f54ca58"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/criteria.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b277cfa58c6c8e0042bd6621c10e2e4199856704"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/complete.patch",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "31c2d93a82b4e9f0e8a877c9491b7b980a853bf5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7e784a0b57a56affd353d8f61951016171bb0310"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/owned.patch",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cd2071f9068978e4225a6966653448675db8ef5e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/postimages/installation-fixture.ts.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8c015003e850561c5ee7fb430203fed4b06feaaf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/postimages/operator-session-cookie.test.ts.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a8865d50f22248d172f106030516e67ec8ee833e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/postimages/operator-session-cookie.ts.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "81a6863f68fc2b83c4b331c19920c59267b5d060"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/integration/operator-cookie/preimages/installation-fixture.ts.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7ac66af2c21e1e46c4bf12365c7f64a255446337"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-composed-qualification/nominal-01.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d1da10f184313e1e6a1689255d63ac7c2321e9b4"
+      }
+    ],
+    "original_bytes_preserved": true
+  },
+  "patch_integrity": {
+    "method": "Complete remotely fetched unified diff text reconstruction; each old/context line compared with target text; reconstructed content exactly equals remotely fetched source/postimage. No product execution.",
+    "patches": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "hunks": 1,
+        "checkedPreimageLines": 10,
+        "postimageExact": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+        "hunks": 1,
+        "checkedPreimageLines": 0,
+        "postimageExact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+        "hunks": 1,
+        "checkedPreimageLines": 0,
+        "postimageExact": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "hunks": 2,
+        "checkedPreimageLines": 16,
+        "postimageExact": true
+      }
+    ],
+    "hunks": 5,
+    "checkedPreimageLines": 26,
+    "ownedPatchBlob": "cd2071f9068978e4225a6966653448675db8ef5e",
+    "sharedPatchBlob": "31c2d93a82b4e9f0e8a877c9491b7b980a853bf5"
+  },
+  "behavior": [
+    "Spec changes only lost-response UI contract assertions; exact status text and retry label match production decision-create.ts. Adds disabled-objective/criteria assertions. Same five test titles, timeouts, human actions, request-loss/reopen logic preserved.",
+    "Cookie parser requires exactly one Set-Cookie header, exact 24hex namespace and64hex handle, exactly four unique required attributes with exact values. Accepts attribute order changes and surrounding attribute whitespace only; rejects duplicates/missing/extra/changed attributes. Token returned unchanged and generic errors do not disclose values.",
+    "Shared fixture keeps production CLI launch, readiness, local-operator policy,303 enrollment/location checks, secret sanitizer, cleanup, actor identity and timeout behavior. Only old order-sensitive regex replaced with strict parser and original opaque token added to sanitizer.",
+    "Focused contract uses real private SQLite, real operator identity, Web/Effect/Web transport, identity/auth/replay/logout. Positive policy and negative cases are genuine source evidence only, not new candidate qualification.",
+    "Pinned producer and transport inspected directly; no behavior contradiction identified in released four-path unit."
+  ],
+  "proof_limits": {
+    "browser": {
+      "schema": "sf2-mission44-hosted-observation-v1",
+      "mission": 44,
+      "selection": "all five preserved Decisions nominal tests",
+      "source": {
+        "sha": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+        "tree": "922c412d219a605c0f771dcdb7b0225c2e383b79"
+      },
+      "composed": {
+        "base": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "W": "12d627f16ab5a83e55e72a1bf5c085133e65ddba",
+        "tree": "73f05222e706daf7e9c0ad4ca4b8bf1dfd1ec5f1"
+      },
+      "snapshot": {
+        "S": "dfcf10bf76982dc6cea651732f6c27dd82d8d7a0",
+        "tree": "409c04b21306a28183cc37256e5e7abad4303acd",
+        "branch": "ci-run-linux-astra-wp11-12d627f1-m44-browser-01",
+        "only_difference_from_W": ".ci-run.json",
+        "compare": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "additions": 1,
+            "deletions": 0,
+            "changes": 1,
+            "previous_filename": null
+          }
+        ]
+      },
+      "request": {
+        "request": {
+          "package": "app",
+          "directory": "packages/app-shell",
+          "packageSelector": "packages/app",
+          "runner": "playwright",
+          "args": [
+            "e2e/sucafina/decisions.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_CHANNEL": "prod"
+          },
+          "config": "e2e/playwright.production.config.ts"
+        },
+        "platform": "linux",
+        "arch": "x64",
+        "sha": "dfcf10bf76982dc6cea651732f6c27dd82d8d7a0"
+      },
+      "run": {
+        "id": 43649103661,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649103661",
+        "job_id": 132613359447,
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "failure",
+        "platform": "ubuntu-24.04",
+        "omni_control": "NOT_APPLICABLE_PLAYWRIGHT"
+      },
+      "result": {
+        "selected": 5,
+        "executed": 5,
+        "passed": 0,
+        "failed": 5,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0,
+        "runtime_stats": {
+          "startTime": "2026-11-14T22:39:51.015Z",
+          "duration": 62917.909,
+          "expected": 0,
+          "skipped": 0,
+          "unexpected": 5,
+          "flaky": 0
+        },
+        "cases": [
+          {
+            "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+            "line": 12,
+            "column": 1,
+            "file": "sucafina/decisions.spec.ts",
+            "status": "unexpected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "failed",
+                "duration_ms": 5711,
+                "retry": 0,
+                "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+                "location": {
+                  "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                  "column": 24,
+                  "line": 106
+                }
+              }
+            ]
+          },
+          {
+            "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+            "line": 21,
+            "column": 1,
+            "file": "sucafina/decisions.spec.ts",
+            "status": "unexpected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "failed",
+                "duration_ms": 3812,
+                "retry": 0,
+                "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+                "location": {
+                  "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                  "column": 24,
+                  "line": 106
+                }
+              }
+            ]
+          },
+          {
+            "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+            "line": 35,
+            "column": 1,
+            "file": "sucafina/decisions.spec.ts",
+            "status": "unexpected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "failed",
+                "duration_ms": 4503,
+                "retry": 0,
+                "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+                "location": {
+                  "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                  "column": 24,
+                  "line": 106
+                }
+              }
+            ]
+          },
+          {
+            "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+            "line": 87,
+            "column": 1,
+            "file": "sucafina/decisions.spec.ts",
+            "status": "unexpected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "failed",
+                "duration_ms": 4505,
+                "retry": 0,
+                "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+                "location": {
+                  "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                  "column": 24,
+                  "line": 106
+                }
+              }
+            ]
+          },
+          {
+            "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+            "line": 135,
+            "column": 1,
+            "file": "sucafina/decisions.spec.ts",
+            "status": "unexpected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "failed",
+                "duration_ms": 4301,
+                "retry": 0,
+                "error": "Error: Production enrollment did not issue its scoped HttpOnly session",
+                "location": {
+                  "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+                  "column": 24,
+                  "line": 106
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "bootstrap": {
+        "real_CLI_listening": "OBSERVED_IN_ALL_FIVE_LOGS_http://::1:4110",
+        "duplicate_ACL": "NOT_OBSERVED_ON_C11",
+        "status_local_operator": "REACHED_BY_FIXTURE_CONTROL_FLOW_BEFORE_FAILURE",
+        "enrollment_303_dashboard": "REACHED_BY_FIXTURE_CONTROL_FLOW_BEFORE_FAILURE",
+        "cookie_admission": "FAILED_BEFORE_CONTEXT_ADDCOOKIES",
+        "Dashboard_UI": "NOT_REACHED",
+        "Workbench_UI": "NOT_REACHED",
+        "human_journeys": "NOT_REACHED"
+      },
+      "failure": {
+        "id": "M44-OPERATOR-COOKIE-TRANSPORT",
+        "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+        "line": 106,
+        "message": "Production enrollment did not issue its scoped HttpOnly session",
+        "owner": 42,
+        "patch": "integration/operator-cookie/complete.patch"
+      },
+      "artifacts": {
+        "id": 14135621936,
+        "name": "playwright-ubuntu-24.04-1",
+        "size": 265876,
+        "sha256": "44e79ed317efd4d0e68bfa0df93c4304eb8689680e117e60b32e34ebec2e5258",
+        "expires_at": "2026-11-21",
+        "members_sha256": {
+          "playwright-runtime.json": "d988322b73b0159480cc7cba0dd8386a55fd08abd45bc08ada96d63eb17b7835",
+          "playwright-selection.json": "930246d486855b40126369c512f5efeabb78cf016fd4af72bbc16972cbec0200",
+          "request.json": "2e769ba1fd36ad6eae98eb2e2ec7f358820c7a5b7f643419e875f9150e455a0b"
+        }
+      },
+      "nominal_preservation": {
+        "source_preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+        "original_test_titles": [
+          "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+          "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+          "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+          "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+          "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+        ],
+        "updated_test_titles": [
+          "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+          "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+          "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+          "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+          "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+        ],
+        "count": 5,
+        "change": "Two assertions aligned to the C11 creation contract; two disabled-state assertions added",
+        "timeouts_unchanged": true,
+        "human_actions_unchanged": true,
+        "request_loss_and_reopen_unchanged": true,
+        "no_test_skip_only_xfail_added": true,
+        "static_only": true
+      },
+      "filters": {
+        "supported": "Exact existing .spec.ts paths only",
+        "four_of_five_title_filter": "UNSUPPORTED_BY_CURRENT_REQUEST_VALIDATOR",
+        "decision": "All five remain in exact file selection; no skip/xfail/only/new synthetic spec."
+      },
+      "acceptance": "NOT_GRANTED",
+      "native": {
+        "provider": "NOT_RUN",
+        "critique": "NOT_RUN",
+        "restart": "NOT_RUN"
+      }
+    },
+    "contract": {
+      "schema": "sf2-mission44-hosted-contract-v1",
+      "mission": 44,
+      "source": {
+        "sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+        "tree": "d87e641ebd9cc8aded6c416c9fd5f9f30b4c9b1e"
+      },
+      "composed": {
+        "base": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+        "W": "953b7ba287d466488f661b6ed27e983668b13b42",
+        "tree": "f1de897f772474401cca38443808dd1c822f172a",
+        "owned_delta": [
+          {
+            "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+            "preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+            "postimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+            "source": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+            "purpose": "Align lost-creation assertions with the locked original-request contract already shipped in C11; add disabled field assertions."
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+            "preimage": null,
+            "postimage": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+            "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+            "purpose": "Validate exact session policy without relying on Set-Cookie attribute order."
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+            "preimage": null,
+            "postimage": "a8865d50f22248d172f106030516e67ec8ee833e",
+            "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+            "purpose": "Real operator/SQLite/Effect transport contract with security negatives and revocation."
+          }
+        ]
+      },
+      "snapshot": {
+        "S": "343199d4c7dd533656731eecd7227b27c40df391",
+        "tree": "429e228a42a5d96f3591b741348b53c39938f40c",
+        "branch": "ci-run-linux-astra-wp11-953b7ba2-m44-cookie-01",
+        "only_difference": ".ci-run.json",
+        "compare": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "additions": 12,
+            "deletions": 0,
+            "changes": 12,
+            "previous_filename": null
+          }
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "run": {
+        "id": 43650131734,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650131734",
+        "job_id": 132616525066,
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-14T22:49:59Z",
+        "completed_at": "2026-11-14T22:51:47Z",
+        "platform": "ubuntu-24.04",
+        "bun": "1.3.14"
+      },
+      "result": {
+        "files": 1,
+        "executed": 2,
+        "passed": 2,
+        "failed": 0,
+        "assertions": 29,
+        "total_ms": 152,
+        "tests": [
+          {
+            "title": "Effect transport preserves a real operator session accepted by the browser fixture",
+            "status": "PASS",
+            "duration_ms": 19
+          },
+          {
+            "title": "operator cookie admission rejects missing changed duplicated and extra attributes without logging values",
+            "status": "PASS",
+            "duration_ms": 0.38
+          }
+        ],
+        "omni": {
+          "nonce": "bb4a48a19988a55e1362b18e878ea02b",
+          "verdict": "not applicable (focused: no declaring test ran)",
+          "proof": "No omni spawn or delegation; no native proof."
+        }
+      },
+      "facts_proved": [
+        "Real operator enrollment with real private SQLite store produces the required redirect and session.",
+        "Old shared fixture regex accepts direct producer cookie but rejects the actual pinned Effect fromWeb/toWeb roundtrip.",
+        "New parser accepts both representations and preserves opaque name/value.",
+        "Transported session authenticates real identity; absent session does not.",
+        "Enrollment replay is forbidden; real logout revokes the session.",
+        "Missing/changed/duplicate/extra cookie attributes, wrong name/token and multiple cookies are rejected."
+      ],
+      "scope_limits": {
+        "shared_fixture_applied": false,
+        "actual_Node_listener_in_this_contract": false,
+        "real_CLI_listener_proof": "nominal-01.json",
+        "new_browser_nominal_pass": false,
+        "WP11_criteria_promoted": 0,
+        "native_provider": "NOT_RUN",
+        "native_critic": "NOT_RUN",
+        "restart": "NOT_RUN",
+        "Apply": "NOT_RUN"
+      },
+      "dedup": {
+        "eligible_prior_run": false,
+        "material_change": "Two new owned files implement and verify the distinct cookie transport contract.",
+        "one_test_run_at_a_time": true,
+        "baseline_nominal_run": "43649103661",
+        "no_nominal_rerun_without_fixture_change": true
+      },
+      "timeouts": {
+        "request_ms": 120000,
+        "source": "Existing test-ci uploader default, unchanged",
+        "test_body_timeout_overrides": 0
+      },
+      "artifacts": {
+        "required_by_bun_lane": false,
+        "authoritative_evidence": "Hosted job log; exact W/S, executed titles/counts/assertions and nonce verified."
+      }
+    },
+    "checks": {
+      "run": {
+        "id": 43650398020,
+        "job_id": 132617339891,
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650398020",
+        "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650398020/job/132617339891",
+        "branch": "astra-check-wp11",
+        "head_sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-14T22:53:06Z",
+        "updated_at": "2026-11-14T22:54:26Z",
+        "workflow": ".github/workflows/astra-wp11-check.yml",
+        "workflow_blob": "3b361b6b22c7c5628d6b149321f73934ea5f9a84",
+        "source": {
+          "productSha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+          "productTree": "d87e641ebd9cc8aded6c416c9fd5f9f30b4c9b1e",
+          "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+          "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+          "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+        },
+        "source_json_log_line": 326,
+        "log_file": null,
+        "log_sha256": "3f21be216604966e24e5e6d7fc6747ba8170986bd404e09f3f5ecbd27f15ddd7",
+        "source_file": "source.json",
+        "source_sha256": "aa17d402ccc5bda06f75ddf3e1edd737105c3e3050313b787760c3d2cb65fc73",
+        "artifact": {
+          "id": 14135439428,
+          "name": "astra-wp11-checks-ff0bd96d1303ef55204d498f286ba0da8543419d-1",
+          "size_in_bytes": 8512,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135439428",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135439428/zip",
+          "expired": false,
+          "created_at": "2026-11-14T22:54:23Z",
+          "expires_at": "2026-11-28T22:54:22Z",
+          "updated_at": "2026-11-14T22:54:23Z",
+          "digest": "sha256:d87c2c91a3c57427e6e30e76ff2e5bb5aaa6a02c80cf9d74393589d8f11170fd",
+          "workflow_run": {
+            "id": 43650398020,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp11",
+            "head_sha": "ff0bd96d1303ef55204d498f286ba0da8543419d"
+          }
+        },
+        "artifact_integrity": "Root downloaded ZIP through GitHub MCP and hydrated its issued file URL; SHA256 matches API digest d87c2c91a3c57427e6e30e76ff2e5bb5aaa6a02c80cf9d74393589d8f11170fd. Extracted source.json equals recorded source byte-for-byte.",
+        "log_retention": "Full source job log was inspected via GitHub MCP; fetch job_id 132617339891 to reproduce raw SHA256. Exact diagnostics and log-line pointers are retained below.",
+        "artifact_members_sha256": {
+          "source.json": "aa17d402ccc5bda06f75ddf3e1edd737105c3e3050313b787760c3d2cb65fc73",
+          "typecheck.log": "5a7e2134901935a8a940e1d907c4d1e667c20379309769972657a72fbb799ef4",
+          "guards.log": "c25ba7f23d5e630d446aebd465c3d428d89f44396d928fa09e35ccd561ca9986"
+        }
+      },
+      "status": "FAILURE_RETAINED_NO_WAIVER",
+      "typescript": 130,
+      "guardsGate": 43,
+      "guardsWarn": 18,
+      "ownResult": {
+        "typescript_diagnostics": 0,
+        "new_blocking_guard_gates": 0,
+        "new_advisories": 0,
+        "existing_spec_advisories": 5,
+        "warning_disposition": "Preserved five existing 180000ms nominal budgets at identical source lines. No skip, weakened oracle, budget increase or ignore added by this analysis."
+      },
+      "conclusion": {
+        "check_pass": false,
+        "check_scope": "source branch astra-wp11 only",
+        "new_own_typescript_sites": 0,
+        "new_own_guard_gates": 0,
+        "new_own_advisories": 0,
+        "retained_failure": true,
+        "not_Wcomp_C11_check": true,
+        "CI_nominal_acceptance": "NOT_GRANTED_BY_THIS_CHECK",
+        "full_campaign_acceptance": "NOT_GRANTED",
+        "patches_for_unrelated_findings": 0
+      }
+    },
+    "criteria": {
+      "count": 83,
+      "newPass": 0,
+      "acceptance": "NOT_GRANTED",
+      "sourceCriteriaBlob": "b277cfa58c6c8e0042bd6621c10e2e4199856704"
+    }
+  },
+  "findings": [
+    {
+      "id": "M44-OPERATOR-COOKIE-TRANSPORT",
+      "disposition": "IMPLEMENTATION_CONSUMABLE_RUNTIME_UNQUALIFIED",
+      "owner": 47,
+      "next": "Apply full four-path unit, new candidate manifest. Session45/S0 qualification must use same existing decisions.spec.ts selecting all five; source0/5 remains failed."
+    },
+    {
+      "id": "M47-DECISIONS-FINANCIAL-DEPENDENCY",
+      "disposition": "MANDATORY_BLOCKER_RETAINED",
+      "owner": "Procurement/S0",
+      "next": "Procurement37 release may provide read-only pre-choice proposal producer; financial-approval-command-unavailable remains. Preserve fifth nominal and require actual compatible financial approval, never treat human choice as approval."
+    },
+    {
+      "id": "M47-C12-FIXTURE-RECONCILIATION",
+      "disposition": "ALREADY_PRESENT_BASELINE42",
+      "owner": 47,
+      "next": "No new C12 rewrite; final32 fixture336504... and composedApply65d2... retained."
+    }
+  ],
+  "verification": {
+    "existing_preimages": "Both spec and shared fixture fetched from actual C15 head and matched exact source manifest.",
+    "additions": "Absent in reviewed terminal42; complete C13/C14/C15 file lists contain no conflicting paths.",
+    "patch": "All5hunks/26preimage-context lines reconstruct exact postimages; complete owned, shared and spec delta reviewed.",
+    "archive": "20 exact source blobs,regular100644,nontruncated",
+    "previous_commit": {
+      "commit": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364",
+      "files": 84,
+      "exact_paths_and_known_blobs": true,
+      "unexpected": [],
+      "missing": [],
+      "deletions": 0
+    }
+  },
+  "preserved": {
+    "five_nominal_tests": "All five remain, including mandatory financial positive; no skip/only/xfail/budget change.",
+    "C12_fixture": {
+      "fixturePath": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "targetBlob": "33650407123163ea881eca9d4940fde364b27c54",
+      "status": "Final32 fixture already present at42. Preserve target Apply65d2 and all C12 changes; do not reapply old whole source tree."
+    },
+    "security_policy": "Exactly one cookie, exact namespace/handle and four unique exact attributes. Only ordering and surrounding whitespace accepted.",
+    "shared_fixture": "Actual CLI enrollment,actor,sanitizer,cleanup preserved; no fake authentication."
+  },
+  "consumer_ack": {
+    "id": "ACK47-04",
+    "source_release": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+    "status": "CONSUMED_IN_CONTAINING_C16_NOT_E2E_QUALIFIED",
+    "source_consumer": 42,
+    "current_consumer": 47,
+    "original_source_receipts_unchanged": true,
+    "next_owner": "45 package checks; S0 all five Decisions nominals on actual candidate."
+  },
+  "instructions": {
+    "requiredBy": "packages/app-shell/e2e/AGENTS.md",
+    "repository": "microsoft/playwright",
+    "docs": [
+      {
+        "path": "docs/src/best-practices-js.md",
+        "blob": "02e1e4db6baea68e725040646396e09a29584420",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/actionability.md",
+        "blob": "848df596771406a7c4d7b2e6120f95b01330a756",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/test-assertions-js.md",
+        "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/locators.md",
+        "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/network.md",
+        "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/browser-contexts.md",
+        "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+        "fullRead": true
+      }
+    ],
+    "applied": "Semantic exact locators, awaited web assertions, retained isolated real fixture, no mutation retries or increased timeouts."
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "final_acceptance": "S0",
+  "GLOBAL_RELEASE": false
+}
