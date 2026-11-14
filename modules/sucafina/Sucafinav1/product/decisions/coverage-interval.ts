@@ -3,7 +3,7 @@ import { requiredSfCostCategories } from "../contracts/coverage-inventory.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
 import type { Period } from "../contracts/context.ts"
 import type { CostCoverageAssessment, CostCoverageBasis, DecisionCase, ScenarioResult } from "../contracts/decisions.ts"
-import type { ScenarioRequest } from "../contracts/operations.ts"
+import type { ScenarioOperation, ScenarioRequest } from "../contracts/operations.ts"
 import type { CriterionRule } from "./criterion-rules.ts"
 import type { CoverageClassification } from "./coverage-classification.ts"
 import { classificationDigest, supportsCoverageClassification } from "./coverage-classification.ts"
@@ -19,6 +19,8 @@ export type PlannerDirectIntervalProof = {
   metadataDigest: string
   engineVersion: string
   parameterRef: string
+  /** Canonical current-source parameter; absent for an explicit replacement scenario. */
+  parameterOperation?: ScenarioOperation
   minimum: number
   maximum: number
   period: Period
@@ -75,9 +77,13 @@ export function createCoverageIntervalCertificate(input: {
   if (!input.structural.sourceRefs.length || !input.structural.baselineRef.trim() || !input.structural.scenarioRef.trim() || !input.structural.metadataDigest.trim() || !input.structural.fixedComponentsDigest.trim()) return undefined
   if (input.structural.scenarioDigest !== digestSfValue(input.scenario) || input.scenario.assumptions.length) return undefined
   const parameterOperations = input.scenario.operations.filter((operation) => operation.targetRef === input.structural.parameterRef)
-  if (parameterOperations.length !== 1) return undefined
-  const operation = parameterOperations[0]
+  if (input.scenario.operations.length ? parameterOperations.length !== 1 || input.structural.parameterOperation !== undefined : !input.structural.parameterOperation) return undefined
+  const operation = input.scenario.operations.length ? parameterOperations[0] : input.structural.parameterOperation
   if (!operation || operation.kind !== "replace" || operation.replacementRef !== undefined || operation.targetRef !== input.structural.parameterRef || operation.targetRef.startsWith("HR:") || operation.currency !== "USD") return undefined
+  if (!input.scenario.operations.length) {
+    const components = input.storedResult.components.filter((component) => component.id === operation.targetRef)
+    if (!input.storedResult.id.startsWith("source-scenario:") || input.storedResult.comparisonStatus !== "complete" || components.length !== 1 || components[0]!.evidenceState !== "confirmed" || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || components[0]!.amount !== operation.amount || components[0]!.currency !== operation.currency || digestSfValue(components[0]!.period) !== digestSfValue(operation.period)) return undefined
+  }
   if (!(input.structural.minimum < input.structural.maximum) || !Number.isFinite(input.structural.minimum) || !Number.isFinite(input.structural.maximum)) return undefined
   if (input.classification.schema !== "sf-coverage-classification-v1" || input.classification.classificationDigest !== classificationDigest(input.classification) || input.classification.caseRef.id !== caseRef.id || input.classification.caseRef.incarnation !== caseRef.incarnation || input.classification.caseRef.version > caseRef.version || digestSfValue(input.classification.basis) !== digestSfValue(input.basis)) return undefined
   if (input.rule.caseRef.id !== caseRef.id || input.rule.caseRef.incarnation !== caseRef.incarnation || input.rule.caseRef.version > caseRef.version || input.rule.accessRevision !== input.context.binding.accessRevision) return undefined

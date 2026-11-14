@@ -10,6 +10,7 @@ import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from 
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { simulatePlannerOperations } from "./scenario.ts"
 import { plannerKnownSubtotal } from "../../src/planner-accounts.ts"
+import { plannerCoverageComplete } from "./coverage.ts"
 
 /** Host resolves the quantifiable value from the currently authorized source, not from model arguments. */
 export type PlannerScenarioInputs = {
@@ -61,7 +62,7 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
   if (coverage.value.assessment.basisId !== coverage.value.basis.id || coverage.value.assessment.basisVersion !== coverage.value.basis.version || !coverage.value.assessment.evaluatedSourceRefs.some((ref) => ref.kind === "record" && ref.refId === source.value.evidence.refId && ref.refDigest === source.value.evidence.refDigest && ref.target.incarnation === source.value.evidence.target.incarnation && ref.target.version === source.value.evidence.target.version && ref.target.projectionDigest === source.value.evidence.target.projectionDigest)) return { status: "needs-input", reason: "coverage-source-mismatch" }
   const period = coverage.value.assessment.horizon
   const currency = coverage.value.assessment.currency
-  const current = await input.compare({ baseRef: request.baseRef, candidateRef: request.baseRef, period, currency }, binding)
+  const current = structuredClone(await input.compare({ baseRef: request.baseRef, candidateRef: request.baseRef, period, currency }, binding))
   if (current.status !== "ok") return current
   if (current.value.sourceRefs.some((ref) => ref.refDigest !== source.value.evidence.refDigest)) return { status: "stale", reason: "source-changed" }
   const http = input.host.requestFor(binding)
@@ -101,7 +102,21 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
   if (replacementEgress.some((entry, index) => replacementDigest(entry) !== replacementDigest(replacements[index]))) return { status: "stale", reason: "replacement-changed" }
   const egress = await checkEvidence()
   if (egress.length !== admission.length || egress.some((entry, index) => entry.state !== "fresh" || entry.ref.refDigest !== admission[index].ref.refDigest || entry.accessRevision !== admission[index].accessRevision) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-evidence-changed" }
+  const knownSubtotal = components.some((component) => component.amount !== null) ? plannerKnownSubtotal(components.map((component) => component.amount)) : null
+  if (!request.operations.length && !request.assumptions.length) {
+    // A request without hypothetical inputs observes the current source. Financial
+    // completeness authenticates that observation; it never executes a choice or command.
+    const latestSource = structuredClone(await input.sources.resolveForecastSource(request.baseRef, binding))
+    const latestCoverage = structuredClone(await input.sources.resolveForecastCoverage(request.baseRef, binding))
+    if (digestSfValue(latestSource) !== digestSfValue(source) || digestSfValue(latestCoverage) !== digestSfValue(coverage) || http.signal.aborted || !await input.host.revalidate(binding)) return { status: "stale", reason: "source-scenario-evidence-changed" }
+    const assessment = coverage.value.assessment
+    const sourceRefs = [source.value.evidence, ...coverage.value.basis.sourceRefs, ...assessment.evaluatedSourceRefs, ...assessment.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+      .filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index)
+    const observation = { id: `source-scenario:${digestSfValue({ request, source: source.value.evidence.refDigest, assessment })}`, version: current.value.baseline.version, components, knownSubtotal, currency, horizon: period, sourceRefs, restrictions: [] }
+    if (knownSubtotal !== null && Number.isFinite(knownSubtotal) && current.value.comparison.comparisonStatus === "complete" && assessment.coverageState === "complete" && plannerCoverageComplete(coverage.value.basis, assessment, current.value.baseline, source.value.evidence)) return { status: "ok", value: { ...observation, knownSubtotal, total: knownSubtotal, costCoverage: assessment, comparisonStatus: "complete", unresolvedConditions: [] } }
+    return { status: "ok", value: { ...observation, total: null, costCoverage: assessment, comparisonStatus: "conditioned", unresolvedConditions: [...new Set([...current.value.gaps, ...assessment.issues, ...assessment.entries.flatMap((entry) => entry.status === "pending" ? [`coverage:${entry.categoryId}:${entry.reason}`] : [])])] } }
+  }
   const scenarioCoverage = { ...coverage.value.assessment, coverageState: coverage.value.assessment.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...coverage.value.assessment.issues, "scenario-coverage-reassessment-required"] }
   const unresolved = [...current.value.gaps, "scenario-is-hypothetical", "scenario-coverage-reassessment-required", ...request.assumptions.map((assumption) => `assumption:${assumption.id}:${assumption.state}:not-applied`)]
-  return { status: "ok", value: { id: `preview:${digestSfValue({ request, source: source.value.evidence.refDigest })}`, version: 0, components, knownSubtotal: components.some((component) => component.amount !== null) ? plannerKnownSubtotal(components.map((component) => component.amount)) : null, total: null, currency, horizon: period, sourceRefs: [source.value.evidence, ...evidenceRefs], costCoverage: scenarioCoverage, comparisonStatus: "conditioned", unresolvedConditions: unresolved, restrictions: ["preview-not-applied"] } }
+  return { status: "ok", value: { id: `preview:${digestSfValue({ request, source: source.value.evidence.refDigest })}`, version: 0, components, knownSubtotal, total: null, currency, horizon: period, sourceRefs: [source.value.evidence, ...evidenceRefs], costCoverage: scenarioCoverage, comparisonStatus: "conditioned", unresolvedConditions: unresolved, restrictions: ["preview-not-applied"] } }
 }
