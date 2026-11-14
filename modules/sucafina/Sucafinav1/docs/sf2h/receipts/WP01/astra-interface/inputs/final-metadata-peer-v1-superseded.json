@@ -1,0 +1,106 @@
+{
+  "schema": "astra.interface.final-map-peer-read.v1",
+  "reviewer": "/root/wp01_read",
+  "scope": "Peer metadata/source/linking and legibility review by a contributing author. Not an independent native/global gate, acceptance opinion or product execution.",
+  "candidate": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "pr": 31,
+    "branch": "astra-interface",
+    "base": "sf2-stack",
+    "increment": "W16"
+  },
+  "verdict": "NO_METADATA_OR_SCOPE_BLOCKER_FOUND",
+  "reviewedArtifacts": [
+    {
+      "path": "/workspace/scratch/080d03a98f2e/analysis/interface-evidence-catalog-final.json",
+      "bytes": 1212664,
+      "sha256": "8e6a4ed609e490fe75ebb1b98652eb795f9b2b02206112810a060d28e05fd4b1"
+    },
+    {
+      "path": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final-WP01.compact.json",
+      "bytes": 176584,
+      "sha256": "593169da61da73e22335d1f1ef08ca7352aef8e2ab9da0f6ba3cd0fbd848b00a"
+    },
+    {
+      "path": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final-WP02.compact.json",
+      "bytes": 144113,
+      "sha256": "47928afd84d96f988cee7e422b33064d8d6e90b8d591cad7a56808a10bbd08f4"
+    },
+    {
+      "path": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final-complete.md",
+      "bytes": 155364,
+      "sha256": "d859936ed32a4afa808b623e7ec481792ab096f850a96999efbe59352b33076e"
+    },
+    {
+      "path": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final.audit.json",
+      "bytes": 2040,
+      "sha256": "cc602c5c98cf6136da0cab155b2e7d64f0c78d239505bfe50980b6d8125f36a5"
+    }
+  ],
+  "counts": {
+    "criteria": 153,
+    "wp01": 75,
+    "wp02": 78,
+    "tasks": 9,
+    "generalClauses": 36,
+    "criterionTypedReferences": 10657,
+    "candidateSources": 185,
+    "externalHistoricalSources": 1,
+    "testRecords": 435,
+    "observations": 1272,
+    "runs": 31
+  },
+  "checks": {
+    "criterionIdsAndLiteralTextsExact": true,
+    "criterionIdsUnique": true,
+    "taskIdsExact": true,
+    "taskTitlesExact": true,
+    "readableMapHasAll153CriterionRows": true,
+    "allIntegratedAcceptanceNotDeclaredDone": true,
+    "allCandidateStaticFail": true,
+    "allCriterionTypedRefsResolve": true,
+    "allCandidateSourceBlobsEqualTree": true,
+    "all435TestRecordsUnchangedFromW16": true,
+    "all1272ObservationsUnchangedFromW16": true,
+    "all31RunIdentitiesResultsUnchangedFromW16": true,
+    "allSourceRecordsUnchangedFromW16": true,
+    "candidateHeadTreeRemainTestedW16": true,
+    "fixedCampaignHashPreserved": true,
+    "newProductExecutionAdded": false
+  },
+  "unresolvedReferences": [],
+  "sourceBlobMismatches": [],
+  "reviewedScopeDistinctions": [
+    "W16 contributes exactly two real recipient consumer bodies and two named harness bodies, each linked to the exact W/S/request/run/job/source blobs. No beforeAll failure is reclassified as a successful consumer body.",
+    "W16 physical lifecycle is a normal successful acquisition/close. The new failed-startup cancellation receipt/probes and unselected standalone default15 callers remain unexecuted; the catalog does not claim a unique cause or cure for prior disk-wait stalls.",
+    "W14 five real selection and two destination observations remain at their original pins. G03 first-known409 review stays implemented but unexecuted, with the actual C08 conflict/product-state-changed mapped to503 and preview mapped to409 made explicit.",
+    "The owner-only CAS proposal is separate, unapplied and unexecuted. It requires owner publication and a future deterministic two-real-POST counterproof; previously uncertain retry semantics remain exact.",
+    "Recipients read/selection/logout purge do not claim a question mutation, responsible assignment inside the selection token, native authority or positive WorkSignals/workDestination mounting.",
+    "Real two-actor edits, case rebase/removed-note retention, stable meeting number, record capture and delayed view/thread recovery retain their component scopes and exact historical execution SHAs.",
+    "BI lifecycle event dispatch is not a positive BI consumer/native proof. Shared host mounting and native/global gates remain explicit dependencies.",
+    "WholeReview C05, Dashboard C12 apply/reload and changed-scope draft continuity remain distinct failures/dependencies; later published producer fences are acknowledged as available, not silently intaken or tested.",
+    "Package static remains FAIL at nine foreign locations with zero own diagnostics; guards or narrow consumer PASS do not turn it into a green package gate.",
+    "Documentary publication may use a later head; the tested product remains W16 and no result is retagged to a future documentation commit."
+  ],
+  "finalDeltaFromFrozenW16": {
+    "newTests": 0,
+    "newObservations": 0,
+    "newRuns": 0,
+    "newProductInputs": 0,
+    "changedCriterionRows": [
+      "WP01.T03.CMP.01",
+      "WP01.T04.CMP.01",
+      "WP01.T04.CMP.02",
+      "WP01.T04.SUC.01"
+    ],
+    "changes": "G03 mapping/proposal/next action; latest upstream reconciliation and explicit not-consumed producer fences; public documentary receipt destinations. Existing W16 files are unchanged."
+  },
+  "limitations": [
+    "No local product, browser, typecheck, guard, build or CI operation was performed.",
+    "This review does not establish runtime proof for the owner-only proposal, failed-startup cancellation branch or pending full-host/native journeys.",
+    "The complete153-clause map remains NOT_DECLARED_DONE; parent/S0 own the integration and final global gates."
+  ],
+  "noProductEdits": true,
+  "noMatrixEdits": true
+}

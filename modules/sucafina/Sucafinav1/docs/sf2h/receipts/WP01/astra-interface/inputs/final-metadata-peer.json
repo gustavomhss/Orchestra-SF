@@ -1,0 +1,202 @@
+{
+  "schema": "astra.interface.final-map-peer-read.revised.v2",
+  "reviewer": "/root/wp01_read",
+  "reviewTarget": "FINAL documentary v3",
+  "candidate": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "pr": 31,
+    "branch": "astra-interface",
+    "base": "sf2-stack",
+    "increment": "W16"
+  },
+  "verdict": "NO_REMAINING_METADATA_OR_CURRENT_HISTORY_SCOPE_BLOCKER_FOUND",
+  "scope": "Revised peer review of the consolidated documentary delta, literal criteria, source/evidence links and current-versus-historical narrative by a contributing product author. This is not an independent native/global gate and does not create product execution evidence.",
+  "publication": {
+    "jsonBundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer.json",
+    "markdownBundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer.md",
+    "productTestedHeadUnchanged": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7"
+  },
+  "supersededPriorPeer": {
+    "artifacts": {
+      "json": {
+        "path": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final.wp01-peer-read.json",
+        "sha256": "f07155db55b1564483025e2946938b2402f8e80b877de1d2128a9314e732a91d",
+        "bytes": 5657,
+        "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer-v1-superseded.json"
+      },
+      "md": {
+        "path": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final.wp01-peer-read.md",
+        "sha256": "b033501f85c615f7426d4a2d5d281005e79676240734f3cf329818afe827ba14",
+        "bytes": 2349,
+        "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/final-metadata-peer-v1-superseded.md"
+      }
+    },
+    "priorCatalogSha256": "8e6a4ed609e490fe75ebb1b98652eb795f9b2b02206112810a060d28e05fd4b1",
+    "disposition": "Preserved byte-for-byte as a superseded review; do not use its no-blocker verdict as final publication approval.",
+    "whatTheFirstReviewMissed": [
+      "It verified literal criteria, typed-reference existence, source blobs and the observation ledger but did not compare every current narrative label with the run/body state it described.",
+      "The current limits array incorrectly described a W16 hook and two blocked recipients; those events were W15 history. W16 actually contains four named passing bodies and no hook failure.",
+      "Both passing W16 recipient test records still carried candidateAttemptScopeRef pointing to a W15 body-not-entered note.",
+      "Further joint review found older W6/W11, period-only selection and component/next-action summaries still attached as current limits. The new review explicitly inspects these relations rather than inferring semantic correctness from resolved reference IDs."
+    ],
+    "retainedUsefulness": "The structural/text/source/ledger equality findings remain useful, but the first review was incomplete for current narrative semantics."
+  },
+  "reviewedArtifacts": [
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-handoff-final.md",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/README.md",
+      "bytes": 26018,
+      "sha256": "d932997669db16004a4ad4e6e938e680bc77974cf18752e524cedfae04393656",
+      "blob": "54cf6b4c35d19f8ee39b0ca5ab1a697e476342eb"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-evidence-catalog-final.json",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/evidence-catalog.json",
+      "bytes": 1227202,
+      "sha256": "bd9cc6a28f0e1aaf8f1da40147ff70e1cbf2c8075b3f35a295ede65ccd1970ee",
+      "blob": "4d8c0956619de59c622abcf27c23d12cd316bcd2"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final-WP01.compact.json",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/WP01.json",
+      "bytes": 181274,
+      "sha256": "8186b088f031bc58af394395a8ed71fa33981664cdbc316588b988677a3cc727",
+      "blob": "1ba016f1c65d25082e92a5da4e934a4bcc2d58a8"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final-WP02.compact.json",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/criteria/WP02.json",
+      "bytes": 149232,
+      "sha256": "5da57592309873b63e639633c74e73171817fefe3f706284f4f009a56e3589fc",
+      "blob": "37d6e626bab524cdf37c3665c1f5d52d4ea06c37"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final-complete.md",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/complete.md",
+      "bytes": 156219,
+      "sha256": "63247ef72821726e52775115e6179fac9722950b75ca9a44c6fb380006d8c863",
+      "blob": "cd3fd7184f3abc19791fb5ce9423a4a9c875063f"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-criteria-final.audit.json",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/audit.json",
+      "bytes": 2040,
+      "sha256": "7c56fde7672331f0a62846108a561437f7903c6a77c7e04636632aab4a0cabed",
+      "blob": "1846c1f5103d8cdea6dd259028b9d5a5752e0f13"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-run-index-final.json",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/run-index.json",
+      "bytes": 36747,
+      "sha256": "90c9284cebfe1525ac60a156776acce97a906d5a66e898da9672cbabc5b93644",
+      "blob": "a713743295c74a30e810d2315be596781af75c55"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-final-editorial-corrections.json",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/editorial-corrections.json",
+      "bytes": 6532,
+      "sha256": "59253a73db91e0a675ab46c28e87a55df50ed3bff7051545d45c34245205062f",
+      "blob": "690043d8652dce436f663d481ee618bf8763bf80"
+    },
+    {
+      "localPath": "/workspace/scratch/080d03a98f2e/analysis/interface-final-editorial-corrections.md",
+      "bundlePath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/criteria/editorial-corrections.md",
+      "bytes": 2300,
+      "sha256": "786333f4d121402f1cd35837d5f0b51a37227c8c2f034e7e80c48d9701a9d5d3",
+      "blob": "41d229c8a479814ffede5adc16091b32ee9412fb"
+    }
+  ],
+  "counts": {
+    "criteria": 153,
+    "wp01": 75,
+    "wp02": 78,
+    "tasks": 9,
+    "generalClauses": 36,
+    "criterionReferencesIncludingHistory": 11018,
+    "historicalCriterionNoteReferences": 1126,
+    "currentCriterionReferences": 9892,
+    "sourceRecordsUnchanged": 186,
+    "testTitles": 435,
+    "observations": 1272,
+    "runs": 31,
+    "currentNamedPass": 4,
+    "currentHookFailures": 0,
+    "movedHistoricalNoteIds": 13
+  },
+  "checks": {
+    "153LiteralCriterionTextsAndIdsEqualCanonical": true,
+    "9TaskIdsTitlesAnd36GeneralClausesPreserved": true,
+    "criterionMetadataAndHistoryReferencesResolve": true,
+    "all1272ObservationsExactlyEqualFrozenW16": true,
+    "all31RunIdentitiesAndResultsEqualFrozenW16": true,
+    "435TitlesAndOriginalTestEvidenceUnchangedExceptTwoHistoryLabelMoves": true,
+    "W16ExactlyFourNamedPassingBodiesAndZeroHooks": true,
+    "W16ExactlyTwoConsumerAndTwoHarnessBodies": true,
+    "bothRecipientCurrentAttemptLabelsNoLongerDescribeW15Blockage": true,
+    "allHistoricalNoteTextsPreservedVerbatim": true,
+    "thirteenHistoricalNotesAbsentFromCurrentLimitsAndPreservedInHistory": true,
+    "falseW16HookSentenceAbsentFromCurrentLimits": true,
+    "currentLimitsAffirmFourPassNoHook": true,
+    "noHistoricalCandidateObservationRefs": true,
+    "sourcesAndCandidateHeadTreeUnchangedFromW16": true,
+    "allCriterionAcceptanceNotDeclaredDoneAndStaticFail": true,
+    "noNewProductOrExecutionCredit": true,
+    "allNineFinalInventoryArtifactsMatchFreeze": true,
+    "peerV1BytesPreserved": true
+  },
+  "recipientCurrentVersusHistoricalEvidence": [
+    {
+      "testRef": "T-c1e1b7846143",
+      "candidateObservationRef": "O-95bf77e03824",
+      "currentRun": "R43594796100",
+      "currentStatus": "pass",
+      "currentBodyEntered": true,
+      "hasStaleCandidateAttemptScope": false,
+      "historicalAttemptScopes": [
+        {
+          "scopeRef": "N-3b9c096f2de9",
+          "attemptRef": "O-9ee821ae4b66",
+          "runRef": "R43593121437",
+          "scope": "W15 beforeAll prevented this named body from executing. This is historical and does not describe the passing W16 named observation."
+        }
+      ],
+      "historyResolvesToActualW15Hook": true
+    },
+    {
+      "testRef": "T-fa55a222dab6",
+      "candidateObservationRef": "O-0d11709cacd2",
+      "currentRun": "R43594796100",
+      "currentStatus": "pass",
+      "currentBodyEntered": true,
+      "hasStaleCandidateAttemptScope": false,
+      "historicalAttemptScopes": [
+        {
+          "scopeRef": "N-3b9c096f2de9",
+          "attemptRef": "O-9ee821ae4b66",
+          "runRef": "R43593121437",
+          "scope": "W15 beforeAll prevented this named body from executing. This is historical and does not describe the passing W16 named observation."
+        }
+      ],
+      "historyResolvesToActualW15Hook": true
+    }
+  ],
+  "consolidatedSemanticReview": [
+    "The current limit now states four W16 named PASS and zero hooks. The actual W15 hook remains a single historical observation, with both old attempts explicitly linked to its run; no Bun event was duplicated.",
+    "Thirteen old limit-note IDs are kept verbatim in historicalLimitRefs. Current notes acknowledge real W9 rebase, W10/W12 thread, W14 case/source/period selection, W16 directory/logout and exact unselected historical evidence.",
+    "Current decision_consumers, review_digest_consumer and browser_harness scope notes distinguish executed component/transport evidence from pending full-host/native claims. Prior scope notes remain historical.",
+    "G02 and D08 current descriptions identify the executed W10 recovery cases and W14 delayed-delivery PASS while preserving earlier patch-review and incomplete observations. Superseded W6d/W7 actions are historical and no longer current criterion instructions.",
+    "G03 does not claim period-only UI or missing record selection. It retains separate responsible assignment, absent positive WorkSignals/destination mounting and the exact first-known409 proof boundary. The C08 storage CAS currently maps to503; preview maps to409. The owner-only change is unapplied/unexecuted and requires publication before its future real concurrent-POST counterproof.",
+    "All153 canonical clauses remain NOT_DECLARED_DONE. WholeReview C05, C12 lost-apply/reload, changed-write-scope draft continuity and nine foreign static locations remain open at their exact evidence pins.",
+    "Normal W16 lifecycle PASS grants no execution credit to failed-startup cancellation cleanup, unselected standalone15 callers, native residents, full installed host or S0/global/epic gates.",
+    "The handoff leads with tested W16 and treats W15 as history. Product W/S/run/request identities remain unchanged by the documentary version; no new execution or foreign input is introduced."
+  ],
+  "unresolvedReferences": [],
+  "artifactHashMismatches": [],
+  "limits": [
+    "No local product, browser, build, typecheck, guard or CI call was executed during this review.",
+    "No product, fixture, test or matrix file was edited by this reviewer. Only this new revised peer receipt is written; the prior peer remains intact.",
+    "This is a peer review by an author, not S0 acceptance, a native reviewer run or an independent global gate.",
+    "Source/metadata equality does not establish transitive integration equivalence. Runtime remains evidenced only at the recorded exact product SHAs."
+  ]
+}
