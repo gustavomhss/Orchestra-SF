@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../../../product/contracts/canonical.ts"
 import { decideSfRecallInvalidation } from "../../../product/decision-memory/invalidation.ts"
-import { deriveSfMemoryOwner } from "../../../product/decision-memory/atlas-projection.ts"
+import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../../../product/decision-memory/atlas-projection.ts"
 import { planSfRecallInvalidation, rankSfRecalledCases, rankSfRecalledCasesAuthorized, sfRecallCacheKey } from "../../../product/decision-memory/recall.ts"
 import { createSfCaseRecall } from "../../../product/decision-memory/case-recall.ts"
 import type { BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
@@ -31,6 +31,50 @@ describe("authorized recall", () => {
     expect(results[0]?.matchedCriteria).toContain("decision-type")
     expect(results[0]?.candidateCaseRef.id).toBe("prior")
     expect(rankSfRecalledCases({ scope, features: { ...features, decisionType: "unrelated" }, candidates: [candidate] })).toEqual([])
+  })
+  test("an empty memory stays empty and authorized candidates rank deterministically without mutating input", () => {
+    expect(rankSfRecalledCases({ scope, features, candidates: [] })).toEqual([])
+    const makeCandidate = (id: string): AuthorizedMemoryProjection => {
+      const caseRef = { ...candidate.envelope.caseRef, id }
+      const event = { ...ledgerEvent, caseRef }
+      const bundleInput = { ...bundle, refId: `bundle-${id}`, target: { ...bundle.target, caseId: id } }
+      const caseBundle = { ...bundleInput, refDigest: digestSfEvidenceRef(bundleInput) }
+      const authorizedCase = { ...candidate.case, events: [event], case: { ...candidate.case.case, id, ledger: [event] } }
+      const mapped = mapSfAtlasEntry({ kind: "task", projection: authorizedCase, eventId: event.id, bundleRef: caseBundle })
+      if (mapped.status !== "mapped") throw new Error("the deterministic candidate must come from the canonical mapper")
+      return { ...candidate, entry: mapped.projection.entry, case: authorizedCase,
+        envelope: { ...candidate.envelope, ...mapped.projection, kind: "task", caseRef, ...sfEvidenceSourceMaps(mapped.projection.evidenceRefs) },
+        resolutions: [{ ...candidate.resolutions[0], ref: caseBundle, currentRef: caseBundle }, candidate.resolutions[1]] }
+    }
+    const first = makeCandidate("a-prior")
+    const second = makeCandidate("z-prior")
+    const currentScope = { ...scope,
+      sourceVersions: { ...first.envelope.sourceVersions, ...second.envelope.sourceVersions },
+      sourceIncarnations: { ...first.envelope.sourceIncarnations, ...second.envelope.sourceIncarnations } }
+    const input = { scope: currentScope, features, candidates: [second, first] }
+    const before = digestSfValue(input)
+    const ranked = rankSfRecalledCases(input)
+    expect(ranked.map((item) => item.candidateCaseRef.id)).toEqual(["a-prior", "z-prior"])
+    expect(rankSfRecalledCases(structuredClone(input))).toEqual(ranked)
+    expect(rankSfRecalledCases({ ...input, candidates: [first, second] })).toEqual(ranked)
+    expect(digestSfValue(input)).toBe(before)
+  })
+  test("the authorized boundary refuses ledger-only or forged Atlas provenance", async () => {
+    const call: TrustedDomainContext = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "alice", requestId: "request", accessRevision: "a1", policyVersion: "p1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease }
+    const { atlasTrace: _trace, ...ledgerOnly } = candidate
+    // These deliberately malformed runtime inputs are not admitted typed projections.
+    // Even otherwise-successful host callbacks cannot turn ledger bytes into Atlas provenance.
+    const untrusted: readonly unknown[] = [
+      ledgerOnly,
+      { ...candidate, atlasTrace: { ...candidate.atlasTrace, module: "decision-ledger" } },
+      { ...candidate, atlasTrace: { ...candidate.atlasTrace, operation: "read-ledger" } },
+      { ...candidate, atlasTrace: { ...candidate.atlasTrace, recordDigest: "not-a-canonical-record-digest" } },
+    ]
+    for (const value of untrusted) {
+      const result = await rankSfRecalledCasesAuthorized({ scope, features, candidates: [value as AuthorizedMemoryProjection], call,
+        authorizeAtlas: async () => true, proveContinuity: async () => true, revalidate: async () => true })
+      expect(result).toEqual({ status: "unavailable" })
+    }
   })
   test("allows an authorized historical source without treating a changed version as current", () => {
     const original = candidate.resolutions[1]

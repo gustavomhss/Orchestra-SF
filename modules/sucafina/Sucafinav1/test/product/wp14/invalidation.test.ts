@@ -2,7 +2,8 @@ import { expect, test } from "bun:test"
 import { digestSfEvidenceRef, sfEvidenceSourceMaps } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
-import { decideSfRecallInvalidation } from "../../../product/decision-memory/invalidation.ts"
+import { createSfInvalidationEnvelope, decideSfRecallInvalidation, planSfMemoryInvalidation } from "../../../product/decision-memory/invalidation.ts"
+import { planSfRecallInvalidation, sfRecallCacheKey } from "../../../product/decision-memory/recall.ts"
 import type { RecallScope } from "../../../product/decision-memory/recall.ts"
 
 const period = { start: "2027-01-01", end: "2027-12-31" }
@@ -93,4 +94,52 @@ test("changed immutable calculation and policy identities invalidate their depen
     expect(decideSfRecallInvalidation(unchanged)).toMatchObject({ status: "reuse" })
     expect(decideSfRecallInvalidation({ ...unchanged, resolutions: [resolution(original, current, "historical"), resolution(reference, reference)] })).toMatchObject({ status: "invalidate", reasons: ["immutable-source"], reauthorize: true })
   }
+})
+
+test("cache scope dimensions invalidate the pure envelope without granting reusable authority", () => {
+  const previous = scope(reference)
+  const changes: readonly { label: string; current: RecallScope; reason: string }[] = [
+    { label: "installation", current: { ...previous, installationId: "another-installation" }, reason: "authority-scope" },
+    { label: "project", current: { ...previous, projectId: "another-project" }, reason: "authority-scope" },
+    { label: "principal", current: { ...previous, principalRef: "bob" }, reason: "authority-scope" },
+    { label: "ACL revision", current: { ...previous, accessRevision: "a2" }, reason: "access-revision" },
+    { label: "policy", current: { ...previous, policyVersion: "p2" }, reason: "policy-version" },
+    { label: "boundary", current: { ...previous, boundaryVersion: "b2" }, reason: "runtime-version" },
+    { label: "schema", current: { ...previous, schemaVersion: "s2" }, reason: "runtime-version" },
+    { label: "manifest", current: { ...previous, manifestVersion: "m2" }, reason: "runtime-version" },
+    { label: "skill", current: { ...previous, skillVersion: "k2" }, reason: "runtime-version" },
+    { label: "source version", current: { ...previous, sourceVersions: { ...previous.sourceVersions, [reference.refDigest]: 2 } }, reason: "source-version" },
+    { label: "source incarnation", current: { ...previous, sourceIncarnations: { ...previous.sourceIncarnations, [reference.refDigest]: "replacement" } }, reason: "source-incarnation" },
+  ]
+  const originalKey = sfRecallCacheKey(previous)
+  for (const { current, reason } of changes) {
+    expect(sfRecallCacheKey(current)).not.toBe(originalKey)
+    expect(planSfRecallInvalidation(previous, current)).toEqual({ invalidate: true, reasons: [reason], reauthorize: true })
+    expect(planSfMemoryInvalidation(previous, current, [reference])).toEqual({ action: "invalidate", reasons: [reason], dependencyDigests: [reference.refDigest], reauthorize: true })
+    const envelope = createSfInvalidationEnvelope(previous, current, [reference])
+    expect(envelope).toMatchObject({ schema: "sf-memory-invalidation-v1", action: "invalidate", reasons: [reason], dependencyDigests: [reference.refDigest], reauthorize: true })
+    expect(envelope.scopeDigest).not.toBe(originalKey)
+  }
+  expect(createSfInvalidationEnvelope(previous, previous, [reference])).toMatchObject({ action: "reuse", reasons: [], reauthorize: true })
+})
+
+test("a substitutive import invalidates its source while an unrelated replacement preserves the envelope", () => {
+  const previous = scope(reference)
+  const replacementBase = { ...reference, refId: "quote-after-import", target: { ...reference.target, incarnation: "replacement" } }
+  const replacement = { ...replacementBase, refDigest: digestSfEvidenceRef(replacementBase) }
+  const current = { ...previous, sourceIncarnations: { ...previous.sourceIncarnations, [reference.refDigest]: replacement.target.incarnation } }
+  const imported = { ...resolution(reference, replacement, "historical"), differences: [{ field: "source-incarnation", before: reference.target.incarnation, after: replacement.target.incarnation }] }
+  expect(decideSfRecallInvalidation({ previous, current, dependencies: [reference], resolutions: [imported] })).toEqual({ status: "invalidate", reasons: ["source-incarnation"], reauthorize: true })
+  expect(decideSfRecallInvalidation({ previous, current, dependencies: [reference], resolutions: [resolution(reference, reference)] })).toEqual({ status: "unavailable", reauthorize: true })
+
+  const unrelatedBase = { ...reference, refId: "another-quote", target: { ...reference.target, recordId: "another-quote" } }
+  const unrelated = { ...unrelatedBase, refDigest: digestSfEvidenceRef(unrelatedBase) }
+  const sharedPrevious = { ...previous, ...sfEvidenceSourceMaps([reference, unrelated]) }
+  const sharedCurrent = { ...sharedPrevious,
+    sourceVersions: { ...sharedPrevious.sourceVersions, [unrelated.refDigest]: 2 },
+    sourceIncarnations: { ...sharedPrevious.sourceIncarnations, [unrelated.refDigest]: "unrelated-replacement" } }
+  expect(planSfMemoryInvalidation(sharedPrevious, sharedCurrent, [reference])).toEqual({ action: "reuse", reasons: [], dependencyDigests: [reference.refDigest], reauthorize: true })
+  expect(createSfInvalidationEnvelope(sharedPrevious, sharedCurrent, [reference])).toMatchObject({ action: "reuse", reasons: [], reauthorize: true })
+  expect(decideSfRecallInvalidation({ previous: sharedPrevious, current: sharedCurrent, dependencies: [reference], resolutions: [resolution(reference, reference)] })).toEqual({ status: "reuse", reasons: [], reauthorize: true })
+  expect(planSfMemoryInvalidation(sharedPrevious, sharedCurrent, [unrelated])).toMatchObject({ action: "invalidate", reasons: ["source-version", "source-incarnation"], reauthorize: true })
 })
