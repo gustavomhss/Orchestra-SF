@@ -1,0 +1,692 @@
+{
+  "schema": "astra-operations.final-guards-receipt.v1",
+  "runId": 43586114915,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586114915",
+  "jobId": 132420828324,
+  "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586114915/job/132420828324",
+  "createdAt": "2026-11-14T10:36:50Z",
+  "updatedAt": "2026-11-14T10:38:01Z",
+  "status": "completed",
+  "conclusion": "failure",
+  "product": {
+    "label": "W5",
+    "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "delivery": {
+    "label": "D1",
+    "sha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+    "tree": "6264ac2e186a1455dbd9ad5fce16b3c1030769be",
+    "parents": [
+      "c4a2f4ebeb88f5915e51569b921be06b3c37ddad"
+    ]
+  },
+  "snapshot": {
+    "sha": "09bd92ba86dca618c398c893303f29d0902dc98e",
+    "tree": "6265e7d19e199667ed53d1492c2011b237b26954",
+    "parents": [
+      "8ad7e16064e9f886b46519581aae5fb6182a2829"
+    ]
+  },
+  "envelope": {
+    "mode": "guards",
+    "productSha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "typecheckSha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "gitBlob": "f29c2f27fbb5e655ab4cf8d829efa60c2a0471bc",
+    "sha256": "6913021170e25f5a669bb71c9f130c3b344d1fcca3beb37d3dd605201c3efb80",
+    "bytes": 201
+  },
+  "workflow": {
+    "path": ".github/workflows/astra-operations-check.yml",
+    "sourceRef": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "gitBlob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "source": "GitHub MCP github_fetch_file",
+    "sha256": "0cb4bb61f42ab33e62d6ad31ffe12eb370e285fe65719a838cd21e4d663d0175",
+    "localMatchesMcp": true
+  },
+  "sourceComparisons": {
+    "W5ToDelivery": {
+      "base": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "head": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+      "aheadBy": 1,
+      "behindBy": 0,
+      "totalCommits": 1,
+      "completeFileCount": 75,
+      "onlyAllowedReceiptPaths": true,
+      "all75PublishedBlobsMatchManifest": true,
+      "productTestsFixturesConfigsWorkflowUnchanged": true,
+      "files": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-cold-review.json",
+          "sha": "cb2bdbbbc4b67532dddc6daf694560032023ab82",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-cold-review.md",
+          "sha": "5cf22c685aa4ed23e4ac0c809b12cbb182635566",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPERATIONS-DELIVERY.md",
+          "sha": "e98a936abf769678d13bc60bd36df640df008267",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/artifact-index.json",
+          "sha": "2829c2cbee4d70b6688920ef4a5a54d069d4fb20",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser3-visual-evidence.md",
+          "sha": "0bfaea7f0368df016c0c6867be6e491d8b0dc2ff",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-fixture-cold-review.md",
+          "sha": "a495c5209314ff7042c5c5d19f42b5be43cead6e",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/cold-review-root-composition.md",
+          "sha": "f369425bd3fa60f389628596a57a98cfdfbc601f",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/compact-map-verification.json",
+          "sha": "d2ac6cf38d46ed06fe960001ba7a8af44ac57f53",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/delivery-criteria-integrity.json",
+          "sha": "7b9d5bcdd5c218ff502faf096a2b8c9a46796b4b",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/delivery-status.json",
+          "sha": "ade325b44bdc887d2ca5263cd5c04788308a377c",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/final-map-delivery.json",
+          "sha": "f1d1a2421c41331da5cd22e38bd6e8e7dc0ff337",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/README.md",
+          "sha": "478940e7e782eec5706bf43a97c652acd675153f",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/diagnostic.log",
+          "sha": "d109e5a1d1814c926fc7aecb01d347aa70da64ce",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/metadata.json",
+          "sha": "cf9daf3010f8362b87d44cd94e146bcd93ceb08d",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/request.json",
+          "sha": "26184451c4ce2fe834a96f0127cf831f3bfb9fcd",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/impact-inspection.json",
+          "sha": "d2e41a90828a73e5b4398f269c55bfa91e724111",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/impact-inspection.md",
+          "sha": "5412b5bf50974d4ca21df6423a3c4850fb0814f8",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/impact-remote-comparison.json",
+          "sha": "52abf6898036b9dc33530c7360bd9466e4447d44",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/operations-criteria-111.md",
+          "sha": "9abcf4c916aee29e414e35f417e6b6fd7c17df9a",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/operations-criteria-111.normalized.json",
+          "sha": "706e3add47794433c219bef0bc7d2ff6245649c8",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/shared-merge-cold-review.json",
+          "sha": "49c1da89f18299f8d838e1a1348d31388a37d277",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/shared-merge-cold-review.md",
+          "sha": "0c29b19d6162afdbc17cf95158eb2e11d77fdf40",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/test-composition-cold-review.md",
+          "sha": "279d9372998023e1df3643c9ac18aad99386bdea",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/test-composition.json",
+          "sha": "a8c22005c760dfbc740e44d0831c562da04079cf",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/w1-w2-symbol-impact.json",
+          "sha": "c6083cd7796cbb4dc5645e529e090206e5ee224f",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/w3-w4-closure.json",
+          "sha": "d51b134958a5355a552b40affedb8ae4cf13f8cd",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/w4-w5-closure.json",
+          "sha": "d0d45ba8c3c1c1164c7a73540b4b16717522bf9d",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/W5-map-publication-manifest.json",
+          "sha": "c69202b3cb4b991bceeb5b7df172ea749caee173",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-43580401528.json",
+          "sha": "b5bc45ab13e434159af10e584601d2b24ff6859b",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-43580401528.log",
+          "sha": "ace6a80902f29945df51591f3a7a4cc22b3f11e6",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-request.json",
+          "sha": "a659d0d1cab1ce14578e261808ef9fa38b8dd528",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.json",
+          "sha": "2bb2feb995d3dd9b61a7abb01e3c51fdf8d7bd20",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.log",
+          "sha": "2147119f0de369239ed9930449edf3a2322318fc",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-43578845234.log",
+          "sha": "793b557c6475a32b41407d1825efce1435d2b21e",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-actual-files.json",
+          "sha": "05c9d1e1a550e57d6c8928ceeb68462a6363f292",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-final.json",
+          "sha": "42b6e08ee3b3e5c070cc1d9320ec42d41b85cfd7",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-request.json",
+          "sha": "8140cd4e48f193be9a60087b18eca3a00d0092dd",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check-43578238861.json",
+          "sha": "820e632639b386250606469edb30d03a9284b7ec",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check-43578238861.log",
+          "sha": "118b68d55dd4d8801679fda003e0304e1d0b155f",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check2-43580277793.json",
+          "sha": "6b06b2a099b00c892d17dd194e3deb4b3bb8ca21",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check2-43580277793.log",
+          "sha": "1953de0095b2b4de7e6ecb33e45bde511c0ebc3a",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check3-43580747934.json",
+          "sha": "8a27a5fc85a34086e190db3fc840fb26e80168f2",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check3-43580747934.log",
+          "sha": "c68afe9ca1502a5c0370ba8d8583d38d093ec0ba",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check4-43582192808.json",
+          "sha": "0aa5f2d29b64486535134bd1c298c75ace52be9f",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check4-43582192808.log",
+          "sha": "246a729e93e905cb3ceaa74814bf122461e1d5c2",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check5-43584394810.json",
+          "sha": "6e0cbc3988db8fe739772ff42bedc5792153bd7d",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check5-43584394810.log",
+          "sha": "291815a3917f3f6dd1068bc0a5d47e193bc1d64c",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-docbrowser-43582881446.json",
+          "sha": "e57f35a9a0c4fa9ced270fc8dcdb177bac0fd1fa",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-docbrowser-43582881446.log",
+          "sha": "b76991d7f8498b59a201455a8c8ec28bd124b59c",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-host-browser-43584405211.json",
+          "sha": "810c7358f929dae3809b6337e32a0fa60a2fdf8a",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-host-browser-43584405211.log",
+          "sha": "438089ae839466a7a47eae8258d26613377ea582",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-native-43580976466.json",
+          "sha": "8a2b90ee7710ad27a7bea7b2bc15961dc9347da6",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-native-43580976466.log",
+          "sha": "753b930704e595bc4b949483f0986187c497912f",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/final-guards-preflight.json",
+          "sha": "12bb1187a647f8ac11a08b662596bd90dba23968",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/native-U20-W1-comparison.json",
+          "sha": "746bf8c84774a0793bb5b7e83c39efc1426a799f",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/native-timeout-diagnosis.md",
+          "sha": "a19889686c64d50a1aa2be9c44a5d19d5a3dc3d2",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-W5-publication-closure.json",
+          "sha": "5ef30bb188f7e01749810a3d6d3f9a1368ebf7d8",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-140-W5.json",
+          "sha": "ce9746624435f058a6e1b5c5689b0ca0deffcf85",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-140-W5.md",
+          "sha": "03b80973a27d1d20a040710db335db947a2358c4",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-140.md",
+          "sha": "82409bda224ae90d29104a886dc31d3fef052ded",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-140.normalized.json",
+          "sha": "766788152bb0ed934a30f1d92be0f65e29596a7e",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-evidence-W2-W3.json",
+          "sha": "56d61fa4763beb8f6144f9578297c318870d8d19",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-evidence-W2-W3.md",
+          "sha": "65f1ddf0c69460a28f72d8c09fb9100df93c0cba",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-evidence-W4.json",
+          "sha": "fa3db14d407036d7be1b28fbc9df6417e30f0655",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-evidence-W4.md",
+          "sha": "b810f4124abf73b5cded11986979efe4ad52dc9a",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-81-W4-results.json",
+          "sha": "5e7c2dabe395f455fb8aa25d941db387115f3bcc",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-81-W4.json",
+          "sha": "439cb779be10fda670b2650793fed6f7d31176ee",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-81-W4.md",
+          "sha": "a5f7606eeed9bef0e15d706b610bfb081278c521",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-81.md",
+          "sha": "2774846fdf686790acbe5055eff964e8f90894b4",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-81.normalized.json",
+          "sha": "fb88d98f6ce5422f058cdb32c4937c70b56f29c3",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-W4-W5.json",
+          "sha": "65d14ac020f693913d4f141b89caecdd6f946d70",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-impact-W4-W5.md",
+          "sha": "505e8d5a14ac0614d50849eba702f19f0e9ec88d",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/refresh-final.json",
+          "sha": "6f87ec0a2f00f95c765d85a2c8f78dcfcd8a5592",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/runs-reconciled-v3.json",
+          "sha": "38e86bf4adc07e781af0de3036e52c31a6f930ff",
+          "status": "added"
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/w5-terminal-evidence-index.json",
+          "sha": "a12ce54e08fd19128c78df85325645b6ee3de895",
+          "status": "added"
+        }
+      ]
+    },
+    "DeliveryToSnapshot": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+      "head": "09bd92ba86dca618c398c893303f29d0902dc98e",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/8ad7e16064e9f886b46519581aae5fb6182a2829",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/8ad7e16064e9f886b46519581aae5fb6182a2829"
+      },
+      "merge_base_commit": {
+        "sha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/8ad7e16064e9f886b46519581aae5fb6182a2829",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/8ad7e16064e9f886b46519581aae5fb6182a2829"
+      },
+      "files": [
+        {
+          "filename": ".astra-operations-check.json",
+          "status": "added",
+          "additions": 6,
+          "deletions": 0,
+          "changes": 6,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "checks": {
+    "envelope": "success",
+    "exactProduct": "success",
+    "guardBase": "success",
+    "sucafinaTypecheck": {
+      "execution": "skipped",
+      "reusedResult": "failure",
+      "sourceRun": 43584394810,
+      "sourceProduct": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "reason": "WP14 source-access-atlas.test.ts(167,41) TS2741: missing procurementEvidenceWrites"
+    },
+    "cliTypecheck": {
+      "execution": "skipped",
+      "reusedResult": "success",
+      "sourceRun": 43584394810,
+      "sourceProduct": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad"
+    },
+    "guards": {
+      "conclusion": "failure",
+      "rules": 78,
+      "changedPaths": 847,
+      "gateFindings": 12,
+      "warnings": 11,
+      "errors": 0,
+      "findings": [
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/diagnostic.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-43580401528.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-43578845234.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check-43578238861.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check2-43580277793.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check3-43580747934.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check4-43582192808.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check5-43584394810.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-docbrowser-43582881446.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-host-browser-43584405211.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "GATE",
+          "location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-native-43580976466.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "severity": "WARN",
+          "location": "apps/cli/package.json:37",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/atlas/boundary/package.json:66",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/atlas/boundary/package.json:67",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/atlas/boundary/package.json:68",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/sucafina/package.json:17",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/sucafina/package.json:18",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/sucafina/package.json:19",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/sucafina/package.json:20",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/sucafina/package.json:21",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/sucafina/package.json:22",
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "severity": "WARN",
+          "location": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts:82",
+          "rule": "test-timeout-raised",
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer."
+        }
+      ]
+    }
+  },
+  "guardBase": {
+    "originDev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "artifactRevisions": [
+      "8ad7e16064e9f886b46519581aae5fb6182a2829",
+      "6264ac2e186a1455dbd9ad5fce16b3c1030769be",
+      "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    ]
+  },
+  "artifact": {
+    "id": 14110702045,
+    "name": "astra-operations-check-1",
+    "size_in_bytes": 1384,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14110702045",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14110702045/zip",
+    "expired": false,
+    "created_at": "2026-11-14T10:37:57Z",
+    "expires_at": "2026-11-28T10:37:55Z",
+    "updated_at": "2026-11-14T10:37:57Z",
+    "digest": "sha256:94760895f342f35eb4cb0b5231ab52398014bc404e02593707272badab682619",
+    "workflow_run": {
+      "id": 43586114915,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "astra-check-operations-8ad7e160-1",
+      "head_sha": "09bd92ba86dca618c398c893303f29d0902dc98e"
+    },
+    "downloadedZipFile": "/workspace/scratch/67acc0fafe95/audit-ci/artifact-14110702045.zip",
+    "verifiedSha256": "94760895f342f35eb4cb0b5231ab52398014bc404e02593707272badab682619",
+    "verifiedSize": 1384,
+    "members": [
+      {
+        "name": "guards.log",
+        "bytes": 9886,
+        "sha256": "326d57d4cc406d535053bfb4369b38911979b045e49d2cbbdfe85e17151adfd7"
+      },
+      {
+        "name": "merge-base.txt",
+        "bytes": 41,
+        "sha256": "541c6844015c5a0839167f338dcca8932ce7eb70c1d79cdd891584a105bf9961"
+      },
+      {
+        "name": "revisions.txt",
+        "bytes": 123,
+        "sha256": "300470ff40aaffb777340d7bfd0c519b35cc086f5b2300c78cb55b838ed5f56f"
+      }
+    ]
+  },
+  "logFile": "/workspace/scratch/67acc0fafe95/audit-ci/operations-final-guards-43586114915.log",
+  "logBytes": 66202,
+  "logSha256": "345894421f0ebcc9e9ee7e5be220f4ee2dcb9ead5f07a5e7e5396c0502543d30",
+  "omni": {
+    "reportedVerdict": null,
+    "scope": "Guard-only workflow runs no product tests or browser acquisition; no positive Omni verdict is asserted."
+  },
+  "qualification": "Guard-only D1 failed on 12 raw .log additions flagged agent-scratch. Envelope, exact checkout and dev pin passed. Both typechecks were skipped and retain W5 CLI PASS / Sucafina FAIL. This run changes no product-test evidence, H09 acquisition result, native/human qualification or global acceptance.",
+  "remediation": "Remove the twelve raw logs from the versioned tree, retain structured receipts and hashes/run/job/artifact links, update the artifact index. Do not rename raw outputs to evade the rule or alter guards. No rerun or product mutation performed by this agent."
+}

@@ -118,5 +118,22 @@
     "localGuards": false,
     "groupEpic": false,
     "mergePerformed": false
+  },
+  "documentationGuards": {
+    "D1": {
+      "sha": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+      "tree": "6264ac2e186a1455dbd9ad5fce16b3c1030769be",
+      "runId": 43586114915,
+      "snapshot": "09bd92ba86dca618c398c893303f29d0902dc98e",
+      "conclusion": "FAILURE",
+      "finding": "12 raw .log outputs violate agent-scratch",
+      "rules": 78,
+      "paths": 847,
+      "gates": 12,
+      "warnings": 11,
+      "errors": 0
+    },
+    "correction": "Remove the 12 raw outputs, retain structured receipts and Actions log references/hashes, and rerun only strict receipt guards. No rule, product, source, test, fixture or workflow changes.",
+    "finalResult": "Recorded in the PR after the corrected immutable receipt commit is validated."
   }
 }

@@ -5,7 +5,7 @@
     "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
     "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
   },
-  "policy": "Original UTF-8 receipt bytes preserved. Source audit paths are provenance; repositoryPath is the durable location. This index excludes itself and the already published code/PNG/owner-patch artifacts.",
+  "policy": "Structured receipt bytes are preserved except explicitly corrected publication descriptions. Source audit paths identify provenance; repositoryPath identifies each published artifact. Raw job logs and the diagnostic excerpt are omitted under agent-scratch; externalLogs maps their hashes and source runs. This index excludes itself and already published code/PNG/owner-patch artifacts.",
   "artifacts": [
     {
       "sourceAuditPath": "audit-ci/H09-cold-review.json",
@@ -24,9 +24,9 @@
     {
       "sourceAuditPath": "OPERATIONS-DELIVERY.md",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPERATIONS-DELIVERY.md",
-      "bytes": 17404,
-      "sha256": "ba3b50fb3ed3c035ed14bdfb065913af8c8a6701b3d4d13753da497264eac843",
-      "gitBlob": "e98a936abf769678d13bc60bd36df640df008267"
+      "bytes": 18977,
+      "sha256": "e29615a2bdce1ca534e00acb4d86a3b41795dea116125baeab77e2ed6734ae61",
+      "gitBlob": "d04550f1006b5531f154463d71201d4336e802b2"
     },
     {
       "sourceAuditPath": "audit-ci/browser3-visual-evidence.md",
@@ -64,11 +64,11 @@
       "gitBlob": "7b9d5bcdd5c218ff502faf096a2b8c9a46796b4b"
     },
     {
-      "sourceAuditPath": "delivery-status.json",
+      "sourceAuditPath": "delivery-status-corrected.json",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/delivery-status.json",
-      "bytes": 3742,
-      "sha256": "a8bf5323196e023534f94b3ebf672bf196ee9fae4ce571fa9f2728ddaebaa046",
-      "gitBlob": "ade325b44bdc887d2ca5263cd5c04788308a377c"
+      "bytes": 4497,
+      "sha256": "d0591c08f01fc359a342d086f16b9104a54d1a8a640330c4b62a377cbfc334ae",
+      "gitBlob": "3270bc5e2fb8db221a501adfe269bf9ac3e0a944"
     },
     {
       "sourceAuditPath": "audit-wp04/final-map-delivery.json",
@@ -80,16 +80,9 @@
     {
       "sourceAuditPath": "audit-ci/findings/OPS-NATIVE-UI-ACQUISITION/README.md",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/README.md",
-      "bytes": 5770,
-      "sha256": "b3be37cde2a4a9f1add227f5138b6870e04cf9bf9802f47d8cec7832026dfa42",
-      "gitBlob": "478940e7e782eec5706bf43a97c652acd675153f"
-    },
-    {
-      "sourceAuditPath": "audit-ci/findings/OPS-NATIVE-UI-ACQUISITION/diagnostic.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/diagnostic.log",
-      "bytes": 1576,
-      "sha256": "f2cf2b0e26840c2fd3a13a9615e0ea2ff832d432e9dd0d72ce2e89faa207e3d5",
-      "gitBlob": "d109e5a1d1814c926fc7aecb01d347aa70da64ce"
+      "bytes": 6154,
+      "sha256": "aca881728f6bc573a71bba79de05ebde315d7af69913d2dff110b526c47b0360",
+      "gitBlob": "8a3f62238af62e9578b8785618efe3bad03e17dc"
     },
     {
       "sourceAuditPath": "audit-ci/findings/OPS-NATIVE-UI-ACQUISITION/metadata.json",
@@ -139,6 +132,13 @@
       "bytes": 550504,
       "sha256": "bd213691c15e13b1ed32d45163c7ff78547b534e928b132c03d16a69a25a9dc5",
       "gitBlob": "706e3add47794433c219bef0bc7d2ff6245649c8"
+    },
+    {
+      "sourceAuditPath": "post-delivery-owner-refresh.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/post-delivery-owner-refresh.json",
+      "bytes": 2447,
+      "sha256": "7b135d93e5b063113cee1b92f1230ea2a32e1594841faad638beb1a220fa93fd",
+      "gitBlob": "636f9ba415ed8813c87db3ea13fb775916230495"
     },
     {
       "sourceAuditPath": "audit-wp04/shared-merge-cold-review.json",
@@ -204,13 +204,6 @@
       "gitBlob": "b5bc45ab13e434159af10e584601d2b24ff6859b"
     },
     {
-      "sourceAuditPath": "audit-ci/operations-browser-43580401528.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-43580401528.log",
-      "bytes": 106202,
-      "sha256": "0adc18f76e418387c309ac6826f841d79a886f86e992bfe1ee58106ea8e1391f",
-      "gitBlob": "ace6a80902f29945df51591f3a7a4cc22b3f11e6"
-    },
-    {
       "sourceAuditPath": "audit-ci/operations-browser-request.json",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-request.json",
       "bytes": 330,
@@ -223,20 +216,6 @@
       "bytes": 42462,
       "sha256": "d65880582ed7693fd27549a8a65f89f2f03f300881ddf37ddf7e00d0a25d44cf",
       "gitBlob": "2bb2feb995d3dd9b61a7abb01e3c51fdf8d7bd20"
-    },
-    {
-      "sourceAuditPath": "audit-ci/operations-bun24-43582205250.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.log",
-      "bytes": 95254,
-      "sha256": "106ea8f72699064ebd8a34f31e49c619b8becb58408a0a21f6efb56fb5564d68",
-      "gitBlob": "2147119f0de369239ed9930449edf3a2322318fc"
-    },
-    {
-      "sourceAuditPath": "audit-ci/operations-bun43-43578845234.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-43578845234.log",
-      "bytes": 178317,
-      "sha256": "784292e76e98a1516cbd45d6facd8a2b6c7a68a89017a1998810ec44e70ff4a8",
-      "gitBlob": "793b557c6475a32b41407d1825efce1435d2b21e"
     },
     {
       "sourceAuditPath": "audit-ci/operations-bun43-actual-files.json",
@@ -267,25 +246,11 @@
       "gitBlob": "820e632639b386250606469edb30d03a9284b7ec"
     },
     {
-      "sourceAuditPath": "audit-ci/operations-check-43578238861.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check-43578238861.log",
-      "bytes": 59631,
-      "sha256": "157c445baf825b2aa31a60c955d0408be15d68f9340c781887e1bddbaf4a0dd1",
-      "gitBlob": "118b68d55dd4d8801679fda003e0304e1d0b155f"
-    },
-    {
       "sourceAuditPath": "audit-ci/operations-check2-43580277793.json",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check2-43580277793.json",
       "bytes": 5112,
       "sha256": "2caa099dbe1791544261387ba587c3d4604ac6de7c7be455733ded90d0b19b77",
       "gitBlob": "6b06b2a099b00c892d17dd194e3deb4b3bb8ca21"
-    },
-    {
-      "sourceAuditPath": "audit-ci/operations-check2-43580277793.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check2-43580277793.log",
-      "bytes": 64099,
-      "sha256": "f128c6cc939a58242d785fb6a301edadea4ecd5a2cf547e37fb392dd534b36c7",
-      "gitBlob": "1953de0095b2b4de7e6ecb33e45bde511c0ebc3a"
     },
     {
       "sourceAuditPath": "audit-ci/operations-check3-43580747934.json",
@@ -295,25 +260,11 @@
       "gitBlob": "8a27a5fc85a34086e190db3fc840fb26e80168f2"
     },
     {
-      "sourceAuditPath": "audit-ci/operations-check3-43580747934.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check3-43580747934.log",
-      "bytes": 62391,
-      "sha256": "1e396aa6606b9c903650599c0cf9663f5ce365f8a043ecc47794ccf4eb766cf5",
-      "gitBlob": "c68afe9ca1502a5c0370ba8d8583d38d093ec0ba"
-    },
-    {
       "sourceAuditPath": "audit-ci/operations-check4-43582192808.json",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check4-43582192808.json",
       "bytes": 7852,
       "sha256": "42008b5fb4180e7c60f607b9bb3960dbd8b02ce2a79dab8d84d581e45526dc0e",
       "gitBlob": "0aa5f2d29b64486535134bd1c298c75ace52be9f"
-    },
-    {
-      "sourceAuditPath": "audit-ci/operations-check4-43582192808.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check4-43582192808.log",
-      "bytes": 63580,
-      "sha256": "dfc2f730ae3f4324e155dd4fd2bd8627f74b690d5a4e7506811762ed9a355a71",
-      "gitBlob": "246a729e93e905cb3ceaa74814bf122461e1d5c2"
     },
     {
       "sourceAuditPath": "audit-ci/operations-check5-43584394810.json",
@@ -323,13 +274,6 @@
       "gitBlob": "6e0cbc3988db8fe739772ff42bedc5792153bd7d"
     },
     {
-      "sourceAuditPath": "audit-ci/operations-check5-43584394810.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check5-43584394810.log",
-      "bytes": 63923,
-      "sha256": "4c55fd2bd5e76fc0c0763ea1664259bb1ff87ccee3b6ebc201cbe939789295e7",
-      "gitBlob": "291815a3917f3f6dd1068bc0a5d47e193bc1d64c"
-    },
-    {
       "sourceAuditPath": "audit-ci/operations-docbrowser-43582881446.json",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-docbrowser-43582881446.json",
       "bytes": 13771,
@@ -337,11 +281,11 @@
       "gitBlob": "e57f35a9a0c4fa9ced270fc8dcdb177bac0fd1fa"
     },
     {
-      "sourceAuditPath": "audit-ci/operations-docbrowser-43582881446.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-docbrowser-43582881446.log",
-      "bytes": 101870,
-      "sha256": "4de65e911e56e13c676afb26bc22d1c0eedb330e952324a65a7c21ede123664b",
-      "gitBlob": "b76991d7f8498b59a201455a8c8ec28bd124b59c"
+      "sourceAuditPath": "audit-ci/operations-final-guards-43586114915.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-final-guards-43586114915.json",
+      "bytes": 32188,
+      "sha256": "6cb98ab23d729c1753ebac50deab041ec76cfbd088918f8307ff09f3da89fa56",
+      "gitBlob": "d575d2a70695d35f1e22edc2ce630fa771ce4203"
     },
     {
       "sourceAuditPath": "audit-ci/operations-host-browser-43584405211.json",
@@ -351,25 +295,11 @@
       "gitBlob": "810c7358f929dae3809b6337e32a0fa60a2fdf8a"
     },
     {
-      "sourceAuditPath": "audit-ci/operations-host-browser-43584405211.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-host-browser-43584405211.log",
-      "bytes": 86523,
-      "sha256": "0c136358dfb791018a8e3cf93f86e3eb6be84ae015547a60c4dedaa49e2991e2",
-      "gitBlob": "438089ae839466a7a47eae8258d26613377ea582"
-    },
-    {
       "sourceAuditPath": "audit-ci/operations-native-43580976466.json",
       "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-native-43580976466.json",
       "bytes": 9245,
       "sha256": "8729c77e831ef9c041f87b9a16b771d15714d6e6357532b02ca141bcc6b20fc8",
       "gitBlob": "8a2b90ee7710ad27a7bea7b2bc15961dc9347da6"
-    },
-    {
-      "sourceAuditPath": "audit-ci/operations-native-43580976466.log",
-      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-native-43580976466.log",
-      "bytes": 149389,
-      "sha256": "042fbc465731f07e250aa1e10d4d9186fcb64bc5ff8ceb325331b64e6bdb4df8",
-      "gitBlob": "753b930704e595bc4b949483f0986187c497912f"
     },
     {
       "sourceAuditPath": "audit-ci/final-guards-preflight.json",
@@ -525,5 +455,168 @@
       "sha256": "6e52e9d1e72898ade2ce46838843ef11f09ef5f5dc09897eaf2c19b5f90b129f",
       "gitBlob": "a12ce54e08fd19128c78df85325645b6ee3de895"
     }
-  ]
+  ],
+  "externalLogs": [
+    {
+      "sourceAuditPath": "audit-ci/findings/OPS-NATIVE-UI-ACQUISITION/diagnostic.log",
+      "bytes": 1576,
+      "sha256": "f2cf2b0e26840c2fd3a13a9615e0ea2ff832d432e9dd0d72ce2e89faa207e3d5",
+      "gitBlob": "d109e5a1d1814c926fc7aecb01d347aa70da64ce",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/diagnostic.log",
+      "runId": 43584405211,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584405211",
+      "relation": "diagnostic excerpt of W5 job log; excerpt hash is not the full source log hash",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-browser-43580401528.log",
+      "bytes": 106202,
+      "sha256": "0adc18f76e418387c309ac6826f841d79a886f86e992bfe1ee58106ea8e1391f",
+      "gitBlob": "ace6a80902f29945df51591f3a7a4cc22b3f11e6",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-43580401528.log",
+      "runId": 43580401528,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580401528",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-bun24-43582205250.log",
+      "bytes": 95254,
+      "sha256": "106ea8f72699064ebd8a34f31e49c619b8becb58408a0a21f6efb56fb5564d68",
+      "gitBlob": "2147119f0de369239ed9930449edf3a2322318fc",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.log",
+      "runId": 43582205250,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582205250",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-bun43-43578845234.log",
+      "bytes": 178317,
+      "sha256": "784292e76e98a1516cbd45d6facd8a2b6c7a68a89017a1998810ec44e70ff4a8",
+      "gitBlob": "793b557c6475a32b41407d1825efce1435d2b21e",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-43578845234.log",
+      "runId": 43578845234,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578845234",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-check-43578238861.log",
+      "bytes": 59631,
+      "sha256": "157c445baf825b2aa31a60c955d0408be15d68f9340c781887e1bddbaf4a0dd1",
+      "gitBlob": "118b68d55dd4d8801679fda003e0304e1d0b155f",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check-43578238861.log",
+      "runId": 43578238861,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578238861",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-check2-43580277793.log",
+      "bytes": 64099,
+      "sha256": "f128c6cc939a58242d785fb6a301edadea4ecd5a2cf547e37fb392dd534b36c7",
+      "gitBlob": "1953de0095b2b4de7e6ecb33e45bde511c0ebc3a",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check2-43580277793.log",
+      "runId": 43580277793,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580277793",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-check3-43580747934.log",
+      "bytes": 62391,
+      "sha256": "1e396aa6606b9c903650599c0cf9663f5ce365f8a043ecc47794ccf4eb766cf5",
+      "gitBlob": "c68afe9ca1502a5c0370ba8d8583d38d093ec0ba",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check3-43580747934.log",
+      "runId": 43580747934,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580747934",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-check4-43582192808.log",
+      "bytes": 63580,
+      "sha256": "dfc2f730ae3f4324e155dd4fd2bd8627f74b690d5a4e7506811762ed9a355a71",
+      "gitBlob": "246a729e93e905cb3ceaa74814bf122461e1d5c2",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check4-43582192808.log",
+      "runId": 43582192808,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582192808",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-check5-43584394810.log",
+      "bytes": 63923,
+      "sha256": "4c55fd2bd5e76fc0c0763ea1664259bb1ff87ccee3b6ebc201cbe939789295e7",
+      "gitBlob": "291815a3917f3f6dd1068bc0a5d47e193bc1d64c",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check5-43584394810.log",
+      "runId": 43584394810,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584394810",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-docbrowser-43582881446.log",
+      "bytes": 101870,
+      "sha256": "4de65e911e56e13c676afb26bc22d1c0eedb330e952324a65a7c21ede123664b",
+      "gitBlob": "b76991d7f8498b59a201455a8c8ec28bd124b59c",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-docbrowser-43582881446.log",
+      "runId": 43582881446,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582881446",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-host-browser-43584405211.log",
+      "bytes": 86523,
+      "sha256": "0c136358dfb791018a8e3cf93f86e3eb6be84ae015547a60c4dedaa49e2991e2",
+      "gitBlob": "438089ae839466a7a47eae8258d26613377ea582",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-host-browser-43584405211.log",
+      "runId": 43584405211,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584405211",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-native-43580976466.log",
+      "bytes": 149389,
+      "sha256": "042fbc465731f07e250aa1e10d4d9186fcb64bc5ff8ceb325331b64e6bdb4df8",
+      "gitBlob": "753b930704e595bc4b949483f0986187c497912f",
+      "removedRepositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-native-43580976466.log",
+      "runId": 43580976466,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580976466",
+      "relation": "exact decoded job log",
+      "publication": "Raw output removed in the correction for agent-scratch. Structured receipt, observations and hashes remain published."
+    },
+    {
+      "sourceAuditPath": "audit-ci/operations-final-guards-43586114915.log",
+      "runId": 43586114915,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586114915",
+      "sha256": "345894421f0ebcc9e9ee7e5be220f4ee2dcb9ead5f07a5e7e5396c0502543d30",
+      "bytes": 66202,
+      "relation": "exact decoded job log",
+      "publication": "Never added to the corrected repository tree; structured failure receipt is published."
+    }
+  ],
+  "documentationCorrection": {
+    "rejectedReceiptCommit": "8ad7e16064e9f886b46519581aae5fb6182a2829",
+    "rejectedGuardRun": 43586114915,
+    "removedRawPaths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/findings/OPS-NATIVE-UI-ACQUISITION/diagnostic.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-browser-43580401528.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun24-43582205250.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-bun43-43578845234.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check-43578238861.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check2-43580277793.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check3-43580747934.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check4-43582192808.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-check5-43584394810.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-docbrowser-43582881446.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-host-browser-43584405211.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci/operations-native-43580976466.log"
+    ],
+    "ruleUnchanged": true,
+    "productUnchanged": true
+  }
 }
