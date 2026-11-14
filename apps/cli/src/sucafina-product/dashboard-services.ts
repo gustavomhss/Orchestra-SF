@@ -87,7 +87,11 @@ export function createSfDashboardServices(input: {
         throw new Error("SF_DASHBOARD_REVIEW_SOURCE_CHANGED")
       return result
     }) }
-  const reviews = createReviewPort({ state: reviewState, now: () => new Date().toISOString(), requestFor: host.requestFor,
+  const reviews = createReviewPort({ state: reviewState, creationTarget,
+    authorizeOutcomeComparison: async (_context, values) => values.length === 0,
+    authorizeOutcome: async (_context, values) => values.length === 0,
+    authorizeDecision: async (_context, values) => values.length === 0,
+    now: () => new Date().toISOString(), requestFor: host.requestFor,
     select, authorizeSections: (context, sections) => revalidateSources(context, sections.flatMap((section) => section.sourceRefs)),
     authorizeComments: async (_context, comments) => comments.length === 0,
     authorizeSensitivity: async (_context, sensitivity) => sensitivity.length === 0,
@@ -300,3 +304,4 @@ function agendaDefinition(page: string, period: Period) {
   }
   return pages[page]
 }
+

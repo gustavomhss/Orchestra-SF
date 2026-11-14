@@ -271,18 +271,40 @@ document.querySelectorAll('[data-case-question]').forEach((form) => {
 
 /** Resolve a work destination again when it is opened, with the current user's access. */
 export const workDestinationScript = `
-document.querySelectorAll('[data-work-destination]').forEach((button) => {
-  if (button.dataset.sfWorkReady) return; button.dataset.sfWorkReady = 'true'
-  button.addEventListener('click', async () => {
-    const status = button.parentElement.querySelector('[role=status]'); button.disabled = true; status.textContent = 'Opening work…'
-    try {
-      const url = new URL(location.href); url.search = '?sf=collaboration-work-destination'
-      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ selection: JSON.parse(button.dataset.selection), actionRef: button.dataset.actionRef }) })
-      const result = await response.json(); if (!response.ok || result.status !== 'ok' || typeof result.value?.href !== 'string') throw new Error('unavailable')
-      const destination = new URL(result.value.href, location.href)
-      if (destination.origin !== location.origin || (destination.pathname !== button.dataset.mount && !destination.pathname.startsWith(button.dataset.mount + '/'))) throw new Error('unavailable')
-      location.assign(destination.href)
-    } catch { status.textContent = 'This work is unavailable or your access changed.'; button.disabled = false }
+document.querySelectorAll('[data-work-list]').forEach((list) => {
+  if (list.dataset.sfWorkReady) return; list.dataset.sfWorkReady = 'true'
+  let closed = false; let epoch = 0
+  const controllers = new Set(); const active = () => !closed && list.isConnected
+  const close = (message) => {
+    if (closed) return
+    closed = true; epoch++; controllers.forEach((controller) => controller.abort()); controllers.clear()
+    list.querySelectorAll('[data-work-destination]').forEach((button) => { button.disabled = true; delete button.dataset.selection; delete button.dataset.actionRef; delete button.dataset.mount })
+    const status = document.createElement('p'); status.setAttribute('role', 'status'); status.textContent = message; list.replaceChildren(status)
+    removeEventListener('sf-access-revoked', revoke); observer.disconnect()
+  }
+  const revoke = () => close('Work access changed. Reopen the application with your current access.')
+  const observer = new MutationObserver(() => { if (!list.isConnected) close('') }); observer.observe(document.body, { childList: true, subtree: true })
+  addEventListener('sf-access-revoked', revoke)
+  list.querySelectorAll('[data-work-destination]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      if (!active() || button.disabled) return
+      const ticket = epoch, status = button.parentElement.querySelector('[role=status]'), controller = new AbortController()
+      controllers.add(controller); const timeout = setTimeout(() => controller.abort(), 10000)
+      button.disabled = true; status.textContent = 'Opening work…'
+      try {
+        const url = new URL(location.href); url.search = '?sf=collaboration-work-destination'
+        const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify({ selection: JSON.parse(button.dataset.selection), actionRef: button.dataset.actionRef }), signal: controller.signal })
+        if (!active()) return
+        if (response.status === 401 || response.status === 403) { revoke(); dispatchEvent(new CustomEvent('sf-access-revoked')); return }
+        const result = await response.json()
+        if (!active() || ticket !== epoch) return
+        if (!response.ok || result.status !== 'ok' || typeof result.value?.href !== 'string') throw new Error('unavailable')
+        const destination = new URL(result.value.href, location.href)
+        if (destination.origin !== location.origin || (destination.pathname !== button.dataset.mount && !destination.pathname.startsWith(button.dataset.mount + '/'))) throw new Error('unavailable')
+        location.assign(destination.href)
+      } catch { if (active() && ticket === epoch) { status.textContent = 'This work is temporarily unavailable. Your current list is preserved; try again.'; button.disabled = false } }
+      finally { clearTimeout(timeout); controllers.delete(controller) }
+    })
   })
 })
 `

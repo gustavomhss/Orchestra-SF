@@ -1,0 +1,92 @@
+{
+  "schema": "astra.interface.peer-read.v1",
+  "increment": "W14",
+  "reviewer": "ci_reconcile",
+  "status": "NO_ADDITIONAL_CONCRETE_BLOCKER_FOUND_READ_ONLY",
+  "productExecution": false,
+  "reviewedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+      "blob": "6321582683cfaec721ad5cf0624a8e2da6e37226",
+      "sha256": "21f0fff966bb475d9c8556c5628c387d28ff030491842242b9f2e3c5315c2957",
+      "bytes": 15844
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "031770797872f4bca0985ac881515539614f5201",
+      "sha256": "b44e26f770ff03768798b1b457262e1dca6132d0653faa9c64b067160e845175",
+      "bytes": 35645,
+      "reviewedScope": "workDestinationScript only; case question and selection authoring outside this peer scope."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "930c93a1704d0444519ffa85b8f69f57cc6c2735",
+      "sha256": "75e5099ff70d345028f0c5d867bd16340484746420d86e54d5b7aeefde390949",
+      "bytes": 24430,
+      "reviewedScope": "workbench-work data-work-list wrapper and workDestinationScript mount only."
+    }
+  ],
+  "realDependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/collection-member.ts",
+      "blob": "4d35da609cc89817abc1d595cdf3de64193f4f1e",
+      "sha256": "415dd91989a9a7329b6b770bad74435f153ea1cecc8cf48f9ca23db33fd57874",
+      "bytes": 2430
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "blob": "a01b11e23e650ffb218fd0a64640110fbc2f8710",
+      "sha256": "7aae927e8679fd11ac23f1bec426b35b807ed1d4f37c74fadc77d39e4110d434",
+      "bytes": 28644
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+      "sha256": "854e20c0a4d48ffebc8fcfc1f85a9f6525fd0aca9116ca3a00e266d819fbeeb4",
+      "bytes": 27238
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/business-services-fixture.ts",
+      "blob": "7294b6c3240ae4b2858dd1603b12e49b0067041f",
+      "sha256": "b4fd1cfa2efbc9d304e5528e0b2648413c84e9deea58b368228e44f781b733e8",
+      "bytes": 1317
+    }
+  ],
+  "correctedBlocker": {
+    "finding": "WorkPort only projects a Procurement item destination after a real captureWorkSource issues its individual authorized source. The first fixture lacked that callback, so it could not produce the two required Open work buttons.",
+    "fix": "Fixture now passes createProcurementCollectionMemberIssuer with services.registry, services.individual and authority.host.revalidate. These actual exports exist in the retained BusinessServices return.",
+    "status": "STATICALLY_CORRECTED_NOT_YET_EXECUTED"
+  },
+  "cases": [
+    {
+      "title": "real destination unavailability preserves My work, while real logout denial purges every protected work item",
+      "intendedProof": "Actual Workbench/Procurement/BCS/collaboration list, real absent resolver 503 preserves both items, real logout 403 removes all protected work data and controls."
+    },
+    {
+      "title": "an earlier real destination response cannot reactivate My work after a later authenticated denial",
+      "intendedProof": "First real destination 503 held after route.fetch; later authenticated denial closes the list and aborts old reads. Releasing the old handler cannot restore controls, source selection, private titles or navigation.",
+      "limit": "This case accepts abortion of the obsolete request; it is not proof of a completed late payload or successful navigation."
+    }
+  ],
+  "staticChecks": [
+    "The only workDestinationScript mount now wraps protected titles and controls in data-work-list.",
+    "503 preserves the actual list; 401/403 closes the complete protected list and emits sf-access-revoked.",
+    "Close increments the epoch, aborts pending controllers, clears source selectors and action refs, disables old buttons and removes listeners/observer.",
+    "The continuation checks active state and epoch after body reading; transient failure cannot re-enable detached buttons.",
+    "Same-origin and mounted-prefix navigation checks remain.",
+    "The two requests are seeded in the actual Procurement persistence and assigned to the current principal.",
+    "No destination resolver is fabricated; the unavailable response is the real unmounted resolver response."
+  ],
+  "bounds": {
+    "caseMs": 45000,
+    "pageMs": 10000,
+    "responseGateMs": 5000,
+    "consumerAbortMs": 10000
+  },
+  "limits": [
+    "Static review only; no Actions result yet.",
+    "The fixture covers consumer recovery, not positive host navigation, native resident output or S0 global gates.",
+    "No typecheck, guards, product run, server restart or remote write performed by this reviewer."
+  ],
+  "nextAction": "Freeze these exact bytes and execute both new cases with real producers under the authorized W14 Actions selection."
+}

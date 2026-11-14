@@ -12,6 +12,8 @@ Se alguma página estiver temporariamente indisponível, a busca informa que a l
 
 Quando **My work** estiver disponível na instalação, informe as datas de início e fim e selecione **Find work**. A lista mostra os itens atribuídos que podem ser consultados nesse período. Quando houver um destino disponível, selecione **Open work** para abri-lo; o acesso é conferido novamente. Se a lista estiver vazia, confira o período. Se a instalação ainda não oferecer essa lista, a tela informa a indisponibilidade e mantém as páginas operacionais como caminho de entrada. Erros de seleção preservam o período para correção e nova tentativa.
 
+Uma falha temporária de **Open work** conserva a lista e permite tentar novamente. Se a consulta detectar sessão expirada ou acesso revogado, todos os itens anteriores são removidos; reabra a aplicação com seu acesso atual.
+
 Quando o serviço fornecer contexto autorizado de uma reunião preservada, o item mostra a referência e a versão da reunião, além da seção ou referência de encaminhamento correspondente. Esses metadados são informativos; não abrem a reunião nem iniciam uma conversa. Se o contexto não puder ser apresentado, o item informa **Review context is unavailable**.
 
 Em **Search documents**, procure documentos que você tem autorização para consultar. Abra o resultado para verificar a origem. Um resultado pode deixar de estar disponível se o acesso ou a fonte mudar.
@@ -42,6 +44,10 @@ No Dashboard, abra **Revisão e ações**, confira o período e selecione **Carr
 ## Registrar e comparar uma decisão
 
 Use **Create a decision** quando precisar manter objetivo, critérios, alternativas e histórico juntos. Informe o objetivo, as datas, a moeda e um critério por linha; depois selecione **Create decision**. A tela abre o caso criado. Você pode editar objetivo, período, moeda e critérios em **Edit decision**.
+
+Em **Choose work for this decision**, marque os registros e informe um período coberto por todos eles e pela decisão. **Save work selection** guarda essa seleção pessoal. Use **Load saved selections** para reabri-la depois e **Check pending work** para consultar o estado atual. A tela distingue uma decisão sem seleção configurada de uma lista de trabalho indisponível; indisponibilidade não significa ausência de pendências. Para perguntar a outra pessoa, use **Ask a question** e escolha o destinatário confirmado pelo diretório.
+
+Se a confirmação da seleção não chegar, seus registros e datas ficam preservados e bloqueados; **Retry same selection** repete a solicitação original. Uma rejeição confirmada antes da gravação oferece **Review rejected selection** para conferir o estado atual antes de iniciar outra tentativa. Se o caso tiver mudado, revise suas fontes com **Reload decision to review sources**. Essas ações não atribuem trabalho por conta própria.
 
 Se o salvamento de uma edição ficar sem confirmação, os campos ficam preservados e bloqueados. Use **Retry same save** para consultar o resultado da mesma solicitação. Um conflito confirmado antes de salvar mostra os valores atuais e sua tentativa; uma resposta perdida seguida de conflito mantém a tentativa inconclusiva até você conferir o caso salvo.
 

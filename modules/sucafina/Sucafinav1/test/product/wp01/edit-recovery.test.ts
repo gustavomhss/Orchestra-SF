@@ -570,28 +570,58 @@ test("independent review does not replace an uncertain author request after a co
 }, 30_000)
 
 test("a delayed review preparation cannot start or restore data after analysis access is revoked", async () => {
-  const delayed: { started?: () => void; release?: () => void } = {}
+  const delayed: { started?: () => void; release?: () => void; body?: string; delivered: boolean; cancelled: boolean } = { delivered: false, cancelled: false }
   const started = new Promise<void>((resolve) => { delayed.started = resolve })
-  const state = { denied: false, starts: 0 }
+  const state = { denied: false, starts: 0, prepares: 0 }
   await browserCase(history, async (incoming) => {
     const input = await incoming.json()
     if (input.action === "list") return state.denied ? Response.json({ status: "denied" }, { status: 403 }) : Response.json({ status: "ok", value: [{ runRef: "author-run", state: "ready", version: 1, outputRef: "author-output" }] })
     if (input.action === "output") return Response.json({ status: "ok", value: { html: "<p>Private review comparison</p>", outputRef: "author-output", review: reviewOffer } })
     if (input.action === "prepare") {
-      await new Promise<void>((resolve) => { delayed.release = resolve; delayed.started?.() })
-      return Response.json({ status: "ok", value: critiqueInput }, { headers: { "X-Fixture-Review-Released": "yes" } })
+      state.prepares++
+      if (state.prepares !== 1) throw new Error("Unexpected additional review preparation")
+      const prepared = Response.json({ status: "ok", value: critiqueInput }, { headers: { "X-Fixture-Review-Released": "yes" } })
+      delayed.body = await within(prepared.text(), "materialize the prepared review response")
+      const bytes = new TextEncoder().encode(delayed.body), split = Math.max(1, Math.floor(bytes.length / 2))
+      // Deliver headers and an exact prefix before revocation so the authorized
+      // consumer awaits the body. The remaining bytes exercise its post-body
+      // access guard, rather than a response discarded before body consumption.
+      const delivery = new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.enqueue(bytes.subarray(0, split))
+          delayed.release = () => {
+            if (delayed.delivered || delayed.cancelled) return
+            controller.enqueue(bytes.subarray(split)); controller.close(); delayed.delivered = true
+          }
+          delayed.started?.()
+        },
+        cancel() { delayed.cancelled = true },
+      })
+      return new Response(delivery, { status: prepared.status, headers: prepared.headers })
     }
     state.starts++; return Response.json({ status: "ok", value: { runRef: "should-not-start" } })
   }, async (page) => {
     await page.getByRole("button", { name: "Open result", exact: true }).click()
+    const released = page.waitForResponse((response) => response.headers()["x-fixture-review-released"] === "yes", { timeout: 5_000 })
     await page.getByRole("button", { name: "Request independent review", exact: true }).click()
     await within(started, "review preparation entered delayed handler")
+    const late = await within(released, "observe review preparation headers before revocation")
+    expect(late.status()).toBe(200)
+    expect(state.prepares).toBe(1)
+    const preparedBody = delayed.body
+    if (typeof preparedBody !== "string") throw new Error("The prepared review payload was not materialized before delivery")
+    expect(JSON.parse(preparedBody)).toEqual({ status: "ok", value: critiqueInput })
+    expect(delayed.delivered).toBe(false)
+    await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))), "allow the review reader to await its incomplete body")
     state.denied = true
     await page.locator("[data-analysis-history]").dispatchEvent("sf-analysis-refresh")
     await page.getByText("Analysis access changed. Reopen the decision with your current access.", { exact: true }).waitFor()
-    const released = page.waitForResponse((response) => response.headers()["x-fixture-review-released"] === "yes")
     delayed.release?.()
-    expect(await within((await released).finished(), "finish delayed review preparation")).toBeNull()
+    expect(await within(late.text(), "read the exact review payload after revocation")).toBe(preparedBody)
+    expect(await within(late.finished(), "finish delayed review preparation")).toBeNull()
+    expect(delayed.delivered).toBe(true)
+    expect(delayed.cancelled).toBe(false)
+    expect(state.prepares).toBe(1)
     await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
     expect(state.starts).toBe(0)
     expect(await page.locator("[data-review-analysis]").count()).toBe(0)

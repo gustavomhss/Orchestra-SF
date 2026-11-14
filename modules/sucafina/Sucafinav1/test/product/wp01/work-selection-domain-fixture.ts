@@ -16,6 +16,8 @@ import { sfHumanReadActions } from "../../../product/integration/human-authority
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
+import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
+import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { createCollaborationHost } from "../../../product/collaboration/host.ts"
 import { createCollaborationHttp } from "../../../product/collaboration/http.ts"
@@ -66,6 +68,10 @@ export async function createWorkSelectionDomainFixture(browser: Browser, render:
       return { commit: true, value: undefined }
     })
     const services = business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
+    // The retained BCS does not export its private record issuer. Compose the
+    // same real producer over the same authority and durable source scopes.
+    const records = createDashboardRecordEvidenceHost({ host: authority.host, scopedSources: persistence,
+      issueRecord: createDashboardRecordSourceIssuer({ host: authority.host, scopedSources: persistence }) })
     const collaboration = createCollaborationHost({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget, scopedSources: persistence,
       evidence: services.context, procurement: services.procurement, collections: services.registry, cases: services.cases, authority: authority.authority, human: authority.human,
       caseSelectionWrites, threadHistoryWrites,
@@ -93,7 +99,7 @@ export async function createWorkSelectionDomainFixture(browser: Browser, render:
       } finally { authority.ui.finish(admitted.value) }
     }
     const selection = { page: "Portfolio Dashboard", recordType: "projects", recordId: "project", fields: ["name"], period }
-    const issued = await read("sf_dashboard_read", selection, (call) => services.dashboardRecords.issue(selection, call))
+    const issued = await read("sf_dashboard_read", selection, (call) => records.issue(selection, call))
     if (issued.status !== "ok") throw new Error(`Real selection source unavailable: ${issued.reason}`)
     const decision: DecisionCase = { id: "work-decision", incarnation: "work-decision-incarnation", version: 1, state: "investigating", objective: "Review operational work",
       horizon: period, currency: "USD", criteria: [{ id: "cost", description: "Review cost", required: true }], participants: [principalRef], sourceRefs: [issued.value], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
