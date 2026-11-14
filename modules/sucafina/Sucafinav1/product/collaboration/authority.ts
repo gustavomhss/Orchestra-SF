@@ -14,12 +14,13 @@ import type { CollaborationRecipientAuthority, ReviewThreadRecipientAuthority } 
 
 /** Current source access and explicitly selected directory IDs are checked separately. */
 export function createCollaborationAuthority(input: { host: DomainPortHost; evidence: BusinessContextService; recipientAuthority?: CollaborationRecipientAuthority; reviewRecipientAuthority?: ReviewThreadRecipientAuthority; authorizeReviewThreadContext?: ReviewThreadContextAuthorizer }) {
-  const reviewRecipientLeases = new Map<string, { proof: ReviewThreadRecipientAuthority; authorize: ReviewThreadRecipientAuthority["authorize"]; check: ReviewThreadRecipientAuthority["checkAtCommit"] }>()
+  type ReviewRecipientLease = { proof: ReviewThreadRecipientAuthority; authorize: ReviewThreadRecipientAuthority["authorize"]; check: ReviewThreadRecipientAuthority["checkAtCommit"] }
+  const reviewRecipientLeases = new WeakMap<TrustedDomainContext, Map<string, ReviewRecipientLease>>()
   const reviewRecipientKey = (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => digestSfValue({ recipientRef, basis, authority: context.binding })
   const checkReviewRecipient = (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => {
     if (!recipientRef.trim() || !basis.reviewContext || !validThreadSourceContext(basis)) return false
     if (recipientRef === context.binding.principalRef) return true
-    const lease = reviewRecipientLeases.get(reviewRecipientKey(recipientRef, basis, context))
+    const lease = reviewRecipientLeases.get(context)?.get(reviewRecipientKey(recipientRef, basis, context))
     if (!lease) return false
     const current = () => input.reviewRecipientAuthority === lease.proof && lease.proof.authorize === lease.authorize && lease.proof.checkAtCommit === lease.check
     try { return current() && lease.check.call(lease.proof, recipientRef, structuredClone(basis), context) === true && current() } catch { return false }
@@ -52,11 +53,18 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     const authorize = proof?.authorize
     const checkAtCommit = proof?.checkAtCommit
     if (!proof || !authorize || !checkAtCommit) return false
-    const current = () => input.reviewRecipientAuthority === proof && proof.authorize === authorize && proof.checkAtCommit === checkAtCommit
+    const leaseKey = reviewRecipientKey(recipientRef, selected, context)
+    const leases = reviewRecipientLeases.get(context) ?? new Map<string, ReviewRecipientLease>()
+    reviewRecipientLeases.set(context, leases)
+    const sameProvider = (lease: ReviewRecipientLease) => lease.proof === proof && lease.authorize === authorize && lease.check === checkAtCommit
+    const current = () => input.reviewRecipientAuthority === proof && proof.authorize === authorize && proof.checkAtCommit === checkAtCommit && (!leases.has(leaseKey) || sameProvider(leases.get(leaseKey)!))
+    // Never repin an outstanding operation to a replacement provider, including
+    // a replay that reuses the exact same authenticated context instance.
+    if (!current() || !leases.has(leaseKey) && leases.size >= 512) return false
     if (!await authorize.call(proof, recipientRef, structuredClone(selected), context).catch(() => false) || !current() || !await reviewThreadBasis(selected, context) || !await historicalSources(selected.evidenceRefs, context)) return false
     if (!await authorize.call(proof, recipientRef, structuredClone(selected), context).catch(() => false) || !current() || !await input.host.revalidate(context)) return false
-    reviewRecipientLeases.set(reviewRecipientKey(recipientRef, selected, context), { proof, authorize, check: checkAtCommit })
-    if (reviewRecipientLeases.size > 512) reviewRecipientLeases.delete(reviewRecipientLeases.keys().next().value!)
+    if (!current() || !leases.has(leaseKey) && leases.size >= 512) return false
+    if (!leases.has(leaseKey)) leases.set(leaseKey, { proof, authorize, check: checkAtCommit })
     return true
   }
   const recipientSources = createRecipientSourceAuthorizer({ sources, revalidate: input.host.revalidate, recipientAuthority: input.recipientAuthority })

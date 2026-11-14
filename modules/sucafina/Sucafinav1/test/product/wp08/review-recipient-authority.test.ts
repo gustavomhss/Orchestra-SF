@@ -69,5 +69,29 @@ test("a C05 request uses the recipient's current review lease, preserves exact r
       expect(JSON.stringify(refused)).not.toContain(swapDraft.body)
     } finally { f.state.transaction = transaction; recipientAuthority.checkAtCommit = originalCheck }
     expect(available(await f.port.storageVersion("threads", f.author))).toBe(version)
+
+    // Reusing the exact active context for another authority check cannot
+    // replace the lease of the first command while it waits to enter C08.
+    const rebindMutation = { expectedStorageVersion: version, idempotencyKey: "review-recipient-same-context-rebind" }
+    const rebindDraft = { ...draft, body: "C05-SAME-CONTEXT: retain the original provider." }
+    const rebindContext = await f.admit("person", "collaboration.thread.create", { draft: rebindDraft, mutation: rebindMutation })
+    let sameContextChecked = false
+    let rebound: boolean | undefined
+    f.state.transaction = async (request, command, work) => {
+      if (command.idempotencyKey === rebindMutation.idempotencyKey) {
+        sameContextChecked = true
+        recipientAuthority.checkAtCommit = () => true
+        rebound = await f.port.authority.reviewRecipientSources("reader-b", f.basis, rebindContext)
+      }
+      return transaction(request, command, work)
+    }
+    try {
+      const refused = await f.port.threads.create(rebindDraft, rebindMutation, rebindContext)
+      expect(sameContextChecked).toBe(true)
+      expect(rebound).toBe(false)
+      expect(refused.status).not.toBe("ok")
+      expect(JSON.stringify(refused)).not.toContain(rebindDraft.body)
+    } finally { f.state.transaction = transaction; recipientAuthority.checkAtCommit = originalCheck }
+    expect(available(await f.port.storageVersion("threads", f.author))).toBe(version)
   } finally { await f.dispose() }
 }, 120000)

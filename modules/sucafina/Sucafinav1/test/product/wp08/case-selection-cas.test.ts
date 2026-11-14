@@ -22,13 +22,16 @@ test("a lost case-selection CAS is a known no-commit conflict and retains exact 
     const winnerMutation = { expectedStorageVersion, idempotencyKey: "winning-selection" }
     const delayedContext = await fixture.admit("person", "collaboration.selection.create", { draft, mutation: delayedMutation })
     const winner = available(await port.create(draft, winnerMutation, await fixture.admit("person", "collaboration.selection.create", { draft, mutation: winnerMutation })))
-    const committed = available(await fixture.state.read(fixture.request("person"), "preferences", (state) => structuredClone(state.preferences)))
+    const committed = await fixture.state.read(fixture.request("person"), "preferences", (state) => structuredClone(state.preferences))
+    if (committed.status !== "ok") throw new Error("Committed preferences unavailable")
     const version = available(await port.storageVersion(fixture.author))
     expect(version).toBe(expectedStorageVersion + 1)
     const rejected = await port.create(draft, delayedMutation, delayedContext)
     expect(rejected).toEqual({ status: "conflict", reason: "selection-not-committed" })
     expect(available(await port.storageVersion(fixture.author))).toBe(version)
-    expect(available(await fixture.state.read(fixture.request("person"), "preferences", (state) => state.preferences))).toEqual(committed)
+    const unchanged = await fixture.state.read(fixture.request("person"), "preferences", (state) => state.preferences)
+    if (unchanged.status !== "ok") throw new Error("Preferences unavailable after the refused CAS")
+    expect(unchanged.value).toEqual(committed.value)
     expect(available(await port.list(draft.caseRef, fixture.author))).toEqual([{ selectionRef: winner.selectionRef, period: fixture.period, state: "active" }])
 
     // A committed attempt is resolved before the old expected version is checked.
