@@ -1,0 +1,79 @@
+{
+  "schema": "operations-c4-followup-text-verification-v1",
+  "status": "EXACT_TEXT_RECONSTRUCTION_ONLY_NOT_PRODUCT_TESTS",
+  "target_checkpoint": "402a091485e11d60dff433049c7dedd7fcead687",
+  "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "method": "Fetched immutable C4 preimages and source49 published postimages with GitHub MCP; independently computed Git blob SHA1 from bytes. Generated unified hunks, required every context/removal line to match exactly, reconstructed desired bytes in memory, and checked published blob identities. No product code imported or executed.",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "preimage_blob": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "postimage_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "exact_preimage": true,
+      "exact_published_postimage": true,
+      "hunks": 1,
+      "strict_text_reconstruction": true,
+      "no_op": false
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "preimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "postimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "exact_preimage": true,
+      "exact_published_postimage": true,
+      "hunks": 0,
+      "strict_text_reconstruction": true,
+      "no_op": true
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "preimage_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "postimage_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "exact_preimage": true,
+      "exact_published_postimage": true,
+      "hunks": 1,
+      "strict_text_reconstruction": true,
+      "no_op": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "preimage_blob": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "postimage_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "exact_preimage": true,
+      "exact_published_postimage": true,
+      "hunks": 1,
+      "strict_text_reconstruction": true,
+      "no_op": false
+    }
+  ],
+  "patches": [
+    {
+      "file": "shared.patch",
+      "git_blob": "b433efe06f957a816c6525433352556816b47c19",
+      "sha256": "ceb11ff3f5eaa3f9ce661352499307853d971c97923f25511011dad89b75d46f",
+      "bytes": 1651,
+      "files": 2
+    },
+    {
+      "file": "test-source-intake.patch",
+      "git_blob": "5f175a76ceb0d63c4b596ba36703844a3ffa32a3",
+      "sha256": "6b84a25c8074420f50dfdbb86ecaa876ea21a63bbb119a0974ccdd4c9e7eb36e",
+      "bytes": 1361,
+      "files": 1
+    },
+    {
+      "file": "complete-followup.patch",
+      "git_blob": "16895fe4784f24363275d7c1a5fdcbd1b5ae36d8",
+      "sha256": "237d6aa1a33c79533c108789bc1e5715251bffdb06ee9c70c88689535387dbe5",
+      "bytes": 3012,
+      "files": 3
+    }
+  ],
+  "all_exact": true,
+  "fuzzy_matching": false,
+  "runtime_tests": "NOT_RUN",
+  "typechecks": "NOT_RUN",
+  "remote_mutations": 0,
+  "ci_dispatches": 0,
+  "prior_assembly_directory_modified": false
+}

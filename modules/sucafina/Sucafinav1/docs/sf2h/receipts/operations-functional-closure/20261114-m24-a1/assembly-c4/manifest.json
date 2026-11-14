@@ -1,0 +1,265 @@
+{
+  "schema": "operations-c4-followup-assembly-proposal-v1",
+  "state": "READY_INERT_PATCH_PENDING_SESSION23_INTAKE_AND_ACTIONS_QUALIFICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "consumer": "session23 sole sf2-stack integrator",
+  "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "source_manifest": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/manifest.json",
+    "blob": "43870a84cc0a4288a38f6e05c33de325d8997a89"
+  },
+  "target": {
+    "checkpoint_commit": "402a091485e11d60dff433049c7dedd7fcead687",
+    "checkpoint_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+    "candidate_id": "C4",
+    "product_commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "product_tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a",
+    "revalidated_documentary_checkpoint": "3c0b7df201559223ddf1631c182a409af700ff38",
+    "revalidated_checkpoint_tree": "b92f6f83e83e2b7ed5ad5ff74d89fb8c015de196",
+    "effective_blobs_unchanged": true
+  },
+  "reconciliation": {
+    "partial_source_admitted": "0042a95967ad651fe65ac0da216db6af86ed804c",
+    "ack": "ACK_PARTIAL_SOURCE_AND_SHARED_ASSEMBLY_CONSUMED_LANE_REMAINS_OPEN",
+    "later_source49_in_C4": false,
+    "new_candidate_required_if_accepted": true,
+    "old_assembly_retained": true,
+    "prior_integration_preserved": "C4 exact host/selection assembly and all unrelated Portfolio/Decisions/Finance/Memory/C12 paths are outside this follow-up delta."
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "kind": "shared",
+      "desired": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "reason": "Set positive 16 MiB attachment limit via existing Settings/save before actual scanner admission; preserve original holders and production assembly.",
+      "preimage_blob": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "postimage_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "preimage_file": "preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "disposition": "PROPOSED_EXACT_DELTA"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "kind": "shared",
+      "desired": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "reason": "Exact nominal Operations host selection already consumed at C4; no delta.",
+      "preimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "postimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "preimage_file": "preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "disposition": "ALREADY_PRESENT_NO_OP"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "kind": "shared",
+      "desired": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "reason": "Include Operations spec/helpers and actual host in existing typecheck:e2e graph without changing test execution selection.",
+      "preimage_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "postimage_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "preimage_file": "preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "disposition": "PROPOSED_EXACT_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "kind": "own-test",
+      "desired": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "reason": "Configure upload cap via actual Settings/save and assert stored byte value; preserve all five behavioral tests and exact expected statuses.",
+      "preimage_blob": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "postimage_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "preimage_file": "preimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "postimage_file": "postimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "disposition": "PROPOSED_EXACT_DELTA"
+    }
+  ],
+  "already_equal_own_sources": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "observed_C4_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "source49_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "disposition": "ALREADY_PRESENT_NO_OP"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "observed_C4_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "source49_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "disposition": "ALREADY_PRESENT_NO_OP"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "observed_C4_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "source49_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "disposition": "ALREADY_PRESENT_NO_OP"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "observed_C4_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "source49_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "disposition": "ALREADY_PRESENT_NO_OP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "observed_C4_blob": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+      "source49_blob": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+      "disposition": "ALREADY_PRESENT_NO_OP"
+    }
+  ],
+  "integration_receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-04.json",
+      "ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "blob": "3c10784d79647eeab543589f2a6a82261e3d8512"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/consumer-acks-04.json",
+      "ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "blob": "c8daf9025fc3cc2a8bc92b2ec06cbf86a362644c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/candidate-C4.json",
+      "ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "blob": "ae31e2ee484eedccac15b6207eef849a74785c88"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-04.json",
+      "ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "blob": "434dc5794527ab700de30e6c19f69a55c33c313f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-04.json",
+      "ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "blob": "5b3d437dcdb66eb02c12808e77fc658f1b0715ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/authority-reconciliation-02.json",
+      "ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "blob": "7327ed7384624e4f3bc1220ab4b1d5b0b9c389bc"
+    }
+  ],
+  "patches": [
+    {
+      "file": "shared.patch",
+      "targets": [
+        "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "packages/app-shell/e2e/tsconfig.json"
+      ],
+      "use": "Apply only after exact C4 preimage reconciliation; boundary test intake is separate.",
+      "git_blob": "b433efe06f957a816c6525433352556816b47c19",
+      "sha256": "ceb11ff3f5eaa3f9ce661352499307853d971c97923f25511011dad89b75d46f",
+      "bytes": 1651,
+      "files": 2
+    },
+    {
+      "file": "test-source-intake.patch",
+      "targets": [
+        "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+      ],
+      "use": "Intake exact source49 corrected regression when current C4 has old508f test.",
+      "git_blob": "5f175a76ceb0d63c4b596ba36703844a3ffa32a3",
+      "sha256": "6b84a25c8074420f50dfdbb86ecaa876ea21a63bbb119a0974ccdd4c9e7eb36e",
+      "bytes": 1361,
+      "files": 1
+    },
+    {
+      "file": "complete-followup.patch",
+      "targets": [
+        "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "packages/app-shell/e2e/tsconfig.json",
+        "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+      ],
+      "use": "Alternative combined three-file payload. Use instead of, never in addition to, the two component patches.",
+      "git_blob": "16895fe4784f24363275d7c1a5fdcbd1b5ae36d8",
+      "sha256": "237d6aa1a33c79533c108789bc1e5715251bffdb06ee9c70c88689535387dbe5",
+      "bytes": 3012,
+      "files": 3
+    }
+  ],
+  "assertions_preserved": [
+    "All five nominal Operations test bodies are byte-identical C4/source49.",
+    "The five boundary regression bodies and expected statuses remain unchanged; only the shared fixture positive upload limit precondition is added.",
+    "Selection is already the exact desired blob and has no patch hunk.",
+    "No mocked parser, scanner verdict, HTML, API response or mutation retry is added."
+  ],
+  "scanner": {
+    "cap_bytes": 16777216,
+    "service": "Existing approved real ClamD at 127.0.0.1 supplied through SF_OPERATIONS_CLAMD_PORT",
+    "available": "NOT_ESTABLISHED_BY_THIS_PAYLOAD",
+    "missing_behavior": "Production scanLocalFile fails closed",
+    "no_install_or_start": true
+  },
+  "qualification": {
+    "text_verification": "verification.json",
+    "local_product_tests": "NOT_RUN",
+    "CI_dispatches_by_child": 0,
+    "source_green_transferred": false,
+    "required_actions": [
+      "Existing surgical Actions mount-boundary.test.ts and selection.test.ts on admitted candidate.",
+      "Existing package typecheck:e2e through approved interface after tsconfig intake.",
+      "Five nominal CI-UI-OPERATIONS bodies on resulting committed composition with real scanner availability; collection is not PASS."
+    ],
+    "root_observed_results": {
+      "nominal": {
+        "run": 43639526175,
+        "W": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "result": "0 pass / 5 fail before UI"
+      },
+      "boundary": {
+        "run": 43641173533,
+        "W": "49d29bf4d6512d130307f46e145885949f213ea8",
+        "result": "3 pass / 2 fail on old source HTTP adapters"
+      },
+      "source_check": {
+        "run": 43641839432,
+        "W": "837ff32d178fc754a38e9b42b117c49c5390257a",
+        "result": "generation,module typecheck,guards PASS with11 inherited warnings"
+      },
+      "new_composition": "NOT_RUN"
+    }
+  },
+  "application_order": [
+    "S0 authorizes continuation of session23 after terminal bounded intake handoff3c0b7df2. This proposal does not create a new writer or presume a still-active integration lease.",
+    "Retain C4 and earlier receipt directories unchanged. Record source49 terminal delivery separately.",
+    "Re-read current shared and boundary preimages. If a target differs from this manifest, reconcile that writer's changes and derive new exact preimages instead of overwriting.",
+    "Reconcile tooling26 ownership/current accepted E2E config output before applying the tsconfig hunk. Do not overwrite an active owner's changes.",
+    "Apply either complete-followup.patch, or exact source49 boundary intake followed by shared.patch. The already-equal selector and own code stay untouched.",
+    "Read back resulting exact blobs. Establish a new material candidate; C4 remains immutable and unqualified.",
+    "Qualify through existing dispatcher with deduplication; required scanner/service and native/human/C06 gaps remain explicit."
+  ],
+  "prior_assembly_directory_untouched_by_this_followup": true,
+  "source_code_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "terminal_receipt_parent": "837ff32d178fc754a38e9b42b117c49c5390257a",
+  "tooling_ownership": {
+    "owner": "tooling26 / astra-compose / PR32",
+    "control": "6da04cd66eb268362ee58509271fef773ac2a62e",
+    "instruction_blob": "171ce861c06e890e73240362dfaeb50a553c82e7",
+    "scope": "packages/app-shell/e2e/tsconfig.json is a tooling26 shared target. Session23 must reconcile its current accepted output/lease before applying this inert proposal. Operations24 edits no shared tooling source.",
+    "state": "PREPARED_NOT_STARTED at reconciled authority; no accepted tooling26 intake observed at C4."
+  },
+  "requests": {
+    "regression": {
+      "path": "regression-request.json",
+      "blob": "41f46f41a06a50e41271f9c4965002aab6359878",
+      "expected_cases": 7,
+      "scope": "5 actual boundary regressions +2 canonical selector regressions"
+    },
+    "nominal": {
+      "path": "../nominal-request.json",
+      "blob": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+      "expected_cases": 5,
+      "scope": "unchanged real browser journeys"
+    },
+    "typecheck": {
+      "directory": "packages/app-shell",
+      "command": "bun run typecheck:e2e",
+      "interface": "existing approved Actions interface after tooling26/session23 intake"
+    }
+  },
+  "source_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+  "integrator_authority": {
+    "handoff_state": "TERMINAL_BOUNDED_INTAKE_HANDOFF_TO_S0",
+    "scope": "Session23 explicitly ended its current bounded integration slice; campaign and source lanes remain open.",
+    "next_intake": "After Operations terminal delivery,S0 must authorize continuation of the sole integrator on existing sf2-stack/PR65. Read this terminal handoff and reconcile actual head/authority; do not assume an active write lease,create a replacement writer,or alter3c0b7df2 history.",
+    "final_dispatcher_and_acceptor": "S0"
+  },
+  "provenance_correction": "Use authoritative source49 tree0d982446f0708975895b59fad3c94d0a53704f58; earlier integrator record's fbaf5fe... source_tree is a documentary mismatch, corrected by final-disposition.json without rewriting history."
+}

@@ -1,0 +1,131 @@
+{
+  "schema": "sf2-operations24-final-publication-disposition-v1",
+  "mission": 24,
+  "observed_at": "2026-11-14T21:21:45Z",
+  "checkpoint": "3c0b7df201559223ddf1631c182a409af700ff38",
+  "parent": "402a091485e11d60dff433049c7dedd7fcead687",
+  "tree": "b92f6f83e83e2b7ed5ad5ff74d89fb8c015de196",
+  "commit_time": "2026-11-14T21:20:10Z",
+  "change": {
+    "kind": "DOCUMENTARY_ONLY",
+    "files": 25,
+    "added": 25,
+    "modified": 0,
+    "deleted": 0,
+    "record_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/",
+    "authoritative_records": 7,
+    "inert_observed_copies": 18,
+    "all_paths_within_record_prefix": true,
+    "effective_product_test_config_changes": 0
+  },
+  "product_candidate": {
+    "id": "C4",
+    "commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a",
+    "state": "FROZEN_IDENTITY_UNQUALIFIED",
+    "new_candidate_created": false
+  },
+  "effective_blob_readbacks": {
+    "packages/app-shell/e2e/sucafina/wp04/host.ts": "8ba8d97ec138265454507852a5ab50b600b96c60",
+    "packages/app-shell/e2e/sucafina/wp04/selection.ts": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+    "packages/app-shell/e2e/tsconfig.json": "8364221434311400cae3007ea74cc67ddcfde765",
+    "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts": "508f4580d0decb1d5c97208fed650f51d8566045",
+    "packages/app-shell/e2e/sucafina/operations.spec.ts": "bab6a804e5f082cc60eb6f27209070b552981035"
+  },
+  "producers": {
+    "state": "UNCHANGED_FROM_402a0914",
+    "proof": "Complete direct-parent diff contains only25 new integrator receipt files. All product/module/CLI paths,including the16 producer/router blobs in advanced-input-disposition-c4.json,remain byte-identical.",
+    "source_receipt": "advanced-input-disposition-c4.json"
+  },
+  "source49": {
+    "commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+    "status": "SHARED_PATCH_READY_SOURCE_TERMINAL_PROVENANCE_PENDING_NOT_CONSUMED",
+    "consumed_predecessor": "0042a95967ad651fe65ac0da216db6af86ed804c",
+    "new_ack": false,
+    "copy_semantics": "18 source49 files are retained under observed/operations24-49 as inert .txt records. Their presence is not runtime/config/test intake.",
+    "pending_unit": [
+      "host8ba8d97e→8230eb28",
+      "mount-boundary508f4580→eddc6028",
+      "E2E tsconfig83642214→fd63fd70"
+    ],
+    "selector": "1bfa0585 already exact;no-op",
+    "prepared_additive_patch": "assembly-c4 based402a remains valid at this documentary-only checkpoint"
+  },
+  "integrator_authority": {
+    "handoff_state": "TERMINAL_BOUNDED_INTAKE_HANDOFF_TO_S0",
+    "scope": "Session23 explicitly ended its current bounded integration slice; campaign and source lanes remain open.",
+    "next_intake": "After Operations terminal delivery,S0 must authorize continuation of the sole integrator on existing sf2-stack/PR65. Read this terminal handoff and reconcile actual head/authority; do not assume an active write lease,create a replacement writer,or alter3c0b7df2 history.",
+    "final_dispatcher_and_acceptor": "S0"
+  },
+  "later_control": {
+    "commit": "86dfe5cd709a4d1701a21b877c2feb92924b08c8",
+    "parent": "ade0332cb8d972eb102de0a9cc98b607d9981343",
+    "addition": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/c12-composed-compatibility.json",
+    "blob": "78a9f99ae73afe10349db06518f8cdcfb657c746",
+    "mission": 32,
+    "state": "PREPARED_NOT_STARTED",
+    "scope": "Explicit C12/PR60 continuation owns composed compatibility. No mission24 revocation,stack writer replacement,planning orT0 change."
+  },
+  "historical_raw_log_copies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/boundary-attempt-02-summary.log.txt",
+      "blob": "13e409fdc3ec143bd982c86501c807eef61cf744",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/guards.log.txt",
+      "blob": "3d97fd6a2bd925ca55b75d70ce437b4f5e527597",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/observed/operations24-49/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/typecheck.log.txt",
+      "blob": "20e434565b59f38fefb6df6bb56015db7e7a7a12",
+      "status": "added"
+    }
+  ],
+  "guard_disposition": {
+    "source49": "Root reports source49 guard failure from three raw-log receipt copies; source cleanup837ff32d178fc754a38e9b42b117c49c5390257a removed them and cleanupcheck43641839432 passed.",
+    "new_checkpoint": "Integrator archived the historical raw-log source blobs above before that cleanup. They are documentary copies,not evidence that the cleaned837 source was consumed.",
+    "implication": "The archived paths end in .log.txt, whereas the inspected agent-scratch rule71ce321c matches changed-path glob **/*.log. Do not infer that these .txt paths reproduce the source49 guard failure. They are historical bytes, not evidence of837 cleanup intake. No composed guard result is claimed and no integrator archive is altered.",
+    "composed_guard_result": "NOT_RUN_NOT_CLAIMED",
+    "verification_scope": "Exact copied paths/blobs read via GitHub MCP; source run outcomes and guard rule supplied by root. No run/log polling or guard execution by this subagent.",
+    "rule": {
+      "path": "script/guards/rules/agent-scratch.toml",
+      "blob": "71ce321c30465faaf957a08256bd6b7d007d4173",
+      "on": "changed-paths",
+      "relevant_glob": "**/*.log"
+    }
+  },
+  "records": {
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/HANDOFF.md": "6e02e994a80e34a5ca9ca52e21cc08eb3058fb1e",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/authority-reconciliation-final.json": "30df2affce2f7eaa6b1b7d97ed62993792d37ee5",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/consumer-acks-final.json": "2214a661adbabade91262c6dd4a80d36b603661d",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/operations24-revision-disposition.json": "6a9c98dabb8bf43bdbd50e5d9dcf6049ffd41597",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-final.json": "a579c6a1bbe32683cd224833178b9580b6df582b",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/source-census-final.json": "3bc0068295317b034a4210c9552b8f7dc894bde9",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/provenance-manifest.json": "d1d4c9f742f6e54a365006c24ead7d2858ca892d"
+  },
+  "evidence_limits": {
+    "tests": "NOT_RUN",
+    "remote_mutations": "NONE",
+    "ci_dispatch": "NONE",
+    "ci_polling": "NONE",
+    "continuous_watch": false,
+    "source_green_transferred": false,
+    "root_code49_unchanged": "Reported by root; publication cleanup is documentary."
+  },
+  "provenance_correction": {
+    "record": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/operations24-revision-disposition.json",
+    "record_blob": "6a9c98dabb8bf43bdbd50e5d9dcf6049ffd41597",
+    "field": "source_tree",
+    "reported": "fbaf5fe4762cd8d68a71d8600c28f4afb0774dd5",
+    "authoritative_source_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+    "correct_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+    "proof": [
+      "GitHub git commit object read directly by root",
+      "Actions43641414497 artifact revisions.txt",
+      "Actions43641173533 execution W/S envelope"
+    ],
+    "instruction": "Session23 must use exact source49 tree0d982446 for next intake; preserve historical record and correct by additive provenance receipt. No change to final own path/blob identities."
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "schema": "sf2-operations24-advanced-input-disposition-v1",
+  "mission": 24,
+  "observed_at": "2026-11-14T21:15:07Z",
+  "bounded_checkpoint": "402a091485e11d60dff433049c7dedd7fcead687",
+  "previous_checkpoint": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+  "product_candidate": {
+    "id": "C4",
+    "commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a",
+    "state": "FROZEN_IDENTITY_UNQUALIFIED"
+  },
+  "chain": [
+    {
+      "commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+      "parent": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+      "scope": "Portfolio P01 plus partial Operations source0042 and two shared assembly paths."
+    },
+    {
+      "commit": "402a091485e11d60dff433049c7dedd7fcead687",
+      "parent": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+      "tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+      "scope": "Four documentary records only."
+    }
+  ],
+  "operations_ack": {
+    "status": "ACK_PARTIAL_SOURCE_AND_SHARED_ASSEMBLY_CONSUMED_LANE_REMAINS_OPEN",
+    "source_commit": "0042a95967ad651fe65ac0da216db6af86ed804c",
+    "source_manifest_blob": "065b53c497565e901a73bf69956446911a3e41da",
+    "source_patch_blob": "50b2fdf2211c3001c90810ea7c49ec38ee6bba26",
+    "integrated_commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "source_paths": 23,
+    "shared_target_paths": 2,
+    "stated_integrator_authority": "READY_PATCH and explicit only23 application order in published manifest/README. No terminal mission24 closure is asserted.",
+    "root_current_source": "49d29bf4d6512d130307f46e145885949f213ea8",
+    "root_source_state": "ACTIVE_NONTERMINAL",
+    "interpretation": "Observed partial ACK for0042 does not acknowledge49d, close mission24, transfer proof, or grant new intake of the active source. C4 explicitly records49d as not included; any later accepted material output creates a new candidate.",
+    "next": "Root prepares additive proposal preserving this consumed partial output; session23 remains sole shared writer. New source intake waits for explicit terminal handoff."
+  },
+  "three_shared_patch_dispositions": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "old_proposal_preimage": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "current_target_blob": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "desired_source49_postimage": "8230eb28f322dde255382b74280192f39844724d",
+      "disposition": "ADDITIVE_REBASE_REQUIRED"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "old_proposal_preimage": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "current_target_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "desired_source49_postimage": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "disposition": "ALREADY_PRESENT_NO_OP"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "old_proposal_preimage": "8364221434311400cae3007ea74cc67ddcfde765",
+      "current_target_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "desired_source49_postimage": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "disposition": "PREIMAGE_STILL_MATCHES"
+    }
+  ],
+  "own_source_dispositions": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "c4_blob": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "source49_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "disposition": "LATER_SOURCE_REVISION_NOT_CONSUMED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "c4_blob": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+      "source49_blob": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+      "disposition": "ALREADY_CONSUMED_EXACT"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "c4_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "source49_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "disposition": "ALREADY_CONSUMED_EXACT"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "c4_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "source49_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "disposition": "ALREADY_CONSUMED_EXACT"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "c4_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "source49_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "disposition": "ALREADY_CONSUMED_EXACT"
+    }
+  ],
+  "unchanged_nominal_inputs": {
+    "packages/app-shell/e2e/sucafina/operations.spec.ts": "bab6a804e5f082cc60eb6f27209070b552981035",
+    "packages/app-shell/e2e/playwright.production.config.ts": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+  },
+  "unchanged_producer_blobs": {
+    "modules/sucafina/Sucafinav1/runtime/application.ts": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts": "b753e3ffbfcdc06de373388845c686afac26dec8",
+    "modules/sucafina/Sucafinav1/runtime/local-scanner.ts": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+    "modules/sucafina/Sucafinav1/runtime/operator-identity.ts": "4845de24285df2459991da7d9895aad95eb93b19",
+    "modules/sucafina/Sucafinav1/runtime/planner.ts": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+    "modules/sucafina/Sucafinav1/runtime/assets.ts": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+    "modules/sucafina/Sucafinav1/product/integration/product-authority.ts": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+    "modules/sucafina/Sucafinav1/product/integration/human-authority.ts": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+    "modules/sucafina/Sucafinav1/product/interface/import-http.ts": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+    "modules/sucafina/Sucafinav1/product/interface/document-http.ts": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+    "apps/cli/src/sucafina-product/import-services.ts": "53a1f34779598545cde83295c8ff98b861fabb72",
+    "apps/cli/src/sucafina-product/document-services.ts": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+    "apps/cli/src/sucafina-product/document-authority.ts": "5cf7795dd466f0d2ec6eaa084194ff3c31d6f728",
+    "apps/cli/src/sucafina-product/business-services.ts": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+    "modules/sucafina/Sucafinav1/product/interface/http.ts": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+    "modules/sucafina/Sucafinav1/product/imports/staged-files.ts": "0d42f5242acd3d1c93bc110422285b96975b8ea0"
+  },
+  "producer_verification": "All14 module/CLI direct bindings were read by pinned path at402a and match declared input blobs. HTTP remains C3 postimage406187a4; staged-file producer remains0d42f524. No Operations producer replacement in this increment.",
+  "other_material_change": {
+    "source": "Portfolio21 PR67@ac7d29397db0f639237cdb39fb0754d59c1a929d",
+    "consumed": "Complete P01: planner-sensitivity.ts, verification.ts and four tests; all88 original source artifacts retained.",
+    "held": "P02/P03/P04 and CurrentChoice remain held for existing C12 receipt-scope fixture incompatibility and declared dependencies."
+  },
+  "authority": {
+    "previous_control": "6da04cd66eb268362ee58509271fef773ac2a62e",
+    "additive_chain": [
+      "5b00bd553781f437586177247b8a726aafd8ee59",
+      "ade0332cb8d972eb102de0a9cc98b607d9981343"
+    ],
+    "changes": [
+      {
+        "mission": 30,
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/routine-native-admission.json",
+        "blob": "5b68a470e3afaff985b949c89273e9f42e85d3c9",
+        "scope": "Routines source adapter/private support; shared host only as complete proposal to23."
+      },
+      {
+        "mission": 31,
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/decisions-functional-closure.json",
+        "blob": "21c6de6a35655b222d78852eea73fc74d320da5e",
+        "scope": "Explicit Decisions20 continuation; Operations24 and tooling26 expressly excluded from writes."
+      }
+    ],
+    "prepared_state": "Both30/31 PREPARED_NOT_STARTED; no supplied native session/model identities.",
+    "mission24_revocation": false,
+    "invariants": "Only23 writes sf2-stack. S0 retains final dispatcher/acceptance. Tooling26 config ownership and prepared review scope preserved; no source green transfer."
+  },
+  "integration_records": {
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/authority-reconciliation-02.json": "7327ed7384624e4f3bc1220ab4b1d5b0b9c389bc",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/candidate-C4.json": "ae31e2ee484eedccac15b6207eef849a74785c88",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/consumer-acks-04.json": "c8daf9025fc3cc2a8bc92b2ec06cbf86a362644c",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-04.json": "434dc5794527ab700de30e6c19f69a55c33c313f",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-04.json": "5b3d437dcdb66eb02c12808e77fc658f1b0715ce",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-04.json": "3c10784d79647eeab543589f2a6a82261e3d8512"
+  },
+  "source49_manifest": {
+    "commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/manifest.json",
+    "blob": "43870a84cc0a4288a38f6e05c33de325d8997a89"
+  },
+  "proof_limits": {
+    "source_nominal_run": 43639526175,
+    "source_nominal_W": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "source_nominal_result": "0 PASS /5 FAIL before business UI; does not qualify C4.",
+    "C4_regressions_and_nominal": "NOT_RUN",
+    "scanner": "No approved real scanner endpoint established by this intake; production scanner code preserved.",
+    "pending": "C06/native/AM/human timing, source49 revised mount/test and graph coverage, inherited mandatory findings.",
+    "no_source_green_transferred": true
+  },
+  "method": {
+    "remote": "Read-only GitHub MCP",
+    "evidence": "Pinned commit ancestry/path lists; Operations ACK04 fields and file identities; candidate/authority/verification records;21 direct path/blob readbacks; source49 manifest; both new control missions and their commits.",
+    "remote_mutations": "NONE",
+    "ci_dispatch": "NONE",
+    "ci_polling": "NONE",
+    "local_tests": "NOT_RUN",
+    "external_messages": "NONE",
+    "scope": "One requested checkpoint only; no continuous branch watch."
+  }
+}
