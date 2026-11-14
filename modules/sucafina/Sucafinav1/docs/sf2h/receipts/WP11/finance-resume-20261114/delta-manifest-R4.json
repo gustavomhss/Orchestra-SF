@@ -1,0 +1,96 @@
+{
+  "schema": "sf2-wp11-r4-publication-manifest-v1",
+  "status": "FROZEN_STATIC_REVIEWED_ACTIONS_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-resume",
+  "base": {
+    "head": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+    "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c"
+  },
+  "owner": "WP11",
+  "producer": "Astra Finance resume WP11",
+  "remotePublication": "ROOT_ONLY_GITHUB_MCP",
+  "productionChanges": [],
+  "localProductTestsExecuted": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "baseBlob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "sha": "d530558df74f6a0a0c7458a1a308ffdc0114b66b",
+      "sha256": "654fe2471dd0ec5ea47e56748bc3d3f8b1906c7ed7b977809d378e98f0886511",
+      "bytes": 39168,
+      "classification": "OWN_TEST_PROOF_DELTA",
+      "localFile": "/workspace/scratch/3b9737c0177a/work-wp11/r4-overlay/modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/r4-criteria-supplement.json",
+      "mode": "100644",
+      "type": "blob",
+      "baseBlob": null,
+      "sha": "c310d3f79f88a15157bac14a7b9e4466f4ec6f64",
+      "sha256": "d54634f5d573d242a9b6607b4a1b90d62858e023f2651f7c34b69c017b27ea3f",
+      "bytes": 88292,
+      "classification": "OWN_CRITERIA_SUPPLEMENT",
+      "localFile": "/workspace/scratch/3b9737c0177a/work-wp11/r4-overlay/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/r4-criteria-supplement.json"
+    }
+  ],
+  "selectors": [
+    "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts"
+  ],
+  "timeoutChanged": false,
+  "criteria": [
+    "WP11.T01.QLT.01"
+  ],
+  "sourceStatusesPreserved": {
+    "VERIFIED_SCOPED": 32,
+    "PARTIAL": 23,
+    "BLOCKED": 26,
+    "NOT_ESTABLISHED": 2
+  },
+  "proofBoundary": "The additional historical projection reader accepts only exact references emitted earlier in this same real journey, exact previously produced alternatives, and the actual persisted receipt through the real producer lookup. This explicit test adapter proves metadata preservation at the WP11 projection boundary; it is not installed historical authorization, a canonical collaboration-question producer, new C17 replay, or a provider restart. The original fresh resolver and all original financial/authorization/application assertions are unchanged.",
+  "originalR3Proof": {
+    "product": {
+      "sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+      "label": "R3",
+      "parents": [
+        "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+      ]
+    },
+    "snapshot": "f74733ed5c2ef77b53c3a40948a1b9c509bf7ac9",
+    "snapshotTree": "7b0270dd270aa81e8c1ecc92a77ee123f1f5124f",
+    "requestBlob": "0eae310489ec68387e232f05c0f31bc2a84036f3",
+    "requestSha256": "fbb4eec9acd2e15264529866e8cb19c708b80962763a5e7577587d725a8f1175",
+    "runId": 43618462688,
+    "jobId": 132518604113,
+    "conclusion": "success",
+    "selectors": [
+      "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "./Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "./Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "./Sucafinav1/test/product/wp11/portfolio-replay-lease-egress.test.ts",
+      "./Sucafinav1/test/product/wp11/result-store.test.ts",
+      "./Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "./Sucafinav1/test/product/wp11/case-port.test.ts",
+      "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "pass": 19,
+    "fail": 0,
+    "assertions": 487,
+    "files": 8,
+    "durationSeconds": 11.73,
+    "logSha256": "153550c8704d89f18f7ccaa239de6415197bde960da58b3862be5d8eebe99f11",
+    "logBytes": 72091,
+    "omni": {
+      "status": "not-applicable",
+      "nonce": "a5f429a2e888b8bc5ac7d8449547aa4f",
+      "notResidentRuntimeProof": true
+    },
+    "limit": "Observed R3 readers, contraproofs and original real choice/prepared/apply journey only. Does not qualify the added R4 assertions or global criteria."
+  },
+  "noGlobalAcceptance": true
+}

@@ -49,10 +49,11 @@ export function renderWaterfall(projection: DomainProjection, selectionRef: stri
   }
   status.textContent = `Reconciliação: ${data.reconciliation}; valor inicial: ${data.initial ?? "indisponível"}; valor final: ${data.final ?? "indisponível"} ${projection.context.currency}; ${projection.context.period.start} – ${projection.context.period.end}; v${projection.version}.`
   section.append(status)
+  const conditioned = projection.decision?.kind === "scenario" && projection.decision.comparison.comparisonStatus !== "complete"
   const rows = [
-    ...(data.initialSource ? [{ label: "Total inicial", componentValueId: data.initialSource.id, start: 0, end: data.initial, amount: data.initial, source: data.initialSource, total: true }] : []),
+    ...(data.initialSource ? [{ label: conditioned ? "Subtotal conhecido inicial" : "Total inicial", componentValueId: data.initialSource.id, start: 0, end: data.initial, amount: data.initial, source: data.initialSource, total: true }] : []),
     ...data.segments.map((segment) => ({ ...segment, total: false })),
-    { label: "Total final", componentValueId: plan.finalValueId, start: 0, end: data.final, amount: data.final, source: data.finalSource, total: true },
+    { label: conditioned ? "Subtotal conhecido final" : "Total final", componentValueId: plan.finalValueId, start: 0, end: data.final, amount: data.final, source: data.finalSource, total: true },
   ]
   const chooseSource = createBiSourceChooser(section, open)
   const selectionFor = (source: DomainProjection["values"][number]): BiSelection => ({ context: projection.context, selectionRef, projectionVersion: projection.version, engineVersion: projection.engineVersion, valueId: source.id, reference: source.drilldown })

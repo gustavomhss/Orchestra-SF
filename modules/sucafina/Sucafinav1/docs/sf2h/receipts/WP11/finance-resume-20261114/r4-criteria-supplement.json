@@ -1,0 +1,2001 @@
+{
+  "schema": "sf2-wp11-finance-resume-r4-supplement-v1",
+  "status": "R3_SCOPED_ACTIONS_OBSERVED_R4_PROJECTION_PROOF_PREPARED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-resume",
+  "base": {
+    "head": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+    "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c"
+  },
+  "canonicalPlan": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan"
+  },
+  "sourceMap": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/criteria-map.json",
+    "blob": "a695600cceca463425e95f7b9996c59e16ce7dd1",
+    "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+    "literalAndStatusPreserved": true
+  },
+  "sourceDispositionCounts": {
+    "VERIFIED_SCOPED": 32,
+    "PARTIAL": 23,
+    "BLOCKED": 26,
+    "NOT_ESTABLISHED": 2
+  },
+  "summary": "All83 canonical source texts and source dispositions are retained. S7 observes the six R3 reader fixes at the published R3 head. R4 adds one test-only populated projection proof to the same real choice/prepared/apply journey; its Actions qualification is pending. No complete criterion or installed/human/runtime outcome is promoted by this supplement.",
+  "ownCodeDeltaGroups": [
+    {
+      "id": "RESULT_REQUEST_LEASE",
+      "paths": [
+        "product/decisions/result-store.ts",
+        "product/decisions/scenario-request-store.ts"
+      ],
+      "criteria": [
+        "WP11.QLT.01",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.INV.01",
+        "WP11.T02.INV.01",
+        "WP11.T02.CMP.01",
+        "WP11.T03.CHK.01"
+      ],
+      "change": "The final C08 case/result/request observation is followed by synchronous equality with the originally retained Request. Existing digest, source, ledger and authority checks remain.",
+      "proof": "calculation-history.test.ts reuses the actual Planner calculation and accepted C17 ledger; four finish/replacement cases target the final namespace authorization and renew valid reading/replay.",
+      "qualification": "OBSERVED_R3_S7_SCOPED; NO_GLOBAL_PROMOTION"
+    },
+    {
+      "id": "APPLICATION_RECEIPT_STATUS_LEASE",
+      "paths": [
+        "product/decisions/apply.ts",
+        "product/decisions/application-status.ts"
+      ],
+      "criteria": [
+        "WP11.INV.02",
+        "WP11.QLT.02",
+        "WP11.QLT.10",
+        "WP11.T04.CHK.02",
+        "WP11.T04.CHK.03",
+        "WP11.T04.DOD.02",
+        "WP11.T04.INV.01",
+        "WP11.T04.QLT.01",
+        "WP11.T04.CMP.01"
+      ],
+      "change": "Retained receipt and status egress require the same Request after final C08 observation. Durable attempt reservation, receipt-first reconciliation, canonical receipt proof and domain dispatch are unchanged.",
+      "proof": "application-indeterminate.test.ts adds four real UI finish/replacement cases after final receipt/status authorization, using the domain-authored receipt actually committed by Planner and recovered after provider reopen. Fresh authorized retry still returns that exact receipt with unchanged dispatch/review/confirmation counts.",
+      "qualification": "OBSERVED_R3_S7_SCOPED; NO_GLOBAL_PROMOTION"
+    },
+    {
+      "id": "HOT_TOPIC_DRAFT_LEASE",
+      "paths": [
+        "product/decisions/hot-topic-draft.ts"
+      ],
+      "criteria": [
+        "WP11.INV.01",
+        "WP11.T01.INV.01",
+        "WP11.T03.CMP.01"
+      ],
+      "change": "readCurrent/list retain Request after final C08 observation; registration/retry retain it after the final draft-authorization callback.",
+      "proof": "hot-topic-draft-domain.test.ts reuses real Dashboard C08 registration. Six finish/expiry cases cover read/list/retry; exact stored fields remain, fresh admission succeeds and source-race oracle is preserved.",
+      "qualification": "OBSERVED_R3_S7_SCOPED; NO_GLOBAL_PROMOTION"
+    },
+    {
+      "id": "PORTFOLIO_CHILD_LOOKUP_LEASE",
+      "paths": [
+        "product/decisions/mutations.ts"
+      ],
+      "criteria": [
+        "WP11.INV.02",
+        "WP11.T01.INV.01",
+        "WP11.T04.CHK.02"
+      ],
+      "change": "replayPortfolio retains Request after case read/authorization before its early not-found response. It does not create a reservation, receipt, portfolio result or domain effect.",
+      "proof": "portfolio-replay-lease-egress.test.ts has two real UI/C08 finish/expiry cases; both preserve complete durable state and a fresh admission returns not-found with zero domain or producer calls.",
+      "qualification": "OBSERVED_R3_S7_SCOPED; NO_GLOBAL_PROMOTION"
+    }
+  ],
+  "ownProofRemaining": [
+    {
+      "criterion": "WP11.T01.QLT.01",
+      "status": "OWN_POPULATED_PROJECTION_PROOF_PREPARED_ACTIONS_PENDING",
+      "action": "Root publishes the test-only R4 delta, then runs only its one selector; bind the outcome to the candidate and preserve S7 as the original R3 proof."
+    }
+  ],
+  "externalGroups": [
+    {
+      "criteria": [
+        "WP11.DOD.02",
+        "WP11.T03.DOD.01",
+        "WP11.T03.CHK.02",
+        "WP11.T03.INV.01",
+        "WP11.T03.QLT.01",
+        "WP11.T04.DOD.01"
+      ],
+      "owners": [
+        "WP04",
+        "WP01",
+        "WP10",
+        "WP12",
+        "S0"
+      ],
+      "remaining": "Installed human choice to domain-generated Procurement proposals, formal approval where required, partial application and recovery in the same journey. Existing Planner execution and seeded cross-domain command proof remain scoped; WP13 G-RETRY is an additional concrete domain-dispatch subproof, not installed end-user acceptance."
+    },
+    {
+      "criteria": [
+        "WP11.DOD.20",
+        "WP11.T02.CHK.20",
+        "WP11.T02.DOD.20"
+      ],
+      "owners": [
+        "WP01",
+        "WP05",
+        "WP12",
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "remaining": "Same canonical calculation/C10 result consumed by every named installed consumer: case UI, criticism and nonempty canonical portfolio. BI/source evidence already exists; source status must be reconciled with new Finance WP05/WP13 evidence without claiming all consumers."
+    },
+    {
+      "criteria": [
+        "WP11.QLT.20",
+        "WP11.T02.QLT.01",
+        "WP11.T02.QLT.20",
+        "WP11.T03.QLT.01"
+      ],
+      "owners": [
+        "WP01",
+        "WP05",
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "remaining": "Installed origin/period/version and complete/conditioned labels, supported N-A or pending reason per category, and proposal/destination presentation."
+    },
+    {
+      "criteria": [
+        "WP11.T01.DOD.01",
+        "WP11.T02.DOD.01"
+      ],
+      "owners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "remaining": "Installed provider composition and alternative editing with the same base and authority."
+    },
+    {
+      "criteria": [
+        "WP11.SUC.01",
+        "WP11.SUC.20",
+        "WP11.T01.SUC.01",
+        "WP11.T03.SUC.01",
+        "WP11.T04.SUC.01",
+        "WP11.T02.SUC.01",
+        "WP11.T02.SUC.20"
+      ],
+      "owners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "remaining": "Observed user/team journey, comprehension of financial caveat, resolution and continuation without manual reconstruction. Automated service/renderer assertions cannot establish this human outcome."
+    },
+    {
+      "criteria": [
+        "WP11.INV.10",
+        "WP11.SUC.10",
+        "WP11.DOD.10",
+        "WP11.CMP.10",
+        "WP11.T01.CHK.18",
+        "WP11.T01.DOD.18",
+        "WP11.T01.INV.18",
+        "WP11.T01.QLT.18",
+        "WP11.T01.CMP.18",
+        "WP11.T01.SUC.18",
+        "WP11.T02.CHK.18",
+        "WP11.T02.DOD.18",
+        "WP11.T02.INV.18",
+        "WP11.T02.QLT.18",
+        "WP11.T02.CMP.18",
+        "WP11.T02.SUC.18",
+        "WP11.T03.CHK.18",
+        "WP11.T03.DOD.18",
+        "WP11.T03.INV.18",
+        "WP11.T03.QLT.18",
+        "WP11.T03.CMP.18",
+        "WP11.T03.SUC.18",
+        "WP11.T04.CHK.18",
+        "WP11.T04.DOD.18",
+        "WP11.T04.INV.18",
+        "WP11.T04.QLT.18",
+        "WP11.T04.CMP.18",
+        "WP11.T04.SUC.18"
+      ],
+      "owners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "remaining": "Installed resident/native/MCP production and consumption, session/provider/capture/resources/skills authority and transport negatives. Source wiring and omni not-applicable are not positive resident-runtime proof."
+    },
+    {
+      "criteria": [
+        "WP11.T04.CMP.01"
+      ],
+      "owners": [
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "remaining": "approval-pending from the canonical domain producer. Unsupported submit_pr or a manufactured receipt is not that state."
+    }
+  ],
+  "financeEvidenceReusedWithLimits": [
+    {
+      "label": "W33_S25",
+      "runId": 43599384924,
+      "jobId": 132460663327,
+      "productHead": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "productTree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+      "snapshot": "34c2647395a03749e5bbc795bcf1656be5d10a03",
+      "result": "17 pass197 assertions;375.28s",
+      "scope": "Grouped source/case read scopes and source admission; original/revised choices and implementation quote history. History closes old provider/UI and uses new authorized readers; no installed UI/native claim."
+    },
+    {
+      "label": "W33_S26",
+      "runId": 43599387716,
+      "jobId": 132460671887,
+      "snapshot": "62223d922ddeb4db39c28213ab8190b01bd0617e",
+      "result": "1 pass86 assertions;75.76s",
+      "scope": "Real BI producer/renderer choice-history consumer; installed mounted UI remains separate."
+    },
+    {
+      "label": "W30_S19",
+      "runId": 43594791351,
+      "productHead": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "snapshot": "823311ee83c6a28273bc8d63bb1157e9bdcb01e7",
+      "result": "21 pass448 assertions",
+      "scope": "Includes calculation-history and actual choice/prepared execution. C17 historical reader opens another connection while original host stays alive; do not call that whole provider restart."
+    },
+    {
+      "label": "S14_INDIVIDUAL_ASSERTION_ONLY",
+      "runId": 43589528126,
+      "productHead": "cfbf7c824d4351431d35533dbe2572de11084b9d",
+      "snapshot": "ee53236037e82ab79227b5ed43874f68dc539e19",
+      "runConclusion": "failure",
+      "individualPassingSelector": "./Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "durationMs": 175664.9,
+      "budgetMs": 180000,
+      "scope": "Existing nested C17 persistence/replay assertion only. Other failures/timeouts in that run remain failures; source/dependency qualification is required for reuse on a later candidate."
+    }
+  ],
+  "r2ObservedEvidence": {
+    "product": {
+      "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+      "label": "R2",
+      "parents": [
+        "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "e8949be0e31952d5be4987c099003cd0b46e2add"
+      ]
+    },
+    "snapshot": "e3c1070024883ce6ea63a71e2401f1e49914de9d",
+    "snapshotTree": "0df2aa9f841272596ca40c5aa0f0d49d958b4bec",
+    "requestBlob": "1b6b340ebe61c8a3ed00d6470c1bab4ed21e3a20",
+    "runId": 43616603779,
+    "jobId": 132512914754,
+    "conclusion": "success",
+    "selectors": [
+      "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "./Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "./Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "./Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "./Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "./Sucafinav1/test/product/wp11/case-port.test.ts",
+      "./Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "summary": "32 pass0 fail393 assertions across8 files;113.59s. renewal-choice-revision112170.15ms within its unchanged180000ms budget.",
+    "logSha256": "b0cd0d6f1b3199218bdebacf177e131e541bdaf09ea4ad3c0593d35fdec1c5b9",
+    "logBytes": 77992,
+    "omni": {
+      "status": "not-applicable",
+      "nonce": "c7187bf0df3bab32e79a87e3e3d12f74",
+      "notResidentRuntimeProof": true
+    },
+    "limit": "Observed on R2 only; does not auto-qualify R3 reader changes."
+  },
+  "boundedAudit": {
+    "scope": "All27 product/decisions files containing input.state.read, pinned through GitHub MCP at R2. Six changed in R3; case-port/current-choice-preview retain R2 fixes; remaining returns were read and do not exhibit this exact final-C08-after-last-lease pattern.",
+    "pins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-proposal-verifier.ts",
+        "sha": "10fbcf27d8e9e5d93978ed0009f46223872d3dad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+        "sha": "c2f91a8cdfc590dc10a1b3a2a9c56be8a424bd5a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+        "sha": "43e1de8c347faea2953ff5baa2919b3b061fc4e4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/application-status.ts",
+        "sha": "29a01e27af230df149e8862beb370f466abf0808"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "sha": "964a53310c340f4496d7410d66f8b852270b75f1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+        "sha": "b7db14e10babd2a8b53715f5dce9f3034e9aa796"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+        "sha": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "sha": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+        "sha": "d7f4199cc20f8e02290107bc64034d3956b42692"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/choice-result-lookup.ts",
+        "sha": "5a7ed750d7949a78a9e3161c539d4e4d6801086b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+        "sha": "25e6056021a20cbdd1a3608fda515d77e052327f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-interval-store.ts",
+        "sha": "38fe7b91cfbad1d0f986c2252e68fed32446a2fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "sha": "dbd02e2d4d15ca2b866179759d38a0066e6550dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+        "sha": "c357c6c66aac544394ab355306e1f6f7195395f7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "sha": "c27e908140ba34ffea39078a78626f47943a8444"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+        "sha": "2441642f59179516da09c9f9780b1b4764f6fd83"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "sha": "d8a151c558227b3bd2612dbb6caba993efa85783"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "sha": "e0840d775274ea73c6b938711764c69593dadca0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+        "sha": "8815cc1fc27b570d241e2dd464d925eff05e5455"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+        "sha": "b90dcbc9e79e6dc505780da885c1fbd504c1fb4c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "sha": "64deee2c7570d718686eb2181ff197f4347e6764"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "sha": "90c3e981d8418c562342660bd3d56d03f9995383"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+        "sha": "ae7a4476d686638512f3fc8bcf342a746259cacc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts",
+        "sha": "75237c53bf97c33d8a192cb6166284576817f4ca"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "sha": "bc32bfb39e8b6012230ee0d136bed142340e5d89"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "sha": "40c78dee5908cd8af58cc3d58435f3cfb4542045"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+        "sha": "368a7f2e207c4f551ac3c6f77424797c97f794f3"
+      }
+    ],
+    "fixes": [
+      "product/decisions/result-store.ts",
+      "product/decisions/scenario-request-store.ts",
+      "product/decisions/apply.ts",
+      "product/decisions/application-status.ts",
+      "product/decisions/hot-topic-draft.ts",
+      "product/decisions/mutations.ts"
+    ],
+    "previousFixesRetained": [
+      "product/decisions/case-port.ts",
+      "product/decisions/current-choice-preview.ts"
+    ],
+    "limit": "This bounded lease-egress scan is not global snapshot atomicity, installed authorization or financial acceptance."
+  },
+  "requestIdentityAudit": {
+    "ownFixturesCorrected": [
+      "test/product/wp11/result-store.test.ts",
+      "test/product/wp11/coverage-access.test.ts",
+      "test/product/wp11/case-port.test.ts"
+    ],
+    "preserved": "Per-context principals/revocation preserved; real UI/DomainAuthority hosts already retain Request; R2 case-port fixes kept. WP13 owner confirmed its three reopen consumers retain Request.",
+    "externalDeltas": []
+  },
+  "sharedPinsReadOnly": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "disposition": "READ_ONLY_OWNER_WP10_OR_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "sha": "9a2da03da92ce07fc8506c72dc1f4139143a7615",
+      "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "disposition": "READ_ONLY_OWNER_WP10_OR_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "disposition": "READ_ONLY_OWNER_WP10_OR_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "sha": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "disposition": "READ_ONLY_OWNER_WP10_OR_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "disposition": "READ_ONLY_OWNER_WP10_OR_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "sha": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "disposition": "READ_ONLY_OWNER_WP10_OR_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "disposition": "READ_ONLY_OWNER_WP10_OR_COMPOSITION"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "WP11.DOD.01",
+      "canonicalText": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.DOD.02",
+      "canonicalText": "Mudanças propostas chegam aos domínios reais e execução parcial é retomável no candidato integrado.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "INTEGRATED_CONSUMER",
+      "sourceRemaining": [
+        "AR3 prova escolha → proposta → aplicação Planner; AR2 prova os dois domínios a partir de propostas seed. Falta a mesma jornada integrada gerar propostas humanas para Planner e Procurement e recuperar o parcial."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP04",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.DOD.20",
+      "canonicalText": "Alternativas persistem inventário, avaliação de categorias e comparação C10 consumidos por UI, BI, crítica e portfólio.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "NAMED_CONSUMERS",
+      "sourceRemaining": [
+        "BI agora consome resultados reais e seu renderer foi exercitado em Chrome. Ainda falta o mesmo cálculo/C10 no módulo WP01 montado, na crítica e em portfólio canônico não vazio, sem substitutos de seleção."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP12",
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.DOD.10",
+      "canonicalText": "As entregas residentes atribuídas a WP11 têm produção, consumo e provas reais completos.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "As entregas residentes têm implementação e consumo parcial em fonte, mas não produção/consumo/provas reais completos na instalação com os recursos externos exigidos."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.INV.01",
+      "canonicalText": "Escolha não é aprovação e simulação não grava em fonte oficial.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "HOT_TOPIC_DRAFT_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.INV.02",
+      "canonicalText": "Não há transação global presumida nem efeito repetido em retry.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE",
+        "PORTFOLIO_CHILD_LOOKUP_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.INV.20",
+      "canonicalText": "Soma reconciliada não prova cobertura. Categoria ausente/pending não vira zero; escolha preserva a condição conhecida na época.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.INV.10",
+      "canonicalText": "WP11 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "RESIDENT_AUTHORITY",
+      "sourceRemaining": [
+        "Grants/CAS, import e ownership têm provas próprias. Identidade/captura e acessos do host residente instalado ainda não foram observados no fluxo native/MCP."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.QLT.01",
+      "canonicalText": "Fontes, versões, hipóteses e efeitos são inspecionáveis.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "RESULT_REQUEST_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.QLT.02",
+      "canonicalText": "Falha conserva trabalho e estado de cada mudança.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.QLT.20",
+      "canonicalText": "Subtotal, total coberto, diferença condicionada e benefício calculado confirmado têm rótulos e fontes distinguíveis.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "PRESENTATION_SCOPE",
+      "sourceRemaining": [
+        "B1B mostra subtotal, total indisponível/completo, sinal da diferença de custo e origem no renderer BI. A distinção completa de rótulos entre diferença condicionada e benefício calculado confirmado em todos os consumidores ainda não foi observada."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.QLT.10",
+      "canonicalText": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "RESULT_REQUEST_LEASE",
+        "APPLICATION_RECEIPT_STATUS_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.CMP.01",
+      "canonicalText": "Cobrir intenção/alternativas/premissas/escolha/propostas/recibos, concorrência, import e revogação.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "RESULT_REQUEST_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.CMP.20",
+      "canonicalText": "Cobrir categoria incluída, inaplicável suportada, pendente, inteiramente omitida, zero confirmado e custo posterior que inverte a comparação.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.CMP.10",
+      "canonicalText": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "A matriz de obrigações residentes 5/18/8/C17 conserva owners/paths e contratos, mas faltam consumidores instalados, negativos completos por transporte e replay native/parent não vazio; o pacote não foi aceito como integral."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.SUC.01",
+      "canonicalText": "Uma decisão passa de pergunta a trabalho executável e pode ser retomada sem reconstruir sua razão.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "USER_JOURNEY",
+      "sourceRemaining": [
+        "Os serviços preservam razão/valores e chegam a uma aplicação real. Falta a jornada instalada de pergunta → escolha → trabalho, retomada pelo usuário sem reconstrução manual."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.SUC.20",
+      "canonicalText": "Usuário vê o que falta, confirma uma categoria e obtém reavaliação reproduzível sem perder a base da escolha original.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "USER_JOURNEY",
+      "sourceRemaining": [
+        "H7/B1B qualificam reavaliação e preservação histórica; a confirmação de escopo/cotação é entrada de fixture. Falta observar o usuário resolver a categoria pelo fluxo montado."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.SUC.10",
+      "canonicalText": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "RESIDENT_CONSUMER",
+      "sourceRemaining": [
+        "Falta execução resident real e consumo instalado da sua saída com replay reprodutível. Nenhum verdict not-applicable de omni vale como execução positiva."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.CHK.01",
+      "canonicalText": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.CHK.02",
+      "canonicalText": "Duas atualizações com expected version idêntica produzem um commit e um conflito com rascunho recuperável, sem perda de dado.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.CHK.03",
+      "canonicalText": "Import JSON malicioso ou troca de registro com ID reutilizado não fabrica confirmação, não apaga histórico confiável nem mantém vínculo à encarnação antiga como válido.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.CHK.18",
+      "canonicalText": "Executar sf_case_read, sf_case_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.DOD.01",
+      "canonicalText": "Caso é criado, retomado e atualizado no provider real da composição; adapter em memória isolado não fecha DoD.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "INSTALLED_PROVIDER",
+      "sourceRemaining": [
+        "O provider SQLite/C08 real cria, relê e edita casos nos testes. A montagem instalada usa a composição do owner WP10, que não foi exercitada neste candidato."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.DOD.18",
+      "canonicalText": "Descritores C16 de sf_case_read, sf_case_draft são implementados e consumidos por T06 com referências reais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.INV.01",
+      "canonicalText": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "RESULT_REQUEST_LEASE",
+        "HOT_TOPIC_DRAFT_LEASE",
+        "PORTFOLIO_CHILD_LOOKUP_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T01.INV.18",
+      "canonicalText": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.QLT.01",
+      "canonicalText": "Falhas distinguem acesso, referência inválida e versão antiga; cada seção mantém origem/período/versão próprios.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "SECTION_PROVENANCE",
+      "sourceRemaining": [
+        "Acesso, referência/encarnação e stale têm códigos e negativos reais. A prova ainda não observa cada seção da projeção completa com origem, período e versão próprios no consumidor; os testes de caso vazio e readers de cálculo não cobrem essa enumeração inteira."
+      ],
+      "remainingOwners": [
+        "WP11",
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "OWN_PROJECTION_PROOF_PREPARED_PLUS_EXTERNAL_PRESENTATION",
+      "ownNextActions": [
+        "Qualify the one R4 choice-prepared-execution selector on Actions. Exact all-section assertions are prepared; installed history authorization and mounted presentation remain separate."
+      ],
+      "r3DeltaGroups": [],
+      "currentQualification": "R4_POPULATED_PROJECTION_ACTIONS_PENDING; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T01.QLT.18",
+      "canonicalText": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.CMP.01",
+      "canonicalText": "Cobrir rascunho, objetivo corrigido, referência revogada/substituída, concorrência e reinício.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.CMP.18",
+      "canonicalText": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.SUC.01",
+      "canonicalText": "André e um colaborador autorizado retomam a mesma pergunta e seus dados sem reconstruir contexto.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "USER_JOURNEY",
+      "sourceRemaining": [
+        "H7 fecha o mesmo caso/escolha para colaborador autorizado após novo provider/UI. Ainda não há retomada observada por André e colaborador no módulo instalado."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T01.SUC.18",
+      "canonicalText": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CHK.01",
+      "canonicalText": "AI-RENEWAL com inventário completo e fontes sintéticas confirmadas: 240000 vs 60000+45000+105000 = 210000; diferença 30000; implantação 70000 produz 235000 e diferença 5000. Taxas/migração/treinamento explicitamente cobertos ou inaplicáveis não são somados duas vezes.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CHK.02",
+      "canonicalText": "Operação que substituiria contribuição já vinculada troca o componente uma vez; o teste com inclusão duplicada é recusado ou reconciliado pelo domínio.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CHK.03",
+      "canonicalText": "Moeda sem FX, custo de saída pending e desconto hipotético mantêm comparação conditioned. Valor 0 confirmado difere de null, categoria omitted e declaração not-applicable sem evidência; nenhum estado desconhecido é promovido a zero.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CHK.20",
+      "canonicalText": "AI-RENEWAL-OMITTED-CATEGORY remove training da entrada, sem linha, sem pending pré-cadastrado e com implementação explicitamente sem treinamento: validador deriva missing-category e knownSubtotal 210000; completeDifference/total coberto ficam indisponíveis e a comparação é conditioned em todos os consumidores.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "NAMED_CONSUMERS",
+      "sourceRemaining": [
+        "A omissão é derivada sem linha/pending pré-cadastrado no produtor e consumida pelo BI. O trecho “em todos os consumidores” permanece sem UI WP01 montada, crítica e portfólio não vazio reais."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP12",
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CHK.21",
+      "canonicalText": "Na mesma variante, confirmar novo componente training=40000 com fonte torna cobertura completa, total 250000, diferença -10000 e teto de implantação15000. A comparação de custo se inverte, condição mínima 20000 falha e a escolha original mantém subtotal 210000/ressalva pending/versões.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CHK.18",
+      "canonicalText": "Executar sf_alternative_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.DOD.01",
+      "canonicalText": "Alternativas persistidas consomem cálculo real WP03 e são editáveis no consumidor WP01.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "WP01_EDIT",
+      "sourceRemaining": [
+        "Persistência e cálculo WP03/C17 são reais e qualificados. Falta editar a alternativa no consumidor WP01 montado com a mesma base/autoridade."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.DOD.20",
+      "canonicalText": "Alternativa persistida entrega cálculo WP03 e cobertura C10 reais a todos os consumidores nomeados.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "NAMED_CONSUMERS",
+      "sourceRemaining": [
+        "Planner/C10, persistência e BI têm prova; a entrega do mesmo resultado a cada consumidor nomeado ainda não inclui crítica e portfólio reais não vazios."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP12",
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.DOD.18",
+      "canonicalText": "Descritores C16 de sf_alternative_draft são implementados e consumidos por T06 com referências reais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.INV.01",
+      "canonicalText": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "RESULT_REQUEST_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T02.INV.20",
+      "canonicalText": "Nenhuma categoria some por não ter linha; cobertura não soma parcelas nem inventa valor, imposto ou fato confirmado.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.INV.18",
+      "canonicalText": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.QLT.01",
+      "canonicalText": "Todo total pode ser reconciliado aos componentes com moeda, período e origem; campos inválidos têm erro específico.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "TOTAL_ORIGIN_PRESENTATION",
+      "sourceRemaining": [
+        "Os totais exercitados reconciliam componentes, moeda, horizonte e erros de alvo/base. Não foi qualificada no candidato a enumeração de origem A/B de todo total e dos campos editáveis inválidos no consumidor de alternativas; o teste planner-origins W6 fica histórico."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.QLT.20",
+      "canonicalText": "Cada categoria mostra referência de parcela, motivo suportado de inaplicabilidade ou pergunta pendente; subtotal e total ficam distintos.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "CATEGORY_PRESENTATION",
+      "sourceRemaining": [
+        "C10 e BI distinguem training pendente/completo e componentes; não foi observada no fluxo montado a apresentação de cada categoria com referência, motivo N/A suportado ou pergunta pendente."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.QLT.18",
+      "canonicalText": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CMP.01",
+      "canonicalText": "Cobrir mesma base, base incompatível, operação inválida, alternativa incompleta e mudança de critério.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "RESULT_REQUEST_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T02.CMP.20",
+      "canonicalText": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.CMP.18",
+      "canonicalText": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.SUC.01",
+      "canonicalText": "O usuário altera uma premissa e obtém uma comparação que pode explicar e reproduzir.",
+      "sourceStatus": "NOT_ESTABLISHED",
+      "sourceClosureClass": "HUMAN_UNDERSTANDING",
+      "sourceRemaining": [
+        "Cálculo reproduzível e revisões de premissa existem, mas ainda não há observação de um usuário editar, explicar e reproduzir a comparação pelo fluxo instalado."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.SUC.20",
+      "canonicalText": "O usuário compreende a ressalva e resolve a informação que altera a comparação, sem refazer manualmente os números.",
+      "sourceStatus": "NOT_ESTABLISHED",
+      "sourceClosureClass": "HUMAN_UNDERSTANDING",
+      "sourceRemaining": [
+        "Nenhum teste de serviço/renderer demonstra compreensão humana da ressalva ou resolução pelo usuário sem refazer números; esse resultado de uso não foi estabelecido."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T02.SUC.18",
+      "canonicalText": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.CHK.01",
+      "canonicalText": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "RESULT_REQUEST_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T03.CHK.02",
+      "canonicalText": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "DOMAIN_PROPOSAL_PRESENTATION",
+      "sourceRemaining": [
+        "Os grants separam escolher, preparar e aplicar; nada aplica automaticamente. Falta a proposta no destino integrado e o percurso formal PR/PO com a confirmação cabível, sem aprovação implícita."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.CHK.03",
+      "canonicalText": "Responsável confirma março enquanto projeto oficial segue maio: cenário usa premissa declarada, divergência permanece visível e atualização oficial exige comando próprio.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.CHK.20",
+      "canonicalText": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.CHK.18",
+      "canonicalText": "Executar sf_change_prepare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.DOD.01",
+      "canonicalText": "Escolha humana gera propostas revisáveis que chegam aos consumidores reais de cada domínio.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "HUMAN_PROCUREMENT_PROPOSAL",
+      "sourceRemaining": [
+        "A proposta humana e o review/aplicação Planner são reais. As propostas Procurement nos testes de execução são seed; falta sua geração pela escolha humana e entrega ao consumidor real."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.DOD.18",
+      "canonicalText": "Descritores C16 de sf_change_prepare são implementados e consumidos por T06 com referências reais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.INV.01",
+      "canonicalText": "Escolha gerencial não equivale a aprovação formal; UI ou IA não delegam autoridade inexistente.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "FORMAL_APPROVAL_AUTHORITY",
+      "sourceRemaining": [
+        "A separação de grants é comprovada no serviço. A aprovação Procurement e o transporte IA/native completo ainda não foram certificados; submit_pr não suportado não prova autorização formal."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP10",
+        "WP12",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.INV.18",
+      "canonicalText": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.QLT.01",
+      "canonicalText": "Cada proposta mostra alteração, motivo, destino e estado; a justificativa continua vinculada aos números debatidos.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "PROPOSAL_PRESENTATION",
+      "sourceRemaining": [
+        "O preview Planner conserva alteração, razão, destino, estado e números; falta qualificar a apresentação de cada proposta/destino na composição instalada, inclusive Procurement."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.QLT.18",
+      "canonicalText": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.CMP.01",
+      "canonicalText": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "HOT_TOPIC_DRAFT_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T03.CMP.18",
+      "canonicalText": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.SUC.01",
+      "canonicalText": "A equipe consegue continuar o trabalho a partir da escolha sem transcrever sua justificativa e seus valores.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "USER_JOURNEY",
+      "sourceRemaining": [
+        "Continuidade de valores/razão é provada por serviços e grants reais. A equipe continuar esse trabalho no consumidor instalado sem transcrição ainda não foi observada."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T03.SUC.18",
+      "canonicalText": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.CHK.01",
+      "canonicalText": "Aplicar Planner com sucesso e recusar Procurement mantém o primeiro resultado e exibe parcial; retomada não reaplica o Planner.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.CHK.02",
+      "canonicalText": "Perder resposta depois do commit e reenviar a mesma correlação resulta em um efeito; caso sem receipt autoritativo fica indeterminado e exige reconciliação, nunca retry cego.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE",
+        "PORTFOLIO_CHILD_LOOKUP_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T04.CHK.03",
+      "canonicalText": "Revogar permissão entre preparação e aplicação recusa a mudança pendente e não expõe resultado restrito em recibo agregado.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T04.CHK.18",
+      "canonicalText": "Executar sf_receipt_get pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.DOD.01",
+      "canonicalText": "O módulo integrado recupera falha parcial e resposta perdida usando recibos reais de domínio.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "INTEGRATED_RECOVERY",
+      "sourceRemaining": [
+        "Receipts e recuperação reais são qualificados nas composições próprias. Falta o módulo integrado expor e consumir a recuperação da mesma jornada humana entre domínios."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP04",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.DOD.02",
+      "canonicalText": "Recuperação consulta recibos de domínio gravados atomicamente com a mutação e reconcilia o caso; a prova inclui resposta perdida após commit e ausência de efeito duplicado.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T04.DOD.18",
+      "canonicalText": "Descritores C16 de sf_receipt_get são implementados e consumidos por T06 com referências reais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.INV.01",
+      "canonicalText": "Não existe promessa de transação global; um erro posterior não desfaz ou oculta commits anteriores.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T04.INV.18",
+      "canonicalText": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.QLT.01",
+      "canonicalText": "Estado informa efeito comprovado e ação de recuperação; correlação estável independe de narrativa IA.",
+      "sourceStatus": "VERIFIED_SCOPED",
+      "sourceClosureClass": "OWN_LITERAL_QUALIFIED",
+      "sourceRemaining": [],
+      "remainingOwners": [],
+      "triageClass": "SOURCE_SCOPED_DISPOSITION_RETAINED",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T04.QLT.18",
+      "canonicalText": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.CMP.01",
+      "canonicalText": "Cobrir sucesso total, sucesso parcial, conflito, pendência de aprovação, permissão revogada e resultado desconhecido.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "APPROVAL_PENDING_PRODUCER",
+      "sourceRemaining": [
+        "Sucesso total/parcial, conflito, revogação e indeterminado têm prova. Falta resultado approval-pending de produtor de domínio; recusar submit_pr não equivale a esse estado."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [
+        "APPLICATION_RECEIPT_STATUS_LEASE"
+      ],
+      "currentQualification": "R3_S7_OBSERVED_FOR_CHANGED_READER_SCOPE; SOURCE_DISPOSITION_NOT_PROMOTED"
+    },
+    {
+      "id": "WP11.T04.CMP.18",
+      "canonicalText": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.SUC.01",
+      "canonicalText": "O usuário sabe o que já foi feito e retoma só o restante, com ausência verificável de efeitos duplicados.",
+      "sourceStatus": "PARTIAL",
+      "sourceClosureClass": "USER_RECOVERY",
+      "sourceRemaining": [
+        "Estados, receipts e ausência de efeito repetido são provados por serviço/HTTP. Falta observar o usuário identificar o que foi feito e retomar somente o restante na tela instalada."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    },
+    {
+      "id": "WP11.T04.SUC.18",
+      "canonicalText": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "sourceStatus": "BLOCKED",
+      "sourceClosureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "sourceRemaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "triageClass": "EXTERNAL_COMPOSITION_PROVIDER_OR_USAGE",
+      "ownNextActions": [],
+      "r3DeltaGroups": [],
+      "currentQualification": "SOURCE_DISPOSITION_PRESERVED; CANDIDATE_BINDING_REMAINS_EXPLICIT"
+    }
+  ],
+  "noGlobalAcceptance": true,
+  "predecessor": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/r3-criteria-triage.json",
+    "blob": "083efb460edcf3b5d6245daf92b0a01241f192f5",
+    "commit": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+    "preservedUnmodified": true
+  },
+  "r3ObservedEvidence": {
+    "product": {
+      "sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+      "label": "R3",
+      "parents": [
+        "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+      ]
+    },
+    "snapshot": "f74733ed5c2ef77b53c3a40948a1b9c509bf7ac9",
+    "snapshotTree": "7b0270dd270aa81e8c1ecc92a77ee123f1f5124f",
+    "requestBlob": "0eae310489ec68387e232f05c0f31bc2a84036f3",
+    "requestSha256": "fbb4eec9acd2e15264529866e8cb19c708b80962763a5e7577587d725a8f1175",
+    "runId": 43618462688,
+    "jobId": 132518604113,
+    "conclusion": "success",
+    "selectors": [
+      "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "./Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "./Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "./Sucafinav1/test/product/wp11/portfolio-replay-lease-egress.test.ts",
+      "./Sucafinav1/test/product/wp11/result-store.test.ts",
+      "./Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "./Sucafinav1/test/product/wp11/case-port.test.ts",
+      "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "pass": 19,
+    "fail": 0,
+    "assertions": 487,
+    "files": 8,
+    "durationSeconds": 11.73,
+    "logSha256": "153550c8704d89f18f7ccaa239de6415197bde960da58b3862be5d8eebe99f11",
+    "logBytes": 72091,
+    "omni": {
+      "status": "not-applicable",
+      "nonce": "a5f429a2e888b8bc5ac7d8449547aa4f",
+      "notResidentRuntimeProof": true
+    },
+    "limit": "Observed R3 readers, contraproofs and original real choice/prepared/apply journey only. Does not qualify the added R4 assertions or global criteria."
+  },
+  "r4ProjectionProof": {
+    "criterion": "WP11.T01.QLT.01",
+    "status": "OWN_POPULATED_PROJECTION_PROOF_PREPARED_ACTIONS_PENDING",
+    "test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "baseBlob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "sha": "d530558df74f6a0a0c7458a1a308ffdc0114b66b",
+      "sha256": "654fe2471dd0ec5ea47e56748bc3d3f8b1906c7ed7b977809d378e98f0886511",
+      "bytes": 39168,
+      "classification": "OWN_TEST_PROOF_DELTA",
+      "localFile": "/workspace/scratch/3b9737c0177a/work-wp11/r4-overlay/modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts"
+    },
+    "selector": "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+    "productionChanges": [],
+    "originalAssertionsPreserved": true,
+    "localProductTestsExecuted": false,
+    "source": "Same existing real SQLite/C08, scoped Planner issuer, canonical alternatives, private human/UI choice, canonical preparation/review, separate application grant, real Planner domain command and persisted receipt. No choice, change, receipt or financial outcome is fabricated.",
+    "added": [
+      "Read the populated case through its unchanged original fresh evidence resolver before applying; compare canonical alternatives, coverage bases, choice, planned proposal and receipt absence.",
+      "After the existing successful application/retry assertions, add an open assumption, a question and its receipt reference answer through real human/UI admissions and own C08 management/mutations.",
+      "Project all nonempty sections through the real case port and C08, preserving exact archived issued record references and the real canonical receipt returned again by readReceipt.",
+      "Compare source identity/digests, alternative and choice content, coverage bases, assumption refs, question/answer ref joins, proposal target/preview/operationRef, receipt metadata, and ledger event/outputDigest.",
+      "Discriminate annual case and target periods from January and February component periods; discriminate current case version from coverage basis1, prepared caseVersion2, receipt version1 and prior ledger caseRef; keep absent receipt period absent.",
+      "Keep the domain snapshot and dispatch count unchanged; reject malformed reference and finished UI lease after the positive projection."
+    ],
+    "boundary": "The additional historical projection reader accepts only exact references emitted earlier in this same real journey, exact previously produced alternatives, and the actual persisted receipt through the real producer lookup. This explicit test adapter proves metadata preservation at the WP11 projection boundary; it is not installed historical authorization, a canonical collaboration-question producer, new C17 replay, or a provider restart. The original fresh resolver and all original financial/authorization/application assertions are unchanged.",
+    "remainingOwners": [
+      "WP01",
+      "WP10",
+      "S0"
+    ],
+    "remaining": "Run the one new selector at R4; installed historical-source authorization, mounted per-section presentation and human usage remain composition/consumer observations."
+  },
+  "r4SourcePins": {
+    "base": {
+      "head": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c"
+    },
+    "pins": [
+      {
+        "path": "test/product/wp11/choice-prepared-execution.test.ts",
+        "sha": "326a262f17914de6675657dd1e6f82baec31e5c3"
+      },
+      {
+        "path": "product/decisions/case-management.ts",
+        "sha": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e"
+      },
+      {
+        "path": "product/contracts/business-context.ts",
+        "sha": "102c849084980ae52223809d33bdeea36a58536b"
+      },
+      {
+        "path": "product/contracts/decisions.ts",
+        "sha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+      },
+      {
+        "path": "product/decisions/case-port.ts",
+        "sha": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+      },
+      {
+        "path": "product/decisions/prepared-apply.ts",
+        "sha": "90c3e981d8418c562342660bd3d56d03f9995383"
+      },
+      {
+        "path": "product/contracts/context.ts",
+        "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+      },
+      {
+        "path": "product/integration/human-authority.ts",
+        "sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a"
+      }
+    ]
+  }
+}

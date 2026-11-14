@@ -9,7 +9,8 @@ import type { ScenarioOperation, ScenarioRequest } from "../../../product/contra
 import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
-import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
+import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
+import { createDecisionCaseManagement } from "../../../product/decisions/case-management.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
@@ -56,7 +57,7 @@ test("a canonical human choice creates a reviewed Planner proposal and only a se
     const payloads = new WeakMap<TrustedUiContext, { action: SfHumanAction; payload: unknown }>()
     const authorize = async (request: Request) => fixture.access.allowed && intents.has(request) && request.headers.get("authorization") === "finance"
       ? { installationId: "i", projectId: "p", principalRef: "finance", accessRevision: "1", policyVersion: "1" } : undefined
-    const actions: SfHumanAction[] = ["decisions.portfolio.read", "decisions.choose", "decisions.prepare-changes", "decisions.apply"]
+    const actions: SfHumanAction[] = ["decisions.portfolio.read", "decisions.choose", "decisions.prepare-changes", "decisions.apply", "decisions.edit", "decisions.add-question", "decisions.answer-question"]
     const ui = createSfUiAuthority({ authorize, commandIdentity: async (request, operation, digest) => {
       const intent = intents.get(request)
       return intent && operation === `sf-human:${intent.action}` && digest === intent.digest ? intent.operationId : undefined
@@ -233,6 +234,14 @@ test("a canonical human choice creates a reviewed Planner proposal and only a se
     expect(afterPrepare.choices).toEqual([choice])
     expect(await official()).toEqual(before)
     expect(await mutations.prepareChanges(prepareRequest, prepareContext)).toEqual(prepared)
+    const projectedBeforeApply = await cases.read({ caseRef: encodeCaseRef(caseRef) }, readContext)
+    expect(projectedBeforeApply.status).toBe("ok")
+    if (projectedBeforeApply.status !== "ok") throw new Error(projectedBeforeApply.reason)
+    expect(projectedBeforeApply.value.case.alternatives).toEqual(alternatives)
+    expect(projectedBeforeApply.value.case.costCoverageBases).toEqual([basis])
+    expect(projectedBeforeApply.value.case.choices).toEqual([choice])
+    expect(projectedBeforeApply.value.case.preparedChanges).toMatchObject([{ caseVersion: change.caseVersion, target: change.target, preview: choice.result, operationRef: change.operation.id, state: "planned" }])
+    expect(projectedBeforeApply.value.case.receipts).toEqual([])
     const review = createPlannerPreparedReview({ host, issueSource: domainPlanner.issueSource })
     const reviewed = await review(change.operation, readContext)
     expect(reviewed.status).toBe("ok")
@@ -284,6 +293,92 @@ test("a canonical human choice creates a reviewed Planner proposal and only a se
     expect(counters.dispatch).toBe(1)
     expect(await official()).toEqual(after)
     expect((await readCase()).choices).toEqual([choice])
+
+    // Projection-only historical boundary: these are exact source references issued
+    // before the real apply above, plus its persisted canonical receipt. The original
+    // fresh resolver remains unchanged. This does not prove an installed historical
+    // authorizer, a collaboration question producer, or a new C17/provider restart.
+    const receiptRef = final.sourceRefs.find((ref): ref is Extract<BusinessEvidenceRef, { kind: "receipt" }> => ref.kind === "receipt" && ref.target.receiptId === applied.value.id)
+    if (!receiptRef) throw new Error("Canonical receipt evidence unavailable")
+    const archivedRefs = structuredClone([...issuedRefs, receiptRef])
+    const receiptLookup = { surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }
+    expect(await producer.readReceipt(receiptLookup, readContext)).toEqual({ status: "ok", value: { state: "found", receipt: applied.value } })
+    const archiveEvidence: BusinessContextService = {
+      resolve: async (ref, binding) => {
+        const known = archivedRefs.some((archived) => digestSfValue(archived) === digestSfValue(ref))
+        const lookedUp = ref.kind === "receipt" ? await producer.readReceipt(receiptLookup, binding) : undefined
+        const retained = ref.kind !== "receipt" || lookedUp?.status === "ok" && lookedUp.value.state === "found" && digestSfValue(lookedUp.value.receipt) === digestSfValue(applied.value)
+        return { ref, state: known && retained && await host.revalidate(binding) ? ref.kind === "receipt" ? "fresh" : "historical" : "revoked", accessRevision: binding.binding.accessRevision, checkedAt: plannerAt }
+      },
+      context: async ({ refs }, binding) => Promise.all(refs.map((ref) => archiveEvidence.resolve(ref, binding))), recall: async () => [],
+      emitFromLedger: async () => { throw new Error("No native memory publication in this proof") },
+    }
+    const archiveAllowed = async (refs: readonly BusinessEvidenceRef[], binding: TrustedDomainContext) => (await archiveEvidence.context({ refs }, binding)).every((item) => item.state === "fresh" || item.state === "historical")
+    const operationIdentity = (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined
+    const management = createDecisionCaseManagement({ state, host, authorizeCase, operationIdentity,
+      authorizeEdit: (request, binding) => human.authorize(binding, "decisions.edit", request), verifyEvidence: archiveAllowed,
+      verifyEdit: (_snapshot, before, next, binding) => binding.kind === "ui" && ui.matchesIntent(binding, "sf-human:decisions.edit", digestSfValue({ caseRef: { id: before.id, incarnation: before.incarnation, version: before.version }, objective: next.objective, criteria: next.criteria, sourceRefs: next.sourceRefs, assumptions: next.assumptions })),
+    })
+    const assumption = { id: "baseline-context", text: "Keep the baseline source distinct from the applied January edit", state: "open" as const, evidenceRefs: [issuedRefs[0]!] }
+    const editRequest = { caseRef: { ...caseRef, version: final.version }, objective: final.objective, criteria: final.criteria, sourceRefs: final.sourceRefs, assumptions: [assumption] }
+    const editContext = await admit("decisions.edit", editRequest, "human-annotate-provenance")
+    const edited = await management.edit(editRequest, editContext)
+    expect(edited.status).toBe("ok")
+    if (edited.status !== "ok") throw new Error(edited.reason)
+    const questionAction = (operation: string): SfHumanAction | undefined => operation === "add-question" ? "decisions.add-question" : operation === "answer-question" ? "decisions.answer-question" : undefined
+    const annotations = createDecisionMutations({ state, host, planner, sources, authorizeCase, operationIdentity,
+      authorizeMutation: async (operation, payload, binding) => { const action = questionAction(operation); return !!action && human.authorize(binding, action, payload) },
+      verifyMutation: (_snapshot, operation, payload, binding) => { const action = questionAction(operation); return !!action && binding.kind === "ui" && ui.matchesIntent(binding, `sf-human:${action}`, digestSfValue(payload)) },
+      resolveQuestion: async (reference, binding) => reference === issuedRefs[1]!.refId && await archiveAllowed([issuedRefs[1]!], binding) ? { status: "ok", value: { id: reference, text: "Which receipt records the separately applied January edit?", evidenceRefs: [issuedRefs[1]!] } } : { status: "denied", reason: "question-evidence-unavailable" },
+      resolveAnswer: async (reference, binding) => reference === receiptRef.refId && await archiveAllowed([receiptRef], binding) ? { status: "ok", value: receiptRef } : { status: "denied", reason: "answer-evidence-unavailable" },
+      confirmAnswer: (ref, questionId, answerRef, binding) => human.authorize(binding, "decisions.answer-question", { caseRef: ref, questionId, answerRef }),
+      confirmChoice: async () => false, resolveChoiceValues: unavailable, prepareDomainCommands: unavailable, createId: randomUUID, now: () => plannerAt,
+    })
+    const questionRequest = { caseRef: edited.value.caseRef, questionRef: issuedRefs[1]!.refId }
+    const questioned = await annotations.addQuestion(questionRequest, await admit("decisions.add-question", questionRequest, "human-question-provenance"))
+    expect(questioned.status).toBe("ok")
+    if (questioned.status !== "ok") throw new Error(questioned.reason)
+    const answerRequest = { caseRef: questioned.value.caseRef, questionId: questionRequest.questionRef, answerRef: receiptRef.refId }
+    const answered = await annotations.answerQuestion(answerRequest, await admit("decisions.answer-question", answerRequest, "human-answer-provenance"))
+    expect(answered.status).toBe("ok")
+    if (answered.status !== "ok") throw new Error(answered.reason)
+    const historicalCases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity, authorizeCase, evidence: archiveEvidence,
+      verifyScenarioOperations: async (value, binding) => digestSfValue(value.alternatives) === digestSfValue(alternatives) && await host.revalidate(binding), createId: randomUUID, now: () => plannerAt,
+    })
+    const projected = await historicalCases.read({ caseRef: encodeCaseRef(caseRef) }, readContext)
+    expect(projected.status).toBe("ok")
+    if (projected.status !== "ok") throw new Error(projected.reason)
+    const view = projected.value
+    expect(view.case).toMatchObject({ version: final.version + 3, horizon: plannerPeriod, currency: "USD", alternatives, costCoverageBases: [basis], assumptions: [assumption], choices: [choice], questions: [{ id: issuedRefs[1]!.refId, state: "answered", answerRef: receiptRef.refId }] })
+    expect(view.case.sourceRefs).toEqual(final.sourceRefs)
+    expect(view.evidenceRefs.map((ref) => ref.refDigest).sort()).toEqual(archivedRefs.map((ref) => ref.refDigest).sort())
+    expect(view.case.assumptions[0]!.evidenceRefs).toEqual([issuedRefs[0]!])
+    expect(view.evidenceRefs.find((ref) => ref.refId === view.case.questions[0]!.id)).toEqual(issuedRefs[1])
+    expect(view.evidenceRefs.find((ref) => ref.refId === view.case.questions[0]!.answerRef)).toEqual(receiptRef)
+    const { operation, receipt, ...changeMetadata } = final.preparedChanges[0]!
+    expect(view.case.preparedChanges).toEqual([{ ...changeMetadata, operationRef: operation.id, receiptRef: receipt!.id }])
+    const { result: domainResult, ...receiptMetadata } = applied.value
+    expect(domainResult.ok).toBe(true)
+    expect(view.case.receipts).toEqual([{ ...receiptMetadata, status: "applied", errors: [] }])
+    expect(view.events).toEqual(final.ledger)
+    expect(view.case.ledger).toEqual(view.events)
+    expect(view.events).toMatchObject([{ kind: "choice-recorded", caseRef: { version: chosen.value.caseRef.version }, evidenceRefs: choice.evidenceRefs, outputDigest: digestSfValue(choice) }])
+    // Case version, choice basis, proposal version and receipt version have separate
+    // meanings. Monthly component periods must not be flattened to the annual case.
+    expect(view.case.choices[0]!.basisVersion).toBe(1)
+    expect(view.case.preparedChanges[0]!.caseVersion).toBe(2)
+    expect(view.case.receipts[0]!.version).toBe(1)
+    expect(view.case.version).toBeGreaterThan(view.events[0]!.caseRef.version)
+    expect(view.case.alternatives[1]!.result.components.find((component) => component.id === "line:1")?.period).toEqual(january)
+    expect(view.case.alternatives[1]!.result.components.find((component) => component.id === "line:2")?.period).toEqual({ start: "2027-02-01", end: "2027-02-28" })
+    expect(view.case.preparedChanges[0]!.target.period).toEqual(plannerPeriod)
+    expect(view.case.preparedChanges[0]!.target.version).toBe(issuedRefs[1]!.target.version)
+    expect(view.case.receipts[0]).not.toHaveProperty("period")
+    expect(await official()).toEqual(after)
+    expect(counters.dispatch).toBe(1)
+    expect((await historicalCases.read({ caseRef: "invalid" }, readContext)).status).toBe("needs-input")
+    human.finish(readContext)
+    expect((await historicalCases.read({ caseRef: encodeCaseRef(caseRef) }, readContext)).status).toBe("denied")
   } finally {
     // Host leases are discarded with the real provider; native grant persistence is not claimed.
     for (const context of contexts) finish?.(context)

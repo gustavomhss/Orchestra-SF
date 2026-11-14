@@ -1,0 +1,74 @@
+{
+  "schema": "sf-finance-scenario-bi-candidate-v1",
+  "status": "FROZEN_FOR_ROOT_REVIEW_AND_ACTIONS",
+  "base": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+  "publicationParentReported": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "baseBlob": null,
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "sha256": "fb69c81e2ca30af08d67c6a185cd33da64d272759a8e2f2bcb5d64a893928918",
+      "bytes": 16784,
+      "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "baseBlob": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895",
+      "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+      "sha256": "8ad91d7b1adc0d7b44027ceadf729b6c3e8ceea9e3f2bfbacaf21dfbd5325673",
+      "bytes": 6961,
+      "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/product/analytics/factory.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "baseBlob": "98d2510a3a44e45ab341aed6a1f2560339ec8578",
+      "blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "sha256": "76e837580584d7ae787fd7461655579b7f4ef1677e07bb081145a20606b38bd0",
+      "bytes": 9063,
+      "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+      "baseBlob": null,
+      "blob": "14445a3e32ab1c906a993fd628d011b8d22659c9",
+      "sha256": "0d840930ad5c848147295a44a6509dc5971548f17f65b278ac28713e1d8f4f84",
+      "bytes": 14475,
+      "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+      "baseBlob": null,
+      "blob": "f35fbae07684e507421a009244b603530f16b1e9",
+      "sha256": "6eb27361398464017f5cd34a2a59da471c5068f759a96aa1ca6e40ee2e2e4330",
+      "bytes": 11594,
+      "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+      "baseBlob": null,
+      "blob": "edad0b7bf1c54b3654b5a0595bcfb6e34d38102b",
+      "sha256": "54789bd3ad9780826b8d09cdc10b8703352c99cfddab563391bf77e53cf298f2",
+      "bytes": 6320,
+      "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts"
+    }
+  ],
+  "productTestsRunLocally": false,
+  "actionsPending": true,
+  "surgicalSelectors": [
+    "./Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+    "./Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+    "./Sucafinav1/test/product/wp05/factory-selection.test.ts"
+  ],
+  "sharedDependency": {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+    "blobAtR2": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+    "modified": false
+  },
+  "coldReview": {
+    "reviewer": "Astra WP13 subagent",
+    "scope": "first five paths before addition of the complete-result test",
+    "finding": "No blocking finding identified in source; strengthen nested-write counterexample with attempted=true inside the actual callback. Applied without removing assertions."
+  },
+  "acceptsGlobal": false
+}

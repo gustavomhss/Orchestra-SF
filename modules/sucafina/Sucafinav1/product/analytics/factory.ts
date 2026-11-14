@@ -14,6 +14,7 @@ import { createProcurementBiSource } from "./procurement.ts"
 import type { ProcurementBiHost } from "./procurement.ts"
 import { bindStoredPortfolioBiPort, createPortfolioBiSource } from "./portfolio.ts"
 import { bindStoredScenarioBiPort, createScenarioBiSource } from "./scenario.ts"
+import type { ScenarioBiHost } from "./scenario.ts"
 
 export type BiProducer = "dashboard" | "planner" | "procurement" | "portfolio" | "scenario"
 
@@ -29,6 +30,7 @@ export function createSfBiFactory(input: {
   procurement?: Routes<ProcurementBiHost>
   portfolio?: Routes<Parameters<typeof bindStoredPortfolioBiPort>[0]>
   scenario?: Routes<Parameters<typeof bindStoredScenarioBiPort>[0]>
+  projectedScenario?: Routes<ScenarioBiHost>
 }) {
   const bindings: { producer: BiProducer; views: readonly BiViewId[]; allowed: readonly BiViewId[]; source: BiPresentationPort }[] = [
     ...(input.dashboard ? [{ producer: "dashboard" as const, views: input.dashboard.views, allowed: ["BI01", "BI02", "BI03", "BI04", "BI07", "BI08"] as const, source: createDashboardBiSource(bindDashboardBiPort(input.dashboard.host)) }] : []),
@@ -36,6 +38,7 @@ export function createSfBiFactory(input: {
     ...(input.projectedPlanner ? [{ producer: "planner" as const, views: input.projectedPlanner.views, allowed: ["BI02", "BI03"] as const, source: createProjectedPlannerBiSource(bindProjectedPlannerBiPort(input.projectedPlanner.host)) }] : []),
     ...(input.procurement ? [{ producer: "procurement" as const, views: input.procurement.views, allowed: ["BI05", "BI06"] as const, source: createProcurementBiSource(input.procurement.host) }] : []),
     ...(input.scenario ? [{ producer: "scenario" as const, views: input.scenario.views, allowed: ["BI09", "BI10", "BI11"] as const, source: createScenarioBiSource(bindStoredScenarioBiPort(input.scenario.host)) }] : []),
+    ...(input.projectedScenario ? [{ producer: "scenario" as const, views: input.projectedScenario.views, allowed: ["BI09", "BI10"] as const, source: createScenarioBiSource(input.projectedScenario.host) }] : []),
     ...(input.portfolio ? [{ producer: "portfolio" as const, views: input.portfolio.views, allowed: ["BI09", "BI10", "BI11"] as const, source: createPortfolioBiSource(bindStoredPortfolioBiPort(input.portfolio.host)) }] : []),
   ]
   const entries = bindings.flatMap((binding) => binding.views.map((view) => ({ view, producer: binding.producer, allowed: binding.allowed.includes(view), source: binding.source })))
