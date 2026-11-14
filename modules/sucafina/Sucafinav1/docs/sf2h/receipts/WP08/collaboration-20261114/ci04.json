@@ -1,0 +1,142 @@
+{
+  "kind": "hosted-surgical",
+  "product": {
+    "sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "tree": "8535b4ffdbbeee8549bc8820fec2551fa6cf9d09"
+  },
+  "snapshot": {
+    "sha": "c03b06bea510e0ed8ec8df105c269304d388317f",
+    "tree": "2dd4bc64683127c0fb13b6135eb8c926d368cf84"
+  },
+  "branch": "ci-run-linux-astra-collaboration-ea5a6f9-4abd04a9-1",
+  "request": {
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp07/closure-work.test.ts",
+        "./Sucafinav1/test/product/wp07/closure-action.test.ts",
+        "./Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts",
+        "./Sucafinav1/test/product/wp07/comment-continuity.test.ts",
+        "./Sucafinav1/test/product/wp07/browser-ui.test.ts",
+        "./Sucafinav1/test/product/wp08/relations-value-time.test.ts",
+        "./Sucafinav1/test/product/wp08/answer-official-source.test.ts",
+        "./Sucafinav1/test/product/wp08/confirmation-real-dependencies.test.ts",
+        "./Sucafinav1/test/product/wp08/confirmation-source-lifecycle.test.ts",
+        "./Sucafinav1/test/product/wp08/handoff-relation-continuity.test.ts",
+        "./Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+        "./Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+        "./Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+        "./Sucafinav1/test/product/wp08/work-presentation.test.ts",
+        "./Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+        "./Sucafinav1/test/product/wp08/work-review-context.test.ts",
+        "./Sucafinav1/test/product/wp09/schedule-native.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "sha256": "4abd04a9ceac4c9b60ede0a35bcade064e24683a832bd67846491d0c6c8554ae",
+    "omniControl": "declared"
+  },
+  "run": {
+    "id": 43584357490,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584357490",
+    "job": 132415569882,
+    "cleanupJob": 132416603487,
+    "cleanupConclusion": "success",
+    "conclusion": "failure",
+    "attempt": 1,
+    "startedAt": "2026-11-14T10:14:52Z",
+    "completedAt": "2026-11-14T10:19:18Z"
+  },
+  "result": {
+    "passed": 42,
+    "failed": 2,
+    "tests": 44,
+    "files": 17,
+    "expects": 342,
+    "seconds": 147.24,
+    "omni": "not applicable (focused: no declaring test ran)",
+    "nativeExecution": "not demonstrated"
+  },
+  "equality": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "head": "c03b06bea510e0ed8ec8df105c269304d388317f",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ea5a6f965c803d436202934872c3650ab8f8eb19"
+    },
+    "merge_base_commit": {
+      "sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ea5a6f965c803d436202934872c3650ab8f8eb19"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": 14109394432,
+      "name": "lean-visual-Linux",
+      "size_in_bytes": 1803940,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109394432",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109394432/zip",
+      "expired": false,
+      "created_at": "2026-11-14T10:19:11Z",
+      "expires_at": "2026-11-21T10:19:10Z",
+      "updated_at": "2026-11-14T10:19:11Z",
+      "digest": "sha256:4171ac4d5a5ffd7d415acf6c30c3b7e98f91fa306d36f3bf78c37b8f703105dc",
+      "workflow_run": {
+        "id": 43584357490,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-astra-collaboration-ea5a6f9-4abd04a9-1",
+        "head_sha": "c03b06bea510e0ed8ec8df105c269304d388317f"
+      }
+    }
+  ],
+  "failures": [
+    {
+      "file": "test/product/wp07/dashboard-agenda-consumer.test.ts",
+      "reason": "Minimal fixture omitted OPEX owners/entries, CAPEX entries and Team leaders; the real Dashboard selector correctly denied the incomplete source.",
+      "resolution": "New owned candidate seeds these via actual domain commands. Pending hosted rerun."
+    },
+    {
+      "file": "test/product/wp08/handoff-relation-continuity.test.ts",
+      "reason": "Test reused a revoked UI grant after restoring the actor, before reaching its delete/recreate negatives.",
+      "resolution": "New owned candidate preserves old-grant denial and obtains a fresh real admission. Pending hosted rerun."
+    }
+  ],
+  "visualInspection": {
+    "status": "inspected-full-page",
+    "receipt": "visual-inspection-ci04.json",
+    "limits": [
+      "Two successful scenario phases were captured, not every later assertion.",
+      "The full run has two failures; these images cannot make it PASS."
+    ]
+  },
+  "limits": [
+    "No native governed Relay/Session/SkillLoadReceipt execution is demonstrated.",
+    "C06 historical evidence and browser thread producer are controlled in the isolated Chromium/SQLite scenario.",
+    "No product test or typecheck ran locally."
+  ]
+}

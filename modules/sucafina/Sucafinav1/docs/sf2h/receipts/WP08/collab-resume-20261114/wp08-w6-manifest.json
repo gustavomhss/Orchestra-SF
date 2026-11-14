@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h-wp08-w6-proposal-v2",
+  "base": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "base_tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+  "preimage_note": "Exact published W5 blobs; answer-work and answer-reuse unchanged since W2. Existing unit preimage confirmed from GitHub test-tree d03e3444 after removing exactly one capture-added final LF. Root must verify all current preimages through GitHub before commit.",
+  "product_tests_run_locally": false,
+  "deadline_ms_each_case": 120000,
+  "human_observation_expiry_changed": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "preimage_blob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+      "postimage_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "postimage_sha256": "59ceaf1a3910ff31ef366184bd31b8e5611e0e42edc9d97640e41c963dc3b808",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "reason": "Restore fresh generic scope; bounded C05 canonical membership without source grants."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "preimage_blob": "a6984795460b51d685b820fba1823df1d56930f4",
+      "postimage_blob": "f1e638546518f35aef1dcd053ae0f2a202cdadd3",
+      "postimage_sha256": "1ee46cf4b39ab7e7c7dab1206f8b762d4c7c050d0682cb50884f1e0dec1c7075",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "reason": "Remove duplicate C05 resolve; bind thread and baseline in protected final fence for both generic and C05."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "preimage_blob": "6cc84fa9ac2be269893225d3ae0e6e119fb3f42e",
+      "postimage_blob": "012175e4acc2be40547089b43f248144beb6c712",
+      "postimage_sha256": "0415729de4175fd746f417917d3b57eeb6ec627e81506b46d45458f69a10c288",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "reason": "Bind authenticated thread plus applicable absent/exact baseline in every protected egress capture, including generic and C05 read."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-state-fence.ts",
+      "preimage_blob": null,
+      "postimage_blob": "7b19cf14f220adb3a01530515ec5ad1657bc8f11",
+      "postimage_sha256": "a7dc5ff1dc4039ebe8fefb81a8315b1e1273d3d7203d21da831c019f36d22607",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/product/collaboration/answer-state-fence.ts",
+      "reason": "Common private readonly protected snapshot equality before and after current producer fence; pins persistence methods and never grants access."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "preimage_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+      "postimage_blob": "5570584303752e8e95159e21d78dccaa63832110",
+      "postimage_sha256": "0e0cfaf5fdfe48ac7f11852c9bb137ad7fe52006c98cb2460534dd0417c19936",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "reason": "Preserve all58 exact expect sites in four independently timed real causal scenarios,120s each."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+      "preimage_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686",
+      "postimage_blob": "506127c65b0e86c5e69303589f3d42102e62fefc",
+      "postimage_sha256": "15430dbcfe2f14cc55029637e2a2604b84ca9255f2207f5b4f48f84965546d08",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+      "reason": "Existing unit model exposes the same underlying state in currentSnapshots; all original oracles unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "dab12a75873f435243911957ce681fb251916c51",
+      "postimage_sha256": "0d2e07044e63926659a03b53a83d7ddf42d42d2cca3bc9f924a315f5e83a8ebf",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "reason": "Two real SQLite/human-edit counterexamples after final external read; directly exercise reuse and Work components without outer collector masking."
+    }
+  ],
+  "static_diagnosis": "wp08-w6-diagnosis.json",
+  "oracle_redistribution_map": "wp08-w6-oracle-map.json",
+  "static_call_count": {
+    "prepare": {
+      "W2": 70,
+      "W5": 32,
+      "W6": 16
+    },
+    "read": {
+      "W5": 32,
+      "W6": 16
+    },
+    "confirm": {
+      "W5": 20,
+      "W6": 12
+    },
+    "work_confirmed": {
+      "W5": 8,
+      "W6": 4
+    },
+    "work_stale": {
+      "W5": 16,
+      "W6": 12
+    },
+    "unit": "full C05 ReviewPort.read calls on the stated happy path; not elapsed-time measurements"
+  },
+  "test_decision": "Keep all58 exact literal expect sites (54 original+4W5), including9 runtime ACL assertions over3consumers. Redistribute first253128.15ms journey into3 complete causal scenarios with fresh real fixtures and setup within each120s budget; preserve actual confirm+SQLite reopen before editing. Keep revocation/physical replacement scenario whole. No seeding of baselines, no shared fixtures or grant cache. R10 adds two complete real human-edit races with independent120s budgets; the existing unit model changes only the protected snapshot shape and retains every assertion.",
+  "performance_limit": "The prior253128.15ms failure remains evidence of excessive full-journey latency. Partitioning the tests is not performance acceptance; measure new phase timings and record the limit.",
+  "recommended_ci_files": [
+    "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts"
+  ],
+  "reattach_scoped_previous_pass": [
+    "W5 WP07 review-thread-context3cases; unchanged producer",
+    "W5 case-selection-cas; unchanged G03 product/test",
+    "W5 review-recipient-authority including R09: executed threads.create, threadReads.read and authority.reviewRecipientSources; none of the host answer callbacks or answerWork/answerReuse changed by W6 were exercised. This is path equivalence, not whole-host blob equivalence.",
+    "W2 review-port14cases and Dashboard agenda1case; unchanged consumers"
+  ],
+  "status": "FROZEN_R10_FOR_INDEPENDENT_READ_ONLY_REVIEW",
+  "r10": {
+    "finding": "Protected final version race in reuse/read and Work, including generic path",
+    "status": "PATCHED_PENDING_INDEPENDENT_REVIEW_AND_GITHUB_ACTIONS",
+    "prior_static_approval": "SUSPENDED; exact previous manifest retained as wp08-w6-manifest-before-r10.json"
+  },
+  "compositional_limit": "WP10/native consumer hook mounting and shared C16 C05 pin output remain separate owner dependencies; reducing local call count or splitting integration tests does not resolve them.",
+  "cold_review_corrections": [
+    {
+      "id": "R10-test-source-identity-arity",
+      "finding": "Independent WP09 review caught2arg sfSourceIdentity calls in new test; corrected both to actual (snapshot,recordType,recordId).",
+      "status": "FIXED_BEFORE_PUBLICATION",
+      "source_oracle_preserved": "Both calls still compare actual physical source identity; no assertion removed."
+    }
+  ]
+}

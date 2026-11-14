@@ -1,0 +1,578 @@
+{
+  "schema": "sf2h-c05-independent-review-v1",
+  "reviewer": "wp09_audit (did not author these C05 changes)",
+  "method": "Read-only source inspection and document/metadata hashing. No local product tests, no remote mutation, no new CI dispatch.",
+  "status": "APPROVED_FOR_HOSTED_VALIDATION",
+  "base_product_sha": "ff557552936197b6734e57f0ecea0c44b19139b1",
+  "reviewed_postimages": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+      "blob": "fc1bebfdd8b1dd4b0536b7076f4305dfa91483d0",
+      "sha256": "5050cc18e00c72f45b5dcb0621d2bce875c4520e418541b8b29b2c357a72288f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "blob": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+      "sha256": "8765407a14075a09f1489951a39ca95c80e070c3a6a38f31cd70375f2b788551"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts",
+      "blob": "8fc4478a9b2ddde3a57c9e8e3cb5d992eb99b8c1",
+      "sha256": "6170609078a8b93294e93e4714b7c61a246d4fbed7a88b72fc6fb82ded599f03"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "blob": "565b2d8310332a9c1d6ad9faeeecea6724815baf",
+      "sha256": "6aa493bd2bacee708cbba8979ce9928f731b1c165eb7ab4bf7e851b44084d3e1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+      "blob": "23f265df26ebf3fdb94c555ae4169badf7c833de",
+      "sha256": "fa84c300310dd35627493b25ec870bfa973e443832762eb30ff6811151637d93"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "blob": "6cc84fa9ac2be269893225d3ae0e6e119fb3f42e",
+      "sha256": "e54631f4b93874e7379114a44dfd87f1e1c5f0b16e2063ade104ef7c6bd818e9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "blob": "a6984795460b51d685b820fba1823df1d56930f4",
+      "sha256": "a68feb6299daad172230b65f0a13a758fa6e2e36a3747bcfa8cee990c1fa3a47"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "blob": "15cfe27a6be1b51b7b7c6bd737c9e2b979752cd5",
+      "sha256": "c5c478b5782c40de6dfcec8ce9346dde637a16a38660d354eabb5d144a0edf84"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+      "blob": "cd9a67887f41986243809672572c972440c832ec",
+      "sha256": "173a7250b9ff4687cfaabcc2773bdf42a3008fa551d4c2bbf8f66f2d4839392f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+      "blob": "7222e35f290d46f68d7ab2aefdfd1780774140ae",
+      "sha256": "080a8bcaad592b430acec0793cb83345f47c93452e8f59554bd9fe9341c843fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "blob": "7d30096e973b003f222698bf2f605fc24031aba5",
+      "sha256": "c8f8dc9fa542016102af2a41f76ddddb64f311f5357f548bedaa0e333b786675"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "blob": "119f642392a046dabc280c785acd2ad1fa65a838",
+      "sha256": "2ffde7e87927fc7112a1fa06171a7002b3b27c89b9f244a009a599d52ac31aaf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+      "blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+      "sha256": "f726383d595c7a97b028a0d0bcade950230ae02ff9730a048866ccfddb2b57de"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "blob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+      "sha256": "70e8c3eaa6b157b8e138e87b650cf5b31a4022bc07808f4e6a8ae04181877ccd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+      "blob": "3b7080be16213512835902c37e58e1c88ca8405f",
+      "sha256": "614c26641564ad7ca61609e04692c54e0e9c58a9a8405fbcb2ea8324de7583c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/review-source-fence.ts",
+      "blob": "ec9fef31987a11a3f031a159b44463980a39cd8d",
+      "sha256": "c186864db2d9014e0a616268569af5e9d2bb93e8bd9c65d5aacfdfcb42c03329"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+      "blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+      "sha256": "048039ee0b9397325731932487bfe4ff4ea72fcf2182c8cf19d94c62732ac751"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+      "sha256": "ce8e007bea53bc1e8423e9b04dfe22f5d3832a26628ce3bb6a04872a53255279"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "blob": "0c49c363917ffaf9062366e54a7b7b970ae471cc",
+      "sha256": "2d26c5879c37a106cc3c2b533f14ce7cf719728131e0843da637ecafb802a3b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+      "blob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+      "sha256": "96f0576638a9bec1a0848b54937ccff70a8d30a439de155266aab9a579bb5eb8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+      "blob": "be5780125d823cc73323f16683d52e962d79d5a5",
+      "sha256": "2a97fae335654136a033bc6c33579fde94f6ffa8652628d63490b0da52acfee7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "blob": "7a97f5f1b8f3728c49f64f0b49c84ac91d98919c",
+      "sha256": "4b3a4eb80c4569e1274ffb7b8cf12b6e735585b3cca28a9b718fb5d6794cdb26"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts",
+      "blob": "55a72783e18a18b0f267b45e4b2b09dd41b244ae",
+      "sha256": "b1693197520ee98e40bcf73a6433a3f11656c9f5a1787c30efa26d85871c77bf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "blob": "bdc370736e6167b0e570cb9d5f801f8e2a88ef09",
+      "sha256": "fa43737455c71ef9644aa2672ec2aa07c7f28796a8d19bd9c62bb7f36a3a13f7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+      "blob": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+      "sha256": "1d9364abd4f9a9bba551af0b7e56cc7f47b6ba06246f84c8030df361b192e311"
+    }
+  ],
+  "findings": [
+    {
+      "id": "C05-R01",
+      "severity": "P2",
+      "owner": "WP07",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+      "summary": "Observation egress lacked provider identity check after its final awaited revalidation.",
+      "trigger": "Final revalidate replaces a captured host/review/prepareAccess method and returns true; previous code returned projection despite an invalid lease.",
+      "resolution": "Added current() after the final await; inspected exact new condition locally, no product execution.",
+      "original_lines": [
+        91,
+        93
+      ],
+      "lines": [
+        133,
+        135
+      ]
+    },
+    {
+      "id": "C05-R02",
+      "severity": "P2",
+      "owner": "WP08",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "summary": "C05 work projection captured only the source object and could consume replaced resolve/observe/fence methods.",
+      "trigger": "A method on the same source object changes across await, especially the final fence; previous code checked object identity only.",
+      "resolution": "Explicit method refs and host/persistence/transactionAll captured; current checks before/after waits and egress; inspected correction.",
+      "original_lines": [
+        59,
+        79
+      ],
+      "lines": [
+        59,
+        79
+      ]
+    },
+    {
+      "id": "C05-R03",
+      "severity": "P2",
+      "owner": "WP08",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "summary": "Bound C05 fence checked method identity only before awaiting the producer fence.",
+      "trigger": "source.observe or source.fence changes while the captured fence awaits and returns true; confirmation callback could commit.",
+      "resolution": "The current predicate now also runs after fenceReview returns; inspected correction.",
+      "original_lines": [
+        39,
+        46
+      ],
+      "lines": [
+        39,
+        46
+      ]
+    },
+    {
+      "id": "C05-R04",
+      "severity": "P1",
+      "owner": "WP08",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "summary": "Recipient action checked review/recipient ACL before a final async human authorization, leaving a revocation window.",
+      "trigger": "The final human.authorize await revokes only the C05 or recipient lease and returns true while domain snapshots remain unchanged.",
+      "resolution": "Human authorization is now awaited before the prepared review fence and recipient commit check; no async authorization follows those checks.",
+      "original_lines": [
+        73,
+        77
+      ],
+      "lines": [
+        73,
+        77
+      ]
+    },
+    {
+      "id": "C05-R05",
+      "severity": "P1",
+      "owner": "WP08; shared output owner for extension",
+      "status": "fixed_fail_closed_source_reviewed_shared_delta_remains",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "summary": "Shared sf_answer_read output discarded the C05 scope while reporting confirmed after current material changed.",
+      "trigger": "A confirmed historical review answer remains valid for its C05 pin after a current-source change; AnswerProjection cannot represent reviewRef/version/digest/sectionId.",
+      "evidence": "thread-reads.ts preserves historical refs, so version rewriting was not the bug. outputs.ts83 defines only questionRef/answer/evidenceRefs/state; an opaque questionRef is not the omitted C05 pin.",
+      "resolution": "C05 shared read now returns review-answer-output-contract-unavailable. Private answerReuse.read retains reviewContext. Shared schema remains unchanged.",
+      "original_lines": [
+        43,
+        49
+      ],
+      "lines": [
+        44,
+        49
+      ]
+    },
+    {
+      "id": "C05-R06",
+      "severity": "P1",
+      "owner": "WP07/WP08",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/review-source-fence.ts",
+      "summary": "General C05 thread mutation fence depends on deriving a record-only C06 confirmation scope.",
+      "trigger": "An authenticated C05 section has a primary record plus document/calculation/receipt evidence. createReviewAnswerSource.resolve calls answerMaterial, which rejects every non-record reference, so valid create/reply/edit operations fail even with current full access.",
+      "related_path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+      "related_lines": [
+        63,
+        101
+      ],
+      "requested_change": "Prepare the review pin/current-ACL/source lease independently of ConfirmationScope derivation. Keep the C06 refusal for unrepresentable confirmation scopes, but do not apply it to general conversations.",
+      "original_lines": [
+        19,
+        23
+      ],
+      "lines": [
+        12,
+        21
+      ],
+      "resolution": "The WP08 wrapper now captures source.prepareThreadFence and its returned closure. WP07 prepareThreadFence reads the authenticated full review and invokes prepareAccess without calling answerMaterial or deriving ConfirmationScope. Its closure pins request/provider/access methods and exact protected review digest before/after waits. Non-record references are not filtered by this general method.",
+      "limits": "The available real fixture exercises record evidence. No real WP06 document/calculation producer witness was available, so non-record integration remains an explicit hosted/integration qualification limit rather than a fabricated positive test."
+    },
+    {
+      "id": "C05-R07",
+      "severity": "P2",
+      "owner": "WP08",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "summary": "Thread mutation still dereferences the C05 recipient commit check dynamically and tests prepared-fence identity before, rather than after, its await.",
+      "trigger": "The options checkReviewRecipientAtCommit method changes during the human/review fence await, or prepareReviewThreadFence changes during its returned fence await. A subsequent check can use the replacement instead of the prepared operation provider.",
+      "requested_change": "Capture commit check and prepare method per operation, invoke captured methods, and compare identities after the last awaited fence before synchronous mutation.",
+      "original_lines": [
+        47,
+        50,
+        64,
+        72,
+        113,
+        122
+      ],
+      "lines": [
+        48,
+        50,
+        64,
+        73,
+        114,
+        124
+      ],
+      "resolution": "Each create/change captures the recipient commit check, passes it explicitly to checkThreadRecipient, rejects replacement, and compares prepareReviewThreadFence after the awaited prepared fence. Recipient actions/history also pin callbacks and order human authorization before final fences."
+    },
+    {
+      "id": "C05-R08",
+      "severity": "P2",
+      "owner": "WP07",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+      "lines": [
+        16,
+        20,
+        33,
+        50,
+        127,
+        135
+      ],
+      "summary": "A second observation under the same scope/basis/UI request could overwrite the first observation's provider lease.",
+      "trigger": "Observe A, replace prepareAccess while keeping material digests equal, observe B under the same binding, then fence A. The former Map key found B's current callback for A.",
+      "resolution": "Every observation receives a private random accessLeaseRef. The Map entry binds that token to authorityScopeDigest, full observation digest, exact review digest and the original callback/provider identity. A newer observation cannot replace A's slot. Token is excluded from source/dependency/scope fingerprints, baseline and command digest; the HTTP preparation route emits an explicit projection that excludes it.",
+      "test_source": "test/product/wp07/review-thread-context.test.ts: second observation cannot rebind first; checks equal material fingerprints, distinct tokens, fence A false / B true and tamper false. Test source inspected only; hosted pass pending."
+    },
+    {
+      "id": "C05-R09",
+      "severity": "P2",
+      "owner": "WP08",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "original_lines": [
+        17,
+        18,
+        22,
+        55,
+        58,
+        59
+      ],
+      "lines": [
+        17,
+        18,
+        19,
+        23,
+        25,
+        26,
+        56,
+        57,
+        58,
+        59,
+        60,
+        63,
+        66,
+        67
+      ],
+      "summary": "A second recipient authorization using the same authenticated context could replace the provider lease of an operation waiting to commit.",
+      "trigger": "Prepare recipient authorization for operation A, replace checkAtCommit on the provider, and reauthorize the same recipient/full basis with the exact same TrustedDomainContext before A enters C08. The former binding-keyed Map overwrote the slot and A could use the new permissive check.",
+      "resolution": "Use a WeakMap keyed by the authentic context object, with an inner Map keyed by recipient, full basis and binding. A populated slot cannot be replaced with different proof, authorize or check method identities. Recheck current provider and existing slot after the last await and before first insertion. At 512 entries reject a new slot instead of evicting a possibly active lease. The commit path invokes the original synchronous checkAtCommit and checks identity on both sides; no authorization boolean is cached.",
+      "test_source": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+        "lines": [
+          73,
+          74,
+          75,
+          76,
+          77,
+          80,
+          81,
+          82,
+          83,
+          84,
+          86,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95
+        ],
+        "assessment": "The existing real SQLite/admitted context fixture calls the same collaboration authority instance outside C08 after replacing checkAtCommit, using the exact same context as the pending thread create. The regression asserts that reauthorization is false, mutation fails without echoing the submitted body and the storage version is unchanged. This is source inspection; it has not been run by this reviewer."
+      },
+      "scope_clarification": "Fresh requestId separated independent normal requests in the earlier analysis. It did not protect concurrent/replayed calls sharing one context; R09 addresses that separate mechanism. Distinct context objects with identical bindings are now isolated as well.",
+      "limits": [
+        "Current recipient ACL remains a fixture boundary; this regression does not prove an installed native recipient authority.",
+        "The reviewer did not run product tests, typecheck, guards or CI, and did not mutate remote state.",
+        "Root must bind hosted results to the final source SHA and verify remote preimages before publication."
+      ]
+    }
+  ],
+  "non_findings": [
+    {
+      "topic": "Recipient Map collisions across independent real UI requests",
+      "assessment": "TrustedUiContext.binding includes a fresh requestId and expiresAt; UI validate consumes admission once with a post-await recheck. C05 mutations require UI. Keying the Map by full binding separates different requests; no duplicate finding raised.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+        }
+      ],
+      "qualification": "This applies only to distinct normal requests with unique IDs. It did not cover repeated calls sharing one authenticated context. C05-R09 records and reviews that separate bug and its fix."
+    },
+    {
+      "topic": "Historical source relabeling",
+      "assessment": "thread-reads C05 branch returns historical evidenceRefs and threadMessageContext requires identical full pin/basis across C05 messages. The shared output ambiguity was addressed separately."
+    },
+    {
+      "topic": "Restart and persisted confirmations",
+      "assessment": "The proposed regression reopens actual SQLite and composes new consumers, expects prior baseline reuse, refuses resurrection of the expired in-memory observation, and asserts unchanged storage version. No hosted pass claimed."
+    },
+    {
+      "topic": "Selection CAS",
+      "assessment": "Proposed code distinguishes known product-state-changed conflict; existing durable idempotency precedes old expected-version handling. Regression uses real state, winner/loser keys, unchanged preferences and exact retry. No new concrete bug found in this read."
+    }
+  ],
+  "advisories": [],
+  "remaining_validation": "The original frozen review and the R09 supplement are source reviews only. Root coordinates hosted CI, static checks and exact head/run binding; no native claim or product PASS is asserted by this reviewer. No additional owned source blocker was found in R09.",
+  "owned_source_blockers": [],
+  "reviewed_manifests": [
+    {
+      "manifest": "wp07-proposal-manifest.json",
+      "sha256": "5999be1b26d82a7ff9b80a46f54f671be936103fa13fab83e35f3ab9729c71ca",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+          "blob": "fc1bebfdd8b1dd4b0536b7076f4305dfa91483d0",
+          "sha256": "5050cc18e00c72f45b5dcb0621d2bce875c4520e418541b8b29b2c357a72288f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+          "blob": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+          "sha256": "8765407a14075a09f1489951a39ca95c80e070c3a6a38f31cd70375f2b788551"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts",
+          "blob": "8fc4478a9b2ddde3a57c9e8e3cb5d992eb99b8c1",
+          "sha256": "6170609078a8b93294e93e4714b7c61a246d4fbed7a88b72fc6fb82ded599f03"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "blob": "565b2d8310332a9c1d6ad9faeeecea6724815baf",
+          "sha256": "6aa493bd2bacee708cbba8979ce9928f731b1c165eb7ab4bf7e851b44084d3e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+          "blob": "23f265df26ebf3fdb94c555ae4169badf7c833de",
+          "sha256": "fa84c300310dd35627493b25ec870bfa973e443832762eb30ff6811151637d93"
+        }
+      ]
+    },
+    {
+      "manifest": "wp08-proposal-manifest.json",
+      "sha256": "11aa9faeb8a738f1aad591524edab464391a811c95fc26be5e062fbd966fa3b9",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+          "blob": "6cc84fa9ac2be269893225d3ae0e6e119fb3f42e",
+          "sha256": "e54631f4b93874e7379114a44dfd87f1e1c5f0b16e2063ade104ef7c6bd818e9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+          "blob": "a6984795460b51d685b820fba1823df1d56930f4",
+          "sha256": "a68feb6299daad172230b65f0a13a758fa6e2e36a3747bcfa8cee990c1fa3a47"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+          "blob": "15cfe27a6be1b51b7b7c6bd737c9e2b979752cd5",
+          "sha256": "c5c478b5782c40de6dfcec8ce9346dde637a16a38660d354eabb5d144a0edf84"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+          "blob": "cd9a67887f41986243809672572c972440c832ec",
+          "sha256": "173a7250b9ff4687cfaabcc2773bdf42a3008fa551d4c2bbf8f66f2d4839392f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+          "blob": "7222e35f290d46f68d7ab2aefdfd1780774140ae",
+          "sha256": "080a8bcaad592b430acec0793cb83345f47c93452e8f59554bd9fe9341c843fa"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+          "blob": "7d30096e973b003f222698bf2f605fc24031aba5",
+          "sha256": "c8f8dc9fa542016102af2a41f76ddddb64f311f5357f548bedaa0e333b786675"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "blob": "119f642392a046dabc280c785acd2ad1fa65a838",
+          "sha256": "2ffde7e87927fc7112a1fa06171a7002b3b27c89b9f244a009a599d52ac31aaf"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+          "blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+          "sha256": "f726383d595c7a97b028a0d0bcade950230ae02ff9730a048866ccfddb2b57de"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+          "blob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+          "sha256": "70e8c3eaa6b157b8e138e87b650cf5b31a4022bc07808f4e6a8ae04181877ccd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+          "blob": "3b7080be16213512835902c37e58e1c88ca8405f",
+          "sha256": "614c26641564ad7ca61609e04692c54e0e9c58a9a8405fbcb2ea8324de7583c8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/review-source-fence.ts",
+          "blob": "ec9fef31987a11a3f031a159b44463980a39cd8d",
+          "sha256": "c186864db2d9014e0a616268569af5e9d2bb93e8bd9c65d5aacfdfcb42c03329"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+          "blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+          "sha256": "048039ee0b9397325731932487bfe4ff4ea72fcf2182c8cf19d94c62732ac751"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+          "blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+          "sha256": "ce8e007bea53bc1e8423e9b04dfe22f5d3832a26628ce3bb6a04872a53255279"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+          "blob": "0c49c363917ffaf9062366e54a7b7b970ae471cc",
+          "sha256": "2d26c5879c37a106cc3c2b533f14ce7cf719728131e0843da637ecafb802a3b2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+          "blob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+          "sha256": "96f0576638a9bec1a0848b54937ccff70a8d30a439de155266aab9a579bb5eb8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+          "blob": "be5780125d823cc73323f16683d52e962d79d5a5",
+          "sha256": "2a97fae335654136a033bc6c33579fde94f6ffa8652628d63490b0da52acfee7"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "blob": "7a97f5f1b8f3728c49f64f0b49c84ac91d98919c",
+          "sha256": "4b3a4eb80c4569e1274ffb7b8cf12b6e735585b3cca28a9b718fb5d6794cdb26"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts",
+          "blob": "55a72783e18a18b0f267b45e4b2b09dd41b244ae",
+          "sha256": "b1693197520ee98e40bcf73a6433a3f11656c9f5a1787c30efa26d85871c77bf"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+          "blob": "bdc370736e6167b0e570cb9d5f801f8e2a88ef09",
+          "sha256": "fa43737455c71ef9644aa2672ec2aa07c7f28796a8d19bd9c62bb7f36a3a13f7"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+          "blob": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+          "sha256": "1d9364abd4f9a9bba551af0b7e56cc7f47b6ba06246f84c8030df361b192e311"
+        }
+      ],
+      "preimage_provenance": "wp08-preimage-provenance.json",
+      "revision_note": "Only remote preimage identities corrected; all previously reviewed postimages unchanged."
+    }
+  ],
+  "boundary_assessment": {
+    "caller_and_recipient": "Full historical C05 pin/basis authorization remains separate from recipient permission. Commit uses prepared caller read-only fence and synchronous current recipient proof. Directory membership alone does not authorize C05.",
+    "source_fields_period_incarnation": "containsBasis validates full admitted refs, exact section period, scoped incarnation/version and primary source coverage. C05 messages retain identical full basis; answerMaterial preserves all representable record dependencies and refuses unsupported C06 supplements explicitly.",
+    "provider_and_async_revocation": "Reviewed all eight corrections on final frozen postimages; final prepared fences check current request, provider method identities, protected review digest and producer ACL lease. Human authorization precedes final mutation checks.",
+    "cas_idempotency_restart": "C08 command digest/storage version are preserved. Real SQLite reopen regression verifies durable baseline/queue suppression, and denies replay of a destroyed ephemeral observation; no local test or result claim.",
+    "shared_contract": "sf_answer_read denies C05 when it cannot carry the historical pin. Private HTTP answer prepare/read retains reviewContext and strips opaque accessLeaseRef. Shared output extension remains with the owner."
+  },
+  "manifest_provenance_correction": {
+    "manifest": "wp08-proposal-manifest.json",
+    "sha256": "11aa9faeb8a738f1aad591524edab464391a811c95fc26be5e062fbd966fa3b9",
+    "provenance": "wp08-preimage-provenance.json",
+    "change": "Remote preimages corrected for 15 existing files. Local snapshots included one additional LF; all reviewed postimages are unchanged.",
+    "source_review_unchanged": true
+  },
+  "supplemental_reviews": [
+    {
+      "report": "c05-r09-independent-review.json",
+      "report_sha256": "936c3e358e69fe4debbaaeab3145ba85aab7bde39417f7fd97a82f5144a316f4",
+      "manifest": "wp08-r09-manifest.json",
+      "manifest_sha256": "3bb5beef9d109b66f90c394c7a007d182c204d4ecd481cfccfe7ccac4a98fc86",
+      "status": "APPROVED_FOR_HOSTED_VALIDATION",
+      "source_overrides": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+          "preimage_blob": "15cfe27a6be1b51b7b7c6bd737c9e2b979752cd5",
+          "blob": "5c9850034bef92736b05a4fc0dddbaa1170c57b1",
+          "sha256": "4ae96d1de91fbbba2df9ccb37eb73e7d3c7990a5eb871acfd234fe5c069e43c3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+          "preimage_blob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+          "blob": "b7e6c7eb149cf9ef05a2390ca289e065cff88489",
+          "sha256": "bb8b23c0afd1dc766af84fba54e8e9b5050baf4a3abf09ac62fb4db83bac92a4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+          "preimage_blob": "bdc370736e6167b0e570cb9d5f801f8e2a88ef09",
+          "blob": "85cbd3d88a224a816ffdd9340537d69025b1dbd1",
+          "sha256": "5842128b363d9ba25a8a696003feb166865cb734a7f7b4e3698a6310edce1341"
+        }
+      ]
+    }
+  ]
+}

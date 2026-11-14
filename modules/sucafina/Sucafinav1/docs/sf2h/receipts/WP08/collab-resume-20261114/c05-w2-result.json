@@ -1,0 +1,262 @@
+{
+  "schema": "sf2h.collab-resume.hosted-result.v1",
+  "run_id": 43616934900,
+  "job_id": 132513933634,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616934900",
+  "product_sha": "20821df310ebc6ea08ccab27e829008d72a04de6",
+  "product_tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+  "snapshot_sha": "161f5f9b547dcb7ca7868a70ab0ffa05413131b3",
+  "snapshot_tree": "5c111f0f8bc448c32c7adfee0e1b42c1666e4be1",
+  "request_sha256": "887cb8b244e4d3cf24ac1fd9c2b60aef611da122e955353eb8cd0b57a25bb457",
+  "conclusion": "failure",
+  "reported_totals": {
+    "pass": 29,
+    "fail": 4,
+    "error": 1,
+    "expect_calls": 518,
+    "tests": 33,
+    "files": 13,
+    "duration_seconds": 981.93
+  },
+  "cases": [
+    {
+      "path": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "preserved review survives changed projections and is denied after access revocation",
+          "duration_ms": 398.69
+        },
+        {
+          "conclusion": "pass",
+          "name": "compact review receipts survive SQLite restart, legacy replay and concurrent preservation",
+          "duration_ms": 55.33
+        },
+        {
+          "conclusion": "pass",
+          "name": "review egress revalidates decision and section sources after the other authorization readers",
+          "duration_ms": 4.85
+        },
+        {
+          "conclusion": "pass",
+          "name": "comparison requires identity and a compatible period before calculating a delta",
+          "duration_ms": 3.89
+        },
+        {
+          "conclusion": "pass",
+          "name": "preserved report exports every selected record from the captured projection",
+          "duration_ms": 56.63
+        },
+        {
+          "conclusion": "pass",
+          "name": "review capability denies a forged binding before selecting source data",
+          "duration_ms": 0.75
+        },
+        {
+          "conclusion": "pass",
+          "name": "financial trajectory exports a captured figure and the same data table in both formats",
+          "duration_ms": 58.4
+        },
+        {
+          "conclusion": "pass",
+          "name": "category charts paginate every captured value in both export formats",
+          "duration_ms": 91.71
+        },
+        {
+          "conclusion": "pass",
+          "name": "ticket flow chart keeps monthly entries as separate periods",
+          "duration_ms": 1.46
+        },
+        {
+          "conclusion": "pass",
+          "name": "timeline export paginates resolved milestones and refuses fabricated completion",
+          "duration_ms": 51.87
+        },
+        {
+          "conclusion": "pass",
+          "name": "waterfall export uses resolved endpoints and marks a mismatched snapshot unavailable",
+          "duration_ms": 87.65
+        },
+        {
+          "conclusion": "pass",
+          "name": "capacity and cost charts require alignment and keep separate units",
+          "duration_ms": 17.89
+        },
+        {
+          "conclusion": "pass",
+          "name": "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+          "duration_ms": 50.51
+        },
+        {
+          "conclusion": "pass",
+          "name": "decision exports retain conditioned coverage and reject an invented complete comparison",
+          "duration_ms": 26.45
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+      "cases": []
+    },
+    {
+      "path": "Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "review agenda consumes real Dashboard selectors with exact record identity, counts, order, empty scope and Talent denial",
+          "duration_ms": 1089.51
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "a lost case-selection CAS is a known no-commit conflict and retains exact retry identity",
+          "duration_ms": 724.17
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "a C05 request uses the recipient's current review lease, preserves exact retry and denies a homonym or revoked lease",
+          "duration_ms": 33565.75
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "cases": [
+        {
+          "conclusion": "fail",
+          "name": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+          "duration_ms": 312068.16
+        },
+        {
+          "conclusion": "fail",
+          "name": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+          "duration_ms": 303803.18
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+          "duration_ms": 18876.44
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access",
+          "duration_ms": 11242.77
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "extended collaboration actions require explicitly registered commands and live human grants",
+          "duration_ms": 0.97
+        },
+        {
+          "conclusion": "pass",
+          "name": "thread edit admission is confined to POST, same origin and the retained current request",
+          "duration_ms": 0.65
+        },
+        {
+          "conclusion": "pass",
+          "name": "cancelled and expired selection admissions never regain authority",
+          "duration_ms": 0.54
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "caller access permits self-assignment but cannot substitute for recipient source authority",
+          "duration_ms": 0.34
+        },
+        {
+          "conclusion": "pass",
+          "name": "recipient identity and every material dependency are checked without name inference",
+          "duration_ms": 0.54
+        },
+        {
+          "conclusion": "pass",
+          "name": "revocation during source inspection and proof failure refuse assignment",
+          "duration_ms": 0.38
+        },
+        {
+          "conclusion": "pass",
+          "name": "the proof gets detached exact refs and cannot rewrite the assignment or omit a dependency",
+          "duration_ms": 0.59
+        },
+        {
+          "conclusion": "pass",
+          "name": "commit checks require a current synchronous recipient lease without repeating source I/O",
+          "duration_ms": 0.43
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/thread-actors.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "a selected viewer with a homonym replies across scoped incarnations and current access revisions without gaining domain authority",
+          "duration_ms": 22841.9
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "cases": [
+        {
+          "conclusion": "fail",
+          "name": "authorized historical messages keep their original basis and a new answer reuses the same stale thread",
+          "duration_ms": 13292.12
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/thread-history-supplements.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "record history and replies retain an independently authorized immutable document supplement",
+          "duration_ms": 7335.59
+        }
+      ]
+    }
+  ],
+  "omni_positive_control": {
+    "verdict": "not applicable",
+    "nonce": "77a4e807111dac85408fd627b425af22",
+    "spawns": 0,
+    "delegated": 0,
+    "native_proof": false
+  },
+  "artifacts": [],
+  "log_sha256": "4ec37548a3e7c8584af9529dcff5649766fc8d4f3abc726a9d1559f30f76699c",
+  "syntax_failure": {
+    "path": "Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+    "line": 290,
+    "corrected_by": "34f26821f62a99ae40ca1e69f4bded602f83768e"
+  },
+  "limitations": "Aggregate failure. Two C05 confirmation cases timed out; historical reuse returned unavailable instead of stale. Passing files are scoped evidence, not proof for subsequent material changes."
+}

@@ -1,0 +1,98 @@
+{
+  "manifest_sha256": "9f740fe4650778cee524b3d67198e5f306bf0e34ac31e7d25c6e82bb8a4be10b",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "preimage_blob": "5570584303752e8e95159e21d78dccaa63832110",
+      "postimage_blob": "8fd6ad9018ff8b67234b4699916f558c6bf9e223",
+      "sha256": "b31319c656e6a8170e1de4f1b69263e409a8c8a21f7459d1c489d01826279b94",
+      "matches_manifest": true,
+      "literal_expect_sites": {
+        "before": 58,
+        "after": 58,
+        "removed": [],
+        "added": []
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "preimage_blob": "dab12a75873f435243911957ce681fb251916c51",
+      "postimage_blob": "a9ad44d2013bb31624633c5a8006667689a4fbab",
+      "sha256": "116b0e990a5a571b4accdef3c40810f41f0120a29a069cd2d487f846f662b209",
+      "matches_manifest": true,
+      "literal_expect_sites": {
+        "before": 18,
+        "after": 26,
+        "removed": [
+          "expect(digestSfValue(object(object(domainAfter.dashboard.data.__sfProductV1).reviews)[f.review.id])).toBe(f.basis.reviewContext.reviewDigest)"
+        ],
+        "added": [
+          "expect(reviewBefore.status).toBe(\"ok\")",
+          "expect(reviewBefore.value).toBeDefined()",
+          "expect(reviewBefore.value).toMatchObject({ id: f.basis.reviewContext.reviewRef, version: f.basis.reviewContext.reviewVersion })",
+          "expect(digestSfValue(reviewBefore.value)).toBe(f.basis.reviewContext.reviewDigest)",
+          "expect(reviewAfter.status).toBe(\"ok\")",
+          "expect(reviewAfter.value).toBeDefined()",
+          "expect(reviewAfter.value).toMatchObject({ id: f.basis.reviewContext.reviewRef, version: f.basis.reviewContext.reviewVersion })",
+          "expect(digestSfValue(reviewAfter.value)).toBe(f.basis.reviewContext.reviewDigest)",
+          "expect(reviewAfter.value).toEqual(reviewBefore.value)"
+        ]
+      }
+    }
+  ],
+  "unchanged_cases": [
+    {
+      "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+      "byte_equivalent": true,
+      "block_sha256": "7189aabe1445f3254dd6d35fd8cf6a3107f1133220d7761a48aa3d1af51bd228",
+      "manifest_span_sha256": "16cc0e8c3b7716ea3d8c1c8fc4209406b190e330ba5b29c71be8dc5f36b3a45c",
+      "manifest_span_definition": "from test declaration through following separator before next test; last test includes unchanged helper tail",
+      "manifest_span_hash_verified": true
+    },
+    {
+      "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+      "byte_equivalent": true,
+      "block_sha256": "0bedd6ec799849e97524b3d10cb2283f72f72b38c95815b374c3e978793500de",
+      "manifest_span_sha256": "2ef01531652e0efc94f1125650269c3d2f74297d3be000fb9e32ef9a0c29a871",
+      "manifest_span_definition": "from test declaration through following separator before next test; last test includes unchanged helper tail",
+      "manifest_span_hash_verified": true
+    },
+    {
+      "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+      "byte_equivalent": true,
+      "block_sha256": "87bf5eacd25dd656b9fa86815af83c05baac8653b0d582e20aab789088e89665",
+      "manifest_span_sha256": "4d1b5736f9b52c9a0a9c060d34cede7ddd77940c19e809f3cfe7c90a91e03816",
+      "manifest_span_definition": "from test declaration through following separator before next test; last test includes unchanged helper tail",
+      "manifest_span_hash_verified": true
+    }
+  ],
+  "helpers_byte_equivalent": true,
+  "helper_tail_sha256": "51c4a8994a9ebd485d4cb3071578c5f86627615ab7a1c2d7450887f703fda808",
+  "imports_prefix_byte_equivalent": true,
+  "selection": {
+    "defined_test_names": [
+      "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+      "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+      "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+      "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+      "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+      "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+      "C05 answer read refuses a real human edit after its final external version read",
+      "C05 answer work refuses a real human edit after its final external version read"
+    ],
+    "selected_test_names": [
+      "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+      "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+      "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+      "C05 answer read refuses a real human edit after its final external version read",
+      "C05 answer work refuses a real human edit after its final external version read"
+    ],
+    "matches_exact_five": true,
+    "excluded_green_test_names": [
+      "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+      "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+      "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source"
+    ]
+  },
+  "product_executed": false
+}

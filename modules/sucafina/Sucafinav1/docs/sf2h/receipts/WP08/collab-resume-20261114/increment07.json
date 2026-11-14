@@ -1,0 +1,113 @@
+{
+  "schema": "sf2h.collab-resume.increment.v1",
+  "increment": "W7",
+  "origin_pr": 33,
+  "delivery_pr": 41,
+  "base_sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+  "base_tree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0",
+  "status": "TEST_CORRECTION_PENDING_HOSTED_VALIDATION",
+  "trigger": {
+    "run_id": 43623257640,
+    "job_id": 132533400502,
+    "product_sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "snapshot_sha": "72848c2122b68e15341baa41e5beef4e9237562a",
+    "conclusion": "failure",
+    "counts": {
+      "pass": 7,
+      "fail": 3,
+      "expect_calls": 212
+    },
+    "findings": [
+      "Edit/reconfirm case exceeded120000ms at149408.75ms.",
+      "Both R10 cases reached the expected refusal but failed later because the test read C08 state from a deliberately sanitized business snapshot. No complete R10 PASS claimed."
+    ]
+  },
+  "changes": [
+    "Inspect the preserved review through the actual C08 reviews namespace before/after the real edit race. Require status, defined value, exact id/version/pin and complete equality.",
+    "Partition only the failed edit/reconfirm case into three independently timed complete causal scenarios. Each uses real confirmation, SQLite reopen before edit and the same message; historical version is checked after reconfirmation, and resolution/reuse follow actual reconfirmation.",
+    "Retain all58 literal C05 oracle sites. A/C/D, imports, helpers, product implementation and shared fixtures are byte-equivalent to W6."
+  ],
+  "manifest_sha256": "9f740fe4650778cee524b3d67198e5f306bf0e34ac31e7d25c6e82bb8a4be10b",
+  "oracle_map_sha256": "160c7ae2551e7f1e1284dffb66c06c230194342fea9e8c833c4f37f7b21e6f7e",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "preimage_blob": "5570584303752e8e95159e21d78dccaa63832110",
+      "postimage_blob": "8fd6ad9018ff8b67234b4699916f558c6bf9e223",
+      "postimage_sha256": "b31319c656e6a8170e1de4f1b69263e409a8c8a21f7459d1c489d01826279b94"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "preimage_blob": "dab12a75873f435243911957ce681fb251916c51",
+      "postimage_blob": "a9ad44d2013bb31624633c5a8006667689a4fbab",
+      "postimage_sha256": "116b0e990a5a571b4accdef3c40810f41f0120a29a069cd2d487f846f662b209"
+    }
+  ],
+  "independent_review": {
+    "reviewer": "wp09_audit",
+    "status": "APPROVED_FOR_PUBLICATION_AND_HOSTED_SURGICAL_CI",
+    "approved_manifest_sha256": "9f740fe4650778cee524b3d67198e5f306bf0e34ac31e7d25c6e82bb8a4be10b",
+    "runtime_or_native_success_claimed": false
+  },
+  "next_selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "./Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "--test-name-pattern",
+      "^(?:C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation|C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version|C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response|C05 answer read refuses a real human edit after its final external version read|C05 answer work refuses a real human edit after its final external version read)$",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "request_sha256": "9d3fcc8f30bb2b880ebe67a5cfd7f2011d4b92ada94b7fb7cc2fd17fa15f6586",
+  "expected_selected_cases": [
+    "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+    "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+    "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+    "C05 answer read refuses a real human edit after its final external version read",
+    "C05 answer work refuses a real human edit after its final external version read"
+  ],
+  "expected_filtered_cases": [
+    "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+    "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+    "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source"
+  ],
+  "reattach": [
+    "W6 seven PASS: A confirmation/SQLite reopen, C current-domain/revocation, D last-await lease/physical replacement, generic historical continuity, host answer reuse, first-confirm HTTP, unit reuse. No production or fixture changed in W7.",
+    "Review A/C/D blocks plus every helper they execute are byte-identical to W6; only B and R10 are selected for new execution."
+  ],
+  "unchanged_case_hashes": [
+    {
+      "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+      "block_sha256": "16cc0e8c3b7716ea3d8c1c8fc4209406b190e330ba5b29c71be8dc5f36b3a45c",
+      "byte_equivalent": true
+    },
+    {
+      "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+      "block_sha256": "2ef01531652e0efc94f1125650269c3d2f74297d3be000fb9e32ef9a0c29a871",
+      "byte_equivalent": true
+    },
+    {
+      "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+      "block_sha256": "4d1b5736f9b52c9a0a9c060d34cede7ddd77940c19e809f3cfe7c90a91e03816",
+      "byte_equivalent": true
+    }
+  ],
+  "unchanged_helpers_sha256": "51c4a8994a9ebd485d4cb3071578c5f86627615ab7a1c2d7450887f703fda808",
+  "limits": {
+    "product_changes": 0,
+    "shared_fixture_changes": 0,
+    "test_deadline_ms": 120000,
+    "human_observation_expiry_ms": 300000,
+    "local_product_tests": false,
+    "native_proof": false,
+    "global_DONE": false
+  },
+  "performance_limit": "W6 B149408.75ms and W5 first253128.15ms remain recorded failures. Partition preserves causal chains and120s; it is not a product-latency fix."
+}

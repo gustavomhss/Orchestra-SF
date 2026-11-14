@@ -1,0 +1,202 @@
+import { dispatchSfCapability } from "../host-binding/capability-dispatch.ts"
+import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+import type { SfDomainValidation } from "../contracts/runtime.ts"
+import type { CapabilityDescriptor } from "../contracts/sf-execution.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+import type { createSfUiAuthority } from "../integration/ui-authority.ts"
+import type { createReviewDownloadHandler } from "../reports/download.ts"
+import type { createSfHumanAuthority } from "../integration/human-authority.ts"
+import type { createReviewClosurePort, ReviewActionHandoff } from "./closure-action.ts"
+import type { createReviewHumanPort } from "./human.ts"
+import type { createReviewAgendaSelection, ReviewAgendaItem } from "./selection.ts"
+import type { createReviewPort } from "./port.ts"
+import { isReviewThreadContext } from "./thread-context.ts"
+import type { createReviewThreadContext } from "./thread-context.ts"
+import type { ThreadSourceContext } from "../collaboration/thread-context.ts"
+import type { createReviewCurrentThread } from "./current-thread.ts"
+import type { createReviewComparisonPort } from "./comparison-port.ts"
+import type { createReviewContributionConsumer, ReviewContributionRequest } from "./contribution.ts"
+import type { createReviewRoutineSelection, RoutineReviewSelectionRequest } from "./routine-selection.ts"
+
+/** Mount in the existing authenticated application; starts no listener or storage. */
+export function createReviewHttp(input: {
+  origin: string
+  ui: ReturnType<typeof createSfUiAuthority>
+  human: ReturnType<typeof createReviewHumanPort>
+  humanAuthority?: ReturnType<typeof createSfHumanAuthority>
+  closure?: ReturnType<typeof createReviewClosurePort>
+  authority: SfDomainValidation
+  descriptors: readonly CapabilityDescriptor[]
+  reviews: ReturnType<typeof createReviewPort>
+  agenda?: ReturnType<typeof createReviewAgendaSelection>
+  routineAgenda?: ReturnType<typeof createReviewRoutineSelection>
+  comparison?: ReturnType<typeof createReviewComparisonPort>
+  currentThread?: ReturnType<typeof createReviewCurrentThread>
+  threadContext?: ReturnType<typeof createReviewThreadContext>
+  contribution?: ReturnType<typeof createReviewContributionConsumer>
+  download: ReturnType<typeof createReviewDownloadHandler>
+  maxBodyBytes: number
+}) {
+  if (!URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin || !Number.isSafeInteger(input.maxBodyBytes) || input.maxBodyBytes <= 0) throw new Error("SF_REVIEW_HTTP_CONFIG_INVALID")
+  return async (request: Request, surface: string): Promise<Response | undefined> => {
+    const url = new URL(request.url)
+    const mode = url.searchParams.get("sf")
+    if (mode !== "review-thread-context" && mode !== "review-read" && mode !== "review-current-thread" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
+    const json = (value: unknown, status: number) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+    if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted || url.searchParams.getAll("sf").length !== 1) return json({ status: "denied", reason: "review-unavailable" }, 403)
+    if (mode === "review-download") {
+      if ([...url.searchParams.keys()].some((key) => !["sf", "artifactRef"].includes(key)) || url.searchParams.getAll("artifactRef").length !== 1) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+      return input.download(request, url.searchParams.get("artifactRef") ?? "")
+    }
+    if (mode === "review-thread-context" || mode === "review-preserve" || mode === "review-agenda" || mode === "review-routine" || mode === "review-contribution" || mode === "review-close" || mode === "review-report" || mode === "review-preview") {
+      if (request.method !== "POST") return json({ status: "denied", reason: "method-unavailable" }, 405)
+      if (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return json({ status: "denied", reason: "review-unavailable" }, 403)
+      if ([...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return json({ status: "needs-input", reason: "invalid-request" }, 400)
+      const length = request.headers.get("content-length")
+      if (length && (!/^\d+$/.test(length) || Number(length) > input.maxBodyBytes)) return json({ status: "needs-input", reason: "request-too-large" }, 413)
+      const reader = request.body?.getReader()
+      if (!reader) return json({ status: "needs-input", reason: "invalid-request" }, 400)
+      const chunks: Uint8Array[] = []
+      let size = 0
+      while (true) {
+        const next = await reader.read()
+        if (next.done) break
+        size += next.value.byteLength
+        if (size > input.maxBodyBytes) { await reader.cancel(); return json({ status: "needs-input", reason: "request-too-large" }, 413) }
+        chunks.push(next.value)
+      }
+      const bytes = new Uint8Array(size)
+      let offset = 0
+      chunks.forEach((chunk) => { bytes.set(chunk, offset); offset += chunk.length })
+      const payload = await new Response(bytes).json().catch(() => undefined)
+      if (payload === undefined) return json({ status: "needs-input", reason: "invalid-request" }, 400)
+      if (mode === "review-thread-context") {
+        const producer = input.threadContext
+        if (!producer) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+        if (!payload || typeof payload !== "object" || Array.isArray(payload) || Object.keys(payload).length !== 3 || Object.keys(payload).some((key) => !["reviewRef", "sectionId", "basis"].includes(key)) || typeof payload.reviewRef !== "string" || !payload.reviewRef.trim() || typeof payload.sectionId !== "string" || !payload.sectionId.trim() || !payload.basis || typeof payload.basis !== "object" || Array.isArray(payload.basis) || Object.keys(payload.basis).length !== 5 || Object.keys(payload.basis).some((key) => !["sourceRef", "sourceIncarnation", "observedVersion", "period", "evidenceRefs"].includes(key))) return json({ status: "needs-input", reason: "invalid-review-thread-context" }, 400)
+        const selected = structuredClone({ reviewRef: payload.reviewRef as string, sectionId: payload.sectionId as string, basis: payload.basis as ThreadSourceContext })
+        const prepare = producer.prepare
+        const authorize = producer.authorize
+        const current = () => input.threadContext === producer && producer.prepare === prepare && producer.authorize === authorize
+        const digest = digestSfValue(selected)
+        const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+        if (admitted.status !== "ok") return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+        try {
+          if (!current() || !await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+          const result = await prepare.call(producer, { reviewRef: selected.reviewRef, sectionId: selected.sectionId }, structuredClone(selected.basis), admitted.value).catch(() => undefined)
+          if (!current() || !result) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+          if (result.status !== "ok") return json({ status: result.status === "needs-input" ? "needs-input" : result.status === "denied" ? "denied" : "unavailable", reason: "review-thread-context-unavailable" }, result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : 503)
+          if (!isReviewThreadContext(result.value) || result.value.reviewRef !== selected.reviewRef || result.value.sectionId !== selected.sectionId) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+          const pin = structuredClone(result.value)
+          if (!await authorize.call(producer, structuredClone(pin), structuredClone(selected.basis), admitted.value).catch(() => false) || !current() || !await input.ui.revalidate(admitted.value) || !current() || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+          return json({ status: "ok", value: { reviewRef: pin.reviewRef, reviewVersion: pin.reviewVersion, reviewDigest: pin.reviewDigest, sectionId: pin.sectionId } }, 200)
+        } finally { input.ui.finish(admitted.value) }
+      }
+      if (mode === "review-contribution") {
+        if (!input.contribution) return json({ status: "unavailable", reason: "contribution-reader-unavailable" }, 503)
+        const digest = digestSfValue(payload)
+        const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+        if (admitted.status !== "ok") return json({ status: "denied", reason: "review-contribution-unavailable" }, 403)
+        try {
+          if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-contribution-unavailable" }, 403)
+          const result = await input.contribution(payload as ReviewContributionRequest, admitted.value)
+          if (!await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-contribution-unavailable" }, 403)
+          return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+        } finally { input.ui.finish(admitted.value) }
+      }
+      if (mode === "review-close") {
+        if (!input.closure || !input.humanAuthority) return json({ status: "unavailable", reason: "handoff-producer-unavailable" }, 503)
+        if (!payload || typeof payload !== "object" || Array.isArray(payload) || Object.keys(payload).some((key) => !["reviewRef", "handoff"].includes(key)) || typeof payload.reviewRef !== "string" || !payload.reviewRef.trim() || !payload.handoff || typeof payload.handoff !== "object" || Array.isArray(payload.handoff)) return json({ status: "needs-input", reason: "invalid-handoff" }, 400)
+        const reviewRef: string = payload.reviewRef
+        const handoff = payload.handoff as ReviewActionHandoff
+        const digest = digestSfValue({ reviewRef })
+        const reviewAdmission = await input.ui.admit(request, "sf_review_prepare", digest)
+        if (reviewAdmission.status !== "ok") return json({ status: "denied", reason: "review-unavailable" }, 403)
+        try {
+          if (!await input.ui.validate(reviewAdmission.value, "sf_review_prepare", digest)) return json({ status: "denied", reason: "review-unavailable" }, 403)
+          const admission = await input.humanAuthority.admit(request, "collaboration.handoff.confirm", handoff)
+          if (admission.status !== "ok") return json({ status: "denied", reason: "handoff-unavailable" }, 403)
+          try {
+            const result = await input.closure.confirm(reviewRef, handoff, reviewAdmission.value, admission.value)
+            return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+          } finally { input.humanAuthority.finish(admission.value) }
+        } finally { input.ui.finish(reviewAdmission.value) }
+      }
+      if (mode === "review-agenda" || mode === "review-routine") {
+        if (mode === "review-agenda" ? !input.agenda : !input.routineAgenda) return json({ status: "unavailable", reason: "agenda-producer-unavailable" }, 503)
+        if (mode === "review-agenda" && (!payload || typeof payload !== "object" || Array.isArray(payload) || !Object.hasOwn(payload, "items") || Object.keys(payload).some((key) => key !== "items") || !Array.isArray(payload.items))) return json({ status: "needs-input", reason: "invalid-agenda" }, 400)
+        const digest = digestSfValue(payload)
+        const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+        if (admitted.status !== "ok") return json({ status: "denied", reason: "agenda-unavailable" }, 403)
+        try {
+          if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "agenda-unavailable" }, 403)
+          const result = mode === "review-agenda" ? await input.agenda!.create(payload.items as ReviewAgendaItem[], admitted.value) : await input.routineAgenda!.create(payload as RoutineReviewSelectionRequest, admitted.value)
+          if (!await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "agenda-unavailable" }, 403)
+          return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" ? 409 : 503)
+        } finally { input.ui.finish(admitted.value) }
+      }
+      if (mode === "review-preserve") {
+        const result = await input.human.preserve(request, payload)
+        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+      }
+      const operation = mode === "review-preview" ? "sf_review_prepare" : "sf_report_prepare"
+      const parsed = decodeSfOperationInput(operation, payload)
+      if (!parsed.ok) return json({ status: "needs-input", reason: "invalid-request" }, 400)
+      const admitted = await input.ui.admit(request, operation, digestSfValue(parsed.value))
+      if (admitted.status !== "ok") return json({ status: "denied", reason: "review-unavailable" }, 403)
+      try {
+        const result = await dispatchSfCapability({ operation, payload: parsed.value, context: admitted.value, descriptors: input.descriptors, authority: input.authority, validateInput: (_descriptor, value) => decodeSfOperationInput(operation, value).ok, validateOutput: (_descriptor, value) => value.status !== "ok" || decodeSfOperationOutput(operation, value.result).ok })
+        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" ? 409 : 503)
+      } finally {
+        input.ui.finish(admitted.value)
+      }
+    }
+    if (mode === "review-closure") {
+      if (request.method !== "GET") return json({ status: "denied", reason: "method-unavailable" }, 405)
+      if (!input.closure) return json({ status: "unavailable", reason: "handoff-producer-unavailable" }, 503)
+      if ([...url.searchParams.keys()].some((key) => !["sf", "closureRef"].includes(key)) || url.searchParams.getAll("closureRef").length !== 1) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+      const closureRef = url.searchParams.get("closureRef") ?? ""
+      if (!/^review-closure:[a-f0-9]{64}$/.test(closureRef)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+      const digest = digestSfValue({ closureRef })
+      const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+      if (admitted.status !== "ok") return json({ status: "denied", reason: "closure-unavailable" }, 403)
+      try {
+        if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
+        const result = await input.closure.read(closureRef, admitted.value)
+        if (result.status !== "ok" || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "closure-unavailable" }, 403)
+        return json(result, 200)
+      } finally { input.ui.finish(admitted.value) }
+    }
+    if (request.method !== "GET") return json({ status: "denied", reason: "method-unavailable" }, 405)
+    const currentConversation = mode === "review-current-thread"
+    if ([...url.searchParams.keys()].some((key) => !(currentConversation ? ["sf", "reviewRef", "commentId"] : ["sf", "reviewRef"]).includes(key)) || url.searchParams.getAll("reviewRef").length !== 1 || currentConversation && url.searchParams.getAll("commentId").length !== 1) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+    const reviewRef = url.searchParams.get("reviewRef") ?? ""
+    if (!reviewRef.trim() || reviewRef.length > 2048) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+    const commentId = currentConversation ? url.searchParams.get("commentId") ?? "" : undefined
+    if (currentConversation && (!commentId?.trim() || commentId.length > 8192)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+    const digest = digestSfValue(currentConversation ? { reviewRef, commentId } : { reviewRef })
+    const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+    if (admitted.status !== "ok") return json({ status: "denied", reason: "review-unavailable" }, 403)
+    try {
+      if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
+      if (currentConversation) {
+        if (!input.currentThread) return json({ status: "unavailable", reason: "current-thread-producer-unavailable" }, 503)
+        const result = await input.currentThread(reviewRef, commentId!, admitted.value)
+        if (!await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "current-thread-unavailable" }, 403)
+        return json(result, result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : 503)
+      }
+      if (mode === "review-comparison") {
+        if (!input.comparison) return json({ status: "unavailable", reason: "comparison-producer-unavailable" }, 503)
+        const result = await input.comparison.read(reviewRef, admitted.value)
+        if (!await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
+        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+      }
+      const result = await input.reviews.read(reviewRef, admitted.value)
+      if (result.status !== "ok" || !await input.ui.revalidate(admitted.value)) return json({ status: "unavailable", reason: "review-unavailable" }, 403)
+      return json(result, 200)
+    } finally {
+      input.ui.finish(admitted.value)
+    }
+  }
+}
+

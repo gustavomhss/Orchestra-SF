@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.collab-resume.increment04.v1",
+  "parent": "34f26821f62a99ae40ca1e69f4bded602f83768e",
+  "reason": "Refuse recipient-provider rebinding in the same admitted context and narrow real C08 state reads in the CAS regression.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "preimage_blob": "15cfe27a6be1b51b7b7c6bd737c9e2b979752cd5",
+      "postimage_blob": "5c9850034bef92736b05a4fc0dddbaa1170c57b1",
+      "sha256": "4ae96d1de91fbbba2df9ccb37eb73e7d3c7990a5eb871acfd234fe5c069e43c3",
+      "bytes": 11602
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+      "preimage_blob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+      "postimage_blob": "b7e6c7eb149cf9ef05a2390ca289e065cff88489",
+      "sha256": "bb8b23c0afd1dc766af84fba54e8e9b5050baf4a3abf09ac62fb4db83bac92a4",
+      "bytes": 4641
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "preimage_blob": "bdc370736e6167b0e570cb9d5f801f8e2a88ef09",
+      "postimage_blob": "85cbd3d88a224a816ffdd9340537d69025b1dbd1",
+      "sha256": "5842128b363d9ba25a8a696003feb166865cb734a7f7b4e3698a6310edce1341",
+      "bytes": 6710
+    }
+  ],
+  "independent_review": {
+    "finding": "R09",
+    "status": "APPROVED_FOR_HOSTED_VALIDATION",
+    "report_sha256": "936c3e358e69fe4debbaaeab3145ba85aab7bde39417f7fd97a82f5144a316f4",
+    "limit": "Source review, not execution evidence"
+  },
+  "static_trigger": {
+    "run_id": 43617349965,
+    "job_id": 132515203708,
+    "product_sha": "34f26821f62a99ae40ca1e69f4bded602f83768e",
+    "diagnostics": 72,
+    "exact_initial_foreign_diagnostics": 69,
+    "new_owned_diagnostics": 3,
+    "owned_file": "test/product/wp08/case-selection-cas.test.ts",
+    "guards": {
+      "status": "success",
+      "rules": 78,
+      "paths": 852,
+      "gates": 0,
+      "warnings": 14,
+      "errors": 0
+    }
+  },
+  "validation": {
+    "product_tests_local": false,
+    "existing_product_run": 43616934900,
+    "next_product_run": "Wait for existing run to complete. Reattach unaffected passing files, reselect only affected/failed files."
+  }
+}

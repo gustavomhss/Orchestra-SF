@@ -1,0 +1,1097 @@
+{
+  "schema": "wp09-hosted-test-cases-v1",
+  "productSha": "ed9a1da0420a0575e16c48118c6ce52edac6ae50",
+  "snapshotSha": "5fbdb55cc56ef0935471b8d674b811995c0385a9",
+  "runId": 43537797828,
+  "jobId": 132270915451,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537797828",
+  "conclusion": "success",
+  "counts": {
+    "passed": 172,
+    "failed": 0,
+    "expects": 911,
+    "files": 30
+  },
+  "durationSeconds": 60.41,
+  "request": {
+    "name": "wave4-request",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp09/actions.test.ts",
+        "Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+        "Sucafinav1/test/product/wp09/capabilities.test.ts",
+        "Sucafinav1/test/product/wp09/confirmation.test.ts",
+        "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+        "Sucafinav1/test/product/wp09/decision.test.ts",
+        "Sucafinav1/test/product/wp09/discovery.test.ts",
+        "Sucafinav1/test/product/wp09/dossier.test.ts",
+        "Sucafinav1/test/product/wp09/export-matrix.test.ts",
+        "Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+        "Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+        "Sucafinav1/test/product/wp09/forecast.test.ts",
+        "Sucafinav1/test/product/wp09/handoff.test.ts",
+        "Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+        "Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+        "Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+        "Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+        "Sucafinav1/test/product/wp09/publication.test.ts",
+        "Sucafinav1/test/product/wp09/recipes.test.ts",
+        "Sucafinav1/test/product/wp09/request-dossier.test.ts",
+        "Sucafinav1/test/product/wp09/result-access.test.ts",
+        "Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+        "Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+        "Sucafinav1/test/product/wp09/review.test.ts",
+        "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+        "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+        "Sucafinav1/test/product/wp09/schedule.test.ts",
+        "Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+        "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+        "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+      ],
+      "env": {}
+    },
+    "content": "{\"package\":\"sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"Sucafinav1/test/product/wp09/actions.test.ts\",\"Sucafinav1/test/product/wp09/authority-dispatch.test.ts\",\"Sucafinav1/test/product/wp09/capabilities.test.ts\",\"Sucafinav1/test/product/wp09/confirmation.test.ts\",\"Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts\",\"Sucafinav1/test/product/wp09/decision.test.ts\",\"Sucafinav1/test/product/wp09/discovery.test.ts\",\"Sucafinav1/test/product/wp09/dossier.test.ts\",\"Sucafinav1/test/product/wp09/export-matrix.test.ts\",\"Sucafinav1/test/product/wp09/followup-consumer.test.ts\",\"Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts\",\"Sucafinav1/test/product/wp09/forecast.test.ts\",\"Sucafinav1/test/product/wp09/handoff.test.ts\",\"Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts\",\"Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts\",\"Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts\",\"Sucafinav1/test/product/wp09/preparation-egress.test.ts\",\"Sucafinav1/test/product/wp09/publication.test.ts\",\"Sucafinav1/test/product/wp09/recipes.test.ts\",\"Sucafinav1/test/product/wp09/request-dossier.test.ts\",\"Sucafinav1/test/product/wp09/result-access.test.ts\",\"Sucafinav1/test/product/wp09/review-confirmation.test.ts\",\"Sucafinav1/test/product/wp09/review-product-consumer.test.ts\",\"Sucafinav1/test/product/wp09/review.test.ts\",\"Sucafinav1/test/product/wp09/schedule-boundaries.test.ts\",\"Sucafinav1/test/product/wp09/schedule-native.test.ts\",\"Sucafinav1/test/product/wp09/schedule.test.ts\",\"Sucafinav1/test/product/wp09/sourcing-consumer.test.ts\",\"Sucafinav1/test/product/wp06/documents/request-selection.test.ts\",\"Sucafinav1/test/product/wp06/documents/egress-fences.test.ts\"],\"env\":{}}\n",
+    "sha256": "b1f1b1bc5a8209fa50aa320fcb6b10b28b8a6e387282fad663eb476966e6f6f8"
+  },
+  "cases": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/recipes.test.ts",
+      "name": "five linear product recipes publish and materialize exact versions in the real Relay store",
+      "result": "pass",
+      "durationMs": 130.54
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/recipes.test.ts",
+      "name": "recipe publication needs explicit current UI authority and never runs during discovery",
+      "result": "pass",
+      "durationMs": 1.04
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/actions.test.ts",
+      "name": "followups preserve explicit fields and leave ambiguous owner and deadline unresolved",
+      "result": "pass",
+      "durationMs": 0.8
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/actions.test.ts",
+      "name": "conflicting copies of a note do not silently select an owner or action",
+      "result": "pass",
+      "durationMs": 0.37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/actions.test.ts",
+      "name": "a note cannot silently change field or period basis, and emitted proposals are isolated from input mutation",
+      "result": "pass",
+      "durationMs": 0.49
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "native Schedule controls and deduped prompt receipts remain distinct from a completed routine",
+      "result": "pass",
+      "durationMs": 187.15
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "admitted plus resultRef remains blocked without execution or authenticated output readers",
+      "result": "pass",
+      "durationMs": 1.63
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "native execution failed cannot become reviewable because a result reference exists",
+      "result": "pass",
+      "durationMs": 0.38
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "native execution cancelled cannot become reviewable because a result reference exists",
+      "result": "pass",
+      "durationMs": 0.21
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "reviewable requires matching native completion and the authenticated immutable artifact",
+      "result": "pass",
+      "durationMs": 2.08
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "result authorization denial never returns schedule result metadata",
+      "result": "pass",
+      "durationMs": 0.32
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "completion rejects a substituted runRef before reading output",
+      "result": "pass",
+      "durationMs": 0.31
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "completion rejects a substituted resultRef before reading output",
+      "result": "pass",
+      "durationMs": 0.19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "completion rejects a substituted outputDigest before reading output",
+      "result": "pass",
+      "durationMs": 0.14
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "name": "cancellation after the artifact read invalidates the earlier completion snapshot",
+      "result": "pass",
+      "durationMs": 0.64
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/handoff.test.ts",
+      "name": "preparation retains one correlation and confirmation stays human-gated",
+      "result": "pass",
+      "durationMs": 7.58
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/handoff.test.ts",
+      "name": "update previews the authorized version and forwards the same payload for human confirmation",
+      "result": "pass",
+      "durationMs": 0.8
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/handoff.test.ts",
+      "name": "selection and before values cannot drift while the authorized source is being resolved",
+      "result": "pass",
+      "durationMs": 0.43
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/sourcing-consumer.test.ts",
+      "name": "dossier keeps the real WP04 ranking, submitted FX, technical exclusion, missing scores and rejected Request stage",
+      "result": "pass",
+      "durationMs": 1453.79
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "revocation during case resolution stops the native invocation before any run starts",
+      "result": "pass",
+      "durationMs": 1.13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run refuses fractional versions and a port that only prepared admission",
+      "result": "pass",
+      "durationMs": 0.42
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted correlationId from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.59
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted authorizationId from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.38
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted armRef from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted childSessionId from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted documentId from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.31
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted publishedVersion from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted principalRef from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.29
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects substituted projectId from the admitted identity",
+      "result": "pass",
+      "durationMs": 0.22
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects removal of admitted authorizationId",
+      "result": "pass",
+      "durationMs": 0.53
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects removal of admitted armRef",
+      "result": "pass",
+      "durationMs": 0.28
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run rejects removal of admitted childSessionId",
+      "result": "pass",
+      "durationMs": 0.26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run compares the complete source digest including id",
+      "result": "pass",
+      "durationMs": 0.46
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run compares the complete source digest including incarnation",
+      "result": "pass",
+      "durationMs": 0.21
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run compares the complete source digest including fields",
+      "result": "pass",
+      "durationMs": 0.19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run compares the complete source digest including version",
+      "result": "pass",
+      "durationMs": 0.24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "run compares the complete source digest including period",
+      "result": "pass",
+      "durationMs": 0.26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "an admission object changed while resolving the case cannot rewrite the accepted identity",
+      "result": "pass",
+      "durationMs": 0.36
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "authority callbacks receive copies and cannot change the admitted or released run",
+      "result": "pass",
+      "durationMs": 0.46
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "status and direct result reads never return another principal's metadata",
+      "result": "pass",
+      "durationMs": 0.63
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "a result reference without admitted run authority is not a ready result",
+      "result": "pass",
+      "durationMs": 0.24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "a run's result reference alone cannot bypass its authenticated immutable artifact reader",
+      "result": "pass",
+      "durationMs": 0.36
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "preparation rejects substituted principal and published version",
+      "result": "pass",
+      "durationMs": 0.52
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "port failures return a bounded failure without backend exception content",
+      "result": "pass",
+      "durationMs": 0.26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "watch preparation keeps case, condition, recipient and recurrence attached to the authorized request",
+      "result": "pass",
+      "durationMs": 0.5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-boundaries.test.ts",
+      "name": "the six producer exports expose the canonical input and output schemas",
+      "result": "pass",
+      "durationMs": 0.07
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+      "name": "review consumes the producer's current scope projection even when the global version changes",
+      "result": "pass",
+      "durationMs": 1.35
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review-confirmation.test.ts",
+      "name": "a missing producer or unavailable scope never becomes a fresh review request",
+      "result": "pass",
+      "durationMs": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/authority-dispatch.test.ts",
+      "name": "all six routine operations use the consumed UI lease through the common dispatcher",
+      "result": "pass",
+      "durationMs": 4.3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/capabilities.test.ts",
+      "name": "run requires the current admission version and passes it to the native port",
+      "result": "pass",
+      "durationMs": 0.76
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule.test.ts",
+      "name": "schedule validates timezone and principal before creating through the public schedule port",
+      "result": "pass",
+      "durationMs": 1.71
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule.test.ts",
+      "name": "due recurrence stays unavailable without a durable occurrence port",
+      "result": "pass",
+      "durationMs": 0.35
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule.test.ts",
+      "name": "schedule update fails closed when its authorized recipe binding is unavailable",
+      "result": "pass",
+      "durationMs": 0.38
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/discovery.test.ts",
+      "name": "run discovery reads C08, deduplicates references and suppresses revoked output",
+      "result": "pass",
+      "durationMs": 1.18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/request-dossier.test.ts",
+      "name": "txt Request evidence reaches the real sourcing dossier as a candidate, then a confirmed premise",
+      "result": "pass",
+      "durationMs": 3462.07
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/request-dossier.test.ts",
+      "name": "docx Request evidence reaches the real sourcing dossier as a candidate, then a confirmed premise",
+      "result": "pass",
+      "durationMs": 4518.21
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/request-dossier.test.ts",
+      "name": "pdf Request evidence reaches the real sourcing dossier as a candidate, then a confirmed premise",
+      "result": "pass",
+      "durationMs": 5020.95
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "name": "routine answer uses the real versioned case command and a replay cannot create a second answer or execute a run",
+      "result": "pass",
+      "durationMs": 241.15
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision.test.ts",
+      "name": "decision routine requires the exact case and admitted version before invoking the native port",
+      "result": "pass",
+      "durationMs": 0.99
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision.test.ts",
+      "name": "decision run must keep the admitted correlation, input scope and native authorization",
+      "result": "pass",
+      "durationMs": 1.42
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision.test.ts",
+      "name": "decision run and result suppress output when authority or case changes at an async boundary",
+      "result": "pass",
+      "durationMs": 0.5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision.test.ts",
+      "name": "decision pinning detects a mutated native binding and rejects routine-result recursion before dispatch",
+      "result": "pass",
+      "durationMs": 0.38
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision.test.ts",
+      "name": "decision failures propagate without a reviewable result and a stale admission cannot recover an old result",
+      "result": "pass",
+      "durationMs": 0.39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision.test.ts",
+      "name": "a decision result requires the authenticated artifact reader and preserves its payload",
+      "result": "pass",
+      "durationMs": 0.59
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision.test.ts",
+      "name": "artifact read cannot return a different run or escape a concurrent case change",
+      "result": "pass",
+      "durationMs": 0.91
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/forecast.test.ts",
+      "name": "forecast review preserves canonical comparison and scoped confirmation",
+      "result": "pass",
+      "durationMs": 1.63
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/forecast.test.ts",
+      "name": "forecast facets are withheld if their producer evidence loses access",
+      "result": "pass",
+      "durationMs": 0.42
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "review rechecks an earlier topic after a later source revokes it",
+      "result": "pass",
+      "durationMs": 0.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "review refuses a mixed source snapshot but accepts a new C06 evaluation timestamp",
+      "result": "pass",
+      "durationMs": 0.67
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "review coverage declares unavailable topics and unknown record counts without counting metrics",
+      "result": "pass",
+      "durationMs": 0.39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "review declares empty selections and omits a section whose producer supplied no usable period",
+      "result": "pass",
+      "durationMs": 0.49
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "forecast suppresses a comparison changed while confirmation was being read",
+      "result": "pass",
+      "durationMs": 0.42
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "forecast rechecks C06 validity and never releases the old fingerprint after revocation",
+      "result": "pass",
+      "durationMs": 0.41
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "a single sourced proposal remains an incomplete factual dossier without fabricated alternatives",
+      "result": "pass",
+      "durationMs": 0.41
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/preparation-egress.test.ts",
+      "name": "dossier pins the initial procurement snapshot and fences it after the final document read",
+      "result": "pass",
+      "durationMs": 0.59
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_catalog authorizes the declared export and binds its exact output to the UI receipt",
+      "result": "pass",
+      "durationMs": 1.16
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_prepare authorizes the declared export and binds its exact output to the UI receipt",
+      "result": "pass",
+      "durationMs": 0.51
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_run authorizes the declared export and binds its exact output to the UI receipt",
+      "result": "pass",
+      "durationMs": 0.5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_status authorizes the declared export and binds its exact output to the UI receipt",
+      "result": "pass",
+      "durationMs": 0.35
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_result authorizes the declared export and binds its exact output to the UI receipt",
+      "result": "pass",
+      "durationMs": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_watch_prepare authorizes the declared export and binds its exact output to the UI receipt",
+      "result": "pass",
+      "durationMs": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_catalog refuses a direct export call without a consumed grant",
+      "result": "pass",
+      "durationMs": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_prepare refuses a direct export call without a consumed grant",
+      "result": "pass",
+      "durationMs": 0.26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_run refuses a direct export call without a consumed grant",
+      "result": "pass",
+      "durationMs": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_status refuses a direct export call without a consumed grant",
+      "result": "pass",
+      "durationMs": 0.23
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_result refuses a direct export call without a consumed grant",
+      "result": "pass",
+      "durationMs": 0.31
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_watch_prepare refuses a direct export call without a consumed grant",
+      "result": "pass",
+      "durationMs": 0.23
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_catalog rejects a serialized context and revoked permission before calling C08",
+      "result": "pass",
+      "durationMs": 0.24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_prepare rejects a serialized context and revoked permission before calling C08",
+      "result": "pass",
+      "durationMs": 0.13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_run rejects a serialized context and revoked permission before calling C08",
+      "result": "pass",
+      "durationMs": 0.15
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_status rejects a serialized context and revoked permission before calling C08",
+      "result": "pass",
+      "durationMs": 0.14
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_result rejects a serialized context and revoked permission before calling C08",
+      "result": "pass",
+      "durationMs": 0.18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_watch_prepare rejects a serialized context and revoked permission before calling C08",
+      "result": "pass",
+      "durationMs": 0.21
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_catalog suppresses output if permission is revoked by an awaited boundary",
+      "result": "pass",
+      "durationMs": 0.27
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_prepare suppresses output if permission is revoked by an awaited boundary",
+      "result": "pass",
+      "durationMs": 0.14
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_run suppresses output if permission is revoked by an awaited boundary",
+      "result": "pass",
+      "durationMs": 0.16
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_status suppresses output if permission is revoked by an awaited boundary",
+      "result": "pass",
+      "durationMs": 0.27
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_result suppresses output if permission is revoked by an awaited boundary",
+      "result": "pass",
+      "durationMs": 0.29
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_watch_prepare suppresses output if permission is revoked by an awaited boundary",
+      "result": "pass",
+      "durationMs": 0.21
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_catalog preserves stale state and refuses a substituted version or result",
+      "result": "pass",
+      "durationMs": 0.39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_prepare preserves stale state and refuses a substituted version or result",
+      "result": "pass",
+      "durationMs": 0.3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_run preserves stale state and refuses a substituted version or result",
+      "result": "pass",
+      "durationMs": 0.27
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_status preserves stale state and refuses a substituted version or result",
+      "result": "pass",
+      "durationMs": 0.18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_result preserves stale state and refuses a substituted version or result",
+      "result": "pass",
+      "durationMs": 0.3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_watch_prepare preserves stale state and refuses a substituted version or result",
+      "result": "pass",
+      "durationMs": 0.28
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_catalog reports an unavailable dependency without inventing a successful receipt",
+      "result": "pass",
+      "durationMs": 0.48
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_prepare reports an unavailable dependency without inventing a successful receipt",
+      "result": "pass",
+      "durationMs": 0.26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_run reports an unavailable dependency without inventing a successful receipt",
+      "result": "pass",
+      "durationMs": 0.25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_status reports an unavailable dependency without inventing a successful receipt",
+      "result": "pass",
+      "durationMs": 0.37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_routine_result reports an unavailable dependency without inventing a successful receipt",
+      "result": "pass",
+      "durationMs": 0.27
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/export-matrix.test.ts",
+      "name": "sf_watch_prepare reports an unavailable dependency without inventing a successful receipt",
+      "result": "pass",
+      "durationMs": 0.32
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+      "name": "real Planner value and FX changes remain separate observations with the producer total and no invented cause",
+      "result": "pass",
+      "durationMs": 225.65
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/forecast-domain-consumer.test.ts",
+      "name": "forecast preparation preserves authorized HR aggregates and independent missing rate, FX and inherited budget",
+      "result": "pass",
+      "durationMs": 528.2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review.test.ts",
+      "name": "factual review > uses scoped validity despite a newer global version and deduplicates topics",
+      "result": "pass",
+      "durationMs": 0.78
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review.test.ts",
+      "name": "factual review > does not disclose a topic after access loss or a failed egress check",
+      "result": "pass",
+      "durationMs": 0.43
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review.test.ts",
+      "name": "review compares selected projections without treating missing amounts as zero",
+      "result": "pass",
+      "durationMs": 0.84
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review.test.ts",
+      "name": "a restricted historical projection cannot leak through review changes",
+      "result": "pass",
+      "durationMs": 0.38
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review.test.ts",
+      "name": "review refuses a previously authorized review when access is revoked before output",
+      "result": "pass",
+      "durationMs": 0.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review.test.ts",
+      "name": "review uses the producer's record count instead of counting projection values",
+      "result": "pass",
+      "durationMs": 0.45
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/confirmation.test.ts",
+      "name": "forecast confirmation uses scoped projection, not global version equality",
+      "result": "pass",
+      "durationMs": 0.49
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/confirmation.test.ts",
+      "name": "missing producer and revoked scope never become a valid confirmation",
+      "result": "pass",
+      "durationMs": 0.27
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/confirmation.test.ts",
+      "name": "confirmation lookup rejects a scope changed during discovery",
+      "result": "pass",
+      "durationMs": 0.42
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+      "name": "WP09 consumes Planner 12000/6000 differences, budget margin and missing actual without invented savings or reasons",
+      "result": "pass",
+      "durationMs": 339.29
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/planner-confirmation-consumer.test.ts",
+      "name": "real C06 January v7 remains valid after February v8; material changes create one pending and revoked access hides review data",
+      "result": "pass",
+      "durationMs": 899.61
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/lifecycle-presentation.test.ts",
+      "name": "native start and result link are insufficient to announce completion",
+      "result": "pass",
+      "durationMs": 0.13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/dossier.test.ts",
+      "name": "dossier rejects an unsealed document ref before asking WP06 for document data",
+      "result": "pass",
+      "durationMs": 0.32
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/dossier.test.ts",
+      "name": "dossier suppresses resolved material when access changes before egress",
+      "result": "pass",
+      "durationMs": 0.24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/dossier.test.ts",
+      "name": "sourcing dossier does not return procurement material after access changes",
+      "result": "pass",
+      "durationMs": 0.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/dossier.test.ts",
+      "name": "sourcing dossier refuses a changed document selection",
+      "result": "pass",
+      "durationMs": 0.3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/dossier.test.ts",
+      "name": "procurement evidence does not implicitly select a document for the dossier",
+      "result": "pass",
+      "durationMs": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "immutable factual result is delivered without model narrative and does not share mutable storage",
+      "result": "pass",
+      "durationMs": 1.19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "result reference alone never grants access; forged identity and changed content are refused",
+      "result": "pass",
+      "durationMs": 0.43
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "revocation during file recovery suppresses all content and retry cannot resurrect it",
+      "result": "pass",
+      "durationMs": 0.43
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "a changed native result pin during recovery is stale and absent artifacts remain pending",
+      "result": "pass",
+      "durationMs": 0.47
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "a substituted artifact with a recomputed self hash still fails the immutable terminal pin",
+      "result": "pass",
+      "durationMs": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "failed and cancelled native executions never open an artifact even with a result reference",
+      "result": "pass",
+      "durationMs": 0.41
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "terminal state changes during artifact recovery invalidate the whole return",
+      "result": "pass",
+      "durationMs": 0.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "name": "input resolver callbacks cannot mutate the run snapshot returned with the artifact",
+      "result": "pass",
+      "durationMs": 0.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+      "name": "routine review returns a real WP07 selection consumed by human preservation and immutable C05 reads",
+      "result": "pass",
+      "durationMs": 27568.82
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+      "name": "routine followups reach real Hot Topics once, recover lost acknowledgement and keep the source relation",
+      "result": "pass",
+      "durationMs": 659.08
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/followup-consumer.test.ts",
+      "name": "routine update previews exact Hot Topic version, requires consent and rejects stale or revoked changes",
+      "result": "pass",
+      "durationMs": 1623.63
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/publication.test.ts",
+      "name": "publication is not opened for a foreign project or revoked authority",
+      "result": "pass",
+      "durationMs": 0.32
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/publication.test.ts",
+      "name": "real Relay publication supplies exact document and version; unpublished drafts cannot be acquired",
+      "result": "pass",
+      "durationMs": 23.59
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "a qualified occurrence binding reaches C08 create and update without approving the routine",
+      "result": "pass",
+      "durationMs": 1.12
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "revocation after occurrence qualification prevents scheduler creation",
+      "result": "pass",
+      "durationMs": 0.29
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "paused schedules and stale edits never reach native occurrence dispatch",
+      "result": "pass",
+      "durationMs": 0.47
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "manual requests require a retry key and retain admission-pending outcome",
+      "result": "pass",
+      "durationMs": 0.36
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "an occurrence cannot claim completion without C07 admission and a real result reference",
+      "result": "pass",
+      "durationMs": 0.25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "revocation during occurrence dispatch hides every result and pending reference",
+      "result": "pass",
+      "durationMs": 0.24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "create keeps the authorized recipe and cadence when owner resolution mutates the caller's request",
+      "result": "pass",
+      "durationMs": 0.41
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "update keeps the authorized schedule, version and cadence across owner awaits",
+      "result": "pass",
+      "durationMs": 0.39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "pause keeps the authorized schedule, version and cadence across owner awaits",
+      "result": "pass",
+      "durationMs": 0.26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "resume keeps the authorized schedule, version and cadence across owner awaits",
+      "result": "pass",
+      "durationMs": 0.17
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "runNow keeps the authorized schedule, version and cadence across owner awaits",
+      "result": "pass",
+      "durationMs": 0.17
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "authorization and qualification callbacks cannot rewrite the mutation payload",
+      "result": "pass",
+      "durationMs": 0.43
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "create requires the same payload authorization immediately before mutation",
+      "result": "pass",
+      "durationMs": 0.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "update requires the same payload authorization immediately before mutation",
+      "result": "pass",
+      "durationMs": 0.18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "pause requires the same payload authorization immediately before mutation",
+      "result": "pass",
+      "durationMs": 0.05
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "resume requires the same payload authorization immediately before mutation",
+      "result": "pass",
+      "durationMs": 0.06
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "runNow requires the same payload authorization immediately before mutation",
+      "result": "pass",
+      "durationMs": 0.03
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "private pending references participate in occurrence egress authorization",
+      "result": "pass",
+      "durationMs": 0.26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "invalid pending reference is rejected before egress: ",
+      "result": "pass",
+      "durationMs": 0.16
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "invalid pending reference is rejected before egress:  pending ",
+      "result": "pass",
+      "durationMs": 0.07
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "invalid pending reference is rejected before egress: ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp",
+      "result": "pass",
+      "durationMs": 0.07
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "pending reference arrays reject nonstrings and excessive entries",
+      "result": "pass",
+      "durationMs": 0.31
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "name": "pending references are deduplicated and detached from callback mutation",
+      "result": "pass",
+      "durationMs": 0.23
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "name": "txt Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "result": "pass",
+      "durationMs": 2211.43
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "name": "docx Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "result": "pass",
+      "durationMs": 4329.07
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "name": "pdf Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "result": "pass",
+      "durationMs": 4678.18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "name": "discovery fences source revisions again after both surface reads finish",
+      "result": "pass",
+      "durationMs": 38.54
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "name": "Request document evidence uses the actual Request resolver and fences an asset changed after list",
+      "result": "pass",
+      "durationMs": 409.04
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "name": "search suppresses an earlier match when a later document read changes its source",
+      "result": "pass",
+      "durationMs": 480.24
+    }
+  ],
+  "omniVerdict": "NOT_APPLICABLE: focused selection made no omni spawn/delegation; no omni execution proof.",
+  "artifactMetadata": {
+    "artifacts": []
+  }
+}

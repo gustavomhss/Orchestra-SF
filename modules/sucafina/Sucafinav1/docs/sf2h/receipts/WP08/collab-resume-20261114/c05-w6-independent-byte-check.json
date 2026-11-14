@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.collab-resume.w6-independent-byte-check.v1",
+  "reviewer": "root",
+  "base_product": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "manifest_sha256": "6a2f86bd94d3e1fa62e1f3fcd1e48b8b6bdb274a219868e8162464f72da9aeef",
+  "method": "Compare the sorted multiset of literal expect(...) and await expect(...) source lines in exact GitHub MCP preimages and frozen local postimages; inspect the full diff separately for causal scenario setup. This is document/source validation only.",
+  "checks": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "before_sites": 58,
+      "after_sites": 58,
+      "exact_assertion_lines_preserved": true,
+      "preimage": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+      "postimage": "5570584303752e8e95159e21d78dccaa63832110"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+      "before_sites": 23,
+      "after_sites": 23,
+      "exact_assertion_lines_preserved": true,
+      "preimage": "d03e3444c85391f5b801396dfee4eca84ba6e686",
+      "postimage": "506127c65b0e86c5e69303589f3d42102e62fefc"
+    }
+  ],
+  "causal_review": {
+    "independent_fixtures": true,
+    "real_confirmation_before_sqlite_reopen": true,
+    "edit_follows_reopen": true,
+    "original_revocation_physical_replacement_chain_kept": true,
+    "deadline_each_ms": 120000,
+    "observation_expiry_ms": 300000
+  },
+  "r10": {
+    "new_test_blob": "dab12a75873f435243911957ce681fb251916c51",
+    "real_human_edit_after_released_final_read": true,
+    "direct_work_consumer": true,
+    "thread_version_increment_baseline_source_review_acl_checked": true
+  },
+  "product_executed": false,
+  "native_proof": false
+}

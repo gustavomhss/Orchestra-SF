@@ -1,0 +1,60 @@
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -16,6 +16,7 @@
+ import type { SfDocumentReader } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import { createDashboardPort } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts"
++import { createDashboardAgendaSelector } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/agenda.ts"
+ import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+ import { createDashboardRecordSourceIssuer, createDashboardSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
+ import { createDashboardCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts"
+@@ -92,6 +93,7 @@
+   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+     issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
++  const dashboardAgenda = createDashboardAgendaSelector({ host, dashboard, sources: dashboardSources, recordEvidence: dashboardRecords })
+   const evidence: { current?: BusinessContextService } = {}
+   const context: BusinessContextService = {
+     resolve: (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }),
+@@ -261,7 +263,7 @@
+     return { status: "ok" as const, value: { forecastComparison: result.value, selectedPeriod: wanted.period, currency: wanted.currency, sourceRefs: refs, registeredReasons: [] } }
+     })
+   } }
+-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
++  return { dashboard, dashboardAgenda, dashboardRecords, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
+     dispose: () => { periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
+ }
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/review-producers.ts
+@@ -0,0 +1,30 @@
++import type { createSfBusinessServices } from "./business-services.ts"
++import type { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
++import { createRecipientAwareThreadReads } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts"
++import type { ReviewCompositionInput } from "../../../../modules/sucafina/Sucafinav1/product/reviews/composition.ts"
++
++/** Inject the canonical producers; selected source association remains an explicit host authority. */
++export function createSfReviewProducerBindings(input: {
++  business: Pick<ReturnType<typeof createSfBusinessServices>, "dashboardAgenda" | "planner" | "procurement">
++  collaboration: Pick<ReturnType<typeof createCollaborationHost>, "threads" | "recipientThread" | "threadHistory">
++  authorizeSourceMapping: ReviewCompositionInput["collaboration"]["authorizeSourceMapping"]
++  maxMessages: number
++  extensions?: Pick<ReviewCompositionInput["ports"], "readBiPresentation" | "captureBiReviewChart" | "reviewOutcome">
++}): Pick<ReviewCompositionInput, "ports" | "collaboration"> {
++  const history = input.collaboration.threadHistory
++  if (!history) throw new Error("SF_REVIEW_THREAD_HISTORY_UNAVAILABLE")
++  return {
++    ports: {
++      ...input.extensions,
++      selectDashboardAgenda: input.business.dashboardAgenda,
++      planner: input.business.planner,
++      procurement: input.business.procurement,
++    },
++    collaboration: {
++      threads: createRecipientAwareThreadReads(input.collaboration.threads, input.collaboration.recipientThread),
++      history: { readVersion: history.readVersion },
++      authorizeSourceMapping: input.authorizeSourceMapping,
++      maxMessages: input.maxMessages,
++    },
++  }
++}

@@ -1,0 +1,225 @@
+{
+  "schema": "sf2h.collab-resume.hosted-result.v1",
+  "run_id": 43619790251,
+  "job_id": 132522634877,
+  "product_sha": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "product_tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+  "snapshot_sha": "49e83715497e221350a8c221f45968debb566bea",
+  "snapshot_tree": "47fa6c5b106da857128545bb62c935c4c7528614",
+  "request_sha256": "1a023927eb151674cc2763b489b9cb7b0abb65c7d3845fd9cedf397a2f11168d",
+  "conclusion": "failure",
+  "counts": {
+    "pass": 8,
+    "fail": 2,
+    "expect_calls": 235,
+    "tests": 10,
+    "files": 7,
+    "duration_seconds": 462.12
+  },
+  "files": [
+    {
+      "path": "Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "a question on C05 keeps its original review and source basis through current data changes and denies revoked review access",
+          "duration_ms": 58178.83
+        },
+        {
+          "conclusion": "pass",
+          "name": "C05 observation rejects a provider replacement after its protected read-only source fence",
+          "duration_ms": 2439.78
+        },
+        {
+          "conclusion": "pass",
+          "name": "a second C05 observation cannot rebind the first observation to a replacement access producer",
+          "duration_ms": 3500.91
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "a lost case-selection CAS is a known no-commit conflict and retains exact retry identity",
+          "duration_ms": 532.05
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "a C05 request uses the recipient's current review lease, preserves exact retry and denies a homonym or revoked lease",
+          "duration_ms": 30046.12
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "cases": [
+        {
+          "conclusion": "fail",
+          "name": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+          "duration_ms": 253128.15
+        },
+        {
+          "conclusion": "pass",
+          "name": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+          "duration_ms": 99895.1
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "cases": [
+        {
+          "conclusion": "fail",
+          "name": "authorized historical messages keep their original basis and a new answer reuses the same stale thread",
+          "duration_ms": 845.12
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+          "duration_ms": 8419.28
+        }
+      ]
+    },
+    {
+      "path": "Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+      "cases": [
+        {
+          "conclusion": "pass",
+          "name": "first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access",
+          "duration_ms": 4942.64
+        }
+      ]
+    }
+  ],
+  "phase_timings": [
+    {
+      "scenario": "preserved-answer",
+      "stage": "fixture-ready",
+      "elapsed_ms": 125
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "question-and-source-change",
+      "elapsed_ms": 4263
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "recipient-reply",
+      "elapsed_ms": 13478
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "exact-answer-reference-checked",
+      "elapsed_ms": 19259
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "unconfirmed-read",
+      "elapsed_ms": 43722
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "http-observation",
+      "elapsed_ms": 61300
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "confirmation-retry",
+      "elapsed_ms": 83643
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "confirmed-read-work-and-shared-denial",
+      "elapsed_ms": 109681
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "sqlite-reopen-and-reuse",
+      "elapsed_ms": 132859
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "reopened-storage-unchanged",
+      "elapsed_ms": 132861
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "answer-edit-and-stale-work",
+      "elapsed_ms": 167054
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "reconfirmation-history-and-resolution",
+      "elapsed_ms": 248492
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "distinct-current-source-answer",
+      "elapsed_ms": 252688
+    },
+    {
+      "scenario": "preserved-answer",
+      "stage": "disposed",
+      "elapsed_ms": 253127
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "fixture-ready",
+      "elapsed_ms": 130
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "reply-denied-at-last-human-await",
+      "elapsed_ms": 11717
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "reply-and-private-observation",
+      "elapsed_ms": 38677
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "confirmation-denied-at-commit",
+      "elapsed_ms": 47660
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "unconfirmed-read",
+      "elapsed_ms": 62093
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "restored-access-confirmation",
+      "elapsed_ms": 99874
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "physical-replacement-denied",
+      "elapsed_ms": 99893
+    },
+    {
+      "scenario": "current-lease",
+      "stage": "disposed",
+      "elapsed_ms": 99894
+    }
+  ],
+  "omni": {
+    "verdict": "not applicable",
+    "nonce": "7d6e60eb59182bbc5026acd868131ddc",
+    "native_execution_proof": false
+  },
+  "log_sha256": "dd5b4a6b646775c0a32337f27d8df304498c277b2ee33a6cfca23dd603432a83",
+  "limitations": "The253.1second case remains FAIL despite later checkpoints. Phase timings are this synthetic hosted journey, not a UI p95 benchmark. Scoped file passes do not make the aggregate run green."
+}

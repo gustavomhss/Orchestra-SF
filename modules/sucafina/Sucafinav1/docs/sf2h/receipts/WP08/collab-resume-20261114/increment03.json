@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h.collab-resume.increment03.v1",
+  "parent": "20821df310ebc6ea08ccab27e829008d72a04de6",
+  "purpose": "Remove exactly one surplus closing parenthesis in the new C05 cloned-observation fence assertion; preserve the assertion and all product behavior.",
+  "file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+    "original_blob": "23f265df26ebf3fdb94c555ae4169badf7c833de",
+    "postimage_blob": "00bd120ba9086a781943fad51cb952ed28948798",
+    "sha256": "6c6adda24c23a64b7f6d4c14e9cacf2b43772d0b6156a50869806836830baa05"
+  },
+  "discovered_by": {
+    "run_id": 43616954979,
+    "job_id": 132513992303,
+    "product_sha": "20821df310ebc6ea08ccab27e829008d72a04de6",
+    "typecheck": {
+      "status": "failure",
+      "syntax_diagnostics": 6,
+      "limit": "Parser errors prevented the deeper typecheck; do not compare this count to the prior 69 semantic diagnostics."
+    },
+    "guards": {
+      "status": "success",
+      "rules": 78,
+      "paths": 851,
+      "gates": 0,
+      "warnings": 14,
+      "errors": 0
+    }
+  },
+  "product_tests_local": false,
+  "next": "Revalidate static checks. Let the in-flight product selection finish; rerun only failed/unexecuted affected files."
+}

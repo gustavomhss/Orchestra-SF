@@ -1,0 +1,24 @@
+{
+  "schema": "astra-collaboration-dependency-intake-v1",
+  "parentProduct": "e7e50c3572dfec8200517f8e9e8d2de23d41cfe7",
+  "owner": "astra-compose",
+  "publishedHead": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+  "publishedTree": "da48ad2d7d4f72867c4093aa32174f6bf731ebbb",
+  "reason": "Consume current published canonical DomainProjection schemas including comparison and sensitivityResultRef, matching the already consumed context.ts. Preserve structural admission rather than invent consumer schemas.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "blobSha": "0d9fc51d26a0ca726d32e74605b555f871d99af6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "blobSha": "4db2e631bd83ccda67442824557881c2ed990c92"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blobSha": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    }
+  ],
+  "foreignArchivedInputs": "All eleven WP08 archived inputs remain unchanged; these are newer published owner blobs, not the archived copies.",
+  "validation": "Affected C07 and dispatcher consumers will run against this dependency in the next surgical request; no PASS transferred to changed decoders."
+}

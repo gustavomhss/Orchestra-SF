@@ -1,0 +1,856 @@
+{
+  "schema": "sf2h.collaboration.recipient-receipt.validation.v1",
+  "date_utc": "2026-11-14",
+  "status": "PRODUCER_FUNCTIONAL_PASS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "collab-resume",
+  "pr": 41,
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "review_common_commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+  "owner_handoff": {
+    "base": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+    "tree": "34c5197f92afe1a773a3c87e2f3397bf89f2abb2",
+    "authority": "Previous writer explicitly delivered the final Collaboration handoff and updated PR41 to delivered for S0 review before any successor write. Silence was not used as release.",
+    "published_with_expected_sha": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+    "force": false
+  },
+  "input_proposal": {
+    "pr": 54,
+    "branch": "work-ack",
+    "sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-ack/c03-recipient-receipt.NOT_APPLIED.patch",
+    "preimage_blob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+    "preimage_sha256": "70e8c3eaa6b157b8e138e87b650cf5b31a4022bc07808f4e6a8ae04181877ccd",
+    "applied_after_exact_preimage_check": true,
+    "additional_delta": "Protected final receipt release and actual current actor/recipient review leases, including strict self lease check after the final await."
+  },
+  "product": {
+    "W": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+    "tree": "a36dee98b9aef866e2d78ad7af416653206e5d02",
+    "product_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "bytes": 19141,
+        "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+        "sha256": "eab35ec8cb7f18414cb33025565e9c96de2bc323aa866e4c96b9fa167f4f2a39"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "bytes": 11868,
+        "blob": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "sha256": "3f9d86ba599e31b082429519cc6c5a614dce3f1bc20fe6faa74dc53ae625b7d2"
+      }
+    ],
+    "manifest": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "bytes": 19141,
+        "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+        "sha256": "eab35ec8cb7f18414cb33025565e9c96de2bc323aa866e4c96b9fa167f4f2a39"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "bytes": 11868,
+        "blob": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "sha256": "3f9d86ba599e31b082429519cc6c5a614dce3f1bc20fe6faa74dc53ae625b7d2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-fixture.ts",
+        "bytes": 2716,
+        "blob": "aa5deb4cf23c5e2324bc1b282c2269ca7972327a",
+        "sha256": "f7a87495533fd26dac8cafae57bae61b04a1b9d4bede2bd1fb7dc651f9897a80"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+        "bytes": 5094,
+        "blob": "84b1e9c9a6362e10ccccc01e243a924221b7d2d1",
+        "sha256": "959c616b4764b32ee9372e6c779b4e3677759e39780e90801da82f43e94dd541"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+        "bytes": 5670,
+        "blob": "87c3cb572869cf1988dbdceed059f86dcc0e9f5d",
+        "sha256": "c76aff64b73a6dfb221d3c8160ac67de569b2514ed6075f3bc4328c412f75ea5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-fences.test.ts",
+        "bytes": 9036,
+        "blob": "e4a14cef6d06973c6bff5bb6097a10910e7c6fd0",
+        "sha256": "aa47ef5eb9f1eb9198f74086ad84a46a55b3b322e1fff9eed1eba78cc5ef1a54"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/preparation.json",
+        "bytes": 4624,
+        "blob": "7cef63c21b4a75125c81cb3f55ca9f8973b86819",
+        "sha256": "5f7241e2606ecc9c5d53d08f3567b45c4d30c15920f5532b28c467085d222d4a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/ci-request.01.json",
+        "bytes": 739,
+        "blob": "ae3b5687cf047c174138d8d2b69c54f2d1accc6d",
+        "sha256": "3ef4abbabdce95d93480c17d284cfe3130aaa794c79faf0bcbca50aaf12fd3e9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/CONTRACT.md",
+        "bytes": 5334,
+        "blob": "b007f61c444af37a4fcb788bd512baad34b7071a",
+        "sha256": "db62a1ca2c810e83badeee528ac1dac11b06519a0f6ec708d3a2048123f6c699"
+      }
+    ],
+    "postimages_verified": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "expected": "22c6309c61b27b89914086a7602bf3bea61a988b",
+        "actual": "22c6309c61b27b89914086a7602bf3bea61a988b",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "expected": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "actual": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-fixture.ts",
+        "expected": "aa5deb4cf23c5e2324bc1b282c2269ca7972327a",
+        "actual": "aa5deb4cf23c5e2324bc1b282c2269ca7972327a",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+        "expected": "84b1e9c9a6362e10ccccc01e243a924221b7d2d1",
+        "actual": "84b1e9c9a6362e10ccccc01e243a924221b7d2d1",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+        "expected": "87c3cb572869cf1988dbdceed059f86dcc0e9f5d",
+        "actual": "87c3cb572869cf1988dbdceed059f86dcc0e9f5d",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-fences.test.ts",
+        "expected": "e4a14cef6d06973c6bff5bb6097a10910e7c6fd0",
+        "actual": "e4a14cef6d06973c6bff5bb6097a10910e7c6fd0",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/preparation.json",
+        "expected": "7cef63c21b4a75125c81cb3f55ca9f8973b86819",
+        "actual": "7cef63c21b4a75125c81cb3f55ca9f8973b86819",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/ci-request.01.json",
+        "expected": "ae3b5687cf047c174138d8d2b69c54f2d1accc6d",
+        "actual": "ae3b5687cf047c174138d8d2b69c54f2d1accc6d",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/CONTRACT.md",
+        "expected": "b007f61c444af37a4fcb788bd512baad34b7071a",
+        "actual": "b007f61c444af37a4fcb788bd512baad34b7071a",
+        "equal": true
+      }
+    ]
+  },
+  "functional_runs": [
+    {
+      "selection": "13 new exact-receipt cases plus 7 existing regressions",
+      "W": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+      "W_tree": "a36dee98b9aef866e2d78ad7af416653206e5d02",
+      "S": "0499e3e313814baad066b3cccb14e4c37ee9fa1c",
+      "S_tree": "612b4cd7b90de76f1947e90daed7e2100e2ae2c9",
+      "request_path": "ci-request.01.json",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+          "./Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+          "./Sucafinav1/test/product/wp08/recipient-receipt-fences.test.ts",
+          "./Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "./Sucafinav1/test/product/wp08/thread-actors.test.ts",
+          "./Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+          "./Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "request_blob": "ae3b5687cf047c174138d8d2b69c54f2d1accc6d",
+      "request_sha256": "3ef4abbabdce95d93480c17d284cfe3130aaa794c79faf0bcbca50aaf12fd3e9",
+      "W_to_S_files": [
+        ".ci-run.json"
+      ],
+      "preserves_product_tests_fixtures_and_configuration": true,
+      "run_id": 43628901092,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901092",
+      "test_job": 132550878448,
+      "cleanup_job": 132552344789,
+      "conclusion": "success",
+      "test_job_conclusion": "success",
+      "cleanup_conclusion": "success",
+      "pass": 20,
+      "fail": 0,
+      "filtered": 0,
+      "expects": 247,
+      "files": 8,
+      "duration_seconds": 220.66,
+      "tests": [
+        {
+          "name": "recipient receipt initial reply returns the original C08 value with one exact append",
+          "duration_ms": 1319.1,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt equal author and text retain distinct identities and replay the earlier message",
+          "duration_ms": 2793.94,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt same key with changed body or expected storage version conflicts without a write",
+          "duration_ms": 2215.45,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt lost response survives SQLite reopen and fresh admission without another append",
+          "duration_ms": 1669.51,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt replay after thread resolution returns the original receipt without reopening",
+          "duration_ms": 2805.52,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt legacy Boolean remains inconclusive and is not backfilled",
+          "duration_ms": 1387.43,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt an edited message version cannot replace the exact original version",
+          "duration_ms": 2868.31,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt revocation before retry denies the old admission and leaves C08 intact",
+          "duration_ms": 1087.05,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt host revocation after the final reader cannot disclose the saved outcome",
+          "duration_ms": 1679.34,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt C05 ACL revocation after the final reader cannot be replaced by host authorization",
+          "duration_ms": 31938.75,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt C05 self lease denies ACL revocation after the last asynchronous review fence",
+          "duration_ms": 32120.76,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt C05 new reply still refuses review revocation at the commit fence",
+          "duration_ms": 18429.55,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt C05 physical source replacement with the same text ID cannot revive a saved reply",
+          "duration_ms": 20779.75,
+          "result": "PASS"
+        },
+        {
+          "name": "extended collaboration actions require explicitly registered commands and live human grants",
+          "duration_ms": 0.76,
+          "result": "PASS"
+        },
+        {
+          "name": "thread edit admission is confined to POST, same origin and the retained current request",
+          "duration_ms": 0.43,
+          "result": "PASS"
+        },
+        {
+          "name": "cancelled and expired selection admissions never regain authority",
+          "duration_ms": 0.48,
+          "result": "PASS"
+        },
+        {
+          "name": "a selected viewer with a homonym replies across scoped incarnations and current access revisions without gaining domain authority",
+          "duration_ms": 22230.38,
+          "result": "PASS"
+        },
+        {
+          "name": "canonical contextual conversations preserve all business snapshots and fail closed for changed, removed or restricted sources",
+          "duration_ms": 1024.89,
+          "result": "PASS"
+        },
+        {
+          "name": "authorized historical messages keep their original basis and a new answer reuses the same stale thread",
+          "duration_ms": 37053.95,
+          "result": "PASS"
+        },
+        {
+          "name": "a C05 request uses the recipient's current review lease, preserves exact retry and denies a homonym or revoked lease",
+          "duration_ms": 38971.31,
+          "result": "PASS"
+        }
+      ],
+      "omni": {
+        "outcome": "not applicable",
+        "reason": "focused: no declaring test ran",
+        "spawns": 0,
+        "delegated": 0,
+        "native_proof": false
+      },
+      "artifacts": [],
+      "log": {
+        "source": "GitHub Actions job log",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901092/job/132550878448",
+        "sha256": "ee2140ae40d886d761fd590ec2403313ea44edef4adadfc4b0f794905c18de94",
+        "bytes": 74305,
+        "retained_in_current_tree": false,
+        "historical_copy": {
+          "commit": "3097481a0baa534220555cfbb18d0506383b9bd9",
+          "path": "logs/01-recipient-receipt.log",
+          "blob": "f5569b949bea03cd08f2432a90e553a43f30ac32"
+        },
+        "removal_reason": "agent-scratch path rule; raw tool output removed, not renamed or exempted"
+      },
+      "validator": "Canonical request validation in GitHub Actions Read request step: success"
+    },
+    {
+      "selection": "One existing C05 resolve/reuse case affected by the new review receipt release and strict self lease",
+      "W": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+      "W_tree": "a36dee98b9aef866e2d78ad7af416653206e5d02",
+      "S": "e97b04631bc573768d5afac8491ac8444dc22850",
+      "S_tree": "3ffa9010495927fecb641f85c53988f6e835d62f",
+      "request_path": "ci-request.02.json",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "--test-name-pattern",
+          "^C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response$",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "request_blob": "5dcf4805b2adea745389072f96346c0f1fd90afd",
+      "request_sha256": "79bb73cb5c601c1ed9db2b38abcd9bb5959c69550f9a282b084aaa2210d666d1",
+      "W_to_S_files": [
+        ".ci-run.json"
+      ],
+      "preserves_product_tests_fixtures_and_configuration": true,
+      "run_id": 43629467025,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629467025",
+      "test_job": 132552649884,
+      "cleanup_job": 132553571067,
+      "conclusion": "success",
+      "test_job_conclusion": "success",
+      "cleanup_conclusion": "success",
+      "pass": 1,
+      "fail": 0,
+      "filtered": 5,
+      "expects": 2,
+      "files": 1,
+      "duration_seconds": 92.59,
+      "tests": [
+        {
+          "name": "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+          "duration_ms": 92410.58,
+          "result": "PASS"
+        }
+      ],
+      "omni": {
+        "outcome": "not applicable",
+        "reason": "focused: no declaring test ran",
+        "spawns": 0,
+        "delegated": 0,
+        "native_proof": false
+      },
+      "artifacts": [],
+      "log": {
+        "source": "GitHub Actions job log",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629467025/job/132552649884",
+        "sha256": "1616c417395494a2d58d207fa1ffa824a95a257623d32e51f27f5d0ef9e5089e",
+        "bytes": 70115,
+        "retained_in_current_tree": false,
+        "historical_copy": {
+          "commit": "3097481a0baa534220555cfbb18d0506383b9bd9",
+          "path": "logs/02-review-resolve.log",
+          "blob": "93edc293a00099aba7664892bd7572d2b2a77872"
+        },
+        "removal_reason": "agent-scratch path rule; raw tool output removed, not renamed or exempted"
+      },
+      "validator": "Canonical request validation in GitHub Actions Read request step: success",
+      "limit": "Positive compatibility of review resolve and subsequent reuse. Does not independently compare the resolve receipt with C08 or claim resolve replay."
+    },
+    {
+      "selection": "Only two corrected receipt assertions and the real-persistence reissue fixture",
+      "W": "f34edcfff26d0041145e13ea612d8d67f58dcbff",
+      "W_tree": "97e38e84b7500fe520eec2479fc93e8a88703465",
+      "S": "0f11903d2c4a888092dd9e13bcea5c817ef5249d",
+      "S_tree": "0434b0c27efb71525322676500e8b5313792a6c7",
+      "request_path": "ci-request.03.json",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+          "./Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+          "./Sucafinav1/test/product/wp08/reissue.test.ts",
+          "--test-name-pattern",
+          "^(recipient receipt initial reply returns the original C08 value with one exact append|recipient receipt lost response survives SQLite reopen and fresh admission without another append|reissue checks actor access and the live physical incarnation)$",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "request_blob": "e462f9a8cb237384a9ab0e8b319daf216eb897d5",
+      "request_sha256": "e3178f6096fc341ed57f12b5b3aa4c7e80afc2d6d7023760fd0fe96ebf0dc8f0",
+      "W_to_S_files": [
+        ".ci-run.json"
+      ],
+      "preserves_product_tests_fixtures_and_configuration": true,
+      "run_id": 43630483191,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630483191",
+      "test_job": 132555760059,
+      "cleanup_job": 132556159682,
+      "conclusion": "success",
+      "test_job_conclusion": "success",
+      "cleanup_conclusion": "success",
+      "pass": 3,
+      "fail": 0,
+      "filtered": 5,
+      "expects": 36,
+      "files": 3,
+      "duration_seconds": 3.57,
+      "tests": [
+        {
+          "name": "recipient receipt initial reply returns the original C08 value with one exact append",
+          "duration_ms": 1217.12,
+          "result": "PASS"
+        },
+        {
+          "name": "recipient receipt lost response survives SQLite reopen and fresh admission without another append",
+          "duration_ms": 1729.44,
+          "result": "PASS"
+        },
+        {
+          "name": "reissue checks actor access and the live physical incarnation",
+          "duration_ms": 395.41,
+          "result": "PASS"
+        }
+      ],
+      "omni": {
+        "outcome": "not applicable",
+        "reason": "focused: no declaring test ran",
+        "spawns": 0,
+        "delegated": 0,
+        "native_proof": false
+      },
+      "artifacts": [],
+      "log": {
+        "source": "GitHub Actions job log",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630483191/job/132555760059",
+        "bytes": 69855,
+        "sha256": "f03adb2c645f4d60d09a7f793f5e16e41e3a390bc091a349ecdb8a8e61e5e86e",
+        "retained_in_current_tree": false
+      },
+      "validator": "Canonical request validation in GitHub Actions Read request step: success"
+    }
+  ],
+  "required_proofs": [
+    {
+      "requirement": 1,
+      "claim": "Reply returns the exact original C08 value, complete intent digests and exact message tuple, with one append; real Collaboration HTTP returns it.",
+      "tests": [
+        "recipient receipt initial reply returns the original C08 value with one exact append"
+      ],
+      "result": "PASS",
+      "runs": [
+        43628901092,
+        43630483191
+      ]
+    },
+    {
+      "requirement": 2,
+      "claim": "Equal-author/equal-body messages have distinct identities; retry of the earlier key returns the earlier saved receipt.",
+      "tests": [
+        "recipient receipt equal author and text retain distinct identities and replay the earlier message"
+      ],
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
+    },
+    {
+      "requirement": 3,
+      "claim": "Discarded result, actual SQLite close/reopen, consumer recomposition and fresh admission recover C08 without append or storage/aggregate-version advance.",
+      "tests": [
+        "recipient receipt lost response survives SQLite reopen and fresh admission without another append"
+      ],
+      "result": "PASS",
+      "limit": "Frozen payload stays in test memory; this is not browser intent persistence or UI reload ACK.",
+      "runs": [
+        43628901092,
+        43630483191
+      ]
+    },
+    {
+      "requirement": 4,
+      "claim": "Reply replay after resolution returns the saved receipt without reopening or adding resolution history.",
+      "tests": [
+        "recipient receipt replay after thread resolution returns the original receipt without reopening"
+      ],
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
+    },
+    {
+      "requirement": 5,
+      "claim": "Same key with divergent body or expectedStorageVersion conflicts; original transaction and storage remain unchanged.",
+      "tests": [
+        "recipient receipt same key with changed body or expected storage version conflicts without a write"
+      ],
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
+    },
+    {
+      "requirement": 6,
+      "claim": "Legacy Boolean remains inconclusive without receipt synthesis/backfill.",
+      "tests": [
+        "recipient receipt legacy Boolean remains inconclusive and is not backfilled"
+      ],
+      "result": "PASS",
+      "limit": "Explicit legacy compatibility fixture replaces only saved transaction.value; it is not execution of the prior producer.",
+      "runs": [
+        43628901092
+      ]
+    },
+    {
+      "requirement": 7,
+      "claim": "An actual message edit to a newer version cannot replace the exact original version in the receipt.",
+      "tests": [
+        "recipient receipt an edited message version cannot replace the exact original version"
+      ],
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
+    },
+    {
+      "requirement": 8,
+      "claim": "Revocation before retry, after the final reader and after the last asynchronous C05 fence denies disclosure under current authority.",
+      "tests": [
+        "recipient receipt revocation before retry denies the old admission and leaves C08 intact",
+        "recipient receipt host revocation after the final reader cannot disclose the saved outcome",
+        "recipient receipt C05 ACL revocation after the final reader cannot be replaced by host authorization",
+        "recipient receipt C05 self lease denies ACL revocation after the last asynchronous review fence"
+      ],
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
+    },
+    {
+      "requirement": 9,
+      "claim": "Physical replacement with the same textual source ID fails closed; new review writes retain sourceFence all, reviews checkNamespaces and the commit-time review lease.",
+      "tests": [
+        "recipient receipt C05 new reply still refuses review revocation at the commit fence",
+        "recipient receipt C05 physical source replacement with the same text ID cannot revive a saved reply",
+        "a C05 request uses the recipient's current review lease, preserves exact retry and denies a homonym or revoked lease"
+      ],
+      "result": "PASS",
+      "runs": [
+        43628901092
+      ]
+    }
+  ],
+  "inherited_c05": {
+    "W": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "S": "a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3",
+    "run_id": 43625515062,
+    "job_id": 132540336771,
+    "pass": 5,
+    "fail": 0,
+    "filtered": 3,
+    "expects": 62,
+    "duration_seconds": 316.06,
+    "scope": "Original five PASS remain pinned to their original W. They are not automatically transported to the new producer. Only the resolve/reuse case is additionally selected for a concrete changed path; the other four are not rerun.",
+    "old_deadlines_and_assertions_unchanged": true
+  },
+  "execution_controls": {
+    "local_product_tests": 0,
+    "local_compilation": false,
+    "local_canonical_validator": false,
+    "epic_or_full_suite": false,
+    "tests_only_github_actions": true,
+    "remote_only_github_mcp": true,
+    "deduplication": "Compared existing runs/requests before each dispatch. Second request starts only after the first run and cleanup complete. No matching receipt request already existed.",
+    "per_test_timeout_ms": 120000,
+    "changed_existing_deadlines": false,
+    "changed_existing_assertions": false,
+    "guard_not_functional_proof": true,
+    "parallel_product_writers": 0,
+    "new_test_assertion_typing_adjusted_without_semantic_change": true
+  },
+  "static_checks": {
+    "baseline_run": 43627225976,
+    "baseline_head": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+    "baseline_typecheck": {
+      "conclusion": "failure",
+      "total": 69,
+      "own": 0
+    },
+    "baseline_guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "paths": 921,
+      "gates": 0,
+      "warnings": 14,
+      "errors": 0
+    },
+    "final_gate": "Re-run the existing Astra WP08 checks on this final evidence delivery HEAD after the type/fixture and agent-scratch corrections. Publish exact HEAD/tree/run/job/artifact, diagnostic equality and guards result in PR41. The failed first gate remains recorded.",
+    "attempts": [
+      {
+        "schema": "sf2h.collaboration.recipient-receipt.static-attempt.v1",
+        "head": "3097481a0baa534220555cfbb18d0506383b9bd9",
+        "tree": "4d6ecf07dfe7cb24d778386b4713e1b21d39d080",
+        "run_id": 43629952588,
+        "job_id": 132554121997,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588",
+        "conclusion": "failure",
+        "typecheck": {
+          "conclusion": "failure",
+          "total": 73,
+          "inherited": 69,
+          "inherited_exact_diagnostic_equality": true,
+          "new": 4,
+          "own_diagnostics": [
+            {
+              "file": "test/product/wp08/recipient-receipt-recovery.test.ts",
+              "line": 25,
+              "column": 81,
+              "code": "TS2769",
+              "message": "No overload matches this call."
+            },
+            {
+              "file": "test/product/wp08/recipient-receipt.test.ts",
+              "line": 23,
+              "column": 29,
+              "code": "TS2769",
+              "message": "No overload matches this call."
+            },
+            {
+              "file": "test/product/wp08/recipient-receipt.test.ts",
+              "line": 30,
+              "column": 83,
+              "code": "TS2769",
+              "message": "No overload matches this call."
+            },
+            {
+              "file": "test/product/wp08/reissue.test.ts",
+              "line": 85,
+              "column": 59,
+              "code": "TS2741",
+              "message": "Property 'persistence' is missing in type '{ requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }' but required in type 'Pick<DomainPortHost, \"persistence\" | \"requestFor\" | \"revalidate\">'."
+            }
+          ]
+        },
+        "guards": {
+          "conclusion": "failure",
+          "rules": 78,
+          "changed_paths": 933,
+          "gates": 2,
+          "warnings": 14,
+          "errors": 0,
+          "findings": [
+            {
+              "rule": "agent-scratch",
+              "path": "logs/01-recipient-receipt.log"
+            },
+            {
+              "rule": "agent-scratch",
+              "path": "logs/02-review-resolve.log"
+            }
+          ]
+        },
+        "artifact": {
+          "id": 14127239841,
+          "name": "astra-wp08-check-3097481a0baa534220555cfbb18d0506383b9bd9-1",
+          "sha256": "8dbd5a44f21b1bb613075cce89cb1546a6ee0d09e75d5bf759f6ff5ec83c9a40"
+        },
+        "log": {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588/job/132554121997",
+          "bytes": 99701,
+          "sha256": "774919ca67995487e77b32f5173ec5b379894b1484045f0b3e68c495f957f7df",
+          "retained_in_repository": false
+        },
+        "correction": {
+          "product_changed": false,
+          "tests": [
+            "Reverse three symmetric structural equality comparisons to respect unknown/readonly overloads; keep full equality assertions.",
+            "Pass the existing real SQLite store to the reissue fixture host, matching its C08 and mutationFence."
+          ],
+          "documentation": [
+            "Remove both raw log files from the current tree instead of renaming or exempting them.",
+            "Preserve exact hashes, outcome records and GitHub job links; the original failed HEAD remains in history."
+          ],
+          "guard_rules_changed": false,
+          "ignores_added": false,
+          "approvals_added": false,
+          "followup_selection": "ci-request.03.json",
+          "followup_status": "PENDING_HOSTED_VALIDATION"
+        }
+      }
+    ]
+  },
+  "consumer": {
+    "owners": [
+      "work-ack",
+      "ui-work",
+      "S0"
+    ],
+    "contract_path": "CONTRACT.md",
+    "producer_sha": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+    "browser_pending_intent_persistence_proven": false,
+    "ui_positive_ack_proven": false,
+    "ui_reload_recovery_proven": false,
+    "installation_proven": false,
+    "native_execution_proven": false,
+    "shared_contract_edits": false,
+    "requirements": [
+      "Consume the published producer by SHA and value.mutationReceipt.",
+      "Persist the complete pending intent in the browser and restore the exact original key/body/expectedStorageVersion under fresh admission.",
+      "Match ACK to intent/principal/key/thread/exact message tuple; never use current projection, text, author, position or Boolean as identity.",
+      "Qualify composed UI positive ACK, lost response/retry/reload, equal messages, divergence, revocation and source replacement.",
+      "Keep ACK separate from human confirmation, attachment/reuse approval and financial authorization."
+    ],
+    "tested_candidate_sha": "f34edcfff26d0041145e13ea612d8d67f58dcbff"
+  },
+  "preserved_handoffs": [
+    {
+      "wp": "WP07",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/collab-resume/HANDOFF.md",
+      "blob": "ff56cabbd910b950c711046ebd27f8336d353029"
+    },
+    {
+      "wp": "WP08",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/COLLABORATION-HANDOFF.md",
+      "blob": "e56254b1bc2fc4157c7f3fbc38309b7bef0b39be"
+    },
+    {
+      "wp": "WP08",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/handoff.md",
+      "blob": "3e138d38da6debead1983a8a0126e53c40e5f143"
+    },
+    {
+      "wp": "WP09",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/collab-resume/owner-deltas.md",
+      "blob": "11e46bb62a4ba4ef263d0d6d11292b34e56f2358"
+    }
+  ],
+  "unchanged_remaining_obligations": [
+    "WP07/WP14 nonempty expected/observed outcome consumer after owner composition",
+    "Host-installed C05/full reader/independent recipient authority composition",
+    "Shared C16 C05 pin contract and consumer presentation",
+    "C17 history, periods and source leases",
+    "WP09 native admission/occurrence/execution/authenticated-result lifecycle",
+    "WP11/WP13 verification, private writer grant and Finance integration",
+    "Browser intent persistence and UI ACK/reload consumption",
+    "C05 latency/SLO qualification",
+    "Inherited typecheck reconciliation and integrated bundle gates"
+  ],
+  "global_release": false,
+  "functional_summary": {
+    "pass_executions": 24,
+    "fail_executions": 0,
+    "unique_test_names": 22,
+    "expects": 285,
+    "runs": 3,
+    "new_cases": 13,
+    "existing_regressions": 9,
+    "product_compiled_by_hosted_bun": true,
+    "interpretation": "S3 reexecutes two names from S1 and adds one existing reissue case. Counts are executions, not 24 distinct tests."
+  },
+  "correction": {
+    "status": "SCOPED_FUNCTIONAL_PASS",
+    "W": "f34edcfff26d0041145e13ea612d8d67f58dcbff",
+    "tree": "97e38e84b7500fe520eec2479fc93e8a88703465",
+    "product_byte_identical_to_W": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+    "request": "ci-request.03.json",
+    "run_id": 43630483191,
+    "pass": 3,
+    "fail": 0,
+    "assertions_preserved": true,
+    "existing_deadlines_unchanged": true,
+    "manifest": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+        "bytes": 5094,
+        "blob": "1de693aabb1189678cc4353ab5f34ca7f29e4938",
+        "sha256": "43eae67d7a89356a193cda33e80f0f74221195b411b655a92e6ffd27b4c841e3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+        "bytes": 5670,
+        "blob": "f3f622a95be54f62e167bf3b3cbef31b95aaff9c",
+        "sha256": "6b7de1ca416486f5660c1fecf3410e5f6dd80442632286ed4222eba0ed67b0f1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+        "bytes": 12996,
+        "blob": "dc0c7c770701f64914f91651d4971462a7110b01",
+        "sha256": "16af1d4a215f8a7d9b573edf0a3ad4ac64ab11ea3dc5ae25fb1976869fbbd8fb"
+      }
+    ],
+    "postimages_verified": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+        "blob": "1de693aabb1189678cc4353ab5f34ca7f29e4938",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+        "blob": "f3f622a95be54f62e167bf3b3cbef31b95aaff9c",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+        "blob": "dc0c7c770701f64914f91651d4971462a7110b01",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "blob": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "equal": true
+      }
+    ],
+    "remaining": "Final exact-head static gate must establish removal of the four own diagnostics and raw-log guard findings; report it in PR41."
+  }
+}

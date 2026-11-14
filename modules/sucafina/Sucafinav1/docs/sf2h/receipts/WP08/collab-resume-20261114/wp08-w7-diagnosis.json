@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h-wp08-w7-diagnosis-v1",
+  "product": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+  "run_id": 43623257640,
+  "job_id": 132533400502,
+  "snapshot": "72848c2122b68e15341baa41e5beef4e9237562a",
+  "result": "FAILURE",
+  "summary": {
+    "pass": 7,
+    "fail": 3,
+    "expects": 212,
+    "tests": 10,
+    "files": 6,
+    "seconds": 572.34
+  },
+  "findings": [
+    {
+      "id": "W7-R10-REVIEW-ORACLE",
+      "kind": "test-only canonical source read",
+      "cause": "f.snapshots() is businessSnapshot and deliberately removes __sfProductV1. Reading its product reviews returned undefined and compared the constant undefined digest with the actual pin. This was not evidence of a changed C05 or a product R10 regression.",
+      "fix": "Read the actual C08 reviews namespace by f.basis.reviewContext.reviewRef before and after. Assert status ok, defined value, exact id/version, exact pin digest both times, and full review equality. Keep business snapshots only for domain/physical invariants. The before read precedes the race hook; after read follows restoration; review namespace cannot increment the thread-read counter.",
+      "qualification": "Both W6 races reached the expected final-egress refusal after real edits but then failed their review invariant; neither W6 case is promoted to PASS. W7 must complete both exact cases."
+    },
+    {
+      "id": "W7-B-PARTITION",
+      "kind": "causal test partition within unchanged deadline",
+      "observed_ms": 149408.75,
+      "deadline_ms": 120000,
+      "observed_phases_ms": {
+        "confirmation_and_sqlite_reopen": 42362,
+        "edit_and_stale_work": 79802,
+        "reconfirm_history_resolve": 149407
+      },
+      "decision": "Use three independent actual fixtures so each complete functional obligation fits its own120s clock. Retain real first confirmation and actual SQLite reopen before every edit. B2 retains original history AFTER actual reconfirmation; moving that oracle before reconfirmation would leave a regression in historical preservation undetected. B3 retains reconfirmation before same-thread resolution and edited-body reuse.",
+      "no_latency_claim": true,
+      "no_product_optimization_or_grant_cache": true
+    }
+  ],
+  "all_existing_oracles_preserved": true,
+  "tests_local": false
+}

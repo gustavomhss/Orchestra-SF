@@ -1,0 +1,313 @@
+{
+  "schema": "sf2h.collab-resume.c05-w6-result.v1",
+  "run_id": 43623257640,
+  "job_id": 132533400502,
+  "product_sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+  "product_tree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0",
+  "snapshot_sha": "72848c2122b68e15341baa41e5beef4e9237562a",
+  "snapshot_tree": "a2736ebc9cad587e0e10576a6758a5003c00831c",
+  "request_sha256": "05443c8b6ad0e91d18b1aae3e92864d7be9016d1779ac2b9f533500655f7ac69",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43623257640",
+  "conclusion": "failure",
+  "counts": {
+    "pass": 7,
+    "fail": 3,
+    "expect_calls": 212,
+    "tests": 10,
+    "files": 6,
+    "duration_seconds": 572.34
+  },
+  "cases": [
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "result": "pass",
+      "name": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+      "duration_ms": 109225.56
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "result": "fail",
+      "name": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+      "duration_ms": 149408.75
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "result": "pass",
+      "name": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+      "duration_ms": 49462.65
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "result": "pass",
+      "name": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+      "duration_ms": 83097.57
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "result": "pass",
+      "name": "authorized historical messages keep their original basis and a new answer reuses the same stale thread",
+      "duration_ms": 38349.72
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "result": "pass",
+      "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+      "duration_ms": 11444.84
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+      "result": "pass",
+      "name": "first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access",
+      "duration_ms": 6455.03
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "result": "fail",
+      "name": "C05 answer read refuses a real human edit after its final external version read",
+      "duration_ms": 66668.51
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "result": "fail",
+      "name": "C05 answer work refuses a real human edit after its final external version read",
+      "duration_ms": 57952.4
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+      "result": "pass",
+      "name": "answer reuse delegates cross-actor scope and authorization to producer",
+      "duration_ms": 3.2
+    }
+  ],
+  "phase_timings": [
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "fixture-ready",
+      "elapsed_ms": 256
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "question-and-source-change",
+      "elapsed_ms": 6063
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "recipient-reply",
+      "elapsed_ms": 17908
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "exact-answer-reference-checked",
+      "elapsed_ms": 25618
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "unconfirmed-read",
+      "elapsed_ms": 46443
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "http-observation",
+      "elapsed_ms": 57935
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "confirmation-retry",
+      "elapsed_ms": 75043
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "confirmed-read-work-and-shared-denial",
+      "elapsed_ms": 93565
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "sqlite-reopen-and-reuse",
+      "elapsed_ms": 109219
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "reopened-storage-unchanged",
+      "elapsed_ms": 109221
+    },
+    {
+      "scenario": "confirmation-reopen",
+      "phase": "disposed",
+      "elapsed_ms": 109222
+    },
+    {
+      "scenario": "edit-reconfirm",
+      "phase": "fixture-ready",
+      "elapsed_ms": 179
+    },
+    {
+      "scenario": "edit-reconfirm",
+      "phase": "real-question-source-change-and-answer",
+      "elapsed_ms": 23429
+    },
+    {
+      "scenario": "edit-reconfirm",
+      "phase": "real-confirmation-and-sqlite-reopen",
+      "elapsed_ms": 42362
+    },
+    {
+      "scenario": "edit-reconfirm",
+      "phase": "answer-edit-and-stale-work",
+      "elapsed_ms": 79802
+    },
+    {
+      "scenario": "edit-reconfirm",
+      "phase": "reconfirmation-history-and-resolution",
+      "elapsed_ms": 149407
+    },
+    {
+      "scenario": "edit-reconfirm",
+      "phase": "disposed",
+      "elapsed_ms": 149409
+    },
+    {
+      "scenario": "distinct-current-revocation",
+      "phase": "fixture-ready",
+      "elapsed_ms": 172
+    },
+    {
+      "scenario": "distinct-current-revocation",
+      "phase": "real-question-source-change-and-answer",
+      "elapsed_ms": 23861
+    },
+    {
+      "scenario": "distinct-current-revocation",
+      "phase": "real-c05-confirmation",
+      "elapsed_ms": 43605
+    },
+    {
+      "scenario": "distinct-current-revocation",
+      "phase": "distinct-current-source-answer",
+      "elapsed_ms": 48757
+    },
+    {
+      "scenario": "distinct-current-revocation",
+      "phase": "disposed",
+      "elapsed_ms": 49462
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "fixture-ready",
+      "elapsed_ms": 166
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "reply-denied-at-last-human-await",
+      "elapsed_ms": 14583
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "reply-and-private-observation",
+      "elapsed_ms": 40396
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "confirmation-denied-at-commit",
+      "elapsed_ms": 47343
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "unconfirmed-read",
+      "elapsed_ms": 56686
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "restored-access-confirmation",
+      "elapsed_ms": 83066
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "physical-replacement-denied",
+      "elapsed_ms": 83095
+    },
+    {
+      "scenario": "current-lease",
+      "phase": "disposed",
+      "elapsed_ms": 83096
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "fixture-ready",
+      "elapsed_ms": 167
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "real-confirmation",
+      "elapsed_ms": 40088
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "edit-refused-at-final-egress",
+      "elapsed_ms": 66662
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "disposed",
+      "elapsed_ms": 66667
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "fixture-ready",
+      "elapsed_ms": 184
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "real-confirmation",
+      "elapsed_ms": 39992
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "edit-refused-at-final-egress",
+      "elapsed_ms": 57947
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "disposed",
+      "elapsed_ms": 57952
+    }
+  ],
+  "findings": [
+    {
+      "id": "W6-LATENCY-B",
+      "kind": "test deadline",
+      "case": "edit-reconfirm",
+      "duration_ms": 149408.75,
+      "deadline_ms": 120000,
+      "status": "unresolved at W6; phase completion is not PASS"
+    },
+    {
+      "id": "W6-R10-FIXTURE",
+      "kind": "incorrect test observation",
+      "line": 83,
+      "diagnosis": "f.snapshots() intentionally applies businessSnapshot, removing __sfProductV1. The test reads undefined, not the persisted C08 review. Read the actual reviews namespace before/after and require defined identity/version/digest equal to the pin; keep domain snapshots unchanged.",
+      "product_denial_assertions_reached": true,
+      "complete_case_pass": false,
+      "future_work": "Correct only the test; later invariant/Work checks were not reached."
+    }
+  ],
+  "omni": {
+    "verdict": "not applicable",
+    "nonce": "8a76934ee7ae715bb5066422d6beb1d9",
+    "spawns": 0,
+    "native_execution_proof": false
+  },
+  "artifacts": [],
+  "cleanup": {
+    "job_id": 132536507250,
+    "conclusion": "success",
+    "snapshot_ref_deleted_by_workflow": true
+  },
+  "limitations": [
+    "All seven named PASS are retained at W6/S exact pins; the aggregate remains FAILURE.",
+    "The first C05 journey partition is not latency/SLO acceptance. The edit/reconfirm journey still exceeded120000ms.",
+    "R10 core edit-denial assertions ran successfully but both full counterexamples failed later and are not PASS.",
+    "No local product execution or native Relay claim."
+  ],
+  "log_sha256": "541e50c1778aa605f1458faa770dd5b052e5afd18c8df1f95ef85395d11dd69b",
+  "log_bytes": 78721
+}

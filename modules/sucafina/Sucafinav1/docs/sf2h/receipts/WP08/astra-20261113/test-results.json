@@ -1,0 +1,626 @@
+{
+  "schema": "wp08-hosted-test-results.v1",
+  "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+  "snapshot_sha": "b55254b4da225f3ad874b27885d4792c69f047ac",
+  "run_id": 43533574980,
+  "job_id": 132256977328,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533574980",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533574980/job/132256977328",
+  "conclusion": "FAILURE",
+  "pass": 64,
+  "fail": 2,
+  "errors": 0,
+  "expect_calls": 640,
+  "test_count": 66,
+  "file_count": 34,
+  "selected_files": [
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/mutation-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/relation-catalog.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/source-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts"
+  ],
+  "executed_files": [
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/mutation-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/relation-catalog.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/source-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts"
+  ],
+  "artifacts": [],
+  "artifact_requirement": "No artifact declared mandatory by test-ci for this Bun selection. Playwright/Lean artifact steps were skipped. Logs are the test execution evidence.",
+  "omni_control": {
+    "verdict": "not applicable",
+    "nonce": "7bf29e67413c037a7f297974b89b40f4",
+    "line": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "proved_omni_execution": false
+  },
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts",
+      "status": "PASS",
+      "name": "human answer evidence is a stable claim and disappears when access is revoked",
+      "duration_ms": 115.2,
+      "product_blob": "12f5181b8e93673710b76a0f6ab6e681ef444c2f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts",
+      "status": "PASS",
+      "name": "work is projected once per canonical action and does not infer ownership",
+      "duration_ms": 0.18,
+      "product_blob": "2c126c4a5bad9bf08bae073dd3fe781dcf7ef23a",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "status": "PASS",
+      "name": "SQLite commits the Hot Topic and its correlation together and revalidates source access",
+      "duration_ms": 25.71,
+      "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "status": "PASS",
+      "name": "canonical Hot Topic read uses read grants without requesting state writes",
+      "duration_ms": 12.03,
+      "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+      "status": "PASS",
+      "name": "handoff retries the canonical action and keeps the same contextual link",
+      "duration_ms": 9.76,
+      "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+      "status": "PASS",
+      "name": "handoff and its relation require the exact real human admission",
+      "duration_ms": 28.54,
+      "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+      "status": "PASS",
+      "name": "handoff update authorizes and reads while the human action lease is active",
+      "duration_ms": 0.71,
+      "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/mutation-fence.test.ts",
+      "status": "PASS",
+      "name": "collaboration fence detects a source change during and after authorization",
+      "duration_ms": 8.76,
+      "product_blob": "803ee63ffe92d210177af75a6e93642e58c749a0",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/mutation-fence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+      "status": "PASS",
+      "name": "reissue checks actor access and the live physical incarnation",
+      "duration_ms": 303.6,
+      "product_blob": "9c8c16cef3a53fa4099f4e2b0408f9eaedac8f36",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "status": "PASS",
+      "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+      "duration_ms": 8000.28,
+      "product_blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+      "status": "PASS",
+      "name": "real confirmation and case selection keep v7 January valid after global v8 February, then show one material review",
+      "duration_ms": 3542.71,
+      "product_blob": "20ab2e370ae16086932f4f23a53e11f6e44b6881",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+      "status": "PASS",
+      "name": "relations and contextual threads persist, retry and hide after access revocation",
+      "duration_ms": 41.33,
+      "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+      "status": "PASS",
+      "name": "confirmation keeps the observed version while current scope and access are rechecked",
+      "duration_ms": 11.15,
+      "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+      "status": "PASS",
+      "name": "thread mutation requires the admitted payload again at commit",
+      "duration_ms": 5.82,
+      "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+      "status": "PASS",
+      "name": "versioned relations keep immutable identity and cannot reuse a retired id",
+      "duration_ms": 17.87,
+      "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/relation-catalog.test.ts",
+      "status": "PASS",
+      "name": "C06 relation kinds require the allowed source types and never infer identity from names",
+      "duration_ms": 0.45,
+      "product_blob": "81a21b3f17c4a499dd0bc6a9b6fdd3c1bc0dac9f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/relation-catalog.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+      "status": "PASS",
+      "name": "a symmetric relation has one identity and cannot silently change evidence or domain records",
+      "duration_ms": 20.52,
+      "product_blob": "88e44b5ddd362d3e8187f80eb4e2f0d5f7108fab",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+      "status": "FAIL",
+      "name": "canonical My Work presentation resolves current Procurement title and destination through SQLite, then revocation removes it",
+      "duration_ms": 91.6,
+      "product_blob": "43103eea4e7a10e8da2f799a2495894627ce528a",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+      "status": "PASS",
+      "name": "response loss after canonical commit recovers the same topic and no substitute action",
+      "duration_ms": 11.81,
+      "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+      "status": "PASS",
+      "name": "revocation at entry to the handoff mutation scope denies before the action",
+      "duration_ms": 0.36,
+      "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+      "status": "PASS",
+      "name": "a readback of another action never reports a confirmed handoff",
+      "duration_ms": 0.46,
+      "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+      "status": "PASS",
+      "name": "explicit linking uses an existing canonical action without updating its domain record",
+      "duration_ms": 0.99,
+      "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts",
+      "status": "PASS",
+      "name": "contextual questions retain separate periods, exact recipients, and communication after resolution",
+      "duration_ms": 40.46,
+      "product_blob": "ea3759877a83e33fc53dcf2af272df02eccd1751",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+      "status": "PASS",
+      "name": "canonical homonymous suppliers never link a textual vendor without the selected source ID",
+      "duration_ms": 372.45,
+      "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+      "status": "PASS",
+      "name": "canonical PMO and CAPEX records preserve identities, money and every domain snapshot through link and unlink",
+      "duration_ms": 231.75,
+      "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts",
+      "status": "PASS",
+      "name": "a stored conversation cannot retarget its observed version, incarnation, or period",
+      "duration_ms": 0.27,
+      "product_blob": "0d96c8b6d8b346fb820c917f179439c44c854803",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts",
+      "status": "PASS",
+      "name": "stored communication has a real first message and an explicit recipient for questions",
+      "duration_ms": 0.09,
+      "product_blob": "0d96c8b6d8b346fb820c917f179439c44c854803",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+      "status": "PASS",
+      "name": "real SQLite handoff survives lost commit acknowledgement without copying private notes or changing source domains",
+      "duration_ms": 569.57,
+      "product_blob": "62822abe76d7049a335bdfd066507d69a9c23093",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "status": "PASS",
+      "name": "real prepared QuestionProposal becomes one canonical thread with case provenance and survives host recomposition",
+      "duration_ms": 1178.04,
+      "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "status": "PASS",
+      "name": "question consumer rejects altered human payload, forged preparation, cloned authority and missing C11 reader",
+      "duration_ms": 1936.29,
+      "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "status": "PASS",
+      "name": "question consumption requires current source access and an explicit period inside the case horizon",
+      "duration_ms": 511.16,
+      "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "status": "PASS",
+      "name": "question commit refuses changed case version and same-version case-content races under real SQLite",
+      "duration_ms": 347.67,
+      "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "status": "PASS",
+      "name": "question commit fences source changes and HTTP consumes the exact shown preparation",
+      "duration_ms": 394.66,
+      "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+      "status": "PASS",
+      "name": "product authority and shared dispatch read a current Procurement work item through SQLite",
+      "duration_ms": 100.74,
+      "product_blob": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+      "status": "PASS",
+      "name": "canonical contextual conversations preserve all business snapshots and fail closed for changed, removed or restricted sources",
+      "duration_ms": 837.34,
+      "product_blob": "62cb309bd8f192f8cedc6801869df1b0ad4ba458",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+      "status": "PASS",
+      "name": "reconfirmation with a new dependency manifest keeps one canonical obligation and original audit",
+      "duration_ms": 0.25,
+      "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+      "status": "PASS",
+      "name": "periods and replaced incarnations never inherit another scope's work identity",
+      "duration_ms": 0.14,
+      "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts",
+      "status": "PASS",
+      "name": "confirmation follows material scope and never treats access loss or replacement as valid",
+      "duration_ms": 0.16,
+      "product_blob": "2fab4d3df79788cc0db859fe8a1f9f95cdeebf84",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+      "status": "PASS",
+      "name": "cycle view returns an explicitly empty cycle without implying completion",
+      "duration_ms": 0.5,
+      "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+      "status": "PASS",
+      "name": "cycle view rejects periods outside the authorized case horizon before listing work",
+      "duration_ms": 0.19,
+      "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+      "status": "PASS",
+      "name": "cycle view refuses case changes before egress",
+      "duration_ms": 0.22,
+      "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+      "status": "PASS",
+      "name": "extended collaboration actions require explicitly registered commands and live human grants",
+      "duration_ms": 0.56,
+      "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+      "status": "PASS",
+      "name": "thread edit admission is confined to POST, same origin and the retained current request",
+      "duration_ms": 0.34,
+      "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+      "status": "PASS",
+      "name": "cancelled and expired selection admissions never regain authority",
+      "duration_ms": 0.29,
+      "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/source-fence.test.ts",
+      "status": "PASS",
+      "name": "C06 source fence is read-only inside SQLite C08 and detects material change and revocation",
+      "duration_ms": 30.59,
+      "product_blob": "48d5fd64c863a764cb266260b87569078669457c",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/source-fence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+      "status": "PASS",
+      "name": "caller access permits self-assignment but cannot substitute for recipient source authority",
+      "duration_ms": 0.26,
+      "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+      "status": "PASS",
+      "name": "recipient identity and every material dependency are checked without name inference",
+      "duration_ms": 0.51,
+      "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+      "status": "PASS",
+      "name": "revocation during source inspection and proof failure refuse assignment",
+      "duration_ms": 0.34,
+      "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+      "status": "PASS",
+      "name": "the proof gets detached exact refs and cannot rewrite the assignment or omit a dependency",
+      "duration_ms": 0.47,
+      "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+      "status": "PASS",
+      "name": "commit checks require a current synchronous recipient lease without repeating source I/O",
+      "duration_ms": 0.37,
+      "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "status": "PASS",
+      "name": "dashboard observation supports a human confirmation and another authorized reader",
+      "duration_ms": 427.93,
+      "product_blob": "ea007ed617c8ee7ba8b52461f41814a9553dbbb3",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+      "status": "PASS",
+      "name": "creates and resolves an explicit empty-source case selection",
+      "duration_ms": 0.84,
+      "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+      "status": "PASS",
+      "name": "rejects forged selection refs and fails closed after revocation",
+      "duration_ms": 0.35,
+      "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+      "status": "PASS",
+      "name": "listing fails closed when protected selection changes between reads",
+      "duration_ms": 0.32,
+      "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+      "status": "PASS",
+      "name": "case changes invalidate the selected case version",
+      "duration_ms": 0.3,
+      "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+      "status": "PASS",
+      "name": "case namespace change before commit refuses selection without persisting it",
+      "duration_ms": 0.31,
+      "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+      "status": "PASS",
+      "name": "answer reuse delegates cross-actor scope and authorization to producer",
+      "duration_ms": 2.15,
+      "product_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts",
+      "status": "FAIL",
+      "name": "work membership uses the current authorized Procurement collection, not refId equality",
+      "duration_ms": 18.27,
+      "product_blob": "03770d948e16708da1cdde11a694a6e325e89b59",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "status": "PASS",
+      "name": "private collaboration HTTP binds the whole human command and rejects other origins",
+      "duration_ms": 0.78,
+      "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "status": "PASS",
+      "name": "private collaboration HTTP does not route prototype keys",
+      "duration_ms": 0.17,
+      "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "status": "PASS",
+      "name": "private HTTP requires exact mount, one route key, bounded JSON and POST before admission",
+      "duration_ms": 1.13,
+      "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "status": "PASS",
+      "name": "real private human grant binds the whole payload and is finished after a handler failure",
+      "duration_ms": 0.78,
+      "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "status": "PASS",
+      "name": "answer observation HTTP returns the display projection while keeping provider-only data private",
+      "duration_ms": 0.66,
+      "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+      "status": "PASS",
+      "name": "observation receipts bind actor, scope, version and fingerprint and expire",
+      "duration_ms": 0.84,
+      "product_blob": "7eb9cbf57f9e8f22f77b0fd4cf62f0a3c025e492",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+      "status": "PASS",
+      "name": "real UI admission binds thread creation to its human action and exact payload",
+      "duration_ms": 7.57,
+      "product_blob": "c62a9eedf33ccba82c6c9e5b5bec014894d4afad",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "status": "PASS",
+      "name": "contextual request → explicit confirmation → one canonical Hot Topic → completion in My Work",
+      "duration_ms": 2451.47,
+      "product_blob": "68dda95afd92154dc426ef40479648c21576de01",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/156f074d15c9787a9fc1b6430e632504ee3a69e6/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts"
+    }
+  ]
+}

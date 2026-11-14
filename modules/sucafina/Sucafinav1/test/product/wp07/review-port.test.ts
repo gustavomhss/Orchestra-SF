@@ -1,4 +1,9 @@
 import { expect, test } from "bun:test"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { openLocalStore } from "../../../runtime/local-store.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createReviewPort } from "../../../product/reviews/port.ts"
 import type { ReviewSection } from "../../../product/reviews/port.ts"
@@ -6,141 +11,332 @@ import type { ReviewCapabilityHost } from "../../../product/reviews/capabilities
 import type { DomainProjection } from "../../../product/contracts/context.ts"
 import type { SfProductState } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
-import { testPersistence } from "../../fixture/persistence.ts"
+import { testPersistence } from "./persistence.ts"
 
 test("preserved review survives changed projections and is denied after access revocation", async () => {
-  const storage = testPersistence()
-  const state = createSfProductState({
-    persistence: storage.persistence,
-    createId: () => "state-incarnation",
-    resolveTarget: async () => ({ incarnation: "review-incarnation" }),
-    authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }),
-  })
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-review-artifact-"))
+  await chmod(directory, 0o700)
+  const storage = await openLocalStore(directory)
+  try {
+    const state = createSfProductState({
+      persistence: storage,
+      createId: () => "state-incarnation",
+      resolveTarget: async (_request, _snapshot, _namespace, target) => target === "review-creation" ? { incarnation: "review-incarnation" } : undefined,
+      authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }),
+    })
+    const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+    const period = { start: "2026-01-01", end: "2026-12-31" }
+    const evidence = { schema: "sf-evidence-v1", refId: "record", installationId: "i", projectId: "p", refDigest: "digest", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "forecast", recordId: "1", incarnation: "original", version: 1, fields: ["value"], projectionDigest: "digest" } } as const
+    const source = { surface: "planner", type: "forecast", id: "1", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
+    const section: ReviewSection = {
+      id: "forecast", title: "Forecast", period, recordCount: 1,
+      comments: [{ id: "comment", version: 3, content: "original note", authorRef: "author", createdAt: "2026-11-13T00:00:00Z", sourceRefs: [source] }],
+      projection: {
+        context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [source], capabilities: [] },
+        version: 1, engineVersion: "v1", components: [], missing: [],
+        values: [{ id: "forecast", value: 1320, period, granularity: "year", sourceRefs: [evidence], drilldown: null, evidenceState: "confirmed" }, { id: "budget", value: 1500, period, granularity: "year", sourceRefs: [evidence], drilldown: null, evidenceState: "confirmed" }],
+      },
+    }
+    const access = { allowed: true, sections: true, comments: true, sourceAvailable: true }
+    const port = createReviewPort({
+      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => access.allowed && outcomes.length === 0, authorizeDecision: async (_context, decisions) => access.allowed && decisions.length === 0, authorizeSections: async () => access.sections, authorizeComments: async () => access.comments, authorizeSensitivity: async () => access.allowed, revalidate: async () => access.allowed, revalidateEvidence: async () => access.allowed,
+      select: async () => access.sourceAvailable ? { status: "ok", value: [section] } : { status: "unavailable", reason: "source-removed" },
+    })
+    const emptySection: ReviewSection = { ...section, id: "restricted", recordCount: 0, comments: [], projection: { ...section.projection, values: [], components: [], context: { ...section.projection.context, sourceRefs: [] } } }
+    const restricted = createReviewPort({
+      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => outcomes.length === 0, authorizeDecision: async (_context, decisions) => decisions.length === 0, authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
+      select: async () => ({ status: "ok", value: [emptySection] }),
+    })
+    expect(await restricted.preview("selection", ["restricted"], binding)).toEqual({ status: "denied", reason: "access-unavailable" })
+    const input = { id: "review-1", selectionRef: "selection", sectionRefs: ["forecast"], expectedStorageVersion: 0, idempotencyKey: "save-1", targetIncarnation: "review-incarnation" }
+    section.chart = { status: "ok", viewId: "BI01", series: [{ id: "series", label: "Forecast", unit: "USD", role: "outlook", valueIds: ["forecast"], values: [{ ...section.projection.values[0]!, value: 999 }] }], limitations: [], unassigned: [] }
+    expect(await port.preserve(input, binding)).toEqual({ status: "unavailable", reason: "chart-projection-mismatch" })
+    section.chart = { status: "ok", viewId: "BI01", series: [{ id: "series", label: "Forecast", unit: "USD", role: "outlook", valueIds: ["forecast"], values: [section.projection.values[0]!] }], limitations: [], unassigned: [section.projection.values[1]!] }
+    expect((await port.preview("selection", ["forecast"], binding)).status).toBe("ok")
+    // Complete chart coverage does not authorize a changed value or evidence body with the same row ID.
+    const originalValues = section.projection.values
+    section.projection.values = [{ ...originalValues[0]!, value: 999 }, originalValues[1]!]
+    expect(await port.preview("selection", ["forecast"], binding)).toEqual({ status: "unavailable", reason: "chart-projection-mismatch" })
+    section.projection.values = [{ ...originalValues[0]!, sourceRefs: [{ ...evidence, target: { ...evidence.target, version: 2 } }] }, originalValues[1]!]
+    expect(await port.preview("selection", ["forecast"], binding)).toEqual({ status: "unavailable", reason: "chart-projection-mismatch" })
+    section.projection.values = originalValues
+    expect((await port.preview("selection", ["forecast"], binding)).status).toBe("ok")
+    const second = structuredClone(section)
+    second.id = "second"
+    const paired = createReviewPort({
+      state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => outcomes.length === 0, authorizeDecision: async (_context, decisions) => decisions.length === 0, authorizeSections: async () => true, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
+      select: async () => ({ status: "ok", value: [section, second] }),
+    })
+    expect((await paired.preview("selection", ["forecast", "second"], binding)).status).toBe("ok")
+    second.comments = [{ ...second.comments![0]!, content: "conflicting" }]
+    expect(await paired.preview("selection", ["forecast", "second"], binding)).toEqual({ status: "unavailable", reason: "conflicting-comment-snapshot" })
+    const comments = section.comments!
+    section.comments = [{ ...comments[0]!, authorRef: "" }]
+    expect(await port.preserve(input, binding)).toEqual({ status: "unavailable", reason: "invalid-comment-snapshot" })
+    section.comments = comments
+    section.agendaNote = "original agenda"
+    const saved = await port.preserve(input, binding)
+    expect(saved.status).toBe("ok")
+    section.agendaNote = "updated agenda"
+    section.projection.values = [{ ...section.projection.values[0], value: 1400 }]
+    section.comments = [{ id: "comment", version: 4, content: "updated note", authorRef: "author", createdAt: "2026-11-14T00:00:00Z", sourceRefs: [source] }]
+    access.sourceAvailable = false
+    const retry = await port.preserve(input, binding)
+    expect(retry.status).toBe("ok")
+    if (retry.status !== "ok" || !retry.value) throw new Error("retry unavailable")
+    expect((retry.value.sections[0].content as ReviewSection["projection"]).values[0].value).toBe(1320)
+    const read = await port.read("review-1", binding)
+    expect(read.status).toBe("ok")
+    if (read.status !== "ok" || !read.value) throw new Error("review unavailable")
+    expect((read.value.sections[0].content as ReviewSection["projection"]).values[0].value).toBe(1320)
+    expect(read.value.sections[0].count).toBe(1)
+    expect(read.value.sections[0].content).toMatchObject({ reviewAgendaNote: "original agenda" })
+    expect(read.value.sections[0].content).toMatchObject({ reviewChart: { status: "ok", viewId: "BI01", series: [{ values: [{ value: 1320 }] }] } })
+    expect((read.value.sections[0].content as ReviewSection["projection"]).values).toHaveLength(2)
+    expect(read.value.comments).toMatchObject([{ id: "comment", version: 3, content: "original note", authorRef: "author" }])
+    const { prepareReport } = await import("../../../product/reviews/capabilities.ts")
+    const { default: JSZip } = await import("jszip")
+    const artifacts: Uint8Array[] = []
+    const host: ReviewCapabilityHost = {
+      reviews: port, requiredAuthority: [],
+      authority: {
+        validateDomainContext: async () => access.allowed,
+        revalidateDomainContext: async () => access.allowed,
+        receiptFor: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "prepareReport", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }),
+      },
+      artifacts: {
+        put: async (entry) => { artifacts.push(entry.artifact.bytes); return { status: "ok", value: { artifactRef: "artifact" } } },
+        read: async () => ({ status: "unavailable", reason: "unused" }),
+      },
+    }
+    const reportInput = { reviewRef: "review-1", format: "docx", sectionRefs: ["forecast"] }
+    expect((await prepareReport(reportInput, binding, host)).status).toBe("ok")
+    const document = await (await JSZip.loadAsync(artifacts[0]!)).file("word/document.xml")!.async("string")
+    expect(document).toContain("1320")
+    expect(document).not.toContain("1400")
+    expect(document).toContain("original agenda")
+    expect(document).not.toContain("updated agenda")
+    expect(document).toContain("original note")
+    expect(document).not.toContain("updated note")
+    const { createReviewArtifactStorage } = await import("../../../product/reports/storage.ts")
+    const artifactOperation = { value: "report-save" }
+    const persisted = createReviewArtifactStorage({ state, reviews: port, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => access.allowed }, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, operationIdentity: () => artifactOperation.value, maxBytes: 5_000_000 })
+    const { renderPreservedReview } = await import("../../../product/reviews/render.ts")
+    const documentArtifact = await renderPreservedReview(read.value, { title: "Review", format: "docx", sectionRefs: ["forecast"] })
+    if (!documentArtifact.ok) throw new Error("document unavailable")
+    expect((await persisted.put({ reviewRef: "review-1", sectionRefs: ["forecast"], artifact: { ...documentArtifact }, format: "docx", recordCount: 1, evidenceRefs: [evidence, evidence] }, binding)).status).toBe("denied")
+    const savedArtifact = await persisted.put({ reviewRef: "review-1", sectionRefs: ["forecast"], artifact: documentArtifact, format: "docx", recordCount: 1, evidenceRefs: [evidence, evidence] }, binding)
+    if (savedArtifact.status !== "ok") throw new Error(`artifact unavailable: ${savedArtifact.reason}`)
+    const download = await persisted.download(savedArtifact.value.artifactRef, binding)
+    expect(download.status).toBe(200)
+    expect(new Uint8Array(await download.arrayBuffer())).toEqual(Uint8Array.from(documentArtifact.bytes))
+    const included = await persisted.inclusion(savedArtifact.value.artifactRef, binding)
+    if (included.status !== "ok") throw new Error("inclusion unavailable")
+    expect(included.value.sections.map((section) => section.sectionRef)).toEqual(["forecast"])
+    expect(included.value.comments).toMatchObject([{ id: "comment", version: 3 }])
+    const slides = await renderPreservedReview(read.value, { title: "Review", format: "pptx", sectionRefs: ["forecast"] })
+    if (!slides.ok) throw new Error("slides unavailable")
+    artifactOperation.value = "slides-save"
+    const savedSlides = await persisted.put({ reviewRef: "review-1", sectionRefs: ["forecast"], artifact: slides, format: "pptx", recordCount: 1, evidenceRefs: [evidence, evidence] }, binding)
+    if (savedSlides.status !== "ok") throw new Error(`slides unavailable: ${savedSlides.reason}`)
+    expect(new Uint8Array(await (await persisted.download(savedSlides.value.artifactRef, binding)).arrayBuffer())).toEqual(Uint8Array.from(slides.bytes))
+    const { createSfUiAuthority } = await import("../../../product/integration/ui-authority.ts")
+    const { createReviewDownloadHandler } = await import("../../../product/reports/download.ts")
+    const authority = createSfUiAuthority({
+      authorize: async () => access.allowed ? { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } : undefined,
+      commandIdentity: async () => "download", createId: () => "download-request", now: () => Date.now(),
+    })
+    const downloadStorage = createReviewArtifactStorage({ state, reviews: port, host: { requestFor: (context) => context.kind === "ui" ? authority.requestFor(context) : undefined, revalidate: (context) => context.kind === "ui" ? authority.revalidate(context) : Promise.resolve(false) }, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, operationIdentity: () => undefined, maxBytes: 5_000_000 })
+    const handler = createReviewDownloadHandler({ authority, storage: downloadStorage })
+    const response = await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)
+    expect(response.status).toBe(200)
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(Uint8Array.from(documentArtifact.bytes))
+    expect((await handler(new Request("https://example.test/report", { method: "POST" }), savedArtifact.value.artifactRef)).status).toBe(405)
+    access.comments = false
+    expect((await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)).status).toBe(403)
+    expect((await persisted.download(savedArtifact.value.artifactRef, binding)).status).toBe(403)
+    expect((await persisted.inclusion(savedArtifact.value.artifactRef, binding)).status).toBe("denied")
+    expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
+    access.comments = true
+    access.sections = false
+    expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
+    access.sections = true
+    access.allowed = false
+    expect((await prepareReport(reportInput, binding, host)).status).toBe("denied")
+    expect(artifacts).toHaveLength(1)
+    expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
+    access.allowed = true
+    await storage.transaction("dashboard", async (snapshot) => {
+      const stored = snapshot.data.__sfProductV1 as SfProductState
+      stored.reviews["review-1"]!.sections[0]!.title = "Tampered"
+      return { commit: true, value: undefined }
+    })
+    expect(await port.preserve(input, binding)).toEqual({ status: "conflict", reason: "preserved-review-changed" })
+    await storage.transaction("dashboard", async (snapshot) => {
+      const stored = snapshot.data.__sfProductV1 as SfProductState
+      stored.reviews["review-1"]!.sourceRefs = []
+      return { commit: true, value: undefined }
+    })
+    expect(await port.read("review-1", binding)).toEqual({ status: "unavailable", reason: "invalid-review-sources" })
+  } finally {
+    await storage.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("compact review receipts survive SQLite restart, legacy replay and concurrent preservation", async () => {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-wp07-review-receipt-"))
+  await chmod(directory, 0o700)
+  const resources = { store: await openLocalStore(directory) }
   const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
   const period = { start: "2026-01-01", end: "2026-12-31" }
-  const evidence = { schema: "sf-evidence-v1", refId: "record", installationId: "i", projectId: "p", refDigest: "digest", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "forecast", recordId: "1", incarnation: "original", version: 1, fields: ["value"], projectionDigest: "digest" } } as const
-  const source = { surface: "planner", type: "forecast", id: "1", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
-  const section: ReviewSection = {
-    id: "forecast", title: "Forecast", period, recordCount: 1,
-    comments: [{ id: "comment", version: 3, content: "original note", authorRef: "author", createdAt: "2026-11-13T00:00:00Z", sourceRefs: [source] }],
-    projection: {
-      context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [source], capabilities: [] },
-      version: 1, engineVersion: "v1", components: [], missing: [],
-      values: [{ id: "forecast", value: 1320, period, granularity: "year", sourceRefs: [evidence], drilldown: null, evidenceState: "confirmed" }, { id: "budget", value: 1500, period, granularity: "year", sourceRefs: [evidence], drilldown: null, evidenceState: "confirmed" }],
+  const source = { surface: "planner", type: "forecast", id: "forecast", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
+  const evidence = { schema: "sf-evidence-v1", kind: "record", refId: "fixture-source", installationId: "i", projectId: "p", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "planner", recordType: "forecast", recordId: "forecast", incarnation: "original", version: 1, fields: ["value"], projectionDigest: "b".repeat(64) } } as const
+  const control = { allowed: true, sourceAvailable: true, selections: 0, amount: 1320 }
+  // Authentication and the domain projection are controlled; the state port,
+  // idempotency protocol, SQLite codec and actual store restart are exercised.
+  const compose = (beforeSelection?: () => Promise<void>) => createReviewPort({
+    state: createSfProductState({ persistence: resources.store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "review-incarnation" }), authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }) }),
+    creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"),
+    authorizeOutcomeComparison: async (_context, outcomes) => control.allowed && outcomes.length === 0, authorizeOutcome: async (_context, outcomes) => control.allowed && outcomes.length === 0, authorizeDecision: async (_context, decisions) => control.allowed && decisions.length === 0,
+    authorizeSections: async () => control.allowed, authorizeComments: async () => control.allowed, authorizeSensitivity: async () => control.allowed,
+    revalidate: async () => control.allowed, revalidateEvidence: async () => control.allowed,
+    select: async () => {
+      control.selections++
+      if (beforeSelection) await beforeSelection()
+      if (!control.sourceAvailable) return { status: "unavailable", reason: "fixture-source-unavailable" }
+      const section: ReviewSection = { id: "forecast", title: "Preserved forecast", period, recordCount: 1, agendaNote: "Keep the original agenda note", comments: [], projection: {
+        version: 1, engineVersion: "fixture-engine", context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [source], capabilities: [] },
+        components: [], missing: [], values: [{ id: "forecast", value: control.amount, currency: "USD", period, granularity: "year", sourceRefs: [evidence], drilldown: evidence, evidenceState: "confirmed" }],
+      } }
+      return { status: "ok", value: [section] }
     },
+  })
+  const request = { id: "review", selectionRef: "selection", sectionRefs: ["forecast"], expectedStorageVersion: 0, idempotencyKey: "save", targetIncarnation: "review-incarnation" }
+  const key = JSON.stringify(["principal", "reviews", "review-creation", "save"])
+  const storedState = () => resources.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1 as SfProductState) }))
+  const replaceReceipt = (value: unknown) => resources.store.transaction("dashboard", async (snapshot) => {
+    const state = snapshot.data.__sfProductV1 as SfProductState
+    state.transactions[key]!.value = structuredClone(value)
+    return { commit: true, value: undefined }
+  })
+  const gates: (() => void)[] = []
+  try {
+    const saved = await compose().preserve(request, binding)
+    if (saved.status !== "ok") throw new Error(saved.reason)
+    const original = structuredClone(saved.value)
+    const compact = { schema: "sf-review-receipt-v1", reviewRef: "review", reviewDigest: digestSfValue(original) }
+    const initial = await storedState()
+    expect(initial.reviews.review).toEqual(original)
+    expect(initial.transactions[key]!.value).toEqual(compact)
+    expect(JSON.stringify(initial.transactions[key]!.value)).not.toContain("sections")
+    expect(JSON.stringify(initial.transactions[key]!.value)).not.toContain("Keep the original agenda note")
+    expect(control.selections).toBe(1)
+
+    await resources.store.dispose()
+    resources.store = await openLocalStore(directory)
+    const reopened = compose()
+    control.sourceAvailable = false
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "ok", value: original })
+    expect(control.selections).toBe(1)
+    expect((await storedState()).transactions[key]!.value).toEqual(compact)
+
+    // Old receipts retain their whole body and remain readable without migration.
+    await replaceReceipt(original)
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "ok", value: original })
+    expect((await storedState()).transactions[key]!.value).toEqual(original)
+    expect(control.selections).toBe(1)
+    for (const [receipt, status] of [
+      [{ ...compact, schema: "sf-review-receipt-v2" }, "unavailable"],
+      [{ schema: compact.schema, reviewRef: compact.reviewRef }, "unavailable"],
+      [{ ...compact, reviewDigest: "invalid" }, "unavailable"],
+      [{ ...compact, reviewRef: "different-review" }, "conflict"],
+      [{ ...compact, reviewDigest: "0".repeat(64) }, "conflict"],
+      [{ ...original, id: "different-legacy-review" }, "conflict"],
+    ] as const) {
+      await replaceReceipt(receipt)
+      const refused = await reopened.preserve(request, binding)
+      expect(refused.status).toBe(status)
+      expect("value" in refused).toBe(false)
+    }
+    await replaceReceipt(compact)
+    await resources.store.transaction("dashboard", async (snapshot) => {
+      const state = snapshot.data.__sfProductV1 as SfProductState
+      state.reviews.review!.sections[0]!.title = "Changed persisted title"
+      return { commit: true, value: undefined }
+    })
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "conflict", reason: "preserved-review-changed" })
+    await resources.store.transaction("dashboard", async (snapshot) => {
+      const state = snapshot.data.__sfProductV1 as SfProductState
+      state.reviews.review = structuredClone(original)
+      return { commit: true, value: undefined }
+    })
+    control.allowed = false
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "denied", reason: "access-unavailable" })
+    expect((await storedState()).reviews.review).toEqual(original)
+    control.allowed = true
+    control.sourceAvailable = true
+
+    // Pause one caller after its empty receipt probe. The other commits the same
+    // intention first; the resumed caller must use that returned receipt even
+    // though its newly selected projection now has a different value.
+    const boundary: { enter?: () => void; release?: () => void } = {}
+    const entered = new Promise<void>((resolve) => { boundary.enter = resolve })
+    const released = new Promise<void>((resolve) => { boundary.release = resolve })
+    gates.push(() => { boundary.release!() })
+    const slow = compose(async () => { boundary.enter!(); await released })
+    const concurrent = { ...request, id: "concurrent-review", idempotencyKey: "concurrent-save", expectedStorageVersion: 1 }
+    const pending = slow.preserve(concurrent, binding)
+    await entered
+    const winning = await reopened.preserve(concurrent, binding)
+    control.amount = 1400
+    boundary.release!()
+    const replayed = await pending
+    if (winning.status !== "ok" || replayed.status !== "ok") throw new Error("Concurrent preserved receipt unavailable")
+    expect(replayed.value).toEqual(winning.value)
+    expect((replayed.value.sections[0]!.content as DomainProjection).values[0]!.value).toBe(1320)
+    const final = await storedState()
+    expect(Object.keys(final.reviews).sort()).toEqual(["concurrent-review", "review"])
+    expect(final.versions.reviews).toBe(2)
+    expect(final.transactions[JSON.stringify(["principal", "reviews", "review-creation", "concurrent-save"])]!.value).toEqual({ schema: "sf-review-receipt-v1", reviewRef: "concurrent-review", reviewDigest: digestSfValue(winning.value) })
+  } finally {
+    gates.forEach((release) => release())
+    await resources.store.dispose()
+    await rm(directory, { recursive: true, force: true })
   }
-  const access = { allowed: true, sections: true, comments: true, sourceAvailable: true }
-  const port = createReviewPort({
-    state, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeSections: async () => access.sections, authorizeComments: async () => access.comments, authorizeSensitivity: async () => access.allowed, revalidate: async () => access.allowed, revalidateEvidence: async () => access.allowed,
-    select: async () => access.sourceAvailable ? { status: "ok", value: [section] } : { status: "unavailable", reason: "source-removed" },
-  })
-  const emptySection: ReviewSection = { ...section, id: "restricted", recordCount: 0, comments: [], projection: { ...section.projection, values: [], components: [], context: { ...section.projection.context, sourceRefs: [] } } }
-  const restricted = createReviewPort({
-    state, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
-    select: async () => ({ status: "ok", value: [emptySection] }),
-  })
-  expect(await restricted.preview("selection", ["restricted"], binding)).toEqual({ status: "denied", reason: "access-unavailable" })
-  const input = { id: "review-1", selectionRef: "selection", sectionRefs: ["forecast"], expectedStorageVersion: 0, idempotencyKey: "save-1", targetIncarnation: "review-incarnation" }
-  section.chart = { status: "ok", viewId: "BI01", series: [{ id: "series", label: "Forecast", unit: "USD", role: "outlook", valueIds: ["forecast"], values: [{ ...section.projection.values[0]!, value: 999 }] }], limitations: [], unassigned: [] }
-  expect(await port.preserve(input, binding)).toEqual({ status: "unavailable", reason: "chart-projection-mismatch" })
-  section.chart = { status: "ok", viewId: "BI01", series: [{ id: "series", label: "Forecast", unit: "USD", role: "outlook", valueIds: ["forecast"], values: [section.projection.values[0]!] }], limitations: [], unassigned: [section.projection.values[1]!] }
-  const second = structuredClone(section)
-  second.id = "second"
-  const paired = createReviewPort({
-    state, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeSections: async () => true, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
-    select: async () => ({ status: "ok", value: [section, second] }),
-  })
-  expect((await paired.preview("selection", ["forecast", "second"], binding)).status).toBe("ok")
-  second.comments = [{ ...second.comments![0]!, content: "conflicting" }]
-  expect(await paired.preview("selection", ["forecast", "second"], binding)).toEqual({ status: "unavailable", reason: "conflicting-comment-snapshot" })
-  const comments = section.comments!
-  section.comments = [{ ...comments[0]!, authorRef: "" }]
-  expect(await port.preserve(input, binding)).toEqual({ status: "unavailable", reason: "invalid-comment-snapshot" })
-  section.comments = comments
-  const saved = await port.preserve(input, binding)
-  expect(saved.status).toBe("ok")
-  section.projection.values = [{ ...section.projection.values[0], value: 1400 }]
-  section.comments = [{ id: "comment", version: 4, content: "updated note", authorRef: "author", createdAt: "2026-11-14T00:00:00Z", sourceRefs: [source] }]
-  access.sourceAvailable = false
-  const retry = await port.preserve(input, binding)
-  expect(retry.status).toBe("ok")
-  if (retry.status !== "ok" || !retry.value) throw new Error("retry unavailable")
-  expect((retry.value.sections[0].content as ReviewSection["projection"]).values[0].value).toBe(1320)
-  const read = await port.read("review-1", binding)
-  expect(read.status).toBe("ok")
-  if (read.status !== "ok" || !read.value) throw new Error("review unavailable")
-  expect((read.value.sections[0].content as ReviewSection["projection"]).values[0].value).toBe(1320)
-  expect(read.value.sections[0].count).toBe(1)
-  expect(read.value.sections[0].content).toMatchObject({ reviewChart: { status: "ok", viewId: "BI01", series: [{ values: [{ value: 1320 }] }] } })
-  expect((read.value.sections[0].content as ReviewSection["projection"]).values).toHaveLength(2)
-  expect(read.value.comments).toMatchObject([{ id: "comment", version: 3, content: "original note", authorRef: "author" }])
-  const { prepareReport } = await import("../../../product/reviews/capabilities.ts")
-  const { default: JSZip } = await import("jszip")
-  const artifacts: Uint8Array[] = []
-  const host: ReviewCapabilityHost = {
-    reviews: port, requiredAuthority: [],
-    authority: {
-      validateDomainContext: async () => access.allowed,
-      revalidateDomainContext: async () => access.allowed,
-      receiptFor: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "prepareReport", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }),
-    },
-    artifacts: {
-      put: async (entry) => { artifacts.push(entry.artifact.bytes); return { status: "ok", value: { artifactRef: "artifact" } } },
-      read: async () => ({ status: "unavailable", reason: "unused" }),
-    },
+})
+
+test("review egress revalidates decision and section sources after the other authorization readers", async () => {
+  const storage = testPersistence()
+  const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "target" }), authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }) })
+  const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+  const period = { start: "2026-01-01", end: "2026-12-31" }
+  const source = { surface: "planner", type: "forecast", id: "overview", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
+  const decisionSource = { ...source, id: "decision-component", incarnation: "decision-original" }
+  const decision: NonNullable<DomainProjection["decision"]> = {
+    kind: "scenario", scenarioResultRef: "result", comparisonRef: "comparison",
+    scenario: { id: "result", version: 1, components: [{ id: "component", amount: 100, currency: "USD", period, sourceRefs: [decisionSource], evidenceState: "confirmed" }], currency: "USD", horizon: period, sourceRefs: [], unresolvedConditions: ["training missing"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 100, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [], entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"], coverageState: "pending" } },
+    comparison: { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 20, completeDifference: null },
   }
-  const reportInput = { reviewRef: "review-1", format: "docx", sectionRefs: ["forecast"] }
-  expect((await prepareReport(reportInput, binding, host)).status).toBe("ok")
-  const document = await (await JSZip.loadAsync(artifacts[0]!)).file("word/document.xml")!.async("string")
-  expect(document).toContain("1320")
-  expect(document).not.toContain("1400")
-  expect(document).toContain("original note")
-  expect(document).not.toContain("updated note")
-  const { createReviewArtifactStorage } = await import("../../../product/reports/storage.ts")
-  const artifactOperation = { value: "report-save" }
-  const persisted = createReviewArtifactStorage({ state, reviews: port, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => access.allowed }, creationTarget: { ref: "review-1", incarnation: "review-incarnation" }, operationIdentity: () => artifactOperation.value, maxBytes: 5_000_000 })
-  const savedArtifact = await persisted.put({ reviewRef: "review-1", sectionRefs: ["forecast"], artifact: { ok: true, name: "review.docx", type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: artifacts[0]! }, format: "docx", recordCount: 1, evidenceRefs: [evidence, evidence] }, binding)
-  if (savedArtifact.status !== "ok") throw new Error(`artifact unavailable: ${savedArtifact.reason}`)
-  const download = await persisted.download(savedArtifact.value.artifactRef, binding)
-  expect(download.status).toBe(200)
-  expect(new Uint8Array(await download.arrayBuffer())).toEqual(artifacts[0]!)
-  const { renderPreservedReview } = await import("../../../product/reviews/render.ts")
-  const slides = await renderPreservedReview(read.value, { title: "Review", format: "pptx", sectionRefs: ["forecast"] })
-  if (!slides.ok) throw new Error("slides unavailable")
-  artifactOperation.value = "slides-save"
-  const savedSlides = await persisted.put({ reviewRef: "review-1", sectionRefs: ["forecast"], artifact: slides, format: "pptx", recordCount: 1, evidenceRefs: [evidence, evidence] }, binding)
-  if (savedSlides.status !== "ok") throw new Error(`slides unavailable: ${savedSlides.reason}`)
-  expect(new Uint8Array(await (await persisted.download(savedSlides.value.artifactRef, binding)).arrayBuffer())).toEqual(slides.bytes)
-  const { createSfUiAuthority } = await import("../../../product/integration/ui-authority.ts")
-  const { createReviewDownloadHandler } = await import("../../../product/reports/download.ts")
-  const authority = createSfUiAuthority({
-    authorize: async () => access.allowed ? { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } : undefined,
-    commandIdentity: async () => "download", createId: () => "download-request", now: () => Date.now(),
+  const access = { allowed: true, revokeDuringSensitivity: false, batches: [] as string[][] }
+  const port = createReviewPort({ state, creationTarget: { ref: "review-creation", incarnation: "target" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSections: async () => true, authorizeComments: async () => true,
+    authorizeSensitivity: async () => { if (access.revokeDuringSensitivity) access.allowed = false; return true },
+    revalidate: async (_context, refs) => { access.batches.push(refs.map((ref) => ref.id)); return refs.every((ref) => ref.id !== decisionSource.id || access.allowed) },
+    revalidateEvidence: async () => true,
+    select: async () => ({ status: "ok", value: [{ id: "decision", title: "Decision", period, recordCount: 1, projection: { context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [source], capabilities: [] }, version: 1, engineVersion: "v1", components: [], values: [], missing: [], decision } }] }),
   })
-  const downloadStorage = createReviewArtifactStorage({ state, reviews: port, host: { requestFor: (context) => context.kind === "ui" ? authority.requestFor(context) : undefined, revalidate: (context) => context.kind === "ui" ? authority.revalidate(context) : Promise.resolve(false) }, creationTarget: { ref: "review-1", incarnation: "review-incarnation" }, operationIdentity: () => undefined, maxBytes: 5_000_000 })
-  const handler = createReviewDownloadHandler({ authority, storage: downloadStorage })
-  const response = await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)
-  expect(response.status).toBe(200)
-  expect(new Uint8Array(await response.arrayBuffer())).toEqual(artifacts[0]!)
-  expect((await handler(new Request("https://example.test/report", { method: "POST" }), savedArtifact.value.artifactRef)).status).toBe(405)
-  access.comments = false
-  expect((await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)).status).toBe(403)
-  expect((await persisted.download(savedArtifact.value.artifactRef, binding)).status).toBe(403)
-  expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
-  access.comments = true
-  access.sections = false
-  expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
-  access.sections = true
-  access.allowed = false
-  expect((await prepareReport(reportInput, binding, host)).status).toBe("denied")
-  expect(artifacts).toHaveLength(1)
-  expect(await port.read("review-1", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
-  access.allowed = true
+  expect((await port.preserve({ id: "review", selectionRef: "selection", sectionRefs: ["decision"], expectedStorageVersion: 0, idempotencyKey: "preserve", targetIncarnation: "target" }, binding)).status).toBe("ok")
+  expect(access.batches.at(-1)).toContain(source.id)
+  expect(access.batches.at(-1)).toContain(decisionSource.id)
+  // Even when a legacy review's aggregate omits a component source, the decision
+  // projection still requires that source's current authorization at egress.
   const stored = storage.state.dashboard.data.__sfProductV1 as SfProductState
-  stored.reviews["review-1"]!.sections[0]!.title = "Tampered"
-  expect(await port.preserve(input, binding)).toEqual({ status: "conflict", reason: "preserved-review-changed" })
-  stored.reviews["review-1"]!.sourceRefs = []
-  expect(await port.read("review-1", binding)).toEqual({ status: "unavailable", reason: "invalid-review-sources" })
+  stored.reviews.review!.sourceRefs = [source]
+  access.batches = []
+  expect((await port.read("review", binding)).status).toBe("ok")
+  expect(access.batches).toEqual([[source.id, decisionSource.id]])
+  access.revokeDuringSensitivity = true
+  expect(await port.read("review", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
 })
 
 test("comparison requires identity and a compatible period before calculating a delta", async () => {
@@ -169,6 +365,14 @@ test("comparison requires identity and a compatible period before calculating a 
   current.sections[0].content.values = [{ ...value, value: Number.MAX_VALUE }]
   expect(compareReviews(previous, current).changes).toMatchObject([{ kind: "incompatible" }])
   expect(compareReviews(null, current).state).toBe("first-review")
+  previous.sections[0].content.values = [value]
+  current.sections[0].content.values = [{ ...value, sourceRefs: [] }]
+  const lost = compareReviews(previous, current)
+  expect(lost.changes).toEqual([])
+  expect(lost).toMatchObject({ state: "compared", omissions: [{ sectionId: "s", valueId: "forecast", reason: "identification-lost" }] })
+  current.sections[0].content.values = [{ ...value, sourceRefs: [{ ...ref, target: { ...ref.target, incarnation: "replacement" } }] }]
+  expect(compareReviews(previous, current).changes).toMatchObject([{ kind: "incompatible" }])
+  expect(compareReviews(null, { ...current, previousReviewRef: "old" }).state).toBe("unavailable")
 })
 
 test("preserved report exports every selected record from the captured projection", async () => {
@@ -201,7 +405,7 @@ test("review capability denies a forged binding before selecting source data", a
   const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "i" }), authorize: async () => undefined })
   const observed = { selections: 0 }
   const reviews = createReviewPort({
-    state, now: () => "2026-11-13T00:00:00Z", requestFor: () => undefined, authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => false, revalidateEvidence: async () => false,
+    state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => undefined, authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => false, revalidateEvidence: async () => false,
     select: async () => { observed.selections++; return { status: "unavailable", reason: "unexpected" } },
   })
   const result = await prepareReview({ selectionRef: "selection", period: { start: "2026-01-01", end: "2026-12-31" }, sectionRefs: ["private"] }, {} as unknown as TrustedDomainContext, {
@@ -384,11 +588,14 @@ test("sensitivity exports evaluated points and preserves a sampled threshold as 
         scenarioRef: "scenario", parameterRef: "rate", bounds: { minimum: 1, maximum: 2, steps: 2 },
         evaluated: [{ parameterValue: 1, resultRef: "result-1", value: 100 }, { parameterValue: 2, resultRef: "result-2", value: 200 }],
         threshold: null, thresholdEvidence: { state: "sampled", interval: { minimum: 1, maximum: 2 }, evidenceRefs: [] },
-        unit: "USD", engineVersion: "v1", costCoverageRefs: [], comparisonStatus: "complete", unresolvedConditions: [], evidenceRefs: [],
+        unit: "USD", parameterUnit: "%", resultUnit: "USD", engineVersion: "v1", costCoverageRefs: [], comparisonStatus: "complete", unresolvedConditions: [], evidenceRefs: [],
       },
     },
   }
-  const review = { id: "sensitivity", version: 1, createdAt: "2026-11-13", sourceRefs: [], comments: [], sections: [{ id: "scenario", title: "Scenario", period, count: 1, sourceRefs: [], content: { values: [], missing: [], context: { sourceRefs: [] }, reviewChart: chart } }] }
+  const scenario = { id: "scenario", version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [], unresolvedConditions: [], restrictions: [], comparisonStatus: "complete", knownSubtotal: 100, total: 100, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [], entries: [], derivedMissingCategoryIds: [], coverageState: "complete" } }
+  const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario", costCoverageRefs: [], criterionResults: [], unresolvedConditions: [], comparisonStatus: "complete", knownDifference: 0, completeDifference: 0 }
+  const decision = { kind: "scenario", scenarioResultRef: "scenario", scenario, comparisonRef: "comparison", comparison, sensitivityResultRef: "sensitivity-result", sensitivity: chart.sensitivity.result }
+  const review = { id: "sensitivity", version: 1, createdAt: "2026-11-13", sourceRefs: [], comments: [], sections: [{ id: "scenario", title: "Scenario", period, count: 1, sourceRefs: [], content: { values: [], missing: [], context: { sourceRefs: [] }, decision, reviewChart: chart } }] }
   for (const format of ["pptx", "docx"] as const) {
     const output = await renderPreservedReview(review, { title: "Review", format, sectionRefs: ["scenario"] })
     if (!output.ok) throw new Error("report unavailable")
@@ -403,6 +610,13 @@ test("sensitivity exports evaluated points and preserves a sampled threshold as 
     expect(xml).toContain("result-2")
     expect(xml).not.toContain("Exact threshold:")
   }
+  const missingRef = structuredClone(review)
+  missingRef.sections[0]!.content.decision.sensitivityResultRef = ""
+  const withoutRef = await renderPreservedReview(missingRef, { title: "Review", format: "docx", sectionRefs: ["scenario"] })
+  if (!withoutRef.ok) throw new Error("report unavailable")
+  const withoutRefZip = await JSZip.loadAsync(withoutRef.bytes)
+  expect(await withoutRefZip.file("word/document.xml")!.async("string")).toContain("Chart BI11 unavailable")
+  expect(Object.keys(withoutRefZip.files).some((path) => /^word\/media\/.*\.png$/.test(path))).toBe(false)
   const missingUnit = structuredClone(review)
   missingUnit.sections[0]!.content.reviewChart.sensitivity.parameterUnit = ""
   const output = await renderPreservedReview(missingUnit, { title: "Review", format: "docx", sectionRefs: ["scenario"] })
@@ -410,3 +624,55 @@ test("sensitivity exports evaluated points and preserves a sampled threshold as 
   const zip = await JSZip.loadAsync(output.bytes)
   expect(await zip.file("word/document.xml")!.async("string")).toContain("Chart BI11 unavailable")
 })
+
+test("decision exports retain conditioned coverage and reject an invented complete comparison", async () => {
+  const { validReviewDecision } = await import("../../../product/reviews/decision.ts")
+  const { renderPreservedReview } = await import("../../../product/reviews/render.ts")
+  const { default: JSZip } = await import("jszip")
+  const period = { start: "2026-01-01", end: "2026-12-31" }
+  const decision = {
+    kind: "scenario", scenarioResultRef: "result", comparisonRef: "comparison",
+    scenario: { id: "result", version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [], unresolvedConditions: ["training missing"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 100, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [], entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"], coverageState: "pending" } },
+    comparison: { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 20, completeDifference: null },
+  } as const
+  expect(validReviewDecision(decision)).toBe(true)
+  expect(validReviewDecision({ ...decision, comparison: { ...decision.comparison, comparisonStatus: "complete", completeDifference: 20 } })).toBe(false)
+  const outcomeBasis = { schema: "sf-evidence-v1", refId: "outcome-source", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "outcome", recordId: "one", incarnation: "inc", version: 1, fields: ["value"], projectionDigest: "digest" } } as const
+  const outcomeEvidence = { ...outcomeBasis, refDigest: digestSfEvidenceRef(outcomeBasis) }
+  const outcome = { caseRef: { id: "case", version: 1, incarnation: "inc" }, expected: 100, observed: 95, cutoff: "2026-12-31", currency: "USD", sourceRefs: [outcomeEvidence], limitations: ["not a causal claim"] } as const
+  const outcomeComparison = { status: "comparable", caseRef: outcome.caseRef, choiceId: "choice", criterionRef: "cost", unit: "USD", currency: "USD", period, expected: 100, observed: 95, delta: -5, cutoff: outcome.cutoff, sourceRefs: outcome.sourceRefs, baselineRefs: [outcomeEvidence], limitations: outcome.limitations, compatibility: { metric: true, unit: true, period: true, currency: true, coverage: "complete", compatible: true }, summary: { facts: ["Observed comparison"], pending: ["No cause inferred"], causality: "not-attributed" }, observation: outcome } as const
+  const storage = testPersistence()
+  const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "target" }), authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }) })
+  const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+  const permission = { decision: false, outcome: true, comparison: true }
+  const port = createReviewPort({ state, creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async () => permission.comparison, authorizeOutcome: async () => permission.outcome, authorizeDecision: async () => permission.decision, authorizeSections: async () => true, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
+    select: async () => ({ status: "ok", value: [{ id: "decision", title: "Decision", period, recordCount: 1, outcome, outcomeComparison, projection: { context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [], capabilities: [] }, version: 1, engineVersion: "v1", components: [], values: [], missing: [], decision } }] }),
+  })
+  expect((await port.preview("selection", ["decision"], binding)).status).toBe("denied")
+  permission.decision = true
+  expect((await port.preview("selection", ["decision"], binding)).status).toBe("ok")
+  permission.comparison = false
+  expect((await port.preview("selection", ["decision"], binding)).status).toBe("denied")
+  permission.comparison = true
+  permission.outcome = false
+  expect((await port.preview("selection", ["decision"], binding)).status).toBe("denied")
+  const review = { id: "decision", version: 1, createdAt: "2026-11-13", sourceRefs: [], comments: [], sections: [{ id: "decision", title: "Decision", period, count: 1, sourceRefs: [], content: { values: [], missing: [], context: { sourceRefs: [] }, decision, reviewOutcome: outcome, reviewOutcomeComparison: outcomeComparison } }] }
+  for (const format of ["docx", "pptx"] as const) {
+    const output = await renderPreservedReview(review, { title: "Decision", format, sectionRefs: ["decision"] })
+    if (!output.ok) throw new Error("decision report unavailable")
+    const zip = await JSZip.loadAsync(output.bytes)
+    const paths = Object.keys(zip.files).filter((path) => format === "docx" ? path === "word/document.xml" : /^ppt\/slides\/slide\d+\.xml$/.test(path))
+    const xml = (await Promise.all(paths.map((path) => zip.file(path)!.async("string")))).join(" ")
+    expect(xml).toContain("conditioned")
+    expect(xml).toContain("Observed comparison")
+    expect(xml).toContain("No cause inferred")
+    expect(xml).toContain("Expected: 100 USD")
+    expect(xml).toContain("Observed: 95 USD")
+    expect(xml).toContain("outcome-source")
+    expect(xml).toContain("missing-category")
+    expect(xml).toContain("Complete difference: unavailable")
+    expect(xml).not.toContain("Complete difference: 20")
+  }
+})
+
+

@@ -1,0 +1,279 @@
+{
+  "schema": "sf2h-c05-w7-independent-test-review-v1",
+  "reviewer": "/root/wp09_audit",
+  "reviewed_at_utc": "2026-11-14T18:13:12Z",
+  "scope": "Read-only review of exactly two W7 test postimages, their causal partition, corrected C08 review observation, preserved oracles and minimal CI selection. No product or fixture implementation changes.",
+  "decision": {
+    "status": "APPROVED_FOR_PUBLICATION_AND_HOSTED_FIVE_CASE_CI",
+    "unresolved_blockers": [],
+    "runtime_status": "PENDING_GITHUB_ACTIONS",
+    "native_proof": false,
+    "product_latency_acceptance": false
+  },
+  "candidate": {
+    "base": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "base_tree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0",
+    "manifest_path": "wp08-w7-manifest.json",
+    "manifest_sha256": "9f740fe4650778cee524b3d67198e5f306bf0e34ac31e7d25c6e82bb8a4be10b",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+        "preimage_blob": "5570584303752e8e95159e21d78dccaa63832110",
+        "postimage_blob": "8fd6ad9018ff8b67234b4699916f558c6bf9e223",
+        "postimage_sha256": "b31319c656e6a8170e1de4f1b69263e409a8c8a21f7459d1c489d01826279b94",
+        "local_postimage": "/workspace/scratch/b64879936364/wp08-w7-proposal/modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+        "preimage_blob": "dab12a75873f435243911957ce681fb251916c51",
+        "postimage_blob": "a9ad44d2013bb31624633c5a8006667689a4fbab",
+        "postimage_sha256": "116b0e990a5a571b4accdef3c40810f41f0120a29a069cd2d487f846f662b209",
+        "local_postimage": "/workspace/scratch/b64879936364/wp08-w7-proposal/modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts"
+      }
+    ],
+    "product_changes": 0,
+    "shared_fixture_changes": 0,
+    "deadline_ms_each": 120000,
+    "human_observation_expiry_changed": false
+  },
+  "prior_evidence": {
+    "product_sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "product_tree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0",
+    "snapshot_sha": "72848c2122b68e15341baa41e5beef4e9237562a",
+    "snapshot_tree": "a2736ebc9cad587e0e10576a6758a5003c00831c",
+    "request_sha256": "05443c8b6ad0e91d18b1aae3e92864d7be9016d1779ac2b9f533500655f7ac69",
+    "run_id": 43623257640,
+    "job_id": 132533400502,
+    "conclusion": "failure",
+    "counts": {
+      "pass": 7,
+      "fail": 3,
+      "expect_calls": 212,
+      "tests": 10,
+      "files": 6,
+      "duration_seconds": 572.34
+    },
+    "metadata_path": "intake/c05-w6-result.json",
+    "metadata_sha256": "7ea22b367fd1d27b601e73c3285e61eb9ff38f7e22db6afa783d41ad62e694c9",
+    "log_path": "intake/job-132533400502.log",
+    "log_sha256": "541e50c1778aa605f1458faa770dd5b052e5afd18c8df1f95ef85395d11dd69b",
+    "omni": {
+      "verdict": "not applicable",
+      "nonce": "8a76934ee7ae715bb5066422d6beb1d9",
+      "spawns": 0,
+      "native_execution_proof": false
+    },
+    "reviewer_method": "Read the already saved GitHub MCP result and log; no refetch or rerun.",
+    "status_precision": "The aggregate W6 result remains FAILURE. Seven named PASS remain scoped evidence. Both R10 cases reached the successful raced-edit refusal and then failed a later test oracle, so neither is a complete PASS. The earlier static approval is retained as history and is not runtime evidence."
+  },
+  "findings": [
+    {
+      "id": "W6-R10-FIXTURE",
+      "classification": "TEST_OBSERVATION_ERROR",
+      "state": "CORRECTED_IN_SOURCE_PENDING_COMPLETE_HOSTED_CASES",
+      "path": "test/product/wp08/answer-egress-version.test.ts",
+      "w6_location": 83,
+      "w7_locations": [
+        [
+          37,
+          46
+        ],
+        [
+          83,
+          101
+        ]
+      ],
+      "cause": "f.snapshots() intentionally projects business snapshots and removes __sfProductV1. The old expression read undefined instead of the canonical preserved C05 review. The identical received digest in both failures is not evidence that C05 changed.",
+      "source_diagnosis": "WP07 independently traced relations-fixture.ts businessSnapshot/snapshots, reviews/port.ts state.reviews[id] reads/writes and state-provider.ts persistence in __sfProductV1. Root records that diagnosis in the saved W6 result.",
+      "accepted_correction": "Read the actual reviews namespace with the real state port and exact reviewRef. Before and after the race, assert status ok, defined value, matching id/version and the exact reviewDigest; additionally compare the whole after value with before. A null or missing record cannot satisfy the identity and digest assertions.",
+      "hook_integrity": "The before review read occurs before installing the thread-read interception; the after read occurs after restoration in finally. The reviews namespace also does not match the threads-only hook. Both external-read counts, the real human edit, response refusals, source/ACL/baseline invariants and final actual Work stale oracle are unchanged.",
+      "oracle_inventory": {
+        "old_literal_sites": 18,
+        "new_literal_sites": 26,
+        "old_incorrect_review_expression_removed": 1,
+        "actual_review_assertion_sites_added": 9,
+        "other_old_sites_preserved": 17,
+        "instances": "The same 26 sites run separately for read and work when each case completes."
+      },
+      "not_changed": [
+        "businessSnapshot sanitization",
+        "WP07 review adapter",
+        "answer-state-fence product logic",
+        "actual edit admission or CAS",
+        "original current ACL and physical-source checks"
+      ]
+    },
+    {
+      "id": "W6-LATENCY-B",
+      "classification": "TEST_DEADLINE_AND_CAUSAL_PARTITION",
+      "state": "PARTITION_SOURCE_APPROVED_RUNTIME_PENDING",
+      "path": "test/product/wp08/review-answer-confirmation.test.ts",
+      "w6_duration_ms": 149408.75,
+      "deadline_ms": 120000,
+      "observed_phase_ms": {
+        "confirmation_and_sqlite_reopen": 42362,
+        "edit_and_stale_work": 79802,
+        "reconfirmation_history_and_resolution": 149407
+      },
+      "accepted_partition": [
+        {
+          "case": "B1",
+          "lines": [
+            99,
+            125
+          ],
+          "name": "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+          "chain": "Fresh real fixture -> actual C05 question and reply after domain change -> actual observation and human confirmation -> real SQLite close/reopen and recomposed consumers -> edit the same message with real human admission/CAS -> exactly one pinned stale item on repeated Work projection -> old confirmation denied."
+        },
+        {
+          "case": "B2",
+          "lines": [
+            127,
+            159
+          ],
+          "name": "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+          "chain": "Independent real fixture -> actual original confirmation -> real SQLite reopen -> real edit -> issue a different actual answerRef -> actual new observation and human reconfirmation -> Work item suppressed -> read original message incarnation/version AFTER reconfirmation and verify original body plus review pin."
+        },
+        {
+          "case": "B3",
+          "lines": [
+            161,
+            186
+          ],
+          "name": "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+          "chain": "Independent real fixture -> actual original confirmation -> real SQLite reopen -> real edit -> actual new answerRef, observation and its own human reconfirmation -> resolve the same thread through the real API -> read the newly confirmed edited body with the preserved review pin."
+        }
+      ],
+      "causal_review": "All three cases perform their own first confirmation and actual SQLite reopen before the edit; none imports another case state or seeds a baseline. B2 preserves the historical oracle after reconfirmation, so reconfirmation-induced historical damage remains observable. B3 performs its own actual reconfirmation before resolve/read. The helper uses the passed recomposed port; it does not return to the closed consumer.",
+      "old_observation_qualification": "B1 retains the old confirmation refusal after the actual reopen/edit sequence. That denial alone is not treated as proof of a post-reopen observation surviving until edit: the separate first-confirm HTTP edited-version test remains a W6 PASS.",
+      "performance_limit": "W5 complete journey 253128.15 ms and W6 B 149408.75 ms remain recorded failures. Partitioning retains each 120000 ms budget including setup and does not establish a product performance improvement or SLO."
+    }
+  ],
+  "preservation": {
+    "review_confirmation_literal_sites": {
+      "W2_original": 54,
+      "W5_additions": 4,
+      "W6": 58,
+      "W7": 58,
+      "removed": [],
+      "altered": []
+    },
+    "method": "Independent text multiset comparison plus semantic inspection of the moved causal chains; no product execution.",
+    "unchanged_green_blocks": [
+      {
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "byte_equivalent": true,
+        "block_sha256": "7189aabe1445f3254dd6d35fd8cf6a3107f1133220d7761a48aa3d1af51bd228",
+        "manifest_span_sha256": "16cc0e8c3b7716ea3d8c1c8fc4209406b190e330ba5b29c71be8dc5f36b3a45c",
+        "manifest_span_definition": "from test declaration through following separator before next test; last test includes unchanged helper tail",
+        "manifest_span_hash_verified": true
+      },
+      {
+        "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "byte_equivalent": true,
+        "block_sha256": "0bedd6ec799849e97524b3d10cb2283f72f72b38c95815b374c3e978793500de",
+        "manifest_span_sha256": "2ef01531652e0efc94f1125650269c3d2f74297d3be000fb9e32ef9a0c29a871",
+        "manifest_span_definition": "from test declaration through following separator before next test; last test includes unchanged helper tail",
+        "manifest_span_hash_verified": true
+      },
+      {
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "byte_equivalent": true,
+        "block_sha256": "87bf5eacd25dd656b9fa86815af83c05baac8653b0d582e20aab789088e89665",
+        "manifest_span_sha256": "4d1b5736f9b52c9a0a9c060d34cede7ddd77940c19e809f3cfe7c90a91e03816",
+        "manifest_span_definition": "from test declaration through following separator before next test; last test includes unchanged helper tail",
+        "manifest_span_hash_verified": true
+      }
+    ],
+    "imports_prefix_byte_equivalent": true,
+    "helper_tail_byte_equivalent": true,
+    "helper_tail_sha256": "51c4a8994a9ebd485d4cb3071578c5f86627615ab7a1c2d7450887f703fda808",
+    "byte_inventory_path": "c05-w7-independent-byte-check.json",
+    "byte_inventory_sha256": "f535b2d9a0f47acd4f6b96f4c85cb7af12dbe90d04b5d210aeae3875b8be8a85",
+    "oracle_map_path": "wp08-w7-oracle-map.json",
+    "oracle_map_sha256": "160c7ae2551e7f1e1284dffb66c06c230194342fea9e8c833c4f37f7b21e6f7e",
+    "no_before_all_or_shared_state": true,
+    "no_baseline_seeding": true,
+    "no_grant_cache": true
+  },
+  "ci": {
+    "root_only": true,
+    "files": [
+      "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts"
+    ],
+    "case_names": [
+      "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+      "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+      "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+      "C05 answer read refuses a real human edit after its final external version read",
+      "C05 answer work refuses a real human edit after its final external version read"
+    ],
+    "test_name_pattern": "^(?:C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation|C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version|C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response|C05 answer read refuses a real human edit after its final external version read|C05 answer work refuses a real human edit after its final external version read)$",
+    "selected_cases": 5,
+    "file_count": 2,
+    "exact_name_selection_independently_verified": true,
+    "green_A_C_D_excluded": true,
+    "reattach_from_exact_w6": [
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+        "result": "pass",
+        "name": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "duration_ms": 109225.56
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+        "result": "pass",
+        "name": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "duration_ms": 49462.65
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+        "result": "pass",
+        "name": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "duration_ms": 83097.57
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+        "result": "pass",
+        "name": "authorized historical messages keep their original basis and a new answer reuses the same stale thread",
+        "duration_ms": 38349.72
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+        "result": "pass",
+        "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+        "duration_ms": 11444.84
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+        "result": "pass",
+        "name": "first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access",
+        "duration_ms": 6455.03
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+        "result": "pass",
+        "name": "answer reuse delegates cross-actor scope and authorization to producer",
+        "duration_ms": 3.2
+      }
+    ],
+    "equivalence_basis": "W7 changes no production or fixture code. The three green cases in the modified review test have byte-equivalent bodies, imports and helper dependencies; the four other green test files are absent from the two-file delta. Reattach these seven scoped results without rerunning them.",
+    "request_scope_limit": "Run only the five altered/partitioned scenario names in the two files. The three filtered green cases are retained from W6, not new passes. No broad group/epic selection is requested."
+  },
+  "limitations": [
+    "Runtime completion of the new five-case selection remains pending.",
+    "No claim that either W6 R10 case passed completely; later actual Work oracle was not reached in W6.",
+    "No native Relay, overall WP08/WP12 closure or performance acceptance is inferred.",
+    "This review does not change the original W6 review or frozen source-advance supplements."
+  ],
+  "operations": {
+    "remote_writes": false,
+    "product_tests_local": false,
+    "local_typecheck": false,
+    "source_import_or_execution": false,
+    "ci_dispatch": false,
+    "postimages_edited": false
+  },
+  "next_action": "Root verifies current remote preimages, publishes the two exact test postimages and dispatches the five-name request once. Bind resulting W/S/tree/run/job and complete counterexample outcomes, retaining W6 scoped PASS and the historical aggregate failures."
+}

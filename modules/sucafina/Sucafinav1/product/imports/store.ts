@@ -6,7 +6,7 @@ import type { SfProductState, SfProductStatePort } from "../contracts/state.ts"
 import type { ImportTarget } from "./staged-files.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 
-export type ImportReceiptSummary = { receiptId: string; manifestId: string; idempotencyKey: string; commandDigest: string; outcome: "applied" | "unchanged"; changedFields: number }
+export type ImportReceiptSummary = { receiptId: string; manifestId: string; idempotencyKey: string; commandDigest: string; outcome: "applied" | "unchanged" | "rejected"; changedFields: number }
 
 export type ImportDetail = {
   manifestId: string
@@ -36,6 +36,24 @@ export function settleSfImportReceipt(state: SfProductState, input: { manifestId
   return true
 }
 
+export function rejectedReceiptId(input: { manifestId: string; previewDigest: string; idempotencyKey: string; commandDigest: string; principalRef: string }) {
+  return digestSfValue(input)
+}
+
+/** Record only a domain refusal attributed to the already-authenticated actor. */
+export function settleSfImportRejection(state: SfProductState, input: { manifestId: string; previewDigest: string; idempotencyKey: string; commandDigest: string; principalRef: string }) {
+  const stored = state.documents[`import-preview:${input.manifestId}`] as StoredPreview | undefined
+  if (!stored || stored.schema !== "sf-import-preview-v1" || stored.digest !== input.previewDigest || stored.digest !== digestSfValue({ schema: stored.schema, fileRef: stored.fileRef, target: stored.target, manifest: stored.manifest, detail: stored.detail, ...(stored.execution ? { execution: stored.execution } : {}) }) || stored.manifest.state !== "preview" || stored.manifest.domainApplied || stored.manifest.context.principalRef !== input.principalRef || stored.manifest.commands.length !== 1) return false
+  const command = stored.manifest.commands[0]!
+  if (command.commandDigest !== input.commandDigest || command.idempotencyKey !== input.idempotencyKey) return false
+  const receiptId = rejectedReceiptId(input)
+  const summary: ImportReceiptSummary = { receiptId, manifestId: input.manifestId, idempotencyKey: input.idempotencyKey, commandDigest: input.commandDigest, outcome: "rejected", changedFields: 0 }
+  const key = `import-rejection:${receiptId}`
+  if (state.documents[key] !== undefined && digestSfValue(state.documents[key]) !== digestSfValue(summary)) return false
+  state.documents[key] = summary
+  return true
+}
+
 /** C08 is the sole store. Commands remain private; output contains only authorized views. */
 export function createSfImportPreviewStore(input: { host: DomainPortHost; state: SfProductStatePort; operationIdentity: (context: TrustedDomainContext) => string | undefined; validateFile: (fileRef: string, digest: string, context: TrustedDomainContext) => Promise<boolean>; authorizeTarget: (target: ImportTarget, context: TrustedDomainContext, mode?: "receipt") => Promise<boolean>; validateRoster?: (target: ImportTarget, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => Promise<boolean> }) {
   const view = (manifest: StoredImportManifest): ImportManifest => ({ id: manifest.id, version: manifest.version, sourceDigest: manifest.sourceDigest, format: manifest.format, context: manifest.context, baseIdentity: manifest.baseIdentity, issues: manifest.issues, state: manifest.state, domainApplied: manifest.domainApplied,
@@ -47,6 +65,7 @@ export function createSfImportPreviewStore(input: { host: DomainPortHost; state:
       const request = input.host.requestFor(context)
       const operation = input.operationIdentity(context)
       if (!request || !operation || !manifest.id || !fileRef || manifest.state !== "preview" || manifest.domainApplied || manifest.receipts.length || manifest.context.principalRef !== context.binding.principalRef || manifest.context.installationId !== context.binding.installationId || manifest.context.projectId !== context.binding.projectId || manifest.context.accessRevision !== context.binding.accessRevision || manifest.context.policyVersion !== context.binding.policyVersion || !await input.host.revalidate(context) || !await input.authorizeTarget(target, context) || !await input.validateFile(fileRef, manifest.sourceDigest, context)) return { status: "denied", reason: "preview-access-unavailable" }
+      if (execution?.kind !== "dashboard" && execution?.rosterEvidence && (!input.validateRoster || !await input.validateRoster(target, execution.rosterEvidence, context))) return { status: "stale", reason: "roster-source-changed" }
       if (!detail || detail.manifestId !== manifest.id || detail.version !== manifest.version || detail.sourceDigest !== manifest.sourceDigest || !Array.isArray(detail.changes) || detail.changes.some((change) => !change.path || !["added", "changed", "removed", "unchanged", "ignored", "rejected"].includes(change.kind) || !change.source || (change.source.kind === "file" && (!change.source.sheet || !Number.isSafeInteger(change.source.row) || change.source.row < 1 || !Number.isSafeInteger(change.source.column) || change.source.column < 1 || !change.source.address || !change.source.field)) || (change.source.kind === "domain" && !change.source.reference) || !["file", "domain"].includes(change.source.kind))) return { status: "needs-input", reason: "invalid-preview-detail" }
       const payload = { schema: "sf-import-preview-v1" as const, fileRef, target, manifest, detail, ...(execution ? { execution } : {}) }
       const entry: StoredPreview = { ...payload, digest: digestSfValue(payload) }
@@ -62,6 +81,7 @@ export function createSfImportPreviewStore(input: { host: DomainPortHost; state:
       })
       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" ? "conflict" : "unavailable", reason: "preview-store-unavailable" }
       if (!await input.host.revalidate(context) || !await input.authorizeTarget(target, context) || !await input.validateFile(fileRef, manifest.sourceDigest, context)) return { status: "stale", reason: "preview-context-changed" }
+      if (execution?.kind !== "dashboard" && execution?.rosterEvidence && (!input.validateRoster || !await input.validateRoster(target, execution.rosterEvidence, context))) return { status: "stale", reason: "roster-source-changed" }
       return { status: "ok", value: view(manifest) }
     },
     read: async (id: string, context: TrustedDomainContext): Promise<PortResult<{ manifest: StoredImportManifest; detail: ImportDetail; execution?: ImportExecution; digest: string; fileRef: string; target: ImportTarget; summary?: ImportReceiptSummary }>> => {
@@ -74,8 +94,12 @@ export function createSfImportPreviewStore(input: { host: DomainPortHost; state:
       if (entry.manifest.state !== "applied" && entry.execution?.kind !== "dashboard" && entry.execution?.rosterEvidence && (!input.validateRoster || !await input.validateRoster(entry.target, entry.execution.rosterEvidence, context))) return { status: "stale", reason: "roster-source-changed" }
       const receipt = entry.manifest.receipts[0]
       const summary = receipt ? read.value.documents[`import-receipt:${receipt.id}`] as ImportReceiptSummary | undefined : undefined
+      const command = entry.manifest.commands[0]
+      const rejectionId = command ? rejectedReceiptId({ manifestId: id, previewDigest: entry.digest, idempotencyKey: command.idempotencyKey, commandDigest: command.commandDigest, principalRef: context.binding.principalRef }) : ""
+      const rejected = rejectionId ? read.value.documents[`import-rejection:${rejectionId}`] as ImportReceiptSummary | undefined : undefined
+      if (rejected && (rejected.outcome !== "rejected" || rejected.changedFields !== 0 || rejected.receiptId !== rejectionId || rejected.manifestId !== id || rejected.idempotencyKey !== command?.idempotencyKey || rejected.commandDigest !== command?.commandDigest)) return { status: "unavailable", reason: "receipt-summary-unavailable" }
       if (entry.manifest.state === "applied" && (!receipt || !summary || summary.receiptId !== receipt.id || summary.manifestId !== id || summary.idempotencyKey !== receipt.idempotencyKey || summary.commandDigest !== receipt.commandDigest || !receipt.result.ok || !receipt.result.value || typeof receipt.result.value !== "object" || !("changedFields" in receipt.result.value) || !("status" in receipt.result.value) || receipt.result.value.changedFields !== summary.changedFields || receipt.result.value.status !== summary.outcome)) return { status: "unavailable", reason: "receipt-summary-unavailable" }
-      return { status: "ok", value: { manifest: entry.manifest, detail: entry.detail, execution: entry.execution, digest: entry.digest, fileRef: entry.fileRef, target: entry.target, summary } }
+      return { status: "ok", value: { manifest: entry.manifest, detail: entry.detail, execution: entry.execution, digest: entry.digest, fileRef: entry.fileRef, target: entry.target, summary: entry.manifest.state === "applied" ? summary : rejected } }
     },
     view,
   }

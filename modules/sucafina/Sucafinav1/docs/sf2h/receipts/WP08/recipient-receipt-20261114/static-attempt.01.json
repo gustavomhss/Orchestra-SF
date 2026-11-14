@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h.collaboration.recipient-receipt.static-attempt.v1",
+  "head": "3097481a0baa534220555cfbb18d0506383b9bd9",
+  "tree": "4d6ecf07dfe7cb24d778386b4713e1b21d39d080",
+  "run_id": 43629952588,
+  "job_id": 132554121997,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588",
+  "conclusion": "failure",
+  "typecheck": {
+    "conclusion": "failure",
+    "total": 73,
+    "inherited": 69,
+    "inherited_exact_diagnostic_equality": true,
+    "new": 4,
+    "own_diagnostics": [
+      {
+        "file": "test/product/wp08/recipient-receipt-recovery.test.ts",
+        "line": 25,
+        "column": 81,
+        "code": "TS2769",
+        "message": "No overload matches this call."
+      },
+      {
+        "file": "test/product/wp08/recipient-receipt.test.ts",
+        "line": 23,
+        "column": 29,
+        "code": "TS2769",
+        "message": "No overload matches this call."
+      },
+      {
+        "file": "test/product/wp08/recipient-receipt.test.ts",
+        "line": 30,
+        "column": 83,
+        "code": "TS2769",
+        "message": "No overload matches this call."
+      },
+      {
+        "file": "test/product/wp08/reissue.test.ts",
+        "line": 85,
+        "column": 59,
+        "code": "TS2741",
+        "message": "Property 'persistence' is missing in type '{ requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }' but required in type 'Pick<DomainPortHost, \"persistence\" | \"requestFor\" | \"revalidate\">'."
+      }
+    ]
+  },
+  "guards": {
+    "conclusion": "failure",
+    "rules": 78,
+    "changed_paths": 933,
+    "gates": 2,
+    "warnings": 14,
+    "errors": 0,
+    "findings": [
+      {
+        "rule": "agent-scratch",
+        "path": "logs/01-recipient-receipt.log"
+      },
+      {
+        "rule": "agent-scratch",
+        "path": "logs/02-review-resolve.log"
+      }
+    ]
+  },
+  "artifact": {
+    "id": 14127239841,
+    "name": "astra-wp08-check-3097481a0baa534220555cfbb18d0506383b9bd9-1",
+    "sha256": "8dbd5a44f21b1bb613075cce89cb1546a6ee0d09e75d5bf759f6ff5ec83c9a40"
+  },
+  "log": {
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588/job/132554121997",
+    "bytes": 99701,
+    "sha256": "774919ca67995487e77b32f5173ec5b379894b1484045f0b3e68c495f957f7df",
+    "retained_in_repository": false
+  },
+  "correction": {
+    "product_changed": false,
+    "tests": [
+      "Reverse three symmetric structural equality comparisons to respect unknown/readonly overloads; keep full equality assertions.",
+      "Pass the existing real SQLite store to the reissue fixture host, matching its C08 and mutationFence."
+    ],
+    "documentation": [
+      "Remove both raw log files from the current tree instead of renaming or exempting them.",
+      "Preserve exact hashes, outcome records and GitHub job links; the original failed HEAD remains in history."
+    ],
+    "guard_rules_changed": false,
+    "ignores_added": false,
+    "approvals_added": false,
+    "followup_selection": "ci-request.03.json",
+    "followup_status": "PENDING_HOSTED_VALIDATION"
+  }
+}

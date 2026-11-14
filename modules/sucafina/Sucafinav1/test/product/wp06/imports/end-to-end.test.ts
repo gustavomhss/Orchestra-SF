@@ -15,6 +15,7 @@ import { createSfUiAuthority } from "../../../../product/integration/ui-authorit
 import { createSfHumanAuthority, sfHumanActions } from "../../../../product/integration/human-authority.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
+import type { PortResult } from "../../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { projectPlannerSource } from "../../../../product/planner/port.ts"
 import { createSfImportHost } from "../../../../product/imports/host.ts"
@@ -53,7 +54,7 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
     const state = createSfProductState({ persistence: app.store, createId: randomUUID, authorize: async (input, snapshot) => await app.identity.authenticate(input, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") }) ? { principalRef: principal.id, accessRevision: "access", policyVersion: "policy" } : undefined, resolveTarget: async (_, __, ___, ref) => { const snapshot = (app.store as typeof app.store & { currentSnapshots?: () => { planner: Snapshot } | undefined }).currentSnapshots?.()?.planner; return snapshot ? sfSourceIdentity(snapshot, "planner-version", ref) : undefined } })
     const actor = { id: principal.id, roles: principal.roles.filter((row) => row.surface === "planner").map((row) => row.role), canWrite: principal.canWrite, assigned: [], domains: [] }
     const target = { surface: "planner" as const, selectionRef: "v1", incarnation: targetIdentity.incarnation, version: targetIdentity.version, options: { newVersion: false, removeMissing: false, preview: {} } }
-    const resolveTarget = async () => app.store.transaction("planner", async (snapshot) => {
+    const resolveTarget = async () => app.store.transaction<PortResult<{ versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>>("planner", async (snapshot) => {
       const source = sfSourceIdentity(snapshot, "planner-version", "v1")
       const projection = projectPlannerSource(snapshot, actor, "v1")
       if (!source || !projection) return { commit: false, value: { status: "unavailable" as const, reason: "source-unavailable" } }
@@ -86,13 +87,24 @@ test("human workbook admission, Planner preview, atomic receipt and retry surviv
       expect(analysis.value.manifest).toEqual(preview.value)
       expect(analysis.value.detail.manifestId).toBe(preview.value.id)
     }
+    const reopenedPreview = await imports.readPreviewReference(preview.value.id, previewGrant.value)
+    expect(reopenedPreview.status).toBe("ok")
+    if (reopenedPreview.status === "ok") {
+      expect(reopenedPreview.value.manifest).toEqual(preview.value)
+      expect(reopenedPreview.value.detail.manifestId).toBe(preview.value.id)
+      expect(reopenedPreview.value.manifest.commands.every((command) => !("command" in command))).toBe(true)
+    }
+    expect((await imports.readPreviewReference("another-preview", previewGrant.value)).status).not.toBe("ok")
+    expect(await imports.readPreviewReference(preview.value.id, { ...previewGrant.value, binding: { ...previewGrant.value.binding, principalRef: "other-principal" } })).toMatchObject({ status: "denied" })
     expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, options: { sheet: "other" } } }, previewGrant.value)).toMatchObject({ status: "stale" })
     expect(await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: { ...selection, admittedFileRef: "other" } }, previewGrant.value)).toMatchObject({ status: "stale" })
     expect(await app.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(domainBeforeAnalysis)
     await app.store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${file.value.ref}`, new Uint8Array([1, 2, 3]), "application/octet-stream"); return { commit: true, value: undefined } })
     expect((await imports.readPreviewForAnalysis({ previewRef: preview.value.id, request: selection }, previewGrant.value)).status).not.toBe("ok")
+    expect((await imports.readPreviewReference(preview.value.id, previewGrant.value)).status).not.toBe("ok")
     await app.store.transaction("dashboard", async (_, blobs) => { await blobs.put(`sf-import/${file.value.ref}`, bytes, "application/octet-stream"); return { commit: true, value: undefined } })
     ui.finish(previewGrant.value)
+    expect(await imports.readPreviewReference(preview.value.id, previewGrant.value)).toMatchObject({ status: "denied" })
     const applyInput = { manifestId: preview.value.id, version: preview.value.version }
     const apply = async () => { const grant = await human.admit(request, "imports.apply", applyInput); if (grant.status !== "ok") throw new Error(grant.reason); const result = await imports.apply(applyInput, grant.value); human.finish(grant.value); return result }
     const first = await apply()

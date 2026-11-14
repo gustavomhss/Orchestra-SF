@@ -1,0 +1,47 @@
+2026-11-14T18:16:34.5366268Z bun test v1.3.14 (0d9b296a)
+2026-11-14T18:16:34.5436353Z 
+2026-11-14T18:16:34.5436862Z Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts:
+2026-11-14T18:16:34.8919897Z WP08_C05_STAGE edit-stale fixture-ready 176ms
+2026-11-14T18:16:52.2174979Z WP08_C05_STAGE edit-stale real-question-source-change-and-answer 17501ms
+2026-11-14T18:17:06.8754460Z WP08_C05_STAGE edit-stale real-confirmation-and-sqlite-reopen 32159ms
+2026-11-14T18:17:21.0914101Z WP08_C05_STAGE edit-stale real-answer-edit 46375ms
+2026-11-14T18:17:36.2244451Z WP08_C05_STAGE edit-stale stable-stale-work-and-old-confirmation-refusal 61508ms
+2026-11-14T18:17:36.2256696Z WP08_C05_STAGE edit-stale disposed 61510ms
+2026-11-14T18:17:36.2271552Z (pass) C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation [61511.96ms]
+2026-11-14T18:17:36.3566521Z WP08_C05_STAGE edit-reconfirm-history fixture-ready 129ms
+2026-11-14T18:17:54.0230745Z WP08_C05_STAGE edit-reconfirm-history real-question-source-change-and-answer 17795ms
+2026-11-14T18:18:09.0239548Z WP08_C05_STAGE edit-reconfirm-history real-confirmation-and-sqlite-reopen 32796ms
+2026-11-14T18:18:23.3729814Z WP08_C05_STAGE edit-reconfirm-history real-answer-edit 47145ms
+2026-11-14T18:18:44.2571707Z WP08_C05_STAGE edit-reconfirm-history real-reconfirmation 68029ms
+2026-11-14T18:18:54.2307850Z WP08_C05_STAGE edit-reconfirm-history work-suppressed-and-original-history-retained 78003ms
+2026-11-14T18:18:54.2318827Z WP08_C05_STAGE edit-reconfirm-history disposed 78004ms
+2026-11-14T18:18:54.2319661Z (pass) C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version [78004.90ms]
+2026-11-14T18:18:54.3579281Z WP08_C05_STAGE edit-reconfirm-resolve fixture-ready 125ms
+2026-11-14T18:19:11.9285036Z WP08_C05_STAGE edit-reconfirm-resolve real-question-source-change-and-answer 17696ms
+2026-11-14T18:19:25.1621448Z WP08_C05_STAGE edit-reconfirm-resolve real-confirmation-and-sqlite-reopen 30930ms
+2026-11-14T18:19:38.0751192Z WP08_C05_STAGE edit-reconfirm-resolve real-answer-edit 43843ms
+2026-11-14T18:19:56.4152452Z WP08_C05_STAGE edit-reconfirm-resolve real-reconfirmation 62183ms
+2026-11-14T18:20:15.7290316Z WP08_C05_STAGE edit-reconfirm-resolve same-thread-resolved-and-edited-answer-reused 81496ms
+2026-11-14T18:20:15.7300070Z WP08_C05_STAGE edit-reconfirm-resolve disposed 81498ms
+2026-11-14T18:20:15.7301306Z (pass) C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response [81498.13ms]
+2026-11-14T18:20:15.7301576Z 
+2026-11-14T18:20:15.7301770Z Sucafinav1/test/product/wp08/answer-egress-version.test.ts:
+2026-11-14T18:20:15.8640990Z [wp08-answer-egress:read] fixture-ready 131ms
+2026-11-14T18:20:45.4781739Z [wp08-answer-egress:read] real-confirmation 29745ms
+2026-11-14T18:21:05.2764031Z [wp08-answer-egress:read] edit-refused-at-final-egress 49544ms
+2026-11-14T18:21:06.3731011Z [wp08-answer-egress:read] same-source-baseline-and-current-stale-work 50640ms
+2026-11-14T18:21:06.3741144Z [wp08-answer-egress:read] disposed 50642ms
+2026-11-14T18:21:06.3743513Z (pass) C05 answer read refuses a real human edit after its final external version read [50642.45ms]
+2026-11-14T18:21:06.5019797Z [wp08-answer-egress:work] fixture-ready 127ms
+2026-11-14T18:21:35.9983518Z [wp08-answer-egress:work] real-confirmation 29624ms
+2026-11-14T18:21:49.5001846Z [wp08-answer-egress:work] edit-refused-at-final-egress 43125ms
+2026-11-14T18:21:50.5928457Z [wp08-answer-egress:work] same-source-baseline-and-current-stale-work 44218ms
+2026-11-14T18:21:50.5937154Z [wp08-answer-egress:work] disposed 44219ms
+2026-11-14T18:21:50.5938619Z (pass) C05 answer work refuses a real human edit after its final external version read [44219.55ms]
+2026-11-14T18:21:50.5956658Z 
+2026-11-14T18:21:50.5956838Z  5 pass
+2026-11-14T18:21:50.5957047Z  3 filtered out
+2026-11-14T18:21:50.5957244Z  0 fail
+2026-11-14T18:21:50.5957445Z  62 expect() calls
+2026-11-14T18:21:50.5957696Z Ran 5 tests across 2 files. [316.06s]
+2026-11-14T18:21:50.5958439Z omni positive control [d697005db9ba2b3452bf3294a8edd353]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
