@@ -1,0 +1,12 @@
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"playwright-import","elapsedMs":0}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"playwright-imported","elapsedMs":329}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-service","elapsedMs":336}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-spawn","elapsedMs":336}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"app-process-spawned","elapsedMs":347,"driverPid":4170}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-import","elapsedMs":371,"driverPid":4170}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"node-imported","elapsedMs":585,"driverPid":4170}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"chromium-launch","elapsedMs":597,"driverPid":4170}
+SF_BROWSER_DRIVER_PHASE {"consumer":"wp01-shared-pool","phase":"startup-cancelled","elapsedMs":10000,"waitingAt":"chromium-launch","driverPid":4170}
+SF_BROWSER_DRIVER_STARTUP_FAILURE {"consumer":"wp01-shared-pool","phase":"startup-cancelled","driverPid":4170,"elapsedMs":10004,"reason":"Browser driver launch exceeded 9667 ms","stderr":""}
+SF_BROWSER_DRIVER_FAILURE {"consumer":"wp01-shared-pool","phase":"startup-cancelled","driverPid":4170,"reason":"WP01 browser timed out: single Node-owned Chromium launch and PID acquisition","stderr":""}
+omni positive control [e73271f7e6e425831126deb297111537]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts); 1 omni spawn(s), 0 delegated.

@@ -1,0 +1,220 @@
+{
+  "schema": "astra-operations.hosted-receipt.v1",
+  "runId": 43582192808,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582192808",
+  "headBranch": "astra-check-operations-64432477-1",
+  "headSha": "e4b18ec95f837985d1f138272d54f2b2732ce66e",
+  "status": "completed",
+  "conclusion": "failure",
+  "createdAt": "2026-11-14T09:47:16Z",
+  "updatedAt": "2026-11-14T09:49:25Z",
+  "product": {
+    "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605"
+  },
+  "snapshot": {
+    "sha": "e4b18ec95f837985d1f138272d54f2b2732ce66e",
+    "tree": "ed9e2dfa08545aa0091607b8c90679f4b45e695f",
+    "parents": [
+      "644324778e4a21d22424515dd698d5b8d6c01893"
+    ]
+  },
+  "snapshotProof": {
+    "soleParent": true,
+    "onlyAddedRequest": true,
+    "comparison": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "head": "e4b18ec95f837985d1f138272d54f2b2732ce66e",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/644324778e4a21d22424515dd698d5b8d6c01893",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/644324778e4a21d22424515dd698d5b8d6c01893"
+      },
+      "merge_base_commit": {
+        "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/644324778e4a21d22424515dd698d5b8d6c01893",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/644324778e4a21d22424515dd698d5b8d6c01893"
+      },
+      "files": [
+        {
+          "filename": ".astra-operations-check.json",
+          "status": "added",
+          "additions": 4,
+          "deletions": 0,
+          "changes": 4,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "request": {
+    "productSha": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "blob": "20b88c60c527e5cec6affb5c86f796582f23219b",
+    "sha256": "b8ce2f8050be9cc96fd50199e1ababd27540e0e9d034fec6c0626570253e9578"
+  },
+  "jobs": [
+    {
+      "id": 132409093299,
+      "name": "scoped-checks",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43582192808,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Verify product SHA and unchanged product tree",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Upload check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14108986881,
+      "name": "astra-operations-check-1",
+      "size_in_bytes": 1580,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108986881",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108986881/zip",
+      "expired": false,
+      "created_at": "2026-11-14T09:49:22Z",
+      "expires_at": "2026-11-28T09:49:22Z",
+      "updated_at": "2026-11-14T09:49:22Z",
+      "digest": "sha256:767f35a6bcbd3e5bbddbde16abcf1df001d3d602a9628a8908940c47343a124b",
+      "workflow_run": {
+        "id": 43582192808,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-operations-64432477-1",
+        "head_sha": "e4b18ec95f837985d1f138272d54f2b2732ce66e"
+      },
+      "verifiedSha256": "767f35a6bcbd3e5bbddbde16abcf1df001d3d602a9628a8908940c47343a124b",
+      "localFile": "/workspace/scratch/67acc0fafe95/audit-ci/artifact-14108986881.zip",
+      "extractedTo": "/workspace/scratch/67acc0fafe95/audit-ci/check4"
+    }
+  ],
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-check4-43582192808.log",
+    "sha256": "dfc2f730ae3f4324e155dd4fd2bd8627f74b690d5a4e7506811762ed9a355a71",
+    "bytes": 63580
+  },
+  "checks": {
+    "envelope": "success",
+    "exactProduct": "success",
+    "guardBase": "success",
+    "sucafinaTypecheck": {
+      "conclusion": "failure",
+      "errors": [
+        {
+          "file": "test/product/wp14/source-access-atlas.test.ts",
+          "line": 167,
+          "column": 41,
+          "code": "TS2741",
+          "reason": "Property 'procurementEvidenceWrites' is missing in type '{ authority: { state: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/...' but required in type '{ authority: { state: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/...'.",
+          "ownership": "Intelligence/WP14; OPS-CONSUMER-02 preserving both scenarios pending owner consumption"
+        }
+      ]
+    },
+    "cliTypecheck": {
+      "conclusion": "success",
+      "errors": []
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 740,
+      "gateFindings": 0,
+      "warnings": 11,
+      "errors": 0
+    }
+  },
+  "guardMergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "qualification": "CLI and guards passed independently. Sucafina and the aggregate run remain FAILURE due to the Atlas fixture missing procurementEvidenceWrites; no own source type error is reported. No prior failure is overwritten and no global acceptance is inferred."
+}

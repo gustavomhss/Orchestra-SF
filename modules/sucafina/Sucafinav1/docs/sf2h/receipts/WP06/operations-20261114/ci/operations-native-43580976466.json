@@ -1,0 +1,310 @@
+{
+  "schema": "astra-operations.native-import-receipt.v1",
+  "runId": 43580976466,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580976466",
+  "status": "completed",
+  "conclusion": "success",
+  "headBranch": "ci-run-linux-astra-operations-d7d343ec-9d66a1145ac1-1",
+  "headSha": "c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01",
+  "tree": "31dd6b7d20177d4f6bfbf778ea1167e433bbdbce",
+  "createdAt": "2026-11-14T09:31:46Z",
+  "updatedAt": "2026-11-14T09:38:57Z",
+  "jobs": [
+    {
+      "id": 132405428532,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43580976466,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132407107175,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43580976466,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "product": {
+    "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "tree": "a3ebf675545fadcd3124b387b15f396550652df8"
+  },
+  "snapshot": {
+    "sha": "c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01",
+    "tree": "31dd6b7d20177d4f6bfbf778ea1167e433bbdbce",
+    "parents": [
+      "d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+    ]
+  },
+  "snapshotProof": {
+    "soleParent": true,
+    "onlyAddedRequest": true,
+    "comparison": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "head": "c2ad4cb308ffa6e4b8d1a0cf5ed031bf1a304a01",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+      },
+      "merge_base_commit": {
+        "sha": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d7d343ecb2ef4b4ccff925f50a5a60324d22b371"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 9,
+          "deletions": 0,
+          "changes": 9,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+    ],
+    "env": {},
+    "sha256": "9d66a1145ac11d041b3f674fc320229ce710adbff21ec92eedd858f79b6ce02f",
+    "blob": "39fa5f7b8719bc542020d11abbdf13afb651aac6"
+  },
+  "actualSelection": {
+    "files": [
+      "Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+    ],
+    "fileCount": 1,
+    "selectedAndExecutedEqual": true
+  },
+  "summary": {
+    "pass": 2,
+    "fail": 0,
+    "skip": 0,
+    "expectCalls": 123,
+    "testCount": 2,
+    "fileCount": 1,
+    "durationSeconds": 311.3
+  },
+  "cases": [
+    {
+      "file": "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "result": "pass",
+      "title": "real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files",
+      "durationMs": 37509.61
+    },
+    {
+      "file": "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "result": "pass",
+      "title": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+      "durationMs": 272633.35
+    }
+  ],
+  "omni": {
+    "verdict": "not-applicable",
+    "nonce": "3006e77114a37fdb4b42598611e825df",
+    "declaringTests": 0,
+    "spawns": 0,
+    "delegations": 0,
+    "raw": "omni positive control [3006e77114a37fdb4b42598611e825df]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  },
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-native-43580976466.log",
+    "sha256": "042fbc465731f07e250aa1e10d4d9186fcb64bc5ff8ceb325331b64e6bdb4df8",
+    "bytes": 149389
+  },
+  "qualification": "The isolated exact file passed in hosted Actions with no request timeout override or fixture assertion change. The earlier W1 aggregate run remains failed. This confirms these Session/MCP/native-adapter component cases at W3, not Omni/model execution, human acceptance, or the global gate. No specific root cause for W1 slowness is inferred."
+}

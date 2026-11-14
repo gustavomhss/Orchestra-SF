@@ -1,0 +1,1669 @@
+{
+  "schema": "astra-operations.wp06-W4-to-prospective-W5-full-scope.v1",
+  "base": {
+    "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605"
+  },
+  "target": "PUBLISHED_W5_COMPARE_AND_H09_RESULT_STILL_REQUIRED",
+  "qualification": "STATIC_SCOPE_RECONCILIATION_NOT_NEW_EXECUTION_OR_GLOBAL_ACCEPTANCE",
+  "supersedesScopeOnlyOf": {
+    "path": "audit-wp06/owner-W5-impact.json",
+    "bytes": 50663,
+    "sha256": "0a6c44b5535c1f0d44b56e88e35b52e4ad15e94526a24f62ad9578d60d0a62d8",
+    "gitBlob": "829d3a413abd2999e6ec0ed72444353302261028"
+  },
+  "completeRuntimeScope": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "ownerCommit": "8f760659279567d2c169691c3e57cf19be10417d",
+      "ownerWholeFileBlob": "0e5a508722c9e741a1737beb7d88ccb596a6f495",
+      "baseBlob": "41a795e5a2c05600741e694efca19f0ab329db55",
+      "composedBlobRequired": "9aee116a091c684ba467f81316d2fb915b3f8758",
+      "wholeOwnerFileMustNotReplaceBase": true,
+      "behavior": "Enrich only the business.procurementDossier consumer with current sourcing terms and a second-read equality fence."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "ownerCommit": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+      "baseBlob": "3bee0f4326c1a65d3c0573695c3e4a1609b6c480",
+      "composedBlobRequired": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "unchangedFormsPrefix": true,
+      "behavior": "Material confirmation script: reviewed digest, immutable retry intention, locks, revocation, uncertain outcome and receipt handling."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "baseBlob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "composedBlobRequired": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "source": "Published PR23 reconciliation hunk restored into Finance review-binding producer; no new business policy or command semantics.",
+      "publishedSourceCommits": {
+        "WP04": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+        "Finance": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b"
+      },
+      "behavior": "After successful domain receipt/classification, reread the whole case and storage CAS, verify authoritative receipt and current authority, then reconcile with the new CAS and whole-case equality.",
+      "modulePrefixAndImportsUnchanged": true
+    }
+  ],
+  "testScope": {
+    "ownChangedFile": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+    "ownChangedBodies": [
+      "H01 business.procurementDossier direct source terms/reread fences",
+      "H09 real decision UI to real Procurement HTTP"
+    ],
+    "exactOwnerFixtures": [
+      {
+        "key": "browserFixture31",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "sha": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+        "localFile": "audit-ci/owner-refresh/browserFixture31.ts"
+      },
+      {
+        "key": "browserDriver31",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "sha": "76188b9f567861b30dba3b22afce66d60a2424c8",
+        "localFile": "operations/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "previousSha": "e476274c6d997a3e305cdf7c139cc3e03430890e",
+        "ownerRefresh": "50906b86da953f9e6fb24f989c51db0fc69496c1"
+      },
+      {
+        "key": "browserStart31",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "sha": "6952098674a027afafb11ff9cdf6d942580c4149",
+        "localFile": "audit-ci/owner-refresh/browserStart31.ts"
+      },
+      {
+        "key": "browserLifecycle31",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "sha": "260151909d86dfc77f6dc3229b660e63e5745033",
+        "localFile": "audit-ci/owner-refresh/browserLifecycle31.ts"
+      }
+    ],
+    "fixtureOwner": {
+      "pr": 31,
+      "head": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+      "tree": "47c22a8bd808367c77171f555afc27bcf8fef7b3"
+    },
+    "driverDiagnosticRefresh": {
+      "schema": "astra-operations.owner-browser-diagnostic-refresh.v1",
+      "ownerPr": 31,
+      "ownerCommit": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "before": "e476274c6d997a3e305cdf7c139cc3e03430890e",
+      "after": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "delta": "Published three-line diagnostic-only DEBUG=pw:browser inside the owned Node driver; no deadline, assertion, API, lifecycle or authorization changes. Other three owner fixtures and UI remain byte-identical.",
+      "qualification": "No browser success inferred; the exact three-file hosted selection remains required."
+    },
+    "configurationDelta": "NONE: no generic test discovery or Playwright configuration change; explicit Actions selectors only",
+    "hostedSelection": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ]
+  },
+  "sourceEvidence": [
+    {
+      "path": "audit-wp04/patches/OPS-C12-CAS-REGRESSION/five-caller-impact.json",
+      "bytes": 5151,
+      "sha256": "29ed9cb17f7e36f632a8386c5e3abfa01ceb1ce45b2bf537cd7bc35f19406ac6",
+      "gitBlob": "1cff61bd3bd02727e3b4139f5de5f72bc2e3e614"
+    },
+    {
+      "path": "audit-wp04/patches/OPS-C12-CAS-REGRESSION/finding.json",
+      "bytes": 5069,
+      "sha256": "bb52a148914057e904b0d8bd769b16bbf2e333232e04a86ee8fdddb55cc3e417",
+      "gitBlob": "d1b616da9452324e3efdbaa46518b1e8ba87e1d4"
+    },
+    {
+      "path": "audit-wp04/patches/OPS-C12-CAS-REGRESSION/restore-reconciliation.patch",
+      "bytes": 4249,
+      "sha256": "341b0cf73da172685f178b10b6b2ae26b9b498f24bd9739f0ea7b6ca1f5ee25d",
+      "gitBlob": "fef1826566873e4cdd6b2b48184bf72f79892ab8"
+    },
+    {
+      "path": "operations/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "bytes": 14023,
+      "sha256": "aa777b4062e785eb69db1724e2be633e4547303310ec02d9b15329affc8f7db8",
+      "gitBlob": "4bdd12ac162d61465557363953e25dfd99fad5e8"
+    },
+    {
+      "path": "operations/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "bytes": 14701,
+      "sha256": "e5fe2ce6591d04a8289a895418225c8fd4ce2e0a58bf789fd4657145ae6d689c",
+      "gitBlob": "90c3e981d8418c562342660bd3d56d03f9995383"
+    },
+    {
+      "path": "audit-ci/owner-refresh/OPS03-intake-manifest.json",
+      "bytes": 9307,
+      "sha256": "99a1ada2fe2a38755f4d55bde61301f2b14f5d26df097ec6900015556e68c700",
+      "gitBlob": "e7523d4ebbab27cda549680bdcbdebf304f12b4f"
+    },
+    {
+      "path": "w5-browser-diagnostic-intake.json",
+      "bytes": 672,
+      "sha256": "7a64d374055cb4f041485e6ccbb44a7e960de8d9559a996b7fb465e6bfb46bd5",
+      "gitBlob": "b69cb7c4111d5895f2efaadc5ed0c477aec9d148"
+    },
+    {
+      "path": "audit-wp06/reuse/W5-corpus81-direct-symbols.json",
+      "bytes": 24349,
+      "sha256": "c7938521937be140dbbf30c4f98316e99daa736e1c339cd26b6a22294520c398",
+      "gitBlob": "8b48a33aa3f7bd7f313cd06f8818c5331d2d7806"
+    },
+    {
+      "path": "audit-ci/owner-refresh/browserFixture31.ts",
+      "bytes": 15208,
+      "sha256": "7a1e5bece6cea161d7b785a14a696d7145772b001b7cb4a7bcf96aa0734a0109",
+      "gitBlob": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8"
+    },
+    {
+      "path": "operations/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "bytes": 23484,
+      "sha256": "295c47a4376e7eb4295badd6960fbeca3fa6afdca20ea6b162285aadfdbe134a",
+      "gitBlob": "76188b9f567861b30dba3b22afce66d60a2424c8"
+    },
+    {
+      "path": "audit-ci/owner-refresh/browserStart31.ts",
+      "bytes": 721,
+      "sha256": "aab192f98e0796f149a8a45b728ac533e23975b701cc4e7e2713a8fa208bb90e",
+      "gitBlob": "6952098674a027afafb11ff9cdf6d942580c4149"
+    },
+    {
+      "path": "audit-ci/owner-refresh/browserLifecycle31.ts",
+      "bytes": 991,
+      "sha256": "db0ea9a106a32299366670c41ce6275eb26fce705aa0f1f41449f42498d7356b",
+      "gitBlob": "260151909d86dfc77f6dc3229b660e63e5745033"
+    }
+  ],
+  "all81TestSourcesInspected": {
+    "count": 81,
+    "missing": [],
+    "directChangedEntryPoints": [],
+    "manifest": {
+      "path": "audit-wp06/reuse/W5-corpus81-direct-symbols.json",
+      "bytes": 24349,
+      "sha256": "c7938521937be140dbbf30c4f98316e99daa736e1c339cd26b6a22294520c398",
+      "gitBlob": "8b48a33aa3f7bd7f313cd06f8818c5331d2d7806"
+    },
+    "limit": "Literal inspection is one witness; reuse additionally depends on exact module delta, lazy callback/descriptor review and prior closed source graph."
+  },
+  "safeHistoricalClosure": {
+    "files": 31,
+    "sources": 100,
+    "intersectionWithAllNewRuntimeAndFixturePaths": []
+  },
+  "scopeExceptionDefinitions": {
+    "W5-E1-NO-IMPORT": "The 31 previously closed historical selections have 100 verified runtime source nodes. Neither of the two proposed owner-change paths is in those closures; the graph is retained by hash.",
+    "W5-E2-LAZY-DOSSIER": "The minimal business-services patch adds one type-only import and one pure async function definition, then replaces only the prepareProcurement and revalidateProcurement callbacks inside business.procurementDossier.prepare. Factory construction does not execute those bodies. Existing descriptors and C12 preparation are unchanged. No selection in the 81-file corpus invokes business.procurementDossier; the direct consumer proof is WP04 host-integration outside that corpus.",
+    "W5-E3-UI-NOT-EMITTED": "Only the decisionApplyScript string changes; decisionApplyForms and module prefix are byte-identical. Generic workbench GET emits this script, so that route is material. The corpus does not render or execute that route: personal-views uses workbench-views POST and the ordinary Planner decorator (which has no decisionApplyScript); workbench-analysis returns at the analysis branch before HTML construction. WP06 import/document renderers and native contribution components use separate scripts.",
+    "W5-E4-CLI-DOSSIER-DISTINCT": "createSfDossierServices consumes business.procurement, sourcingEvidence, resolveProcurement, procurementSelections and registry directly. It does not call business.procurementDossier. The five dossier-runtime cases exercise the CLI consumer, so their W4 outcomes are preserved by this minimal wrapper-only change, but cannot qualify OPS-HOST-01B.",
+    "W5-E5-CAS-BODY": "The restored hunk is inside createPreparedExecution after receipt/classification; it changes no import, API or module initialization. The 81-file corpus does not reach that body. The three C12 direct-port selections call createSfPreparedApply from prepared-apply.ts, whose runtime imports exclude apply.ts.",
+    "W5-E6-EXPLICIT-FIXTURES": "Four owner fixtures are consumed only by the new explicit startup/host-integration/lifecycle Bun selection. Startup/finalizer .test.ts files are not implicitly included in historical exact-file requests. No shared preload/discovery/config is changed."
+  },
+  "rows": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "DIRECT_PORT_NOT_CREATE_PREPARED_EXECUTION",
+        "detail": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/dashboard-import.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/candidates.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/docx.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED",
+        "W5-E4-CLI-DOSSIER-DISTINCT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/pdf-digital.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/pdf-empty.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/resolver.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/source-fence.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/changes.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-command.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-provenance.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-unchanged.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail-coverage.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/export-download-privacy.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/files.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-unchanged.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/receipt.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance-edge.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "DIRECT_PORT_NOT_CREATE_PREPARED_EXECUTION",
+        "detail": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "DIRECT_PORT_NOT_CREATE_PREPARED_EXECUTION",
+        "detail": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "priorDecision": "OWNER_ATLAS_CONSUMER_PATCH_AND_VALIDATION_REQUIRED",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": true,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E1-NO-IMPORT"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "priorDecision": "REUSE_W3_NATIVE_COMPONENT_PASS",
+      "twoOwnerDeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_THESE_TWO_DELTAS_ONLY",
+      "scopeExceptionIds": [
+        "W5-E2-LAZY-DOSSIER",
+        "W5-E3-UI-NOT-EMITTED"
+      ],
+      "priorOutcomePreserved": true,
+      "pendingOwnerOrCIStatusStillPending": false,
+      "allScopedW5DeltaDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "casWitness": {
+        "classification": "POST_DOMAIN_RECONCILIATION_NOT_EXECUTED",
+        "detail": "Existing closed source/symbol scope plus inspected test/callback mapping: this selection does not invoke the createPreparedExecution successful receipt/classification branch. Its changed body has no module-level effect or new import."
+      },
+      "browserFixtureWitness": "New pool/startup/finalizer/driver are absent from this exact selection and its inspected imports. Explicit file selectors and unchanged test-ci/Playwright configuration do not discover them."
+    }
+  ],
+  "fiveCallerReview": {
+    "schema": "astra-operations.c12-cas-restoration-symbol-impact.v1",
+    "base_product": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "base_producer_blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+    "proposed_producer_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+    "observed_run": 43582205250,
+    "job_id": 132409129729,
+    "aggregate_conclusion": "failure",
+    "scope": "Exact restoration hunk only; any other W5 runtime changes need their own caller closure. No local execution.",
+    "rows": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+        "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+        "decision": "RERUN_AFFECTED",
+        "call_path": [
+          "host-integration.http(decision-apply)",
+          "createProcurementDecisionHost.apply",
+          "createPreparedExecution",
+          "post-domain receipt classification/reconciliation"
+        ],
+        "why": "H02/H03 first applications, H05 concurrent case edit, H06 same-proof receipt recovery reach the restored block. H01 will additionally change to prove OPS-HOST-01B. Retain all eight test bodies and revalidate this selected file; the three failures remain historical observations until the corrected candidate passes."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+        "sha256": "d03fd49e40bbbdaba425923237153c306622856cacf93b84928cf16f27f6950c",
+        "decision": "REUSE_W4_PASS_DIRECT_PORT_CLOSURE",
+        "call_path": [
+          "test",
+          "createSfPreparedApply.executePrepared/readReceipt"
+        ],
+        "why": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "blob": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb",
+        "sha256": "f24ff0e954254cefb82e5bbecb09c0e857382cb661f806c4ed9d2fdbd84256f0",
+        "decision": "REUSE_W4_PASS_DIRECT_PORT_CLOSURE",
+        "call_path": [
+          "test",
+          "createSfPreparedApply.executePrepared/readReceipt"
+        ],
+        "why": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "blob": "160df21d7dd44109c392cf213680629b6c26d450",
+        "sha256": "4e33961e339eeccce9c0f865dafc9a1676e22b6cc3bc2a9b098b32a936418cc9",
+        "decision": "REUSE_W4_PASS_DIRECT_PORT_CLOSURE",
+        "call_path": [
+          "test",
+          "createSfPreparedApply.executePrepared/readReceipt"
+        ],
+        "why": "Calls the unchanged prepared-apply port directly. This file does not import or invoke createPreparedExecution; it never reaches the restored post-domain reconciliation block. All runtime imports used by these scenarios are unchanged by this exact restoration. Preserve synthetic fixture proof limitations in WP11; own prepared-production uses real review material."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+        "blob": "a8348b91ed8eb4483352e449b8bb37aef409b803",
+        "sha256": "05f037d91a3151006b64e5399364d6e31ffda935ea6c61076e39fe75d7abebf4",
+        "decision": "REUSE_W4_PASS_EARLY_RETURN_CLOSURE",
+        "call_path": [
+          "partial domain execution case",
+          "createPreparedExecution",
+          "receipt lookup / confirmation / apply-throws / unbound receipt checks"
+        ],
+        "why": "The only createPreparedExecution test has five attempts: unknown read→unavailable; unconfirmed→denied; revoked on confirmation→denied; synthetic domain writes then throws→domain-result-unknown; retry finds fake domain receipt without persisted review proof→review-proof-unbound. Every attempt returns before classification/post-domain reconciliation. Other file cases exercise separate pure/domain ports. The new hunk adds no import, parameter, module-level effect or change to those early branches.",
+        "scope": "Component negative fixture only; not proof of real review production, durable binding or successful reconciliation."
+      }
+    ],
+    "minimal_affected_bun": [
+      "Sucafinav1/test/product/wp04/host-integration.test.ts"
+    ],
+    "reusable_file_count": 4,
+    "qualification": "Reusable individual passed cases remain attributed to W4 and its failed aggregate; do not rename the run successful or substitute static analysis for first execution of changed code."
+  },
+  "additionalCasePortReview": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+    "outside81": true,
+    "decision": "REUSE_W4_INDIVIDUAL_PASSES_FOR_EXACT_CAS_HUNK",
+    "attemptsBeforeChangedBlock": [
+      "receipt read unavailable",
+      "human confirmation absent",
+      "authority revoked on confirmation",
+      "domain receipt persisted then response throws",
+      "retry receipt lacks bound real review proof"
+    ],
+    "limitation": "The title mentions reconciliation, but this negative fixture never reaches successful classification/reconciliation. It is not a proof of the restored hunk."
+  },
+  "nativeAndBrowser": {
+    "nativeImportW3": "Preserve run43580976466: descriptors/import renderer never invoke prepared decision Apply, dossier wrapper or pool fixtures.",
+    "browserImportsW2": "Preserve 14 cases in run43580401528: own import renderer/scripts and exact config unchanged.",
+    "browserProcurementW2": "Preserve 8 cases in run43580401528: domain UI/queue host has no prepared decision HTTP or generic decision Apply script; lazy factories remain unexecuted.",
+    "browserDocumentsW4": "Preserve run43582881446 after candidate compare: own document/dossier/scenario renderers, synthetic endpoints and exact config unchanged by all scoped W5 changes.",
+    "runtimeDossierW4": "Preserve five observed cases: direct CLI consumer uses sourcingEvidence directly, not business.procurementDossier or createPreparedExecution."
+  },
+  "materialValidation": {
+    "requiredFile": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+    "cas": [
+      "H02/H03 first application",
+      "H05 concurrent case edit",
+      "H06 lost-response receipt recovery"
+    ],
+    "ownerWrapper": [
+      "H01 actual source terms and current references",
+      "H01 actual source-change/revocation during read"
+    ],
+    "ownerUi": [
+      "H09 script real reviewDigest and real Apply/receipt through owned HTTP"
+    ],
+    "startupAndLifecycle": "Two explicit owner tests provide browser acquisition/lease/process-exit proof; previous owner run failed launch and does not qualify H09."
+  },
+  "conditions": [
+    "Before reusing any prior result on W5, verify the published compare matches these exact runtime blobs and four owner fixtures, with only the declared host-integration changes and receipts.",
+    "Any additional runtime, contracts, configuration, test fixture or producer intake requires separate materiality review.",
+    "Keep W1 timeout and W4 aggregate failure visible; reuse individual positive observations only within qualified scope.",
+    "Preserve Atlas owner pending state, two historical skips, AM/native/human/global limitations.",
+    "No product tests/typechecks/browser were executed locally, no remote mutations and no CI dispatch in this audit."
+  ]
+}

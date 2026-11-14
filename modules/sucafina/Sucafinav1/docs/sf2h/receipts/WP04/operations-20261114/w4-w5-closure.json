@@ -1,0 +1,945 @@
+{
+  "schema": "astra-operations.wp04.w4-w5-closure.v1",
+  "base": {
+    "commit": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605"
+  },
+  "candidate": {
+    "commit": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "remote_compare": {
+    "path": "w4-w5-compare.json",
+    "complete": true,
+    "total_commits": 2,
+    "changed_files": 36,
+    "material_code_paths": 8,
+    "remaining_paths": "docs, receipts and PNG artifacts only; no package/config/runtime additions beyond pinned code"
+  },
+  "published_code_pins": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "9aee116a091c684ba467f81316d2fb915b3f8758",
+      "sha256": "68217f68873c5f550572e6bbdad7e378626ad3193542f508581a86baa922fb12",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/apps/cli/src/sucafina-product/business-services.ts",
+      "remote_and_inspected_equal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "sha256": "aa777b4062e785eb69db1724e2be633e4547303310ec02d9b15329affc8f7db8",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "remote_and_inspected_equal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "sha256": "ca082614ef672c2640261e1bef690375a32c8bbb016b67993be276a19f930184",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "remote_and_inspected_equal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+      "sha256": "1e3c4025a9cda489246cb4309ca157a0248476f15c7ca31bfc45e872c783581c",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "remote_and_inspected_equal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "blob": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+      "sha256": "7a1e5bece6cea161d7b785a14a696d7145772b001b7cb4a7bcf96aa0734a0109",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "remote_and_inspected_equal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "sha256": "295c47a4376e7eb4295badd6960fbeca3fa6afdca20ea6b162285aadfdbe134a",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "remote_and_inspected_equal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "blob": "6952098674a027afafb11ff9cdf6d942580c4149",
+      "sha256": "aab192f98e0796f149a8a45b728ac533e23975b701cc4e7e2713a8fa208bb90e",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "remote_and_inspected_equal": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "sha256": "db0ea9a106a32299366670c41ce6275eb26fce705aa0f1f41449f42498d7356b",
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "remote_and_inspected_equal": true
+    }
+  ],
+  "scope_catalog": {
+    "C45-01": "Restored apply.ts hunk is inside createPreparedExecution after the domain result/receipt classification. Imports, API, module initialization and earlier branches unchanged. Own prepared-production plus WP11 prepared-apply/planner-apply call unchanged createSfPreparedApply directly; WP11 case-port returns before this block in all five attempts. Only real host H02/H03/H05/H06 reach it.",
+    "C45-02": "business-services adds a type-only import and pure async prepareProcurementDossier definition, then replaces only callbacks inside procurementDossier.prepare. Construction does not invoke the wrapper. Original prepareProcurement used by C12/finance remains byte-identical. queue-view exercises queue projection/list/selection and finance-sourcing-integration exercises source/selection/draft/analysis; neither calls procurementDossier. H01 is the changed direct consumer.",
+    "C45-03": "decisionApplyForms and module prefix are unchanged; only the decisionApplyScript string changes. Workbench normal GET which emits it is material (H09 new own composition). personal-views requests workbench-views POST; workbench-analysis requests analysis endpoints; ui-sourcing-analysis uses sourcingAnalysisForm and rejects missing runtime/origin/path before generic HTML. None executes the changed script.",
+    "C45-04": "The eight Procurement Playwright cases use the real domain page/queue/approval/supplier host, not generic prepared-decision Apply. Their source/host paths and actual rendered script boundary are unchanged. sourcing-controller uses its distinct unchanged sourcing script and intercepted transport; its historical two-case scope remains explicit.",
+    "C45-05": "The four browser fixture sources are newly consumed only in explicit ./startup → ./host-integration → ./lifecycle. No shared preload, package, lockfile, workflow or test discovery configuration changed. Prior exact-file selections do not acquire the pool or discover those two new test files.",
+    "C45-06": "For the remaining domain/algorithm/context selections, the previously reviewed W1→W2 C12 call-path exclusions and W3→W4 closure remain valid: no new calls or source changes occur outside the eight pinned files. Current test-source symbol inspection and scoped import witnesses supplement the prior reviews; they are not substituted for earlier runtime/call-path inspection."
+  },
+  "rows": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts]",
+      "test_source_blob": "06990c2bcb0ebc68797e275c5c24a6946b7cbb5b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts]",
+      "test_source_blob": "318ac0407d95f38ee8b2b80c26f5ccb00edd1a32"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts]",
+      "test_source_blob": "2acbd3f41e433a2a8949f9c453f0614715239ef8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts]",
+      "test_source_blob": "161d98af958b15ea738d84001e581ed6fd7fe725"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts]",
+      "test_source_blob": "b124021c502932239759b2b73bf7df336148b134"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts]",
+      "test_source_blob": "418cd5b1a8dbed34a77a8df6a8b71a2c0135564d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_EXACT_W4_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-01"
+      ],
+      "reason": "Direct unchanged prepared-apply port; restored createPreparedExecution body is not invoked.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts]",
+      "test_source_blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts]",
+      "test_source_blob": "988acd8d75fdf2a667fc080b5d9d03505fb90589"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts]",
+      "test_source_blob": "a27d1ac9342d81f072a9d1a1708140357788576f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts]",
+      "test_source_blob": "868e0de7fb7f16d482ada9fc8956cd58aa2b40df"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts]",
+      "test_source_blob": "032e603265a088dbe2e168b6477de2c469067d4a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts]",
+      "test_source_blob": "df59fbe6a75525e57a7013a09a1a56712214868e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts]",
+      "test_source_blob": "18a30f1ee4083eef1cccad8b9e8193a11cfc758f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-02"
+      ],
+      "reason": "Factory is constructed; changed dossier wrapper and prepared Apply path are not invoked by this selection.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts]",
+      "test_source_blob": "0be7868bec9fc8886965a5957c91d557c8b1a7d0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts]",
+      "test_source_blob": "9c1e7227c19f19d736d281ac4efd364f65c67a0e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts]",
+      "test_source_blob": "985c8d282bfda42ec3bdd08804c3dba9bd6292c2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts]",
+      "test_source_blob": "3b99b7de8ae407af38a156b16e8e1518faacaa9e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/parity-procurement.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/parity-procurement.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/parity-procurement.test.ts]",
+      "test_source_blob": "d825652dc5778853703ef170df842c82d51c22fb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts]",
+      "test_source_blob": "d622fa8463ee6d05a5c03de6517381045b6f0241"
+    },
+    {
+      "path": "modules/sucafina/porta/codigo.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/porta/codigo.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/porta/codigo.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/porta/codigo.test.ts]",
+      "test_source_blob": "957db86b5262af76cf09f636180919c64cbea5b2"
+    },
+    {
+      "path": "modules/sucafina/porta/linha.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/porta/linha.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/porta/linha.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/porta/linha.test.ts]",
+      "test_source_blob": "692f4133f3100d18ac78969a1b0b9b80ae083b36"
+    },
+    {
+      "path": "modules/sucafina/porta/s3.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/porta/s3.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/porta/s3.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/porta/s3.test.ts]",
+      "test_source_blob": "67926ae6e644d86bfd3c5ff958b6914b7b27ae20"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-02",
+        "C45-03"
+      ],
+      "reason": "Inspected route/callback returns without changed dossier, Apply execution or script emission.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts]",
+      "test_source_blob": "3f5b97c87b09cca223581cfb9228270be6b32da6",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts]",
+      "test_source_blob": "9a8236fad4a5a8e6f36fa509c94d3d1064050b13",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts]",
+      "test_source_blob": "cce2a91907a6a46b02aa4f4596f8631cfd484a50",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts]",
+      "test_source_blob": "2fa00719649f25d5a12b757a30c613bd91077a84",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts]",
+      "test_source_blob": "4f3a2f9ca16548c863ce756f4c653ef7ae341f12",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts]",
+      "test_source_blob": "348d6489f4c2ab311b5eb13f9ed2025539294070",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts]",
+      "test_source_blob": "7dbd3703fbab474d843b725a57ba4e404ea10df4",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts]",
+      "test_source_blob": "7937bd30026928e390f3b9d5c823e43b1e9a4025",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts]",
+      "test_source_blob": "aa7fa9b776e421f0141bdabc34353d2d53123233",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts]",
+      "test_source_blob": "70441c630d5ff61836b3de2c937aac8bd500be29",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts]",
+      "test_source_blob": "6a05fe2a6df7f4e0570dfd04440f69cb2ab8495b",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts]",
+      "test_source_blob": "360806db367feca8c8dc199d3739632e72767ed9",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts]",
+      "test_source_blob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts]",
+      "test_source_blob": "11735326f621576904444b3cad356c3cb182fa51",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_EXACT_W4_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-01"
+      ],
+      "reason": "Direct unchanged prepared-apply port; restored createPreparedExecution body is not invoked.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts]",
+      "test_source_blob": "160df21d7dd44109c392cf213680629b6c26d450",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts]",
+      "test_source_blob": "02d41d67a0b8cdff3c2577e89e20e7da4161b547",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts]",
+      "test_source_blob": "b4108f3095e680cb2941f570d3a0ccdf04f784ec",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts]",
+      "test_source_blob": "27927a1ca228b4c8ce92e31f12c672597124d382",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-02"
+      ],
+      "reason": "Factory is constructed; changed dossier wrapper and prepared Apply path are not invoked by this selection.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts]",
+      "test_source_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts]",
+      "test_source_blob": "f36105aeeca61fae9c2e405c29c60ed913734407"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts]",
+      "test_source_blob": "4d9428c707305479e35e7831a53224cbf6d8650b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "runner": "bun",
+      "decision": "RUN_MATERIAL_W5_HOST",
+      "scope_refs": [
+        "C45-05",
+        "C45-01",
+        "C45-02",
+        "C45-03"
+      ],
+      "reason": "H01 new terms/source/revoke proof; H02/H03/H05/H06 restored reconciliation; new H09 real UI/HTTP. Explicit owner startup/finalizer accompany this file.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts]",
+      "test_source_blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-02",
+        "C45-03"
+      ],
+      "reason": "Inspected route/callback returns without changed dossier, Apply execution or script emission.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts]",
+      "test_source_blob": "b763c8f92cacaac3bd49051c22d350648cde3706",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts]",
+      "test_source_blob": "6183b5a77945fa2fe66f02e92c070359775d1129",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts]",
+      "test_source_blob": "a39a1ce0c862ecbc563ddc2e49bd4c781791cb2b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts]",
+      "test_source_blob": "807fa850731d52a4b562fd825114b27f15bab7a5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts]",
+      "test_source_blob": "e366d37c1f31217744e800263d9dcc514e2db755"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_EXACT_W4_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-01"
+      ],
+      "reason": "Direct unchanged prepared-apply port; restored createPreparedExecution body is not invoked.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts]",
+      "test_source_blob": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts]",
+      "test_source_blob": "c906976e26b1fa182dd4532b68d32c3831fc17f2",
+      "independent_wp06_review_ref": "../audit-wp06/operations-impact-W4-W5.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-06"
+      ],
+      "reason": "Prior component and symbol closure unaffected by the exact W5 delta; all historical limits/statuses retained.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts]",
+      "test_source_blob": "2ee757265aba5b63a8fef120cfabda3e38d36e6f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "runner": "bun",
+      "decision": "REUSE_PRIOR_SCOPED_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-02",
+        "C45-03"
+      ],
+      "reason": "Inspected route/callback returns without changed dossier, Apply execution or script emission.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts]",
+      "test_source_blob": "ce1064c72d28b3cb281c0adbd50964b22e753099"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "runner": "playwright",
+      "decision": "REUSE_PRIOR_SCOPED_BROWSER_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-04"
+      ],
+      "reason": "Exact prior browser boundary remains; this does not qualify new H09 decision Apply UI.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts]",
+      "test_source_blob": "a960a2cad432000edf51efcc6764c0c21d60ce07"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+      "runner": "playwright",
+      "decision": "REUSE_PRIOR_SCOPED_BROWSER_PASS",
+      "scope_refs": [
+        "C45-05",
+        "C45-04"
+      ],
+      "reason": "Exact prior browser boundary remains; this does not qualify new H09 decision Apply UI.",
+      "prior_impact_ref": "impact-inspection.json:rows[path=packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts]",
+      "c12_prior_review_ref": "ts29-30/w1-w2-symbol-impact.json:rows[path=packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts]",
+      "w4_closure_ref": "w3-w4-closure.json",
+      "current_source_inspection_ref": "w5-symbol-source-inspection.json[path=packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts]",
+      "test_source_blob": "0f5c3ca429f006855fa25044017d0f8371a8c699"
+    }
+  ],
+  "five_c12_callers_ref": "patches/OPS-C12-CAS-REGRESSION/five-caller-impact.json",
+  "additional_wp11_case_port": "Unchanged W4 fixture outside original53; five createPreparedExecution attempts return before restored block. Retain ten W4 case-port passes only with those fixture limitations.",
+  "browser_and_native_closure_ref": "../audit-wp06/operations-impact-W4-W5.json:nativeAndBrowser",
+  "static_inspection_limit": "The broad supplemental import scan has unresolved cached nodes and is not the qualification basis by itself. Reuse relies on exact published delta, prior reviewed call paths, unchanged module initialization and the named source/route exceptions.",
+  "qualification": "No local product execution. A reused pass retains its actual run/product/snapshot. Current checks and H09 startup failure remain separate observations; no native/human/global acceptance."
+}

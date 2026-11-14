@@ -1,0 +1,784 @@
+{
+  "schema": "astra-operations.owner-refresh.v1",
+  "heads": {
+    "compose": {
+      "pr": 32,
+      "sha": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979"
+    },
+    "interface": {
+      "pr": 31,
+      "sha": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+      "tree": "07681e28bfb16f216c738c54345661af1239dc3c"
+    },
+    "finance": {
+      "pr": 35,
+      "sha": "217c9bcc75d499eff3884fb4afe662d5c0029935"
+    }
+  },
+  "findings": {
+    "OPS02": {
+      "composeBlob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+      "closed": false,
+      "reason": "Published Atlas fixture still omits the WP06 Documents → BCS → Atlas scenario. Never replace the full Operations fixture with it."
+    },
+    "OPS01B": {
+      "publishedAt": "8f760659279567d2c169691c3e57cf19be10417d",
+      "ownerFullBlob": "0e5a508722c9e741a1737beb7d88ccb596a6f495",
+      "composedMinimumBlob": "9aee116a091c684ba467f81316d2fb915b3f8758",
+      "patch": "audit-ci/owner-refresh/OPS-HOST-01B/OPS-HOST-01B-owner.patch",
+      "scope": "import + wrapper + two call-site substitutions; patch not applied by this subagent."
+    },
+    "OPS03": {
+      "uiBlob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "interfaceHead": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+      "driverBlob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "driverDifference": "+2 diagnostic comments; process.env.DEBUG='pw:browser' in Node child before Playwright import. No deadline/assertion/runtime API changes.",
+      "remainingFixturesUnchanged": true,
+      "manifest": "audit-ci/owner-refresh/OPS03-intake-manifest.json"
+    },
+    "C12_CAS": {
+      "composeBlob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "financeBlob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "restorationPublishedByOwners": false,
+      "wp04Patch": "audit-wp04/patches/OPS-C12-CAS-REGRESSION"
+    }
+  },
+  "compare32": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "8f760659279567d2c169691c3e57cf19be10417d",
+    "head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "8f760659279567d2c169691c3e57cf19be10417d",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/8f760659279567d2c169691c3e57cf19be10417d",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/8f760659279567d2c169691c3e57cf19be10417d"
+    },
+    "merge_base_commit": {
+      "sha": "8f760659279567d2c169691c3e57cf19be10417d",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/8f760659279567d2c169691c3e57cf19be10417d",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/8f760659279567d2c169691c3e57cf19be10417d"
+    },
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intake-06.json",
+        "status": "added",
+        "additions": 1022,
+        "deletions": 0,
+        "changes": 1022,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group33-31635d0c66ea.json",
+        "status": "added",
+        "additions": 982,
+        "deletions": 0,
+        "changes": 982,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group35-a274302d1599.json",
+        "status": "added",
+        "additions": 640,
+        "deletions": 0,
+        "changes": 640,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/group36-46c904ead4e9.json",
+        "status": "added",
+        "additions": 2148,
+        "deletions": 0,
+        "changes": 2148,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence/input-intake-w2-c17.json",
+        "status": "added",
+        "additions": 109,
+        "deletions": 0,
+        "changes": 109,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence/input-intake-w2.json",
+        "status": "added",
+        "additions": 71,
+        "deletions": 0,
+        "changes": 71,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+        "status": "modified",
+        "additions": 34,
+        "deletions": 15,
+        "changes": 49,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 5,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "status": "modified",
+        "additions": 52,
+        "deletions": 7,
+        "changes": 59,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+        "status": "modified",
+        "additions": 17,
+        "deletions": 4,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 4,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 3,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 3,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 3,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 1,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 1,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 1,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts",
+        "status": "modified",
+        "additions": 9,
+        "deletions": 3,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 1,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+        "status": "modified",
+        "additions": 33,
+        "deletions": 38,
+        "changes": 71,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+        "status": "modified",
+        "additions": 14,
+        "deletions": 4,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+        "status": "modified",
+        "additions": 18,
+        "deletions": 6,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 4,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "status": "modified",
+        "additions": 15,
+        "deletions": 6,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "status": "modified",
+        "additions": 31,
+        "deletions": 18,
+        "changes": 49,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 2,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "status": "modified",
+        "additions": 21,
+        "deletions": 5,
+        "changes": 26,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 1,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 3,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "status": "modified",
+        "additions": 12,
+        "deletions": 9,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 5,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "status": "modified",
+        "additions": 23,
+        "deletions": 13,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+        "status": "modified",
+        "additions": 13,
+        "deletions": 8,
+        "changes": 21,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+        "status": "modified",
+        "additions": 11,
+        "deletions": 8,
+        "changes": 19,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 2,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 2,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "status": "added",
+        "additions": 60,
+        "deletions": 0,
+        "changes": 60,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "status": "modified",
+        "additions": 24,
+        "deletions": 13,
+        "changes": 37,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 1,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/routines/review-confirmation.ts",
+        "status": "modified",
+        "additions": 26,
+        "deletions": 1,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+        "status": "modified",
+        "additions": 64,
+        "deletions": 0,
+        "changes": 64,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 1,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp03/exact-threshold-fallback.test.ts",
+        "status": "added",
+        "additions": 67,
+        "deletions": 0,
+        "changes": 67,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "status": "added",
+        "additions": 148,
+        "deletions": 0,
+        "changes": 148,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+        "status": "added",
+        "additions": 80,
+        "deletions": 0,
+        "changes": 80,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+        "status": "modified",
+        "additions": 9,
+        "deletions": 0,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp09/review-scope-consumer.test.ts",
+        "status": "added",
+        "additions": 51,
+        "deletions": 0,
+        "changes": 51,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+        "status": "modified",
+        "additions": 33,
+        "deletions": 1,
+        "changes": 34,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 2,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "status": "modified",
+        "additions": 14,
+        "deletions": 6,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 3,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "status": "added",
+        "additions": 200,
+        "deletions": 0,
+        "changes": 200,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "status": "added",
+        "additions": 69,
+        "deletions": 0,
+        "changes": 69,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 2,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 1,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 3,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 2,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 1,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+        "status": "modified",
+        "additions": 74,
+        "deletions": 0,
+        "changes": 74,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "status": "modified",
+        "additions": 26,
+        "deletions": 4,
+        "changes": 30,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/contribution.test.ts",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 2,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "status": "modified",
+        "additions": 28,
+        "deletions": 4,
+        "changes": 32,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "status": "modified",
+        "additions": 46,
+        "deletions": 1,
+        "changes": 47,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "status": "modified",
+        "additions": 16,
+        "deletions": 1,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+        "status": "modified",
+        "additions": 51,
+        "deletions": 22,
+        "changes": 73,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 3,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 1,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+        "status": "modified",
+        "additions": 19,
+        "deletions": 1,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+        "status": "modified",
+        "additions": 30,
+        "deletions": 0,
+        "changes": 30,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 1,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "status": "modified",
+        "additions": 15,
+        "deletions": 10,
+        "changes": 25,
+        "previous_filename": null
+      }
+    ]
+  },
+  "compare31": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+    "head": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/a29565f763ddd90bc5bc3b8d298afb47ad84008d"
+    },
+    "merge_base_commit": {
+      "sha": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/a29565f763ddd90bc5bc3b8d298afb47ad84008d"
+    },
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      }
+    ]
+  },
+  "compare35": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+    "head": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+    "status": "ahead",
+    "ahead_by": 2,
+    "behind_by": 0,
+    "total_commits": 2,
+    "too_large": null,
+    "base_commit": {
+      "sha": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/660db9a46e4c1d7ff87c23f6bb37f451cc703ccb"
+    },
+    "merge_base_commit": {
+      "sha": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/660db9a46e4c1d7ff87c23f6bb37f451cc703ccb"
+    },
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 2,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "status": "modified",
+        "additions": 11,
+        "deletions": 6,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "status": "modified",
+        "additions": 19,
+        "deletions": 3,
+        "changes": 22,
+        "previous_filename": null
+      }
+    ]
+  },
+  "composeCheck": {
+    "runId": 43581964635,
+    "jobId": 132408407484,
+    "snapshot": "17366d23d06beefac4ac1f0b2056d92906a4226f",
+    "product": "8f760659279567d2c169691c3e57cf19be10417d",
+    "conclusion": "failure",
+    "qualification": "Owner run, not an Operations check. Sucafina and CLI failed; Atlas and guards passed. Published owner body attributes 1 own WP10 test diagnostic plus49 Sucafina and11 CLI external diagnostics."
+  }
+}

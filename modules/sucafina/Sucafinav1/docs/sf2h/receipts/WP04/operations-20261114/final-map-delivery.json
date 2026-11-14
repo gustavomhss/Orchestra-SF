@@ -1,0 +1,132 @@
+{
+  "schema": "astra-operations.wp04.final-component-delivery.v1",
+  "candidate": {
+    "pr": 34,
+    "commit": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "criterion_count": 111,
+  "historical_statuses": {
+    "PASS_SCOPED": 97,
+    "BLOCKED_NATIVE": 10,
+    "NOT_RUN_HUMAN": 4
+  },
+  "current_statuses": {
+    "SCOPED_COMPONENT_EVIDENCE_WITH_UNQUALIFIED_UI_CONSUMER": 28,
+    "BLOCKED_NATIVE": 10,
+    "SCOPED_COMPONENT_EVIDENCE_REUSED_CLOSURE": 69,
+    "NOT_RUN_HUMAN": 4
+  },
+  "current_accepted_criteria": 0,
+  "component_test_catalog": {
+    "catalog_cases": 127,
+    "qualified_component_cases": 127,
+    "failed_component_cases": 0,
+    "pending_old_c12_cases": 0,
+    "new_c12_cases_pass": 2,
+    "new_ui_case_unqualified": 1,
+    "by_proof": {
+      "R-HIST-BUN": 95,
+      "R-W1-BUN": 16,
+      "R-W5-HOST": 6,
+      "R-W2-BROWSER": 8,
+      "R-W4-BUN": 2
+    },
+    "qualified_by_proof": {
+      "R-HIST-BUN": 95,
+      "R-W1-BUN": 16,
+      "R-W5-HOST": 6,
+      "R-W2-BROWSER": 8,
+      "R-W4-BUN": 2
+    },
+    "qualification": "All 127 original mapped cases have positive component observations at their actual executed SHAs or explicit later closure. This does not mean 127 newly executed W5 cases or 111 accepted criteria. H09 is an additional unqualified UI consumer; W5 aggregate failed and native/human/global obligations remain."
+  },
+  "verification": {
+    "original_sha256": "293a4a81ca9d5da520823030b1620f919ed8aa3f9a5990f3bb964c43a5d89cd3",
+    "original_bytes": 1208971,
+    "normalized_sha256": "bd213691c15e13b1ed32d45163c7ff78547b534e928b132c03d16a69a25a9dc5",
+    "normalized_bytes": 550504,
+    "markdown_sha256": "92888ebbbf91e45ef3108dfe96a0269ced73c393448f42d6ba4cbeab83bb4eaa",
+    "markdown_bytes": 47281,
+    "criterion_count": 111,
+    "literal_sequence_equal": true,
+    "literal_markdown_rows_equal": true,
+    "full_semantic_roundtrip_equal": true,
+    "current_addendum_semantic_roundtrip_equal": true,
+    "original_files_untouched": true,
+    "catalog_sizes": {
+      "paths": 82,
+      "notes": 157,
+      "lists": 670,
+      "files": 82,
+      "statuses": 3,
+      "implementations": 126,
+      "consumers": 69,
+      "tests": 127,
+      "impacts": 127,
+      "bindings": 110,
+      "checks": 3,
+      "candidate_notes": 1,
+      "candidate_lists": 107,
+      "candidate_case_closures": 21,
+      "candidate_proofs": 7,
+      "candidate_tests": 3,
+      "candidate_browser_cases": 8,
+      "candidate_native_cases": 2,
+      "candidate_checks": 9
+    },
+    "current_candidate_commit": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "qualification": "Document normalization only, not product test or acceptance."
+  },
+  "files": [
+    {
+      "path": "audit-wp04/operations-criteria-111.md",
+      "bytes": 47281,
+      "sha256": "92888ebbbf91e45ef3108dfe96a0269ced73c393448f42d6ba4cbeab83bb4eaa"
+    },
+    {
+      "path": "audit-wp04/operations-criteria-111.normalized.json",
+      "bytes": 550504,
+      "sha256": "bd213691c15e13b1ed32d45163c7ff78547b534e928b132c03d16a69a25a9dc5"
+    },
+    {
+      "path": "audit-wp04/compact-map.py",
+      "bytes": 32308,
+      "sha256": "83ba17591cc5f0f1ca48a518e46475f31d48c8b42d5632f204e6237a93b4360d"
+    },
+    {
+      "path": "audit-wp04/compact-map-verification.json",
+      "bytes": 1219,
+      "sha256": "75fb7309843145167662895a27039a4fc9d38a75b865f20095f3bfa3e3aec25f"
+    },
+    {
+      "path": "audit-wp04/wp04-candidate-update.json",
+      "bytes": 276112,
+      "sha256": "62b85b07dab335b66e615b3f586525787d67253d70c730871bc5a34c4a764b7b"
+    },
+    {
+      "path": "audit-wp04/w4-w5-closure.json",
+      "bytes": 61174,
+      "sha256": "790ff89fd396bd86bdad3d0bd7f4ee60f3845f9f033cb05135641cfab7575abb"
+    },
+    {
+      "path": "audit-wp04/w4-w5-compare.json",
+      "bytes": 9967,
+      "sha256": "51b67098c2227a7d7bf27afc27ab6470b835c94ebe11955d5e73bcb216eee22f"
+    },
+    {
+      "path": "audit-wp04/w5-published-code-pins.json",
+      "bytes": 4704,
+      "sha256": "41b0e756c52de1be0a08d1016a21ae95fab68f40493c1cbfae8c0596bbdd19e5"
+    },
+    {
+      "path": "audit-wp04/w5-symbol-source-inspection.json",
+      "bytes": 27588,
+      "sha256": "07629b27a9e681f3b793b8d656a65040be049784b962f9af7e21eacf817072bc"
+    }
+  ],
+  "own_code_freeze_preserved": true,
+  "code_freeze": "patches/H09-real-ui/own-four-freeze.json",
+  "source_or_ci_actions_after_W5_terminal": "none",
+  "qualification": "Full source/criterion/evidence map retained, all original semantic fields recoverable, no native/human/global acceptance. Positive component proof is separate from startup/H09/finalizer failure and Atlas typecheck blocker."
+}

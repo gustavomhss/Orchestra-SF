@@ -1,0 +1,139 @@
+{
+  "schema": "astra-operations.check-receipt.v1",
+  "runId": 43580277793,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580277793",
+  "status": "completed",
+  "conclusion": "failure",
+  "jobId": 132403312862,
+  "createdAt": "2026-11-14T09:22:49Z",
+  "updatedAt": "2026-11-14T09:24:53Z",
+  "product": {
+    "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+    "tree": "d780548f6058e08e555e0565f013b3b0054973da"
+  },
+  "snapshot": {
+    "sha": "ee2099e581eb4a6fc83283599763dd825c4a8ac4",
+    "tree": "9d7b605e49faf56f7cad31f087846d16351c171a",
+    "parents": [
+      "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+    ]
+  },
+  "envelope": {
+    "productSha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "gitBlob": "d118faffb71f89fed16b6512b7b2eff9dfde0c95",
+    "mode": "all",
+    "sha256": "68e0f308360f1d68d2d7d645dc78659fe922e8c5034145406430fa61e3486b27"
+  },
+  "sourceComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+    "head": "ee2099e581eb4a6fc83283599763dd825c4a8ac4",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+    },
+    "merge_base_commit": {
+      "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+    },
+    "files": [
+      {
+        "filename": ".astra-operations-check.json",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      }
+    ]
+  },
+  "checks": {
+    "envelope": "success",
+    "exactProduct": "success",
+    "guardBase": "success",
+    "sucafinaTypecheck": {
+      "conclusion": "failure",
+      "errors": [
+        {
+          "file": "product/procurement/decision-host.ts",
+          "line": 154,
+          "column": 293,
+          "code": "TS2345",
+          "reason": "TrustedDomainContext is not assignable to TrustedUiContext",
+          "ownership": "WP04"
+        },
+        {
+          "file": "test/product/wp11/case-port.test.ts",
+          "line": 225,
+          "column": 45,
+          "code": "TS2739",
+          "reason": "Missing reviewDigestFor and revalidateProducer",
+          "ownership": "Finance/WP11 consumer fixture"
+        },
+        {
+          "file": "test/product/wp14/source-access-atlas.test.ts",
+          "line": 167,
+          "column": 41,
+          "code": "TS2741",
+          "reason": "Missing procurementEvidenceWrites",
+          "ownership": "Intelligence/WP14; OPS-CONSUMER-02 patch pending"
+        }
+      ]
+    },
+    "cliTypecheck": {
+      "conclusion": "failure",
+      "errors": [
+        {
+          "file": "../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "line": 154,
+          "column": 293,
+          "code": "TS2345",
+          "reason": "TrustedDomainContext is not assignable to TrustedUiContext",
+          "ownership": "WP04"
+        }
+      ]
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 727,
+      "gateFindings": 0,
+      "warnings": 11,
+      "errors": 0
+    }
+  },
+  "artifact": {
+    "id": 14107882603,
+    "name": "astra-operations-check-1",
+    "size_in_bytes": 2125,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107882603",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107882603/zip",
+    "expired": false,
+    "created_at": "2026-11-14T09:24:50Z",
+    "expires_at": "2026-11-28T09:24:50Z",
+    "updated_at": "2026-11-14T09:24:50Z",
+    "digest": "sha256:eccc9e9e3738f57de2142d606d49fe6f18cb79949c86f22ac1abea5c1f62400c",
+    "workflow_run": {
+      "id": 43580277793,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "astra-check-operations-5e0c79ee-1",
+      "head_sha": "ee2099e581eb4a6fc83283599763dd825c4a8ac4"
+    },
+    "downloadVerifiedSha256": "eccc9e9e3738f57de2142d606d49fe6f18cb79949c86f22ac1abea5c1f62400c",
+    "localFile": "/workspace/scratch/67acc0fafe95/audit-ci/artifact-14107882603.zip",
+    "extractedTo": "/workspace/scratch/67acc0fafe95/audit-ci/check2"
+  },
+  "logFile": "/workspace/scratch/67acc0fafe95/audit-ci/operations-check2-43580277793.log",
+  "qualification": "Both typechecks failed. Guards passed independently. No typecheck reuse baseline or component/global acceptance arises from this run.",
+  "logSha256": "f128c6cc939a58242d785fb6a301edadea4ecd5a2cf547e37fb392dd534b36c7"
+}

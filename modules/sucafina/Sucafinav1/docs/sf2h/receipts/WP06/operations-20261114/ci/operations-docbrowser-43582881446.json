@@ -1,0 +1,443 @@
+{
+  "schema": "astra-operations.hosted-receipt.v1",
+  "runId": 43582881446,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582881446",
+  "headBranch": "ci-run-linux-astra-operations-64432477-a093f32bd72d-1",
+  "headSha": "5a6d4ee27f2279b8d5e6e1c19c392d8b92a8f6d7",
+  "status": "completed",
+  "conclusion": "success",
+  "createdAt": "2026-11-14T09:56:21Z",
+  "updatedAt": "2026-11-14T09:59:16Z",
+  "product": {
+    "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605"
+  },
+  "snapshot": {
+    "sha": "5a6d4ee27f2279b8d5e6e1c19c392d8b92a8f6d7",
+    "tree": "c1bdbdf0ef7b90b0e6aaab5e9c5d5800244ab547",
+    "parents": [
+      "644324778e4a21d22424515dd698d5b8d6c01893"
+    ]
+  },
+  "snapshotProof": {
+    "soleParent": true,
+    "onlyAddedRequest": true,
+    "comparison": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "head": "5a6d4ee27f2279b8d5e6e1c19c392d8b92a8f6d7",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/644324778e4a21d22424515dd698d5b8d6c01893",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/644324778e4a21d22424515dd698d5b8d6c01893"
+      },
+      "merge_base_commit": {
+        "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/644324778e4a21d22424515dd698d5b8d6c01893",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/644324778e4a21d22424515dd698d5b8d6c01893"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 12,
+          "deletions": 0,
+          "changes": 12,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/wp06/documents.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts",
+    "blob": "d5a353122d5b1c314044e4be0f121609a6277f1a",
+    "sha256": "a093f32bd72d57555f3a34c97566f0ade2a7b223161409d2501fcf9667b24ea6"
+  },
+  "jobs": [
+    {
+      "id": 132411172044,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43582881446,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 41
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132411786218,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43582881446,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14109376511,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 651289,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109376511",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109376511/zip",
+      "expired": false,
+      "created_at": "2026-11-14T09:59:07Z",
+      "expires_at": "2026-11-21T09:59:06Z",
+      "updated_at": "2026-11-14T09:59:07Z",
+      "digest": "sha256:93b31d55b61fda19366c0e97d7bb0b4ee3bcc74db432fb9416ae302aeb290cc1",
+      "workflow_run": {
+        "id": 43582881446,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-astra-operations-64432477-a093f32bd72d-1",
+        "head_sha": "5a6d4ee27f2279b8d5e6e1c19c392d8b92a8f6d7"
+      },
+      "verifiedSha256": "93b31d55b61fda19366c0e97d7bb0b4ee3bcc74db432fb9416ae302aeb290cc1",
+      "localFile": "/workspace/scratch/67acc0fafe95/audit-ci/artifact-14109376511.zip",
+      "extractedTo": "/workspace/scratch/67acc0fafe95/audit-ci/browser-documents-w4"
+    }
+  ],
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-docbrowser-43582881446.log",
+    "sha256": "4de65e911e56e13c676afb26bc22d1c0eedb330e952324a65a7c21ede123664b",
+    "bytes": 101870
+  },
+  "validatedRequestRuntime": {
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/wp06/documents.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "platform": "linux",
+    "arch": "x64",
+    "sha": "5a6d4ee27f2279b8d5e6e1c19c392d8b92a8f6d7"
+  },
+  "cases": [
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 real document renderer shows a candidate and source as data until explicit confirmation",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 810,
+      "retry": 0,
+      "status": "expected"
+    },
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 real document renderer preserves an explicit stale refusal and removes unusable source content",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 1026,
+      "retry": 0,
+      "status": "expected"
+    },
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 dossier renderer exposes unit, revision, reference and literal source excerpt without confirming",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 653,
+      "retry": 0,
+      "status": "expected"
+    },
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 dossier renderer invalidates selection after sourcing-dossier-read 403",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 724,
+      "retry": 0,
+      "status": "expected"
+    },
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 dossier renderer invalidates selection after sourcing-dossier-read 409",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 712,
+      "retry": 0,
+      "status": "expected"
+    },
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 dossier renderer invalidates selection after document-open 409",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 717,
+      "retry": 0,
+      "status": "expected"
+    },
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 document scenario renderer submits references only after explicit preview and preserves conditional totals",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 340,
+      "retry": 0,
+      "status": "expected"
+    },
+    {
+      "file": "sucafina/wp06/documents.spec.ts",
+      "title": "WP06 document scenario renderer removes prior result and source after a stale refusal",
+      "project": "chromium",
+      "result": "passed",
+      "durationMs": 503,
+      "retry": 0,
+      "status": "expected"
+    }
+  ],
+  "actualSelection": {
+    "files": [
+      "e2e/sucafina/wp06/documents.spec.ts"
+    ],
+    "fileCount": 1,
+    "listedCaseCount": 8,
+    "executedCaseCount": 8,
+    "selectedAndExecutedEqual": true
+  },
+  "summary": {
+    "startTime": "2026-11-14T09:58:27.115Z",
+    "duration": 39579.58,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0,
+    "pass": 8,
+    "fail": 0,
+    "skip": 0,
+    "retries": 0,
+    "attempts": 8,
+    "globalErrors": [],
+    "workers": 1,
+    "repeatEach": 1
+  },
+  "attachments": [
+    {
+      "name": "wp06-sourcing-dossier.png",
+      "contentType": "image/png",
+      "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser-documents-w4/wp06-sourcing-dossier.png",
+      "sha256": "c2a0f610654ff42b0412a9d542b041c69c0ca022bc93677a8bd33bd2ddc0df4d",
+      "bytes": 234026
+    }
+  ],
+  "omni": {
+    "verdict": "not-reported",
+    "qualification": "Playwright lane records a nonce but does not emit the Bun positive-control verdict. This receipt proves no Omni execution."
+  },
+  "visualReview": {
+    "reviewed": true,
+    "image": "/workspace/scratch/67acc0fafe95/audit-ci/browser-documents-w4/wp06-sourcing-dossier.png",
+    "observations": [
+      "Commercial comparison, recorded human choice, domain ranking and Request proposal terms are visible.",
+      "Candidate price has unit, pending confirmation, document revision, reference and literal excerpt.",
+      "Rejected evidence is visibly excluded from dossier premises.",
+      "Hostile text and HTML payload remain visibly literal; source excerpt is not executed as instruction."
+    ],
+    "limits": "This spec renders actual product HTML/script with route.fulfill HTTP fixtures. It is renderer/interaction evidence, not an additional real-host, native, human-timing or global proof."
+  },
+  "qualification": "Hosted production Playwright ran the explicit one-spec selection: eight expected passes, zero retries/skips/flakes. Artifact digest and request match. Screenshot inspected. Renderer fixture scope is retained; real host evidence is separate."
+}

@@ -1,0 +1,488 @@
+{
+  "schema": "sf-wp04-c12-w1-w2-symbol-impact-v1",
+  "base": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+  "head": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+  "head_tree": "d780548f6058e08e555e0565f013b3b0054973da",
+  "remote_compare": "w1-w2-comparison.json",
+  "compare_complete": true,
+  "compare_file_count": 26,
+  "scope": "Additional validation caused by the W2 C12 digest protocol, not a replacement for W1 composition validation or global acceptance. W1-to-W2 also contains a WP06 dashboard adapter type annotation fix owned by WP06.",
+  "owned_minimum": [
+    "test/product/wp04/host-integration.test.ts",
+    "test/product/wp04/prepared-production.test.ts"
+  ],
+  "producer_owner_minimum": [
+    "test/product/wp11/prepared-apply.test.ts",
+    "test/product/wp11/planner-apply.test.ts"
+  ],
+  "additional_owner_caller": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "owner": "astra-finance",
+      "decision": "EXTERNAL_DIRECT_CALLER_INTAKE_REQUIRED",
+      "evidence": "W2 allcheck43580277793 TS2345 at225:45: missing reviewDigestFor/revalidateProducer in createPreparedExecution; this file was outside the historical53-file selection. Owner/root must consume a correct published fixture and include its affected test.",
+      "qualification": "Do not edit outside ownership or replace proof with an arbitrary constant solely to satisfy types."
+    }
+  ],
+  "rows": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/comparison-review.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/confirmation.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/contracts.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/money.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "runner": "bun",
+      "decision": "OWNED_AFFECTED",
+      "reason": "Direct createSfPreparedApply consumer now supplies a private callback bound to actual domain review facts through proposalReviewDigest; both SQLite mutation scenarios exercise changed receipt binding.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/projection.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/reissue.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/sources.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/finance-material.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/queue-view.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "Creates business services but calls procurementQueueView, procurementSelections, procurement.list and registry.resolveRequestSource only. C12 factory construction is inert; no decision review or apply is invoked. Shared constructor typing is covered by official allcheck and host-integration.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/ui-queues.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+      "selector": "Sucafinav1/test/parity-procurement.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/parity-procurement.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "selector": "Sucafinav1/test/procurement-runtime.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/porta/codigo.test.ts",
+      "selector": "porta/codigo.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/porta/codigo.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/porta/linha.test.ts",
+      "selector": "porta/linha.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/porta/linha.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/porta/s3.test.ts",
+      "selector": "porta/s3.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/porta/s3.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "selector": "Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "selector": "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "selector": "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "selector": "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "selector": "Sucafinav1/test/product/wp07/review-port.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "Imports product/reviews/port.ts and report storage/compare; this is a preserved review artifact consumer, not product/decisions/prepared-review.ts. No dependency on the changed prepared decision review producer.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "selector": "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "selector": "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "selector": "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "selector": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "selector": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "selector": "Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "selector": "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "selector": "Sucafinav1/test/product/wp03/port.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "selector": "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "selector": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "runner": "bun",
+      "decision": "PRODUCER_OWNER_AFFECTED",
+      "reason": "Direct createSfPreparedApply consumer for all published Planner surfaces; exact Finance fixture intake supplies new proof parameter. Its synthetic fixture proof does not qualify real review production; WP04 host tests and owner integration retain that obligation.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "selector": "Sucafinav1/test/product/wp03/persistence.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "selector": "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "selector": "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "Creates business services but exercises sourcing input, selections, individual sources and cases.draft. No C12 review/apply invocation; the C12 source-evidence resolution body is unchanged. Reuse remains conditional on its exact W1 result and unchanged other dependencies.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/ui-conflict.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "runner": "bun",
+      "decision": "OWNED_AFFECTED",
+      "reason": "Calls real HTTP decision-review/decision-apply and procurementDecisions, so the complete new digest/cache/human grant/producer reread/persisted receipt protocol is executed. Six published scenarios plus two new adversarial scenarios require W2+ qualification.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "selector": "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "Exercises workbench analysis HTTP actions; it does not invoke Procurement decision-review/apply or prepared factories. A future owner UI change is a separate material delta.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "selector": "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "selector": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "selector": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "selector": "Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "selector": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "runner": "bun",
+      "decision": "PRODUCER_OWNER_AFFECTED",
+      "reason": "Direct createSfPreparedApply consumer; exact published Finance fixture intake adjusts proof binding and changed-proof replay assertions. Owner fixture is a scoped component test, not a substitute for the full real-human host scenario.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "selector": "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+      "selector": "Sucafinav1/test/product/wp00/contracts.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "No changed C12 symbol is invoked in the inspected selection/import mapping. W1-to-W2 leaves its own source and non-C12 runtime unchanged (apart from the separate WP06 type annotation fix); retain existing W1/historical proof only under its exact closure and outcome.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts]"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "selector": "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "runner": "bun",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "Exercises sourcing analysis rendering and input admission through interface/http.ts. The shared decisionApplyScript asset is unchanged in W2 and this test does not invoke Procurement decision-apply.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts]"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "selector": "e2e/sucafina/wp04/procurement.spec.ts",
+      "runner": "playwright",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "Real browser host constructs business services but mounts only business.procurementQueueView as productView in createApplication. It does not mount createProcurementDecisionHttp or call decision-review/decision-apply. Its eight Procurement page/queue/C03 scenarios have no new C12 material path; preserve required W1 runtime validation and do not repeat solely for W2 C12.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts]"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+      "selector": "e2e/sucafina/wp04/sourcing-controller.spec.ts",
+      "runner": "playwright",
+      "decision": "NO_ADDITIONAL_C12_RUN",
+      "reason": "The controller remains route-intercepted and does not call the prepared-decision factories or HTTP adapter; controller source and assets are unchanged in W1-to-W2. Historical two-case closure reuse remains separate from real-host browser proof.",
+      "prior_qualification_ref": "../impact-inspection.json:rows[path=packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts]"
+    }
+  ],
+  "ui_dependency": {
+    "id": "OPS-CONSUMER-03",
+    "owner": "astra-compose",
+    "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+    "state": "patch proposed, no owner consumption yet",
+    "future_validation": "Any consumed UI change must test returned real digest, missing/malformed proof rejection, same body/key retry, revocation and current target checks. The unchanged WP04 procurement.spec does not prove this decision UI."
+  },
+  "own_followup": {
+    "finding": "TS2345 from W2 allcheck43580277793/job132403312862",
+    "base_commit": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+    "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+    "base_blob": "4209315764673f8c52fdd94fd76b0f120767b39f",
+    "candidate_blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+    "sha256": "dc8a1a16ea7b54b03ca6bafacf60cc27b61aff32626c2a8cf69affa5d3f1399f",
+    "change": "Require context.kind === ui before matchesIntent. This adds a runtime type guard and narrows TrustedDomainContext; no cast, new grant, fallback or contract relaxation.",
+    "validation": "No local tests/typechecks; rerun hosted check with next root candidate."
+  },
+  "ci_qualification": "W1 run43578845234 globalFAIL retained (100pass/1fail). New C12 cases cannot inherit W1 passes. W2 allcheck43580277793 failed on own narrowing and external fixture/Atlas inputs. Own narrowing corrected; no local execution and next hosted check pending.",
+  "qualification": false
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.operations.shared-merge-cold-review.v1",
+  "reviewer": "/root/wp04_audit",
+  "author_of_reviewed_sources": "/root/ci_coordination",
+  "independent_of_reviewed_three_sources": true,
+  "reviewer_authored_other_test_inputs": true,
+  "candidate": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+  "candidate_tree": "e7c36171c132009e34d4f870e5d300bab4a1c82a",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "reviewed_blob": "5d64d3424cbf37509e9aab75a660e79656563879",
+      "input_blobs": {
+        "04": "e32bd0f414b254c77c8fe49a3ce40aadfc5f339c",
+        "06": "08aedf96aa42b5be8b9e9ca1cd5eeb0be5988bbd",
+        "Base": "81f07b9d68a85811cef3aa4d3b4615475486f04f"
+      },
+      "source": "https://github.com/gustavomhss/Orchestra-SF/blob/de6959db82dbe48bd59e3d012ff668a86347a6cd/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "reviewed_blob": "41a795e5a2c05600741e694efca19f0ab329db55",
+      "input_blobs": {
+        "04": "3faa29c858ba97b2b98fc270256500132a1f29cc",
+        "06": "49f9e7824edb25443f48a2035ebfa698554de87e",
+        "Base": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5"
+      },
+      "source": "https://github.com/gustavomhss/Orchestra-SF/blob/de6959db82dbe48bd59e3d012ff668a86347a6cd/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "reviewed_blob": "69f1f73ca6a1fa0d48114c554aca0747e4934624",
+      "input_blobs": {
+        "04": "f6d7b659945cd90f1bc09b6c24d8a3962d156ad4",
+        "06": "a4aa4481186de664a878e83b32982889405013bb",
+        "Base": "fa0d39f3dfc23bfce751d91b00ae6c8fc2a87686"
+      },
+      "source": "https://github.com/gustavomhss/Orchestra-SF/blob/de6959db82dbe48bd59e3d012ff668a86347a6cd/modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+    }
+  ],
+  "result": "NO_NEW_COMPOSITION_DEFECT_CONFIRMED_IN_REVIEWED_SCOPE",
+  "findings": [],
+  "preservation_checks": [
+    "Same procurementEvidenceWrites instance binds authority and business services.",
+    "Procurement prepared-target authorization, queue productView, sourcingInputs, collaboration work and decision HTTP remain.",
+    "WP06 input preparation, document scenario, dossier routes, SkillLoadReceipt proof and current candidate output checks remain.",
+    "Both published analysis read/output denial and ready/native guards are present.",
+    "The contract routineRuns signature matches the real factory at candidate W."
+  ],
+  "known_external_blocker": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "line": 167,
+    "issue": "createSfBusinessServices caller lacks required procurementEvidenceWrites WeakSet.",
+    "owner": "astra-compose",
+    "source_inspected": true,
+    "changed_by_reviewer": false,
+    "ci_observation": "Root/CI reviewer reports TS2741; no independent hosted-log verification claimed here."
+  },
+  "factory_signature": {
+    "path": "modules/sucafina/Sucafinav1/product/routines/factory.ts",
+    "blob": "56ab7cf58e65d2d051279aac484d58b17ccf1f0e",
+    "fetched_via": "GitHub MCP at candidate W",
+    "signature": "(context: TrustedDomainContext) => Promise<PortResult<readonly RoutineResult[]>>"
+  },
+  "validation": {
+    "local_product_execution": false,
+    "local_typecheck": false,
+    "remote_source_mutation": false,
+    "ci_dispatched_by_reviewer": false,
+    "selection": "impact-inspection.json",
+    "group_qualified": false,
+    "native_qualified": false,
+    "human_qualified": false
+  },
+  "report": "shared-merge-cold-review.md"
+}

@@ -1,0 +1,1460 @@
+{
+  "schema": "astra-operations.browser3-receipt.v1",
+  "runId": 43580401528,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580401528",
+  "status": "completed",
+  "conclusion": "success",
+  "jobId": 132403694001,
+  "jobs": [
+    {
+      "id": 132403694001,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43580401528,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 41
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132404533890,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43580401528,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "product": {
+    "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+    "tree": "d780548f6058e08e555e0565f013b3b0054973da"
+  },
+  "snapshot": {
+    "sha": "26726f85ce39819fcfa376daf1e6ebea203188b2",
+    "tree": "894b04fdaa5213758aa57430c13df0b090f6457f",
+    "parents": [
+      "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+    ]
+  },
+  "snapshotProof": {
+    "soleParent": true,
+    "onlyAddedRequest": true,
+    "comparison": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "head": "26726f85ce39819fcfa376daf1e6ebea203188b2",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+      },
+      "merge_base_commit": {
+        "sha": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 14,
+          "deletions": 0,
+          "changes": 14,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/wp04/procurement.spec.ts",
+      "e2e/sucafina/wp06/imports.spec.ts",
+      "e2e/sucafina/wp06/documents.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts",
+    "sha256": "4560be8ad457182e3b3348825f39daabae4468c46824f079c043fb4080ce4b33",
+    "blob": "a659d0d1cab1ce14578e261808ef9fa38b8dd528"
+  },
+  "platform": {
+    "os": "linux",
+    "arch": "x64",
+    "runner": "ubuntu-24.04"
+  },
+  "config": {
+    "path": "e2e/playwright.production.config.ts",
+    "bundle": "production",
+    "playwright": "1.59.1",
+    "workers": 1,
+    "maxFailures": 0,
+    "projects": [
+      {
+        "id": "chromium",
+        "retries": 0,
+        "repeatEach": 1,
+        "timeout": 60000
+      }
+    ]
+  },
+  "actualSelection": {
+    "files": [
+      "e2e/sucafina/wp04/procurement.spec.ts",
+      "e2e/sucafina/wp06/documents.spec.ts",
+      "e2e/sucafina/wp06/imports.spec.ts"
+    ],
+    "caseCount": 30,
+    "listedAndExecutedCaseIdsEqual": true,
+    "byFile": [
+      {
+        "file": "e2e/sucafina/wp04/procurement.spec.ts",
+        "tests": 8
+      },
+      {
+        "file": "e2e/sucafina/wp06/documents.spec.ts",
+        "tests": 8
+      },
+      {
+        "file": "e2e/sucafina/wp06/imports.spec.ts",
+        "tests": 14
+      }
+    ],
+    "listReportSkippedMeans": "The 30 skipped entries in --list JSON are discovery-only; runtime executed every case."
+  },
+  "summary": {
+    "startTime": "2026-11-14T09:26:10.507Z",
+    "duration": 103659.9,
+    "expected": 30,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0,
+    "attemptCount": 30,
+    "retriedTests": 0
+  },
+  "cases": [
+    {
+      "id": "7d58c2f10e011e1762f6-e74e31951ef73043467c",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 107,
+      "title": "keyboard submission uses current entries and focuses the real 422 field without clearing the draft",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2204,
+          "errors": [],
+          "startTime": "2026-11-14T09:26:44.853Z",
+          "attachments": [
+            {
+              "name": "keyboard-422.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--9e351--without-clearing-the-draft-chromium/attachments/keyboard-422-png-74a619a6ac459b1bd5a56eaa682863138c3d0676.png",
+              "sha256": "633db0dffd2f43164f8d640650f4a24a319f6cbe9ff25ab62070496f5fe4a4fd",
+              "bytes": 43669,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/keyboard-422.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "keyboard-422.json",
+              "contentType": "application/json",
+              "value": {
+                "id": "PR-2026-0002",
+                "status": 422,
+                "focusedField": "pr.justification",
+                "draftPreserved": true,
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d58c2f10e011e1762f6-5bc5633e0709ea291048",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 143,
+      "title": "two authenticated actors review an actual CAS conflict and submit only after an explicit version choice",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 4489,
+          "errors": [],
+          "startTime": "2026-11-14T09:26:47.250Z",
+          "attachments": [
+            {
+              "name": "cas-explicit-review-step.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--1f0cd--an-explicit-version-choice-chromium/attachments/cas-explicit-review-step-png-96633157d2c96ffe08faa3ccda34c00bab2b672e.png",
+              "sha256": "39c8f4fc67bf0352259f0fef0243fba162ba2ac5a1cfb05bc6ae838813889051",
+              "bytes": 64490,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/cas-explicit-review-step.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "cas-explicit-review-step.json",
+              "contentType": "application/json",
+              "value": {
+                "id": "PR-2026-0003",
+                "status": 409,
+                "currentVersionCAS": 2,
+                "postCountBeforeChoice": 1,
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d58c2f10e011e1762f6-287b10ed82c0fe19f9dd",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 211,
+      "title": "a stale approval preserves the typed comment and refuses to revive an action after cancellation",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 4293,
+          "errors": [],
+          "startTime": "2026-11-14T09:26:51.749Z",
+          "attachments": [
+            {
+              "name": "approval-comment-preserved.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--a3e63-n-action-after-cancellation-chromium/attachments/approval-comment-preserved-png-fde35fa8afcd95cc605bbc0ea77f611cba37b923.png",
+              "sha256": "c85f6d5633b68505fffdedc370e9b17b5a6e23df979705465a1f078203e1fdcf",
+              "bytes": 50678,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/approval-comment-preserved.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "approval-comment-preserved.json",
+              "contentType": "application/json",
+              "value": {
+                "id": "PR-2026-0004",
+                "status": 409,
+                "currentVersionCAS": 3,
+                "postCount": 1,
+                "unavailableAction": "approve",
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d58c2f10e011e1762f6-8c7b25debe0aa353a250",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 258,
+      "title": "a real committed save cannot clear edits typed before its response arrives",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2910,
+          "errors": [],
+          "startTime": "2026-11-14T09:26:56.050Z",
+          "attachments": [
+            {
+              "name": "later-edits-preserved.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--cd8f4-before-its-response-arrives-chromium/attachments/later-edits-preserved-png-9a4760dc6676cd3f6f35eb96ad514698aecc2cc0.png",
+              "sha256": "ac700252f96a9b9aca8851b6a51f710b89f41a77b6c3226ad82f5fddce422094",
+              "bytes": 40202,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/later-edits-preserved.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "later-edits-preserved.json",
+              "contentType": "application/json",
+              "value": {
+                "id": "PR-2026-0005",
+                "status": 200,
+                "committedValue": "The value sent to the real host",
+                "unsavedValue": "Later edits remain unsaved",
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d58c2f10e011e1762f6-9e0f3475f2459fe104e5",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 294,
+      "title": "a recurring request reaches an internally issued PO with source values and negotiated entries preserved",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 17360,
+          "errors": [],
+          "startTime": "2026-11-14T09:26:58.968Z",
+          "attachments": [
+            {
+              "name": "pr-sourcing-po-issued.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--90263-egotiated-entries-preserved-chromium/attachments/pr-sourcing-po-issued-png-5a33bb0439862d38941938d560f416b68f66c15b.png",
+              "sha256": "969c15e5ee5c2c8537a761dd41d0bf7a2b914c8bdb81374c8ced23fb46e8afbf",
+              "bytes": 45443,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/pr-sourcing-po-issued.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "pr-sourcing-po-issued.json",
+              "contentType": "application/json",
+              "value": {
+                "id": "PR-2026-0006",
+                "sourceSupplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+                "currency": "EUR",
+                "quantity": 2,
+                "negotiatedUnitPrice": 48,
+                "savedPaymentTerms": "Net 60 negotiated",
+                "issuedInternally": true,
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d58c2f10e011e1762f6-c8e3702487f8f0f6beba",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 410,
+      "title": "the A B C comparison shows score components and retains submitted FX in the real detail and queue",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 7742,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:16.335Z",
+          "attachments": [
+            {
+              "name": "abc-submitted-comparison.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--5ae3c-n-the-real-detail-and-queue-chromium/attachments/abc-submitted-comparison-png-c8c05242f8e93fd705091411610f4f68e556d071.png",
+              "sha256": "caca42acdbb2b8fb81aaa52b9f67fb94179509754a8f2ddd6cdb953f6cd6db45",
+              "bytes": 85744,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/abc-submitted-comparison.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "abc-submitted-comparison.json",
+              "contentType": "application/json",
+              "value": {
+                "id": "PR-2026-0001",
+                "selectedBaseAmount": 32400,
+                "euroOriginal": 28000,
+                "submittedFx": 1.08,
+                "euroBaseAmount": 30240,
+                "rank": [
+                  "A",
+                  "B"
+                ],
+                "excluded": [
+                  "C"
+                ],
+                "humanTimingMeasured": false
+              }
+            },
+            {
+              "name": "queue-keyboard-filter-restored.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--5ae3c-n-the-real-detail-and-queue-chromium/attachments/queue-keyboard-filter-restored-png-77ae5d77d728a31beb71f07c7b708f3e33c76922.png",
+              "sha256": "f3d530fc4796b7489c4671ca87579cabf3cfd89d971e8cc3ce35e2326af8ec94",
+              "bytes": 44689,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/queue-keyboard-filter-restored.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "queue-keyboard-filter-restored.json",
+              "contentType": "application/json",
+              "value": {
+                "id": "PR-2026-0001",
+                "filter": "All",
+                "search": "PR-2026-0001",
+                "interaction": "Home, ArrowDown, Tab, text, Tab, Enter; End, Tab, text, Tab, Enter",
+                "retainedBaseAmount": 32400,
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d58c2f10e011e1762f6-60f6b637affd22a29ffa",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 478,
+      "title": "an authorized bank change requires supplier revalidation and a real viewer cannot read or update bank details",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 5089,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:24.085Z",
+          "attachments": [
+            {
+              "name": "supplier-bank-revalidation.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-bank-revalidation-png-86b36b20fa1eea513a4841c7378e607f11382d84.png",
+              "sha256": "6351481af961d1c55dfde58ba51f5041b4eb2d7fdf1723c04358da2e5d5b0366",
+              "bytes": 49679,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/supplier-bank-revalidation.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "supplier-bank-revalidation.json",
+              "contentType": "application/json",
+              "value": {
+                "supplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+                "result": "pending",
+                "validationCleared": true,
+                "actorRole": "admin",
+                "humanTimingMeasured": false
+              }
+            },
+            {
+              "name": "supplier-viewer-redaction.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-viewer-redaction-png-635160f01a84e2fb99b1544563edab59d276efeb.png",
+              "sha256": "50db1678eb159a32cc8c831295c5407890e4f2f92f912f7343638da018de50a9",
+              "bytes": 59729,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/supplier-viewer-redaction.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "supplier-viewer-redaction.json",
+              "contentType": "application/json",
+              "value": {
+                "supplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+                "bankControls": 0,
+                "unauthorizedWrite": 403,
+                "syntheticPolicy": "viewer-only",
+                "humanTimingMeasured": false
+              }
+            },
+            {
+              "name": "supplier-reactivated-masked.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-reactivated-masked-png-4e6464be4dd5f769e4c2830b4fd1f5e29a5d7a3a.png",
+              "sha256": "d203569af630c433d1d9c60f4fe6878e8290b4c9f704074530bed15fb1877e87",
+              "bytes": 59616,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/supplier-reactivated-masked.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "supplier-reactivated-masked.json",
+              "contentType": "application/json",
+              "value": {
+                "supplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+                "result": "active",
+                "revalidatedBy": "macos:87be8678-b0ca-401c-807e-68ff1863b621:1001",
+                "bankControls": 0,
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7d58c2f10e011e1762f6-c0d99f800a3aab81fa61",
+      "file": "e2e/sucafina/wp04/procurement.spec.ts",
+      "line": 544,
+      "title": "settings reject invalid currencies with visible feedback and reset restores defaults without changing a submitted request",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 6935,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:29.182Z",
+          "attachments": [
+            {
+              "name": "settings-reset-preserves-submitted-source.png",
+              "contentType": "image/png",
+              "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--87a1f-hanging-a-submitted-request-chromium/attachments/settings-reset-preserves-submitted-source-png-22bd8e28c08fa08dfc400792348513e53cb7ffee.png",
+              "sha256": "f3d530fc4796b7489c4671ca87579cabf3cfd89d971e8cc3ce35e2326af8ec94",
+              "bytes": 44689,
+              "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/settings-reset-preserves-submitted-source.png",
+              "width": 1280,
+              "height": 720
+            },
+            {
+              "name": "settings-reset-preserves-submitted-source.json",
+              "contentType": "application/json",
+              "value": {
+                "invalidSave": 422,
+                "validSave": 200,
+                "reset": 200,
+                "resetInteraction": "Tab, Enter, Tab, Space",
+                "retainedRequest": "PR-2026-0001",
+                "submittedEuroFx": 1.08,
+                "humanTimingMeasured": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-93f71af1d5f65b85602b",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 76,
+      "title": "WP06 real document renderer shows a candidate and source as data until explicit confirmation",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 747,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:36.180Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-58664c7fbb1feb989ec1",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 97,
+      "title": "WP06 real document renderer preserves an explicit stale refusal and removes unusable source content",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1006,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:36.934Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-b3e65280963d61d74bce",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 174,
+      "title": "WP06 dossier renderer exposes unit, revision, reference and literal source excerpt without confirming",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 493,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:37.948Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-09072e7fca2836f968b5",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 192,
+      "title": "WP06 dossier renderer invalidates selection after sourcing-dossier-read 403",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 729,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:38.448Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-7bdf8f494e1c0b56cd96",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 192,
+      "title": "WP06 dossier renderer invalidates selection after sourcing-dossier-read 409",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 707,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:39.187Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-5ddf13ccb34b65a0080e",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 192,
+      "title": "WP06 dossier renderer invalidates selection after document-open 409",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 728,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:39.902Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-5ca5105d4865ca78bbdc",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 254,
+      "title": "WP06 document scenario renderer submits references only after explicit preview and preserves conditional totals",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 384,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:40.638Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "87f5c3bc0aa83f2f428c-0a0d95028aa21400f394",
+      "file": "e2e/sucafina/wp06/documents.spec.ts",
+      "line": 272,
+      "title": "WP06 document scenario renderer removes prior result and source after a stale refusal",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 521,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:41.030Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-6bb3cf27cbb4aee04220",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 127,
+      "title": "WP06 real renderer: simulation, literal source content and cancel preserve inputs without Apply",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 835,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:41.574Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-8a5e9d0956cf1dccd1ba",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 151,
+      "title": "WP06 real renderer: stale Apply requires a new destination and explicit preview",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1217,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:42.415Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-9fc6298d4295f62eacbe",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 172,
+      "title": "WP06 real renderer: failed preview detail cannot enable Apply before review",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 730,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:43.639Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-f73f94b9cc0c2601434d",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 187,
+      "title": "WP06 real renderer: a receipt read failure retries without another Apply",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 876,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:44.378Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-24fc002ec38c41c1411d",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 201,
+      "title": "WP06 real renderer: rejected Apply displays a rejected receipt and disables replay",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 769,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:45.262Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-6388ae2b6376f5792ee8",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 213,
+      "title": "WP06 real renderer: a stale analysis reference never claims an applied import",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 638,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:46.038Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-016455c7f9e9c843f717",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 223,
+      "title": "WP06 real renderer: explicit Apply displays confirmed applied receipt",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 760,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:46.684Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-36179b3b1fef69ec30bd",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 223,
+      "title": "WP06 real renderer: explicit Apply displays confirmed unchanged receipt",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 761,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:47.452Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-80ea6cc26474c619b92b",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 245,
+      "title": "WP06 optional sf-enquadrar-decisao starts from the exact reviewed file, preview and selected case",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 947,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:48.220Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-b6c9adf6a85b0c8f9454",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 245,
+      "title": "WP06 optional sf-explicar-forecast starts from the exact reviewed file, preview and selected case",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 956,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:49.175Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-17f118a813673e083d8f",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 279,
+      "title": "WP06 missing analysis model preserves the independent reviewed Apply action",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 881,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:50.138Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-8a0c0789994983824996",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 291,
+      "title": "WP06 stale analysis preparation cannot start a session or consume the import Apply action",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 907,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:51.025Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-914a9216feb05c5f09d9",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 305,
+      "title": "WP06 an uncertain analysis Start retries the exact admitted request and idempotency key",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1044,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:51.942Z",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "aae446821b7be56929f9-6422e7f6091a0cefb2bc",
+      "file": "e2e/sucafina/wp06/imports.spec.ts",
+      "line": 325,
+      "title": "WP06 stale analysis output is removed while the deterministic preview remains visible",
+      "project": "chromium",
+      "expectedStatus": "passed",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1008,
+          "errors": [],
+          "startTime": "2026-11-14T09:27:52.993Z",
+          "attachments": []
+        }
+      ]
+    }
+  ],
+  "omni": {
+    "verdict": "not-reported",
+    "nonce": "b1d52941d1e8d2aa5205dced92ace189",
+    "configuredMode": "suite",
+    "qualification": "The log records setup and nonce but no positive-control verdict; this browser run supplies no Omni acceptance evidence."
+  },
+  "artifact": {
+    "id": 14108775848,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 1888979,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108775848",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108775848/zip",
+    "expired": false,
+    "created_at": "2026-11-14T09:27:55Z",
+    "expires_at": "2026-11-21T09:27:54Z",
+    "updated_at": "2026-11-14T09:27:55Z",
+    "digest": "sha256:eb747ff47369eaa6301947e3ef92b6c0977dff5b100e2f782448c70d751a5aab",
+    "workflow_run": {
+      "id": 43580401528,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-linux-astra-operations-5e0c79ee-4560be8ad457-1",
+      "head_sha": "26726f85ce39819fcfa376daf1e6ebea203188b2"
+    },
+    "verifiedSha256": "eb747ff47369eaa6301947e3ef92b6c0977dff5b100e2f782448c70d751a5aab",
+    "localFile": "/workspace/scratch/67acc0fafe95/audit-ci/artifact-14108775848.zip",
+    "extractedTo": "/workspace/scratch/67acc0fafe95/audit-ci/browser3"
+  },
+  "images": {
+    "attachments": 11,
+    "uniqueImages": 10,
+    "files": [
+      {
+        "name": "keyboard-422.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--9e351--without-clearing-the-draft-chromium/attachments/keyboard-422-png-74a619a6ac459b1bd5a56eaa682863138c3d0676.png",
+        "sha256": "633db0dffd2f43164f8d640650f4a24a319f6cbe9ff25ab62070496f5fe4a4fd",
+        "bytes": 43669,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/keyboard-422.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-e74e31951ef73043467c",
+        "title": "keyboard submission uses current entries and focuses the real 422 field without clearing the draft"
+      },
+      {
+        "name": "cas-explicit-review-step.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--1f0cd--an-explicit-version-choice-chromium/attachments/cas-explicit-review-step-png-96633157d2c96ffe08faa3ccda34c00bab2b672e.png",
+        "sha256": "39c8f4fc67bf0352259f0fef0243fba162ba2ac5a1cfb05bc6ae838813889051",
+        "bytes": 64490,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/cas-explicit-review-step.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-5bc5633e0709ea291048",
+        "title": "two authenticated actors review an actual CAS conflict and submit only after an explicit version choice"
+      },
+      {
+        "name": "approval-comment-preserved.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--a3e63-n-action-after-cancellation-chromium/attachments/approval-comment-preserved-png-fde35fa8afcd95cc605bbc0ea77f611cba37b923.png",
+        "sha256": "c85f6d5633b68505fffdedc370e9b17b5a6e23df979705465a1f078203e1fdcf",
+        "bytes": 50678,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/approval-comment-preserved.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-287b10ed82c0fe19f9dd",
+        "title": "a stale approval preserves the typed comment and refuses to revive an action after cancellation"
+      },
+      {
+        "name": "later-edits-preserved.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--cd8f4-before-its-response-arrives-chromium/attachments/later-edits-preserved-png-9a4760dc6676cd3f6f35eb96ad514698aecc2cc0.png",
+        "sha256": "ac700252f96a9b9aca8851b6a51f710b89f41a77b6c3226ad82f5fddce422094",
+        "bytes": 40202,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/later-edits-preserved.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-8c7b25debe0aa353a250",
+        "title": "a real committed save cannot clear edits typed before its response arrives"
+      },
+      {
+        "name": "pr-sourcing-po-issued.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--90263-egotiated-entries-preserved-chromium/attachments/pr-sourcing-po-issued-png-5a33bb0439862d38941938d560f416b68f66c15b.png",
+        "sha256": "969c15e5ee5c2c8537a761dd41d0bf7a2b914c8bdb81374c8ced23fb46e8afbf",
+        "bytes": 45443,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/pr-sourcing-po-issued.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-9e0f3475f2459fe104e5",
+        "title": "a recurring request reaches an internally issued PO with source values and negotiated entries preserved"
+      },
+      {
+        "name": "abc-submitted-comparison.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--5ae3c-n-the-real-detail-and-queue-chromium/attachments/abc-submitted-comparison-png-c8c05242f8e93fd705091411610f4f68e556d071.png",
+        "sha256": "caca42acdbb2b8fb81aaa52b9f67fb94179509754a8f2ddd6cdb953f6cd6db45",
+        "bytes": 85744,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/abc-submitted-comparison.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-c8e3702487f8f0f6beba",
+        "title": "the A B C comparison shows score components and retains submitted FX in the real detail and queue"
+      },
+      {
+        "name": "queue-keyboard-filter-restored.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--5ae3c-n-the-real-detail-and-queue-chromium/attachments/queue-keyboard-filter-restored-png-77ae5d77d728a31beb71f07c7b708f3e33c76922.png",
+        "sha256": "f3d530fc4796b7489c4671ca87579cabf3cfd89d971e8cc3ce35e2326af8ec94",
+        "bytes": 44689,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/queue-keyboard-filter-restored.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-c8e3702487f8f0f6beba",
+        "title": "the A B C comparison shows score components and retains submitted FX in the real detail and queue"
+      },
+      {
+        "name": "supplier-bank-revalidation.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-bank-revalidation-png-86b36b20fa1eea513a4841c7378e607f11382d84.png",
+        "sha256": "6351481af961d1c55dfde58ba51f5041b4eb2d7fdf1723c04358da2e5d5b0366",
+        "bytes": 49679,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/supplier-bank-revalidation.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-60f6b637affd22a29ffa",
+        "title": "an authorized bank change requires supplier revalidation and a real viewer cannot read or update bank details"
+      },
+      {
+        "name": "supplier-viewer-redaction.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-viewer-redaction-png-635160f01a84e2fb99b1544563edab59d276efeb.png",
+        "sha256": "50db1678eb159a32cc8c831295c5407890e4f2f92f912f7343638da018de50a9",
+        "bytes": 59729,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/supplier-viewer-redaction.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-60f6b637affd22a29ffa",
+        "title": "an authorized bank change requires supplier revalidation and a real viewer cannot read or update bank details"
+      },
+      {
+        "name": "supplier-reactivated-masked.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-reactivated-masked-png-4e6464be4dd5f769e4c2830b4fd1f5e29a5d7a3a.png",
+        "sha256": "d203569af630c433d1d9c60f4fe6878e8290b4c9f704074530bed15fb1877e87",
+        "bytes": 59616,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/supplier-reactivated-masked.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-60f6b637affd22a29ffa",
+        "title": "an authorized bank change requires supplier revalidation and a real viewer cannot read or update bank details"
+      },
+      {
+        "name": "settings-reset-preserves-submitted-source.png",
+        "contentType": "image/png",
+        "path": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/packages/app-shell/e2e/test-results/sucafina-wp04-procurement--87a1f-hanging-a-submitted-request-chromium/attachments/settings-reset-preserves-submitted-source-png-22bd8e28c08fa08dfc400792348513e53cb7ffee.png",
+        "sha256": "f3d530fc4796b7489c4671ca87579cabf3cfd89d971e8cc3ce35e2326af8ec94",
+        "bytes": 44689,
+        "reviewPath": "/workspace/scratch/67acc0fafe95/audit-ci/browser3/screenshots/settings-reset-preserves-submitted-source.png",
+        "width": 1280,
+        "height": 720,
+        "testId": "7d58c2f10e011e1762f6-c0d99f800a3aab81fa61",
+        "title": "settings reject invalid currencies with visible feedback and reset restores defaults without changing a submitted request"
+      }
+    ]
+  },
+  "jsonAttachments": [
+    {
+      "testId": "7d58c2f10e011e1762f6-e74e31951ef73043467c",
+      "name": "keyboard-422.json",
+      "value": {
+        "id": "PR-2026-0002",
+        "status": 422,
+        "focusedField": "pr.justification",
+        "draftPreserved": true,
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-5bc5633e0709ea291048",
+      "name": "cas-explicit-review-step.json",
+      "value": {
+        "id": "PR-2026-0003",
+        "status": 409,
+        "currentVersionCAS": 2,
+        "postCountBeforeChoice": 1,
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-287b10ed82c0fe19f9dd",
+      "name": "approval-comment-preserved.json",
+      "value": {
+        "id": "PR-2026-0004",
+        "status": 409,
+        "currentVersionCAS": 3,
+        "postCount": 1,
+        "unavailableAction": "approve",
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-8c7b25debe0aa353a250",
+      "name": "later-edits-preserved.json",
+      "value": {
+        "id": "PR-2026-0005",
+        "status": 200,
+        "committedValue": "The value sent to the real host",
+        "unsavedValue": "Later edits remain unsaved",
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-9e0f3475f2459fe104e5",
+      "name": "pr-sourcing-po-issued.json",
+      "value": {
+        "id": "PR-2026-0006",
+        "sourceSupplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+        "currency": "EUR",
+        "quantity": 2,
+        "negotiatedUnitPrice": 48,
+        "savedPaymentTerms": "Net 60 negotiated",
+        "issuedInternally": true,
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-c8e3702487f8f0f6beba",
+      "name": "abc-submitted-comparison.json",
+      "value": {
+        "id": "PR-2026-0001",
+        "selectedBaseAmount": 32400,
+        "euroOriginal": 28000,
+        "submittedFx": 1.08,
+        "euroBaseAmount": 30240,
+        "rank": [
+          "A",
+          "B"
+        ],
+        "excluded": [
+          "C"
+        ],
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-c8e3702487f8f0f6beba",
+      "name": "queue-keyboard-filter-restored.json",
+      "value": {
+        "id": "PR-2026-0001",
+        "filter": "All",
+        "search": "PR-2026-0001",
+        "interaction": "Home, ArrowDown, Tab, text, Tab, Enter; End, Tab, text, Tab, Enter",
+        "retainedBaseAmount": 32400,
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-60f6b637affd22a29ffa",
+      "name": "supplier-bank-revalidation.json",
+      "value": {
+        "supplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+        "result": "pending",
+        "validationCleared": true,
+        "actorRole": "admin",
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-60f6b637affd22a29ffa",
+      "name": "supplier-viewer-redaction.json",
+      "value": {
+        "supplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+        "bankControls": 0,
+        "unauthorizedWrite": 403,
+        "syntheticPolicy": "viewer-only",
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-60f6b637affd22a29ffa",
+      "name": "supplier-reactivated-masked.json",
+      "value": {
+        "supplier": "f6d61bd6-8af1-44f5-9be2-21d6df1f8bed",
+        "result": "active",
+        "revalidatedBy": "macos:87be8678-b0ca-401c-807e-68ff1863b621:1001",
+        "bankControls": 0,
+        "humanTimingMeasured": false
+      }
+    },
+    {
+      "testId": "7d58c2f10e011e1762f6-c0d99f800a3aab81fa61",
+      "name": "settings-reset-preserves-submitted-source.json",
+      "value": {
+        "invalidSave": 422,
+        "validSave": 200,
+        "reset": 200,
+        "resetInteraction": "Tab, Enter, Tab, Space",
+        "retainedRequest": "PR-2026-0001",
+        "submittedEuroFx": 1.08,
+        "humanTimingMeasured": false
+      }
+    }
+  ],
+  "log": {
+    "path": "/workspace/scratch/67acc0fafe95/audit-ci/operations-browser-43580401528.log",
+    "sha256": "0adc18f76e418387c309ac6826f841d79a886f86e992bfe1ee58106ea8e1391f"
+  },
+  "qualification": "30 production-renderer browser cases passed at W2. These results do not certify native Omni, human timing/approval or global acceptance. Later changes require their own impact analysis."
+}

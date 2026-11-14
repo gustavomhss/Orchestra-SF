@@ -1,0 +1,1450 @@
+{
+  "schema": "astra-operations.wp06-W5-publication-closure.v1",
+  "appendOnly": true,
+  "base": {
+    "sha": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605"
+  },
+  "product": {
+    "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "condition": "CLOSED",
+  "method": "GitHub MCP immutable commit/compare/contents reads; Git blob and exact local bytes checked without product execution.",
+  "commitChain": [
+    {
+      "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "tree": "5cc00703f04845c62448a2a3239683d266d8d548",
+      "parents": [
+        "b98264317b39bec01c57e31a5c197802a954429f"
+      ],
+      "message": "fix(operations): preserve post-commit CAS and compose real reviewed UI and sourcing dossier",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/c4a2f4ebeb88f5915e51569b921be06b3c37ddad"
+    },
+    {
+      "sha": "b98264317b39bec01c57e31a5c197802a954429f",
+      "tree": "3b485e9da605ff628336ddb678301aaf409669ba",
+      "parents": [
+        "644324778e4a21d22424515dd698d5b8d6c01893"
+      ],
+      "message": "docs(operations): pin C12 CAS intake regression and published restoration",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/b98264317b39bec01c57e31a5c197802a954429f"
+    }
+  ],
+  "documentOnlyIntermediate": {
+    "sha": "b98264317b39bec01c57e31a5c197802a954429f",
+    "tree": "3b485e9da605ff628336ddb678301aaf409669ba",
+    "files": 5,
+    "allReceipts": true
+  },
+  "completeComparison": {
+    "files": 36,
+    "commits": 2,
+    "mergeBase": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "truncated": false,
+    "codeFiles": 8,
+    "textReceipts": 17,
+    "pngReceipts": 11,
+    "unexpectedPaths": []
+  },
+  "codePins": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "9aee116a091c684ba467f81316d2fb915b3f8758",
+      "sha256": "68217f68873c5f550572e6bbdad7e378626ad3193542f508581a86baa922fb12",
+      "bytes": 39083,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/apps/cli/src/sucafina-product/business-services.ts",
+      "materializedBytesEqual": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "sha256": "aa777b4062e785eb69db1724e2be633e4547303310ec02d9b15329affc8f7db8",
+      "bytes": 14023,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "materializedBytesEqual": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "sha256": "ca082614ef672c2640261e1bef690375a32c8bbb016b67993be276a19f930184",
+      "bytes": 8792,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "materializedBytesEqual": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "blob": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+      "sha256": "7a1e5bece6cea161d7b785a14a696d7145772b001b7cb4a7bcf96aa0734a0109",
+      "bytes": 15208,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "materializedBytesEqual": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "sha256": "db0ea9a106a32299366670c41ce6275eb26fce705aa0f1f41449f42498d7356b",
+      "bytes": 991,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "materializedBytesEqual": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "blob": "6952098674a027afafb11ff9cdf6d942580c4149",
+      "sha256": "aab192f98e0796f149a8a45b728ac533e23975b701cc4e7e2713a8fa208bb90e",
+      "bytes": 721,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "materializedBytesEqual": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "sha256": "295c47a4376e7eb4295badd6960fbeca3fa6afdca20ea6b162285aadfdbe134a",
+      "bytes": 23484,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "materializedBytesEqual": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+      "sha256": "1e3c4025a9cda489246cb4309ca157a0248476f15c7ca31bfc45e872c783581c",
+      "bytes": 62958,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/c4a2f4ebeb88f5915e51569b921be06b3c37ddad/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "materializedBytesEqual": true
+    }
+  ],
+  "nonCodeChanges": [
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-independent-review.json",
+      "status": "added",
+      "additions": 141,
+      "deletions": 0,
+      "changes": 141,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-independent-review.md",
+      "status": "added",
+      "additions": 21,
+      "deletions": 0,
+      "changes": 21,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-second-dossier-manifest.json",
+      "status": "added",
+      "additions": 44,
+      "deletions": 0,
+      "changes": 44,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H01-second-dossier.patch",
+      "status": "added",
+      "additions": 127,
+      "deletions": 0,
+      "changes": 127,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-real-ui-manifest.json",
+      "status": "added",
+      "additions": 70,
+      "deletions": 0,
+      "changes": 70,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-real-ui.patch",
+      "status": "added",
+      "additions": 188,
+      "deletions": 0,
+      "changes": 188,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/H09-root-review.md",
+      "status": "added",
+      "additions": 17,
+      "deletions": 0,
+      "changes": 17,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-REGRESSION.json",
+      "status": "added",
+      "additions": 106,
+      "deletions": 0,
+      "changes": 106,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-REGRESSION.md",
+      "status": "added",
+      "additions": 9,
+      "deletions": 0,
+      "changes": 9,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-REGRESSION.patch",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0,
+      "changes": 23,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-C12-CAS-callers.json",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0,
+      "changes": 76,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-39c8f4fc67bf.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-50db1678eb15.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-633db0dffd2f.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-6351481af961.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-969c15e5ee5c.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-ac700252f96a.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-c85f6d5633b6.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-caca42acdbb2.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-d203569af630.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/browser-43580401528-f3d530fc4796.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-UI-intake-manifest.json",
+      "status": "added",
+      "additions": 233,
+      "deletions": 0,
+      "changes": 233,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-browser-diagnostic-intake.json",
+      "status": "added",
+      "additions": 10,
+      "deletions": 0,
+      "changes": 10,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-intake-W5.json",
+      "status": "added",
+      "additions": 37,
+      "deletions": 0,
+      "changes": 37,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/owner-intake-independent-review-W5.md",
+      "status": "added",
+      "additions": 25,
+      "deletions": 0,
+      "changes": 25,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/browser-43582881446-c2a0f610654f.png",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/ci-screenshot-manifest.json",
+      "status": "added",
+      "additions": 127,
+      "deletions": 0,
+      "changes": 127,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/collaboration-producer-refresh.json",
+      "status": "added",
+      "additions": 21,
+      "deletions": 0,
+      "changes": 21,
+      "previous_filename": null
+    }
+  ],
+  "previousSymbolImpact": {
+    "path": "audit-wp06/operations-impact-W4-W5.json",
+    "bytes": 109012,
+    "sha256": "65bc17f8fe866142d74bb8c1bcfb5a8e51ac421dddf33a1a11839e4a00a1d9d1"
+  },
+  "prior81Results": {
+    "path": "audit-wp06/operations-impact-81-W4-results.json",
+    "bytes": 88047,
+    "sha256": "2525e0e01837226a70794573f0a494549a9cf1197e36ff5715d6d0800ea27f44"
+  },
+  "rows": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/analysis-options.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O001",
+        "W4O002",
+        "W4O003",
+        "W4O004",
+        "W4O005",
+        "W4O006"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O007",
+        "W4O008",
+        "W4O009",
+        "W4O010",
+        "W4O011",
+        "W4O012",
+        "W4O013",
+        "W4O014",
+        "W4O015",
+        "W4O016",
+        "W4O017",
+        "W4O018",
+        "W4O019",
+        "W4O020",
+        "W4O021",
+        "W4O022",
+        "W4O023",
+        "W4O024",
+        "W4O025",
+        "W4O026",
+        "W4O027",
+        "W4O028",
+        "W4O029",
+        "W4O030",
+        "W4O031",
+        "W4O032",
+        "W4O033",
+        "W4O034",
+        "W4O035",
+        "W4O036",
+        "W4O037",
+        "W4O038",
+        "W4O039",
+        "W4O040",
+        "W4O041",
+        "W4O042",
+        "W4O043",
+        "W4O044",
+        "W4O045",
+        "W4O046",
+        "W4O047",
+        "W4O048",
+        "W4O049",
+        "W4O050",
+        "W4O051",
+        "W4O052",
+        "W4O053",
+        "W4O054"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O055"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O068",
+        "W4O069"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/dashboard-import.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/candidates.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/docx.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O110",
+        "W4O111",
+        "W4O112",
+        "W4O113",
+        "W4O114"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O115",
+        "W4O116",
+        "W4O117"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O109"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/pdf-digital.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/pdf-empty.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O106",
+        "W4O107",
+        "W4O108"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/resolver.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/scenario-consumer.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/source-fence.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O079",
+        "W4O080"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O086",
+        "W4O087",
+        "W4O088"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/changes.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-command.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-provenance.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-unchanged.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O081",
+        "W4O082",
+        "W4O083"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail-coverage.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/export-download-privacy.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/files.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O092"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O090",
+        "W4O091"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O093",
+        "W4O094",
+        "W4O095"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O085"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-unchanged.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O096",
+        "W4O097",
+        "W4O098",
+        "W4O099",
+        "W4O100",
+        "W4O101",
+        "W4O102",
+        "W4O103"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O084"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/receipt.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O089"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O104",
+        "W4O105"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance-edge.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O078"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-lifecycle.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O056"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "priorDecision": "PENDING_EXACT_BUN24_RESULT",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OBSERVED_W4_INDIVIDUAL_PASSES_AGGREGATE_FAILURE_RETAINED",
+      "W4ObservedCaseIds": [
+        "W4O067"
+      ],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "priorDecision": "OWNER_ATLAS_CONSUMER_PATCH_AND_VALIDATION_REQUIRED",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "OWNER_ATLAS_CONSUMER_PATCH_AND_VALIDATION_REQUIRED",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "OWNER_CONSUMER_PROOF_STILL_REQUIRED",
+      "ownerPending": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "priorDecision": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_HISTORICAL_SCOPED_CLOSURE",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "priorDecision": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W1_INDIVIDUAL_PASSES_AFTER_C12_SCOPE_REVIEW",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "priorDecision": "REUSE_W3_NATIVE_COMPONENT_PASS",
+      "publicationCondition": "CLOSED_AT_W5_BY_COMPLETE_MCP_COMPARE_AND_EXACT_BLOBS",
+      "scopedDecision": "NO_ADDITIONAL_WP06_SELECTION_FOR_EXACT_SCOPED_W5_CHANGES",
+      "priorOutcomePreserved": true,
+      "qualifiedPriorOutcome": "REUSE_W3_NATIVE_COMPONENT_PASS",
+      "W4ObservedCaseIds": [],
+      "currentW5Treatment": "REUSE_QUALIFIED_COMPONENT_OBSERVATIONS_AT_W5_WITH_EXISTING_LIMITS",
+      "ownerPending": false
+    }
+  ],
+  "nativeReuse": {
+    "runId": 43580976466,
+    "observedProduct": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "cases": 2,
+    "reusableAt": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "priorTimeoutFailureRetained": true,
+    "qualification": "ACTUAL_SESSION_MCP_RECORDED_INGRESS_COMPONENT_NOT_GLOBAL_GNATIVE"
+  },
+  "browserReuse": [
+    {
+      "runId": 43580401528,
+      "observedProduct": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "spec": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "cases": 14,
+      "reusableAt": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "qualification": "PRODUCTION_RENDERER_HTTP_SYNTHETIC_COMPONENT"
+    },
+    {
+      "runId": 43580401528,
+      "observedProduct": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+      "spec": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "cases": 8,
+      "reusableAt": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "qualification": "REAL_DOMAIN_HOST_WITH_CONTROLLED_LOCAL_OPERATOR_FIXTURE"
+    },
+    {
+      "runId": 43582881446,
+      "observedProduct": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "spec": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "cases": 8,
+      "reusableAt": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+      "qualification": "PRODUCTION_RENDERER_HTTP_SYNTHETIC_COMPONENT"
+    }
+  ],
+  "collaborationProducerRefresh": {
+    "pr": 33,
+    "head": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+    "originalCanonicalHead": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+        "blob": "ed88a6ff4f6c42eecfd80ba13824e8122fcc774e",
+        "sha256": "887fc25028e7f69fa6cdfec2a5e31eb6be82dc97182045b43adc658084f564fe",
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5ec1630993e4fa66684539db11af939b44ec8ecd/modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+        "changedFromConsumedCanonicalProducer": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+        "blob": "2eb9ee92719402d137aca96c4861c086c6526971",
+        "sha256": "71abb6b0548eff9608875a41f0a20892503aef63178394e1e0528d6bc84aa4ff",
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5ec1630993e4fa66684539db11af939b44ec8ecd/modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+        "changedFromConsumedCanonicalProducer": false
+      }
+    ],
+    "conclusion": "Canonical dossier and actual sourcing producer remain identical. No wider Collaboration code merge or routine/native/global proof is inferred."
+  },
+  "evidence": {
+    "W4-W5-published-compare.json": {
+      "path": "audit-wp06/reuse/W4-W5-published-compare.json",
+      "bytes": 9968,
+      "sha256": "2d3ffcafc5bf803eeba95e3a38bd33820787782c8a3bffdd3e6c3a21172c5de4"
+    },
+    "W4-document-parent-compare.json": {
+      "path": "audit-wp06/reuse/W4-document-parent-compare.json",
+      "bytes": 2191,
+      "sha256": "537013f77b4e8aa372d0e51e055cef3dd237dd88da02043c0a3e0e7d09e78557"
+    },
+    "W5-commit-chain.json": {
+      "path": "audit-wp06/reuse/W5-commit-chain.json",
+      "bytes": 898,
+      "sha256": "ff090787f5922759c0c8aef1e046786b5427f1c0cde23029c7a985828bcfd0fd"
+    },
+    "W5-published-source-fetches.json": {
+      "path": "audit-wp06/reuse/W5-published-source-fetches.json",
+      "bytes": 197509,
+      "sha256": "69ffbca71debb6543346d700b3c18168199bc1db7ea827e3eb52033d3025b62c"
+    }
+  },
+  "limits": [
+    "Source closure makes existing qualified component results reusable; it is not a newly executed test result.",
+    "Changed host-integration/H01/H09 and owner browser pool require their own W5 hosted observations; they are not replaced by WP06 prior passes.",
+    "Atlas, historical skips, AM/native/human/global requirements and aggregate failures remain unchanged.",
+    "Only final receipts/screenshots are added outside the eight verified code paths; canonical plan, engines and deployment/identity policy are not part of this change."
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schema": "astra-operations.guards-final-preflight.v1",
+  "checkedAt": "2026-11-14 10:34:56 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "productBaseline": {
+    "sha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "tree": "5cc00703f04845c62448a2a3239683d266d8d548",
+    "typecheckRun": 43584394810,
+    "cli": "success",
+    "sucafina": "failure",
+    "failure": "WP14 source-access-atlas.test.ts(167,41) TS2741: missing procurementEvidenceWrites"
+  },
+  "dev": {
+    "ref": "refs/heads/dev",
+    "sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "source": "GitHub MCP github_fetch git/ref/heads/dev"
+  },
+  "workflow": {
+    "path": ".github/workflows/astra-operations-check.yml",
+    "sourceRef": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "gitBlob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "source": "GitHub MCP github_fetch_file",
+    "sha256": "0cb4bb61f42ab33e62d6ad31ffe12eb370e285fe65719a838cd21e4d663d0175",
+    "localMatchesMcp": true
+  },
+  "requiredEnvelope": {
+    "mode": "guards",
+    "productSha": "<D>",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "typecheckSha": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad"
+  },
+  "contract": {
+    "keysExact": [
+      "devSha",
+      "mode",
+      "productSha",
+      "typecheckSha"
+    ],
+    "pushBranchPattern": "astra-check-operations-*",
+    "snapshot": "HEAD equals GITHUB_SHA; first parent equals productSha; diff-tree productSha→HEAD exactly A\\t.astra-operations-check.json. Receipt additionally verifies sole parent.",
+    "inputAncestry": [
+      "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "e7fd8ff797441681f360e7775155a8cc2830280c"
+    ],
+    "reuseAncestry": "typecheckSha must be ancestor of productSha",
+    "scopedChangedPaths": "^modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP(?:04|06)/operations-20261114/[^\\n]+\\.(?:md|json|patch|log|txt)$",
+    "newPngsAllowed": false,
+    "changedProductTestsConfigOrWorkflowAllowed": false,
+    "exactProductCheckout": true,
+    "devMustEqualOriginDev": true,
+    "commands": [
+      "bun run check:guards --base origin/dev"
+    ],
+    "typechecks": "Both skipped by guards mode; no conversion of baseline failures",
+    "evidence": [
+      "merge-base.txt",
+      "revisions.txt",
+      "guards.log"
+    ],
+    "artifact": "astra-operations-check-${github.run_attempt}",
+    "concurrency": {
+      "group": "astra-operations-check",
+      "cancelInProgress": false
+    }
+  },
+  "terminalReconciliation": [
+    "D parent/tree and W5→D complete path comparison",
+    "S sole parent D and only added request",
+    "request exact bytes, git blob and SHA256",
+    "workflow identity vs W5",
+    "run/job/steps/logs with baseline failures kept separate",
+    "artifact download byte hash and guards/revisions/merge-base content"
+  ],
+  "qualification": "Read-only preflight. No run dispatched or product executed. Guards-only SUCCESS cannot close Sucafina typecheck or aggregate/global acceptance."
+}
