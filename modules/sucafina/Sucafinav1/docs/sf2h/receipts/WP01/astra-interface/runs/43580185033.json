@@ -1,0 +1,1333 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "source": "GitHub MCP fetch_workflow_run_jobs + fetch_workflow_job_logs + fetch_file(.ci-run.json at exact snapshot)",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43580185033,
+  "job_id": 132403039360,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580185033",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580185033/job/132403039360",
+  "conclusion": "failure",
+  "cleanup_job_id": 132404112794,
+  "cleanup_conclusion": "success",
+  "attempt": 1,
+  "product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+  "product_tree": "81d2ef6f1106447c1ad4730e4e7a31c084c0662f",
+  "snapshot_sha": "ad7b1fd527ceb1132c85202cfe5c8f88b1828c2c",
+  "snapshot_tree": "fab8c153c84a3737ffbd2897bc01917c279c98d0",
+  "snapshot_branch": "ci-run-linux-astra-interface-b13b28a8c8-7d94252864-1",
+  "envelope_proof": {
+    "method": "Root Git tree entries compared; identical child tree SHAs preserve descendant blobs",
+    "onlyDelta": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "73e1674913321a1c387d2749880827fc283bae15",
+    "productTree": "81d2ef6f1106447c1ad4730e4e7a31c084c0662f",
+    "snapshotTree": "fab8c153c84a3737ffbd2897bc01917c279c98d0"
+  },
+  "request_sha256": "7d942528644cf458c5a800964875cfd2965e1f421bfe42bf155c4a3496646b59",
+  "request_blob": "73e1674913321a1c387d2749880827fc283bae15",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/http.test.ts",
+      "./Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/record-search.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "./Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "./Sucafinav1/test/form-layout.test.ts",
+      "./Sucafinav1/test/visual-layout.test.ts",
+      "./Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "./Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "./Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "./Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "./Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "./Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "./Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43580185033.log",
+    "bytes": 152622,
+    "sha256": "7c48e6aeb862c5a877f3d5ace4618f0faa9e7261d4b6fbb8eb85b5b8dcb6b183"
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+    "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "summary": {
+    "pass": 23,
+    "fail": 24,
+    "observations": 47,
+    "files": 26,
+    "expect_calls": 501,
+    "elapsed_seconds": 157.72,
+    "failure_families": {
+      "wp01_shared_browser_startup_timeout_and_poisoned_pool": 21,
+      "c05_preserved_review_reopen_403_after_source_change": 1,
+      "dashboard_write_withdrawal_message_then_retention_not_reached": 1,
+      "dashboard_lost_apply_reload_discovery_message_not_reached": 1
+    },
+    "before_all_hook_failures": 9,
+    "warning": "Bun includes failing beforeAll hooks in its observation count. Named pool-acquisition failures did not reach the browser product assertions."
+  },
+  "omni": {
+    "nonce": "b964ae25a6fe68a4426fdb525914256c",
+    "status": "pass",
+    "spawns": 12,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 2,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 2,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "pass_observations": 4,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "pass_observations": 4,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "pass_observations": 3,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "pass_observations": 7,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    }
+  ],
+  "observations": [
+    {
+      "status": "fail",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "duration_ms": 10003.73,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "log_line": 863,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:27.9148138Z     \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts\",\n2026-11-14T09:23:27.9149001Z     \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts\",\n2026-11-14T09:23:27.9149861Z     \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts\",\n2026-11-14T09:23:27.9150911Z     \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts\"\n2026-11-14T09:23:27.9151486Z   ],\n2026-11-14T09:23:27.9152089Z   startup: \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts\",\n2026-11-14T09:23:27.9153064Z   finalizer: \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts\",\n2026-11-14T09:23:27.9153841Z }\n2026-11-14T09:23:27.9154082Z WP01 browser launch phase {\n2026-11-14T09:23:27.9154683Z   phase: \"published Node browser driver through AppProcess\",\n2026-11-14T09:23:27.9155022Z }\n2026-11-14T09:23:37.9131069Z 34 | \n2026-11-14T09:23:37.9131680Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:37.9132218Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:37.9132546Z 37 |   try {\n2026-11-14T09:23:37.9132915Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:37.9133754Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:37.9134185Z                                                ^\n2026-11-14T09:23:37.9134587Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:37.9135183Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:37.9135811Z (fail) WP01 starts one Node-owned Chromium through Omni before leasing it across files [10003.73ms]"
+    },
+    {
+      "status": "pass",
+      "name": "dashboard groups retain every canonical destination and its original index",
+      "duration_ms": 0.48,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 866,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "field errors identify the input and preserve the draft",
+      "duration_ms": 4.18,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 887,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:37.9243117Z 196 | \n2026-11-14T09:23:37.9243672Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:37.9244240Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:37.9244647Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:37.9245082Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:37.9245914Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:37.9246441Z                                    ^\n2026-11-14T09:23:37.9246762Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:37.9247324Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:37.9248135Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts:19:25)\n2026-11-14T09:23:37.9248615Z \n2026-11-14T09:23:37.9248695Z 34 | \n2026-11-14T09:23:37.9249052Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:37.9249456Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:37.9249690Z 37 |   try {\n2026-11-14T09:23:37.9249994Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:37.9250455Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:37.9250793Z                                                ^\n2026-11-14T09:23:37.9251152Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:37.9251762Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:37.9252297Z (fail) field errors identify the input and preserve the draft [4.18ms]"
+    },
+    {
+      "status": "fail",
+      "name": "procurement submission carries edits from its record's editor",
+      "duration_ms": 2.47,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 908,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:37.9267919Z 196 | \n2026-11-14T09:23:37.9268340Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:37.9268825Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:37.9269222Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:37.9269645Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:37.9270294Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:37.9270866Z                                    ^\n2026-11-14T09:23:37.9271217Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:37.9271861Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:37.9272617Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts:44:25)\n2026-11-14T09:23:37.9273029Z \n2026-11-14T09:23:37.9273098Z 34 | \n2026-11-14T09:23:37.9273621Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:37.9274059Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:37.9274354Z 37 |   try {\n2026-11-14T09:23:37.9274715Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:37.9275191Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:37.9275522Z                                                ^\n2026-11-14T09:23:37.9275867Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:37.9276413Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:37.9276954Z (fail) procurement submission carries edits from its record's editor [2.47ms]"
+    },
+    {
+      "status": "pass",
+      "name": "edits made while an apply is in flight remain unsaved in the real shell",
+      "duration_ms": 8127.89,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 910,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "authenticated BI renders, filters and fails closed after session revocation",
+      "duration_ms": 16.62,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "log_line": 933,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.1039631Z 196 | \n2026-11-14T09:23:46.1040296Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.1040967Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.1041579Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.1042215Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.1043103Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.1043983Z                                    ^\n2026-11-14T09:23:46.1044415Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.1045228Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.1046005Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts:39:27)\n2026-11-14T09:23:46.1046437Z \n2026-11-14T09:23:46.1046764Z 34 | \n2026-11-14T09:23:46.1047119Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.1047554Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.1047874Z 37 |   try {\n2026-11-14T09:23:46.1048327Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.1049022Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.1049525Z                                                ^\n2026-11-14T09:23:46.1050054Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.1050910Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.1051817Z (fail) authenticated BI renders, filters and fails closed after session revocation [16.62ms]"
+    },
+    {
+      "status": "fail",
+      "name": "workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF",
+      "duration_ms": 62.12,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "log_line": 956,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.2200044Z 196 | \n2026-11-14T09:23:46.2200592Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.2201168Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.2201770Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.2202431Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.2203499Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.2204146Z                                    ^\n2026-11-14T09:23:46.2204624Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.2205646Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.2206388Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts:73:27)\n2026-11-14T09:23:46.2206778Z \n2026-11-14T09:23:46.2206868Z 34 | \n2026-11-14T09:23:46.2207347Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.2207935Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.2208258Z 37 |   try {\n2026-11-14T09:23:46.2208667Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.2209306Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.2209771Z                                                ^\n2026-11-14T09:23:46.2210293Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.2211125Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.2212022Z (fail) workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF [62.12ms]"
+    },
+    {
+      "status": "fail",
+      "name": "import reports the persisted unchanged outcome after an uncertain response",
+      "duration_ms": 2.36,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "log_line": 979,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.2244067Z 196 | \n2026-11-14T09:23:46.2244676Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.2245322Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.2245910Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.2246549Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.2247397Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.2248058Z                                    ^\n2026-11-14T09:23:46.2248694Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.2249344Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.2250117Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts:19:25)\n2026-11-14T09:23:46.2250636Z \n2026-11-14T09:23:46.2250710Z 34 | \n2026-11-14T09:23:46.2251059Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.2251462Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.2251722Z 37 |   try {\n2026-11-14T09:23:46.2252160Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.2252865Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.2253649Z                                                ^\n2026-11-14T09:23:46.2254192Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.2255054Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.2255969Z (fail) import reports the persisted unchanged outcome after an uncertain response [2.36ms]"
+    },
+    {
+      "status": "pass",
+      "name": "Planner boundary rejects unpublished operations and invalid monthly context before host admission",
+      "duration_ms": 2.04,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "log_line": 982,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "Planner grid previews pasted values and preserves a conflicting draft",
+      "duration_ms": 6.36,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "log_line": 1003,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.2417171Z 196 | \n2026-11-14T09:23:46.2417668Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.2418545Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.2419201Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.2419898Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.2420769Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.2421373Z                                    ^\n2026-11-14T09:23:46.2421829Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.2422702Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.2424114Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts:57:27)\n2026-11-14T09:23:46.2424734Z \n2026-11-14T09:23:46.2424860Z 34 | \n2026-11-14T09:23:46.2425353Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.2425957Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.2426285Z 37 |   try {\n2026-11-14T09:23:46.2426725Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.2427404Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.2427899Z                                                ^\n2026-11-14T09:23:46.2428425Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.2429278Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.2430342Z (fail) Planner grid previews pasted values and preserves a conflicting draft [6.36ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.09,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "log_line": 1026,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.2470427Z 196 | \n2026-11-14T09:23:46.2471027Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.2471737Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.2472392Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.2473032Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.2474128Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.2474748Z                                    ^\n2026-11-14T09:23:46.2475159Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.2476043Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.2477188Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:24:19)\n2026-11-14T09:23:46.2477760Z \n2026-11-14T09:23:46.2477847Z 34 | \n2026-11-14T09:23:46.2478324Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.2478871Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.2479201Z 37 |   try {\n2026-11-14T09:23:46.2479631Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.2480312Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.2480820Z                                                ^\n2026-11-14T09:23:46.2481351Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.2482373Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.2483007Z (fail) (unnamed) [0.09ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 1.3,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "log_line": 1049,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.2510838Z 196 | \n2026-11-14T09:23:46.2511668Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.2512512Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.2513418Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.2514220Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.2515156Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.2515884Z                                    ^\n2026-11-14T09:23:46.2516438Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.2517354Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.2518769Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts:18:41)\n2026-11-14T09:23:46.2519525Z \n2026-11-14T09:23:46.2519732Z 34 | \n2026-11-14T09:23:46.2520352Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.2521159Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.2521605Z 37 |   try {\n2026-11-14T09:23:46.2522142Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.2522876Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.2523528Z                                                ^\n2026-11-14T09:23:46.2523897Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.2524653Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.2525087Z (fail) (unnamed) [1.30ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 1.62,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "log_line": 1072,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.2676074Z 196 | \n2026-11-14T09:23:46.2676521Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.2676980Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.2677380Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.2677805Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.2678376Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.2678769Z                                    ^\n2026-11-14T09:23:46.2679062Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.2679616Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.2680328Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts:11:27)\n2026-11-14T09:23:46.2680674Z \n2026-11-14T09:23:46.2680754Z 34 | \n2026-11-14T09:23:46.2681094Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.2681503Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.2681739Z 37 |   try {\n2026-11-14T09:23:46.2682047Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.2682671Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.2683012Z                                                ^\n2026-11-14T09:23:46.2683619Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.2684187Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.2684782Z (fail) (unnamed) [1.62ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.1,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "log_line": 1095,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.2702091Z 196 | \n2026-11-14T09:23:46.2702413Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.2702838Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.2703375Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.2703809Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.2704364Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.2704762Z                                    ^\n2026-11-14T09:23:46.2705051Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.2705591Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.2706297Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts:24:19)\n2026-11-14T09:23:46.2706650Z \n2026-11-14T09:23:46.2706710Z 34 | \n2026-11-14T09:23:46.2707049Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.2707460Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.2707688Z 37 |   try {\n2026-11-14T09:23:46.2707976Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.2708512Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.2708893Z                                                ^\n2026-11-14T09:23:46.2709370Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.2710142Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.2710842Z (fail) (unnamed) [0.10ms]"
+    },
+    {
+      "status": "fail",
+      "name": "All editor screens keep readable field widths and ordered configuration sections",
+      "duration_ms": 21.92,
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "log_line": 1118,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.3017837Z 196 | \n2026-11-14T09:23:46.3018420Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.3019112Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.3019741Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.3020386Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.3021100Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.3021629Z                                    ^\n2026-11-14T09:23:46.3021999Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.3022774Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.3024100Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/form-layout.test.ts:23:25)\n2026-11-14T09:23:46.3024544Z \n2026-11-14T09:23:46.3024635Z 34 | \n2026-11-14T09:23:46.3025371Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.3025972Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.3026286Z 37 |   try {\n2026-11-14T09:23:46.3026742Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.3027454Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.3027975Z                                                ^\n2026-11-14T09:23:46.3028451Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.3029368Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.3030413Z (fail) All editor screens keep readable field widths and ordered configuration sections [21.92ms]"
+    },
+    {
+      "status": "fail",
+      "name": "Executive metrics align, fill the content area and fit desktop and mobile viewports",
+      "duration_ms": 107.2,
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "log_line": 1142,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.4119423Z 196 | \n2026-11-14T09:23:46.4119875Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.4120345Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.4120772Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.4121200Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.4121758Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.4122154Z                                    ^\n2026-11-14T09:23:46.4122445Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.4123041Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.4123873Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/visual-layout.test.ts:60:27)\n2026-11-14T09:23:46.4124419Z \n2026-11-14T09:23:46.4124484Z 34 | \n2026-11-14T09:23:46.4124827Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.4125237Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.4125469Z 37 |   try {\n2026-11-14T09:23:46.4125770Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.4126216Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.4126546Z                                                ^\n2026-11-14T09:23:46.4126952Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.4127684Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.4128303Z (fail) Executive metrics align, fill the content area and fit desktop and mobile viewports [107.20ms]"
+    },
+    {
+      "status": "fail",
+      "name": "contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation",
+      "duration_ms": 60.04,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "log_line": 1168,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.4744917Z 196 | \n2026-11-14T09:23:46.4745297Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.4745794Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.4746229Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.4746653Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.4747429Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.4747830Z                                    ^\n2026-11-14T09:23:46.4748121Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.4748681Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.4749416Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:111:27)\n2026-11-14T09:23:46.4749789Z \n2026-11-14T09:23:46.4749851Z 34 | \n2026-11-14T09:23:46.4750333Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.4750775Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.4751014Z 37 |   try {\n2026-11-14T09:23:46.4751322Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.4751782Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.4752139Z                                                ^\n2026-11-14T09:23:46.4752503Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.4753083Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.4754071Z (fail) contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation [60.04ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.11,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "log_line": 1191,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.4775300Z 196 | \n2026-11-14T09:23:46.4775671Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.4776110Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.4776497Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.4777065Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.4777610Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.4778005Z                                    ^\n2026-11-14T09:23:46.4778290Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.4778821Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.4779540Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts:16:19)\n2026-11-14T09:23:46.4779905Z \n2026-11-14T09:23:46.4779974Z 34 | \n2026-11-14T09:23:46.4780311Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.4780713Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.4780938Z 37 |   try {\n2026-11-14T09:23:46.4781224Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.4781706Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.4782040Z                                                ^\n2026-11-14T09:23:46.4782383Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.4782931Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.4783500Z (fail) (unnamed) [0.11ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.13,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "log_line": 1214,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.4803521Z 196 | \n2026-11-14T09:23:46.4803890Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.4804335Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.4804734Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.4805162Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.4805712Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.4806100Z                                    ^\n2026-11-14T09:23:46.4806383Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.4806924Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.4807660Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:17:19)\n2026-11-14T09:23:46.4808029Z \n2026-11-14T09:23:46.4808099Z 34 | \n2026-11-14T09:23:46.4808440Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.4808840Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.4809071Z 37 |   try {\n2026-11-14T09:23:46.4809365Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.4809812Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.4810142Z                                                ^\n2026-11-14T09:23:46.4810510Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.4811192Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.4811793Z (fail) (unnamed) [0.13ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.1,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "log_line": 1237,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.4829252Z 196 | \n2026-11-14T09:23:46.4829620Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.4830088Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.4830585Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.4831019Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.4831580Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.4831978Z                                    ^\n2026-11-14T09:23:46.4832276Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.4832835Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.4833729Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts:35:41)\n2026-11-14T09:23:46.4834087Z \n2026-11-14T09:23:46.4834149Z 34 | \n2026-11-14T09:23:46.4834529Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.4834928Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.4835155Z 37 |   try {\n2026-11-14T09:23:46.4835443Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.4835885Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.4836218Z                                                ^\n2026-11-14T09:23:46.4836664Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.4837206Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.4837628Z (fail) (unnamed) [0.10ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 1.34,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "log_line": 1260,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.4890095Z 196 | \n2026-11-14T09:23:46.4890661Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.4891359Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.4891953Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.4892608Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.4893703Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.4894345Z                                    ^\n2026-11-14T09:23:46.4894790Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.4895654Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.4896748Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:22:41)\n2026-11-14T09:23:46.4897135Z \n2026-11-14T09:23:46.4897208Z 34 | \n2026-11-14T09:23:46.4897552Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.4897969Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.4898279Z 37 |   try {\n2026-11-14T09:23:46.4898586Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.4899045Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.4899394Z                                                ^\n2026-11-14T09:23:46.4900141Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.4901007Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.4901664Z (fail) (unnamed) [1.34ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.1,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "log_line": 1283,
+      "kind": "hook_failure",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": false,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.4913808Z 196 | \n2026-11-14T09:23:46.4914325Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.4915010Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.4915646Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.4916306Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.4917152Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.4917762Z                                    ^\n2026-11-14T09:23:46.4918203Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.4919108Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.4920159Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts:16:41)\n2026-11-14T09:23:46.4920700Z \n2026-11-14T09:23:46.4920796Z 34 | \n2026-11-14T09:23:46.4921307Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.4921926Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.4922268Z 37 |   try {\n2026-11-14T09:23:46.4922901Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.4923874Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.4924375Z                                                ^\n2026-11-14T09:23:46.4924868Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.4925448Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43)\n2026-11-14T09:23:46.4925888Z (fail) (unnamed) [0.10ms]"
+    },
+    {
+      "status": "fail",
+      "name": "a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture",
+      "duration_ms": 65.7,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "log_line": 1306,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.6724428Z 196 | \n2026-11-14T09:23:46.6725043Z 197 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:23:46.6725763Z 198 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:23:46.6726416Z 199 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:23:46.6727096Z 200 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:23:46.6727958Z 201 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:23:46.6728569Z                                    ^\n2026-11-14T09:23:46.6729020Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:23:46.6729901Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:201:30)\n2026-11-14T09:23:46.6731004Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts:27:25)\n2026-11-14T09:23:46.6731512Z \n2026-11-14T09:23:46.6731590Z 34 | \n2026-11-14T09:23:46.6732036Z 35 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:23:46.6732490Z 36 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:23:46.6733026Z 37 |   try {\n2026-11-14T09:23:46.6733669Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.6734197Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.6734567Z                                                ^\n2026-11-14T09:23:46.6734970Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.6735640Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43\n2026-11-14T09:23:46.6736505Z (fail) a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture [65.70ms]"
+    },
+    {
+      "status": "fail",
+      "name": "C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content",
+      "duration_ms": 18248.84,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "log_line": 1321,
+      "kind": "named_test",
+      "failure_family": "c05_preserved_review_reopen_403_after_source_change",
+      "test_body_entered": true,
+      "product_assertion_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:23:46.6733669Z 38 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:23:46.6734197Z 39 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:23:46.6734567Z                                                ^\n2026-11-14T09:23:46.6734970Z error: WP01 browser timed out: single Node-owned Chromium launch and PID acquisition\n2026-11-14T09:23:46.6735640Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:39:43\n2026-11-14T09:23:46.6736505Z (fail) a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture [65.70ms]\n2026-11-14T09:24:04.9225287Z 226 | \n2026-11-14T09:24:04.9225658Z SF_WP01_C05_HISTORICAL_REVIEW {\n2026-11-14T09:24:04.9242948Z 227 |     const reopened = await fetch(historyUrl, { headers: { cookie } })\n2026-11-14T09:24:04.9243770Z 228 |     const reopenedResponse = object(await reopened.json())\n2026-11-14T09:24:04.9244586Z 229 |     console.info(\"SF_WP01_C05_HISTORICAL_REVIEW\", { reviewId: original.id, originalCreatedAt: original.createdAt, originalTotal: 1300, currentTotal: 2400,\n2026-11-14T09:24:04.9245853Z 230 |       sameSourceIncarnation: currentSource?.incarnation === originalSource!.incarnation, httpStatus: reopened.status, resultStatus: reopenedResponse.status, reason: reopenedResponse.reason })\n2026-11-14T09:24:04.9246660Z 231 |     expect(reopened.status).toBe(200)\n2026-11-14T09:24:04.9246968Z                                   ^\n2026-11-14T09:24:04.9247252Z error: expect(received).toBe(expected)\n2026-11-14T09:24:04.9247430Z \n2026-11-14T09:24:04.9247524Z Expected: 200\n2026-11-14T09:24:04.9247720Z Received: 403\n2026-11-14T09:24:04.9247830Z \n2026-11-14T09:24:04.9250111Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts:231:29)\n2026-11-14T09:24:04.9251179Z (fail) C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content [18248.84ms]"
+    },
+    {
+      "status": "pass",
+      "name": "personal views isolate authenticated principals and reconcile exact retries",
+      "duration_ms": 1301.76,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "log_line": 1333,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation",
+      "duration_ms": 2303.35,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "log_line": 1338,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "duration_ms": 11004.63,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1342,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "duration_ms": 11684.54,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1405,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard discovery fences participant removal after options were assembled",
+      "duration_ms": 57.83,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1407,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard discovery resolves real ticket months and Executive signal records",
+      "duration_ms": 506.17,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1408,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "duration_ms": 31573.27,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1422,
+      "kind": "named_test",
+      "failure_family": "dashboard_write_withdrawal_message_then_retention_not_reached",
+      "test_body_entered": true,
+      "product_assertion_reached": true,
+      "browser_journey_reached": true,
+      "excerpt": "2026-11-14T09:24:31.1465627Z SF_WP02_DRAFT_CONFLICT_PHASE {\"phase\":\"fixture.close\",\"state\":\"started\"}\n2026-11-14T09:24:31.1508127Z SF_WP02_DRAFT_CONFLICT_PHASE {\"phase\":\"fixture.close\",\"state\":\"returned\",\"elapsedMs\":4}\n2026-11-14T09:24:31.2270092Z SF_WP02_DRAFT_CONFLICT_PHASE {\"phase\":\"browser.close\",\"state\":\"returned\",\"elapsedMs\":81}\n2026-11-14T09:24:31.2270948Z (pass) Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed [11684.54ms]\n2026-11-14T09:24:31.2274581Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-draft-conflict\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4092},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":4751},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":4766,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":92,\"framesFromBrowser\":279,\"peakQueuedBytes\":7705,\"peakBufferedBytes\":1138,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}\n2026-11-14T09:24:31.2849556Z (pass) Dashboard discovery fences participant removal after options were assembled [57.83ms]\n2026-11-14T09:24:31.7911487Z (pass) Dashboard discovery resolves real ticket months and Executive signal records [506.17ms]\n2026-11-14T09:25:03.3643394Z 490 |     await panel.getByLabel(/^Rascunho/).selectOption(\"new\")\n2026-11-14T09:25:03.3644017Z 491 |     await panel.getByLabel(/^Hot Topic de origem/).selectOption({ label: \"Original action\" })\n2026-11-14T09:25:03.3646511Z 492 |     await panel.getByLabel(\"Ação\", { exact: true }).fill(\"Unsaved operator wording\")\n2026-11-14T09:25:03.3646873Z 493 |     f.policy.writable = false\n2026-11-14T09:25:03.3647240Z 494 |     await panel.getByRole(\"button\", { name: \"Salvar rascunho\", exact: true }).click()\n2026-11-14T09:25:03.3647795Z 495 |     await panel.getByText(\"Seu acesso não permite esta ação agora.\", { exact: false }).waitFor()\n2026-11-14T09:25:03.3648182Z                                                                                             ^\n2026-11-14T09:25:03.3648472Z TimeoutError: for: Timeout 30000ms exceeded.\n2026-11-14T09:25:03.3648678Z Call log:\n2026-11-14T09:25:03.3649168Z   - waiting for locator('[data-dashboard-workbench]').getByText('Seu acesso não permite esta ação agora.') to be visible\n2026-11-14T09:25:03.3649477Z \n2026-11-14T09:25:03.3649811Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:495:87\n2026-11-14T09:25:03.3650260Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:25:03.3650696Z (fail) Dashboard contextual draft retains edits when current write authority is withdrawn [31573.27ms]"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+      "duration_ms": 5207.26,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "log_line": 1426,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard retains the exact draft attempt when its first response is denied after the real host commits",
+      "duration_ms": 2998.33,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "log_line": 1428,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable",
+      "duration_ms": 3585.92,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "log_line": 1429,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+      "duration_ms": 5723.53,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "log_line": 1432,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "duration_ms": 36316.96,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "log_line": 1446,
+      "kind": "named_test",
+      "failure_family": "dashboard_lost_apply_reload_discovery_message_not_reached",
+      "test_body_entered": true,
+      "product_assertion_reached": true,
+      "browser_journey_reached": true,
+      "excerpt": "2026-11-14T09:25:08.5780444Z (pass) Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery [5207.26ms]\n2026-11-14T09:25:11.5762265Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-egress-recovery\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4092},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":5186},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":5201,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":33,\"framesFromBrowser\":125,\"peakQueuedBytes\":3965,\"peakBufferedBytes\":3633,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}\n2026-11-14T09:25:11.5766946Z (pass) Dashboard retains the exact draft attempt when its first response is denied after the real host commits [2998.33ms]\n2026-11-14T09:25:15.1618025Z (pass) Dashboard clears dirty draft consumers when the source disappears or is replaced under the same id while the case remains readable [3585.92ms]\n2026-11-14T09:25:15.1621344Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-source-recovery\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4092},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":5319},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":5334,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":79,\"framesFromBrowser\":278,\"peakQueuedBytes\":2459,\"peakBufferedBytes\":936,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}\n2026-11-14T09:25:20.8855917Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"host-access-recovery\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4092},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":5558},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":5573,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":47,\"framesFromBrowser\":139,\"peakQueuedBytes\":2458,\"peakBufferedBytes\":1589,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}\n2026-11-14T09:25:20.8858803Z (pass) Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case [5723.53ms]\n2026-11-14T09:25:57.2022709Z 381 |     await page.reload()\n2026-11-14T09:25:57.2023417Z 382 |     await page.locator(\"[data-dashboard-workbench-panel] > summary\").click()\n2026-11-14T09:25:57.2024498Z 383 |     await panel.getByText(\"Há uma tentativa anterior para conferir.\", { exact: false }).waitFor()\n2026-11-14T09:25:57.2025246Z 384 |     expect(await panel.getByRole(\"button\", { name: \"Repetir mesma tentativa\", exact: true }).isVisible()).toBe(false)\n2026-11-14T09:25:57.2026880Z 385 |     await panel.getByRole(\"button\", { name: \"Carregar opções\", exact: true }).click()\n2026-11-14T09:25:57.2027598Z 386 |     await panel.getByText(\"Opções atualizadas com seu acesso atual.\", { exact: false }).waitFor()\n2026-11-14T09:25:57.2028111Z                                                                                              ^\n2026-11-14T09:25:57.2028447Z TimeoutError: for: Timeout 30000ms exceeded.\n2026-11-14T09:25:57.2028721Z Call log:\n2026-11-14T09:25:57.2029269Z   - waiting for locator('[data-dashboard-workbench]').getByText('Opções atualizadas com seu acesso atual.') to be visible\n2026-11-14T09:25:57.2029679Z \n2026-11-14T09:25:57.2030244Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts:386:88\n2026-11-14T09:25:57.2030951Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:25:57.2031735Z (fail) Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads [36316.96ms]"
+    },
+    {
+      "status": "pass",
+      "name": "canonical hot topic retries once, detects changed intent and follows completion",
+      "duration_ms": 5.02,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "log_line": 1449,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "action input is fixed before asynchronous host authorization",
+      "duration_ms": 0.29,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "log_line": 1450,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "ambiguous normalized topic IDs cannot be read or updated",
+      "duration_ms": 0.35,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "log_line": 1451,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 handoff recovers a lost C03 response after SQLite reopen and follows the same action through update and completion",
+      "duration_ms": 2641.84,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1455,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 explicit intentions with the same title stay distinct and a changed correlation conflicts",
+      "duration_ms": 1587.39,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1456,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 requires the human grant and refuses a contributor even with readable source evidence",
+      "duration_ms": 237.49,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1457,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 revalidates an admitted human lease after the persisted role is withdrawn",
+      "duration_ms": 32.19,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1458,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 rejects revoked source scopes and removed Hot Topic references without recreating an action",
+      "duration_ms": 989.03,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1459,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C06 update replay refuses an action ID reused in a different incarnation after SQLite reopen",
+      "duration_ms": 1175.51,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1460,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 does not copy sensitive Talent values and rejects the source when current access is withdrawn",
+      "duration_ms": 1475.12,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1461,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "duration_ms": 0.63,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "log_line": 1506,
+      "kind": "named_test",
+      "failure_family": "wp01_shared_browser_startup_timeout_and_poisoned_pool",
+      "test_body_entered": true,
+      "product_assertion_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:26:05.3775245Z 262 |   if (pool.failed) failures.push(pool.failure)\n2026-11-14T09:26:05.3775710Z 263 |   if (pool.launches !== 1) failures.push(new Error(\"WP01 selection did not share exactly one Chromium launch\"))\n2026-11-14T09:26:05.3776525Z 264 |   if (activeLease || pool.releasing) failures.push(new Error(\"WP01 browser lease remains active at finalization\"))\n2026-11-14T09:26:05.3777082Z 265 |   if (contexts !== 0) failures.push(new Error(\"WP01 browser contexts remain at finalization\"))\n2026-11-14T09:26:05.3777745Z 266 |   if (pool.acquisitions === 0 || pool.acquisitions !== pool.releases) failures.push(new Error(\"WP01 browser acquisition/release counts do not match\"))\n2026-11-14T09:26:05.3778269Z                                                                                               ^\n2026-11-14T09:26:05.3778605Z error: WP01 browser acquisition/release counts do not match\n2026-11-14T09:26:05.3779185Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:266:89)\n2026-11-14T09:26:05.3779937Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)\n2026-11-14T09:26:05.3780362Z  97 | \n2026-11-14T09:26:05.3780568Z  98 | function shutdownBrowser(): Promise<void> {\n2026-11-14T09:26:05.3780835Z  99 |   if (pool.shutdown) return pool.shutdown\n2026-11-14T09:26:05.3781084Z 100 |   const browser = pool.browser\n2026-11-14T09:26:05.3781313Z 101 |   const driver = pool.driver\n2026-11-14T09:26:05.3781762Z 102 |   if (!browser || !driver) return Promise.reject(new Error(\"WP01 browser driver was never acquired in this shared module\"))\n2026-11-14T09:26:05.3782171Z                                                            ^\n2026-11-14T09:26:05.3782483Z error: WP01 browser driver was never acquired in this shared module\n2026-11-14T09:26:05.3783092Z       at shutdownBrowser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:102:54)\n2026-11-14T09:26:05.3783981Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:267:15)\n2026-11-14T09:26:05.3784707Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)\n2026-11-14T09:26:05.3785338Z (fail) WP01 shares one Chromium across files, releases every lease, and proves final process exit [0.63ms]"
+    }
+  ],
+  "proof_records": {
+    "SF_WP02_BROWSER_DRIVER_PROOF": [
+      {
+        "log_line": 909,
+        "value": {
+          "consumer": "preview-in-flight",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4141
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4156,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 14,
+            "framesFromBrowser": 56,
+            "peakQueuedBytes": 2013,
+            "peakBufferedBytes": 457,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1334,
+        "value": {
+          "consumer": "personal-views",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4343
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4358,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 23,
+            "framesFromBrowser": 98,
+            "peakQueuedBytes": 2455,
+            "peakBufferedBytes": 575,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1337,
+        "value": {
+          "consumer": "dashboard-monthly",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4482
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4497,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 74,
+            "framesFromBrowser": 228,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 661,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1341,
+        "value": {
+          "consumer": "host-contextual-controls",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4616
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4631,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 68,
+            "framesFromBrowser": 154,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 792,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1406,
+        "value": {
+          "consumer": "host-draft-conflict",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4751
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4766,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 92,
+            "framesFromBrowser": 279,
+            "peakQueuedBytes": 7705,
+            "peakBufferedBytes": 1138,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1425,
+        "value": {
+          "consumer": "host-draft-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5050
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5065,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 76,
+            "framesFromBrowser": 220,
+            "peakQueuedBytes": 3941,
+            "peakBufferedBytes": 3608,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1427,
+        "value": {
+          "consumer": "host-egress-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5186
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5201,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 33,
+            "framesFromBrowser": 125,
+            "peakQueuedBytes": 3965,
+            "peakBufferedBytes": 3633,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1430,
+        "value": {
+          "consumer": "host-source-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5319
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5334,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 79,
+            "framesFromBrowser": 278,
+            "peakQueuedBytes": 2459,
+            "peakBufferedBytes": 936,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1431,
+        "value": {
+          "consumer": "host-access-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4092
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5558
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5573,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 47,
+            "framesFromBrowser": 139,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ],
+    "SF_WP01_C05_HISTORICAL_REVIEW": [
+      {
+        "reviewId": "dashboard-review:bac146051fe8a731d6791e602d2408d1dad0045bc7bb944a8f1168ea7d971e0b",
+        "originalCreatedAt": "2026-11-14T09:23:48.780Z",
+        "originalTotal": 1300,
+        "currentTotal": 2400,
+        "sameSourceIncarnation": true,
+        "httpStatus": 403,
+        "resultStatus": "denied",
+        "reason": "access-unavailable",
+        "source_log_lines": [
+          1308,
+          1324,
+          1332
+        ],
+        "note": "Console stdout was interleaved with the assertion stderr. Values above are literal log fields; no current-source deletion or permission revocation was performed."
+      }
+    ]
+  },
+  "limits": [
+    "Only W4 b13b28a8c8843b1c1b8cd81a3c7e627e700287de is tested. CaptureId narrowing, BI shell refresh, decision reviewDigest and AlternativeDraft readonly fixes after W4 have no results from this run.",
+    "WP01 startup timed out at10s before launchBrowserDriver returned and before PID acquisition; lifecycle records launches0/acquisitions0/releases0, pid undefined, driverClosedfalse, processExitedfalse. Omni positive-control pass is not physical cleanup proof.",
+    "Nine beforeAll hook failures prevented declared test bodies. Other shared-pool consumers failed acquiring a browser, so their product behavior remains unobserved.",
+    "C05 positive HTTP assertion was executed independently of the failed pool: same preserved review, original1300/current2400, same source incarnation, current authorization, expected200 received403 access-unavailable. The live-number browser assertion in the same file was not executed.",
+    "Dashboard write-withdrawal test stopped waiting for the existing denial message at host-workbench.ts495; later retain-input and save-enabled assertions were not reached. The producer source-continuity finding is static evidence, not a runtime diagnostic inferred from this timeout alone.",
+    "Lost C12 apply test committed application and reloaded, then stopped waiting for successful discovery at workbench-recovery.ts386. It did not reach replay/unique-receipt final assertions; provider routing finding remains separately pinned.",
+    "Four new Dashboard recovery tests passed with full createSfBusinessServices and initializeAtlas. The first test manually emits the consumer revocation signal and is not proof of native signal delivery; canonical case-removal purge is independently covered by the fourth test.",
+    "Nine successful individual Node browser lifecycle proofs do not repair the shared WP01 pool lifecycle failure or establish native/GNATIVE/global acceptance.",
+    "No Atlas/native or epic test was selected in W4. Historical42-file observations remain at903 and S0 owns final native/global gates."
+  ]
+}

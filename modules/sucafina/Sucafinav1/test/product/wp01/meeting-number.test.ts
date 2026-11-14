@@ -50,7 +50,9 @@ test("a live Dashboard meeting keeps its financial number during background refr
     const captureResponse = await captured
     expect(captureResponse.status()).toBe(200)
     const capture = object(object(await captureResponse.json()).value)
-    expect(typeof capture.captureId).toBe("string")
+    const captureId = capture.captureId
+    expect(typeof captureId).toBe("string")
+    if (typeof captureId !== "string") throw new Error("The real capture response did not identify its preserved record")
     await panel.getByText("Retrato do registro preservado.", { exact: true }).waitFor()
 
     const previewed = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-agenda")
@@ -73,7 +75,7 @@ test("a live Dashboard meeting keeps its financial number during background refr
     await panel.getByRole("button", { name: "Abrir histórico", exact: true }).click()
     const firstResponse = await firstHistory
     expect(firstResponse.status()).toBe(200)
-    expect(new URL(firstResponse.url()).searchParams.get("id")).toBe(capture.captureId)
+    expect(new URL(firstResponse.url()).searchParams.get("id")).toBe(captureId)
     const original = object(object(await firstResponse.json()).value)
     expect(original.state).toBe("historical")
     expect(rows(object(original.projection).values)).toContainEqual(expect.objectContaining({ id: "opexOwners:meeting-owner:budget", value: 1200 }))
@@ -136,7 +138,7 @@ test("a live Dashboard meeting keeps its financial number during background refr
     await panel.getByRole("button", { name: "Abrir histórico", exact: true }).click()
     const historicalResponse = await reopened
     expect(historicalResponse.status()).toBe(200)
-    expect(new URL(historicalResponse.url()).searchParams.get("id")).toBe(capture.captureId)
+    expect(new URL(historicalResponse.url()).searchParams.get("id")).toBe(captureId)
     const historical = object(object(await historicalResponse.json()).value)
     expect(historical.state).toBe("historical")
     expect(historical.capturedAt).toBe(original.capturedAt)

@@ -16,10 +16,10 @@ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
   if (entry.dataset.sfApplyReady) return; entry.dataset.sfApplyReady = 'true'
   let context = JSON.parse(entry.dataset.context)
   const review = entry.querySelector('[data-review-change]'); const output = entry.querySelector('[data-change-review]'); const confirm = entry.querySelector('[data-change-confirm]'); const apply = entry.querySelector('[data-apply-change]'); const status = entry.querySelector('[data-change-status]'); const guard = entry.querySelector('[data-change-guard]')
-  let reviewed = false; let intention; let busy = false; let closed = false; let completed = false
+  let reviewed = false; let reviewDigest; let intention; let busy = false; let closed = false; let completed = false
   const active = () => !closed && entry.isConnected
   const revoke = () => {
-    closed = true; reviewed = false; context = undefined
+    closed = true; reviewed = false; reviewDigest = undefined; context = undefined
     if (intention) intention.body = ''; intention = undefined
     output.replaceChildren(); confirm.checked = false; confirm.disabled = true; review.disabled = true; apply.disabled = true
     delete guard.dataset.dirty; delete entry.dataset.context
@@ -45,26 +45,25 @@ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
   }
   review.addEventListener('click', async () => {
     if (!active() || busy || intention || completed || review.disabled) return
-    busy = true; reviewed = false; confirm.checked = false; delete guard.dataset.dirty; controls(); output.textContent = 'Checking the current change…'; status.textContent = ''
+    busy = true; reviewed = false; reviewDigest = undefined; confirm.checked = false; delete guard.dataset.dirty; controls(); output.textContent = 'Checking the current change…'; status.textContent = ''
     try {
       const value = await send('decision-review', JSON.stringify({ purpose: 'review', caseRef: context.caseRef, choiceId: context.choiceId, changeId: context.changeId }), crypto.randomUUID())
       if (!active()) return
-      if (!value || value.changeId !== context.changeId || value.choiceId !== context.choiceId || value.surface !== context.surface || value.expectedVersion !== context.expectedVersion || !Array.isArray(value.fields)) throw new Error('changed')
+      if (!value || typeof value.reviewDigest !== 'string' || !/^[a-f0-9]{64}$/.test(value.reviewDigest) || value.changeId !== context.changeId || value.choiceId !== context.choiceId || value.surface !== context.surface || value.expectedVersion !== context.expectedVersion || !Array.isArray(value.fields)) throw new Error('changed')
       output.replaceChildren(); const summary = document.createElement('p'); summary.textContent = 'Destination: ' + value.surface + (value.target?.label ? ' · ' + value.target.label : '') + ' · expected version ' + value.expectedVersion + ' · state ' + value.state; output.append(summary)
       const display = (item) => item === null ? 'Empty' : ['string', 'number', 'boolean'].includes(typeof item) ? String(item) : 'Unavailable'
       value.fields.forEach((field) => { const line = document.createElement('p'); line.textContent = field.field + ': ' + display(field.before) + (field.beforeCurrency ? ' ' + field.beforeCurrency : '') + ' → ' + display(field.after) + (field.afterCurrency ? ' ' + field.afterCurrency : ''); output.append(line) })
       if (value.receipt) { const receipt = document.createElement('p'); receipt.textContent = 'Recorded receipt: ' + value.receipt.surface + ' · version ' + value.receipt.version; output.append(receipt) }
-      // The published apply contract binds case version, choice and prepared change.
-      // The producer separately validates human confirmation and current domain state.
-      if (!value.receipt && value.state === 'planned' && value.fields.length && value.fields.every((field) => (field.before === null || ['string', 'number', 'boolean'].includes(typeof field.before)) && (field.after === null || ['string', 'number', 'boolean'].includes(typeof field.after)))) { reviewed = true; guard.dataset.dirty = 'true' }
+      // Bind the application and every exact retry to the proof returned by the current review.
+      if (!value.receipt && value.state === 'planned' && value.fields.length && value.fields.every((field) => (field.before === null || ['string', 'number', 'boolean'].includes(typeof field.before)) && (field.after === null || ['string', 'number', 'boolean'].includes(typeof field.after)))) { reviewDigest = value.reviewDigest; reviewed = true; guard.dataset.dirty = 'true' }
       else status.textContent = 'This change cannot be applied from this review. Check its current state and recorded receipt.'
     } catch { if (active()) output.textContent = 'Current change unavailable or stale. Refresh the decision before trying again.' }
     finally { busy = false; controls() }
   })
   confirm.addEventListener('change', () => { if (!active() || busy || intention || completed) return; controls() })
   apply.addEventListener('click', async () => {
-    if (!active() || busy || completed || apply.disabled || !intention && (!reviewed || !confirm.checked)) return
-    if (!intention) intention = { key: crypto.randomUUID(), body: JSON.stringify({ caseRef: context.caseRef, choiceId: context.choiceId, changeId: context.changeId }), uncertain: false }
+    if (!active() || busy || completed || apply.disabled || !intention && (!reviewed || !reviewDigest || !confirm.checked)) return
+    if (!intention) intention = { key: crypto.randomUUID(), body: JSON.stringify({ caseRef: context.caseRef, choiceId: context.choiceId, changeId: context.changeId, reviewDigest }), uncertain: false }
     const attempt = intention; const reconciling = attempt.uncertain
     busy = true; guard.dataset.dirty = 'true'; controls(); status.textContent = 'Applying reviewed change…'
     try {
@@ -74,7 +73,7 @@ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
       intention = undefined; completed = true; delete guard.dataset.dirty; status.textContent = 'Application receipt recorded. Reloading the decision to show its outcome…'; location.reload()
     } catch (error) {
       if (!active() || intention !== attempt) return
-      if (error?.rejected && !reconciling) { intention = undefined; reviewed = false; confirm.checked = false; delete guard.dataset.dirty; status.textContent = 'Application was rejected. Review the current change again before making a new attempt.' }
+      if (error?.rejected && !reconciling) { intention = undefined; reviewed = false; reviewDigest = undefined; confirm.checked = false; delete guard.dataset.dirty; status.textContent = 'Application was rejected. Review the current change again before making a new attempt.' }
       else { attempt.uncertain = true; status.textContent = error?.rejected ? 'The retry was rejected, but the earlier application is still unconfirmed. Keep the same request and check the current receipt before another change.' : error?.conflict ? 'The application returned a conflict and its outcome is still unconfirmed. The reviewed request stays locked; check the current receipt or retry the same request.' : 'Could not confirm application. The reviewed request is locked; retry the same request to reconcile its receipt.' }
     } finally { busy = false; controls() }
   })

@@ -411,11 +411,23 @@ function attach() {
   }) })
 }
 function applyRefresh() {
-  if (!pending.html || document.querySelector("form[data-dirty], dialog[open], [data-sf-retain-view]") || document.activeElement && document.activeElement.closest("form")) return
+  if (pending.closed || pending.writing || !pending.html || document.querySelector("form[data-dirty], dialog[open], [data-sf-retain-view]") || document.activeElement && document.activeElement.closest("form")) return
   const next = new DOMParser().parseFromString(pending.html, "text/html")
   const main = next.querySelector("main")
   if (!main) { pending.html = null; return }
-  document.querySelector("main").replaceWith(main)
+  const current = document.querySelector("main")
+  // refresh() already checked the server response and access revision. A live
+  // reader may retain this same page only by claiming the event synchronously.
+  // The event grants no authority: that reader must reauthorize its own data,
+  // coalesce pending reads, and clear protected results when access is lost.
+  if (current?.dataset.page && current.dataset.page === main.dataset.page &&
+      current.dataset.drawn === "true" && main.dataset.drawn === "true" &&
+      next.body.dataset.surface === document.body.dataset.surface &&
+      !current.dispatchEvent(new CustomEvent("sucafina:main-refresh", { cancelable: true }))) {
+    pending.html = null
+    return
+  }
+  current?.replaceWith(main)
   pending.html = null
   attach()
   if (pending.focus !== null) {
