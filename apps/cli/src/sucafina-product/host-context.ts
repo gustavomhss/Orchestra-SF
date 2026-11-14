@@ -42,6 +42,7 @@ import { createSfDossierServices } from "./dossier-services.ts"
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
+import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeSkillProof } from "./native-skill-proof.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
 import type { SfStoppedRun } from "./native-execution.ts"
@@ -250,7 +251,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         targetOutputDigest: author.value.output.outputDigest, caseRef: author.value.run.caseRef } : undefined
       const chosen = { profile: parent.profile, manifestDigest: parent.manifestDigest, skills: [skill], operationIds: [...captured.request.requestedOperationScope] }
       if (!selectionMatches(chosen)) return { status: "denied", reason: "analysis-selection-unavailable" }
-      const actualModel = model.value
+      const actualModel = sfNativeModelRef(model.value)
       const existing = async (): Promise<PortResult<{ runRef: string }> | undefined> => {
         const found = await authority.state.read(request, "contributions", (stored, actor) => {
           const run = stored.nativeRuns?.[runRef]
@@ -577,7 +578,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       if (descriptors.length + business.remainingOperations().length !== contractFreeze.operations.length) throw new Error("SF_OPERATION_REGISTRY_INVALID")
       const project = yield* projects.resolve(directory)
       const identity = Object.freeze({ installationId: input.installationId, hostId: randomUUID(), projectId: project.id,
-        location: Object.freeze({ directory }) })
+        location: Object.freeze(sfNativeLocationRef({ directory })) })
       state.identity = identity
       state.store = store
       state.models = async () => {

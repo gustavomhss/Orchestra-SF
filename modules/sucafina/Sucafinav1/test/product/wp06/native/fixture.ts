@@ -1,13 +1,16 @@
 import path from "node:path"
 import { randomUUID } from "node:crypto"
-import { DateTime, Effect } from "effect"
+import { DateTime, Effect, Layer } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
+import { makeLocationNode } from "@orchestra/core/effect/app-node"
 import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { EventV2 } from "@orchestra/core/event"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
+import type { Location } from "@orchestra/core/location"
 import { Mcp } from "@orchestra/core/mcp"
 import { ModelV2 } from "@orchestra/core/model"
+import { PluginV2 } from "@orchestra/core/plugin"
 import { ProjectV2 } from "@orchestra/core/project"
 import { ProviderV2 } from "@orchestra/core/provider"
 import { SessionV2 } from "@orchestra/core/session"
@@ -41,6 +44,7 @@ import { createSfImportServices } from "../../../../../../../apps/cli/src/sucafi
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfProductDispatch } from "../../../../../../../apps/cli/src/sucafina-product/contribution.ts"
 import { createSfNativeSkillProof } from "../../../../../../../apps/cli/src/sucafina-product/native-skill-proof.ts"
+import { sfNativeLocationRef, sfNativeModelRef } from "../../../../../../../apps/cli/src/sucafina-product/native-identity.ts"
 import { createSfDocumentHttp } from "../../../../product/interface/document-http.ts"
 import { createSfImportHttp } from "../../../../product/interface/import-http.ts"
 import atlasPackage from "../../../../../../../modules/atlas/boundary/package.json" with { type: "json" }
@@ -59,26 +63,41 @@ export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof c
       return { profile, manifestDigest: bundle.manifestDigest, skills,
         operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))) }
     })
+    const location = sfNativeLocationRef(app.installation.location)
+    const sources = new WeakMap<SkillV2.Interface, SfSourceCapability>()
+    const resident = makeLocationNode({
+      name: "sucafina/wp06-native-resident",
+      deps: [AgentV2.node, SkillV2.node, PluginV2.node],
+      layer: Layer.effectDiscard(Effect.gen(function* () {
+        const agents = yield* AgentV2.Service
+        const skills = yield* SkillV2.Service
+        const plugins = yield* PluginV2.Service
+        yield* plugins.wait(PluginV2.ID.make("config-agent"))
+        const sourceCapability = yield* registerSfResidentAgents({ agents, skills, selected, source: bundle.source }).pipe(Effect.orDie)
+        sources.set(skills, sourceCapability)
+        yield* Effect.addFinalizer(() => Effect.sync(() => { sources.delete(skills) }))
+      })),
+    })
     // Location Task captures both Session services from the completed application's exports.
     const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionExecution.node, SessionStore.node, EventV2.node, LocationServiceMap.node, ProjectV2.node]),
-      [[SessionExecution.node, SessionExecutionLocal.node]])
+      [[SessionExecution.node, SessionExecutionLocal.node]], [resident])
     await Effect.gen(function* () {
       const session = yield* SessionV2.Service
       const store = yield* SessionStore.Service
       const events = yield* EventV2.Service
       const projects = yield* ProjectV2.Service
       const locations = yield* LocationServiceMap.Service
-      const project = yield* projects.resolve(app.installation.location.directory)
-      const placed = yield* Effect.gen(function* () {
-        const agents = yield* AgentV2.Service
+      const project = yield* projects.resolve(location.directory)
+      yield* Effect.gen(function* () {
         const skills = yield* SkillV2.Service
         const mcp = yield* Mcp.Service
-        return { agents, skills, mcp }
-      }).pipe(Effect.provide(locations.get(app.installation.location)))
-      const sourceCapability = yield* registerSfResidentAgents({ ...placed, selected, source: bundle.source })
-      const fixture = yield* Effect.promise(() => compose({ app, session, store, events, projectId: project.id, selected, sourceCapability, ...placed }))
-      yield* Effect.addFinalizer(() => Effect.promise(() => fixture.dispose()))
-      yield* Effect.promise(() => work(fixture))
+        const sourceCapability = sources.get(skills)
+        if (!sourceCapability) throw new Error("Location resident source registration missing")
+        const fixture = yield* Effect.promise(() => compose({ app, session, store, events, projectId: project.id,
+          selected, sourceCapability, skills, mcp, location }))
+        yield* Effect.addFinalizer(() => Effect.promise(() => fixture.dispose()))
+        yield* Effect.promise(() => work(fixture))
+      }).pipe(Effect.scoped, Effect.provide(locations.get(location)))
     }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
   } finally { await app.dispose() }
 }
@@ -86,10 +105,10 @@ export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof c
 async function compose(input: {
   app: Awaited<ReturnType<typeof createWp06Runtime>>; session: SessionV2.Interface; store: SessionStore.Interface; events: EventV2.Interface
   projectId: string; selected: readonly SfSelectedRuntime[]; skills: SkillV2.Interface; mcp: Mcp.Interface
-  sourceCapability: SfSourceCapability
+  sourceCapability: SfSourceCapability; location: Location.Ref
 }) {
   const { app } = input
-  const installation = { ...app.installation, hostId: randomUUID(), projectId: input.projectId }
+  const installation = { ...app.installation, hostId: randomUUID(), projectId: input.projectId, location: input.location }
   const lifetime = { open: true }
   const selectionMatches = (value: SfSelectedRuntime) => validSfSelection(value) && input.selected.some((parent) =>
     digestSfValue(parent.profile) === digestSfValue(value.profile) && parent.manifestDigest === value.manifestDigest &&
@@ -178,17 +197,19 @@ async function compose(input: {
       return { status: "ok", value: { sourceFence: await app.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) })) } }
     }, revalidateForCommit: (record, call, _snapshot, output) => verifyOutput(record, call, output), now: () => new Date().toISOString() })
   const releases = new Set<() => void>()
-  const bind = async (skillId: string, skillInput: unknown = {}, prompt?: string) => {
+  const bind = async (skillId: string, skillInput: unknown = {}, prompt?: string, variant?: string) => {
     const parent = input.selected.find((value) => value.profile.id === (skillId === "sf-explicar-forecast" ? "sf_finance" : skillId === "sf-enquadrar-decisao" ? "sf_maestro" : "sf_procurement") && value.skills.some((skill) => skill.id === skillId))
     const skill = parent?.skills.find((value) => value.id === skillId)
     if (!parent || !skill) throw new Error("Native skill missing from real bundle")
     const selected: SfSelectedRuntime = { ...parent, skills: [skill], operationIds: [...skill.allowedOperations] }
     // Deliberately named as prerecorded ingress, never represented as a provider completion.
-    const model = ModelV2.Ref.make({ providerID: ProviderV2.ID.make("wp06-recorded-ingress"), id: ModelV2.ID.make("deterministic-public-events") })
+    const requestedModel = ModelV2.Ref.make({ providerID: ProviderV2.ID.make("wp06-recorded-ingress"), id: ModelV2.ID.make("deterministic-public-events"),
+      ...(variant === undefined ? {} : { variant: ModelV2.VariantID.make(variant) }) })
+    const model = sfNativeModelRef(requestedModel)
     const runId = randomUUID()
     const request = app.request()
     const currentCaseRef = structuredClone(caseRef)
-    const intent = { caseRef: currentCaseRef, skillId, skillInput, selected, model }
+    const intent = { caseRef: currentCaseRef, skillId, skillInput, selected, model: requestedModel }
     const access = await authority.human.admit(request, "analysis.start", intent)
     if (access.status !== "ok") throw new Error(`Run admission: ${access.reason}`)
     try {
@@ -200,6 +221,8 @@ async function compose(input: {
       const stored = await runs.create(record, access.value)
       if (stored.status !== "ok") throw new Error(`Native run persistence: ${stored.reason}`)
       const session = await Effect.runPromise(input.session.create({ location: installation.location, agent: AgentV2.ID.make(parent.profile.id), model }))
+      if (digestSfValue(session.model) !== digestSfValue(record.model) || digestSfValue(session.location) !== digestSfValue(installation.location))
+        throw new Error("Persisted Core Session identity differs from admitted run")
       const receipt = await Effect.runPromise(loadSfSkill({ session: input.session, skills: input.skills, sourceCapability: input.sourceCapability,
         selected, sessionID: session.id, profile: parent.profile, skill, runId, manifestDigest: parent.manifestDigest }))
       await Effect.runPromise(input.store.narrow(session.id, { skills: { entry: skill.id, allow: [skill.id] },
@@ -273,7 +296,7 @@ async function compose(input: {
           return { run: saved.value, output: built.value, assistantMessageID }
         })
       }
-      return { admission, binding: bound.value, session, receipt, record: attached.value, promptAdmission, context, call, domain, complete, release }
+      return { admission, binding: bound.value, session, receipt, record: attached.value, requestedModel, promptAdmission, context, call, domain, complete, release }
     } finally { authority.human.finish(access.value) }
   }
   const http = async (kind: "document" | "import", mode: string, payload?: unknown, query: Record<string, string> = {}, cookie = app.cookie) => {

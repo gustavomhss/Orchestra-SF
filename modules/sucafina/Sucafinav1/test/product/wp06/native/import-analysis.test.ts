@@ -54,7 +54,12 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const uiDispatched = decodeSfOperationOutput("sf_import_preview", uiReceipt.result)
     if (!uiDispatched.ok) throw new Error("UI C04 output schema invalid")
     expect(manifestSemantics(uiDispatched.value)).toEqual(manifestSemantics(ui))
-    const previewRun = await fixture.bind("sf-explicar-forecast")
+    const previewRun = await fixture.bind("sf-explicar-forecast", {}, undefined, "recorded-explicit")
+    expect(previewRun.requestedModel.variant).toBe("recorded-explicit")
+    expect(previewRun.record.model.variant).toBe("recorded-explicit")
+    const storedPreviewSession = await Effect.runPromise(fixture.sessionStore.get(previewRun.session.id))
+    expect(digestSfValue(storedPreviewSession?.model)).toBe(digestSfValue(previewRun.record.model))
+    expect(digestSfValue(storedPreviewSession?.location)).toBe(digestSfValue(fixture.installation.location))
     const previews: ImportManifest[] = []
     for (const surface of ["native", "mcp"] as const) {
       const result = await previewRun.call(surface, "sf_import_preview", request)
@@ -116,6 +121,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(forecastProof.value.promptContext?.importPreview.manifest).toEqual(chosen)
     const forecastPrompt = sfAnalysisPrompt(analysisRequest.objective, forecastProof.value)
     const native = await fixture.bind("sf-explicar-forecast", prepared.value, forecastPrompt)
+    expect(native.requestedModel).not.toHaveProperty("variant")
+    expect(native.record.model.variant).toBe("default")
     expect(native.promptAdmission?.prompt.text).toBe(forecastPrompt)
     expect(native.promptAdmission?.sessionID).toBe(native.session.id)
     const complete = await native.complete({ kind: "FinancialAnalysis", payload: prepared.value.forecastComparison, evidenceRefs: prepared.value.sourceRefs }, async (output, call) => {
