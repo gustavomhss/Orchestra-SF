@@ -1,0 +1,148 @@
+{
+  "schema": "sf-wp00-published-scanner-observation-v1",
+  "product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537536421",
+  "job_id": 132270061005,
+  "run_conclusion": "success",
+  "test_passed": true,
+  "marker_must_not_be_used_without_final_test_verdict": true,
+  "observation": {
+    "schema": "sf-wp00-scanner-host-preflight-v1",
+    "environment": "github-actions-runner",
+    "runId": "43537536421",
+    "runAttempt": "1",
+    "snapshotSha": "e01e84a6f213b981de60489811383112736ba3f6",
+    "runnerOs": "Linux",
+    "runnerArch": "X64",
+    "runnerScannerStatus": "absent",
+    "scanner": {
+      "name": null,
+      "command": null,
+      "args": null,
+      "resolvedPath": null,
+      "realPath": null,
+      "sha256": null,
+      "version": null,
+      "versionExitCode": null,
+      "productProbeVersion": null
+    },
+    "probes": {
+      "clean": null,
+      "canary": null
+    },
+    "writes": {
+      "clean": {
+        "ok": false,
+        "refusal": "scanner-unavailable",
+        "scanner": "no-scanner-on-path"
+      },
+      "canary": {
+        "ok": false,
+        "refusal": "scanner-unavailable",
+        "scanner": "no-scanner-on-path"
+      },
+      "cleanRecords": 0,
+      "finalRecords": 0,
+      "canaryChangedPartition": false
+    },
+    "elapsedMs": 10,
+    "c17Status": "HOLD",
+    "gnativeStatus": "NOT_PROVEN",
+    "limitation": "Runner scanner/write-door evidence only; no installed-host identity, native provider, durable host transaction or full C17 acceptance. Executable identity is observed here, not a new product pin."
+  },
+  "qualification": {
+    "runner_fail_closed": "PASS",
+    "controlled_unable_to_run_refusal": "PASS",
+    "WP00.T04.CHK.12": "PASS",
+    "installed_scanner": "NOT_PROVEN",
+    "C17": "HOLD",
+    "GNATIVE": "NOT_PROVEN"
+  },
+  "next_owner": "WP10.T07/S0",
+  "next_action": "Provide and pin the allowed scanner dependency in the installed product; record its path/version/digest and real clean/canary behavior, then qualify the durable host transaction. Do not substitute a simulated scanner.",
+  "historical_observations": [
+    {
+      "product_sha": "fe30d34f509bd1d7ab12d30566200f1059eb5456",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43522589708",
+      "job_id": 132220306494,
+      "observation": {
+        "schema": "sf-wp00-scanner-host-preflight-v1",
+        "environment": "github-actions-runner",
+        "runId": "43522589708",
+        "runAttempt": "1",
+        "snapshotSha": "d3ce1eab9779b12a283f7ddefb812901a94144b2",
+        "runnerOs": "Linux",
+        "runnerArch": "X64",
+        "runnerScannerStatus": "absent",
+        "scanner": {
+          "name": null,
+          "command": null,
+          "args": null,
+          "resolvedPath": null,
+          "realPath": null,
+          "sha256": null,
+          "version": null,
+          "versionExitCode": null,
+          "productProbeVersion": null
+        },
+        "probes": {
+          "clean": null,
+          "canary": null
+        },
+        "writes": {
+          "clean": {
+            "ok": false,
+            "refusal": "scanner-unavailable",
+            "scanner": "no-scanner-on-path"
+          },
+          "canary": {
+            "ok": false,
+            "refusal": "scanner-unavailable",
+            "scanner": "no-scanner-on-path"
+          },
+          "cleanRecords": 0,
+          "finalRecords": 0,
+          "canaryChangedPartition": false
+        },
+        "elapsedMs": 17,
+        "c17Status": "HOLD",
+        "gnativeStatus": "NOT_PROVEN",
+        "limitation": "Runner scanner/write-door evidence only; no installed-host identity, native provider, durable host transaction or full C17 acceptance. Executable identity is observed here, not a new product pin."
+      }
+    }
+  ],
+  "controlled_invocation_failure": {
+    "schema": "sf-wp00-scanner-controlled-failure-v1",
+    "runId": "43537536421",
+    "snapshotSha": "e01e84a6f213b981de60489811383112736ba3f6",
+    "evidenceKind": "controlled-invocation-failure-regression",
+    "runtimeExecutable": "/home/runner/.bun/bin/bun",
+    "runtimeVersion": "1.3.14",
+    "classifierDescriptor": "trufflehog",
+    "observedExitCode": 1,
+    "observed": {
+      "detectedCommand": "/home/runner/.bun/bin/bun",
+      "exitAllowedAsClean": false,
+      "exitAllowedAsHit": false,
+      "stderrNamesMissingScript": true,
+      "stderrTruncated": false,
+      "verdict": "could-not-run",
+      "adapter": {
+        "returned": null,
+        "error": "scanner unavailable"
+      },
+      "write": {
+        "ok": false,
+        "refusal": "scanner-unavailable",
+        "scanner": "trufflehog"
+      },
+      "records": 0,
+      "events": []
+    },
+    "installedScanner": "NOT_PROVEN",
+    "c17Status": "HOLD",
+    "gnativeStatus": "NOT_PROVEN",
+    "limitation": "Real Bun failure, canonical subprocess classifier, product adapter and Atlas write door only. Bun is not a scanner; no installed gitleaks/trufflehog, timeout, clean/hit detection or durable host qualification is claimed."
+  },
+  "controlled_failure_limit": "The invoked executable is Bun, not an installed scanner. Its real failure qualifies the unable-to-run refusal branch only; it supplies no clean/hit, native host or installed scanner acceptance."
+}

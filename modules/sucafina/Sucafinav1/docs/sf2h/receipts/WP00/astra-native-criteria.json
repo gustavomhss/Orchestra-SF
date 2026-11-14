@@ -1,0 +1,271 @@
+{
+  "schema": "sf-wp00-independent-native-preflight-v1",
+  "reviewer": "/root/native_qualification",
+  "task_status": "DRAFT/BLOCKED",
+  "native_execution": "NOT_RUN",
+  "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+  "tool_registry_entries_observed": 326,
+  "exposed_native_tool_matches": [],
+  "criteria": [
+    {
+      "criterion_id": "WP00.T04.CHK.01",
+      "requirement": "Verificador detecta qualquer colisão entre escritores existentes ou prefixos novos.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Ownership collision verifier was not run by the independent native reviewer.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.02",
+      "requirement": "Uma receita mínima linear percorre a admissão governada prevista e produz uma saída verificável no caminho nativo disponível; aprovação humana permanece fora dos steps Relay.",
+      "review_status": "BLOCKED",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "C07-01: the candidate and newer host producer supply unavailable routine ports; no governed Relay recipe executed.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.03",
+      "requirement": "Qualquer incapacidade do host é registrada como bloqueio da ligação correspondente, sem redefinir o aceite para passar.",
+      "review_status": "STATIC_EVIDENCE",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "NATIVE-01, C07-01, SCANNER-01 record precise capability gaps without changing acceptance.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.04",
+      "requirement": "Qualificar a autorização do run e dos resultados/arquivos nativos: acesso revogado não pode ser recuperado por link alternativo. Se o caminho nativo não suportar o recorte, definir saída sem conteúdo sensível e resolver o contrato antes de declarar C08 apto, sem modificar o engine.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Native run/file revocation and alternate-link denial were not exercised on an installation.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.10",
+      "requirement": "Fonte skill pronta13, caso real14, adapter Planner15, ponte16, composição18 e inferência/listTools/callTool consumida18–20; sem fixture de porta final.",
+      "review_status": "BLOCKED",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "NATIVE-01: source composition exists, but no installed Request/case/Session/provider/tool/consumer chain was observed.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.11",
+      "requirement": "NativeContext ausente, operação proibida e provider homônimo são recusados; indisponibilidade não substitui prova por generate tool-less.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Code and synthetic SDK tests contain missing-context/non-granted/namesake controls; actual native negatives unexecuted.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.12",
+      "requirement": "Scanner sem binário ou unable-to-run marca HOLD na qualificação C17 e não clean.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Source distinguishes unavailable scanner; real missing-binary/timeout probe was not run. C17 remains HOLD.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.40",
+      "requirement": "Uma execução 18-20 registra caso/principal/perfil/skill/digest/modelo/bridge/tool/domain/retorno reais e recusa chamada não concedida/provider homônimo.",
+      "review_status": "BLOCKED",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "No actual native inference or receipt with the required case/profile/skill/model/bridge/domain chain.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.41",
+      "requirement": "Ler roster e leases: nenhum período excede quatro atores por sessão; gates determinísticos continuam por T02 quando GNATIVE falha.",
+      "review_status": "PARTIAL_STATIC",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Current live roster is root + 3 children; historical roster/leases not reconstructed or certified.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CHK.42",
+      "requirement": "Scanner real observado é registrado antes T20: binary/version/path e clean probe. Ausente/timeout mantém estado explícito e dono T07; não considerar makeScannerAdapter ou stub como prova de execução real.",
+      "review_status": "BLOCKED",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "No observed scanner executable/path/version/clean probe; path pinning helper gap assigned WP10.T07.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.DOD.01",
+      "requirement": "GNATIVE registra o binding real, a inferência escopada, a preparação de admissão e o resultado da qualificação. Impedimentos mantêm esta task aberta; G0 de contratos não depende desta conclusão.",
+      "review_status": "BLOCKED",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "GNATIVE is NOT_RUN; impediments leave T04 open.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.DOD.02",
+      "requirement": "Qualificação identifica e exercita os serviços reais ou registra o impedimento específico. Um impedimento mantém esta task aberta; não transforma o gate de contratos em bloqueio global.",
+      "review_status": "PARTIAL_STATIC",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Real source services and specific impediments documented; task remains open until actual exercise.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.DOD.10",
+      "requirement": "GNATIVE prova pelo menos1perfil/1skill/1pack reais com cadeia inteira e recibo verificável.",
+      "review_status": "BLOCKED",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "No real 1 profile/1 skill/1 pack complete native execution receipt.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.DOD.40",
+      "requirement": "GNATIVE é exercício real da cadeia, separado de G0 e CI.",
+      "review_status": "BLOCKED",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "GNATIVE was not executed; it is kept distinct from contracts and hosted tests.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.INV.01",
+      "requirement": "Não contornar o início governado nem simular execução nativa usando um botão local ou resultado pré-fabricado.",
+      "review_status": "STATIC_EVIDENCE",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Reviewer did not bypass governance, run substitute native provider, or fabricate result.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.INV.10",
+      "requirement": "Tranche mínima não reduz as obrigações5/18/8 nem usa identidade de engineering para passar.",
+      "review_status": "STATIC_EVIDENCE",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "5/18/8 obligations preserved; no engineering identity substituted.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.INV.40",
+      "requirement": "Qualifier S3 não escreve runtime oucase que qualifica.",
+      "review_status": "STATIC_EVIDENCE",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Independent reviewer modified no runtime or C09 case source; review is not presented as native S3 acceptance.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.QLT.01",
+      "requirement": "A prova mínima é limitada ao caminho necessário de produto e não vira uma investigação de infraestrutura.",
+      "review_status": "STATIC_EVIDENCE",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Inspection limited to actual product chain, provider branches, scanner and existing test runner.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.QLT.10",
+      "requirement": "Preflight distingue SDK/binding/model/driver/scanner indisponíveis e conserva causalidade de falha.",
+      "review_status": "PARTIAL_STATIC",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Source separates SDK/binding/catalog/session/scanner; unobserved installed availability retained explicitly.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.QLT.40",
+      "requirement": "Recibo incluiSHA e valores/proveniência observados; não usar conclusão de mock.",
+      "review_status": "PARTIAL_STATIC",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Report records exact source pins and evidence; runtime observed values are absent and not invented.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CMP.01",
+      "requirement": "Cobrir edição compartilhada, consumo de contratos, admissão, versão publicada, resultado, falha e diferença entre Schedule e Relay.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Governed admission/result/failure/Schedule-vs-Relay end-to-end behavior remains unexecuted.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CMP.10",
+      "requirement": "Gates incluem perfil, skill carregada, MCP autorizado, domínio real, caso e consumidor, com negativos de identidade.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Required source gates exist; full real case/consumer and negative identity exercise is outstanding.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.CMP.40",
+      "requirement": "Cobrir carga, chamadaautorizada/diretanegada, conflito de provider e indisponibilidade, com caso real.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Actual skill load, allowed/denied call, provider conflict and unavailable paths need installed-host exercise.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.SUC.01",
+      "requirement": "As frentes de produto desta campanha podem construir em paralelo com fontes de verdade e pontos de integração conhecidos.",
+      "review_status": "PARTIAL_STATIC",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Source/owner integration points supplied; deterministic contract work can continue independently.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.SUC.10",
+      "requirement": "AtéT20 se sabe se a cadeia nativa é realizável no ambiente; prazo falho é relatado, nunca reinterpretado.",
+      "review_status": "NOT_RUN",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Historical T+20 condition cannot be retroactively certified; current surface cannot perform native chain.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    },
+    {
+      "criterion_id": "WP00.T04.SUC.40",
+      "requirement": "O gate descobre cedo falha de integração sem reter construção determinística.",
+      "review_status": "PARTIAL_STATIC",
+      "product_acceptance_status": "NOT_PROVEN",
+      "reason": "Concrete candidate integration gaps identified and assigned without blocking independent T02 work.",
+      "evidence": "native-review.md",
+      "source_commit": "7631b186e4249abd0fc24c7d10beb62355db3f3b",
+      "runtime_run": null
+    }
+  ]
+}

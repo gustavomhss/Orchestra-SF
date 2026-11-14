@@ -1,0 +1,35 @@
+{
+  "schema": "sf2h-preparation-static-review-v1",
+  "recordedAt": "2026-11-14T19:44:59.834131+00:00",
+  "scope": "read-only cold review of preparation code/data against existing immutable sources",
+  "independence": "Delegated preparation collaborators reviewed disjoint scopes; this is not any of the three final independent reviews for accepted C. No author claims final reviewer authority.",
+  "productTestsExecuted": 0,
+  "nativeProofsExecuted": 0,
+  "findingsResolved": [
+    {
+      "area": "capture parity",
+      "finding": "CapabilityResult.outputRef is optional; baseDigest/caseRef are not universal receipt fields.",
+      "resolution": "Preserve optional outputRef; require unaltered raw receipt; bind normalized fields to handlerExport/principalRef/accessRevision/callId/inputDigest/resultDigest; observe case/base separately with evidence. UI exposure requires an observed UI action."
+    },
+    {
+      "area": "resource coverage",
+      "finding": "Request resource IDs and host requirement IDs are different namespaces with missing explicit facets.",
+      "resolution": "Many-to-many mapping for all 17 resources reaches all 17 preflight requirements. Expanded actual descriptor, C16, bridge, provider lifecycle, Atlas transaction/documents and Schedule facets without removing prior requirements."
+    },
+    {
+      "area": "campaign receipts",
+      "finding": "Generic S0-B evidence fields need preservation in addition to native proof-specific receipt fields.",
+      "resolution": "Exact complete campaign_evidence object copied from pinned S0-B; all 48 fields exposed in plan/template and required by capture validator with explicit non-applicability reasons."
+    },
+    {
+      "area": "hook usability",
+      "finding": "Owner hook IDs and canonical plan IDs use different naming conventions.",
+      "resolution": "All 278 hooks explicitly mapped by exact source pointer to canonical check_id, preserving expected text and consumer tasks."
+    }
+  ],
+  "limitations": [
+    "Static source/shape review cannot authenticate arbitrary owner callbacks or archived claims.",
+    "No Bun typecheck, guards, product CI, installed model/provider call or native proof was run.",
+    "AM06 and six AM02 Routines routes retain the observed installed-port composition gap."
+  ]
+}

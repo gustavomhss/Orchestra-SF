@@ -1,0 +1,631 @@
+{
+  "schema": "sf2h-native-preflight-v1",
+  "observedAt": "2026-11-14T19:27:23.892Z",
+  "sourceHead": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+  "candidateC": null,
+  "scope": "source-presence-and-capability-discovery",
+  "status": "NEEDS_HOST",
+  "finalExecutionAllowed": false,
+  "finalGate": "S0 must verify acceptance of the same C before calling the final runner",
+  "nativeAccepted": false,
+  "nativeExecutions": 0,
+  "planDigest": "23a7020be1b4487a09a7751082563728121d8183cf633138cb0e229517d5154a",
+  "counts": {
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39,
+    "proofDefinitions": 12,
+    "checks": 278
+  },
+  "runtime": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "capabilities": [
+    {
+      "id": "shared.host-placement",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "ownerTasks": [
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "operation": "Discover the installed Orchestra root, Location and candidate without admitting a run",
+      "resource": "Existing authenticated Orchestra host exposing its current installationId, hostId, projectId, Location.Ref and runtime build SHA",
+      "requiredEvidence": [
+        "actual origin and SF mount",
+        "runtime_build_sha equals supplied candidate C",
+        "installation/project/location identities returned by that root",
+        "current provider object/generation identification"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No Orchestra native host API is exposed to this preparation session. Desktop Commander lists the user's Mac offline; this is not evidence that a runtime is running elsewhere.",
+      "nextAction": "Host owner supplies a reachable existing installation and a read-only readiness observation; do not create credentials, guess localhost, restart desktop/server or infer model availability."
+    },
+    {
+      "id": "shared.authority",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "ownerTasks": [
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "operation": "Admit current authenticated human/UI and native contexts using the root's private registries",
+      "resource": "Actual Request/session authority and C08/C16 registry for selected cases; two independently authorized actors for isolation",
+      "requiredEvidence": [
+        "principalRef/accessRevision/policyVersion",
+        "case id/incarnation/version",
+        "lease lifetime and providerGeneration",
+        "real callID joined to domain port/receipt",
+        "two sessions with same profile and distinct accessible contexts"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No authenticated Orchestra principal or private registry lease is available here. JSON, casts and fixture memberships cannot supply it.",
+      "nextAction": "Use host-issued contexts only. For denied probes submit untrusted arguments through the real wrapper; never construct a TrustedExecutionBinding or synthetic grants in this harness."
+    },
+    {
+      "id": "shared.model",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM06"
+      ],
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "operation": "Resolve the selected model from Catalog and exercise SessionV2 through installed SfNativeHostApi",
+      "resource": "Existing provider/model available in the real Location, current C15 budget reservation and distributed skill source capability",
+      "requiredEvidence": [
+        "effective providerID/model id/variant returned by Catalog and session",
+        "native_session_id/run_id",
+        "actual source_path/version/digest from SkillLoadReceipt",
+        "budget reservation/token-count receipt",
+        "author and independent reviewer run identities"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No provider credentials, available-model list or current C15 reservation has been observed. Repository declarations are not model access.",
+      "nextAction": "Owner exposes existing authorized model selection and onReady SfNativeHostApi. Preserve c15-context-budget-gate-unavailable/resident-source-or-model-unavailable when absent."
+    },
+    {
+      "id": "shared.observer",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "ownerTasks": [
+        "WP10.T01",
+        "WP10.T06",
+        "WP12.T01"
+      ],
+      "operation": "Capture and join authenticated runtime observations without changing authority",
+      "resource": "Existing onSkillLoaded/onVerifiedCall callbacks, native collect(binding), canonical run/output readers and real UI consumer after reload",
+      "requiredEvidence": [
+        "SkillLoadReceipt",
+        "C16 receipt and operation/domain callID/result digest",
+        "ordered actual SessionV2 transcript",
+        "persisted outputRef/schemaVersion",
+        "consumer action and reload observation",
+        "negative outcome with no restricted egress"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "Hooks exist in code but no installed observer or live binding is exposed. onVerifiedCall observes successful verified calls only; absence of a callback is not a denied-call proof.",
+      "nextAction": "Bind observation only through the owner composition capability and collect failures at their actual wrapper/result. Do not accept self-reported pass flags, screenshot alone or transcript from another SHA."
+    },
+    {
+      "id": "am04.human-choice-apply",
+      "proofs": [
+        "AM04"
+      ],
+      "ownerTasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "operation": "Prepare with model; choose, review and Apply through admitted human actions",
+      "resource": "Existing decision HTTP mount and PreparedApplyPort for each actual target domain",
+      "requiredEvidence": [
+        "human choice reason and alternative/version/basis",
+        "prepared change and target incarnation/expectedVersion",
+        "actual reviewDigest returned by decision-review",
+        "canonical CommandReceipt plus domain-state effect",
+        "original ChoiceRecord preserved",
+        "human authority revalidated per domain"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "APIs exist, but no authorized case, choice, target data or authenticated human session is available in this session.",
+      "nextAction": "Use real selected case inputs and existing human UI/HTTP. Native contexts must remain denied for executePrepared; never derive authority from a model-provided actor/role."
+    },
+    {
+      "id": "am04.commit-loss-barrier",
+      "proofs": [
+        "AM04"
+      ],
+      "ownerTasks": [
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "operation": "Lose the result after the domain transaction commits and before case reconciliation",
+      "resource": "Owner-supported one-attempt fault barrier at PreparedApplyPort.executePrepared return / createPreparedExecution reconciliation boundary",
+      "requiredEvidence": [
+        "barrier trace before and after domain commit",
+        "persisted domain receipt before case update",
+        "lost response observation",
+        "retry request retaining same idempotencyKey and commandDigest",
+        "exactly one domain effect and one canonical receipt",
+        "case reconciliation after recovery"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No public native fault barrier is exposed in the inspected code or this session. Browser response loss after the complete handler does not prove the earlier commit-to-reconciliation interval.",
+      "nextAction": "WP11.T04/WP10.T01 must expose or supply an already supported controlled observation at this boundary; preparation keeps this request blocked rather than editing active hosts or substituting a fixture."
+    },
+    {
+      "id": "am04.replay-revocation-partial",
+      "proofs": [
+        "AM04"
+      ],
+      "ownerTasks": [
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "operation": "Replay a committed command; reject changed content or revoked authority and display partial domain state",
+      "resource": "Existing canonical receipt lookup plus owner-approved source/version/access changes on the selected test case",
+      "requiredEvidence": [
+        "same key and digest recover same receipt/effect",
+        "same key changed digest conflicts",
+        "stale target version does not apply",
+        "revoked reader cannot recover restricted receipt",
+        "one domain committed while another blocked yields explicit partial state",
+        "reload preserves choice and known receipt"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No mutable authorized domain/case scope or permission-revocation operation is exposed here.",
+      "nextAction": "Provide isolated authorized business corpus and actual owner-supported revocation/change operations. Never mutate role maps, mint principals or assert a global transaction."
+    },
+    {
+      "id": "am05.atlas-source-context",
+      "proofs": [
+        "AM05"
+      ],
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T02",
+        "WP14.T05",
+        "WP10.T07"
+      ],
+      "operation": "Resolve original evidence and emit/recall via real Atlas boundary and protected C08 state",
+      "resource": "Installed BusinessContextService/createSfAtlasMemory, genuine committed case/outbox event and admitted document/record/calculation/receipt sources",
+      "requiredEvidence": [
+        "resolved module path and engine/boundary digests",
+        "BusinessEvidenceRef document/incarnation/revision/span/blob and text digests",
+        "record incarnation/version/fields/period",
+        "calculation engine/input/result digest and canonical receipt",
+        "createMemoryEmit/createMemoryRead/DurableMemory observed calls",
+        "missing/invalidated source refused"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "Code is reusable but neither a current business evidence scope nor real installed Atlas instrumentation is exposed.",
+      "nextAction": "Use original owner APIs and private outbox generated by real case actions. Reading only the SF ledger, a copied memory entry or a serialized call context cannot prove AM05."
+    },
+    {
+      "id": "am05.scanner",
+      "proofs": [
+        "AM05"
+      ],
+      "ownerTasks": [
+        "WP10.T07"
+      ],
+      "operation": "Probe and run the installed native-memory scanner through trusted host configuration",
+      "resource": "Actual qualified gitleaks/trufflehog binary with absolute path, canonical ScannerBinarySpec, version and digest",
+      "requiredEvidence": [
+        "binary absolute path/version/SHA256",
+        "clean verdict and committed append",
+        "synthetic secret-canary hit with no append",
+        "real process timeout with scanner-unavailable and no append",
+        "absent executable with scanner-unavailable and no append",
+        "unchanged host-selected command/spec authority"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "The host scanner has not been discovered or qualified. Existing component tests install a real scanner in CI but do not establish this host's capability.",
+      "nextAction": "Host owner provides existing qualified scanner and controlled absence/timeout scenarios. Never accept always-clean callbacks, a Bun executable standing in for scanner, or model-selected command/path/timeout."
+    },
+    {
+      "id": "am05.durability-restart",
+      "proofs": [
+        "AM05"
+      ],
+      "ownerTasks": [
+        "WP10.T07",
+        "WP14.T02"
+      ],
+      "operation": "Append, await commit, reopen in a new process and recall with newly authenticated binding",
+      "resource": "Owner-managed isolated proof process and protected store using the installed candidate C",
+      "requiredEvidence": [
+        "append trace distinct from async commit",
+        "committedRevision/eventId/recordDigest",
+        "same event recovered as already-committed",
+        "parent and reader OS process IDs differ",
+        "old process disposal/new process start trace",
+        "new authenticated binding and same persisted source context",
+        "consumer opens prior case and current differences"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No owner-managed restart scope or installed store is available. WP14's existing child reader uses explicit synthetic identities and emits nativeSessionWitness:false.",
+      "nextAction": "Reuse its process/receipt assertion pattern only; execute through an owner-managed isolated proof instance with real reauthentication. Do not restart the user's desktop/server or reuse a serialized old binding."
+    },
+    {
+      "id": "am05.commit-failure-loss",
+      "proofs": [
+        "AM05"
+      ],
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "operation": "Observe failed commit and lost committed response, then retry through original outbox",
+      "resource": "Owner-supported transaction fault/response-loss observation with actual C08 persistence",
+      "requiredEvidence": [
+        "commit=false or failure leaves no new durable event",
+        "lost committed response preserves log/envelope/outbox consistency",
+        "same source event/digest recovers durable receipt",
+        "changed event digest conflicts",
+        "no success on synchronous append alone"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No supported native transaction fault barrier is exposed in this session.",
+      "nextAction": "Owner supplies an existing controlled fault mechanism; harness may validate receipts but must not replace persistence with callbacks or call a staged append durable."
+    },
+    {
+      "id": "am05.isolation-revocation",
+      "proofs": [
+        "AM03",
+        "AM05"
+      ],
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T07",
+        "WP14.T02"
+      ],
+      "operation": "Exercise same-profile actors, wrong owner/session/case and source revocation/incarnation replacement",
+      "resource": "Two real independently authorized sessions plus one scoped private canary and owner-approved permission/source changes",
+      "requiredEvidence": [
+        "no cross-actor content/title/count/cache leak",
+        "owner omitted/forged fails",
+        "session/case mismatch fails",
+        "revocation removes prompt/BI/report/link/recall payloads",
+        "replacement does not regain validity by textual ID",
+        "restored access re-resolves current source",
+        "precedent explanation compares actual current differences"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "Fixture actors in WP14 are insufficient; no real two-actor scope/revocation capability is exposed.",
+      "nextAction": "Provide existing authorized actors and a private proof corpus; invoke the real wrapper and current source revalidation. Do not synthesize enterprise identities."
+    },
+    {
+      "id": "am05.packaging",
+      "proofs": [
+        "AM05"
+      ],
+      "ownerTasks": [
+        "WP10.T07"
+      ],
+      "operation": "Check actual Atlas business/native exports, AST external edge, generated artifacts and spawn guard on C",
+      "resource": "Canonical boundary builder/check:generated, business-memory-ports tests and root check:spawn-imports",
+      "requiredEvidence": [
+        "exact external memory-emit.ts -> ./scanner.js -> @orchestra/atlas-boundary/native-memory edge",
+        "zero spawn imports/computed imports/eval/scanner bodies in business bundle",
+        "bound native exports retained; no raw factories in native entry",
+        "SHA256 of all four generated JS/d.ts artifacts",
+        "guard and allowlist byte identity",
+        "real commands/run/job/results pinned to C"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "Packaging sources and four blob identities exist; no current accepted-C packaging gate has run for this preparation.",
+      "nextAction": "Reuse existing boundary tests/build checks in canonical CI when C is accepted. Do not edit generated artifacts, widen spawn allowlist or relabel a component green as native acceptance."
+    },
+    {
+      "id": "am05.documents-artifacts",
+      "proofs": [
+        "AM05"
+      ],
+      "ownerTasks": [
+        "WP06.T05",
+        "WP07.T04",
+        "WP10.T07"
+      ],
+      "operation": "Open and re-open admitted document evidence and generated material using current authorization",
+      "resource": "Original WP06 document store/resolver and actual WP07 artifacts, returned as opaque authorized refs",
+      "requiredEvidence": [
+        "PDF digital/DOCX/text extraction from admitted bytes",
+        "candidate versus human confirmation states",
+        "same evidenceRef revision/span/digests consumed",
+        "no-text/invalid/removed source remains explicit",
+        "artifact bytes/hash/format inspected after reload",
+        "revoked artifact/link cannot reveal source"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "No admitted document bytes or authenticated artifact store has been exposed here.",
+      "nextAction": "Owner selects existing authorized corpus and files; preserve source hashes and object identities. A local generated fixture file alone does not satisfy native artifact consumption."
+    },
+    {
+      "id": "am06.native-admission",
+      "proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "ownerTasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP10.T01",
+        "WP12.T04"
+      ],
+      "operation": "Resolve a published plan, prepare governed Task admission, start and read actual Relay execution",
+      "resource": "Installed SfRoutineNativePort implementing resolvePlan/resolveRecipe/prepare/readAdmission/start/readRun/listRunRefs/readExecution/readArtifact against real native storage",
+      "requiredEvidence": [
+        "current publication documentId/publishedVersion",
+        "planRevisionId/writeScope/workflowParameters/inputDigest",
+        "admissionRef/version/authorizationId/armRef/correlationId",
+        "actual Relay runRef and terminal execution revision",
+        "child Session/profile/skill/load receipt",
+        "artifact outputDigest and current sourceRefs"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "CODE_GAP_CONFIRMED: host-context.ts constructs createSfRoutineServices without native at both pinned WP10 and observed current HEAD; comment states no routine descriptors advertised. Installed publication is read-only and cannot provide admission/execution.",
+      "nextAction": "WP10.T01/WP09.T07 installs the real governed native port in its own namespace, then S0 composes its SHA into C. Do not implement a fake SfRoutineNativePort or treat SessionV2.resume/external self-reported run JSON as Task admission."
+    },
+    {
+      "id": "am06.return-retry",
+      "proofs": [
+        "AM06"
+      ],
+      "ownerTasks": [
+        "WP09.T07",
+        "WP12.T04",
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05"
+      ],
+      "operation": "Read actual run/result, consume the canonical artifact in product and resume after input/failure",
+      "resource": "Same SfRoutineNativePort plus createRoutineResultAccess and existing product agenda/work consumers",
+      "requiredEvidence": [
+        "C11 queued/running/needs-input/ready/stale/cancelled/failed observations as applicable",
+        "actual run terminal state joined to artifact outputDigest",
+        "question ends run and response occurs in product",
+        "new version/ref after human answer",
+        "retry/reload preserves correlation and no duplicate proposal/effect",
+        "openResult/agenda consume same resultRef"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "Blocked by missing installed native C07 adapter and live product consumer.",
+      "nextAction": "Retain deterministic product facts when synthesis fails; observe new admitted run after human input. Never invent an in-run human wait or count a resultRef without terminal verification as completion."
+    },
+    {
+      "id": "am06.recursion-schedule",
+      "proofs": [
+        "AM06"
+      ],
+      "ownerTasks": [
+        "WP09.T06",
+        "WP09.T07",
+        "WP12.T04"
+      ],
+      "operation": "Deny recursive prepare/run in routine-result mode; exercise actual recurrence, cancellation and revocation",
+      "resource": "Host-bound entryMode and installed native Schedule adapter with current owner/timezone/recurrence",
+      "requiredEvidence": [
+        "interactive catalog/prepare and run only with current C07 admission",
+        "routine-result prepare/run denied with no new run",
+        "schedule id/owner/timezone/recurrence from current native service",
+        "cancellation/revocation prevents further unauthorized result and schedule effects",
+        "retry/reload dedupe",
+        "no business approval from recurrence"
+      ],
+      "status": "NEEDS_HOST",
+      "liveObservation": null,
+      "reason": "No live installed-host probe supplied",
+      "observedPreparationReason": "C07 is not installed; no Schedule execution or cancellation/revocation resource is exposed by this preparation session.",
+      "nextAction": "WP09.T06/WP09.T07 exposes existing supported native lifecycle; host sets entryMode, never model arguments. Preserve actual limitations and do not change Maestro/Relay/Schedule engines."
+    }
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-inputs.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-change-services.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/prepared-application-egress.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-http.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/analysis-options.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    },
+    {
+      "path": "modules/atlas/boundary/test/business-memory-ports.test.ts",
+      "status": "NOT_PRESENT_IN_CHECKOUT",
+      "sha256": null
+    }
+  ],
+  "missingHostCount": 17,
+  "missingSourceCount": 29
+}

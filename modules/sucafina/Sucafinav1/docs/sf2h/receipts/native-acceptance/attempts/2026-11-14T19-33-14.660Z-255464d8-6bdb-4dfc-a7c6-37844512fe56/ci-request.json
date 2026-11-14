@@ -1,0 +1,17 @@
+{
+  "status": "REQUEST_VALIDATED_NOT_DISPATCHED",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/native-acceptance/preparation.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "omniControlScope": "declared",
+  "dispatchAllowedHere": false,
+  "reason": "Only astra-wp00/PR20 is authorized; canonical CI needs a separate ci-run-* snapshot ref."
+}

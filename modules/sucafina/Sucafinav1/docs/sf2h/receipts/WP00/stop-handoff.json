@@ -1,0 +1,64 @@
+{
+  "schema": "sf-wp-stop-v1",
+  "wp": "WP00",
+  "branch": "sf2-compose",
+  "checkpoint_before_handoff": {
+    "head": "a0503c5a88c0b78f3b330d8ab1379b6f300f835b",
+    "tree": "57696e67448ffb62d105c0cb59d06a841076d7ad"
+  },
+  "handoff_commit": "the commit containing this file; its SHA cannot be embedded in itself",
+  "input": {
+    "baseline": "55f7e707c8c9a01aa880fce542b851ad7840508f",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "foreign_copies": "none staged; source-only peer SHAs documented in conversation"
+  },
+  "tasks": {
+    "WP00.T01": "partial; static baseline, no runtime proof",
+    "WP00.T02": "partial; shared contract changes need provider integration",
+    "WP00.T03": "partial; synthetic corpus consumed by domain tests, hosted proof not run",
+    "WP00.T04": "blocked externally; GNATIVE and C07 not demonstrated"
+  },
+  "workers": [
+    {
+      "id": "S0-A",
+      "model": "gpt-6.1-terra",
+      "state": "stopped after handoff",
+      "lease": "WP00 e14 released"
+    },
+    {
+      "id": "/root/wp00_t03",
+      "model": "gpt-6-luna",
+      "state": "completed",
+      "lease": "released"
+    },
+    {
+      "id": "01a1d65e-bbf6-7a12-a4e3-05e434ab890b",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "fenced"
+    },
+    {
+      "id": "01a1d65c-d9a5-7583-87d0-052e5e6202e6",
+      "model": "grok-4.7-build",
+      "state": "terminal HTTP 402",
+      "lease": "fenced"
+    }
+  ],
+  "changes": "Contracts C11, C02, C08, mixed scenario provenance; generated schemas; baseline and corpus; C07 factual receipt. Consumer/provider peers require integration.",
+  "checks": {
+    "local_tests": "NOT_RUN",
+    "hosted_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guard": "NOT_RUN",
+    "GNATIVE": "NOT_RUN",
+    "AM01-AM06": "NOT_RUN"
+  },
+  "findings": [
+    "C07 governed admission, SF reauthorization and result reader not demonstrated",
+    "C08 namespace and new private records depend on WP10 provider/migration",
+    "WP12/WP13/WP02/WP03 consumers depend on contract changes",
+    "T01 static evidence and T03 acceptance/volume measurement incomplete",
+    "Grok quota exhausted HTTP 402"
+  ],
+  "resume": "Fence old writers, inspect exact handoff commit and remote, integrate WP10 and producer dependencies, complete T01-T04 including independent GNATIVE, then request one final scoped hosted gate and PR; no local tests."
+}
