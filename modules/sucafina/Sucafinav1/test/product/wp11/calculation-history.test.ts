@@ -24,7 +24,7 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
   const fixture = await plannerFixture()
   try {
     for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
-    const context = await fixture.admit("sf-human:planner.read", {})
+    const context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
     const http = fixture.host.requestFor(context)
     if (!http) throw new Error("Real UI authority unavailable")
     const issuedSource = await fixture.issueSource("v0", context)

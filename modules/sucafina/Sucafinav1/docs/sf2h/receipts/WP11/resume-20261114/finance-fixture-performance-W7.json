@@ -1,0 +1,317 @@
+{
+  "schema": "sf-wp11-fixture-performance-w7-v1",
+  "recordedAtUtc": "2026-11-14T10:52:16.427540+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "WP11 own fixtures/tests; publication and hosted execution owned by root",
+  "priorHostedFailures": [
+    {
+      "selection": "H1",
+      "productSha": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "snapshotSha": "aba3100dc20ec6e305c22c9930bd438730ea05c9",
+      "runIds": [
+        43585795893
+      ],
+      "logSha256": "1ba407e9d72bbd660c767f0ac47dbcaf45e3310f0de72282baa4b4650b8f1563",
+      "summary": {
+        "pass": 0,
+        "fail": 1,
+        "error": 1,
+        "tests": 1,
+        "files": 1,
+        "durationSeconds": 180.16
+      },
+      "failures": [
+        {
+          "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "status": "fail",
+          "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+          "line": 832,
+          "timestamp": "2026-11-14T10:37:42.8796103Z",
+          "durationMs": 180022.29,
+          "timeoutMs": 180000
+        }
+      ],
+      "lastTrace": {
+        "renewal-choice-history": {
+          "line": 817,
+          "label": "renewal-choice-history",
+          "phase": "threshold-before:complete",
+          "elapsedMs": 180005,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.read.cases": {
+              "calls": 2362,
+              "elapsedMs": 52512,
+              "maximumMs": 50
+            },
+            "host.revalidate": {
+              "calls": 14365,
+              "elapsedMs": 20042,
+              "maximumMs": 24
+            },
+            "classified-source": {
+              "calls": 368,
+              "elapsedMs": 413,
+              "maximumMs": 12
+            },
+            "classified-coverage": {
+              "calls": 358,
+              "elapsedMs": 44307,
+              "maximumMs": 230
+            },
+            "c08.read.preferences": {
+              "calls": 680,
+              "elapsedMs": 18198,
+              "maximumMs": 52
+            },
+            "c08.transaction.preferences": {
+              "calls": 3,
+              "elapsedMs": 137,
+              "maximumMs": 64
+            },
+            "c08.transaction.cases": {
+              "calls": 5,
+              "elapsedMs": 301,
+              "maximumMs": 65
+            },
+            "planner.verifyOperation": {
+              "calls": 916,
+              "elapsedMs": 217580,
+              "maximumMs": 366
+            },
+            "operation-source": {
+              "calls": 5496,
+              "elapsedMs": 1327,
+              "maximumMs": 15
+            },
+            "operation-coverage": {
+              "calls": 3664,
+              "elapsedMs": 730,
+              "maximumMs": 17
+            }
+          }
+        }
+      }
+    },
+    {
+      "selection": "AR1",
+      "productSha": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "snapshotSha": "5e20813965995ee1a6745a3fe1908ac34db57ec4",
+      "runIds": [
+        43586380221
+      ],
+      "logSha256": "fa60d15e07db1909d099724a4b3e8eaec02b1721aac971d8ed9836037d8bfa58",
+      "summary": {
+        "pass": 24,
+        "fail": 2,
+        "tests": 26,
+        "files": 14,
+        "durationSeconds": 182.38
+      },
+      "failures": [
+        {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "status": "fail",
+          "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+          "line": 841,
+          "timestamp": "2026-11-14T10:41:51.2094273Z",
+          "durationMs": 18.88
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "status": "fail",
+          "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+          "line": 851,
+          "timestamp": "2026-11-14T10:44:51.2269748Z",
+          "durationMs": 180012.72,
+          "timeoutMs": 180000
+        }
+      ],
+      "lastTrace": {
+        "calculation-persistence": {
+          "line": 850,
+          "label": "calculation-persistence",
+          "phase": "outer-evidence:complete",
+          "elapsedMs": 180009,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.transaction.cases": {
+              "calls": 3,
+              "elapsedMs": 19,
+              "maximumMs": 12
+            },
+            "host.revalidate": {
+              "calls": 38116,
+              "elapsedMs": 345,
+              "maximumMs": 5
+            },
+            "c08.read.cases": {
+              "calls": 2585,
+              "elapsedMs": 9125,
+              "maximumMs": 10
+            },
+            "source.resolve": {
+              "calls": 10689,
+              "elapsedMs": 128155,
+              "maximumMs": 33
+            },
+            "source.coverage": {
+              "calls": 7690,
+              "elapsedMs": 167,
+              "maximumMs": 5
+            },
+            "evidence.recordProjection": {
+              "calls": 3210,
+              "elapsedMs": 101472,
+              "maximumMs": 75
+            },
+            "c08.read.preferences": {
+              "calls": 647,
+              "elapsedMs": 2629,
+              "maximumMs": 48
+            },
+            "c08.transaction.preferences": {
+              "calls": 2,
+              "elapsedMs": 22,
+              "maximumMs": 14
+            },
+            "c17.request:decision-result:wp11-calculation-1": {
+              "calls": 207,
+              "elapsedMs": 107907,
+              "maximumMs": 580
+            },
+            "c17.result:decision-result:wp11-calculation-1": {
+              "calls": 207,
+              "elapsedMs": 40740,
+              "maximumMs": 223
+            },
+            "planner.replay.nested": {
+              "calls": 210,
+              "elapsedMs": 30432,
+              "maximumMs": 3531
+            },
+            "evidence.calculation": {
+              "calls": 51,
+              "elapsedMs": 85258,
+              "maximumMs": 1819
+            },
+            "c17.request:decision-result:wp11-calculation-2": {
+              "calls": 5,
+              "elapsedMs": 70333,
+              "maximumMs": 17615
+            },
+            "c17.result:decision-result:wp11-calculation-2": {
+              "calls": 4,
+              "elapsedMs": 28053,
+              "maximumMs": 7058
+            }
+          }
+        }
+      }
+    }
+  ],
+  "h1Diagnosis": {
+    "measuredPhasesMs": {
+      "bootstrapComplete": 31372,
+      "prepareBeforeComplete": 82181,
+      "thresholdBeforeStart": 82208,
+      "thresholdBeforeComplete": 121922,
+      "guardFailure": 180005
+    },
+    "stateAtThresholdStartAndEnd": {
+      "stateBytes": 977337,
+      "transactions": 19,
+      "results": 12,
+      "changed": false
+    },
+    "conclusion": "The hot threshold interval has repeated reads/validation over constant durable state, not newly accumulating receipts or an infinite self-nested state value.",
+    "callGraph": "Each full operation verifier invokes two canonical comparisons (two Planner reads each) and one simulation transaction. Every outer local-store transaction decodes all three surfaces, including Dashboard C08. Repeating the verifier from nested case/scenario/criterion observations amplifies this fixed cost.",
+    "causeBoundary": "Inclusive trace durations overlap. They establish repeated calls and constant state, not an exclusive CPU profile. No saveCase/product mutation or foreign driver change was made."
+  },
+  "w7FixtureChanges": {
+    "minimalBootstrap": "Uses exactly the published WP05 renewal source inputs: USD/2027, renewal240000, bridge60000, implementation45000, service105000, omitted/bundled training classification. Production Planner computes both initial conditioned simulations; production C08 seeds one durable case. Removes unrelated initial result publication, criterion/bindings, sensitivity samples and threshold evaluation previously built by createWp05SensitivityFixture before WP11 rebuilt them.",
+    "assertions": "Every prior history financial/coverage/criterion/threshold/interval/retry/negative/reopen assertion is retained. Removed bootstrap work had no assertions in this history fixture and was reconstructed for the actual before/after cases anyway.",
+    "sourceOnlyAdmission": "Strict schema decoding precedes the branch. Nonempty operations OR assumptions still use the complete production operation verifier. Empty operations/assumptions use one complete production compareForecast observation with current actor, source scope/projection and ingress/egress fences, then exact source reread and host/request checks. No target-free simulation or redundant second comparison is needed; no observation is cached between calls.",
+    "canonicalQuoteRevision": "Uses production domain.execute Versions.copy and OPEX.save with the actual copied-line CAS version. Checks the original source projection is unchanged. Returns current source/basis/evidence hosts and supplies no calculated total; the classified Planner computes the subsequent250000/235000 scenarios.",
+    "sameBatchEvidence": "Within one evidence.context call, identical full-reference digests share one resolver promise and each requested position receives a cloned result. The map is created and discarded per call. All subsequent calls re-resolve authority and sources; no authorization or financial result cache spans operations.",
+    "humanChoiceWiring": "Preserves every UI/human grant, request/operation identity, command digest, source/snapshot verifier and choice method. The operational Planner uses current source authority without C10 enrichment; the judgment Planner retains original C10 coverage and criteria. API unchanged.",
+    "ruleBootstrap": "The initial criterion rule is now registered at expectedVersion0 because the discarded WP05 bootstrap rule no longer exists. Subsequent phases still increment and register real durable rule versions.",
+    "newCollaboratorRestart": "The seed explicitly includes collaborator as a participant. history.restart disposes the writer SQLite connection and finishes the old UI context, opens the same directory, and rebuilds UI/C08/case-port and source resolution from persisted data. The test verifies the old UI context is invalid, collaborator sees the same case/incarnation/version, original choice digest, current250000 result and one choice event; outsider is denied and revoked reader authority is denied.",
+    "budget": "Original180000ms timeout and wall-clock guard unchanged. Incomplete work remains failure."
+  },
+  "proofBoundaries": [
+    "The WP05 source-boundary remains synthetic: references are produced by canonical projectPlannerSource plus digests and explicit fixture declarations. This path does not use the installed scoped source issuer and is not GNATIVE proof.",
+    "All monetary outputs and comparisons remain production Planner outputs. Source amount literals are input fixtures, not recomputed formulas.",
+    "The new restart proof is disposal/reopen of SQLite plus new UI/C08/reader instances in the same hosted test process. It is not a native process restart or mounted browser session.",
+    "Collaborator membership and host identity/role inputs are explicit test fixture configuration, not independent external identity-provider evidence.",
+    "AR1 nested C17/source-authority failures remain failures. Root owns the separate calculation-history and calculation-persistence follow-up; these seven history files do not establish their resolution.",
+    "No runtime success or performance improvement is asserted until hosted CI executes these exact bytes."
+  ],
+  "validation": {
+    "relativeImportPaths": {
+      "status": "PASS_STATIC",
+      "missing": []
+    },
+    "gitDiffCheck": "PASS_STATIC",
+    "productTests": "NOT_RUN_LOCALLY",
+    "typecheck": "NOT_RUN_LOCALLY",
+    "independentReview": {
+      "status": "NO_CONCRETE_STATIC_BLOCKER",
+      "reviewer": "ci_reconciliation",
+      "scope": "All seven own test/fixture paths",
+      "findings": "Canonical source-only observation keeps decode, no-operation/no-assumption scope, current source/period, compareForecast ingress/egress, exact reread and host/signal fences. Complete verifier remains for other cases. Same-batch full-reference dedup preserves order/cardinality. Bootstrap ruleVersion0 matches an empty registry; quote CAS preserves original projection. New restarted reader rebuilds UI/C08/case-port and verifies persisted membership/current Planner sources. Human grants and classified judgment remain intact.",
+      "limitations": "Runtime completion, performance, scoped issuer and native/browser authority are not established by static review."
+    },
+    "hostedCi": {
+      "status": "PENDING_FOR_FINAL_BYTES",
+      "commitSha": null,
+      "runId": null
+    }
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "gitBlob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "sha256": "e1245f8cce8f39a460b49ddd43cd266fb851fabff9f348b094ce653202acd5c4",
+      "bytes": 16241
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "gitBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "sha256": "cafe5d427ece4fef7dabd7c90869afe14e82be58501bd47cd261037a42075a7b",
+      "bytes": 2994
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "gitBlob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "sha256": "d84af8ce76b4392699a595c05d24984f2de3e8f8555bd1c9a9df959fa6ec7def",
+      "bytes": 9193
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "gitBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "sha256": "d550cf3e4c24b89f8eb224071f72f0f39bc3d7b0446eb790231fcdb3b92d7209",
+      "bytes": 24863
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "gitBlob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "sha256": "f2149ed78166add2869fd2612d1936007c3a94862ebacdb277e0dba7c6f56ddf",
+      "bytes": 5144
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "gitBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+      "sha256": "92117e4ca3c542ed2308d42100a35f31e1cf163e5e90c08065d155a1ed737600",
+      "bytes": 14130
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "gitBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "sha256": "3235d1d73b2ff62c4f6d0120b8f043babd3539b5b4f2921b7685a0b997456f7c",
+      "bytes": 8546
+    }
+  ]
+}

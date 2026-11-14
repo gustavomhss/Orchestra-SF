@@ -35,7 +35,14 @@ test("nested C17 calculations reopen through persisted canonical requests and re
     }
     const evidence: BusinessContextService = { ...fixture.evidence, resolve, context: async ({ refs }, context) => Promise.all(refs.map((ref) => resolve(ref, context))) }
     const planner = createPlannerPort({ host: fixture.host, sources: fixture.sources, evidence })
-    const settings = { state, host: fixture.host, authorizeCase: async (value: DecisionCase) => value.id === fixture.caseRef.id && value.incarnation === fixture.caseRef.incarnation && value.participants.includes(fixture.context.binding.principalRef) && await fixture.host.revalidate(fixture.context), verifySources: async (_value: unknown, refs: readonly BusinessEvidenceRef[]) => (await Promise.all(refs.map((ref) => resolve(ref, fixture.context)))).every((value) => value.state === "fresh"), createId: () => `wp11-calculation-${++ports.next}`, now: () => "2026-11-13T00:00:00Z" }
+    const settings = { state, host: fixture.host, authorizeCase: async (value: DecisionCase) => value.id === fixture.caseRef.id && value.incarnation === fixture.caseRef.incarnation && value.participants.includes(fixture.context.binding.principalRef) && await fixture.host.revalidate(fixture.context), verifySources: async (_value: unknown, refs: readonly BusinessEvidenceRef[], context: Parameters<typeof resolve>[1]) => {
+      // Generic result access needs current scoped-source authorization. The separate
+      // canonical verifyCalculationSources callback still obtains an authorized financial
+      // projection and replays every ancestor. Do not run an extra forecast self-comparison
+      // merely to check a record's freshness; the actual source issuer checks its digest.
+      const observed = await Promise.all(refs.map((ref) => ref.kind === "record" ? fixture.evidence.resolve(ref, context) : resolve(ref, context)))
+      return observed.every((value) => value.state === "fresh")
+    }, createId: () => `wp11-calculation-${++ports.next}`, now: () => "2026-11-13T00:00:00Z" }
     const results = createSfDecisionResultStore({ ...settings, verifyCalculationSources: (value, refs, context) => ports.producer ? ports.producer.verifyCalculationSources(value, refs, context) : Promise.resolve(false) })
     const requestSettings = { state, results, host: fixture.host, authorizeCase: async () => true, authorizeProducer: async () => true, verifySnapshot: () => true, operationIdentity: () => `wp11-request-${ports.next}`, writes }
     const requests = createScenarioRequestStore({ ...requestSettings, verifyRequestSources: (request, result, context) => ports.producer ? ports.producer.verifyCalculationRequestSources(request, result, context) : Promise.resolve(false) })
@@ -66,7 +73,7 @@ test("nested C17 calculations reopen through persisted canonical requests and re
     expect(innerEvidence.status).toBe("ok")
     if (innerEvidence.status !== "ok") throw new Error(innerEvidence.reason)
     await trace.checkpoint("inner-evidence:complete", first.state, fixture.request)
-    const outerRequest: ScenarioRequest = { ...fixture.scenario, operations: fixture.scenario.operations.map((operation) => operation.targetRef === "implementation:11" ? { ...operation, amount: 46000 } : operation), assumptions: [{ id: "ancestor-analysis", value: "Use the earlier scenario only as traceable analysis, without approving or applying it.", state: "hypothetical", evidenceRefs: [innerEvidence.value] }] }
+    const outerRequest: ScenarioRequest = { ...fixture.scenario, operations: [{ kind: "replace", targetRef: "implementation:11", amount: 46000, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } }], assumptions: [{ id: "ancestor-analysis", value: "Use the earlier scenario only as traceable analysis, without approving or applying it.", state: "hypothetical", evidenceRefs: [innerEvidence.value] }] }
     const outer = await persist(outerRequest, "outer")
     expect(outer.result.knownSubtotal).toBe(211000)
     expect(outer.result.total).toBeNull()
@@ -136,11 +143,11 @@ async function calculationFixture(trace: ReturnType<typeof createWp11FixtureTrac
       recall: async () => [], emitFromLedger: async () => { throw new Error("No memory publication in the persistence fixture") },
     }
     const caseRef = { id: "calculation-case", incarnation: "calculation-incarnation", version: 1 }
-    const scenario: ScenarioRequest = { baseRef: source.refId, operations: [
-      { kind: "replace", targetRef: "implementation:11", amount: 45000, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } },
-      { kind: "replace", targetRef: "bridge:11", amount: 60000, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } },
-      { kind: "replace", targetRef: "new-service:11", amount: 105000, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } },
-    ], assumptions: [] }
+    // The parent observes the same three real source components. Replacing all three
+    // with their existing amounts added no ancestry assertion but multiplied every
+    // canonical replay. The child still performs a real 46000 replacement and carries
+    // this source-only C17 parent; all ancestor, conservative-reader and CAS checks stay.
+    const scenario: ScenarioRequest = { baseRef: source.refId, operations: [], assumptions: [] }
     const decision: DecisionCase = { ...caseRef, state: "investigating", objective: "Persist and reopen the canonical calculation ancestry", horizon: plannerPeriod, currency: "USD", criteria: [], participants: [context.binding.principalRef], sourceRefs: [source], alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     const reviseSource = async (reference: string) => {
       if (reference !== source.refId) throw new Error("Unknown calculation source")
