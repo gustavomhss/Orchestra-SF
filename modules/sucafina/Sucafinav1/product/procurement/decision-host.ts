@@ -151,7 +151,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   // WP11 changes state/receipt during reconciliation; the reviewed proposal must stay identical.
   const reviewDigestFor: ReviewDigestFor = (context, request, change) => {
     const held = current(context)
-    return held && isReviewDigest(held.admitted.reviewDigest) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue({ ...change, state: "planned", receipt: null }) === digestSfValue({ ...held.change, state: "planned", receipt: null }) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admitted)) ? held.admitted.reviewDigest : undefined
+    return held && context.kind === "ui" && isReviewDigest(held.admitted.reviewDigest) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue({ ...change, state: "planned", receipt: null }) === digestSfValue({ ...held.change, state: "planned", receipt: null }) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admitted)) ? held.admitted.reviewDigest : undefined
   }
   const validTarget = (snapshot: Snapshot, held: ActiveApply) => {
     const target = held.change.target
