@@ -1,0 +1,61 @@
+{
+  "schema": "wp12-independent-cancellation-review-v1",
+  "status": "PASS_STATIC",
+  "reviewer": "/root/compose_typecheck",
+  "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+  "candidateBaseCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "beforeBlob": "38ce273d8a953868fa3c1ea577f0ef18a433243d",
+      "afterBlob": "47e25de4ed1e743a2366c234a56baf2633c805bb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "beforeBlob": "282255c3f34ac9df7f14c913e5698d0d6146a71a",
+      "afterBlob": "d12d8702f5914c94475b3ad1205718ecf1899fe9"
+    }
+  ],
+  "sourceFilesHashChecked": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+      "sha256": "a6feadbff3f9e7c84120f603fa7498abcd983946fb5c96b9a0bc6d4bef454a94",
+      "bytes": 35027
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "blob": "d058f2fea94329fab357c386386a76f8435da879",
+      "sha256": "395d49b8290b494ecdb60d8ef5222df5ee991bca98409e2247cad1c070249083",
+      "bytes": 53248
+    }
+  ],
+  "preservation": {
+    "cancelFunctionExactlyMatchesPublished": true,
+    "allProductionOutsideCancelByteIdentical": true,
+    "all22PriorTestsByteIdentical": true,
+    "twoAddedTestsMatchPublishedExceptCurrentReaderReason": true,
+    "newImports": false,
+    "publicApiChanged": false
+  },
+  "findings": [],
+  "reasoning": [
+    "Before the first await, host and opaque execution ticket identity and the canonical command digest are retained. New retained-scope predicates are additive and preserve command mutation checks at each existing callback/return boundary.",
+    "The run returned by readRun is cloned once; both the original returned alias and the private clone are pinned. The clone supplies case, context fingerprint, manifest, skill receipt and stored review target to revalidation, so the caller review target remains only a consistency assertion.",
+    "Each authorization/cancel/interrupt callback captures binding identity, lease identity, kind and binding value digest. Prior scope predicates remain checked. The ordinary installed human.finish path removes registry admission without mutating those context objects, so normal scope disposal is not mistaken for input mutation.",
+    "Authorization still accepts only ok or source-stale. Cancellation remains durable before native interruption; refusal or alias mutation after commit does not erase the cancelled record. The fresh third host scope and native execution ticket registry remain the source of interrupt authority.",
+    "readLifecycle already returns a private clone, so normal C08 cancellation writes do not mutate the pinned observed run. Revalidation and C08 transition/commit authority checks are unchanged.",
+    "The cancellation test differentiates eight mutation/control phases and checks exact cancel/interrupt counts, state/version, unchanged receipt/case/objective, absent output and storageVersion increments. Its positive boundary returns native-runtime-not-attached rather than asserting real native interruption.",
+    "The progress test attacks retained lifecycle run, output, current-run and discarded ready-return aliases after scope return. Current readSfAnalysisRun pins all these references and clones final egress; its source is byte-preserved. Both stored values and storageVersion must remain unchanged.",
+    "Existing stale observation/CAS handling, AlternativeDraft provenance, command cycles/digests, publication paths, egress pins, lifecycle fallback and prior cancellation/revocation tests are all outside the changed function or remain byte-identical."
+  ],
+  "limits": [
+    "Static review is not a hosted test or typecheck result.",
+    "The two additions use real C08 persistence with explicitly injected authority and fixture receipts. They do not establish installed ACL, actual Session/SkillLoadReceipt admission or GNATIVE.",
+    "No foreign host source or authority contract was edited or imported by this increment."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "sourceEditedByReviewer": false,
+  "remoteMutation": false
+}

@@ -337,22 +337,24 @@ export async function cancelSfAnalysis(input: {
   const command = () => ({ runRef: input.runRef, sessionID: input.sessionID, skillReceipt: input.skillReceipt,
     caseRef: input.caseRef, contextFingerprint: input.contextFingerprint, reviewTarget: input.reviewTarget })
   const commandDigest = digestSfValue(command())
-  const unchanged = () => input.host === host && input.executionTicket === executionTicket && matchesDigest(command(), commandDigest)
+  const pins: { value: unknown; digest: string }[] = []
+  const identities: (() => boolean)[] = []
+  const unchanged = () => input.host === host && input.executionTicket === executionTicket && matchesDigest(command(), commandDigest) &&
+    identities.every((matches) => matches()) && pins.every((pin) => matchesDigest(pin.value, pin.digest))
   const changed = { status: "denied", reason: "cancellation-input-changed-during-authorization" } as const
   const authorized = await host.withRunContext(runRef, async (context) => {
+    identities.push(retainScopeIdentity(context))
     if (!unchanged()) return changed
     const current = await host.readRun(runRef, context)
     if (!unchanged()) return changed
     if (current.status !== "ok") return current
-    const run = current.value
+    const run = structuredClone(current.value)
+    const runDigest = digestSfValue(run)
+    pins.push({ value: current.value, digest: runDigest }, { value: run, digest: runDigest })
     if (run.runRef !== runRef || !run.native || run.native.sessionID !== input.sessionID ||
       digestSfValue(run.native.skillReceipt) !== digestSfValue(input.skillReceipt) || digestSfValue(run.caseRef) !== digestSfValue(input.caseRef) ||
-      run.contextFingerprint !== input.contextFingerprint || (input.reviewTarget && digestSfValue(input.reviewTarget) !== digestSfValue(run.reviewTarget))) {
-      return { status: "denied", reason: "run-binding-mismatch" } as const
-    }
-    const runDigest = digestSfValue(run)
-    // Independent review cancellation validates the stored author identity even
-    // when the caller supplies no review metadata or the old source is stale.
+      run.contextFingerprint !== input.contextFingerprint || (input.reviewTarget && digestSfValue(input.reviewTarget) !== digestSfValue(run.reviewTarget))) return { status: "denied", reason: "run-binding-mismatch" } as const
+    // The review target comes from durable host state, never from caller/model metadata.
     const checked = await host.revalidate(context, {
       runRef,
       caseRef: run.caseRef,
@@ -362,15 +364,18 @@ export async function cancelSfAnalysis(input: {
       skillReceipts: [run.native.skillReceipt],
       reviewTarget: run.reviewTarget,
     })
-    return unchanged() && matchesDigest(run, runDigest) ? checked : changed
+    return unchanged() ? checked : changed
   })
   if (!unchanged()) return changed
   if (authorized.status !== "ok" && authorized.status !== "stale") return authorized
-  const cancelled = await host.withRunContext(runRef, (context) => unchanged()
-    ? host.analysis.cancel(runRef, context) : Promise.resolve(changed))
+  const cancelled = await host.withRunContext(runRef, async (context) => {
+    identities.push(retainScopeIdentity(context))
+    return unchanged() ? host.analysis.cancel(runRef, context) : changed
+  })
   if (!unchanged()) return changed
   if (cancelled.status !== "ok" || !cancelled.value.cancelled) return cancelled
   const interrupted = await host.withRunContext(runRef, async (context) => {
+    identities.push(retainScopeIdentity(context))
     // Cancellation is already durable. The execution host must authorize this one-shot interrupt
     // against its own ticket/session registry even though ordinary run revalidation now rejects it.
     return unchanged() ? host.execution.interrupt(executionTicket, context) : changed

@@ -1,0 +1,124 @@
+{
+  "schema": "wp12-selective-cancellation-reconciliation-v1",
+  "status": "INDEPENDENT_STATIC_REVIEW_COMPLETE_HOSTED_PENDING",
+  "author": "/root/own_review_resume",
+  "source": {
+    "pr": 36,
+    "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+    "retrieval": "GitHub MCP fetch_file, full source bytes independently hash-checked",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+        "blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+        "sha256": "a6feadbff3f9e7c84120f603fa7498abcd983946fb5c96b9a0bc6d4bef454a94",
+        "bytes": 35027
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "d058f2fea94329fab357c386386a76f8435da879",
+        "sha256": "395d49b8290b494ecdb60d8ef5222df5ee991bca98409e2247cad1c070249083",
+        "bytes": 53248
+      }
+    ]
+  },
+  "baseProduct": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "before": {
+        "blob": "38ce273d8a953868fa3c1ea577f0ef18a433243d",
+        "sha256": "d98da8227b889ceabc491ae2805eadf35d3640659fee00f47c370324589ca1e6",
+        "bytes": 33498
+      },
+      "after": {
+        "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+        "sha256": "24e3adae61412737721c26b7115af965236d34a183ba9b1c0a6f7f7bb997ff79",
+        "bytes": 33852
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "before": {
+        "blob": "282255c3f34ac9df7f14c913e5698d0d6146a71a",
+        "sha256": "831ea75381cdaaa79896d9e7850746890842f5e2eb2f4abc8f5901fd920f4b6c",
+        "bytes": 43194
+      },
+      "after": {
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+        "bytes": 52814
+      }
+    }
+  ],
+  "selection": {
+    "analysisPort": "Only cancelSfAnalysis function replaced with its exact source W7 function. Every byte before and after that function is preserved from W14.",
+    "runStoreTests": "Only the two source W7 test declarations for cancellation aliases and retained progress aliases are added. The latter uses the unchanged W14 read refusal reason run-input-changed-during-read; no test logic, expected refusal, oracle, phase or fixture is removed.",
+    "allPriorTestsPreserved": true,
+    "testCountBefore": 22,
+    "testCountAfter": 24,
+    "noNewImports": true,
+    "wholeSourceSnapshotImported": false
+  },
+  "invariants": [
+    "The original command digest, host identity and opaque execution ticket identity are captured before the first await.",
+    "The durable run returned by readRun and a private structured clone remain pinned through authorization, cancellation and interruption scopes.",
+    "Each encountered scope retains its binding object, lease object, kind and binding-value identity; prior scope identities remain checked after subsequent awaits.",
+    "A changed retained run is refused before cancellation. A change after durable cancellation does not undo the committed cancellation.",
+    "Stored reviewTarget remains the authority; optional caller reviewTarget stays a consistency assertion.",
+    "Publication including stale observation/CAS, ready readers including all W14 aliases/egress fences, lifecycle fallback, reasons and all other functions are byte-identical."
+  ],
+  "counterproofs": {
+    "cancellationPhases": [
+      "read-return",
+      "verify-return",
+      "authorization-return",
+      "cancel-entry",
+      "cancel-return",
+      "interrupt-entry",
+      "interrupt-return",
+      "unchanged"
+    ],
+    "progressPhases": [
+      "lifecycle-run",
+      "content-output",
+      "content-current-run",
+      "discarded-scope-result",
+      "unchanged"
+    ],
+    "durableChecks": [
+      "actual C08 create/attach/transition/publish/read and SQLite persistence",
+      "run identity/state/version and original receipt unchanged except the expected durable cancellation",
+      "storageVersion increments exactly once only after cancellation commits",
+      "no output appears in cancellation tests; progress tests preserve stored output and all C08 bytes",
+      "positive controls retain unavailable native-runtime-not-attached and detached ready content respectively"
+    ],
+    "fixtureBoundary": "Existing explicit injected host authority plus sfRunFixture are component fixtures. These are not real Session/SkillLoadReceipt/provider admission or installed ACL proof; native interrupt returns unavailable and is never faked as successful."
+  },
+  "validation": {
+    "syntax": {
+      "method": "node --check on both files; no imports evaluated",
+      "status": "PASS"
+    },
+    "sourceHash": "Both full MCP source blobs matched",
+    "boundaryByteIdentity": "PASS before/after cancellation function",
+    "priorTestSource": "PASS, removing the two additions recovers the prior test file byte-for-byte",
+    "localProductTests": "NOT_RUN",
+    "localTypecheck": "NOT_RUN",
+    "hostedTests": "NOT_RUN_FOR_THIS_INCREMENT",
+    "hostedTypecheck": "NOT_RUN_FOR_THIS_INCREMENT",
+    "independentReview": "PASS_STATIC"
+  },
+  "acceptance": {
+    "providerInference": false,
+    "installedHostProof": false,
+    "GNATIVE": false,
+    "fullWP12": false
+  },
+  "artifacts": {
+    "diff": "increment.diff",
+    "source": "source/",
+    "before": "before/"
+  },
+  "publicationParent": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+  "independentReviewReceipt": "cancellation-review-12.json"
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "sf-wp12-hosted-check-result-v1",
+  "phase": "resume-11",
+  "product": {
+    "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df"
+  },
+  "check": {
+    "snapshot": "b44a28cace5e9cff526718abf2eaa4d3b06b12b1",
+    "tree": "47cbdb2f15d5bee571f13fd93dd374f68649e750",
+    "runId": 43600551809,
+    "jobId": 132464148364,
+    "conclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43600551809",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "exitCode": 0,
+      "diagnostics": 0
+    },
+    "spawnImports": {
+      "conclusion": "success",
+      "checkedFiles": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 899,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "bytes": 63792,
+    "sha256": "3cbdfb19e0139aee3f9de28e94f0d19424e889d8b6ca505e02595bc0d0f108b6"
+  },
+  "artifact": {
+    "id": 14116421477,
+    "name": "astra-wp12-check-1",
+    "digest": "sha256:ec5baa6ec32e373bfde6fa26a8788e1ab6dc99ef6848ee1ceed59032fdfa6a7e",
+    "bytes": 1422
+  },
+  "typeCorrection": {
+    "receipt": "intent-typefix-11.json",
+    "blob": "bcd35e803b8a00e6ddabef03c10885279e427870",
+    "emittedJavaScriptUnchanged": true
+  },
+  "limits": [
+    "Typecheck and guards are not product execution or native inference.",
+    "W16 Procurement product run43600564160 was in progress at this receipt cutoff; its result requires a separate terminal receipt."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}
