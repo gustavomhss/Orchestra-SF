@@ -6,22 +6,26 @@
   "status": "NOT_RUN_INTERFACE_NOT_PUBLISHED",
   "request": "Qualify exact composed W using authorized package compiler/guards interface; do not transfer checks43 or other candidates",
   "product": {
-    "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
-    "tree": "47e2d418566704e49c70286bf32e05e01feb9218",
-    "parent_C18": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
-    "source": "b84dfb5e97689def89fde63ed0b6f44732f882d0",
+    "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+    "tree": "0d655fcddbbc708ba7aa01fcdee1c2699f5e9e08",
+    "parent": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "base_C18": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "source": "7b37732555b3378f238eee56e0f713e8ae92cae3",
     "overlay": [
       {
         "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
-        "mode": "100644",
-        "type": "blob",
-        "sha": "d99af3b43388b510e510908fff2371a34b57eee1"
+        "preblob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "postblob": "d99af3b43388b510e510908fff2371a34b57eee1"
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
-        "mode": "100644",
-        "type": "blob",
-        "sha": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188"
+        "preblob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+        "postblob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "preblob": "47b5358c8dda3179045499388ce98871576a2aa9",
+        "postblob": "82adc95c5eeb8573e1e96cef255b4d26fbff9be7"
       }
     ]
   },
@@ -54,32 +58,6 @@
     "composed_compiler_receipts": "ABSENT",
     "observed_by": "ci_p03 read-only reviewer; root target/control reads"
   },
-  "independent_functional_request": {
-    "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
-    "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
-    "request_blob": "7abd4938446bf3d555440a26924629602fd903d0",
-    "run": 43653550785,
-    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653550785",
-    "result": "FAIL",
-    "by_file": {
-      "history_provenance": {
-        "status": "PASS",
-        "pass": 22,
-        "fail": 0,
-        "final_CAS_ms": 319.28,
-        "reopen_ms": 402.17
-      },
-      "semantic_union": {
-        "status": "FAIL",
-        "duration_ms": 180013.86,
-        "budget_ms": 180000,
-        "phase": "before.persistent.evaluateAndStore omitted result before line50",
-        "guard_ms": 180003,
-        "late_status": "stale",
-        "late_reason": "comparison-rule-or-source-changed"
-      }
-    }
-  },
   "constraints": [
     "No astra-check-wp13 takeover or historical source workflow transplant",
     "No epic dispatch, local typecheck/test, timeout/oracle weakening",
@@ -93,5 +71,62 @@
     "compiler ref",
     "sf2-stack"
   ],
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "independent_functional_requests": {
+    "R1": {
+      "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+      "request_blob": "7abd4938446bf3d555440a26924629602fd903d0",
+      "run": 43653550785,
+      "job": 132627055702,
+      "result": {
+        "status": "FAIL",
+        "tests": 23,
+        "files": 2,
+        "pass": 22,
+        "fail": 1,
+        "errors": 1,
+        "expect_calls": 103,
+        "duration_seconds": 182.49,
+        "by_file": {
+          "history_provenance": {
+            "status": "PASS",
+            "pass": 22,
+            "fail": 0,
+            "final_CAS_ms": 319.28,
+            "reopen_ms": 402.17
+          },
+          "semantic_union": {
+            "status": "FAIL",
+            "duration_ms": 180013.86,
+            "budget_ms": 180000,
+            "phase": "before.persistent.evaluateAndStore omitted result before line50",
+            "guard_ms": 180003,
+            "late_status": "stale",
+            "late_reason": "comparison-rule-or-source-changed"
+          }
+        },
+        "run": 43653550785,
+        "job": 132627055702,
+        "cleanup_job": 132628306934,
+        "cleanup": "PASS",
+        "control": {
+          "nonce": "a0fdd0d90f104afcc799143ae0f577da",
+          "nonce_count": 1,
+          "verdict_count": 1,
+          "verdict": "2026-11-14T23:35:00.5407491Z omni positive control [a0fdd0d90f104afcc799143ae0f577da]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "valid": true
+        }
+      }
+    },
+    "R2": {
+      "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+      "request_blob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+      "run": 43654501551,
+      "job": 132629953065,
+      "result": "IN_PROGRESS"
+    },
+    "evidence_scope": "R1 qualifies22history tests atW1; R2 selectsP03 only atW2. No claim of combined23-test PASS atW2."
+  }
 }

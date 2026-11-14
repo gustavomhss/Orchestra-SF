@@ -72,6 +72,33 @@
         "sha256": "8c41459fdc43db360863ad3a72477abcb7a3ef91818ecb2d15d0352a0215411e",
         "bytes": 78213
       }
+    },
+    {
+      "id": "R2",
+      "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "tree": "0d655fcddbbc708ba7aa01fcdee1c2699f5e9e08",
+      "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+      "S_tree": "865addc63c07e2a04c039baf1aea35046f7cffc1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_blob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+      "run": 43654501551,
+      "job": 132629953065,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654501551",
+      "outcome": {
+        "status": "IN_PROGRESS"
+      },
+      "reason": "AfterR1diagnosis and ownedreadscopefix; no unchangedretry"
     }
   ],
   "local_tests": 0,

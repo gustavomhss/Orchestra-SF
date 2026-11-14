@@ -140,3 +140,118 @@ diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.te
 +  }
 +}, 120000)
 +
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts
+@@ -30,23 +30,34 @@
+ 
+ const policyCriteria = ["renewal-difference", "renewal-ceiling-240000"] as const
+ 
++type CriterionEvaluationTiming = { calls: number; completed: number; totalElapsedMs: number; maximumElapsedMs: number }
++
+ test("semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed", async () => {
++  const startedAt = Date.now()
++  const criterionTiming: CriterionEvaluationTiming = { calls: 0, completed: 0, totalElapsedMs: 0, maximumElapsedMs: 0 }
++  const logPhase = (phase: string, status?: string) => console.info("[wp13-semantic-phase]", JSON.stringify({ phase, status, elapsedMs: Date.now() - startedAt, criterionEvaluations: { ...criterionTiming } }))
+   const history = await createRenewalChoiceHistory()
+   try {
+-    const before = await composePortfolio(history, history.before)
++    logPhase("compose-before:start")
++    const before = await composePortfolio(history, history.before, criterionTiming)
++    logPhase("compose-before:complete")
+     expect(history.before.baselineScenario.operations).toEqual([])
+     expect(history.before.baselineResult.id.startsWith("source-scenario:")).toBe(true)
+     expect(history.before.baselineResult).toMatchObject({ total: 240000, comparisonStatus: "complete" })
+     expect(before.ceilingRule).toMatchObject({ metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", sensitivity: { baselineRef: history.before.baselineRef } })
+     expect(history.before.rule).toMatchObject({ metricRef: "planner:known-subtotal-difference", operator: "lte", value: -20000, unit: "USD", sensitivity: { baselineRef: history.before.baselineRef } })
++    logPhase("baseline:start")
+     const baseline = await before.product.port.evaluate({ ...before.request, candidateRefs: [before.baselineCandidateRef], constraints: [] }, history.fixture.context)
++    logPhase("baseline:complete", baseline.status)
+     if (baseline.status !== "ok") throw new Error(`Source-only baseline portfolio: ${JSON.stringify(baseline)}`)
+     expect(baseline.value.combinations).toHaveLength(1)
+     expect(baseline.value.combinations[0]!.components).toEqual(history.before.baselineResult.components)
+     expect(baseline.value.combinations[0]!.restrictions).toContain("analysis-unavailable")
+     expect(baseline.value.combinations[0]!.eligibility).toBe("conditioned")
+ 
++    logPhase("omitted:start")
+     const omitted = await before.persistent.evaluateAndStore(before.request, history.before.caseRef, history.fixture.context)
++    logPhase("omitted:complete", omitted.status)
+     if (omitted.status !== "ok") throw new Error(`Omitted-training portfolio: ${JSON.stringify(omitted)}`)
+     const original = omitted.value.portfolio.combinations[0]!
+     expect(omitted.value.portfolio.combinations).toHaveLength(1)
+@@ -65,7 +76,9 @@
+     if (originalStored.status !== "ok" || !originalStored.value) throw new Error("Original portfolio C08 unavailable")
+     const originalDigest = digestSfValue(originalStored.value)
+ 
++    logPhase("choose:start")
+     const chosen = await before.choose()
++    logPhase("choose:complete")
+     const choiceDigest = digestSfValue(chosen.choice)
+     expect(chosen.choice.result).toMatchObject({ knownSubtotal: 210000, total: null, comparisonStatus: "conditioned" })
+     expect(chosen.choice.criteria).toEqual(policyCriteria)
+@@ -74,14 +87,20 @@
+     expect((await history.readCase()).preparedChanges).toEqual([])
+     expect((await history.readCase()).receipts).toEqual([])
+ 
++    logPhase("resolve-training:start")
+     const phase = await history.resolveTraining()
++    logPhase("resolve-training:complete")
+     expect(phase.caseRef.id).toBe(history.before.caseRef.id)
+     expect(phase.caseRef.incarnation).toBe(history.before.caseRef.incarnation)
+     expect(phase.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
+     expect(phase.scenario).toMatchObject({ operations: [], assumptions: [] })
+     expect(phase.selectedResult.id.startsWith("source-scenario:")).toBe(true)
+-    const after = await composePortfolio(history, phase, before.ceilingRule.version)
++    logPhase("compose-after:start")
++    const after = await composePortfolio(history, phase, criterionTiming, before.ceilingRule.version)
++    logPhase("compose-after:complete")
++    logPhase("confirmed:start")
+     const confirmed = await after.persistent.evaluateAndStore(after.request, phase.caseRef, history.fixture.context)
++    logPhase("confirmed:complete", confirmed.status)
+     if (confirmed.status !== "ok") throw new Error(`Confirmed-training source portfolio: ${JSON.stringify(confirmed)}`)
+     const current = confirmed.value.portfolio.combinations[0]!
+     expect(current).toMatchObject({ eligibility: "ineligible", comparisonStatus: "complete", analysis: { scenario: { knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } }, comparison: { knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete" } } })
+@@ -144,10 +163,13 @@
+     expect((await after.persistent.read(confirmed.value.portfolioResultRef, history.fixture.context)).status).not.toBe("ok")
+     expect(revokedBaselineReads).toBeGreaterThan(readsAfterRule)
+     expect((await after.coverageFor(phase.baselineScenario.baseRef, history.fixture.context)).status).not.toBe("ok")
+-  } finally { await history.cleanup() }
++  } finally {
++    logPhase("finally")
++    await history.cleanup()
++  }
+ }, 180000)
+ 
+-async function composePortfolio(history: Awaited<ReturnType<typeof createRenewalChoiceHistory>>, phase: Awaited<ReturnType<typeof createRenewalChoiceHistory>>["before"], expectedCeilingRuleVersion = 0) {
++async function composePortfolio(history: Awaited<ReturnType<typeof createRenewalChoiceHistory>>, phase: Awaited<ReturnType<typeof createRenewalChoiceHistory>>["before"], criterionTiming: CriterionEvaluationTiming, expectedCeilingRuleVersion = 0) {
+   const host = history.fixture.host
+   const context = history.fixture.context
+   const writes = new WeakSet<object>()
+@@ -239,7 +261,25 @@
+   // Grants are synthetic fixture authority. Both explicit human rules use the canonical Planner
+   // difference metric; <= 0 is equivalent to the ceiling only for the pinned complete 240000 baseline.
+   const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
+-  const rules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async (request, trusted) => trusted.kind === "ui" && request.criterionId === criterion.id && request.metricRef === "planner:known-subtotal-difference" && request.operator === "lte" && request.value === 0 && request.unit === "USD" && request.sensitivity?.baselineRef === phase.baselineRef && await host.revalidate(trusted), verifyEvidence: (rule, trusted) => evidenceCurrent(rule.evidenceRefs, trusted), verifySnapshot, readMetric: (request, trusted) => { if (!metrics.read) throw new Error("Canonical criterion metric not composed"); return metrics.read(request, trusted) }, verifyMetric: (metric, trusted) => evidenceCurrent(metric.evidenceRefs, trusted), operationIdentity: () => `source-ceiling-rule-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
++  const canonicalRules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async (request, trusted) => trusted.kind === "ui" && request.criterionId === criterion.id && request.metricRef === "planner:known-subtotal-difference" && request.operator === "lte" && request.value === 0 && request.unit === "USD" && request.sensitivity?.baselineRef === phase.baselineRef && await host.revalidate(trusted), verifyEvidence: (rule, trusted) => evidenceCurrent(rule.evidenceRefs, trusted), verifySnapshot, readMetric: (request, trusted) => { if (!metrics.read) throw new Error("Canonical criterion metric not composed"); return metrics.read(request, trusted) }, verifyMetric: (metric, trusted) => evidenceCurrent(metric.evidenceRefs, trusted), operationIdentity: () => `source-ceiling-rule-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
++  // Binding validation also evaluates rules outside the Planner comparison's read scope.
++  // Keep each complete canonical readonly evaluation in one fresh root, joining an
++  // existing root only through the same authority-preserving snapshot helper.
++  const rules: typeof canonicalRules = {
++    ...canonicalRules,
++    evaluate: async (request, trusted) => {
++      const startedAt = Date.now()
++      criterionTiming.calls += 1
++      try {
++        return await readPortfolioSnapshot(host, trusted, request, () => canonicalRules.evaluate(request, trusted), { status: "unavailable", reason: "source-criterion-snapshot-unavailable" })
++      } finally {
++        const elapsedMs = Date.now() - startedAt
++        criterionTiming.completed += 1
++        criterionTiming.totalElapsedMs += elapsedMs
++        criterionTiming.maximumElapsedMs = Math.max(criterionTiming.maximumElapsedMs, elapsedMs)
++      }
++    },
++  }
+   metrics.read = createPlannerCriterionMetric({ host, rules, units: phase.issuer, preview: (request, trusted) => comparePlannerPreview({ host, sources, scenarios, planner: previewPlanner }, request, trusted) })
+   if (!phase.rule.sensitivity) throw new Error("Canonical rule units unavailable")
+   const registered = await rules.register({ caseRef: phase.caseRef, criterionId: criterion.id, metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", period: phase.selectedResult.horizon, evidenceRefs: phase.rule.sensitivity.sourceRefs, sensitivity: phase.rule.sensitivity, expectedRuleVersion: expectedCeilingRuleVersion }, context)

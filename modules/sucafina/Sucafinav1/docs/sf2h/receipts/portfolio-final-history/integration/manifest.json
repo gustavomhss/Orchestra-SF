@@ -1,5 +1,5 @@
 {
-  "schema": "sf2h.portfolio-final-history.integration-manifest.v1",
+  "schema": "sf2h.portfolio-final-history.integration-manifest.v2",
   "mission": 50,
   "epoch": "portfolio-history-browser50",
   "consumer": "47 sole sf2-stack integrator",
@@ -9,7 +9,8 @@
     "terminal43": "6f0ac4628f2c8cf99d809a9150ab1dd0e17e5fc4",
     "ACK50": "85191ca90750da1ff494bc2098bf87c6f4f3c297",
     "proof_commit": "a97b78dc42424aa66385732416aa02518ecdb9b8",
-    "history_commit": "b84dfb5e97689def89fde63ed0b6f44732f882d0"
+    "history_commit": "b84dfb5e97689def89fde63ed0b6f44732f882d0",
+    "p03_fixture_commit": "7b37732555b3378f238eee56e0f713e8ae92cae3"
   },
   "target": {
     "symbol": "C18",
@@ -19,11 +20,13 @@
     "increment06": "a724e806a64ed070404e827cbf694da8ea53cbc4"
   },
   "candidate": {
-    "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
-    "tree": "47e2d418566704e49c70286bf32e05e01feb9218",
-    "parent": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
-    "material_paths": 2,
-    "ref_policy": "Unreferenced validation W with temporary CI child only; no sf2-stack ref move"
+    "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+    "tree": "0d655fcddbbc708ba7aa01fcdee1c2699f5e9e08",
+    "parent": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "base_target": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "material_paths_from_C18": 3,
+    "material_delta_from_W1": 1,
+    "ref_policy": "Unreferenced validation W2; CI child via temporary ref only; no sf2-stack ref move"
   },
   "files": [
     {
@@ -61,13 +64,32 @@
         "artifact": "postimages/history-provenance.test.ts.txt"
       },
       "change": "Preserve21 existing tests and fourth/final real-CAS oracle, append real reopen/authority proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "mode": "100644",
+      "precondition": "EXACT_BLOB",
+      "pre": {
+        "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+        "sha256": "bf37a61e3e919f54b06edfc1d8808c13e5206f983f34b06661466f05770ce0b9",
+        "bytes": 43332,
+        "artifact": "preimages/semantic-union-source-scenario.test.ts.txt"
+      },
+      "post": {
+        "blob": "82adc95c5eeb8573e1e96cef255b4d26fbff9be7",
+        "sha256": "9994b16549bea7a3b7c4db8ab8d9adc9192214b0dbc2ca1b0005f596fcfbd0a0",
+        "bytes": 45377,
+        "artifact": "postimages/semantic-union-source-scenario.test.ts.txt"
+      },
+      "change": "Fixture-only canonical readonly rule scope and cheap phase diagnostics;72originalexpect lines/both180000budgets/producers identical"
     }
   ],
   "patch": {
     "path": "complete.patch",
-    "sha256": "f4f646fd0df5340808944215a446ecf2f4d5e480bb607138994fd4d38205ae79",
-    "bytes": 10170,
-    "complete": true
+    "sha256": "0dca24a0bddf2608300ed219682bde5d1ea6283e1740c9251832fb472dcbc7f2",
+    "bytes": 20268,
+    "complete": true,
+    "prior_R1": "R1-complete.patch"
   },
   "dependencies": [
     {
@@ -91,7 +113,7 @@
       "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
       "assertions": 72,
       "budget_ms": 180000,
-      "disposition": "KEEP_CURRENT exact original43 P03, already consumed47"
+      "disposition": "Original43 preimage preserved; ownedfixturepost in files list keepsall72expect/budgets/producers"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
@@ -282,32 +304,61 @@
     "If target changes relevant blobs, reconcile and publish a new manifest/qualified W; do not imply this run covers another material tree"
   ],
   "hosted": {
-    "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
-    "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
-    "S_tree": "275841f22701b3c464e869b2e353f07873aa2c5e",
-    "S_only_delta": ".ci-run.json",
-    "request_blob": "7abd4938446bf3d555440a26924629602fd903d0",
-    "run": 43653550785,
-    "job": 132627055702,
-    "result": "FAIL",
-    "by_file": {
-      "history_provenance": {
-        "status": "PASS",
-        "pass": 22,
-        "fail": 0,
-        "final_CAS_ms": 319.28,
-        "reopen_ms": 402.17
-      },
-      "semantic_union": {
+    "R1": {
+      "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+      "request_blob": "7abd4938446bf3d555440a26924629602fd903d0",
+      "run": 43653550785,
+      "job": 132627055702,
+      "result": {
         "status": "FAIL",
-        "duration_ms": 180013.86,
-        "budget_ms": 180000,
-        "phase": "before.persistent.evaluateAndStore omitted result before line50",
-        "guard_ms": 180003,
-        "late_status": "stale",
-        "late_reason": "comparison-rule-or-source-changed"
+        "tests": 23,
+        "files": 2,
+        "pass": 22,
+        "fail": 1,
+        "errors": 1,
+        "expect_calls": 103,
+        "duration_seconds": 182.49,
+        "by_file": {
+          "history_provenance": {
+            "status": "PASS",
+            "pass": 22,
+            "fail": 0,
+            "final_CAS_ms": 319.28,
+            "reopen_ms": 402.17
+          },
+          "semantic_union": {
+            "status": "FAIL",
+            "duration_ms": 180013.86,
+            "budget_ms": 180000,
+            "phase": "before.persistent.evaluateAndStore omitted result before line50",
+            "guard_ms": 180003,
+            "late_status": "stale",
+            "late_reason": "comparison-rule-or-source-changed"
+          }
+        },
+        "run": 43653550785,
+        "job": 132627055702,
+        "cleanup_job": 132628306934,
+        "cleanup": "PASS",
+        "control": {
+          "nonce": "a0fdd0d90f104afcc799143ae0f577da",
+          "nonce_count": 1,
+          "verdict_count": 1,
+          "verdict": "2026-11-14T23:35:00.5407491Z omni positive control [a0fdd0d90f104afcc799143ae0f577da]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "valid": true
+        }
       }
-    }
+    },
+    "R2": {
+      "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+      "request_blob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+      "run": 43654501551,
+      "job": 132629953065,
+      "result": "IN_PROGRESS"
+    },
+    "evidence_scope": "R1 qualifies22history tests atW1; R2 selectsP03 only atW2. No claim of combined23-test PASS atW2."
   },
   "checks": {
     "typecheck": "NOT_RUN",
