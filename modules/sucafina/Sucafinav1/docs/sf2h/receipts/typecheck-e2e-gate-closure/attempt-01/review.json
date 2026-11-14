@@ -1,0 +1,67 @@
+{
+  "scope": "Independent static review of mission26 config/verifier/builder/workflow; no product authorship or code edits by reviewer",
+  "reviewer": "/root/pack_review",
+  "status": "PASS_STATIC_TOOLING_ONLY",
+  "typecheck": "NOT_RUN",
+  "tests": "NOT_RUN",
+  "CI": "NOT_RUN",
+  "finding_fixed": {
+    "id": "M26-FLAKY-REPORTER-ROOT",
+    "observation": "Reporter loaded by path string was outside the first include.",
+    "resolution": "Explicit include and runtime root added; effective config/program verifier requires it."
+  },
+  "retained_gates": {
+    "original_jobs_unchanged": 8,
+    "package_typechecks": 5,
+    "recipes": 8,
+    "final_aggregator_requires_new_job": true
+  },
+  "reviewed_files": [
+    {
+      "path": "packages/app-shell/tsconfig.sf-e2e.json",
+      "bytes": 533,
+      "sha256": "6bd78feeb679a7d735aeee226860c656fb2b8c3f26fc7b6738d34c42c81a85c0"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "bytes": 4281,
+      "sha256": "98130221e3c0d9fab48c134cfd347894a19fc4b5c075c92d7c080362904bd3f4"
+    },
+    {
+      "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+      "bytes": 10147,
+      "sha256": "5a35232ad96f85ee5de164c3a1ed46a981897a6db959a429e05aba8db773f129"
+    },
+    {
+      "path": "script/sf2h/final-bundle/build-artifact.py",
+      "bytes": 16157,
+      "sha256": "f7b2e2cb65a09961bff0eda4b50b977b580baa5c29e2474c1d9979362b00c87d"
+    },
+    {
+      "path": ".github/workflows/sf2-epic.yml",
+      "bytes": 54846,
+      "sha256": "5c87488dbb717ad4e5a410aa69cc0cb15264465512d8546838497c2ae58301b8"
+    }
+  ],
+  "limits": [
+    "No compiler program or diagnostics observed; actual installed tsgo output and dependency resolution remain unverified.",
+    "No C/G7, D/G8, AM or E2E verdict."
+  ],
+  "scoped_refresh": {
+    "source_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+    "reviewer": "/root/pack_review",
+    "status": "PASS_STATIC_SCOPE_ONLY",
+    "roots": 47,
+    "graph_nodes": 1399,
+    "graph_edges": 8707,
+    "new_helper": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+    "new_helper_git_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+    "new_helper_sha256": "f538c98efd03387467cd663f7990f00a930dabf249d3e3cda1513b9e483810c3",
+    "scope_result": "Existing glob and direct host import include the new helper; no new by-string TS root outside declared scope in inspected delta. Prior tooling hashes unchanged.",
+    "selector_finding": "SUPERSEDED_BY_CURRENT_SOURCE",
+    "compiler": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "runtime_prerequisite": "SF_OPERATIONS_CLAMD_PORT and real ClamD readiness remain unverified; see diagnostics-and-pending.json."
+  }
+}

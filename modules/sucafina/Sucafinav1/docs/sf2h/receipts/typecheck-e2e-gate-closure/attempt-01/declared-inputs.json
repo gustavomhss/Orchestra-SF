@@ -1,0 +1,342 @@
+{
+  "schema": "sf2-e2e-typecheck-evidence-v1",
+  "mode": "declared-source-inventory",
+  "candidate_sha": null,
+  "product_tree": null,
+  "run_id": null,
+  "attempt": null,
+  "commands": {
+    "cwd": "packages/app-shell",
+    "effective_config": "bun run typecheck:sf-e2e --showConfig",
+    "typecheck": "bun run typecheck:sf-e2e --listFiles --pretty false"
+  },
+  "input_configs": [
+    {
+      "path": "packages/app-shell/tsconfig.sf-e2e.json",
+      "bytes": 533,
+      "sha256": "6bd78feeb679a7d735aeee226860c656fb2b8c3f26fc7b6738d34c42c81a85c0",
+      "git_blob_sha": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1"
+    },
+    {
+      "path": "packages/app-shell/tsconfig.json",
+      "bytes": 702,
+      "sha256": "82a45765a63c349c2a0f4369f5145b7ce962522d0747abf9c4a2463a4bee98e4",
+      "git_blob_sha": "8604188dee0f1ce9978cae39366d1850f5e97e7f"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "bytes": 2358,
+      "sha256": "26b37a283557b1c24a70533f54c067abb6d4c74191151e4c203d3b5458b437a7",
+      "git_blob_sha": "8364221434311400cae3007ea74cc67ddcfde765"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "bytes": 4281,
+      "sha256": "98130221e3c0d9fab48c134cfd347894a19fc4b5c075c92d7c080362904bd3f4",
+      "git_blob_sha": "fed0414375fe5ad9553d1b6562f54972f2ed89f7"
+    }
+  ],
+  "nominal_specs": [
+    "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "packages/app-shell/e2e/sucafina/reports.spec.ts"
+  ],
+  "declared_runtime_roots": [
+    "packages/app-shell/e2e/utils/flaky-reporter.ts",
+    "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts",
+    "packages/app-shell/e2e/sucafina/wp04/host.ts",
+    "packages/app-shell/e2e/sucafina/reports-support/production-state.ts"
+  ],
+  "declared_inputs": [
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "bytes": 1711,
+      "sha256": "492f3145a61e5469f43618270701d2ba1972bb82e271633dc5f952557de3dc66",
+      "git_blob_sha": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/alternative-response.ts",
+      "bytes": 1921,
+      "sha256": "71cf37291bd40a22273231b45bd3cd444c72d3604ff82e9bab11c37ea7af5906",
+      "git_blob_sha": "7e7122698568a4ced5aed789a4d2ac743cd6db2c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "bytes": 18938,
+      "sha256": "a7220c9cef8ae3fa3d94d1dc22a74d5107af4245fbe7f2f14a5e5e6ed04fdcb4",
+      "git_blob_sha": "72471e276be8a95f499b4b4693c5a283772a2df3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "bytes": 7825,
+      "sha256": "a934c3c67ddb17515d6b7e11d4103900ca279c7bcf9819c52cfe378c8e0c2977",
+      "git_blob_sha": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "bytes": 2019,
+      "sha256": "3a77abd7bb57416dc5857a48d92042f968cd8b39ad224abc133aca150123fa6f",
+      "git_blob_sha": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "bytes": 5452,
+      "sha256": "e332f7b28e2f66f2127be95796d114df02ca3e65f4c332123a5ba11a7e6d5150",
+      "git_blob_sha": "72b6c14d762b17a9b70398bdcfd3b5c4ec877559"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "bytes": 11670,
+      "sha256": "bceb4c415ac0be676b9db554c97b2c737f529f33e7a6b2d3af5a3034539db988",
+      "git_blob_sha": "a2515c40a71728299b0e9303168b6d822f2ba338"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "bytes": 16304,
+      "sha256": "7e88c36122b43f46de8942b4f471d6dbbd15004dae9598b5f6fe3eb15c7a2c77",
+      "git_blob_sha": "7136131cdb713abecccde2c29e8b6c1204b60a6c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "bytes": 16515,
+      "sha256": "41dfe00301d3e8b9d9417139d794ba204b09aeaf88840c00b8f53e486f489ea4",
+      "git_blob_sha": "c03cf0ec947f10548557643dd8a57a39e098fef0"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "bytes": 6525,
+      "sha256": "f538c98efd03387467cd663f7990f00a930dabf249d3e3cda1513b9e483810c3",
+      "git_blob_sha": "d60be2f87aa210c9700fba276932a6f443264e4f"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "bytes": 2996,
+      "sha256": "069d93515f36cc67e0ca0d8ac143ebebcae58fcf8bda6f336f958d995888a775",
+      "git_blob_sha": "6ddccf1af1119c4eec6b45c568caf3f45d8c62bc"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "bytes": 6129,
+      "sha256": "f975745557648cf3c051b78b86f86a9f6496aaa17ab31361a18953eaaac90469",
+      "git_blob_sha": "079af7db0ade65464aa31e564d82209527f75b5f"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "bytes": 7105,
+      "sha256": "5ef4b128d8080ea69be22d315633af4686cd24896bc01f6192b9435aa39a9e6a",
+      "git_blob_sha": "7af501a9567f1311983e80265ebb9c1d47cf3989"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "bytes": 5507,
+      "sha256": "effbebf134bf256e13bababb2b82f5b73a103336433731b47e8832a1ed7fda03",
+      "git_blob_sha": "c750821955cb56e7e6549c808d3c8e1cf5ee6e2a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+      "bytes": 4220,
+      "sha256": "b275ff36385f89e40448ce622dd1730fde411e122e8aa0effb12a6a31049f761",
+      "git_blob_sha": "08296858b237881f29432c1cb982c91a4284c51a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/selection.check.ts",
+      "bytes": 6182,
+      "sha256": "11668a9504715b8168aa3d0f5763713ebb2f171638c585ec0d7a886e096f6161",
+      "git_blob_sha": "691ddedf779cb18d115dfd816732fe93ccea3ed9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "bytes": 2356,
+      "sha256": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb",
+      "git_blob_sha": "bab6a804e5f082cc60eb6f27209070b552981035"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+      "bytes": 12519,
+      "sha256": "f5d9150c2e4f8efbb0bbb53b76e81a33c350a90b0733c2db907d2334ef98134e",
+      "git_blob_sha": "dbdd5c6cf117bd793101dfa6164b026dd10ec9bd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/corpus.ts",
+      "bytes": 1776,
+      "sha256": "2c2b147814f1c919a965234ee292c2563b90027557b83cec54744d38f1639963",
+      "git_blob_sha": "301e30515aac62a2fb50937eb5d507d7faae06fd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+      "bytes": 1754,
+      "sha256": "161df17bb67e01cd3537095232b7a8f777e396db039184d14d3a62366c462682",
+      "git_blob_sha": "2a53115e2f116f49dc23c779aff2349cd149dc1c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+      "bytes": 3821,
+      "sha256": "913fe96e439784551a41cf5bebc01b72c0b52546b5c1fcef7a9de8a29f447aa2",
+      "git_blob_sha": "70a721dc5c20182f67ba3cd52a153190f62875e9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/model.ts",
+      "bytes": 3019,
+      "sha256": "424821d68d25020ea3113c429208686fd5f3d86f814f8e7fad1dcbf14294c27f",
+      "git_blob_sha": "dc4c34866e35b8eee0911897b79396dce51a600e"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/ooxml.ts",
+      "bytes": 13245,
+      "sha256": "d62b91152f2ae58434613893586369f19342359c4771f4dde8be48956e4213d5",
+      "git_blob_sha": "8ab65231d7f94a18e71ac3a78ef2b9a4995b1c79"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "bytes": 12415,
+      "sha256": "14126ee821f9e163d09330a443942bde0ff156c024d7190109b1470970702d6d",
+      "git_blob_sha": "40591b3e4e2f672a80a898ac6d6238fa08f4d565"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
+      "bytes": 1962,
+      "sha256": "4b058ccb0eb4dc09a5bd967530e1b809ec025d4f6e7fedd0219a6c5f38f8c669",
+      "git_blob_sha": "a32cac26786e4ace96490f719677370e42f87958"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "bytes": 19030,
+      "sha256": "1071f2aab0315ae26afd58e293af62cc27d0e32ce7f889f81d9dd1106115651b",
+      "git_blob_sha": "82e4723fc40359e4da16a64973db8d9c516d3ebd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "bytes": 5265,
+      "sha256": "c72378ba4dc5f3463235cc51cf84b1e86dedb36ccb3b69dc12b2ae50eb801dd4",
+      "git_blob_sha": "e05b2e2a8e1b09114c4d1691d946a0cd59ad87f6"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "bytes": 6074,
+      "sha256": "ea9da191002050f784b1dc3ce90b143335d443bbf03fc70b7dd2d8587cd46c8a",
+      "git_blob_sha": "0d6c965e2afb83b2fe703c080f1f96547b2a582f"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/baseline-ui.spec.ts",
+      "bytes": 16323,
+      "sha256": "00575f2eb9e0bbdbcd8e6017cbedac2ad14f402448c4a172f97b799c5a2cfc7e",
+      "git_blob_sha": "4b2b37ba4f49a4a264d13cc1ddd949324533de80"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/browser.ts",
+      "bytes": 6352,
+      "sha256": "917a7fa6798afeea9d9b59a8f3482f74421d60149d715adcf6603f79fb22ad04",
+      "git_blob_sha": "54d6795ebe4c92e923359e4f5339af1177fb40c2"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/flows.ts",
+      "bytes": 17469,
+      "sha256": "7ff7f767d6aec978f27cbcfe4c2c7f8120fc741b600f35e8a018baca94cb1e8d",
+      "git_blob_sha": "dcc3118aa4ae3a079df1da27976905fc7ca80310"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/measurements.ts",
+      "bytes": 14265,
+      "sha256": "f06750009f5400bcce03a7a961d4227fe837fd59340f995d1393671cbbb36244",
+      "git_blob_sha": "a8eee7b6ebff2befaa6edd3f1fd350bfb0aaead9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts",
+      "bytes": 5286,
+      "sha256": "234c517f59707a0d436ab126fe4f469c130da38979b6eb00dac5d0dc8deb8322",
+      "git_blob_sha": "881aa769a5afd9e357f4c15171436c1ce4b8fcfd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts",
+      "bytes": 3147,
+      "sha256": "a1eb7682fa1427ae07452147273479b2917366bc35847a5589737978b6b34816",
+      "git_blob_sha": "c0a45f42c218ad9822c064fb3f7d8140ed0747d6"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "bytes": 7877,
+      "sha256": "ccc049ee9cd91dad7ff700a002ab90a4c098c4cc0becb519abe0de2b7ba5260d",
+      "git_blob_sha": "7ac66af2c21e1e46c4bf12365c7f64a255446337"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts",
+      "bytes": 702,
+      "sha256": "ab756fb5731885423f09a060043c9269d19a1277ad1f0363fd109b3678fcd98f",
+      "git_blob_sha": "58f40c0f9908ad5cc8c1eebb74f4fd7a1e05283e"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts",
+      "bytes": 15105,
+      "sha256": "b68281e9be910172b8aff1d14cde9715059e3808d3d1ab2dd1bc788b1b17930c",
+      "git_blob_sha": "95fea121022aca4a357d79fe0b4620b564d7ab44"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "bytes": 9943,
+      "sha256": "5d4b6957ce955b2252b28063bbc20cce929d51313f4d893d62c32a9965414298",
+      "git_blob_sha": "8ba8d97ec138265454507852a5ab50b600b96c60"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "bytes": 43185,
+      "sha256": "6562cb86fc9ea7095fb812b8477363dd59adb9b71907e1096bd72722d3d7b9b5",
+      "git_blob_sha": "a960a2cad432000edf51efcc6764c0c21d60ce07"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "bytes": 591,
+      "sha256": "15c30bd61c79a537a89ff4488d3dcc02e093df4a2784d7024280c016e138c831",
+      "git_blob_sha": "1bfa058531fc84f012dcb8b601d471abd8fa0aad"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+      "bytes": 11602,
+      "sha256": "ff6f9a25d0096d993eef8ff9c1a48c1536f537d2f312dae06b8b2e0a4f7cda56",
+      "git_blob_sha": "cb587b4f3ff010d9a7c0a893c0b25507d11c7ce1"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "bytes": 26708,
+      "sha256": "6cd45b5e982228811e1c58acaa7153e0161134c2404dc3dc6ad51a5b54069d60",
+      "git_blob_sha": "6d7322f9cac51c897c45211a4d69329df95d402c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp06/imports.spec.ts",
+      "bytes": 26743,
+      "sha256": "528adccaed9455b678df726843aff0578fc6c8fdd77703a5078112efe78d1123",
+      "git_blob_sha": "ba95219b372a67cf45722333d7429a3a436b8e0d"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp10/composition.spec.ts",
+      "bytes": 32568,
+      "sha256": "de2f1939c6048e1661304e54b0db886ca1172f0ee6bbd01ff45553c99fdf792e",
+      "git_blob_sha": "736c85ae7ef4a87bb0c76c36408c156e21a59432"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp10/extended-flows.ts",
+      "bytes": 10956,
+      "sha256": "0d487e0196b6820668f0e1df02f4ba2ff1e795f9e15a775f645695e7dc7be9ba",
+      "git_blob_sha": "e34ac2516d4dcbff52788a8080837938deac2b08"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp10/review-revocation.ts",
+      "bytes": 5071,
+      "sha256": "342bcfae1713494ee5c53dea1e8ee0deb324c35518824698b0ee643d5a57caad",
+      "git_blob_sha": "3b807eab48a5368c9b7de0ec7a90550d3c1c3e70"
+    },
+    {
+      "path": "packages/app-shell/e2e/utils/flaky-reporter.ts",
+      "bytes": 2008,
+      "sha256": "57ae50a10e5a26c8859558f5318360c410e5acfb592db6cfa7775bdbd8ea3d05",
+      "git_blob_sha": "be58ae28f50a56ced43bfa934472a7303437ca13"
+    }
+  ],
+  "compiler_status": "NOT_RUN",
+  "compiler_files": [],
+  "diagnostics": [],
+  "failures": [],
+  "status": "INPUTS_PRESENT_COMPILER_NOT_RUN",
+  "source_snapshot": "402a091485e11d60dff433049c7dedd7fcead687",
+  "source_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+  "tooling_overlay": "Six mission26 files in intake-files.json; this is not a composed Git commit or compiler result."
+}

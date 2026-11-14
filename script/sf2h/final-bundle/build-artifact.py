@@ -176,9 +176,55 @@ static=f'''  sf-static:
           if-no-files-found: error
           retention-days: 14
 '''
+# Keep E2E typechecking independent: an inherited package failure must not skip it.
+e2e_typecheck=f'''  sf-e2e-typecheck:
+    if: {guard}
+    name: Sucafina E2E typecheck and inclusion
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - uses: ./.github/actions/setup-bun
+      - name: Typecheck Sucafina E2Es and record the compiler file graph
+        working-directory: packages/app-shell
+        run: |
+          evidence="$GITHUB_WORKSPACE/sf-e2e-typecheck-evidence"
+          mkdir -p "$evidence"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          export SF_PRODUCT_TREE="$(git rev-parse 'HEAD^{{tree}}')"
+          bun --version > "$evidence/bun-version.txt"
+          set +e
+          bun run typecheck:sf-e2e --showConfig > "$evidence/effective-config.json" 2> "$evidence/config.stderr.log"
+          config_status=$?
+          bun run typecheck:sf-e2e --listFiles --pretty false > "$evidence/typecheck.log" 2>&1
+          typecheck_status=$?
+          set -e
+          cat "$evidence/config.stderr.log" "$evidence/typecheck.log"
+          cd "$GITHUB_WORKSPACE"
+          set +e
+          node script/sf2h/final-bundle/verify-e2e-typecheck.mjs \\
+            --config "$evidence/effective-config.json" \\
+            --log "$evidence/typecheck.log" \\
+            --config-status "$config_status" \\
+            --typecheck-status "$typecheck_status" \\
+            --output "$evidence/inclusion.json"
+          verification_status=$?
+          set -e
+          if [ "$config_status" -ne 0 ] || [ "$typecheck_status" -ne 0 ] || [ "$verification_status" -ne 0 ]; then
+            exit 1
+          fi
+      - name: Upload Sucafina E2E typecheck evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-e2e-typecheck-${{{{ github.sha }}}}-${{{{ github.run_attempt }}}}
+          path: sf-e2e-typecheck-evidence
+          if-no-files-found: error
+          retention-days: 14
+'''
 final=f'''  bundle-result:
     if: always() && {guard}
-    needs: [plan, atlas-scope, atlas, omni, unit-rest, e2e, recipe, sf-static]
+    needs: [plan, atlas-scope, atlas, omni, unit-rest, e2e, recipe, sf-static, sf-e2e-typecheck]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -188,7 +234,7 @@ final=f'''  bundle-result:
         run: |
           node -e 'const n=JSON.parse(process.env.RESULTS); const bad=Object.entries(n).filter(([,v])=>v.result!=="success"); if(bad.length) {{ console.error(JSON.stringify(bad)); process.exit(1) }}'
 '''
-output = (u+'\n'+t+'\n'+static+'\n'+final).encode('utf-8')
+output = (u+'\n'+t+'\n'+static+'\n'+e2e_typecheck+'\n'+final).encode('utf-8')
 if options.check:
     if not target.is_file() or target.read_bytes() != output:
         raise SystemExit(f'BUNDLE_DRIFT: {target} differs from the committed builder and sources')

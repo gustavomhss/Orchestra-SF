@@ -1,0 +1,106 @@
+{
+  "schema": "sf2-mission26-diagnostics-v1",
+  "status": "COMPILER_NOT_RUN",
+  "current_compiler": {
+    "command": "cd packages/app-shell && bun run typecheck:sf-e2e --listFiles --pretty false",
+    "execution": "NOT_RUN",
+    "diagnostics": null,
+    "reason": "Bun and installed workspace dependencies unavailable. Hosted final dispatcher remains S0; no current check-ref handoff authorizes this session to dispatch."
+  },
+  "inherited_failures": [
+    {
+      "source": "PR32 predecessor description and final-ci-preparation handoff",
+      "run_id": 43604348151,
+      "status": "INHERITED_FAIL_NOT_REVALIDATED",
+      "historical_diagnostics": 14,
+      "scope": "Historical Sucafina diagnostics only; not a result on the current product snapshot or mission26 output",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43604348151",
+      "resolution": "Retain exact old identity and obtain new compiler output on composed C. No waiver or invented patch."
+    }
+  ],
+  "source_findings": [
+    {
+      "id": "M26-OPERATIONS-HOST-SELECTION",
+      "owner": "WP04/session24, astra-wp04 PR23",
+      "kind": "Functional static source prerequisite; not a compiler diagnostic",
+      "status": "SUPERSEDED_BY_CURRENT_SOURCE_DO_NOT_APPLY",
+      "patch": "owner-patches/operations-host-selection.patch",
+      "postimage": "owner-patches/selection.ts.txt",
+      "manifest": "owner-patches/manifest.json",
+      "resolved_source_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "resolved_git_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "routing": [
+    {
+      "prefix": "packages/app-shell/e2e/sucafina/operations",
+      "owner": "WP04 / Operations / PR23"
+    },
+    {
+      "prefix": "packages/app-shell/e2e/sucafina/decisions",
+      "owner": "WP11 / Decisions / PR40"
+    },
+    {
+      "prefix": "packages/app-shell/e2e/sucafina/reports",
+      "owner": "WP07 / Reports / PR27"
+    },
+    {
+      "prefix": "Other product paths",
+      "owner": "Resolve current source owner and handoff from actual diagnostic path; mission26 has no write lease there"
+    }
+  ],
+  "remaining": [
+    {
+      "owner": "session23",
+      "action": "Consume six tooling/config files and rerun static preflight on actual composed tree."
+    },
+    {
+      "owner": "S0",
+      "action": "Execute and retain actual package and E2E compiler programs/diagnostics and mandatory gates on C."
+    },
+    {
+      "owner": "WP04/session24",
+      "action": "Validate current Operations producer/host and its runtime prerequisites through S0; the old selector patch is superseded and must not be applied to402."
+    }
+  ],
+  "no_local_tests": true,
+  "no_ci_dispatched": true,
+  "no_tests_changed": true,
+  "source_snapshot": "402a091485e11d60dff433049c7dedd7fcead687",
+  "runtime_prerequisites": [
+    {
+      "id": "M26-OPERATIONS-SCANNER-PREREQUISITE",
+      "status": "RUNTIME_PREREQUISITE_UNVERIFIED",
+      "owner": "S0 / WP04-session24",
+      "source_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+      "sources": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "git_blob_sha": "8ba8d97ec138265454507852a5ab50b600b96c60",
+          "sha256": "5d4b6957ce955b2252b28063bbc20cce929d51313f4d893d62c32a9965414298",
+          "bytes": 9943,
+          "source_kind": "GitHub MCP fetch_file at current ref"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+          "git_blob_sha": "d60be2f87aa210c9700fba276932a6f443264e4f",
+          "sha256": "f538c98efd03387467cd663f7990f00a930dabf249d3e3cda1513b9e483810c3",
+          "bytes": 6525,
+          "source_kind": "GitHub MCP fetch_file at current ref"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+          "git_blob_sha": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+          "sha256": "b108b553ed5754047570e4393066dc25591a72c3c46cf7f7840a5a0add6aa26b",
+          "bytes": 1977,
+          "source_kind": "Local cached bytes verified against pinned GitHub MCP tree blob"
+        }
+      ],
+      "observation": "Current host reads SF_OPERATIONS_CLAMD_PORT; absent value selects scanner:null. installation delegates to scanLocalFile, which returns false without an endpoint. Source comment requires an already approved real ClamD service.",
+      "workflow_observation": "No ClamD or SF_OPERATIONS_CLAMD_PORT declaration in inspected sf2-epic.yml. Composite actions and actual runner service readiness were not evaluated for this prerequisite.",
+      "limit": "Not a compiler diagnostic or an observed runtime failure. No service provisioning or runtime code changes belong to this typecheck mission.",
+      "next_action": "S0 and source owner establish approved runner prerequisite before real Operations execution and preserve their evidence; no source assertion was weakened."
+    }
+  ]
+}
