@@ -1,0 +1,144 @@
+{
+  "schema": "sf2h.mission35.patch.v1",
+  "mission": 35,
+  "finding": "M29-ATLAS-003",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "authorityCommit": "aa382fe3fa532006fe0923b58f2aa496a365edc2",
+  "original": {
+    "sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+    "tree": "7f76f3db44cb3cbaa69d070c6268560150067603"
+  },
+  "composedObservedInMission": "133312e39a9aa6d1cb51bed20625108c6cc79359",
+  "composedInput": {
+    "sha": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+    "tree": "561700c145767a16d42e8b2103bd0ea81d0b379f",
+    "testAndHelperEqualToMissionObserved": true
+  },
+  "review": {
+    "sha": "28e50f2c306f4088b5e396941e54f7ccc10ce62a",
+    "findingBlob": "5660eb28b4d5ccbf2de7db7c4352df3d22d61922"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "mode": "100644",
+      "original": {
+        "gitBlob": "4b0edefc2ed818c2c9cd17e035e6d0b84e110dcf",
+        "sha256": "0cf19a3f8375dfbfb9102d8669405d6129064ca8debefe3039de7a17178e2872",
+        "bytes": 23388
+      },
+      "composedPreimage": {
+        "gitBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+        "sha256": "eb069a16f091733d7fda481ed9e05f339dace99b496a2c16fe3050c06412c85f",
+        "bytes": 34388
+      },
+      "postimage": {
+        "gitBlob": "ff83d341a0b0effc066616f17c7d92a3419bef99",
+        "sha256": "0df31e68bc08b583edcbafcae0d2f99f1fcb4c340f36c690dfd818476b0a2af4",
+        "bytes": 43854
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "mode": "100644",
+      "original": {
+        "gitBlob": "439ba78e8208133e498ebfb87b00e4eb882dd8fd",
+        "sha256": "ae173af790c4af13359812def4d8386867924249b5c89506ce8a8c885b42cdd5",
+        "bytes": 10833
+      },
+      "composedPreimage": {
+        "gitBlob": "6194f415573636efd47751f977cd157c9396f17d",
+        "sha256": "509fc4423f0d74c130a5ead0c8744548f578109a6c50ac3095089f5e6dc801d4",
+        "bytes": 11421
+      },
+      "postimage": {
+        "gitBlob": "e52b6baaf0b30edb7a289e070287c9027eb364cf",
+        "sha256": "688318f86382a12446b7803d07ff435cee26405feb6ddd246c46b5ed4abf746d",
+        "bytes": 14155
+      }
+    }
+  ],
+  "composedC17": {
+    "preservedByteForByte": true,
+    "gitBlob": "fb742163bd102cb455b669f2e9f200ed4a56fda3",
+    "sha256": "ba60a5d4d8ffd8bbc743d3030db473ad9350b03a001a5f0a9a07eb93e876cc1c",
+    "bytes": 20558
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/0001-restore-atlas-process-proof.patch",
+    "gitBlob": "4f328019012fa23a07df0b17152f792861ff7c77",
+    "sha256": "d41bc56a3fe281d9cdd859493de4a9ddc2b155ea54c02c0157650e75c2b5a749",
+    "bytes": 28999
+  },
+  "dependencyClosure": {
+    "rule": "Exact composedInput tree, overlay only the two listed test/helper postimages. Every other runtime, engine, host, fixture, config and dependency blob remains that input tree. No composed runtime is authored or copied into the PR38 product tree.",
+    "sourceAccess": {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3"
+    },
+    "atlasMemory": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59"
+    }
+  },
+  "ci": {
+    "state": "NOT_RUN_AT_PUBLICATION",
+    "selection": [
+      "Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+    ],
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "sourceBlobs": {
+      "testWorkflow": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "testCI": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "testRequest": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "testLocation": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "expectSpawn": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac",
+      "process": "a2c29d4a18c44ff407e6055b27830fade5d43f20",
+      "ciInterface": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+    },
+    "budget": {
+      "testEachMs": 180000,
+      "childCooperativeMs": 90000,
+      "childBoundMs": 120000,
+      "increased": false
+    },
+    "nativeSessionWitness": false
+  },
+  "coverage": {
+    "retained": [
+      "cross-principal authorized recall",
+      "empty selection refusal",
+      "forged reference refusal",
+      "revoked principal refusal",
+      "C17 confirmed document and original capture",
+      "C17 idempotent replay and source blob revocation"
+    ],
+    "restored": [
+      "isolated process via approved AppProcess spawn",
+      "PID read from process handle and compared to child",
+      "parent persisted receipt/envelope/capture equals canonical child read",
+      "actual createSfCaseRecall consumer result"
+    ],
+    "added": [
+      "actual C08 case incarnation replacement refuses old reference",
+      "no outsider or revoked matches/derived metadata",
+      "Atlas/outbox unchanged after child and denied reads"
+    ],
+    "originalOnlyGap": "Original f803 includes synthetic native authorizeRecallCase/ancestry mutation assertions whose optional source API is absent from the composed sourceAccess blob. Those source inputs and original test remain archived; this patch makes no runtime edits and does not claim that separate original-only native-selection suite ran."
+  },
+  "acceptance": {
+    "M29_ATLAS_003": "PENDING_HOSTED_PROOF",
+    "AM05": "OPEN_NATIVE_SESSION_BINDING_SKILL_AND_CONSUMER_REQUIRED",
+    "globalRelease": false
+  }
+}
