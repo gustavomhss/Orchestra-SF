@@ -1,8 +1,4 @@
-import { AppProcess } from "@orchestra/core/process"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
 import type { Page } from "@playwright/test"
-import { Deferred, Effect, Stream } from "effect"
-import { ChildProcess } from "effect/unstable/process"
 import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -42,6 +38,18 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
   const repository = path.resolve(support, "../../../../..")
   const entry = path.resolve(support, input.setupEntry)
   if (path.dirname(entry) !== support || !entry.endsWith(".ts")) throw new Error("Reports setup must stay in reports-support")
+  // Playwright lists this file under Node before any fixture is admitted. Core's
+  // process graph reaches platform/global initialization, so load it only for
+  // this real fixture; listing must not initialize process services or state.
+  const [{ AppProcess }, { LayerNode }, { Deferred, Effect, Stream }, { ChildProcess }] = await Promise.all([
+    import("@orchestra/core/process"),
+    import("@orchestra/core/effect/layer-node"),
+    import("effect"),
+    import("effect/unstable/process"),
+  ]).catch((error: unknown) => {
+    const detail = error instanceof Error ? error.stack ?? error.message : String(error)
+    throw new Error(`Reports fixture dependencies failed to load: ${redact(detail)}`)
+  })
   const local = path.join(repository, "modules/sucafina/Sucafinav1/local")
   const owned: { child?: ChildProcessHandle } = {}
 

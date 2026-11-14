@@ -24,8 +24,10 @@ test("a lost reply response remains unknown and sends again only on an explicit 
     const first = transport.requests[0]!
     expect(first.url).toBe("https://reports.example.invalid/sucafina/dashboard?sf=collaboration-thread-reply")
     expect(first.method).toBe("POST")
-    expect(first.credentials).toBe("same-origin")
-    expect(first.cache).toBe("no-store")
+    // Inspect the actual fetch boundary: Bun's Request clone normalizes these
+    // browser options instead of retaining the supplied RequestInit values.
+    expect(transport.options[0]?.credentials).toBe("same-origin")
+    expect(transport.options[0]?.cache).toBe("no-store")
     expect(first.headers.get("X-SF-Review-Binding")).toBe(binding)
     expect(first.headers.get("Idempotency-Key")).toBe(payload.mutation.idempotencyKey)
     const body = await first.clone().text()
@@ -196,7 +198,9 @@ function ok(value: unknown) {
 function fixture(respond: (request: Request) => Response | Promise<Response>, initial: { binding: string | undefined } = { binding }) {
   const state: { binding: string | undefined; accessLost: number } = { binding: initial.binding, accessLost: 0 }
   const requests: Request[] = []
+  const options: RequestInit[] = []
   const send = async (input: RequestInfo | URL, init?: RequestInit) => {
+    options.push({ ...init })
     const request = new Request(input, init)
     requests.push(request.clone())
     return await respond(request)
@@ -207,7 +211,7 @@ function fixture(respond: (request: Request) => Response | Promise<Response>, in
     url: () => address,
     binding: () => state.binding,
   })
-  return { state, requests, client }
+  return { state, requests, options, client }
 }
 
 async function failure(pending: Promise<unknown>, kind: ReviewDiscussionError["kind"], outcome: ReviewDiscussionError["outcome"]) {
