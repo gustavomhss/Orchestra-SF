@@ -1,0 +1,64 @@
+{
+  "schema": "wp12-independent-own-api-fix-review-v1",
+  "status": "PASS_STATIC",
+  "reviewer": "/root/compose_typecheck",
+  "reviewedFile": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+    "beforeBlob": "32c71d3c8c9645e6957eca6f3e4afa64727b71a5",
+    "afterBlob": "7ddbda1cbc79857768ead729ed70dfe67dd5ae64",
+    "sha256": "a9f5e7fa7eb63c06e41f021cf66a000d66c02747f9f1f571c422372073a06136",
+    "bytes": 29334,
+    "expectLinesPreserved": 79,
+    "explicitTimeoutMs": 360000
+  },
+  "failure": "Hosted C23 found nonexistent context.persistence.read and the resulting implicit-any callback; no W23 product run was dispatched.",
+  "reviewCorrection": "The earlier broad static review missed this concrete persistence API mismatch. This additive review verifies the full published implementation and actual return type directly; it does not rewrite the prior cutoff.",
+  "checks": [
+    "Wp12NativeMissionContext.persistence is ReturnType<typeof createSfSourcePersistence>, not the product state-store API.",
+    "The full published createSfSourcePersistence type and implementation expose transaction, selected optional Persistence methods, scoped-source methods and initializeSources. Neither exposes read.",
+    "AssetPersistence.transaction accepts a Snapshot callback returning Promise<{commit:boolean,value:T}> and returns Promise<T>. The async callback now infers Snapshot and string T.",
+    "The actual wrapper delegates transaction to the installed driver and returns commit:false without synchronization writes. The callback neither mutates the snapshot nor requests a domain write.",
+    "The digest retains exactly opexOwners, opexEntries, capexProjects and capexEntries; no fields, expected values, source or authorization checks are removed.",
+    "Inverting the single function-body replacement restores the complete old file byte for byte; all79expect calls,360000msdeadline, native ordering and every other branch remain.",
+    "The sole direct context.persistence method call in the driver is now the verified transaction. The initializer also already uses that real transaction contract."
+  ],
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "commit": "c571d47bf356e26944d6980bad37a73992751a20",
+      "blob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c571d47bf356e26944d6980bad37a73992751a20/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "commit": "c571d47bf356e26944d6980bad37a73992751a20",
+      "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "sha256": "c5abe76c2d256f0257d9ae35495c4fda99dca220ed1d6f9642963d742459db7f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c571d47bf356e26944d6980bad37a73992751a20/modules/sucafina/Sucafinav1/runtime/assets.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "commit": "c571d47bf356e26944d6980bad37a73992751a20",
+      "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c571d47bf356e26944d6980bad37a73992751a20/modules/sucafina/Sucafinav1/runtime/contract.ts"
+    }
+  ],
+  "sourceProof": "persistence-api-full-mcp.json",
+  "harnessBlob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+  "findings": [],
+  "runtimeQualification": "This corrects a real method/API error, not merely erased type syntax. No emitted-JavaScript identity or future hosted success is claimed.",
+  "validation": {
+    "exactFullPublishedSourceHashesVerified": 3,
+    "exactHarnessTypeVerified": true,
+    "inversePatchPreservation": true,
+    "noLocalProductExecution": true,
+    "noLocalProductImports": true,
+    "noLocalTypecheck": true,
+    "noSourceEditsByReviewer": true,
+    "noRemoteMutation": true,
+    "noCITriggered": true
+  },
+  "nextRequiredGate": "Publish this own blob and run one full hosted package check before product execution."
+}

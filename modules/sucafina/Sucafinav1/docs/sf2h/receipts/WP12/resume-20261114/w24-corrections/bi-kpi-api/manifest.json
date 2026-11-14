@@ -1,0 +1,47 @@
+{
+  "schema": "wp12-own-api-fix-manifest-v1",
+  "status": "FROZEN_STATIC_REVIEWED_NOT_RUN",
+  "failure": {
+    "run_id": 43609973039,
+    "job_id": 132492663762,
+    "reason": "C23 typecheck rejected SourcePersistence.read and resulting implicit-any callback; no product flight ran this driver."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+      "frozen_path": "resume-input/criteria/bi-kpi-api-fix/frozen/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+      "before_blob": "32c71d3c8c9645e6957eca6f3e4afa64727b71a5",
+      "blob": "7ddbda1cbc79857768ead729ed70dfe67dd5ae64",
+      "sha256": "a9f5e7fa7eb63c06e41f021cf66a000d66c02747f9f1f571c422372073a06136",
+      "bytes": 29334
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/api-fix-review.json",
+      "frozen_path": "resume-input/criteria/bi-kpi-api-fix/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/api-fix-review.json",
+      "blob": "6e2fa7305100c36b9234ebaa80691ad895fc7715",
+      "sha256": "e48a51d842eca75c0575533d9c039f976ad80ba960598c0c6bb0b13e82f7c08d",
+      "bytes": 4266,
+      "kind": "own-document"
+    }
+  ],
+  "change": "Replace nonexistent persistence.read with the existing transaction API returning commit:false; digest still contains exactly the same four raw budget collections. This changes the driver API call, not just erased types.",
+  "diff": "resume-input/criteria/bi-kpi-api-fix/delta.diff",
+  "retained": [
+    "all raw cells and values",
+    "all scopes/grants/canonical operations",
+    "all 79 assertions",
+    "all consumers and Session receipt checks",
+    "360000ms deadline",
+    "published BI route docs as historical cutoff"
+  ],
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "foreign_edits": false,
+  "independent_review": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/api-fix-review.json",
+    "sha256": "e48a51d842eca75c0575533d9c039f976ad80ba960598c0c6bb0b13e82f7c08d",
+    "blob": "6e2fa7305100c36b9234ebaa80691ad895fc7715",
+    "status": "PASS_STATIC",
+    "scope": "Published AssetPersistence/Persistence/SfSourcePersistence API, unchanged four-field digest, commit:false, 79 assertions and 360000ms deadline."
+  }
+}

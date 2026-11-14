@@ -1,0 +1,100 @@
+{
+  "schema": "sf-wp12-exact-hosted-check-result-v1",
+  "phase": "resume-18",
+  "product": {
+    "sha": "c571d47bf356e26944d6980bad37a73992751a20",
+    "tree": "ef76c4c5809a29eb8d7935f1830829c25de7d4bc"
+  },
+  "check": {
+    "snapshot": "a814adf2d8082824c8f20e70df0b99fbc504b3cb",
+    "tree": "8ffd0190ff6f64d5e22cde876cffb47beae7410b",
+    "directParent": "c571d47bf356e26944d6980bad37a73992751a20",
+    "onlyEnvelopePath": ".astra-wp12-check.json",
+    "branch": "astra-check-wp12",
+    "runId": 43609973039,
+    "jobId": 132492663762,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43609973039",
+    "status": "completed",
+    "conclusion": "failure",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "envelope": {
+      "sha256": "910b6550fca30ce02f56e7458650eff945a3d712f7e011772acbd853fb155b90",
+      "blob": "3db73d86a6e61b4622748f6dd2287f5ffcf7bb19",
+      "candidateShaOmitted": true
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "status": "failure",
+      "exitCode": 2,
+      "ownDiagnostics": 2,
+      "foreignDiagnostics": 0,
+      "diagnostics": [
+        "2026-11-14T15:25:35.2879084Z ##[error]test/product/wp12/native-execution-bi-kpi.test.ts(269,30): error TS2339: Property 'read' does not exist on type 'AssetPersistence & Pick<Persistence, \"currentSnapshots\" | \"transactionAll\"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<...>; }'.",
+        "2026-11-14T15:25:35.2892851Z ##[error]test/product/wp12/native-execution-bi-kpi.test.ts(269,49): error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
+      ]
+    },
+    "spawnImports": {
+      "command": "bun run check:spawn-imports",
+      "status": "success",
+      "filesChecked": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "success",
+      "rules": 78,
+      "changedPaths": 1045,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "bytes": 65519,
+    "sha256": "ebe34b3719f01ab4e04c173df27238a1b27e3748a08700d327d696624dbfbf23",
+    "source": "GitHub Actions job log132492663762",
+    "verifiedFrom": "evidence/resume-18-check.log"
+  },
+  "artifact": {
+    "id": 14119524952,
+    "name": "astra-wp12-check-1",
+    "bytes": 1659,
+    "digest": "sha256:ba9b1f83f29028fd90d2ca2fdcadce2ae4220badf938617d854d0bd24e13aaa8",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43609973039/artifacts/14119524952",
+    "qualification": "GitHub artifact metadata and upload-log digest/size checked. No ZIP member inspection asserted."
+  },
+  "scope": {
+    "ownSourceChanges": 4,
+    "foreignSourceChanges": 0,
+    "effectiveForeignPins": 339,
+    "preparation": "preparation-18.json",
+    "productTestsDispatchedOnThisProduct": false
+  },
+  "diagnosis": [
+    {
+      "path": "test/product/wp12/native-execution-bi-kpi.test.ts",
+      "line": 269,
+      "codes": [
+        "TS2339",
+        "TS7006"
+      ],
+      "reason": "The concrete createSfSourcePersistence result exposes transaction/currentSnapshots, not read; the callback implicit-any diagnostic follows from that nonexistent method. Use the real read-only transaction with commit:false and the same four-collection digest.",
+      "classification": "OWN_API_CORRECTION_NOT_ERASED_TYPE_ONLY"
+    }
+  ],
+  "followup": "Publish the independently reviewed one-file BI API correction. New exact-product full-package check is required; no product tests dispatched on W23.",
+  "limits": [
+    "This is a failed hosted typecheck, not a product run.",
+    "The new correction must use the real persistence API without a write, cast or weakened assertion.",
+    "The unavailable provider remains explicit; no native inference or integrated WP12 acceptance is inferred."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12": false,
+  "resolvedPreviousDiagnostics": {
+    "run": 43609369186,
+    "count": 3,
+    "status": "All three C22 TS2769 diagnostics absent after reviewed W23 runtime guards."
+  }
+}

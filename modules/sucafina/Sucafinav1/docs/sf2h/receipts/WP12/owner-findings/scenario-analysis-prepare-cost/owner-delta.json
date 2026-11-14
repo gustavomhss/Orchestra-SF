@@ -1,0 +1,28 @@
+{
+  "schema": "wp12-owner-delta-v1",
+  "owner": "WP10 / integration",
+  "findingId": "WP12-SCENARIO-ANALYSIS-PREPARE-COST",
+  "status": "READY_TO_FORWARD_NOT_APPLIED",
+  "subject": "ScenarioComparisonInput: real preparation returns final authority refusal near fresh admission expiry",
+  "message": "Run 43606961039 / job 132483561647 fails 0/1 (101 assertions). The three real C09/C10 alternatives complete at 14:59:02.360761Z with knownSubtotals 240000/210000/250000, coverage complete/pending/complete and training derived only for the omission. The first fresh analysis.prepare returns analysis-authority-changed at 15:04:02.6858459Z. HTTP 06522fa4 creates a new admission then checks it after registry.prepare; UI 502fb1ab fixes a five-minute expiry. We preserve this fence. Please diagnose the real preparation path with passive per-stage timing and publish a bounded correction preserving all source/result/case re-observations and final authority. The log does not expose the first inner failing port. Latest PR29 4bc9c722 has downstream resolveMany fca50978/1782c209, but grouping includes stored producer version and these three sequential promotions have versions 2/3/4, so that isolated pair does not reduce sibling case reads here. Planner port 83897092 self-comparison reduction is relevant but has additional financial dependencies; please provide the exact safe closure or a separately published compatible correction. WP12's d418d5d4 public UI case-scope fix is published in 5c148a16 but was not reached by this failure; its existence does not release the mission rerun.",
+  "requestedEvidence": [
+    "passive timing around actual input/lookup/compare/source/context/final-authority phases, without recording private payloads",
+    "minimal complete source pins of the correction, including any required Finance dependencies",
+    "negative proofs for case/source/result mutation, current Request/lease, revocation and abort",
+    "successful original three-alternative input preparation and subsequent real consumer path under the existing deadline"
+  ],
+  "forbiddenSubstitutes": [
+    "longer lease or test deadline",
+    "renewing admission inside the operation",
+    "authority cache or reuse across independent phases",
+    "synthetic input/result/receipt",
+    "discarding the third alternative, annual inventory or derived-training assertion"
+  ],
+  "wp12WorkCompleted": [
+    "read-only runtime and source diagnosis",
+    "latest published source comparison",
+    "independent review requested",
+    "latent UI comparison scope fix published separately"
+  ],
+  "nextAction": "S0/root may forward this owned report. No source from WP10/WP03/WP11 was edited or installed by this audit."
+}
