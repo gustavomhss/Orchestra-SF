@@ -10,6 +10,7 @@ import type { AvailableConfirmationScopeObservation, ConfirmationObserver } from
 import { answerReuseBaselineKey } from "./answer-reuse.ts"
 import type { AnswerReuseBaseline } from "./answer-reuse.ts"
 import { isThread } from "./threads.ts"
+import { threadMessageContext } from "./thread-context.ts"
 
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 export type AnswerWork = { state: "unconfirmed" } | {
@@ -47,11 +48,13 @@ export function createAnswerWorkPort<T extends AvailableConfirmationScopeObserva
     if (thread.kind === "comment" || !answer || baseline === undefined) return { status: "ok", value: { state: "unconfirmed" } }
     if (!isBaseline(baseline) || baseline.questionId !== questionId || baseline.answerId !== answer.id || baseline.installationId !== context.binding.installationId || baseline.projectId !== context.binding.projectId) return { status: "unavailable", reason: "answer-work-unavailable" }
     const scope = baseline.scope
-    const originals = thread.evidenceRefs.filter((ref) => ref.refId === thread.sourceRef)
+    const basis = threadMessageContext(thread, answer)
+    if (!basis) return { status: "unavailable", reason: "answer-work-unavailable" }
+    const originals = basis.evidenceRefs.filter((ref) => ref.refId === basis.sourceRef)
     const original = originals[0]
-    if (originals.length !== 1 || !original || original.kind !== "record" || original.target.surface !== scope.sourceRef.surface || original.target.recordType !== scope.sourceRef.type || original.target.recordId !== scope.sourceRef.id || digestSfValue([...original.target.fields].sort()) !== digestSfValue([...scope.fields].sort()) || digestSfValue(thread.period) !== digestSfValue(scope.period) || !await input.source.verifyManifest(scope, context)) return { status: "unavailable", reason: "answer-work-unavailable" }
-    const dependencies = thread.evidenceRefs.filter((ref) => ref !== original)
-    if (thread.evidenceRefs.some((ref) => ref.kind !== "record" || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) || dependencies.length !== scope.materialDependencies.length || scope.materialDependencies.some((dependency) => dependencies.filter((ref) => ref.kind === "record" && ref.target.surface === dependency.surface && ref.target.recordType === dependency.type && ref.target.recordId === dependency.id && digestSfValue([...ref.target.fields].sort()) === digestSfValue([...dependency.fields].sort()) && digestSfValue(ref.target.period) === digestSfValue(dependency.period)).length !== 1)) return { status: "unavailable", reason: "answer-work-unavailable" }
+    if (originals.length !== 1 || !original || original.kind !== "record" || original.target.surface !== scope.sourceRef.surface || original.target.recordType !== scope.sourceRef.type || original.target.recordId !== scope.sourceRef.id || digestSfValue([...original.target.fields].sort()) !== digestSfValue([...scope.fields].sort()) || digestSfValue(basis.period) !== digestSfValue(scope.period) || !await input.source.verifyManifest(scope, context)) return { status: "unavailable", reason: "answer-work-unavailable" }
+    const dependencies = basis.evidenceRefs.filter((ref) => ref !== original)
+    if (basis.evidenceRefs.some((ref) => ref.kind !== "record" || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) || dependencies.length !== scope.materialDependencies.length || scope.materialDependencies.some((dependency) => dependencies.filter((ref) => ref.kind === "record" && ref.target.surface === dependency.surface && ref.target.recordType === dependency.type && ref.target.recordId === dependency.id && digestSfValue([...ref.target.fields].sort()) === digestSfValue([...dependency.fields].sort()) && digestSfValue(ref.target.period) === digestSfValue(dependency.period)).length !== 1)) return { status: "unavailable", reason: "answer-work-unavailable" }
     const observation = await input.source.observe(scope, context)
     if (observation.state !== "available" || observation.physicalIncarnation !== baseline.physicalIncarnation || !Number.isSafeInteger(observation.sourceVersion) || observation.sourceVersion < 1 || !observation.sourceFingerprint || !observation.dependencyFingerprint || !observation.scopeFingerprint) return { status: "unavailable", reason: "answer-work-unavailable" }
     const current = observation.evidence
@@ -79,3 +82,4 @@ function isBaseline(value: unknown): value is AnswerReuseBaseline {
     return identity(dependency) && fields(dependency.fields) && isSfPeriod(dependency.period) && Number.isSafeInteger(dependency.version) && Number(dependency.version) > 0 && typeof dependency.observedAt === "string" && Number.isFinite(Date.parse(dependency.observedAt))
   })
 }
+

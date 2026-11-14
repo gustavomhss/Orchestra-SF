@@ -9,7 +9,15 @@ export function createRecipientAwareThreadReads(threads: Pick<ReturnType<typeof 
   return { read: async (id: string, context: TrustedDomainContext) => {
     if (recipientThread) {
       const projected = await recipientThread(id, context)
-      if (projected.status === "ok") return { status: "ok" as const, value: { ...projected.value, sourceRef: projected.value.current.sourceRef.refId, sourceIncarnation: projected.value.current.sourceRef.target.incarnation, observedVersion: projected.value.observed.version, period: projected.value.observed.period, evidenceRefs: projected.value.current.evidenceRefs } }
+      if (projected.status === "ok") {
+        const period = projected.value.current.sourceRef.target.period
+        const observed = projected.value.observed.period
+        // A current-state rollover never relabels the conversation's original competence.
+        if (!period || period.start > observed.start || period.end < observed.end) return projected.value.historical
+          ? { status: "ok" as const, value: { id: projected.value.id, kind: projected.value.kind, ...(projected.value.recipientRef ? { recipientRef: projected.value.recipientRef } : {}), state: projected.value.state, messages: projected.value.messages, ...projected.value.historical } }
+          : { status: "unavailable" as const, reason: "thread-historical-context-unavailable" }
+        return { status: "ok" as const, value: { ...projected.value, sourceRef: projected.value.current.sourceRef.refId, sourceIncarnation: projected.value.current.sourceRef.target.incarnation, observedVersion: projected.value.observed.version, period: observed, evidenceRefs: projected.value.current.evidenceRefs } }
+      }
     }
     return threads.read(id, context)
   }, readHistorical: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {

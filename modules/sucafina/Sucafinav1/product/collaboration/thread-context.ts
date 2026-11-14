@@ -14,7 +14,7 @@ export function threadMessageContext(thread: CollaborationThread, message: Colla
   if (!validThreadSourceContext(thread) || !validThreadSourceContext(selected)) return undefined
   const original = thread.evidenceRefs.find((ref) => ref.refId === thread.sourceRef)
   const source = selected.evidenceRefs.find((ref) => ref.refId === selected.sourceRef)
-  if (!original || !source || original.kind !== "record" || source.kind !== "record" || digestSfValue(selector(original)) !== digestSfValue(selector(source)) || digestSfValue(selected.period) !== digestSfValue(thread.period)) return undefined
+  if (!original || !source || original.kind !== "record" || source.kind !== "record" || digestSfValue(selector(original)) !== digestSfValue(selector(source))) return undefined
   const originals = thread.evidenceRefs.map(selector).map(digestSfValue).sort()
   const selectedRefs = selected.evidenceRefs.map(selector).map(digestSfValue).sort()
   if (digestSfValue(originals) !== digestSfValue(selectedRefs)) return undefined
@@ -33,5 +33,5 @@ export function validThreadSourceContext(value: unknown): value is ThreadSourceC
 
 function selector(ref: BusinessEvidenceRef) {
   if (ref.kind !== "record") return { immutableSupplement: ref }
-  return { installationId: ref.installationId, projectId: ref.projectId, surface: ref.target.surface, recordType: ref.target.recordType, recordId: ref.target.recordId, fields: [...ref.target.fields].sort(), period: ref.target.period }
+  return { installationId: ref.installationId, projectId: ref.projectId, surface: ref.target.surface, recordType: ref.target.recordType, recordId: ref.target.recordId, fields: [...ref.target.fields].sort() }
 }

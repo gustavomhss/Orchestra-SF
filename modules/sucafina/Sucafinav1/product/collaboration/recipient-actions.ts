@@ -37,16 +37,20 @@ export function createRecipientThreadActions(input: {
     if (stored.status !== "ok" || !isThread(stored.value) || stored.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
     const prior = stored.value
     if (digestSfValue({ id: prior.id, kind: prior.kind, recipientRef: prior.recipientRef, state: prior.state, messages: prior.messages, version: prior.observedVersion, period: prior.period }) !== digestSfValue({ id: projected.value.id, kind: projected.value.kind, recipientRef: projected.value.recipientRef, state: projected.value.state, messages: projected.value.messages, version: projected.value.observed.version, period: projected.value.observed.period })) return { status: "stale", reason: "thread-changed" }
-    const answer = prior.state === "resolved" && selected.action.kind === "reply" && input.answerWork ? await input.answerWork(id, context) : undefined
-    const reopen = prior.state === "resolved" && selected.action.kind === "reply" && prior.recipientRef === context.binding.principalRef && answer?.status === "ok" && answer.value.state === "stale"
+    const original = prior.evidenceRefs.find((ref) => ref.refId === prior.sourceRef)
+    const currentPeriod = projected.value.current.sourceRef.target.period
+    const rollover = !!projected.value.historical && original?.kind === "record" && !!currentPeriod && digestSfValue(original.target.period) !== digestSfValue(currentPeriod)
+    const answer = prior.state === "resolved" && selected.action.kind === "reply" && !rollover && input.answerWork ? await input.answerWork(id, context) : undefined
+    const reopen = prior.state === "resolved" && selected.action.kind === "reply" && prior.recipientRef === context.binding.principalRef && (rollover || answer?.status === "ok" && answer.value.state === "stale")
     if (prior.state !== "open" && !reopen) return { status: "conflict", reason: "thread-resolved" }
-    const basis: ThreadSourceContext = { sourceRef: projected.value.current.sourceRef.refId, sourceIncarnation: projected.value.current.sourceRef.target.incarnation, observedVersion: projected.value.current.sourceRef.target.version, period: projected.value.observed.period, evidenceRefs: projected.value.current.evidenceRefs }
+    const period = currentPeriod && (currentPeriod.start > prior.period.start || currentPeriod.end < prior.period.end) ? currentPeriod : prior.period
+    const basis: ThreadSourceContext = { sourceRef: projected.value.current.sourceRef.refId, sourceIncarnation: projected.value.current.sourceRef.target.incarnation, observedVersion: projected.value.current.sourceRef.target.version, period, evidenceRefs: projected.value.current.evidenceRefs }
     if (!validThreadSourceContext(basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
     const fence = await input.mutationFence.prepare(async () => {
       const current = await input.read(id, context)
       if (current.status !== "ok" || digestSfValue(current.value.current) !== digestSfValue(projected.value.current) || digestSfValue({ id: current.value.id, kind: current.value.kind, recipientRef: current.value.recipientRef, state: current.value.state, messages: current.value.messages, version: current.value.observed.version, period: current.value.observed.period }) !== digestSfValue({ id: prior.id, kind: prior.kind, recipientRef: prior.recipientRef, state: prior.state, messages: prior.messages, version: prior.observedVersion, period: prior.period })) return false
-      const stillPending = reopen && input.answerWork ? await input.answerWork(id, context) : undefined
-      return !reopen || stillPending?.status === "ok" && stillPending.value.state === "stale" && answer?.status === "ok" && digestSfValue(stillPending.value) === digestSfValue(answer.value)
+      const stillPending = reopen && !rollover && input.answerWork ? await input.answerWork(id, context) : undefined
+      return !reopen || rollover && !!current.value.historical || stillPending?.status === "ok" && stillPending.value.state === "stale" && answer?.status === "ok" && digestSfValue(stillPending.value) === digestSfValue(answer.value)
     })
     if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
     const messageId = selected.action.kind === "reply" ? input.createId() : undefined

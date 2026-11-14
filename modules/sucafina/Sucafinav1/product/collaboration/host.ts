@@ -41,6 +41,7 @@ import { createWorkSourceRefresh } from "./work-source-refresh.ts"
 import { createThreadAnswerEvidence } from "./evidence.ts"
 import { createThreadHistory } from "./thread-history.ts"
 import { createThreadSourceContinuity } from "./thread-continuity.ts"
+import { createHistoricalThreadSourceRefresh } from "./thread-source-refresh.ts"
 import { createAnswerReusePort } from "./answer-reuse.ts"
 import { createAnswerWorkPort } from "./answer-work.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
@@ -88,11 +89,16 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority })
   const reissue = input.issueForActor ? createCollaborationReissuer({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context), prepareMaterialScope: input.prepareReissueScope }) : undefined
   const refreshWorkSource = input.issueForActor ? createWorkSourceRefresh({ host: input.host, issueForActor: input.issueForActor, authorize: (ref, context) => authority.sources([ref], context) }) : undefined
+  const historicalThreadSource = createHistoricalThreadSourceRefresh({ host: input.host, evidence: input.evidence })
+  const refreshThreadSource: NonNullable<typeof refreshWorkSource> = async (original, context) => {
+    const samePeriod = refreshWorkSource ? await refreshWorkSource(original, context) : undefined
+    return samePeriod?.status === "ok" ? samePeriod : historicalThreadSource(original, context)
+  }
   const baseSelections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
   const caseSelection = input.caseSelectionWrites ? createCaseWorkSelection({ host: input.host, state: input.state, cases: input.cases, authority, human: input.human, fence: createCollaborationMutationFence(input.host), fallback: baseSelections, reissue, refreshWorkSource, workCaseAuthority: input.workCaseAuthority, target: input.creationTarget, createId: input.createId, caseSelectionWrites: input.caseSelectionWrites }) : undefined
   const selections = caseSelection?.port ?? baseSelections
-  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshWorkSource, authorize: authority.sources, authorizeHistorical: authority.historicalSources }) : undefined
-  const authorizeThreadSourceContinuity = reissue ? createThreadSourceContinuity({ host: input.host, reissue, refresh: refreshWorkSource, authorizeHistorical: authority.historicalSources }) : undefined
+  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshThreadSource, authorize: authority.sources, authorizeHistorical: authority.historicalSources }) : undefined
+  const authorizeThreadSourceContinuity = reissue ? createThreadSourceContinuity({ host: input.host, reissue, refresh: refreshThreadSource, authorizeHistorical: authority.historicalSources }) : undefined
   const confirmation = (() => {
     if (!input.confirmationSource || typeof input.confirmationSource.verifyManifest !== "function" || typeof input.confirmationSource.fenceManifest !== "function") return undefined
     const source = input.confirmationSource
@@ -188,10 +194,15 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     scopeForAnswer: async (questionId, answerRef, context) => {
       if (!await answerEvidence.belongsToQuestion(questionId, answerRef, context)) return { status: "unavailable", reason: "answer-scope-unavailable" }
       const thread = await threadReads.read(questionId, context)
-      if (thread.status !== "ok" || !thread.value.evidenceRefs.length || thread.value.evidenceRefs.some((ref) => ref.kind !== "record")) return { status: "unavailable", reason: "answer-scope-unavailable" }
-      const evidence = thread.value.evidenceRefs as readonly Extract<BusinessEvidenceRef, { kind: "record" }>[]
-      const source = evidence.find((ref) => ref.refId === thread.value.sourceRef)
-      if (!source || source.kind !== "record" || source.refId !== thread.value.sourceRef || !source.target.period || digestSfValue(source.target.period) !== digestSfValue(thread.value.period)) return { status: "unavailable", reason: "answer-scope-unavailable" }
+      const answer = await answerEvidence.resolve(answerRef, context)
+      if (thread.status !== "ok" || answer.status !== "ok") return { status: "unavailable", reason: "answer-scope-unavailable" }
+      const message = thread.value.messages.find((entry) => entry.id === answer.value.target.recordId && entry.incarnation === answer.value.target.incarnation && entry.version === answer.value.target.version && entry.authorRef === thread.value.recipientRef)
+      if (!message) return { status: "unavailable", reason: "answer-scope-unavailable" }
+      const basis = message.sourceContext ?? thread.value
+      if (!basis.evidenceRefs.length || basis.evidenceRefs.some((ref) => ref.kind !== "record")) return { status: "unavailable", reason: "answer-scope-unavailable" }
+      const evidence = basis.evidenceRefs as readonly Extract<BusinessEvidenceRef, { kind: "record" }>[]
+      const source = evidence.find((ref) => ref.refId === basis.sourceRef)
+      if (!source || source.kind !== "record" || source.refId !== basis.sourceRef || !source.target.period || digestSfValue(source.target.period) !== digestSfValue(basis.period)) return { status: "unavailable", reason: "answer-scope-unavailable" }
       if (evidence.filter((ref) => ref.refId === source.refId).length !== 1) return { status: "unavailable", reason: "answer-scope-unavailable" }
       const derived = input.resolveAnswerScope ? await input.resolveAnswerScope(source, evidence, context) : source.target.surface === "dashboard" && evidence.length === 1 ? { status: "ok" as const, value: { scope: { sourceRef: { surface: source.target.surface, type: source.target.recordType, id: source.target.recordId, incarnation: source.target.incarnation }, fields: source.target.fields, period: source.target.period, materialDependencies: [], scopeDefinitionVersion: "dashboard-c06-v1" } } } : { status: "unavailable" as const, reason: "answer-scope-unavailable" }
       if (derived.status !== "ok") return derived
