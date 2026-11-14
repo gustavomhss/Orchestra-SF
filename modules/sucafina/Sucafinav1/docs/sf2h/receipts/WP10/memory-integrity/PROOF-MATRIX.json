@@ -1,0 +1,148 @@
+{
+  "mission": "MemoryA27",
+  "candidate": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+  "scope": "Functional evidence, with head-qualified deduplication; not a native/global acceptance claim",
+  "requirements": [
+    {
+      "requirement": "Intact capture accepted under authorized context",
+      "evidence": "MI05 preflight.test.ts",
+      "sourceW": "W34",
+      "status": "PASS",
+      "notes": "Fresh and materially historical positives precede corruption in the same real fixture",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Intact capture accepted under authorized context",
+      "observed": "Fresh and materially historical positives precede corruption in the same real fixture",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Corrupted persisted capture rejected without rewrite",
+      "evidence": "MI05 preflight.test.ts",
+      "sourceW": "W34",
+      "status": "PASS",
+      "notes": "Projection changed without digest recomputation; Atlas unavailable; repeated preflight denied; persisted corrupt bytes unchanged",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Corrupted persisted capture rejected without rewrite",
+      "observed": "Projection changed without digest recomputation; Atlas unavailable; repeated preflight denied; persisted corrupt bytes unchanged",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Historical positive and metadata-only stale.preserve",
+      "evidence": "MI05 preflight.test.ts; original historical MI07 separately",
+      "sourceW": "W34",
+      "status": "PASS",
+      "notes": "Output and Atlas unchanged by metadata preserve; later source edit makes commit stale/source-changed",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Historical positive and metadata-only stale.preserve",
+      "observed": "Output and Atlas unchanged by metadata preserve; later source edit makes commit stale/source-changed",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Source, owner and incarnation divergence",
+      "evidence": "MI05 identity.test.ts (5 cases)",
+      "sourceW": "W34",
+      "status": "PASS",
+      "notes": "Includes physical replacement with old fingerprint unchanged and owner partition movement with empty canonical recall",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Source, owner and incarnation divergence",
+      "observed": "Includes physical replacement with old fingerprint unchanged and owner partition movement with empty canonical recall",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Record mutation during await",
+      "evidence": "MI05 authority.test.ts",
+      "sourceW": "W34",
+      "status": "PASS",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Record mutation during await",
+      "observed": "MI05 authority.test.ts",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Source mutation during await",
+      "evidence": "MI06 authority.test.ts selected case",
+      "sourceW": "W35",
+      "status": "PASS",
+      "notes": "Real capture read, real outer C08 snapshot mutation, denied before unsafe continuity refresh",
+      "evidence_mode": "EXECUTED_W35",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Source mutation during await",
+      "observed": "Real capture read, real outer C08 snapshot mutation, denied before unsafe continuity refresh",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Original Request retained",
+      "evidence": "MI05 authority.test.ts",
+      "sourceW": "W34",
+      "status": "PASS",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Original Request retained",
+      "observed": "MI05 authority.test.ts",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Revocation after last capture read",
+      "evidence": "MI05 authority.test.ts",
+      "sourceW": "W34",
+      "status": "PASS",
+      "notes": "Last real reader call calibrated, exact count and reached point asserted",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Revocation after last capture read",
+      "observed": "Last real reader call calibrated, exact count and reached point asserted",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Headers changed after final authorization revalidation",
+      "evidence": "MI05 authority.test.ts",
+      "sourceW": "W34",
+      "status": "PASS",
+      "notes": "Last real revalidation calibrated; final wrapper identity fence denies",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Headers changed after final authorization revalidation",
+      "observed": "Last real revalidation calibrated; final wrapper identity fence denies",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "Real complete fallback for multiple envelopes",
+      "evidence": "MI05 fallback.test.ts",
+      "sourceW": "W34",
+      "status": "PASS",
+      "notes": "Two records accepted; only second capture corrupted; first independently readable; whole preflight denied",
+      "evidence_mode": "REATTACHED_FROM_W34",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "expected": "Real complete fallback for multiple envelopes",
+      "observed": "Two records accepted; only second capture corrupted; first independently readable; whole preflight denied",
+      "evidence_uri": "RUN-INDEX.json"
+    },
+    {
+      "requirement": "The same three final revocation entrypoints not reached in A27 refuse access",
+      "expected": "Producer.prepare, verifier.verify and the same accepted output proof return unavailable after current authority is revoked",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "status": "PASS",
+      "sourceW": "W36",
+      "evidence": "MI08 revocation-tail.test.ts",
+      "evidence_mode": "EXECUTED_W36",
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638160793",
+      "observed": "All three same real entrypoints positive ok then revoked unavailable. Three tests,51expects,95.22s; canonical completed recalls2/2/4. Original historical sequence not completed."
+    },
+    {
+      "requirement": "Original historical scenario completes without assertion or budget changes",
+      "expected": "Whole original file passes including580/583–585 within225000/240000",
+      "entity_id": "WP10.S0-B.MemoryA27",
+      "status": "FAIL",
+      "sourceW": "W35",
+      "evidence": "MI07 original historical-memory.test.ts",
+      "evidence_mode": "EXECUTED_W35_FAILURE_RETAINED_ON_RUNTIME_IDENTICAL_W36",
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43637227753",
+      "observed": "225000 deadline in memory.fence-final-request-headers at225014ms, abortedtrue, before changed stale access and tail. No repeat unchanged and no diagnosis/optimization of X29."
+    }
+  ],
+  "reuse": "See EVIDENCE-REUSE.json; never report all 13 as one green W35 run."
+}

@@ -1,0 +1,319 @@
+{
+  "schema": "sf2-closed-output-consumer-acks-v1",
+  "mission": 23,
+  "consumer": "S0-C",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "lease_epoch": "S0-C-e6-browser23",
+  "acks": [
+    {
+      "lane": "C12/session19",
+      "source_pr": 60,
+      "source_commit": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "source_base": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "source_handoff_blob": "f4fe7dafe006297ec4fe8644ac9ecd0f88945152",
+      "integrated_commit": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+      "integrated_tree": "72d2a3c443233017dec3820d1a6987c4934e39f6",
+      "status": "ACK_CONSUMED_SELECTIVELY_IMPLEMENTATION_ONLY",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/HANDOFF.md",
+          "source_blob": "f4fe7dafe006297ec4fe8644ac9ecd0f88945152",
+          "target_preimage": null,
+          "integrated_blob": "f4fe7dafe006297ec4fe8644ac9ecd0f88945152",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-01/IMPLEMENTATION.md",
+          "source_blob": "659140bbc6d8bac30d6fbb73d032bfa2aa93c54f",
+          "target_preimage": null,
+          "integrated_blob": "659140bbc6d8bac30d6fbb73d032bfa2aa93c54f",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-01/INTEGRATION.md",
+          "source_blob": "136765e9267c8e1cfd5bf044c13bb2820666d13f",
+          "target_preimage": null,
+          "integrated_blob": "136765e9267c8e1cfd5bf044c13bb2820666d13f",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-01/TESTS.json",
+          "source_blob": "3870c0173985230b604a338e4aa9909b4d191b74",
+          "target_preimage": null,
+          "integrated_blob": "3870c0173985230b604a338e4aa9909b4d191b74",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-02/CHECKS.json",
+          "source_blob": "8e555a5cb7738d7e66671e2d40f9a071f8c0d920",
+          "target_preimage": null,
+          "integrated_blob": "8e555a5cb7738d7e66671e2d40f9a071f8c0d920",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-02/IMPLEMENTATION.md",
+          "source_blob": "a8007f5c89000509f931655171d7ba3d6bb14d59",
+          "target_preimage": null,
+          "integrated_blob": "a8007f5c89000509f931655171d7ba3d6bb14d59",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-02/TESTS.json",
+          "source_blob": "6204b5beb611c5e92f3f0f1916c850d465a92082",
+          "target_preimage": null,
+          "integrated_blob": "6204b5beb611c5e92f3f0f1916c850d465a92082",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-03/CHECKS.json",
+          "source_blob": "3cab6b6ad78d0480cc1876f88b11b26aaa0cab9a",
+          "target_preimage": null,
+          "integrated_blob": "3cab6b6ad78d0480cc1876f88b11b26aaa0cab9a",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-03/IMPLEMENTATION.md",
+          "source_blob": "dd9986098eee2713c898bda93b554c07dd19046e",
+          "target_preimage": null,
+          "integrated_blob": "dd9986098eee2713c898bda93b554c07dd19046e",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "source_blob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
+          "target_preimage": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+          "integrated_blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+          "method": "FOUR_PUBLISHED_HUNKS_ON_FINANCE_EXECUTOR"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "source_blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "target_preimage": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+          "integrated_blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+          "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "source_blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "target_preimage": "e169d335f091c446bb380ee73f450083f917946f",
+          "integrated_blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "source_blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+          "target_preimage": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+          "integrated_blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+          "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+          "source_blob": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+          "target_preimage": null,
+          "integrated_blob": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+          "source_blob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+          "target_preimage": null,
+          "integrated_blob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "source_blob": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+          "target_preimage": null,
+          "integrated_blob": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/partial.ts",
+          "source_blob": "31c54f4ddeb4cddbca1684ae311b40d2dd209521",
+          "target_preimage": null,
+          "integrated_blob": "31c54f4ddeb4cddbca1684ae311b40d2dd209521",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "source_blob": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+          "target_preimage": null,
+          "integrated_blob": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+          "source_blob": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+          "target_preimage": null,
+          "integrated_blob": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+          "method": "EXACT_SOURCE_ADDITION"
+        }
+      ],
+      "consumer_wiring": {
+        "source": "C12",
+        "producer": "product/procurement/decision-host.ts",
+        "consumer": "product/procurement/decision-http.ts -> /procurement?sf=decision-recover -> product/ui/decision-apply.ts",
+        "mount": "product/interface/http.ts already mounts production renderer/script; apps/cli/src/sucafina-product/business-services.ts spreads procurement host result",
+        "guarantee": "Static wiring only; observed runtime result NOT_RUN"
+      },
+      "source_proof_scope": "19 distinct scenarios by qualified combined source evidence (16 pass/3 fail initial; affected rerun 7 pass); aggregate source check remains FAIL due WP14 TS2741. Not a bundle green.",
+      "limits": [
+        "Four published apply.ts deltas composed on retained Finance executor.",
+        "Original tests and receipt blobs retained; legacy conflict/recovery oracle mismatch remains owner work.",
+        "No composed test or final acceptance."
+      ]
+    },
+    {
+      "lane": "Finance18",
+      "source_pr": 42,
+      "source_commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "source_base": "454b97daf614176507711df889bd45743467f7af",
+      "source_handoff_blob": "aff4a6ce54f550ad742c1d8f8b8534d38916f21a",
+      "integrated_commit": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+      "integrated_tree": "72d2a3c443233017dec3820d1a6987c4934e39f6",
+      "status": "ACK_CONSUMED_SELECTIVELY_IMPLEMENTATION_ONLY",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/CHECK-W2-result.json",
+          "source_blob": "c32adeae7a3c3ceac4d22aa860a2ee8eeff43a27",
+          "target_preimage": null,
+          "integrated_blob": "c32adeae7a3c3ceac4d22aa860a2ee8eeff43a27",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/CI-LEDGER.json",
+          "source_blob": "843932747f639b2fadfc9508352cf13099b19a04",
+          "target_preimage": null,
+          "integrated_blob": "843932747f639b2fadfc9508352cf13099b19a04",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/HANDOFF-FINAL.md",
+          "source_blob": "aff4a6ce54f550ad742c1d8f8b8534d38916f21a",
+          "target_preimage": null,
+          "integrated_blob": "aff4a6ce54f550ad742c1d8f8b8534d38916f21a",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/S1-result.json",
+          "source_blob": "fcbee41e78bbbae10a1fe11976773bb875f8e3ba",
+          "target_preimage": null,
+          "integrated_blob": "fcbee41e78bbbae10a1fe11976773bb875f8e3ba",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/S2-result.json",
+          "source_blob": "506fc37b641e38414f722902c74d5d27adba5e59",
+          "target_preimage": null,
+          "integrated_blob": "506fc37b641e38414f722902c74d5d27adba5e59",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/S3-result.json",
+          "source_blob": "346874f64e4a1cb31f720374b7e8999e75515d00",
+          "target_preimage": null,
+          "integrated_blob": "346874f64e4a1cb31f720374b7e8999e75515d00",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/criteria-provenance.json",
+          "source_blob": "39a3d6d9455bf10fe409b3e39f6d14ff50019856",
+          "target_preimage": null,
+          "integrated_blob": "39a3d6d9455bf10fe409b3e39f6d14ff50019856",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/criteria-provenance.md",
+          "source_blob": "7c11941781e406bcf11db3daf9525ff6a32291bc",
+          "target_preimage": null,
+          "integrated_blob": "7c11941781e406bcf11db3daf9525ff6a32291bc",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/delta-02.json",
+          "source_blob": "33cab7a37ad721f4ff71c5181572ff4706a85a67",
+          "target_preimage": null,
+          "integrated_blob": "33cab7a37ad721f4ff71c5181572ff4706a85a67",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/intake-01.json",
+          "source_blob": "d7f5a341bcbae6bd66cf4a99b462bdcb6aefd850",
+          "target_preimage": null,
+          "integrated_blob": "d7f5a341bcbae6bd66cf4a99b462bdcb6aefd850",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/integration-intake.json",
+          "source_blob": "368c0d2afc6c8530d271672a4bc03b1b39d51af8",
+          "target_preimage": null,
+          "integrated_blob": "368c0d2afc6c8530d271672a4bc03b1b39d51af8",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/residual-boundary.json",
+          "source_blob": "c986ddb9ca04467b230e08833315f893eabec61f",
+          "target_preimage": null,
+          "integrated_blob": "c986ddb9ca04467b230e08833315f893eabec61f",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "source_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+          "target_preimage": "33a99c9fc0d1c22b9dee21ee37274988c72736ba",
+          "integrated_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+          "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "source_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+          "target_preimage": "d2ae9e7b53fe3a86b356f8453814b2b7d7b2615e",
+          "integrated_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+          "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+          "source_blob": "1a6989101c47f36ff21d8495780b179ceb595357",
+          "target_preimage": null,
+          "integrated_blob": "1a6989101c47f36ff21d8495780b179ceb595357",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+          "source_blob": "438672355e67c0c4b0f445b01a993edb1b3ad7fc",
+          "target_preimage": null,
+          "integrated_blob": "438672355e67c0c4b0f445b01a993edb1b3ad7fc",
+          "method": "EXACT_SOURCE_ADDITION"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+          "source_blob": "d48900410734026982431b44d4885fe0f91fae9d",
+          "target_preimage": null,
+          "integrated_blob": "d48900410734026982431b44d4885fe0f91fae9d",
+          "method": "EXACT_SOURCE_ADDITION"
+        }
+      ],
+      "consumer_wiring": {
+        "source": "Finance18",
+        "producer": "product/decisions/result-store.ts",
+        "consumer": "product/planner/sensitivity-units.ts readHistoricalScenarios(..., parallel); existing stored-scenarios retains serial default",
+        "guarantee": "Fresh canonical result reads and compact receipt decoder preserved; runtime equivalence NOT_RUN"
+      },
+      "source_proof_scope": "Source affected selection 43 pass/350 assertions; long journey FAIL before confirmed threshold/history/replay/reopen. FIN-IND-005 remains OPEN_IMPLEMENTED_NOT_CLOSED.",
+      "limits": [
+        "Both product preimages matched the bundle.",
+        "Newer bundle state-provider, local-store and fixtures preserved.",
+        "FIN-IND-005 remains OPEN_IMPLEMENTED_NOT_CLOSED.",
+        "No composed test or final acceptance."
+      ]
+    }
+  ],
+  "manifest": "increment-01.json",
+  "assembly": "assembly-01.json",
+  "verification": "verification-01.json",
+  "source_green_transferred": false,
+  "final_dispatcher": "S0",
+  "final_acceptance": "S0",
+  "global_release": false
+}

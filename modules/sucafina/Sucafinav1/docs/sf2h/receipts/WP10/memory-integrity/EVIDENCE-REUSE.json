@@ -1,0 +1,271 @@
+{
+  "mission": "memory-integrity-preflight",
+  "status": "REATTACHED_OBSERVATIONS_NOT_NEW_EXECUTION",
+  "origin": {
+    "W": "f511f30b73289c2f21c843254569d31c02eb9608",
+    "tree": "ee2964cd6cc96ee2697e9d05835777870a843f65",
+    "S": "9294efc1ec5a2f0fdd02f3eb0544b92b2b77a6b8",
+    "run": 43633110221,
+    "job": 132563879756,
+    "overallRun": "FAIL",
+    "result": "11 pass / 1 fail"
+  },
+  "target": {
+    "W": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+    "tree": "2b08f61fc8068bf9274099595eda3cbd749d3369"
+  },
+  "unchanged": {
+    "runtime": {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "f3e7c88000f47018a6b3bb0f6e65ddac1a948e45"
+    },
+    "fixture": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "blob": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737"
+    },
+    "preflightTestBlob": "4e61e3a87f2f944f4282c840450c36c8bbb6c7a1",
+    "identityTestBlob": "ea72668c00f4bd9d4fd4f902c803f3631b2268e3",
+    "workflowBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "requestValidatorBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "sharedInputs": "Imports, fixture/helpers, top-level state, hooks, config/env, ordering/concurrency and the other test bodies are unchanged."
+  },
+  "changed": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+    "beforeBlob": "09c1e9720ab1df63369601a769a39895bdcbea65",
+    "afterBlob": "4ce3037d1018eee316a429ed1c3c60f7f079a53a",
+    "scope": "Only source-during-await body: invalid nested commit replaced by outer real C08 snapshot fault. Two appended receipts are the only other changed files.",
+    "compare": "https://github.com/gustavomhss/Orchestra-SF/compare/f511f30b73289c2f21c843254569d31c02eb9608...a00ba2a55190e9ee1fe52fa3030a9cc297b2825a"
+  },
+  "reusedCases": [
+    {
+      "status": "pass",
+      "name": "Memory integrity preflight rejects a corrupted Atlas original without rewriting the capture",
+      "durationMs": 34699.97
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity keeps authorized metadata-only stale preservation and rejects a later source change",
+      "durationMs": 27224.66
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity rejects divergent owner in a persisted capture",
+      "durationMs": 10338.97
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity rejects divergent capture-source in a persisted capture",
+      "durationMs": 13127.47
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity rejects divergent case-incarnation in a persisted capture",
+      "durationMs": 10305.3
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity refuses physical source replacement despite the old fingerprint",
+      "durationMs": 8119.5
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity refuses an empty recall after the capture partition moves to another owner",
+      "durationMs": 28523.23
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity retains the original Request despite replacement of constructor input",
+      "durationMs": 12609.91
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity rejects record mutation after the real Atlas reader awaited",
+      "durationMs": 12651.69
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity respects principal revocation after the last real memory read",
+      "durationMs": 13141.34
+    },
+    {
+      "status": "pass",
+      "name": "Memory integrity rejects headers changed after the final real revalidation",
+      "durationMs": 17194.14
+    }
+  ],
+  "affectedCase": {
+    "run": 43633722919,
+    "job": 132565829643,
+    "selection": "-t in-place source change",
+    "result": "1 pass / 0 fail / 4 filtered / 5 expects"
+  },
+  "rule": {
+    "protocol": "CI.md step 7: affected revalidation; S0-B evidence.validity: affected criteria; COMMON: surgical dedupe and reattachment",
+    "audit": "memory_ci_protocol read-only review",
+    "limit": "No claim of 12 tests executed green in W33. Same-candidate global qualification remains open."
+  },
+  "supersession": {
+    "by": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+    "reason": "The product reader changed after MI04. W32/W33 cases are retained as causal history only; all 13 focused cases require new execution on the refined candidate."
+  },
+  "currentContribution": {
+    "candidateW": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+    "sourceW": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+    "sourceS": "9b1f70a68f9633d465dd253126e63086f47676a4",
+    "sourceRun": 43636096246,
+    "sourceStatus": "FAIL",
+    "sourceCounts": {
+      "pass": 12,
+      "fail": 1
+    },
+    "retainedObservations": [
+      {
+        "name": "Memory integrity preflight rejects a corrupted Atlas original without rewriting the capture",
+        "status": "PASS",
+        "durationMs": 35789.54
+      },
+      {
+        "name": "Memory integrity keeps authorized metadata-only stale preservation and rejects a later source change",
+        "status": "PASS",
+        "durationMs": 23298.52
+      },
+      {
+        "name": "Memory integrity rejects divergent owner in a persisted capture",
+        "status": "PASS",
+        "durationMs": 11318.65
+      },
+      {
+        "name": "Memory integrity rejects divergent capture-source in a persisted capture",
+        "status": "PASS",
+        "durationMs": 13361.24
+      },
+      {
+        "name": "Memory integrity rejects divergent case-incarnation in a persisted capture",
+        "status": "PASS",
+        "durationMs": 11351.7
+      },
+      {
+        "name": "Memory integrity refuses physical source replacement despite the old fingerprint",
+        "status": "PASS",
+        "durationMs": 7750.76
+      },
+      {
+        "name": "Memory integrity refuses an empty recall after the capture partition moves to another owner",
+        "status": "PASS",
+        "durationMs": 33488.7
+      },
+      {
+        "name": "Memory integrity retains the original Request despite replacement of constructor input",
+        "status": "PASS",
+        "durationMs": 11120.56
+      },
+      {
+        "name": "Memory integrity rejects record mutation after the real Atlas capture reader awaited",
+        "status": "PASS",
+        "durationMs": 10987.93
+      },
+      {
+        "name": "Memory integrity respects principal revocation after the last real capture read",
+        "status": "PASS",
+        "durationMs": 13522.99
+      },
+      {
+        "name": "Memory integrity rejects headers changed after the final real revalidation",
+        "status": "PASS",
+        "durationMs": 14891.1
+      },
+      {
+        "name": "Memory integrity uses the real full recall for multiple envelopes and refuses damage outside the referenced capture",
+        "status": "PASS",
+        "durationMs": 36658.27
+      }
+    ],
+    "delta": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "patch": "+ if (!stable()) return false after pinning the canonical capture result, before the next await.",
+      "testsChanged": false,
+      "assertionsChanged": false,
+      "budgetsChanged": false,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+          "./Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+          "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+          "./Sucafinav1/test/product/wp10/memory-integrity/fallback.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "allRuntimeOtherThanThisLineIdentical": true
+    },
+    "reason": "The pure synchronous fence was already required at final egress. Stable paths execute identical readers. Only the in-place source mutation could enter an unsafe continuation, and it is reexecuted separately. These are observations on W34, not a claim of 13 cases executed/passing on W35.",
+    "affectedRecheck": "MI06 source-await; MI07 historical scenario; CHECK35 full required type/guard envelope",
+    "protocol": [
+      "CI.md section 7 affected revalidation",
+      "S0-B.evidence.validity",
+      "COMMON dedupe/reattachment"
+    ],
+    "calibrationReview": {
+      "readerCalls": "New stable guard is synchronous; no reader or revalidate call is added.",
+      "principalRevocation": "Fault changes f.access.allowed after the last real capture; stable does not read this external flag. Existing continuity/final revalidation still observes revocation, preserving target/count.",
+      "finalHeaders": "Fault happens after the wrapper's final real revalidation, after the new early fence. Reach and count remain unchanged.",
+      "recordMutation": "Fault changes record.policyVersion, not the BCS stable input set. The wrapper's final identity check remains the rejecting check.",
+      "sourceMutation": "Only affected path: C08 snapshot changes after capture; early fence now denies before continuity refresh. MI06 reexecutes this exact case.",
+      "reviewer": "memory_focused_tests; static only, not global FINAL"
+    },
+    "runtimeImplementationW": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7"
+  },
+  "historicalFailure": {
+    "sourceW": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+    "sourceS": "e63511737be687a2e42f9a15706a229db42a31c1",
+    "run": 43637227753,
+    "status": "FAIL",
+    "historicalBlob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+    "budgets": [
+      225000,
+      240000
+    ],
+    "lastPhase": "memory.fence-final-request-headers",
+    "elapsedMs": 225014,
+    "aborted": true,
+    "assertions580_583_585": "NOT_REACHED",
+    "reuseCondition": "Later candidate adds only an independent own-namespace tail test and receipts; runtime, historical test, imports and inputs remain unchanged.",
+    "meaning": "Retained FAIL and qualification limitation, not evidence of success; focused equivalent tail checks cannot convert the original run to green."
+  },
+  "finalTestOnlyDelta": {
+    "from": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+    "to": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-07/RESULT.json",
+        "status": "added",
+        "blob": "daf4d1d429f3cd25ef4b9368a8675c83b32ce961"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-08/PREPARATION.json",
+        "status": "added",
+        "blob": "f291c316073f22c52632986ab350e3ec64e0d234"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+        "status": "added",
+        "blob": "b737b7f797b880c3e2664f65747ef2bc2c18156f"
+      }
+    ],
+    "runtimeIdentical": true,
+    "historicalIdentical": true,
+    "existingTestsAndFixtureIdentical": true,
+    "retainedEvidence": [
+      "MI05 12 PASS observations on W34 with prior one-line-fence analysis",
+      "MI06 source-await PASS on W35",
+      "MI07 historical FAIL on W35; limitation retained"
+    ],
+    "newProof": "MI08 W36 PASS3/0,51expects,95.22s; each entrypoint positive before revocation; full historical result unchanged FAIL."
+  }
+}

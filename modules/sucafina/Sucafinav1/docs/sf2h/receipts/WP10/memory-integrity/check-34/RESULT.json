@@ -1,0 +1,183 @@
+{
+  "status": "FAIL",
+  "scope": "Full existing product check; no global green claim",
+  "W": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+  "tree": "cb51ae6f05946b76623283f70e78abbd2ed0aef0",
+  "S": "f9e314f1b4c31962306626cc5c3363913f17e296",
+  "snapshotTree": "43e6665e4d1d0f5de07dd774065766f176cab9c3",
+  "parents": [
+    "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+    "2b2de14f4c6608ef4a92effc7bb6961bfd348f8a"
+  ],
+  "request": {
+    "productSha": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  },
+  "requestSha256": "5f7c1fb8f720cf43e98c71495ddf6d465666d1c384bba426ce24fe18eded0a9d",
+  "requestBlob": "cdccfd26c0473204ac25f9ff74927bcf91c799a1",
+  "run": 43635682967,
+  "job": 132571841882,
+  "steps": [
+    {
+      "name": "Set up job",
+      "conclusion": "success"
+    },
+    {
+      "name": "Checkout check envelope",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate exact product and envelope",
+      "conclusion": "success"
+    },
+    {
+      "name": "Checkout exact product",
+      "conclusion": "success"
+    },
+    {
+      "name": "Record product and guard base",
+      "conclusion": "success"
+    },
+    {
+      "name": "Setup Bun",
+      "conclusion": "success"
+    },
+    {
+      "name": "Typecheck Sucafina",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Typecheck CLI consumers",
+      "conclusion": "success"
+    },
+    {
+      "name": "Typecheck WP10 test consumers",
+      "conclusion": "success"
+    },
+    {
+      "name": "Verify canonical Atlas generation",
+      "conclusion": "success"
+    },
+    {
+      "name": "Typecheck Atlas boundary",
+      "conclusion": "success"
+    },
+    {
+      "name": "Guard subprocess imports",
+      "conclusion": "success"
+    },
+    {
+      "name": "Guard product against origin/dev",
+      "conclusion": "success"
+    },
+    {
+      "name": "Upload exact-check evidence",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Setup Bun",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Checkout exact product",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Checkout check envelope",
+      "conclusion": "success"
+    },
+    {
+      "name": "Complete job",
+      "conclusion": "success"
+    }
+  ],
+  "diagnostics": {
+    "count": 13,
+    "memory": 0,
+    "areas": {
+      "WP04 (product + tests)": 3,
+      "WP06": 4,
+      "WP08": 5,
+      "WP09": 1
+    },
+    "lines": [
+      "##[error]product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "##[error]test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "##[error]test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+      "##[error]test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    ]
+  },
+  "spawn": {
+    "files": 4702,
+    "allowListedSites": 66
+  },
+  "guards": {
+    "rules": 78,
+    "changedPaths": 2212,
+    "gateFindings": 0,
+    "warnFindings": 53,
+    "errors": 0
+  },
+  "artifact": {
+    "id": 14129692442,
+    "name": "astra-wp10-check-1",
+    "size_in_bytes": 4363,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14129692442",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14129692442/zip",
+    "expired": false,
+    "created_at": "2026-11-14T20:09:41Z",
+    "expires_at": "2026-11-28T20:09:41Z",
+    "updated_at": "2026-11-14T20:09:41Z",
+    "digest": "sha256:fdc0fbba06ddf8498ca86457f463799e1e27d0239a2ed1f0df7120267b021a33",
+    "workflow_run": {
+      "id": 43635682967,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "astra-check-wp10",
+      "head_sha": "f9e314f1b4c31962306626cc5c3363913f17e296"
+    },
+    "fileId": "file_00000000e7e0820e80a92fa930767ff2",
+    "downloadVia": "GitHub MCP",
+    "archiveInspection": "Not claimed"
+  },
+  "typechecksLocal": false,
+  "log": {
+    "path": "check-34/job.txt",
+    "bytes": 91037,
+    "sha256": "0a8de3c83baded1fb8ddc231f0f958a5a27ee2837d86191677e215fa263ea1d9"
+  },
+  "baselineDiagnostics": {
+    "baselineRun": 43629131094,
+    "baselineJob": 132551590764,
+    "currentRun": 43635682967,
+    "currentJob": 132571841882,
+    "normalization": "Only timestamps and ANSI removed; all 13 TS diagnostic lines compared in order",
+    "identical": true,
+    "baselineCount": 13,
+    "currentCount": 13,
+    "diagnostics": [
+      "##[error]product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "##[error]test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "##[error]test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "##[error]test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+      "##[error]test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "##[error]test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    ]
+  }
+}

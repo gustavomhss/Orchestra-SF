@@ -1,0 +1,57 @@
+{
+  "mission": "memory-integrity-preflight",
+  "attempt": "MI03",
+  "status": "PASS",
+  "productW": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+  "productTree": "2b08f61fc8068bf9274099595eda3cbd749d3369",
+  "snapshotS": "32d40b0e9c4fcc5f8329b73c3afd17afb862c13d",
+  "snapshotTree": "db6de261eda9f5b3f686288bb44aa9a5b11863e1",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "-t",
+      "in-place source change",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "b753a2c99edf373a1d754e7db32c2f9a6dd5a5021544beecf7a785bd7788eb54",
+  "requestBlob": "8d30e700292a6d9b20138383a16bcc9ffdcc5cd6",
+  "run": 43633722919,
+  "job": 132565829643,
+  "cleanupJob": 132566259781,
+  "cleanup": "success",
+  "artifacts": [],
+  "pass": 1,
+  "fail": 0,
+  "filtered": 4,
+  "expects": 5,
+  "tests": 1,
+  "files": 1,
+  "elapsedSeconds": 10.65,
+  "testDurationMs": 10209.31,
+  "omni": {
+    "verdict": "pass",
+    "nonce": "8186cb1a12a64b14331798933b97534c",
+    "spawns": 2,
+    "delegated": 0
+  },
+  "test": {
+    "name": "Memory integrity rejects an in-place source change after the real Atlas reader awaited",
+    "observed": "Intact preflight ok; real recall returned one record; mutation reached on active C08 snapshot; adverse preflight denied; Atlas persisted bytes unchanged."
+  },
+  "runtime": {
+    "changedSinceMI02": false,
+    "blob": "f3e7c88000f47018a6b3bb0f6e65ddac1a948e45"
+  },
+  "log": {
+    "bytes": 70009,
+    "sha256": "29e6cd7aa0ed3faa599d7f172f6a2489309db0910a586eab04bef14faa46d588"
+  }
+}

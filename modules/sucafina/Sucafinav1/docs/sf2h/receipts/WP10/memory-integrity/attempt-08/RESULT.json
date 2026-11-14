@@ -1,0 +1,94 @@
+{
+  "mission": "MemoryA27 integrity preflight",
+  "attempt": "MI08",
+  "status": "PASS",
+  "productW": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+  "productTree": "6f69fc8bfcfcd8ae313ef1a556a35d11ad09e556",
+  "snapshotS": "088c84fe639638b3623f2278a91b08e24e614964",
+  "snapshotTree": "0d12b520fd0adf578d8202bbb8f7223892971065",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "ae25bc1b17bb395a8319e3cd169a2f5e5ef1cf75b46ea2a313a8ff6bf9233ccb",
+  "requestBlob": "6e5f4480eb06a383b3426d99d3a8848a45f3da64",
+  "run": 43638160793,
+  "job": 132579470930,
+  "cleanupJob": 132580450675,
+  "cleanup": "SUCCESS",
+  "artifacts": [],
+  "pass": 3,
+  "fail": 0,
+  "expects": 51,
+  "tests": 3,
+  "files": 1,
+  "elapsedSeconds": 95.22,
+  "cases": [
+    {
+      "name": "Memory integrity revocation tail refuses producer preparation after an authorized historical positive",
+      "status": "PASS",
+      "durationMs": 24228.97
+    },
+    {
+      "name": "Memory integrity revocation tail refuses verification after an authorized historical positive",
+      "status": "PASS",
+      "durationMs": 24527.97
+    },
+    {
+      "name": "Memory integrity revocation tail refuses the same output proof after authorized historical acceptance",
+      "status": "PASS",
+      "durationMs": 45957.13
+    }
+  ],
+  "observations": [
+    {
+      "boundary": "producer.prepare",
+      "positive": "ok",
+      "revoked": "unavailable",
+      "completedCanonicalReads": 2,
+      "nativeExecution": false
+    },
+    {
+      "boundary": "verifier.verify",
+      "positive": "ok",
+      "revoked": "unavailable",
+      "completedCanonicalReads": 2,
+      "nativeExecution": false
+    },
+    {
+      "boundary": "proof.acceptsOutput",
+      "positive": "ok",
+      "revoked": "unavailable",
+      "completedCanonicalReads": 4,
+      "nativeExecution": false
+    }
+  ],
+  "omni": {
+    "status": "PASS",
+    "spawns": 6,
+    "delegated": 0,
+    "nonce": "4d9b9608ca5e9de4daa19f58a92731ab"
+  },
+  "budgets": {
+    "perFixtureCooperativeMs": 105000,
+    "perTestBunMs": 120000,
+    "changed": false
+  },
+  "expected": "Each same real entrypoint accepts historical evidence first and becomes unavailable solely after fixture principal authority revocation.",
+  "observed": "All three positives and corresponding unavailable negatives reached; Request/headers/selection/Atlas and same output remain unchanged, Request not aborted; canonical recalls completed2/2/4.",
+  "qualification": "Focused boundary proof only. Does not reach, complete or green the original historical sequence, which remains MI07 FAIL.",
+  "log": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-08/job.txt",
+    "bytes": 75979,
+    "sha256": "1ae31c80dfda1baae11708cafbd2c2dd58a41857b09b6d1558dda3a6a95ee0a9"
+  }
+}

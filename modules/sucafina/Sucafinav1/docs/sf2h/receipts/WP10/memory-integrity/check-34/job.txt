@@ -1,0 +1,843 @@
+﻿2026-11-14T20:06:20.2566092Z Current runner version: '2.338.2'
+2026-11-14T20:06:20.2592883Z ##[group]Runner Image Provisioner
+2026-11-14T20:06:20.2593906Z Hosted Compute Agent
+2026-11-14T20:06:20.2594609Z Version: 20261103.629
+2026-11-14T20:06:20.2595464Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T20:06:20.2596364Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T20:06:20.2597174Z Worker ID: {d77fc552-88bf-4b14-aa92-dbe94b4d0878}
+2026-11-14T20:06:20.2598358Z Region: eastus2
+2026-11-14T20:06:20.2599065Z Cloud: Azure
+2026-11-14T20:06:20.2601156Z ##[endgroup]
+2026-11-14T20:06:20.2604146Z ##[group]Operating System
+2026-11-14T20:06:20.2604903Z Ubuntu
+2026-11-14T20:06:20.2605714Z 24.04.5
+2026-11-14T20:06:20.2606360Z LTS
+2026-11-14T20:06:20.2607123Z ##[endgroup]
+2026-11-14T20:06:20.2607842Z ##[group]Runner Image
+2026-11-14T20:06:20.2608753Z Image: ubuntu-24.04
+2026-11-14T20:06:20.2609562Z Version: 20261111.370.1
+2026-11-14T20:06:20.2611174Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T20:06:20.2613236Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+2026-11-14T20:06:20.2614488Z ##[endgroup]
+2026-11-14T20:06:20.2616061Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T20:06:20.2618570Z Contents: read
+2026-11-14T20:06:20.2619454Z Metadata: read
+2026-11-14T20:06:20.2620177Z ##[endgroup]
+2026-11-14T20:06:20.2622736Z Secret source: Actions
+2026-11-14T20:06:20.2623887Z Cache mode: write
+2026-11-14T20:06:20.2625145Z Prepare workflow directory
+2026-11-14T20:06:20.3086585Z Prepare all required actions
+2026-11-14T20:06:20.3145858Z Getting action download info
+2026-11-14T20:06:20.4879810Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-11-14T20:06:20.6380701Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-14T20:06:20.8683476Z Complete job name: composition
+2026-11-14T20:06:20.9425268Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-14T20:06:20.9426523Z with:
+2026-11-14T20:06:20.9427067Z   ref: f9e314f1b4c31962306626cc5c3363913f17e296
+2026-11-14T20:06:20.9427764Z   fetch-depth: 0
+2026-11-14T20:06:20.9428413Z   persist-credentials: false
+2026-11-14T20:06:20.9429028Z   repository: gustavomhss/Orchestra-SF
+2026-11-14T20:06:20.9434213Z   token: ***
+2026-11-14T20:06:20.9434715Z   ssh-strict: true
+2026-11-14T20:06:20.9435215Z   ssh-user: git
+2026-11-14T20:06:20.9435705Z   clean: true
+2026-11-14T20:06:20.9436225Z   sparse-checkout-cone-mode: true
+2026-11-14T20:06:20.9436842Z   fetch-tags: false
+2026-11-14T20:06:20.9437360Z   show-progress: true
+2026-11-14T20:06:20.9437895Z   lfs: false
+2026-11-14T20:06:20.9438501Z   submodules: false
+2026-11-14T20:06:20.9439034Z   set-safe-directory: true
+2026-11-14T20:06:20.9439881Z ##[endgroup]
+2026-11-14T20:06:21.2277420Z Syncing repository: gustavomhss/Orchestra-SF
+2026-11-14T20:06:21.2280077Z ##[group]Getting Git version info
+2026-11-14T20:06:21.2281209Z Working directory is '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T20:06:21.2282789Z [command]/usr/bin/git version
+2026-11-14T20:06:21.2376823Z git version 2.56.1
+2026-11-14T20:06:21.2393036Z ##[endgroup]
+2026-11-14T20:06:21.2405985Z Temporarily overriding HOME='/home/runner/work/_temp/6f30ca07-2b7d-4082-8afe-df8f0d03f2d6' before making global git config changes
+2026-11-14T20:06:21.2407973Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T20:06:21.2411289Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T20:06:21.2486334Z Deleting the contents of '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T20:06:21.2491608Z ##[group]Initializing the repository
+2026-11-14T20:06:21.2500333Z [command]/usr/bin/git init /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T20:06:21.2609529Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-14T20:06:21.2611471Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-14T20:06:21.2612609Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-14T20:06:21.2613394Z hint: call:
+2026-11-14T20:06:21.2613853Z hint:
+2026-11-14T20:06:21.2614424Z hint: 	git config --global init.defaultBranch <name>
+2026-11-14T20:06:21.2615348Z hint:
+2026-11-14T20:06:21.2616210Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-14T20:06:21.2617533Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-14T20:06:21.2618512Z hint:
+2026-11-14T20:06:21.2619115Z hint: 	git branch -m <name>
+2026-11-14T20:06:21.2619782Z hint:
+2026-11-14T20:06:21.2620707Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-14T20:06:21.2626581Z Initialized empty Git repository in /home/runner/work/Orchestra-SF/Orchestra-SF/.git/
+2026-11-14T20:06:21.2640205Z [command]/usr/bin/git remote add origin https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T20:06:21.2691385Z ##[endgroup]
+2026-11-14T20:06:21.2692657Z ##[group]Disabling automatic garbage collection
+2026-11-14T20:06:21.2696315Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-14T20:06:21.2730847Z ##[endgroup]
+2026-11-14T20:06:21.2732133Z ##[group]Setting up auth
+2026-11-14T20:06:21.2737155Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T20:06:21.2771659Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T20:06:21.3144613Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T20:06:21.3186058Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T20:06:21.3399397Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T20:06:21.3439827Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T20:06:21.3662608Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-14T20:06:21.3715989Z ##[endgroup]
+2026-11-14T20:06:21.3716700Z ##[group]Fetching the repository
+2026-11-14T20:06:21.3832872Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-14T20:06:36.5752883Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T20:06:36.5753728Z  * [new branch]            astra-check-collaboration -> origin/astra-check-collaboration
+2026-11-14T20:06:36.5754563Z  * [new branch]            astra-check-compose     -> origin/astra-check-compose
+2026-11-14T20:06:36.5755094Z  * [new branch]            astra-check-finance     -> origin/astra-check-finance
+2026-11-14T20:06:36.5755740Z  * [new branch]            astra-check-fresume     -> origin/astra-check-fresume
+2026-11-14T20:06:36.5756426Z  * [new branch]            astra-check-intelligence -> origin/astra-check-intelligence
+2026-11-14T20:06:36.5757110Z  * [new branch]            astra-check-interface   -> origin/astra-check-interface
+2026-11-14T20:06:36.5758031Z  * [new branch]            astra-check-operations-15df31a6-1d158562-1 -> origin/astra-check-operations-15df31a6-1d158562-1
+2026-11-14T20:06:36.5759214Z  * [new branch]            astra-check-operations-5e0c79ee-1 -> origin/astra-check-operations-5e0c79ee-1
+2026-11-14T20:06:36.5760056Z  * [new branch]            astra-check-operations-64432477-1 -> origin/astra-check-operations-64432477-1
+2026-11-14T20:06:36.5760735Z  * [new branch]            astra-check-operations-8ad7e160-1 -> origin/astra-check-operations-8ad7e160-1
+2026-11-14T20:06:36.5761840Z  * [new branch]            astra-check-operations-ba8a09e3-1 -> origin/astra-check-operations-ba8a09e3-1
+2026-11-14T20:06:36.5762456Z  * [new branch]            astra-check-operations-c4a2f4eb-1 -> origin/astra-check-operations-c4a2f4eb-1
+2026-11-14T20:06:36.5763080Z  * [new branch]            astra-check-operations-d7d343ec-1 -> origin/astra-check-operations-d7d343ec-1
+2026-11-14T20:06:36.5763720Z  * [new branch]            astra-check-operations-de6959db-1 -> origin/astra-check-operations-de6959db-1
+2026-11-14T20:06:36.5764394Z  * [new branch]            astra-check-operations-exports-e1fe9561-1 -> origin/astra-check-operations-exports-e1fe9561-1
+2026-11-14T20:06:36.5765155Z  * [new branch]            astra-check-operations-fixes-32a73ae7-0c170bcc-1 -> origin/astra-check-operations-fixes-32a73ae7-0c170bcc-1
+2026-11-14T20:06:36.5765927Z  * [new branch]            astra-check-operations-fixes-c9b14ba6-0789c92c-1 -> origin/astra-check-operations-fixes-c9b14ba6-0789c92c-1
+2026-11-14T20:06:36.5766730Z  * [new branch]            astra-check-operations-import-recovery-e1dc51a6-2 -> origin/astra-check-operations-import-recovery-e1dc51a6-2
+2026-11-14T20:06:36.5767529Z  * [new branch]            astra-check-operations-import-recovery-feaa3856-1 -> origin/astra-check-operations-import-recovery-feaa3856-1
+2026-11-14T20:06:36.5768879Z  * [new branch]            astra-check-operations-procurement-apply-897484c9-a5db3871-01 -> origin/astra-check-operations-procurement-apply-897484c9-a5db3871-01
+2026-11-14T20:06:36.5769865Z  * [new branch]            astra-check-operations-sourcing-money-a3b7fb9b-2 -> origin/astra-check-operations-sourcing-money-a3b7fb9b-2
+2026-11-14T20:06:36.5770701Z  * [new branch]            astra-check-operations-sourcing-money-aa5d8c0e-1 -> origin/astra-check-operations-sourcing-money-aa5d8c0e-1
+2026-11-14T20:06:36.5771334Z  * [new branch]            astra-check-wp00        -> origin/astra-check-wp00
+2026-11-14T20:06:36.5771942Z  * [new branch]            astra-check-wp01        -> origin/astra-check-wp01
+2026-11-14T20:06:36.5772341Z  * [new branch]            astra-check-wp02        -> origin/astra-check-wp02
+2026-11-14T20:06:36.5772759Z  * [new branch]            astra-check-wp03        -> origin/astra-check-wp03
+2026-11-14T20:06:36.5773197Z  * [new branch]            astra-check-wp04        -> origin/astra-check-wp04
+2026-11-14T20:06:36.5773591Z  * [new branch]            astra-check-wp05        -> origin/astra-check-wp05
+2026-11-14T20:06:36.5774088Z  * [new branch]            astra-check-wp06        -> origin/astra-check-wp06
+2026-11-14T20:06:36.5774525Z  * [new branch]            astra-check-wp07        -> origin/astra-check-wp07
+2026-11-14T20:06:36.5774914Z  * [new branch]            astra-check-wp08        -> origin/astra-check-wp08
+2026-11-14T20:06:36.5775291Z  * [new branch]            astra-check-wp09        -> origin/astra-check-wp09
+2026-11-14T20:06:36.5775661Z  * [new branch]            astra-check-wp10        -> origin/astra-check-wp10
+2026-11-14T20:06:36.5776049Z  * [new branch]            astra-check-wp11        -> origin/astra-check-wp11
+2026-11-14T20:06:36.5776422Z  * [new branch]            astra-check-wp12        -> origin/astra-check-wp12
+2026-11-14T20:06:36.5776797Z  * [new branch]            astra-check-wp13        -> origin/astra-check-wp13
+2026-11-14T20:06:36.5777174Z  * [new branch]            astra-check-wp14        -> origin/astra-check-wp14
+2026-11-14T20:06:36.5777572Z  * [new branch]            astra-collaboration     -> origin/astra-collaboration
+2026-11-14T20:06:36.5777972Z  * [new branch]            astra-compose           -> origin/astra-compose
+2026-11-14T20:06:36.5778577Z  * [new branch]            astra-evidence-9048e0e6-01 -> origin/astra-evidence-9048e0e6-01
+2026-11-14T20:06:36.5779016Z  * [new branch]            astra-finance           -> origin/astra-finance
+2026-11-14T20:06:36.5779418Z  * [new branch]            astra-intelligence      -> origin/astra-intelligence
+2026-11-14T20:06:36.5779837Z  * [new branch]            astra-interface         -> origin/astra-interface
+2026-11-14T20:06:36.5850278Z  * [new branch]            astra-operations        -> origin/astra-operations
+2026-11-14T20:06:36.5851156Z  * [new branch]            astra-wp00              -> origin/astra-wp00
+2026-11-14T20:06:36.5851896Z  * [new branch]            astra-wp01              -> origin/astra-wp01
+2026-11-14T20:06:36.5852532Z  * [new branch]            astra-wp02              -> origin/astra-wp02
+2026-11-14T20:06:36.5853134Z  * [new branch]            astra-wp03              -> origin/astra-wp03
+2026-11-14T20:06:36.5853742Z  * [new branch]            astra-wp04              -> origin/astra-wp04
+2026-11-14T20:06:36.5854340Z  * [new branch]            astra-wp05              -> origin/astra-wp05
+2026-11-14T20:06:36.5854770Z  * [new branch]            astra-wp06              -> origin/astra-wp06
+2026-11-14T20:06:36.5855217Z  * [new branch]            astra-wp07              -> origin/astra-wp07
+2026-11-14T20:06:36.5855656Z  * [new branch]            astra-wp08              -> origin/astra-wp08
+2026-11-14T20:06:36.5856079Z  * [new branch]            astra-wp09              -> origin/astra-wp09
+2026-11-14T20:06:36.5856489Z  * [new branch]            astra-wp10              -> origin/astra-wp10
+2026-11-14T20:06:36.5856898Z  * [new branch]            astra-wp11              -> origin/astra-wp11
+2026-11-14T20:06:36.5857332Z  * [new branch]            astra-wp12              -> origin/astra-wp12
+2026-11-14T20:06:36.5857742Z  * [new branch]            astra-wp13              -> origin/astra-wp13
+2026-11-14T20:06:36.5858344Z  * [new branch]            astra-wp14              -> origin/astra-wp14
+2026-11-14T20:06:36.5858804Z  * [new branch]            azure-bootstrap         -> origin/azure-bootstrap
+2026-11-14T20:06:36.5859282Z  * [new branch]            azure-bootstrap-tests   -> origin/azure-bootstrap-tests
+2026-11-14T20:06:36.5859746Z  * [new branch]            azure-delivery          -> origin/azure-delivery
+2026-11-14T20:06:36.5860404Z  * [new branch]            azure-foundation        -> origin/azure-foundation
+2026-11-14T20:06:36.5860865Z  * [new branch]            azure-hardening         -> origin/azure-hardening
+2026-11-14T20:06:36.5861318Z  * [new branch]            azure-mvp               -> origin/azure-mvp
+2026-11-14T20:06:36.5861835Z  * [new branch]            azure-safety            -> origin/azure-safety
+2026-11-14T20:06:36.5862305Z  * [new branch]            azure-validation        -> origin/azure-validation
+2026-11-14T20:06:36.5862794Z  * [new branch]            bank-field-projection   -> origin/bank-field-projection
+2026-11-14T20:06:36.5863505Z  * [new branch]            ci-run-linux-finance-closure-5a029e77-0cf38dfb-s2 -> origin/ci-run-linux-finance-closure-5a029e77-0cf38dfb-s2
+2026-11-14T20:06:36.5864138Z  * [new branch]            cloud-web-payload       -> origin/cloud-web-payload
+2026-11-14T20:06:36.5864607Z  * [new branch]            collab-resume           -> origin/collab-resume
+2026-11-14T20:06:36.5865054Z  * [new branch]            compose-resume          -> origin/compose-resume
+2026-11-14T20:06:36.5865547Z  * [new branch]            compose-resume-check    -> origin/compose-resume-check
+2026-11-14T20:06:36.5866134Z  * [new branch]            dependabot/bun/npm-9e993f0168 -> origin/dependabot/bun/npm-9e993f0168
+2026-11-14T20:06:36.5866813Z  * [new branch]            dependabot/github_actions/actions-001d3a24bd -> origin/dependabot/github_actions/actions-001d3a24bd
+2026-11-14T20:06:36.5867356Z  * [new branch]            dev                     -> origin/dev
+2026-11-14T20:06:36.5867794Z  * [new branch]            diagnose-calculation    -> origin/diagnose-calculation
+2026-11-14T20:06:36.5868414Z  * [new branch]            diagnose-memory         -> origin/diagnose-memory
+2026-11-14T20:06:36.5868889Z  * [new branch]            finance-journey         -> origin/finance-journey
+2026-11-14T20:06:36.5869332Z  * [new branch]            finance-resume          -> origin/finance-resume
+2026-11-14T20:06:36.5869805Z  * [new branch]            fix-dashboard-cells     -> origin/fix-dashboard-cells
+2026-11-14T20:06:36.5870397Z  * [new branch]            fix-planner-import      -> origin/fix-planner-import
+2026-11-14T20:06:36.5870904Z  * [new branch]            fix-procurement-visibility -> origin/fix-procurement-visibility
+2026-11-14T20:06:36.5871424Z  * [new branch]            headcount-date-parity   -> origin/headcount-date-parity
+2026-11-14T20:06:36.5871882Z  * [new branch]            import-recovery         -> origin/import-recovery
+2026-11-14T20:06:36.5872313Z  * [new branch]            intel-resume            -> origin/intel-resume
+2026-11-14T20:06:36.5872760Z  * [new branch]            interface-resume        -> origin/interface-resume
+2026-11-14T20:06:36.5873244Z  * [new branch]            interface-resume-check  -> origin/interface-resume-check
+2026-11-14T20:06:36.5873714Z  * [new branch]            manual-app-build        -> origin/manual-app-build
+2026-11-14T20:06:36.5874165Z  * [new branch]            native-access-gate      -> origin/native-access-gate
+2026-11-14T20:06:36.5874632Z  * [new branch]            native-access-view      -> origin/native-access-view
+2026-11-14T20:06:36.5875075Z  * [new branch]            native-admission        -> origin/native-admission
+2026-11-14T20:06:36.5875525Z  * [new branch]            native-browser-env      -> origin/native-browser-env
+2026-11-14T20:06:36.5875990Z  * [new branch]            native-budget-summary   -> origin/native-budget-summary
+2026-11-14T20:06:36.5876446Z  * [new branch]            native-budget-ui        -> origin/native-budget-ui
+2026-11-14T20:06:36.5876892Z  * [new branch]            native-calendar         -> origin/native-calendar
+2026-11-14T20:06:36.5877345Z  * [new branch]            native-chapter-bind     -> origin/native-chapter-bind
+2026-11-14T20:06:36.5877828Z  * [new branch]            native-client-transport -> origin/native-client-transport
+2026-11-14T20:06:36.5878576Z  * [new branch]            native-compiled         -> origin/native-compiled
+2026-11-14T20:06:36.5879129Z  * [new branch]            native-conflict         -> origin/native-conflict
+2026-11-14T20:06:36.5879589Z  * [new branch]            native-context-pin      -> origin/native-context-pin
+2026-11-14T20:06:36.5880043Z  * [new branch]            native-controller       -> origin/native-controller
+2026-11-14T20:06:36.5880495Z  * [new branch]            native-editor-base      -> origin/native-editor-base
+2026-11-14T20:06:36.5880939Z  * [new branch]            native-entry            -> origin/native-entry
+2026-11-14T20:06:36.5881380Z  * [new branch]            native-graph-hoist      -> origin/native-graph-hoist
+2026-11-14T20:06:36.5881819Z  * [new branch]            native-guide            -> origin/native-guide
+2026-11-14T20:06:36.5882255Z  * [new branch]            native-headcount        -> origin/native-headcount
+2026-11-14T20:06:36.5882710Z  * [new branch]            native-installation     -> origin/native-installation
+2026-11-14T20:06:36.5883146Z  * [new branch]            native-origin           -> origin/native-origin
+2026-11-14T20:06:36.5883605Z  * [new branch]            native-page-views       -> origin/native-page-views
+2026-11-14T20:06:36.5884072Z  * [new branch]            native-people-summary   -> origin/native-people-summary
+2026-11-14T20:06:36.5884546Z  * [new branch]            native-people-view      -> origin/native-people-view
+2026-11-14T20:06:36.5885001Z  * [new branch]            native-router-bind      -> origin/native-router-bind
+2026-11-14T20:06:36.5885446Z  * [new branch]            native-security         -> origin/native-security
+2026-11-14T20:06:36.5885898Z  * [new branch]            native-security-map     -> origin/native-security-map
+2026-11-14T20:06:36.5886352Z  * [new branch]            native-security-ui      -> origin/native-security-ui
+2026-11-14T20:06:36.5886783Z  * [new branch]            native-serve            -> origin/native-serve
+2026-11-14T20:06:36.5887232Z  * [new branch]            native-server-adapter   -> origin/native-server-adapter
+2026-11-14T20:06:36.5887714Z  * [new branch]            native-server-pin       -> origin/native-server-pin
+2026-11-14T20:06:36.5888441Z  * [new branch]            native-startup          -> origin/native-startup
+2026-11-14T20:06:36.5888944Z  * [new branch]            native-startup-base     -> origin/native-startup-base
+2026-11-14T20:06:36.5889395Z  * [new branch]            native-sucafina         -> origin/native-sucafina
+2026-11-14T20:06:36.5889844Z  * [new branch]            native-view-locales     -> origin/native-view-locales
+2026-11-14T20:06:36.5890290Z  * [new branch]            native-web-entry        -> origin/native-web-entry
+2026-11-14T20:06:36.5890738Z  * [new branch]            native-web-marker       -> origin/native-web-marker
+2026-11-14T20:06:36.5891176Z  * [new branch]            native-web-proof        -> origin/native-web-proof
+2026-11-14T20:06:36.5891628Z  * [new branch]            native-write-flows      -> origin/native-write-flows
+2026-11-14T20:06:36.5892070Z  * [new branch]            operations-fixes        -> origin/operations-fixes
+2026-11-14T20:06:36.5892529Z  * [new branch]            procurement-apply       -> origin/procurement-apply
+2026-11-14T20:06:36.5892984Z  * [new branch]            project-import-fix      -> origin/project-import-fix
+2026-11-14T20:06:36.5893430Z  * [new branch]            review-contracts        -> origin/review-contracts
+2026-11-14T20:06:36.5893865Z  * [new branch]            review-finance          -> origin/review-finance
+2026-11-14T20:06:36.5894316Z  * [new branch]            review-operations       -> origin/review-operations
+2026-11-14T20:06:36.5894756Z  * [new branch]            sf-product-plan         -> origin/sf-product-plan
+2026-11-14T20:06:36.5895191Z  * [new branch]            sf2-ai-ready            -> origin/sf2-ai-ready
+2026-11-14T20:06:36.5895622Z  * [new branch]            sf2-atomic-ready        -> origin/sf2-atomic-ready
+2026-11-14T20:06:36.5896068Z  * [new branch]            sf2-authority-fix       -> origin/sf2-authority-fix
+2026-11-14T20:06:36.5896618Z  * [new branch]            sf2-base                -> origin/sf2-base
+2026-11-14T20:06:36.5897039Z  * [new branch]            sf2-bi-ready            -> origin/sf2-bi-ready
+2026-11-14T20:06:36.5897471Z  * [new branch]            sf2-bundle-review       -> origin/sf2-bundle-review
+2026-11-14T20:06:36.5897907Z  * [new branch]            sf2-ci-triage           -> origin/sf2-ci-triage
+2026-11-14T20:06:36.5898540Z  * [new branch]            sf2-collab-ready        -> origin/sf2-collab-ready
+2026-11-14T20:06:36.5898968Z  * [new branch]            sf2-compose             -> origin/sf2-compose
+2026-11-14T20:06:36.5899373Z  * [new branch]            sf2-control             -> origin/sf2-control
+2026-11-14T20:06:36.5899805Z  * [new branch]            sf2-dashboard-ready     -> origin/sf2-dashboard-ready
+2026-11-14T20:06:36.5900265Z  * [new branch]            sf2-decisions-ready     -> origin/sf2-decisions-ready
+2026-11-14T20:06:36.5900706Z  * [new branch]            sf2-host-ready          -> origin/sf2-host-ready
+2026-11-14T20:06:36.5901163Z  * [new branch]            sf2-import-ready        -> origin/sf2-import-ready
+2026-11-14T20:06:36.5901588Z  * [new branch]            sf2-integrate           -> origin/sf2-integrate
+2026-11-14T20:06:36.5902021Z  * [new branch]            sf2-memory-ready        -> origin/sf2-memory-ready
+2026-11-14T20:06:36.5902457Z  * [new branch]            sf2-planner-ready       -> origin/sf2-planner-ready
+2026-11-14T20:06:36.5902908Z  * [new branch]            sf2-portfolio-ready     -> origin/sf2-portfolio-ready
+2026-11-14T20:06:36.5903376Z  * [new branch]            sf2-procurement-ready   -> origin/sf2-procurement-ready
+2026-11-14T20:06:36.5903827Z  * [new branch]            sf2-relay-ready         -> origin/sf2-relay-ready
+2026-11-14T20:06:36.5904257Z  * [new branch]            sf2-reports-ready       -> origin/sf2-reports-ready
+2026-11-14T20:06:36.5904694Z  * [new branch]            sf2-runtime-fix         -> origin/sf2-runtime-fix
+2026-11-14T20:06:36.5905119Z  * [new branch]            sf2-seam-fixes          -> origin/sf2-seam-fixes
+2026-11-14T20:06:36.5905673Z  * [new branch]            sf2-stack               -> origin/sf2-stack
+2026-11-14T20:06:36.5906090Z  * [new branch]            sf2-ui-ready            -> origin/sf2-ui-ready
+2026-11-14T20:06:36.5906516Z  * [new branch]            sourcing-money          -> origin/sourcing-money
+2026-11-14T20:06:36.5906935Z  * [new branch]            ui-recovery             -> origin/ui-recovery
+2026-11-14T20:06:36.5907344Z  * [new branch]            ui-review               -> origin/ui-review
+2026-11-14T20:06:36.5907747Z  * [new branch]            ui-source               -> origin/ui-source
+2026-11-14T20:06:36.5908286Z  * [new branch]            ui-work                 -> origin/ui-work
+2026-11-14T20:06:36.5908683Z  * [new branch]            work-ack                -> origin/work-ack
+2026-11-14T20:06:36.5909081Z  * [new branch]            work-g03                -> origin/work-g03
+2026-11-14T20:06:36.5909487Z  * [new branch]            work-reuse              -> origin/work-reuse
+2026-11-14T20:06:36.5909962Z  * [new branch]            workbook-number-parser  -> origin/workbook-number-parser
+2026-11-14T20:06:36.5911226Z [command]/usr/bin/git rev-parse --verify --quiet f9e314f1b4c31962306626cc5c3363913f17e296^{object}
+2026-11-14T20:06:36.5911672Z f9e314f1b4c31962306626cc5c3363913f17e296
+2026-11-14T20:06:36.5912404Z ##[endgroup]
+2026-11-14T20:06:36.5912806Z ##[group]Determining the checkout info
+2026-11-14T20:06:36.5913202Z ##[endgroup]
+2026-11-14T20:06:36.5913474Z [command]/usr/bin/git sparse-checkout disable
+2026-11-14T20:06:36.6084471Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-14T20:06:36.6119797Z ##[group]Checking out the ref
+2026-11-14T20:06:36.6122813Z [command]/usr/bin/git checkout --progress --force f9e314f1b4c31962306626cc5c3363913f17e296
+2026-11-14T20:06:37.6344420Z Updating files:  88% (15047/17005)
+2026-11-14T20:06:37.6403914Z Updating files:  89% (15135/17005)
+2026-11-14T20:06:37.6461045Z Updating files:  90% (15305/17005)
+2026-11-14T20:06:37.6517274Z Updating files:  91% (15475/17005)
+2026-11-14T20:06:37.6574624Z Updating files:  92% (15645/17005)
+2026-11-14T20:06:37.6632887Z Updating files:  93% (15815/17005)
+2026-11-14T20:06:37.6693461Z Updating files:  94% (15985/17005)
+2026-11-14T20:06:37.6785312Z Updating files:  95% (16155/17005)
+2026-11-14T20:06:37.6886715Z Updating files:  96% (16325/17005)
+2026-11-14T20:06:37.6972154Z Updating files:  97% (16495/17005)
+2026-11-14T20:06:37.7054812Z Updating files:  98% (16665/17005)
+2026-11-14T20:06:37.7257381Z Updating files:  99% (16835/17005)
+2026-11-14T20:06:37.7257734Z Updating files: 100% (17005/17005)
+2026-11-14T20:06:37.7258228Z Updating files: 100% (17005/17005), done.
+2026-11-14T20:06:37.7440785Z Note: switching to 'f9e314f1b4c31962306626cc5c3363913f17e296'.
+2026-11-14T20:06:37.7441290Z 
+2026-11-14T20:06:37.7441507Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-14T20:06:37.7441899Z changes and commit them, and you can discard any commits you make in this
+2026-11-14T20:06:37.7442326Z state without impacting any branches by switching back to a branch.
+2026-11-14T20:06:37.7442546Z 
+2026-11-14T20:06:37.7442692Z If you want to create a new branch to retain commits you create, you may
+2026-11-14T20:06:37.7443054Z do so (now or later) by using -c with the switch command. Example:
+2026-11-14T20:06:37.7443254Z 
+2026-11-14T20:06:37.7443344Z   git switch -c <new-branch-name>
+2026-11-14T20:06:37.7443493Z 
+2026-11-14T20:06:37.7443581Z Or undo this operation with:
+2026-11-14T20:06:37.7443707Z 
+2026-11-14T20:06:37.7443784Z   git switch -
+2026-11-14T20:06:37.7443885Z 
+2026-11-14T20:06:37.7444157Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-14T20:06:37.7444431Z 
+2026-11-14T20:06:37.7444622Z HEAD is now at f9e314f1b4 ci(sf-memory): check canonical capture integrity integration
+2026-11-14T20:06:37.7517679Z ##[endgroup]
+2026-11-14T20:06:37.7567051Z [command]/usr/bin/git log -1 --format=%H
+2026-11-14T20:06:37.7595891Z f9e314f1b4c31962306626cc5c3363913f17e296
+2026-11-14T20:06:37.7604054Z ##[group]Removing auth
+2026-11-14T20:06:37.7607115Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T20:06:37.7647098Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T20:06:37.7876716Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T20:06:37.7910030Z http.https://github.com/.extraheader
+2026-11-14T20:06:37.7916267Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-14T20:06:37.7954272Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T20:06:37.8185715Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T20:06:37.8221811Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T20:06:37.8447759Z ##[endgroup]
+2026-11-14T20:06:37.8641290Z ##[group]Run node --input-type=module <<'NODE'
+2026-11-14T20:06:37.8641679Z [36;1mnode --input-type=module <<'NODE'[0m
+2026-11-14T20:06:37.8641988Z [36;1mimport { appendFileSync, readFileSync } from 'node:fs'[0m
+2026-11-14T20:06:37.8642308Z [36;1mimport { execFileSync } from 'node:child_process'[0m
+2026-11-14T20:06:37.8642669Z [36;1mconst input = JSON.parse(readFileSync('.astra-wp10-check.json', 'utf8'))[0m
+2026-11-14T20:06:37.8643044Z [36;1mconst keys = Object.keys(input).sort().join(',')[0m
+2026-11-14T20:06:37.8643370Z [36;1mconst delivery = keys === 'candidateSha,devSha,productSha'[0m
+2026-11-14T20:06:37.8643695Z [36;1mif ((!delivery && keys !== 'devSha,productSha') ||[0m
+2026-11-14T20:06:37.8644219Z [36;1m    ![input.productSha, input.devSha, ...(delivery ? [input.candidateSha] : [])].every(value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value)))[0m
+2026-11-14T20:06:37.8644741Z [36;1m  throw new Error('Invalid WP10 check envelope')[0m
+2026-11-14T20:06:37.8645129Z [36;1mconst git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()[0m
+2026-11-14T20:06:37.8645616Z [36;1mif (git('rev-parse', 'HEAD') !== process.env.GITHUB_SHA || git('rev-parse', 'HEAD^') !== input.productSha)[0m
+2026-11-14T20:06:37.8646117Z [36;1m  throw new Error('The check must descend directly from the declared product SHA')[0m
+2026-11-14T20:06:37.8646634Z [36;1mif (git('diff-tree', '--no-commit-id', '--name-status', '-r', input.productSha, 'HEAD') !== 'A\t.astra-wp10-check.json')[0m
+2026-11-14T20:06:37.8647095Z [36;1m  throw new Error('The check snapshot changed product blobs')[0m
+2026-11-14T20:06:37.8647534Z [36;1mgit('merge-base', '--is-ancestor', 'd41ea01b8d9aa068301c1643c1ec3dc088900533', input.productSha)[0m
+2026-11-14T20:06:37.8647900Z [36;1mif (delivery) {[0m
+2026-11-14T20:06:37.8648454Z [36;1m  git('merge-base', '--is-ancestor', input.candidateSha, input.productSha)[0m
+2026-11-14T20:06:37.8648956Z [36;1m  const changes = git('diff', '--name-status', input.candidateSha, input.productSha).split('\n').filter(Boolean)[0m
+2026-11-14T20:06:37.8649597Z [36;1m  if (!changes.length || changes.some(line => !/^A\tmodules\/sucafina\/Sucafinav1\/docs\/sf2h\/receipts\/WP10\/.+\.(json|md|txt)$/.test(line)))[0m
+2026-11-14T20:06:37.8650234Z [36;1m    throw new Error('Delivery must add only WP10 evidence; it cannot edit candidate or existing receipts')[0m
+2026-11-14T20:06:37.8650624Z [36;1m  for (const line of changes) {[0m
+2026-11-14T20:06:37.8650852Z [36;1m    const path = line.slice(2)[0m
+2026-11-14T20:06:37.8651256Z [36;1m    if (!git('ls-tree', input.productSha, '--', path).startsWith('100644 blob ')) throw new Error('Invalid evidence mode')[0m
+2026-11-14T20:06:37.8651644Z [36;1m  }[0m
+2026-11-14T20:06:37.8651964Z [36;1m}[0m
+2026-11-14T20:06:37.8652326Z [36;1mappendFileSync(process.env.GITHUB_OUTPUT, `sha=${input.productSha}\ndev=${input.devSha}\ndelivery=${delivery}\n`)[0m
+2026-11-14T20:06:37.8652760Z [36;1mNODE[0m
+2026-11-14T20:06:37.8674514Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:06:37.8674816Z ##[endgroup]
+2026-11-14T20:06:38.0744879Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-14T20:06:38.0745186Z with:
+2026-11-14T20:06:38.0745382Z   ref: 5d42e44fb623db78a3a6ef025d2317a3fb653432
+2026-11-14T20:06:38.0745614Z   fetch-depth: 0
+2026-11-14T20:06:38.0745796Z   persist-credentials: false
+2026-11-14T20:06:38.0746015Z   repository: gustavomhss/Orchestra-SF
+2026-11-14T20:06:38.0747873Z   token: ***
+2026-11-14T20:06:38.0748224Z   ssh-strict: true
+2026-11-14T20:06:38.0748416Z   ssh-user: git
+2026-11-14T20:06:38.0748588Z   clean: true
+2026-11-14T20:06:38.0748769Z   sparse-checkout-cone-mode: true
+2026-11-14T20:06:38.0748983Z   fetch-tags: false
+2026-11-14T20:06:38.0749177Z   show-progress: true
+2026-11-14T20:06:38.0749351Z   lfs: false
+2026-11-14T20:06:38.0749511Z   submodules: false
+2026-11-14T20:06:38.0749690Z   set-safe-directory: true
+2026-11-14T20:06:38.0749881Z ##[endgroup]
+2026-11-14T20:06:38.1456870Z Syncing repository: gustavomhss/Orchestra-SF
+2026-11-14T20:06:38.1459146Z ##[group]Getting Git version info
+2026-11-14T20:06:38.1459839Z Working directory is '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T20:06:38.1490948Z [command]/usr/bin/git version
+2026-11-14T20:06:38.1529772Z git version 2.56.1
+2026-11-14T20:06:38.1546477Z ##[endgroup]
+2026-11-14T20:06:38.1559698Z Temporarily overriding HOME='/home/runner/work/_temp/0150ebb9-0c9a-4460-bd9e-769c2becac80' before making global git config changes
+2026-11-14T20:06:38.1560690Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T20:06:38.1564726Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T20:06:38.1609492Z [command]/usr/bin/git config --local --get remote.origin.url
+2026-11-14T20:06:38.1636015Z https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T20:06:38.1649466Z ##[group]Removing previously created refs, to avoid conflicts
+2026-11-14T20:06:38.1654205Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2026-11-14T20:06:38.1681153Z HEAD
+2026-11-14T20:06:38.1737320Z ##[endgroup]
+2026-11-14T20:06:38.1740598Z [command]/usr/bin/git submodule status
+2026-11-14T20:06:38.2031758Z ##[group]Cleaning the repository
+2026-11-14T20:06:38.2039784Z [command]/usr/bin/git clean -ffdx
+2026-11-14T20:06:38.2445023Z [command]/usr/bin/git reset --hard HEAD
+2026-11-14T20:06:39.0312559Z HEAD is now at f9e314f1b4 ci(sf-memory): check canonical capture integrity integration
+2026-11-14T20:06:39.0322118Z ##[endgroup]
+2026-11-14T20:06:39.0324256Z ##[group]Disabling automatic garbage collection
+2026-11-14T20:06:39.0329847Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-14T20:06:39.0369421Z ##[endgroup]
+2026-11-14T20:06:39.0369848Z ##[group]Setting up auth
+2026-11-14T20:06:39.0375829Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T20:06:39.0413737Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T20:06:39.0645919Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T20:06:39.0690107Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T20:06:39.0929761Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T20:06:39.0969536Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T20:06:39.1211341Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-14T20:06:39.1266670Z ##[endgroup]
+2026-11-14T20:06:39.1267178Z ##[group]Fetching the repository
+2026-11-14T20:06:39.1275183Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-14T20:06:39.2979160Z [command]/usr/bin/git rev-parse --verify --quiet 5d42e44fb623db78a3a6ef025d2317a3fb653432^{object}
+2026-11-14T20:06:39.3011332Z 5d42e44fb623db78a3a6ef025d2317a3fb653432
+2026-11-14T20:06:39.3015718Z ##[endgroup]
+2026-11-14T20:06:39.3016227Z ##[group]Determining the checkout info
+2026-11-14T20:06:39.3018843Z ##[endgroup]
+2026-11-14T20:06:39.3021298Z [command]/usr/bin/git sparse-checkout disable
+2026-11-14T20:06:39.3182022Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-14T20:06:39.3221656Z ##[group]Checking out the ref
+2026-11-14T20:06:39.3224809Z [command]/usr/bin/git checkout --progress --force 5d42e44fb623db78a3a6ef025d2317a3fb653432
+2026-11-14T20:06:39.3559585Z Previous HEAD position was f9e314f1b4 ci(sf-memory): check canonical capture integrity integration
+2026-11-14T20:06:39.3560840Z HEAD is now at 5d42e44fb6 fix(sf-memory): bind canonical capture reads to current preflight observations
+2026-11-14T20:06:39.3571813Z ##[endgroup]
+2026-11-14T20:06:39.3615934Z [command]/usr/bin/git log -1 --format=%H
+2026-11-14T20:06:39.3646496Z 5d42e44fb623db78a3a6ef025d2317a3fb653432
+2026-11-14T20:06:39.3655308Z ##[group]Removing auth
+2026-11-14T20:06:39.3659107Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T20:06:39.3695254Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T20:06:39.3926451Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T20:06:39.3957805Z http.https://github.com/.extraheader
+2026-11-14T20:06:39.3964408Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-14T20:06:39.4003011Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T20:06:39.4234900Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T20:06:39.4279125Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T20:06:39.4510840Z ##[endgroup]
+2026-11-14T20:06:39.4655220Z ##[group]Run test "$(git rev-parse HEAD)" = "$PRODUCT_SHA"
+2026-11-14T20:06:39.4655565Z [36;1mtest "$(git rev-parse HEAD)" = "$PRODUCT_SHA"[0m
+2026-11-14T20:06:39.4655849Z [36;1mtest "$(git rev-parse origin/dev)" = "$DEV_SHA"[0m
+2026-11-14T20:06:39.4656126Z [36;1mmkdir -p "$EVIDENCE"[0m
+2026-11-14T20:06:39.4656558Z [36;1mgit merge-base HEAD origin/dev > "$EVIDENCE/merge-base.txt"[0m
+2026-11-14T20:06:39.4657072Z [36;1mgit rev-parse HEAD HEAD^{tree} origin/dev > "$EVIDENCE/revisions.txt"[0m
+2026-11-14T20:06:39.4677765Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:06:39.4678260Z env:
+2026-11-14T20:06:39.4678479Z   PRODUCT_SHA: 5d42e44fb623db78a3a6ef025d2317a3fb653432
+2026-11-14T20:06:39.4678759Z   DEV_SHA: a1d37698a7bb097c1578f827eba6a19b9917ef07
+2026-11-14T20:06:39.4679050Z   EVIDENCE: /home/runner/work/_temp/astra-wp10-evidence
+2026-11-14T20:06:39.4679290Z ##[endgroup]
+2026-11-14T20:06:39.5002348Z Prepare all required actions
+2026-11-14T20:06:39.5002833Z Getting action download info
+2026-11-14T20:06:39.5755137Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-14T20:06:39.6983454Z Download action repository 'oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6' (SHA:0c5077e51419868618aeaa5fe8019c62421857d6)
+2026-11-14T20:06:39.8406601Z Download action repository 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-11-14T20:06:40.0940263Z ##[group]Run ./.github/actions/setup-bun
+2026-11-14T20:06:40.0940506Z with:
+2026-11-14T20:06:40.0940669Z ##[endgroup]
+2026-11-14T20:06:40.0988984Z ##[start-action display=Setup Node;id=setup.__actions_setup-node]
+2026-11-14T20:06:40.1043440Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-14T20:06:40.1043747Z with:
+2026-11-14T20:06:40.1043964Z   node-version: 24
+2026-11-14T20:06:40.1044144Z   always-auth: false
+2026-11-14T20:06:40.1044325Z   check-latest: false
+2026-11-14T20:06:40.1046182Z   token: ***
+2026-11-14T20:06:40.1046352Z ##[endgroup]
+2026-11-14T20:06:40.2260742Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-14T20:06:40.2263764Z (node:2475) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T20:06:40.2264629Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T20:06:40.2266452Z ##[group]Environment details
+2026-11-14T20:06:40.5974869Z node: v24.22.2
+2026-11-14T20:06:40.5975189Z npm: 11.19.1
+2026-11-14T20:06:40.5975666Z yarn: 1.22.22
+2026-11-14T20:06:40.5976367Z ##[endgroup]
+2026-11-14T20:06:40.6076296Z ##[end-action id=setup.__actions_setup-node;outcome=success;conclusion=success;duration_ms=508]
+2026-11-14T20:06:40.6079097Z ##[start-action display=Get baseline download URL;id=setup.bun-url]
+2026-11-14T20:06:40.6151367Z ##[group]Run if [ "$RUNNER_ARCH" = "X64" ]; then
+2026-11-14T20:06:40.6151680Z [36;1mif [ "$RUNNER_ARCH" = "X64" ]; then[0m
+2026-11-14T20:06:40.6152014Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-14T20:06:40.6152334Z [36;1m  case "$RUNNER_OS" in[0m
+2026-11-14T20:06:40.6152551Z [36;1m    macOS)   OS=darwin ;;[0m
+2026-11-14T20:06:40.6152761Z [36;1m    Linux)   OS=linux ;;[0m
+2026-11-14T20:06:40.6152966Z [36;1m    Windows) OS=windows ;;[0m
+2026-11-14T20:06:40.6153164Z [36;1m  esac[0m
+2026-11-14T20:06:40.6153575Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-${OS}-x64-baseline.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T20:06:40.6154087Z [36;1melif [ "$RUNNER_OS-$RUNNER_ARCH" = "Windows-ARM64" ]; then[0m
+2026-11-14T20:06:40.6154456Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-14T20:06:40.6154951Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-windows-aarch64.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T20:06:40.6155345Z [36;1mfi[0m
+2026-11-14T20:06:40.6180290Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:06:40.6180595Z ##[endgroup]
+2026-11-14T20:06:40.6488453Z ##[end-action id=setup.bun-url;outcome=success;conclusion=success;duration_ms=40]
+2026-11-14T20:06:40.6490600Z ##[start-action display=Setup Bun;id=setup.__oven-sh_setup-bun]
+2026-11-14T20:06:40.6531268Z ##[group]Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+2026-11-14T20:06:40.6531568Z with:
+2026-11-14T20:06:40.6531939Z   bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-14T20:06:40.6532338Z   no-cache: false
+2026-11-14T20:06:40.6534212Z   token: ***
+2026-11-14T20:06:40.6534387Z ##[endgroup]
+2026-11-14T20:06:40.7891732Z Obtained version 1.3.14 from package.json
+2026-11-14T20:06:40.7894388Z Downloading a new version of Bun: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-14T20:06:41.0688694Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/96ea5cb6-9c93-4a79-ae9d-2510178b0bd4.zip
+2026-11-14T20:06:41.6542404Z [command]/home/runner/.bun/bin/bun --revision
+2026-11-14T20:06:41.6600119Z 1.3.14+0d9b296af
+2026-11-14T20:06:41.6722895Z ##[end-action id=setup.__oven-sh_setup-bun;outcome=success;conclusion=success;duration_ms=1023]
+2026-11-14T20:06:41.6725182Z ##[start-action display=Get cache directory;id=setup.cache]
+2026-11-14T20:06:41.6741825Z ##[group]Run echo "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"
+2026-11-14T20:06:41.6742160Z [36;1mecho "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T20:06:41.6759971Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:06:41.6760265Z ##[endgroup]
+2026-11-14T20:06:41.6843009Z ##[end-action id=setup.cache;outcome=success;conclusion=success;duration_ms=11]
+2026-11-14T20:06:41.6844913Z ##[start-action display=Compute dependency cache keys;id=setup.keys]
+2026-11-14T20:06:41.7969285Z ##[group]Run echo "bun=Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131" >> "$GITHUB_OUTPUT"
+2026-11-14T20:06:41.7970030Z [36;1mecho "bun=Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T20:06:41.7970744Z [36;1mecho "modules=Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T20:06:41.7989070Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:06:41.7989354Z ##[endgroup]
+2026-11-14T20:06:41.8033939Z ##[end-action id=setup.keys;outcome=success;conclusion=success;duration_ms=118]
+2026-11-14T20:06:41.8035833Z ##[start-action display=Restore node_modules;id=setup.modules-cache]
+2026-11-14T20:06:41.8067092Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T20:06:41.8067394Z with:
+2026-11-14T20:06:41.8067977Z   path: node_modules
+packages/*/node_modules
+packages/*/*/node_modules
+apps/*/node_modules
+modules/*/node_modules
+modules/*/*/node_modules
+tooling/*/node_modules
+native/*/*/node_modules
+native/*/*/*/node_modules
+
+2026-11-14T20:06:41.8069061Z   key: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-14T20:06:41.8069656Z   enableCrossOsArchive: false
+2026-11-14T20:06:41.8069974Z   fail-on-cache-miss: false
+2026-11-14T20:06:41.8070259Z   lookup-only: false
+2026-11-14T20:06:41.8070478Z ##[endgroup]
+2026-11-14T20:06:41.9095575Z (node:2557) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T20:06:41.9097135Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T20:06:41.9780617Z Cache not found for input keys: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-14T20:06:41.9851088Z ##[end-action id=setup.modules-cache;outcome=success;conclusion=success;duration_ms=181]
+2026-11-14T20:06:41.9854093Z ##[start-action display=Restore Bun dependencies;id=setup.bun-cache]
+2026-11-14T20:06:41.9902907Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T20:06:41.9903217Z with:
+2026-11-14T20:06:41.9903398Z   path: /home/runner/.bun/install/cache
+2026-11-14T20:06:41.9903774Z   key: Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131
+2026-11-14T20:06:41.9904136Z   restore-keys: Linux-X64-bun-v3-
+
+2026-11-14T20:06:41.9904360Z   enableCrossOsArchive: false
+2026-11-14T20:06:41.9904568Z   fail-on-cache-miss: false
+2026-11-14T20:06:41.9904764Z   lookup-only: false
+2026-11-14T20:06:41.9904946Z ##[endgroup]
+2026-11-14T20:06:42.0783578Z (node:2570) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T20:06:42.0784888Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T20:06:42.1406291Z Cache not found for input keys: Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131, Linux-X64-bun-v3-
+2026-11-14T20:06:42.1470541Z ##[end-action id=setup.bun-cache;outcome=success;conclusion=success;duration_ms=161]
+2026-11-14T20:06:42.1472658Z ##[start-action display=Install setuptools for distutils compatibility;id=setup.__run]
+2026-11-14T20:06:42.1488380Z ##[group]Run python3 -m pip install setuptools || pip install setuptools || true
+2026-11-14T20:06:42.1488841Z [36;1mpython3 -m pip install setuptools || pip install setuptools || true[0m
+2026-11-14T20:06:42.1506162Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:06:42.1506443Z ##[endgroup]
+2026-11-14T20:06:44.0646035Z Defaulting to user installation because normal site-packages is not writeable
+2026-11-14T20:06:44.8398896Z Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (68.1.2)
+2026-11-14T20:06:45.0842389Z ##[end-action id=setup.__run;outcome=success;conclusion=success;duration_ms=2936]
+2026-11-14T20:06:45.0845278Z ##[start-action display=Install dependencies;id=setup.__run_2]
+2026-11-14T20:06:45.0883654Z ##[group]Run # Workaround for patched peer variants
+2026-11-14T20:06:45.0884159Z [36;1m# Workaround for patched peer variants[0m
+2026-11-14T20:06:45.0884562Z [36;1m# e.g. ./patches/ for standard-openapi[0m
+2026-11-14T20:06:45.0885022Z [36;1m# https://github.com/oven-sh/bun/issues/28147[0m
+2026-11-14T20:06:45.0885462Z [36;1mif [ "$RUNNER_OS" = "Windows" ]; then[0m
+2026-11-14T20:06:45.0885968Z [36;1m  # Bun can leave a patched package directory half-renamed on Windows.[0m
+2026-11-14T20:06:45.0886698Z [36;1m  # The hoisted layout nests several copies of a patched package (e.g. @ai-sdk/openai-compatible),[0m
+2026-11-14T20:06:45.0887531Z [36;1m  # and Bun applies the patch once per copy; concurrent renames into the same cache entry race[0m
+2026-11-14T20:06:45.0888563Z [36;1m  # with ENOTEMPTY. Every attempt starts from an empty cache because the loser may leave it partial.[0m
+2026-11-14T20:06:45.0889219Z [36;1m  cache_dir="$PWD/.bun-install-cache"[0m
+2026-11-14T20:06:45.0889637Z [36;1m  trap 'rm -rf "$cache_dir"' EXIT[0m
+2026-11-14T20:06:45.0890004Z [36;1m  for attempt in 1 2 3 4 5; do[0m
+2026-11-14T20:06:45.0890332Z [36;1m    rm -rf "$cache_dir"[0m
+2026-11-14T20:06:45.0890650Z [36;1m    rm -rf node_modules[0m
+2026-11-14T20:06:45.0891138Z [36;1m    if bun install --no-cache --cache-dir "$cache_dir" --linker hoisted ; then[0m
+2026-11-14T20:06:45.0891648Z [36;1m      exit 0[0m
+2026-11-14T20:06:45.0891898Z [36;1m    fi[0m
+2026-11-14T20:06:45.0892408Z [36;1m    echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"[0m
+2026-11-14T20:06:45.0892990Z [36;1m  done[0m
+2026-11-14T20:06:45.0893242Z [36;1m  exit 1[0m
+2026-11-14T20:06:45.0893529Z [36;1melse[0m
+2026-11-14T20:06:45.0893776Z [36;1m  bun install [0m
+2026-11-14T20:06:45.0893956Z [36;1mfi[0m
+2026-11-14T20:06:45.0911430Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:06:45.0911712Z ##[endgroup]
+2026-11-14T20:06:45.0973564Z bun install v1.3.14 (0d9b296a)
+2026-11-14T20:06:45.1144044Z Resolving dependencies
+2026-11-14T20:06:49.7327506Z Resolved, downloaded and extracted [465]
+2026-11-14T20:06:49.7328611Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-arm64 - 404
+2026-11-14T20:06:49.7330908Z 
+2026-11-14T20:06:49.7335714Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-musl - 404
+2026-11-14T20:06:49.7336285Z 
+2026-11-14T20:06:49.7336866Z warn: GET https://registry.npmjs.org/hugr-omni-win32-x64-msvc - 404
+2026-11-14T20:06:49.7337371Z 
+2026-11-14T20:06:49.7337706Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-x64 - 404
+2026-11-14T20:06:49.7338030Z 
+2026-11-14T20:06:49.7338565Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-gnu - 404
+2026-11-14T20:06:49.7338942Z 
+2026-11-14T20:06:49.7339275Z warn: GET https://registry.npmjs.org/hugr-omni-win32-arm64-msvc - 404
+2026-11-14T20:06:49.7339625Z 
+2026-11-14T20:06:49.7339956Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-musl - 404
+2026-11-14T20:06:49.7340568Z 
+2026-11-14T20:06:49.7340879Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-gnu - 404
+2026-11-14T20:07:28.8526961Z Saved lockfile
+2026-11-14T20:07:28.8527191Z 
+2026-11-14T20:07:28.8527435Z $ bun run --cwd packages/core fix-node-pty
+2026-11-14T20:07:28.8565360Z $ bun run script/fix-node-pty.ts
+2026-11-14T20:07:28.8746909Z $ husky
+2026-11-14T20:07:28.9101623Z 
+2026-11-14T20:07:28.9102409Z + @actions/artifact@5.0.1 (v6.3.1 available)
+2026-11-14T20:07:28.9102928Z + @tsconfig/bun@1.0.9 (v1.0.11 available)
+2026-11-14T20:07:28.9103304Z + @types/mime-types@3.0.1
+2026-11-14T20:07:28.9103882Z + @typescript/native-preview@7.0.0-dev.20251207.1
+2026-11-14T20:07:28.9104313Z + glob@13.0.5 (v14.0.4 available)
+2026-11-14T20:07:28.9104601Z + husky@9.1.7
+2026-11-14T20:07:28.9104831Z + oxlint@1.60.0
+2026-11-14T20:07:28.9105104Z + oxlint-tsgolint@0.21.0
+2026-11-14T20:07:28.9105442Z + prettier@3.6.2 (v3.10.0 available)
+2026-11-14T20:07:28.9105808Z + semver@7.8.1 (v7.8.6 available)
+2026-11-14T20:07:28.9106139Z + turbo@2.10.2
+2026-11-14T20:07:28.9106506Z + @ai-sdk/openai-compatible@2.0.41 (v3.0.90 available)
+2026-11-14T20:07:28.9106915Z + heap-snapshot-toolkit@1.1.3
+2026-11-14T20:07:28.9107279Z + typescript@5.8.2 (v7.0.2 available)
+2026-11-14T20:07:28.9107498Z 
+2026-11-14T20:07:28.9107684Z 2953 packages installed [43.81s]
+2026-11-14T20:07:28.9603294Z ##[end-action id=setup.__run_2;outcome=success;conclusion=success;duration_ms=43875]
+2026-11-14T20:07:28.9605407Z ##[start-action display=Save Bun dependencies;id=setup.__actions_cache]
+2026-11-14T20:07:28.9615829Z ##[end-action id=setup.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T20:07:28.9617506Z ##[start-action display=Save node_modules;id=setup.__actions_cache_2]
+2026-11-14T20:07:28.9623406Z ##[end-action id=setup.__actions_cache_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T20:07:28.9662629Z ##[group]Run set -o pipefail
+2026-11-14T20:07:28.9662899Z [36;1mset -o pipefail[0m
+2026-11-14T20:07:28.9663301Z [36;1mbun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/sucafina-typecheck.log"[0m
+2026-11-14T20:07:28.9681049Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:07:28.9681324Z ##[endgroup]
+2026-11-14T20:07:28.9737513Z $ bun --cwd Sucafinav1 typecheck
+2026-11-14T20:07:28.9769858Z $ tsgo --noEmit
+2026-11-14T20:08:00.5326617Z ##[error]product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '"../ui/forecast-analysis.ts"' has no exported member 'analysisHistory'.
+2026-11-14T20:08:00.5340585Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, "resolve">'.
+2026-11-14T20:08:00.5349865Z ##[error]test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T20:08:00.5355449Z ##[error]test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.
+2026-11-14T20:08:00.5357491Z   Property 'importPreview' does not exist on type '{ decisionRecall: SfMemoryPrompt; }'.
+2026-11-14T20:08:00.5360316Z ##[error]test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.
+2026-11-14T20:08:00.5362753Z   Property 'importPreview' does not exist on type '{ decisionRecall: SfMemoryPrompt; }'.
+2026-11-14T20:08:00.5365386Z ##[error]test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.
+2026-11-14T20:08:00.5367375Z   Property 'importPreview' does not exist on type '{ decisionRecall: SfMemoryPrompt; }'.
+2026-11-14T20:08:00.5368895Z ##[error]test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.
+2026-11-14T20:08:00.5375910Z ##[error]test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T20:08:00.5385524Z ##[error]test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T20:08:00.5395176Z ##[error]test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T20:08:00.5404618Z ##[error]test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T20:08:00.5413912Z ##[error]test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T20:08:00.5423604Z ##[error]test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T20:08:01.1827319Z ##[error]Process completed with exit code 2.
+2026-11-14T20:08:01.1871257Z ##[group]Run set -o pipefail
+2026-11-14T20:08:01.1871509Z [36;1mset -o pipefail[0m
+2026-11-14T20:08:01.1871816Z [36;1mbun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/cli-typecheck.log"[0m
+2026-11-14T20:08:01.1889589Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:08:01.1889862Z ##[endgroup]
+2026-11-14T20:08:01.1948908Z $ tsgo --noEmit
+2026-11-14T20:08:32.7466777Z ##[group]Run set -o pipefail
+2026-11-14T20:08:32.7467041Z [36;1mset -o pipefail[0m
+2026-11-14T20:08:32.7467475Z [36;1mbun typecheck --project test/product/wp10/tsconfig.json 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/wp10-test-typecheck.log"[0m
+2026-11-14T20:08:32.7486217Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:08:32.7486504Z ##[endgroup]
+2026-11-14T20:08:32.7551600Z $ tsgo --noEmit --project "test/product/wp10/tsconfig.json"
+2026-11-14T20:08:45.0236733Z ##[group]Run set -o pipefail
+2026-11-14T20:08:45.0236991Z [36;1mset -o pipefail[0m
+2026-11-14T20:08:45.0237297Z [36;1mbun run generate 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/atlas-generate.log"[0m
+2026-11-14T20:08:45.0237794Z [36;1mbun run check:generated 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/atlas-generated-check.log"[0m
+2026-11-14T20:08:45.0238647Z [36;1mgit diff --exit-code -- src/generated 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/atlas-generated-diff.log"[0m
+2026-11-14T20:08:45.0256351Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:08:45.0256624Z ##[endgroup]
+2026-11-14T20:08:45.0329367Z $ bun script/build.ts
+2026-11-14T20:09:10.9763023Z $ bun script/build.ts --check
+2026-11-14T20:09:35.9737669Z ##[group]Run set -o pipefail
+2026-11-14T20:09:35.9737923Z [36;1mset -o pipefail[0m
+2026-11-14T20:09:35.9738416Z [36;1mbun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/atlas-typecheck.log"[0m
+2026-11-14T20:09:35.9756095Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:09:35.9756381Z ##[endgroup]
+2026-11-14T20:09:35.9826804Z $ tsgo --noEmit
+2026-11-14T20:09:36.1323997Z ##[group]Run set -o pipefail
+2026-11-14T20:09:36.1324382Z [36;1mset -o pipefail[0m
+2026-11-14T20:09:36.1324912Z [36;1mbun run check:spawn-imports 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/spawn-imports.log"[0m
+2026-11-14T20:09:36.1344298Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:09:36.1344585Z ##[endgroup]
+2026-11-14T20:09:36.1403862Z $ bun run script/check-spawn-imports.ts
+2026-11-14T20:09:36.5585744Z spawn-imports: 4702 files checked, 66 allow-listed sites
+2026-11-14T20:09:36.5755855Z ##[group]Run set -o pipefail
+2026-11-14T20:09:36.5756114Z [36;1mset -o pipefail[0m
+2026-11-14T20:09:36.5756465Z [36;1mbun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/astra-wp10-evidence/guards.log"[0m
+2026-11-14T20:09:36.5774548Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T20:09:36.5774829Z ##[endgroup]
+2026-11-14T20:09:36.5845996Z $ bun run script/guards/run.ts --base origin/dev
+2026-11-14T20:09:41.2900512Z WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2902745Z WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2904530Z WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2905810Z WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2907328Z WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2908705Z WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2909733Z WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2910747Z WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2911751Z WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2912729Z WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2913706Z WARN modules/sucafina/package.json:23 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2914671Z WARN modules/sucafina/package.json:24 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2915603Z WARN package.json:126 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2916487Z WARN package.json:127 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2917729Z WARN modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W26/W22-D-partial/publication/verified-W22-tree.json [large-file] Large file added (over 1 MB). Check it belongs in git; generated data and media usually do not.
+2026-11-14T20:09:41.2919214Z WARN modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json:5 [local-abs-path] Absolute path into a personal home directory. Use a relative path, an environment variable or os.homedir().
+2026-11-14T20:09:41.2920605Z WARN modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:113 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2921743Z WARN modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:162 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2922811Z WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:41 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2923973Z WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:158 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2924995Z WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:417 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2926034Z WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:605 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2927071Z WARN modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts:60 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2928274Z WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:78 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2929395Z WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:168 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2930473Z WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:321 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2931535Z WARN modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts:77 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2932562Z WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts:87 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2933587Z WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts:227 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2934612Z WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts:60 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2935636Z WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts:110 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2936676Z WARN modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts:81 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2937771Z WARN modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:79 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2938976Z WARN modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts:38 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2940056Z WARN modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts:106 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2941319Z WARN modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:136 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2942390Z WARN modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:262 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2943388Z WARN modules/sucafina/Sucafinav1/test/product/wp05/browser.ts:38 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2944586Z WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:228 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2945765Z WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:267 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2946956Z WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:269 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2948258Z WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:329 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2949435Z WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:341 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2950605Z WARN modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts:101 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2951781Z WARN modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-fallback-lifecycle.test.ts:46 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2952892Z WARN modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:189 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2954032Z WARN modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts:115 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2955100Z WARN modules/sucafina/Sucafinav1/test/visual-layout.test.ts:74 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2956072Z WARN packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:213 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2957026Z WARN packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:280 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2957975Z WARN packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:336 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2959161Z WARN modules/sucafina/Sucafinav1/product/routines/review-result.ts:41 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.
+2026-11-14T20:09:41.2960241Z WARN modules/sucafina/Sucafinav1/product/routines/review-result.ts:43 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.
+2026-11-14T20:09:41.2960955Z guards: 78 rules, 2212 changed paths, 0 gate and 53 warn findings, 0 errors.
+2026-11-14T20:09:41.2973402Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2975346Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2976883Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2978541Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2980142Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2981534Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2982942Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2984340Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2985816Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2987279Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2988861Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2990274Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2991695Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2993124Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T20:09:41.2994400Z ##[warning]Large file added (over 1 MB). Check it belongs in git; generated data and media usually do not.
+2026-11-14T20:09:41.2995799Z ##[warning]Absolute path into a personal home directory. Use a relative path, an environment variable or os.homedir().
+2026-11-14T20:09:41.2997091Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2998489Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.2999621Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3000761Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3001896Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3002997Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3004209Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3005312Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3006419Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3007525Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3008922Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3010230Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3011397Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3012504Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3013593Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3014688Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3015923Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3017039Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3018279Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3019395Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3020489Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3021592Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3022677Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3023778Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3024912Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3026041Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3027132Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3028368Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3029461Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3030561Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3031639Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3032736Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3033832Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3034931Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3036025Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T20:09:41.3037256Z ##[warning]Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.
+2026-11-14T20:09:41.3038692Z ##[warning]Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.
+2026-11-14T20:09:41.3435614Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-14T20:09:41.3435952Z with:
+2026-11-14T20:09:41.3436132Z   name: astra-wp10-check-1
+2026-11-14T20:09:41.3436378Z   path: /home/runner/work/_temp/astra-wp10-evidence
+2026-11-14T20:09:41.3436634Z   if-no-files-found: error
+2026-11-14T20:09:41.3436838Z   retention-days: 14
+2026-11-14T20:09:41.3437020Z   compression-level: 6
+2026-11-14T20:09:41.3437204Z   overwrite: false
+2026-11-14T20:09:41.3437386Z   include-hidden-files: false
+2026-11-14T20:09:41.3437583Z ##[endgroup]
+2026-11-14T20:09:41.4879054Z (node:3291) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T20:09:41.4880082Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T20:09:41.4944636Z With the provided path, there will be 11 files uploaded
+2026-11-14T20:09:41.4945313Z Artifact name is valid!
+2026-11-14T20:09:41.4945754Z Root directory input is valid!
+2026-11-14T20:09:41.6958823Z Beginning upload of artifact content to blob storage
+2026-11-14T20:09:41.7210632Z (node:3291) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-14T20:09:41.7717339Z Uploaded bytes 4363
+2026-11-14T20:09:41.7927055Z Finished uploading artifact content to blob storage!
+2026-11-14T20:09:41.7927973Z SHA256 digest of uploaded artifact zip is fdc0fbba06ddf8498ca86457f463799e1e27d0239a2ed1f0df7120267b021a33
+2026-11-14T20:09:41.7929442Z Finalizing artifact upload
+2026-11-14T20:09:42.1288019Z Artifact astra-wp10-check-1.zip successfully finalized. Artifact ID 14129692442
+2026-11-14T20:09:42.1289294Z Artifact astra-wp10-check-1 has been successfully uploaded! Final size is 4363 bytes. Artifact ID is 14129692442
+2026-11-14T20:09:42.1294705Z Artifact download URL: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43635682967/artifacts/14129692442
+2026-11-14T20:09:42.1516571Z Post job cleanup.
+2026-11-14T20:09:42.1520298Z ##[start-action display=Setup Bun;id=__23f1814e-79d8-43bb-b6f0-c523376af573.__oven-sh_setup-bun]
+2026-11-14T20:09:42.1522258Z ##[end-action id=__23f1814e-79d8-43bb-b6f0-c523376af573.__oven-sh_setup-bun;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T20:09:42.1523765Z ##[start-action display=Setup Node;id=__23f1814e-79d8-43bb-b6f0-c523376af573.__actions_setup-node]
+2026-11-14T20:09:42.1525234Z ##[end-action id=__23f1814e-79d8-43bb-b6f0-c523376af573.__actions_setup-node;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T20:09:42.1574358Z Post job cleanup.
+2026-11-14T20:09:42.2295128Z [command]/usr/bin/git version
+2026-11-14T20:09:42.2334350Z git version 2.56.1
+2026-11-14T20:09:42.2366151Z Temporarily overriding HOME='/home/runner/work/_temp/802946e4-da93-4515-9eb8-d4db78bd4e85' before making global git config changes
+2026-11-14T20:09:42.2367355Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T20:09:42.2370741Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T20:09:42.2408214Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T20:09:42.2440832Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T20:09:42.2687888Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T20:09:42.2734347Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T20:09:42.2980427Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T20:09:42.3021779Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T20:09:42.3397212Z Post job cleanup.
+2026-11-14T20:09:42.4199476Z [command]/usr/bin/git version
+2026-11-14T20:09:42.4237093Z git version 2.56.1
+2026-11-14T20:09:42.4265844Z Temporarily overriding HOME='/home/runner/work/_temp/5f0e810e-29a4-4fbe-a2a0-33422c12b5eb' before making global git config changes
+2026-11-14T20:09:42.4267009Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T20:09:42.4270677Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T20:09:42.4305816Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T20:09:42.4336348Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T20:09:42.4604316Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T20:09:42.4637514Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T20:09:42.4884101Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T20:09:42.4927337Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T20:09:42.5325210Z Cleaning up orphan processes
+2026-11-14T20:09:42.5637999Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830, actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

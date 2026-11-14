@@ -1,0 +1,52 @@
+{
+  "mission": "MemoryA27 integrity preflight",
+  "attempt": "MI08",
+  "status": "PREPARED_NOT_RUN",
+  "parentProductW": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+  "reasonRun": 43637227753,
+  "reason": "MI07 did not reach the historical tail before its unchanged225000 deadline. This own-namespace test exercises the same three real entrypoints with positive controls, without repeating or editing the historical scenario.",
+  "changes": {
+    "runtime": "UNCHANGED from W35",
+    "fixture": "UNCHANGED",
+    "historical": "UNCHANGED",
+    "newTest": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "sha256": "b6e0f89ac1255f3edd90b587af08bbe9721ea9792cf9050d96dcd68b472beda4"
+    }
+  },
+  "boundaries": [
+    "createSfMemoryInputProducer.prepare",
+    "createSfDecisionMemoryVerifier.verify",
+    "verified proof.acceptsOutput"
+  ],
+  "proofDesign": "Three independent scenarios. Actual material historical source, real analysis.prepare admission, canonical completed recalls and positive result before changing only fixture access.allowed to false. Same Request/headers/input/capture/output, not aborted; unavailable after revocation.",
+  "budgets": {
+    "perFixtureCooperativeMs": 105000,
+    "perTestBunMs": 120000,
+    "originalHistoricalCooperativeMs": 225000,
+    "originalHistoricalBunMs": 240000,
+    "existingBudgetsChanged": false
+  },
+  "realAndSynthetic": "See final manifest; no native Session/model execution. The recall hook forwards the installed canonical reader and only counts completed ok reads.",
+  "selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "ae25bc1b17bb395a8319e3cd169a2f5e5ef1cf75b46ea2a313a8ff6bf9233ccb",
+  "fullHistoricalQualification": "BLOCKED; focal proof must never relabel MI07 as PASS",
+  "normalCheck35": {
+    "snapshot": "3b03055c52e804a6b2cd38a32e86dfe35735cdd2",
+    "status": "NOT_RUN",
+    "reason": "Superseded before dispatch by normal check of final candidate including new test."
+  },
+  "localTests": "NOT_RUN"
+}

@@ -1,0 +1,31 @@
+{
+  "mission": "memory-integrity-preflight",
+  "status": "PREPARED_NOT_RUN",
+  "reason": "MI02 source-during-await test attempted forbidden nested write, so denial assertion was not reached.",
+  "runtime": {
+    "changed": false,
+    "blob": "f3e7c88000f47018a6b3bb0f6e65ddac1a948e45",
+    "inheritedFromW": "f511f30b73289c2f21c843254569d31c02eb9608"
+  },
+  "testChange": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+    "beforeBlob": "09c1e9720ab1df63369601a769a39895bdcbea65",
+    "afterSha256": "2b1558f9187ede10fd71d7dee1185f0830f0a5ad03f52177652a1f9b95608e63",
+    "delta": "Run the adverse preflight inside a real outer C08 transaction; after forwarding the real recall, mutate its actual snapshots argument. commit:false discards the fault.",
+    "assertions": "Expected denied, real reader reached, Atlas unchanged; not weakened",
+    "budgets": "105000 cooperative / 120000 test unchanged",
+    "reader": "Real BCS/Atlas; no permissive substitute"
+  },
+  "readEvidence": {
+    "localStore": {
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "observation": "currentSnapshots clones; outer transactionAll callback argument is the active root snapshots"
+    },
+    "sourceLifecycle": {
+      "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "observation": "guard/finish applies only on commit:true"
+    }
+  },
+  "causalLimits": "MI02 failure is invalid test injection. No executed aliasing defect claimed for LocalStore.",
+  "selection": "Exact failing test, pending protocol audit; no unrelated rerun."
+}
