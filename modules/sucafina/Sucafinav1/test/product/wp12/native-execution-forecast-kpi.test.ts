@@ -101,7 +101,7 @@ test("native Finance checks a human-selected budget KPI without replacing foreca
       for (const invalid of [
         { request: { metricRef: dashboardMetricSelector(sources.base.refId, "total-budget"), period }, status: "needs-input", reason: "invalid-dashboard-source-selector" },
         { request: { ...kpiRequest, period: { start: "2026-01-01", end: "2026-12-31" } }, status: "denied", reason: "source-unavailable" },
-      ]) {
+      ] as const) {
         const refused = await dispatchWp12Ui(context, "sf_kpi_explain", invalid.request)
         expect(refused.status).toBe(invalid.status)
         if (refused.status === "ok") throw new Error("An unrelated producer or unselected period became a KPI source")

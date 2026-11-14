@@ -1,0 +1,79 @@
+{
+  "schema": "wp12-independent-type-only-review-v1",
+  "status": "PASS_BOUNDED_STATIC_REVIEW",
+  "reviewer": "astra-wp12/compose_typecheck",
+  "sourceBefore": {
+    "path": "resume-input/w28/forecast-before.ts",
+    "bytes": 29693,
+    "blob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+    "sha256": "35d4f8573f1e5ece274ca29fc6e4a4f2f8c70851e206cd529de957213bf762ce"
+  },
+  "sourceAfter": {
+    "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+    "bytes": 29702,
+    "blob": "749063953007e4e0d216dcaf278337de45ef6e3d",
+    "sha256": "fe0c909f2c53da5147ca59cab68cc80f24dbfafa292c904042720e15dfb7da5a"
+  },
+  "observedFailure": {
+    "runId": 43618678972,
+    "jobId": 132519258483,
+    "productSha": "5e768df0473a75b2436e3208350155c96708b1c6",
+    "checkSnapshot": "565e4153a6bfb6f41dd7ac06718d5b0d95113b8f",
+    "diagnostics": 1,
+    "location": "native-execution-forecast-kpi.test.ts(106,37)",
+    "code": "TS2769",
+    "reason": "The table of two refusal cases widened invalid.status to string; Bun matcher expects the closed CapabilityResult status union.",
+    "log": {
+      "path": "evidence/resume-22-check.log",
+      "bytes": 65119,
+      "sha256": "8c7a53b7fb290bd45e34b2b4a2c951d275143a9daafea5312a84f3e68bdd74d8"
+    },
+    "spawnImports": {
+      "files": 4618,
+      "allowListedSites": 66,
+      "status": "PASS"
+    },
+    "guards": {
+      "rules": 78,
+      "changedPaths": 1144,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0,
+      "status": "PASS"
+    }
+  },
+  "exactDelta": {
+    "addedBytes": 9,
+    "change": "Add as const to the two-element invalid-case array only.",
+    "effect": "Preserves the literal statuses needs-input/denied and exact reason strings; makes the table readonly at the type level. No runtime assertion, value, request or branch is changed."
+  },
+  "preserved": {
+    "sourceOutsideOneInsertion": "BYTE_IDENTICAL",
+    "expectCalls": 83,
+    "testCount": 1,
+    "deadlineMs": 360000,
+    "negativePairs": [
+      "needs-input / invalid-dashboard-source-selector",
+      "denied / source-unavailable"
+    ],
+    "nativeAndUiBoundaries": true,
+    "selectorsGrantsAndConsumers": true
+  },
+  "typeErasure": {
+    "emittedJavaScriptIdentical": true,
+    "sha256": "199be281dc5f40768c1d4e9196e0d9a63b97dd3e7114fe0d23222dae109fb400",
+    "bytes": 35127,
+    "method": "Node stripTypeScriptTypes transform, source strings only; no test/product import or execution",
+    "syntaxCheck": "PASS node --check"
+  },
+  "findings": [],
+  "limitations": [
+    "This source-only check does not replace the required hosted C28 package typecheck.",
+    "No runtime result is claimed; W27 product request was never dispatched."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "productImports": false,
+  "sourceEditedByReviewer": false,
+  "remoteMutation": false
+}
