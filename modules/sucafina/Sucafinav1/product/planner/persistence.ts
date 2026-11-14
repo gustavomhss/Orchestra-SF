@@ -30,12 +30,12 @@ export function createPlannerResultPersistence(input: { store: ReturnType<typeof
     if (value.request.scenarioRefs.length !== 2 || value.request.scenarioRefs[0] === value.request.scenarioRefs[1] || value.result.baselineResultRef !== value.request.scenarioRefs[0] || value.result.alternativeResultRef !== value.request.scenarioRefs[1]) return { status: "conflict", reason: "comparison-reference-mismatch" }
     const records = await Promise.all(value.request.scenarioRefs.map((resultRef) => input.store.readHistoricalScenario ? input.store.readHistoricalScenario({ resultRef }, context) : input.store.read({ resultRef, kind: "scenario" }, context)))
     const failed = records.find((record) => record.status !== "ok")
-    if (failed && failed.status !== "ok") return failed
+    if (failed) return failed
     if (records.some((record) => record.status !== "ok" || record.value.caseRef.id !== selected.value.id || record.value.caseRef.incarnation !== selected.value.incarnation || record.value.caseRef.version > selected.value.version)) return { status: "denied", reason: "scenario-outside-case" }
     {
       const current = await Promise.all(value.request.scenarioRefs.map((reference) => scenarios.resolve(reference, context)))
       const failure = current.find((item) => item.status !== "ok")
-      if (failure && failure.status !== "ok") return failure
+      if (failure) return failure
       if (current.some((item, index) => {
         const record = records[index]
         return item.status !== "ok" || !record || record.status !== "ok" || digestSfValue(item.value.result) !== record.value.resultDigest

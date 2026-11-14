@@ -89,7 +89,7 @@ export function createChangeProposalService(input: {
     if (!caseRef) return { status: "needs-input", reason: "invalid-case-reference" }
     const previews = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: { ...caseRef, version: current.value.case.version }, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
     const failedPreview = previews.find((item) => item.status !== "ok")
-    if (failedPreview && failedPreview.status !== "ok") return failedPreview
+    if (failedPreview) return failedPreview
     const changes = resolved.value.changes.map((item, index) => {
       const target = item.command.target
       const evidence = item.targetEvidence

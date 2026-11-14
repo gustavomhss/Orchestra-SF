@@ -204,7 +204,7 @@ export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; cas
 }
 
 /** The existing Procurement resolver and port reauthenticate and project the current record. */
-export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>; procurement: ProcurementPort }) {
+export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>["resolve"]; procurement: ProcurementPort }) {
   return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {

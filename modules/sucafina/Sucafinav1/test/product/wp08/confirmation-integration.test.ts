@@ -15,6 +15,7 @@ import { createDashboardSourceIssuer } from "../../../product/integration/dashbo
 import { createDashboardSourceHost } from "../../../product/dashboard/sources.ts"
 import { createDashboardPort } from "../../../product/dashboard/port.ts"
 import { createDashboardConfirmationObserver } from "../../../product/dashboard/confirmation.ts"
+import type { DashboardConfirmationObservation } from "../../../product/dashboard/confirmation.ts"
 import { createConfirmationPort } from "../../../product/collaboration/confirmation.ts"
 import { createConfirmationObservationReceipts } from "../../../product/collaboration/confirmation-observations.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -60,7 +61,7 @@ test("dashboard observation supports a human confirmation and another authorized
     const admitted = await human.admit(new Request("https://example.test/confirm", { method: "POST", headers: { origin: "https://example.test", actor: "admin" } }), "collaboration.confirmation.confirm", command)
     if (admitted.status !== "ok") throw new Error("confirmation admission failed")
     const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: "workspace-inc" }), authorize: async (request) => ({ principalRef: request.headers.get("actor")!, accessRevision: "access", policyVersion: "policy" }) })
-    const port = createConfirmationPort({ host, state, human, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, observe: observer.observe, fence: async (selected, observation, context) => await observer.fenceManifest(selected, context) && await observer.fence(selected, observation, context), verifyObserved: receipts.verifyObserved, createId: randomUUID, now: () => at })
+    const port = createConfirmationPort<Extract<DashboardConfirmationObservation, { state: "available" }>>({ host, state, human, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, observe: observer.observe, fence: async (selected, observation, context) => await observer.fenceManifest(selected, context) && await observer.fence(selected, observation, context), verifyObserved: receipts.verifyObserved, createId: randomUUID, now: () => at })
     const confirmed = await port.confirm(command, admitted.value)
     if (confirmed.status !== "ok") throw new Error(`confirmation failed: ${confirmed.reason}`)
     expect(confirmed.value).not.toHaveProperty("physicalIncarnation")

@@ -1,6 +1,9 @@
 import { expect, test, type Page } from "@playwright/test"
 import { sfDocumentWorkbench } from "../../../../../modules/sucafina/Sucafinav1/product/documents/workbench.ts"
 import { htmlPolicy } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import { sfDossierWorkbench } from "../../../../../apps/cli/src/sucafina-product/dossier-workbench.ts"
+import { sfDocumentScenarioWorkbench } from "../../../../../modules/sucafina/Sucafinav1/product/documents/scenario-workbench.ts"
+import type { BusinessEvidenceRef } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 
 // Production HTML/script/CSP in a real browser, with explicitly synthetic HTTP responses.
 // Parser, SQLite, ACL, BCS and native/skill proofs belong to the separate actual-service tests.
@@ -80,12 +83,14 @@ test("WP06 real document renderer shows a candidate and source as data until exp
   await expect(fixture.root.locator("img")).toHaveCount(0)
   await expect(page.locator("[data-injected]")).toHaveCount(0)
   expect(fixture.calls.filter((call) => call.operation === "document-confirm")).toHaveLength(0)
+  await expect(fixture.root.getByRole("link", { name: "Use confirmed amount in a scenario", exact: true })).toHaveCount(0)
   expect(fixture.calls.find((call) => call.operation === "document-schema")?.payload).toEqual({ documentRef: "document-1", fields: [{ id: "Price", type: "number", unit: "USD" }] })
   expect(fixture.calls.filter((call) => call.operation === "document-sources").map((call) => call.selection)).toContain("request-r1")
   await fixture.root.getByRole("button", { name: "Confirm this field", exact: true }).click()
   await expect(fixture.root.getByRole("status")).toHaveText("Field confirmed with its current source.")
   await expect(fixture.root.getByText("confirmed · document revision 7", { exact: true })).toBeVisible()
   await expect(fixture.root.getByRole("button", { name: "Confirm this field", exact: true })).toHaveCount(0)
+  await expect(fixture.root.getByRole("link", { name: "Use confirmed amount in a scenario", exact: true })).toHaveAttribute("href", /sf=document-scenario&ref=/)
   expect(fixture.calls.filter((call) => call.operation === "document-confirm")).toHaveLength(1)
 })
 
@@ -114,4 +119,168 @@ test("WP06 real document renderer preserves an explicit stale refusal and remove
   await expect(fixture.root.getByText(excerpt, { exact: true })).toHaveCount(0)
   await expect(fixture.root.getByRole("link", { name: "Open original", exact: true })).toHaveCount(0)
   expect(fixture.calls.filter((call) => call.operation === "document-confirm")).toHaveLength(1)
+})
+
+// This exercises the production dossier renderer and CSP only. The Request, SQLite,
+// parser, confirmation and source-revocation proofs run in dossier-runtime.test.ts.
+async function openDossier(page: Page) {
+  const state: { failure?: { operation: string; status: number; result: string } } = {}
+  const calls: { operation: string; method: string }[] = []
+  const candidate = { id: "candidate-dossier", fieldCandidate: "Price", value: 42, unit: "USD", version: 7, status: "extracted",
+    ref: { refId: "evidence-dossier", refDigest: "d".repeat(64), target: { documentId: "document-dossier", revision: 7, segment: { start: 0, end: excerpt.length } } } }
+  const html = sfDossierWorkbench()
+  await page.route("**/sucafina/procurement?*", async (route) => {
+    const request = route.request()
+    const url = new URL(request.url())
+    const operation = url.searchParams.get("sf") ?? ""
+    if (operation === "sourcing-dossier") {
+      await route.fulfill({ status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Content-Security-Policy": htmlPolicy(html) }, body: html })
+      return
+    }
+    calls.push({ operation, method: request.method() })
+    expect(request.method()).toBe("GET")
+    if (state.failure?.operation === operation) {
+      await route.fulfill({ status: state.failure.status, json: { status: state.failure.result } })
+      return
+    }
+    if (operation === "sourcing-dossier-requests") {
+      expect(url.searchParams.get("start")).toBe("2026-01-01")
+      expect(url.searchParams.get("end")).toBe("2026-12-31")
+      await route.fulfill({ json: { status: "ok", value: [{ requestRef: "request-dossier", label: "Request r1" }] } })
+      return
+    }
+    if (operation === "sourcing-dossier-read") {
+      expect(url.searchParams.get("requestRef")).toBe("request-dossier")
+      await route.fulfill({ json: { status: "ok", value: { request: { values: [{ id: "status", value: "sourcing" }] }, documents: [{ state: "pending", evidence: candidate }] } } })
+      return
+    }
+    expect(operation).toBe("document-open")
+    expect(JSON.parse(url.searchParams.get("ref") ?? "null")).toEqual(candidate.ref)
+    await route.fulfill({ json: { status: "ok", value: { title: "terms-r1.txt", location: `text:0-${excerpt.length}`, excerpt, href: "/sucafina/procurement?download=asset-r1" } } })
+  })
+  await page.goto("/sucafina/procurement?sf=sourcing-dossier")
+  const root = page.locator("[data-dossier-workbench]")
+  await root.getByLabel("Start date", { exact: true }).fill("2026-01-01")
+  await root.getByLabel("End date", { exact: true }).fill("2026-12-31")
+  await root.getByRole("button", { name: "Load Requests", exact: true }).click()
+  await expect(root.getByRole("status")).toHaveText("Select a Request and show its dossier.")
+  await expect(root.getByLabel("Request", { exact: true })).toHaveValue("request-dossier")
+  await expect(root.getByRole("button", { name: "Show dossier", exact: true })).toBeEnabled()
+  await root.getByRole("button", { name: "Show dossier", exact: true }).click()
+  await expect(root.getByRole("status")).toHaveText("Current evidence loaded. This view does not confirm fields or apply changes.")
+  return { root, state, calls }
+}
+
+test("WP06 dossier renderer exposes unit, revision, reference and literal source excerpt without confirming", async ({ page }) => {
+  const fixture = await openDossier(page)
+  await expect(fixture.root.getByRole("heading", { name: "Price: 42 USD", exact: true })).toBeVisible()
+  await expect(fixture.root.getByText("Pending confirmation · extracted · document revision 7", { exact: true })).toBeVisible()
+  await expect(fixture.root.getByText(`Reference evidence-dossier · terms-r1.txt · text:0-${excerpt.length}`, { exact: true })).toBeVisible()
+  await expect(fixture.root.getByText(excerpt, { exact: true })).toBeVisible()
+  await expect(fixture.root.getByRole("link", { name: "Open original", exact: true })).toHaveAttribute("href", "/sucafina/procurement?download=asset-r1")
+  await expect(fixture.root.locator("img")).toHaveCount(0)
+  await expect(page.locator("[data-injected]")).toHaveCount(0)
+  expect(fixture.calls.map((call) => call.operation)).toEqual(["sourcing-dossier-requests", "sourcing-dossier-read", "document-open"])
+  expect(fixture.calls.every((call) => call.method === "GET")).toBe(true)
+})
+
+for (const failure of [
+  { operation: "sourcing-dossier-read", status: 403, result: "denied" },
+  { operation: "sourcing-dossier-read", status: 409, result: "stale" },
+  { operation: "document-open", status: 409, result: "stale" },
+]) {
+  test(`WP06 dossier renderer invalidates selection after ${failure.operation} ${failure.status}`, async ({ page }) => {
+    const fixture = await openDossier(page)
+    fixture.state.failure = failure
+    await fixture.root.getByRole("button", { name: "Show dossier", exact: true }).click()
+    await expect(fixture.root.getByRole("status")).toHaveText("The source or access changed. Reload Requests and review current evidence.")
+    await expect(fixture.root.getByRole("region", { name: "Dossier", exact: true })).toBeEmpty()
+    await expect(fixture.root.getByRole("button", { name: "Show dossier", exact: true })).toBeDisabled()
+    await expect(fixture.root.getByLabel("Request", { exact: true })).toBeDisabled()
+    await expect(fixture.root.getByLabel("Request", { exact: true })).toHaveValue("")
+    await expect(fixture.root.getByText(excerpt, { exact: true })).toHaveCount(0)
+    await expect(fixture.root.getByRole("link", { name: "Open original", exact: true })).toHaveCount(0)
+    fixture.state.failure = undefined
+    await fixture.root.getByRole("button", { name: "Load Requests", exact: true }).click()
+    await expect(fixture.root.getByRole("status")).toHaveText("Select a Request and show its dossier.")
+    await expect(fixture.root.getByRole("button", { name: "Show dossier", exact: true })).toBeEnabled()
+    expect(fixture.calls.every((call) => call.method === "GET")).toBe(true)
+  })
+}
+
+// Actual scenario renderer/script/CSP; HTTP data is synthetic. The real ScenarioResult,
+// confirmed evidence and SQLite non-mutation are proved by scenario-consumer.test.ts.
+async function openDocumentScenario(page: Page) {
+  const ref: Extract<BusinessEvidenceRef, { kind: "document" }> = { schema: "sf-evidence-v1", kind: "document", installationId: "browser-installation", projectId: "browser-project",
+    refId: "scenario-evidence", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { documentId: "scenario-document", incarnation: "scenario-incarnation", revision: 7,
+      blobDigest: { algorithm: "sha256", value: "b".repeat(64) }, segment: { start: 0, end: excerpt.length, unit: "utf16", textDigest: { algorithm: "sha256", value: "c".repeat(64) } }, fieldCandidateId: "scenario-candidate", confirmationVersion: 1 } }
+  const target = { baseRef: "planner-version:v1:incarnation:7", targetRef: "opex:1", period: { start: "2027-01-01", end: "2027-01-31" }, currency: "USD", label: "v1 · opex:1 · USD" }
+  const calls: { operation: string; method: string; payload: unknown }[] = []
+  const state = { stale: false }
+  const html = sfDocumentScenarioWorkbench("procurement", ref)
+  await page.route("**/sucafina/procurement?*", async (route) => {
+    const request = route.request()
+    const url = new URL(request.url())
+    const operation = url.searchParams.get("sf") ?? ""
+    if (operation === "document-scenario") {
+      await route.fulfill({ headers: { "Content-Type": "text/html; charset=utf-8", "Content-Security-Policy": htmlPolicy(html) }, body: html })
+      return
+    }
+    const payload: unknown = request.method() === "POST" ? request.postDataJSON() : undefined
+    calls.push({ operation, method: request.method(), payload })
+    if (operation === "document-scenario-preview") {
+      expect(request.method()).toBe("POST")
+      expect(payload).toEqual({ documentRef: ref, baseRef: target.baseRef, targetRef: target.targetRef, period: target.period })
+      if (state.stale) { await route.fulfill({ status: 409, json: { status: "stale", reason: "document-scenario-source-changed" } }); return }
+      await route.fulfill({ json: { status: "ok", value: { domainApplied: false, evidence: { fieldCandidate: "Price", value: 42, unit: "USD", version: 7, ref },
+        scenario: { knownSubtotal: 1142, total: null, currency: "USD", costCoverage: { coverageState: "pending", issues: ["inventory-unavailable"] },
+          unresolvedConditions: ["scenario-is-hypothetical", "scenario-coverage-reassessment-required"], components: [{ id: "opex:1", amount: 42, currency: "USD", evidenceState: "hypothetical" }] } } } })
+      return
+    }
+    expect(request.method()).toBe("GET")
+    expect(JSON.parse(url.searchParams.get("ref") ?? "null")).toEqual(ref)
+    if (operation === "document-scenario-targets") { await route.fulfill({ json: { status: "ok", value: [target] } }); return }
+    expect(operation).toBe("document-open")
+    await route.fulfill({ json: { status: "ok", value: { title: "scenario.txt", location: `text:0-${excerpt.length}`, excerpt, href: "/sucafina/procurement?download=scenario" } } })
+  })
+  await page.goto("/sucafina/procurement?sf=document-scenario")
+  const root = page.locator("[data-document-scenario]")
+  await expect(root.getByRole("status")).toHaveText("Choose the destination and preview the scenario.")
+  await expect(root.getByLabel("Planner destination and month", { exact: true })).toHaveValue("0")
+  await expect(root.getByRole("button", { name: "Preview scenario", exact: true })).toBeEnabled()
+  return { root, calls, state }
+}
+
+test("WP06 document scenario renderer submits references only after explicit preview and preserves conditional totals", async ({ page }) => {
+  const fixture = await openDocumentScenario(page)
+  expect(fixture.calls.map((call) => call.operation)).toEqual(["document-scenario-targets", "document-open"])
+  await expect(fixture.root.getByText(excerpt, { exact: true })).toBeVisible()
+  await expect(fixture.root.locator("img")).toHaveCount(0)
+  await expect(page.locator("[data-injected]")).toHaveCount(0)
+  await fixture.root.getByRole("button", { name: "Preview scenario", exact: true }).click()
+  await expect(fixture.root.getByRole("status")).toHaveText("Scenario ready. Coverage remains conditional; no domain changes were applied.")
+  await expect(fixture.root.getByRole("heading", { name: "Simulation · no changes applied", exact: true })).toBeVisible()
+  await expect(fixture.root.getByText("Price: 42 USD · revision 7", { exact: true })).toBeVisible()
+  await expect(fixture.root.getByText("Evidence scenario-evidence", { exact: true })).toBeVisible()
+  await expect(fixture.root.getByText("Known subtotal: 1142 USD · Complete total: unavailable", { exact: true })).toBeVisible()
+  await expect(fixture.root.getByText("Cost coverage: pending · inventory-unavailable", { exact: true })).toBeVisible()
+  await expect(fixture.root.getByText("opex:1: 42 USD · hypothetical", { exact: true })).toBeVisible()
+  expect(fixture.calls.filter((call) => call.method === "POST")).toHaveLength(1)
+  await expect(fixture.root.getByRole("button", { name: /apply|confirm/i })).toHaveCount(0)
+})
+
+test("WP06 document scenario renderer removes prior result and source after a stale refusal", async ({ page }) => {
+  const fixture = await openDocumentScenario(page)
+  await fixture.root.getByRole("button", { name: "Preview scenario", exact: true }).click()
+  await expect(fixture.root.getByRole("status")).toHaveText("Scenario ready. Coverage remains conditional; no domain changes were applied.")
+  fixture.state.stale = true
+  await fixture.root.getByRole("button", { name: "Preview scenario", exact: true }).click()
+  await expect(fixture.root.getByRole("status")).toHaveText("document-scenario-source-changed")
+  await expect(fixture.root.locator("[data-result]")).toBeEmpty()
+  await expect(fixture.root.locator("[data-source]")).toBeEmpty()
+  await expect(fixture.root.getByRole("button", { name: "Preview scenario", exact: true })).toBeDisabled()
+  await expect(fixture.root.getByLabel("Planner destination and month", { exact: true })).toBeDisabled()
+  await expect(fixture.root.getByLabel("Planner destination and month", { exact: true })).toHaveValue("")
+  await expect(fixture.root.getByText("Evidence scenario-evidence", { exact: true })).toHaveCount(0)
+  expect(fixture.calls.filter((call) => call.operation === "document-scenario-preview")).toHaveLength(2)
 })

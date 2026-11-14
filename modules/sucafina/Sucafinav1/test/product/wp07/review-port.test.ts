@@ -103,14 +103,14 @@ test("preserved review survives changed projections and is denied after access r
   if (savedArtifact.status !== "ok") throw new Error(`artifact unavailable: ${savedArtifact.reason}`)
   const download = await persisted.download(savedArtifact.value.artifactRef, binding)
   expect(download.status).toBe(200)
-  expect(new Uint8Array(await download.arrayBuffer())).toEqual(artifacts[0]!)
+  expect(Array.from(new Uint8Array(await download.arrayBuffer()))).toEqual(Array.from(artifacts[0]!))
   const { renderPreservedReview } = await import("../../../product/reviews/render.ts")
   const slides = await renderPreservedReview(read.value, { title: "Review", format: "pptx", sectionRefs: ["forecast"] })
   if (!slides.ok) throw new Error("slides unavailable")
   artifactOperation.value = "slides-save"
   const savedSlides = await persisted.put({ reviewRef: "review-1", sectionRefs: ["forecast"], artifact: slides, format: "pptx", recordCount: 1, evidenceRefs: [evidence, evidence] }, binding)
   if (savedSlides.status !== "ok") throw new Error(`slides unavailable: ${savedSlides.reason}`)
-  expect(new Uint8Array(await (await persisted.download(savedSlides.value.artifactRef, binding)).arrayBuffer())).toEqual(slides.bytes)
+  expect(Array.from(new Uint8Array(await (await persisted.download(savedSlides.value.artifactRef, binding)).arrayBuffer()))).toEqual(Array.from(slides.bytes))
   const { createSfUiAuthority } = await import("../../../product/integration/ui-authority.ts")
   const { createReviewDownloadHandler } = await import("../../../product/reports/download.ts")
   const authority = createSfUiAuthority({
@@ -121,7 +121,7 @@ test("preserved review survives changed projections and is denied after access r
   const handler = createReviewDownloadHandler({ authority, storage: downloadStorage })
   const response = await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)
   expect(response.status).toBe(200)
-  expect(new Uint8Array(await response.arrayBuffer())).toEqual(artifacts[0]!)
+  expect(Array.from(new Uint8Array(await response.arrayBuffer()))).toEqual(Array.from(artifacts[0]!))
   expect((await handler(new Request("https://example.test/report", { method: "POST" }), savedArtifact.value.artifactRef)).status).toBe(405)
   access.comments = false
   expect((await handler(new Request("https://example.test/report"), savedArtifact.value.artifactRef)).status).toBe(403)

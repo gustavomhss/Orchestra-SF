@@ -423,7 +423,7 @@ export function createApplication(mount: string, application: Application) {
           ? `<label>FY<select data-year="sidebar" data-query="year">${[2024, 2025, 2026, 2027].map((year) => `<option value="${year}"${year === sidebar ? " selected" : ""}>${year}</option>`).join("")}</select></label>`
           : "",
       )
-      const toolsHtml = application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a>${surface === "planner" || surface === "dashboard" ? `<a href="${mount}/${surface}?sf=imports">Imports</a>` : ""}<a href="${mount}/${surface}?sf=documents">Documents</a><!--local-tools-->`) : html
+      const toolsHtml = application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a>${surface === "planner" || surface === "dashboard" ? `<a href="${mount}/${surface}?sf=imports">Imports</a>` : ""}<a href="${mount}/${surface}?sf=documents">Documents</a>${surface === "procurement" ? `<a href="${mount}/procurement?sf=sourcing-dossier">Sourcing dossier</a>` : ""}<!--local-tools-->`) : html
       const finalHtml = application.productHtml?.(toolsHtml, surface, page) ?? toolsHtml
       return {
         commit: snapshot.audit.length !== auditBefore,

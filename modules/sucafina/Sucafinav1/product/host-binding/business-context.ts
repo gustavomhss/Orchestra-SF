@@ -1,5 +1,5 @@
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
-import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, SfAtlasProjection } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
 import { createSfAtlasMemory } from "./atlas-memory.ts"
@@ -167,10 +167,7 @@ export function createSfAtlasBusiness(input: {
 }) {
   const dashboard = createSfDashboardSourceAccess({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard })
   const dashboardRecord = createSfDashboardRecordSourceAccess({ host: input.host, records: input.dashboardRecords })
-  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, authorizeEvidence: async (refs, call) => {
-    const results = await context.context({ refs }, call)
-    return results.length === refs.length && results.every((result, index) => (result.state === "fresh" || result.state === "historical") && digestSfValue(result.ref) === digestSfValue(refs[index])) && await input.host.revalidate(call)
-  } })
+  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, cases: input.cases })
   const procurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
   const document = createSfDocumentSourceAccess({ host: input.host, read: input.documentRead })
   const planner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
@@ -212,11 +209,23 @@ export function createSfAtlasBusiness(input: {
     recall: async (request, call) => {
       const records = await Promise.all(request.caseRefs.map((ref) => memory.recall(ref, call)))
       if (records.some((result) => result.status !== "ok")) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
-      return records.flatMap((result) => result.status === "ok" ? result.records : [])
+      return records.flatMap((result) => result.status === "ok" ? result.records : []).map((record) => {
+        if (record.envelope.kind !== "task" || !isSfAtlasTaskEntry(record.entry)) throw new Error("SF_MEMORY_ENTRY_UNAVAILABLE")
+        return { envelope: record.envelope, entry: record.entry }
+      })
     },
     emitFromLedger: (ref, call) => memory.emitFromLedger(ref, call),
   })
   const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
   return { context, memory, capabilities }
+}
+
+/** The shared Atlas entry union also contains entries outside this product's task contract. */
+function isSfAtlasTaskEntry(value: unknown): value is Extract<SfAtlasProjection, { kind: "task" }>["entry"] {
+  return !!value && typeof value === "object" && !Array.isArray(value) &&
+    "taskId" in value && typeof value.taskId === "string" && "stoppedAt" in value && typeof value.stoppedAt === "string" &&
+    "lesson" in value && typeof value.lesson === "string" && "ref" in value && typeof value.ref === "string" &&
+    "attempted" in value && Array.isArray(value.attempted) && value.attempted.every((item) => typeof item === "string") &&
+    "failedWith" in value && Array.isArray(value.failedWith) && value.failedWith.every((item) => typeof item === "string")
 }

@@ -3,7 +3,13 @@ import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { randomUUID } from "node:crypto"
-import { NO_SCANNER_NAME } from "@orchestra/atlas-boundary/native-memory"
+import { KNOWN_SCANNERS, NO_SCANNER_NAME } from "@orchestra/atlas-boundary/native-memory"
+import { AppProcess } from "@orchestra/core/process"
+import { BackendToolkit } from "@orchestra/core/backend-toolkit"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { Effect } from "effect"
+import { ChildProcess } from "effect/unstable/process"
+import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { roleMap } from "../../../runtime/admin.ts"
 import { resolve } from "../../../src/identity.ts"
@@ -15,7 +21,9 @@ import { createDashboardSourceIssuer } from "../../../product/integration/dashbo
 import { createDashboardSourceHost } from "../../../product/dashboard/sources.ts"
 import { createDashboardPort } from "../../../product/dashboard/port.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
-import { createSfAtlasMemory } from "../../../product/host-binding/atlas-memory.ts"
+import { createSfAtlasMemory, rankSfAtlasRecall } from "../../../product/host-binding/atlas-memory.ts"
+import { createSfCaseRecall } from "../../../product/decision-memory/case-recall.ts"
+import { deriveAuthorizedRecallFeatures } from "../../../product/decision-memory/case-features.ts"
 import { createSfAtlasScanner } from "../../../product/host-binding/atlas-scanner.ts"
 import { createDecisionCasePort, encodeCaseRef, parseCaseRef } from "../../../product/decisions/case-port.ts"
 import { createSfCaseEventSourceAccess, createSfDashboardContinuityProof, createSfDashboardSourceAccess, createSfSourceContinuityProof } from "../../../product/decision-memory/source-access.ts"
@@ -28,12 +36,17 @@ const binding = (id: string): TrustedDomainContext => ({ kind: "ui", binding: { 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 
 test("protected Atlas original binds cross-principal continuity after store reopen", async () => {
-  const version = Bun.env.SF_ATLAS_SCANNER_VERSION
-  expect(version).toBeTruthy() // CI preflight must supply the observed version; a fake scanner cannot satisfy this test.
-  if (!version) throw new Error("SF_ATLAS_SCANNER_VERSION preflight missing")
-  const scanner = createSfAtlasScanner()
-  expect(scanner.name).not.toBe(NO_SCANNER_NAME)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-atlas-source-handoff-"))
+  try {
+    expectSpawn(import.meta.path)
+    const pinned = KNOWN_SCANNERS.find((item) => item.name === "gitleaks")
+    if (!pinned) throw new Error("The pinned Atlas scanner spec is unavailable")
+    const spec = { ...pinned, command: (await Effect.runPromise(BackendToolkit.ensure("gitleaks").pipe(Effect.provideService(BackendToolkit.Root, path.join(directory, "toolkit"))))).executable }
+    const probe = await Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(spec.command, ["--version"], { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+    const version = probe.stdout.toString("utf8").trim()
+    if (probe.exitCode !== 0 || !version) throw new Error("Could not determine the Atlas scanner version")
+    const scanner = createSfAtlasScanner({ scanners: [spec] })
+    expect(scanner.name).not.toBe(NO_SCANNER_NAME)
   let store = await openLocalStore(directory, { lockTimeoutMs: 500 })
   const session = { id: "alice", active: true }
   const time = "2026-11-13T12:00:00Z"
@@ -60,7 +73,7 @@ test("protected Atlas original binds cross-principal continuity after store reop
     const eventProof = createSfSourceContinuityProof({ host, readOriginal, readCurrent: eventAccess })
     const proveContinuity = (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => original.kind === "record" && original.target.surface === "dashboard" ? dashboardProof(original, current, call) : original.kind === "case-event" ? eventProof(original, current, call) : Promise.resolve(false)
     atlas = createSfAtlasMemory({ state, cases, host, evidence, scanner, scannerVersion: version, now: () => time, proveContinuity })
-    return { persistence, host, issue, dashboard, source, state, cases, atlas }
+    return { persistence, host, issue, dashboard, source, state, cases, atlas, proveContinuity }
   }
   try {
     const first = await open(true)
@@ -71,7 +84,7 @@ test("protected Atlas original binds cross-principal continuity after store reop
     const event: CaseLedgerEvent = { id: "event", caseRef: { id: "case", incarnation: "case-inc", version: 1 }, kind: "analysis-accepted", principalRef: "alice", at: time, consideredActions: ["renewal"], factualGaps: [], lifecycleState: "investigating", rationale: "Compare the authorized source", evidenceRefs: [source], outputDigest: "c".repeat(64) }
     const base: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: "event-ref", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "decision", target: { caseId: "case", caseIncarnation: "case-inc", caseVersion: 1, eventId: event.id, outputDigest: event.outputDigest, evidenceRefs: [source] } }
     const eventRef = { ...base, refDigest: digestSfEvidenceRef(base) }
-    const decision: DecisionCase = { id: "case", incarnation: "case-inc", version: 1, state: "investigating", objective: "Compare", horizon: period, currency: "USD", criteria: [{ id: "cost", description: "Cost", required: true }], participants: ["alice", "bob"], sourceRefs: [source], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [event] }
+    const decision: DecisionCase = { id: "case", incarnation: "case-inc", version: 1, state: "investigating", objective: "Compare", horizon: period, currency: "USD", criteria: [{ id: "cost", description: "Cost", required: true }], participants: ["alice", "bob"], sourceRefs: [source], alternatives: [], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "renewal", categoryIds: [], additionalCategoryIds: [], sourceRefs: [source] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [event] }
     const key = JSON.stringify(["case", "case-inc", event.id])
     const seed = await first.state.transaction(new Request("https://example.test", { headers: { authorization: "alice" } }), { namespace: "cases", expectedStorageVersion: 0, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: 0 }], idempotencyKey: "seed", commandDigest: digestSfValue(eventRef), targetRef: "seed", targetIncarnation: "seed" }, async (state) => { state.cases.case = decision; state.outbox[key] = { eventRef, writerPrincipalRef: "alice", accessRevision: "1", createdAt: time, attempts: 0, state: "pending" }; return { commit: true, value: null } })
     expect(seed.status).toBe("ok")
@@ -91,11 +104,21 @@ test("protected Atlas original binds cross-principal continuity after store reop
     const recall = await reopened.atlas.recall({ id: "case", incarnation: "case-inc" }, binding("bob"))
     expect(recall.status).toBe("ok")
     if (recall.status === "ok") expect(recall.records).toHaveLength(1)
+    const caseRecall = createSfCaseRecall({ host: reopened.host, cases: reopened.cases, memory: reopened.atlas, selectCandidates: async () => [{ id: "case", incarnation: "case-inc" }], featuresForCase: async (value, call) => deriveAuthorizedRecallFeatures(value, call), runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" }, proveContinuity: reopened.proveContinuity, rank: rankSfAtlasRecall })
+    const recallRequest = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, limit: 10, scope: { query: "renewal", recallScope: { cases: [{ id: "case", incarnation: "case-inc", version: 1 }], period, includeHistorical: false } } }
+    const caseMatches = await caseRecall(recallRequest, binding("bob"))
+    expect(caseMatches.status).toBe("ok")
+    if (caseMatches.status !== "ok") throw new Error("Actual Atlas case recall unavailable")
+    expect(caseMatches.matches).toHaveLength(1)
+    expect(caseMatches.matches[0]?.explanation.candidateCaseRef).toEqual(recallRequest.caseRef)
+    expect((await caseRecall({ ...recallRequest, scope: { ...recallRequest.scope, recallScope: { ...recallRequest.scope.recallScope, cases: [] } } }, binding("bob"))).status).toBe("unavailable")
     const forged = { ...source, refId: "forged" }
     expect(await proof({ ...forged, refDigest: digestSfEvidenceRef(forged) }, current.currentRef, binding("bob"))).toBe(false)
     session.active = false
+    expect((await caseRecall(recallRequest, binding("bob"))).status).toBe("unavailable")
     expect(await proof(original, current.currentRef, binding("bob"))).toBe(false)
     expect((await reopened.atlas.recall({ id: "case", incarnation: "case-inc" }, binding("bob"))).status).toBe("unavailable")
     expect(await reopened.atlas.readOriginal({ id: "case", incarnation: "case-inc" }, source.refDigest, binding("bob"))).toBeUndefined()
-  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
-})
+  } finally { await store.dispose() }
+  } finally { await rm(directory, { recursive: true, force: true }) }
+}, 180_000)

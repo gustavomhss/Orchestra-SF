@@ -11,9 +11,25 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   const body = await request.text()
   if (new TextEncoder().encode(body).byteLength > 65536) return reply({ status: "invalid" }, 413)
   const parsed: unknown = await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined)
-  if (!record(parsed) || (parsed.action !== "start" && parsed.action !== "read" && parsed.action !== "cancel" && parsed.action !== "list" && parsed.action !== "output")) return reply({ status: "invalid" }, 400)
+  if (!record(parsed) || (parsed.action !== "start" && parsed.action !== "read" && parsed.action !== "cancel" && parsed.action !== "list" && parsed.action !== "output" && parsed.action !== "prepare")) return reply({ status: "invalid" }, 400)
   if (!runtime.analyses) return reply({ status: "unavailable" }, 503)
   const action = parsed.action
+  if (action === "prepare") {
+    if (!runtime.analysisInputs) return reply({ status: "unavailable" }, 503)
+    const selected = record(parsed.input) && Object.keys(parsed.input).every((key) => key === "request" || key === "selection") && "selection" in parsed.input ? parsed.input : undefined
+    const wanted = selected && readAnalysisRequest(selected.request)
+    if (!selected || !wanted || Object.keys(parsed).some((key) => key !== "action" && key !== "input")) return reply({ status: "invalid" }, 400)
+    const input = { request: wanted, selection: selected.selection }
+    const admitted = await runtime.human.admit(request, "analysis.prepare", input)
+    if (admitted.status !== "ok") return reply({ status: admitted.status }, admitted.status === "unavailable" ? 503 : 403)
+    try {
+      const result = await runtime.analysisInputs.prepare(admitted.value, input).catch(() => undefined)
+      if (!result) return reply({ status: "unavailable" }, 503)
+      if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+      if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+      return reply(result, 200)
+    } finally { runtime.human.finish(admitted.value) }
+  }
   const input = action === "start" ? await analysisInput(parsed.input, runtime) : action === "list" ? caseInput(parsed.caseRef) : typeof parsed.runRef === "string" && parsed.runRef.trim() ? { runRef: parsed.runRef } : undefined
   if (!input || Object.keys(parsed).some((key) => key !== "action" && key !== (action === "start" ? "input" : action === "list" ? "caseRef" : "runRef"))) return reply({ status: "invalid" }, 400)
   const admitted = await runtime.human.admit(request, action === "list" || action === "output" ? "analysis.read" : `analysis.${action}`, input)
@@ -27,7 +43,7 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     if (!result) return reply({ status: "unavailable" }, 503)
     if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-    if (action === "read" && "state" in result.value) return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...(result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
+    if (action === "read" && "runRef" in result.value && "version" in result.value && "state" in result.value) return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...(result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
     if (action === "output" && "kind" in result.value) {
       const output = result.value
       const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)
@@ -48,17 +64,22 @@ function caseInput(value: unknown) {
 }
 
 async function analysisInput(value: unknown, runtime: SfHostServices) {
-  if (!record(value) || Object.keys(value).some((key) => !["request", "skillInput", "model"].includes(key)) || !("skillInput" in value) || !record(value.request)) return undefined
-  const request = value.request
-  const caseRef = request.caseRef
-  if (!record(caseRef)) return undefined
+  if (!record(value) || Object.keys(value).some((key) => !["request", "skillInput", "model"].includes(key)) || !("skillInput" in value)) return undefined
+  const request = readAnalysisRequest(value.request)
+  if (!request) return undefined
+  const model = (await runtime.models().catch(() => [])).find((item) => digestSfValue(item) === digestSfValue(value.model))
+  return model ? { request, skillInput: value.skillInput, model } : undefined
+}
+
+function readAnalysisRequest(value: unknown) {
+  if (!record(value) || !record(value.caseRef)) return undefined
+  const request = value
+  const caseRef = value.caseRef
   if (Object.keys(request).some((key) => !["caseRef", "profileId", "profileVersion", "skillId", "skillVersion", "manifestDigest", "outputSchemaVersion", "requestedOperationScope", "objective"].includes(key)) ||
     Object.keys(caseRef).some((key) => !["id", "incarnation", "version"].includes(key)) ||
-    typeof caseRef.id !== "string" || typeof caseRef.incarnation !== "string" || !Number.isSafeInteger(caseRef.version) ||
+    typeof caseRef.id !== "string" || typeof caseRef.incarnation !== "string" || typeof caseRef.version !== "number" || !Number.isSafeInteger(caseRef.version) ||
     typeof request.profileId !== "string" || typeof request.profileVersion !== "string" || typeof request.skillId !== "string" || typeof request.skillVersion !== "string" ||
     typeof request.manifestDigest !== "string" || typeof request.outputSchemaVersion !== "string" || typeof request.objective !== "string" ||
     !Array.isArray(request.requestedOperationScope) || !request.requestedOperationScope.every((item) => typeof item === "string")) return undefined
-  const model = (await runtime.models().catch(() => [])).find((item) => digestSfValue(item) === digestSfValue(value.model))
-  if (!model) return undefined
-  return { request: { caseRef: { id: caseRef.id, incarnation: caseRef.incarnation, version: caseRef.version as number }, profileId: request.profileId, profileVersion: request.profileVersion, skillId: request.skillId, skillVersion: request.skillVersion, manifestDigest: request.manifestDigest, outputSchemaVersion: request.outputSchemaVersion, requestedOperationScope: request.requestedOperationScope, objective: request.objective }, skillInput: value.skillInput, model }
+  return { caseRef: { id: caseRef.id, incarnation: caseRef.incarnation, version: caseRef.version }, profileId: request.profileId, profileVersion: request.profileVersion, skillId: request.skillId, skillVersion: request.skillVersion, manifestDigest: request.manifestDigest, outputSchemaVersion: request.outputSchemaVersion, requestedOperationScope: request.requestedOperationScope, objective: request.objective }
 }
