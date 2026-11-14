@@ -1,0 +1,137 @@
+{
+  "schema": "sf2h-current-choice-terminal-handoff-v1",
+  "mission": 46,
+  "cohort": "CURRENT-CHOICE-COHORT",
+  "delivery_state": "COMPLETE_SOURCE_IMPLEMENTATION_AND_QUALIFICATION_RELEASED_FOR_INTEGRATION",
+  "terminal": true,
+  "source_authority": "RELEASED",
+  "pr": 35,
+  "branch": "astra-finance",
+  "product": {
+    "sha": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+    "tree": "73beb3558437a2b8671f7d88aad4332304af2d75",
+    "production_last_changed": "5de6b03d563dadcfb9a7a582bfb44c1d391c911d"
+  },
+  "terminal_commit": "Containing docs-only Git commit; exact SHA is published in the PR35 terminal comment. No recursive self-hash claim.",
+  "commits": [
+    {
+      "stage": "ACK",
+      "sha": "90920c34546517baad267b3ee93705f7fc1016a3",
+      "parent": "ec052c2c3bef96f492512f3d5f663919580f25c8"
+    },
+    {
+      "stage": "W1",
+      "sha": "5de6b03d563dadcfb9a7a582bfb44c1d391c911d",
+      "purpose": "Owned production fence, binding and promotion/replay; actual adapter tests."
+    },
+    {
+      "stage": "W2",
+      "sha": "c67d62cf9a33faef900322e37f83cf2a567b8f38",
+      "purpose": "Actual canonical producer lifecycle and W1 evidence; observed new test replay/type/receipt-gate failures retained."
+    },
+    {
+      "stage": "W3",
+      "sha": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+      "purpose": "Correct test observer composition/narrowing; remove prohibited raw logs; actual32-test source PASS."
+    },
+    {
+      "stage": "W4",
+      "sha": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+      "purpose": "Preserve all four C12 read-fence cases; deliver complete owned/shared v3 patches; actual supplemental4-test PASS."
+    }
+  ],
+  "validation": {
+    "core_receipt": "ci/W3-validation.json",
+    "supplement_receipt": "ci/W4-validation.json",
+    "supplement_selection_reason": "ci/W4-scope.json",
+    "typecheck_delta": "ci/typecheck-delta-final.json",
+    "history_receipts": [
+      "ci/W1-validation.json",
+      "ci/W2-validation.json"
+    ],
+    "tests": "32pass0fail +4pass0fail,34unique names with2overlap; never one34-case run.",
+    "final_check": {
+      "run": 43653793969,
+      "job": 132627781768,
+      "overall": "failure",
+      "typecheck": "failure;131pre-existing external,0owned,exact same path/location/code multiset",
+      "guards": "success;78rules,1127historicalpaths,0gate,14warn,0errors"
+    }
+  },
+  "deliverables": {
+    "human_handoff": "terminal-handoff.md",
+    "source_release": "source-release.json",
+    "criterion_mapping": "criteria.json",
+    "exact_pins_and_dependencies": "integration-pins-final.json",
+    "independent_review": "independent-review-46.json",
+    "owned_selective_patch": "integration/owned-cohort.patch",
+    "owned_manifest": "integration/owned-manifest.json",
+    "shared_complete_patch": "shared-for-42/mission46-current-choice-composition-v3.patch",
+    "shared_manifest": "shared-for-42/manifest-v3.json",
+    "shared_integration_guide": "shared-for-42/INTEGRATION-v3.md"
+  },
+  "integration": {
+    "owner": "session42",
+    "final_acceptance_owner": "S0",
+    "observed_candidate": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "strategy": "Nine exact owned files plus six-path complete shared patch, after fresh preimage reconciliation. No whole-branch/control merge.",
+    "shared_status": "NOT_APPLIED_NOT_TYPECHECKED_NOT_RUNTIME_TESTED",
+    "source_green_transfers_to_C": false,
+    "remaining_gaps": [
+      {
+        "id": "M46-COMPOSED-C",
+        "owner": "session42/S0",
+        "state": "PENDING",
+        "requirement": "Compose the fence immediately above the current actual driver, preserve producer/authority identity, and execute source regressions plus actual HTTP/UI journey on one exact C. Observed candidate driver/provider/Planner/business/cost-coverage differ from source qualification."
+      },
+      {
+        "id": "M46-SHARED-UI",
+        "owner": "session42",
+        "state": "NOT_APPLIED_NOT_RUN",
+        "requirement": "Apply/reconcile the complete shared v3 patch; qualify discovery, current coverage, explicit prepare/review/promotion, revoked access and idempotent lost-response UI recovery. Historical Atlas protected capture is required; missing ancestry remains unavailable."
+      },
+      {
+        "id": "M46-TYPECHECK-EXTERNAL",
+        "owner": "respective path owners/integrator",
+        "state": "BLOCKED_OUTSIDE_WRITE_PATHS",
+        "requirement": "Resolve the131unchanged external package diagnostics; source package check is not green."
+      },
+      {
+        "id": "M46-NUMERIC-LITERAL",
+        "owner": "canonical financial owners/S0",
+        "state": "PARTIAL",
+        "requirement": "WP11.T02.CHK.21 andWP11.T03.CHK.20 remain partial: lifecycle observes knownSubtotal250000 but totalnull/conditioned; complete total250000, difference-10000, threshold15000/min20000 and omitted/zero/not-applicable branches require their canonical full proof. Do not upgrade hypotheses or change engines/policy in this mission."
+      },
+      {
+        "id": "M46-NATIVE-RESIDENT",
+        "owner": "native/consumer owners/S0",
+        "state": "NOT_RUN",
+        "requirement": "Installed browser, native/MCP equivalence, resident model and all consumer edges are not certified by this source test selection."
+      }
+    ]
+  },
+  "criteria": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/criteria.json",
+    "literal_ids": 83,
+    "literal_text_preserved": true,
+    "canonical_status_override": false,
+    "scoped_counts": {
+      "VERIFIED_WITHIN_COHORT": 12,
+      "PARTIAL": 38,
+      "DEPENDENCY_EVIDENCE_ONLY": 5,
+      "OUTSIDE_MISSION": 28
+    },
+    "canonical_global_pass_count": 0
+  },
+  "assertions": {
+    "all_written_source_paths_within_packet": true,
+    "source_change_of_shared_host_runtime_policy_engine": false,
+    "local_product_tests": false,
+    "epic": false,
+    "dev_merge": false,
+    "deploy": false,
+    "original_plan_and_history_preserved": true,
+    "GLOBAL_RELEASE_unchanged": true
+  },
+  "followup_required": "No further mission46 source writer remains active. session42 may selectively consume this released increment and route integration findings to the actual owners; S0 retains final acceptance."
+}

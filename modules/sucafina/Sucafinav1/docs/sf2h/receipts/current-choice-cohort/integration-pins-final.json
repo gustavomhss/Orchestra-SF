@@ -1,0 +1,313 @@
+{
+  "schema": "sf2h-current-choice-integration-pins-v1",
+  "mission": 46,
+  "cohort": "CURRENT-CHOICE-COHORT",
+  "branch": "astra-finance",
+  "pr": 35,
+  "packet": {
+    "sha": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+    "T0": "2026-11-13T04:01:10Z",
+    "lease_epoch": "current-choice-browser46"
+  },
+  "source": {
+    "initial": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "W": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+    "tree": "73beb3558437a2b8671f7d88aad4332304af2d75",
+    "production_last_changed": "5de6b03d563dadcfb9a7a582bfb44c1d391c911d",
+    "validation_core_W": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+    "core_receipt": "ci/W3-validation.json",
+    "supplement_receipt": "ci/W4-validation.json",
+    "terminal_receipts_only": "The later terminal commit changes only this receipt directory; source/test blobs remain those listed here.",
+    "final_checks": {
+      "receipt": "ci/W4-validation.json",
+      "typecheck": "FAIL_131_EXTERNAL_ZERO_CURRENT_CHOICE",
+      "guards": "PASS_ZERO_GATES"
+    }
+  },
+  "candidate": {
+    "packet_C12": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "shared_patch_previous_base": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "observed_cutoff": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "current_choice_paths_unchanged_between_C12_and_cutoff": true,
+    "new_test_directory_absent_at_C12_and_cutoff": true,
+    "qualification_status": "NOT_RUN_ON_COMPOSED_C"
+  },
+  "outputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "db487cd1b6263835302e9bcf80499d18531aa592",
+      "predecessor_blob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "composed_C12_blob": "c27e908140ba34ffea39078a78626f47943a8444",
+      "observed_candidate_blob": "c27e908140ba34ffea39078a78626f47943a8444",
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Preserve and supersede C12 exact Request defense with joint persistence authority/snapshot fence."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "blob": "6333d208823355d26b2c02259859a13e0eae9b19",
+      "predecessor_blob": "2441642f59179516da09c9f9780b1b4764f6fd83",
+      "composed_C12_blob": "2441642f59179516da09c9f9780b1b4764f6fd83",
+      "observed_candidate_blob": "2441642f59179516da09c9f9780b1b4764f6fd83",
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Deliver exact owned output; no foreign path overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "blob": "349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae",
+      "predecessor_blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "composed_C12_blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "observed_candidate_blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Deliver exact owned output; no foreign path overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "blob": "b2f96bec220a6ec2f674057546541d5a700e969e",
+      "predecessor_blob": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+      "composed_C12_blob": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+      "observed_candidate_blob": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Deliver exact owned output; no foreign path overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "blob": "e3b25caeece77ca1d755bc64e8253ca003179793",
+      "predecessor_blob": "46b004a1b374229ad46077930134ba0469213087",
+      "composed_C12_blob": "87e24342ee27b98e26b29a69a2f8de6b7bf7206c",
+      "observed_candidate_blob": "87e24342ee27b98e26b29a69a2f8de6b7bf7206c",
+      "qualified_by": "W4 supplemental source file gate run43653791489/job132627774817 PASS4/0",
+      "decision": "Preserve all four C12 cases and assertions; compose the branded fence and external observation provider."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+      "blob": "dd5c155115190cf4af4ab76ec37970e3df268253",
+      "predecessor_blob": null,
+      "composed_C12_blob": null,
+      "observed_candidate_blob": null,
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Deliver exact owned output; no foreign path overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+      "blob": "1f7e6cb2716cb2b17084ab599219f7651961e485",
+      "predecessor_blob": null,
+      "composed_C12_blob": null,
+      "observed_candidate_blob": null,
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Deliver exact owned output; no foreign path overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+      "blob": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3",
+      "predecessor_blob": null,
+      "composed_C12_blob": null,
+      "observed_candidate_blob": null,
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Deliver exact owned output; no foreign path overwrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "blob": "084f7050ca7f45fe22962207f706a5e0d71e3a93",
+      "predecessor_blob": null,
+      "composed_C12_blob": null,
+      "observed_candidate_blob": null,
+      "qualified_by": "W3 source gate run43653193008/job132625941654 PASS32/0; exact bytes retained atW4",
+      "decision": "Deliver exact owned output; no foreign path overwrite."
+    }
+  ],
+  "source_dependencies_observed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "9a2da03da92ce07fc8506c72dc1f4139143a7615",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "blob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/source-issuer.ts",
+      "blob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts",
+      "blob": "75237c53bf97c33d8a192cb6166284576817f4ca",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "source": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+    }
+  ],
+  "test_support_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "source": "61a7a7eab8dd12e1767e9343398acea7becbff42"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "source": "6470bebdc9bb5044df7959e697cb7d8629157e23"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "source": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "source": "61a7a7eab8dd12e1767e9343398acea7becbff42"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "source": "6470bebdc9bb5044df7959e697cb7d8629157e23"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "source": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1"
+    }
+  ],
+  "observed_candidate_dependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "blob": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "blob": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "blob": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "source": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    }
+  ],
+  "dependency_rule": "All source tests execute the exact transitive tree of their W/S pins. These are material dependency pins, not a claim that source and composed runtimes are identical. Do not downgrade current candidate dependencies to reproduce a green. Reconcile with actual owner and rerun the same applicable source selection plus the composed HTTP/UI consumer in one exact C.",
+  "owned_patch": {
+    "path": "integration/owned-cohort.patch",
+    "base": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "sha256": "e4c649eae4fdffac0b5fe72dfbb106b12d75df6a0bc04ebdd865977ae14a9ad8",
+    "blob": "9c11c83f1fa3d62b26a16f2fbd8e8e5a46c538a7",
+    "paths": 9,
+    "complete": true
+  },
+  "shared_patch": {
+    "path": "shared-for-42/mission46-current-choice-composition-v3.patch",
+    "manifest": "shared-for-42/manifest-v3.json",
+    "guide": "shared-for-42/INTEGRATION-v3.md",
+    "base": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "sha256": "d036ee32780f10c6e217a1608701e3de3aa520143b2b2fe03f91d87ca5a03d9f",
+    "blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+    "paths": 6,
+    "complete": true,
+    "status": "NOT_APPLIED_NOT_TYPECHECKED_NOT_RUNTIME_TESTED",
+    "supersedes": [
+      "mission46-current-choice-composition.patch",
+      "mission46-current-choice-composition-v2.patch"
+    ],
+    "apply_rule": "Apply only the complete v3, never cumulatively; verify six preimages on the actual integration HEAD first. Preserve new Procurement/Decisions44 content. Host composition must install the fence directly above the real driver before lifecycle/authority/producers."
+  },
+  "scope": {
+    "all_within_packet": true,
+    "shared_target_paths_edited_on_source": [],
+    "engines_or_policies_changed": [],
+    "local_product_executions": 0,
+    "merge_dev": false,
+    "deploy": false,
+    "observed_diff_head": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+    "changed_paths_since_initial_at_W4": 30,
+    "terminal_receipts_delta": "The later terminal docs-only commit adds/updates receipts in the same allowed directory; its exact final path count is checked remotely and recorded in the PR35 terminal comment."
+  },
+  "preservation": {
+    "source_ancestors_preserved": true,
+    "canonical_plan_or_criteria_rewritten": false,
+    "historical_finance_handoff_unchanged": true,
+    "history_notes": "W2 failure and removed raw logs remain in immutable history. Final tree retains structured actual receipts and CI URLs. C12 late lease tests retained; no skip or timeout raised."
+  }
+}

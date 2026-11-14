@@ -28,9 +28,10 @@
     },
     {
       "id": "M46-C12-READ-TESTS",
-      "status": "PRESERVED_PENDING_W4_GATE",
+      "status": "PRESERVED_VALIDATED_W4",
       "finding": "Composed C12 had two additional late namespace lease cases absent from the original Finance source.",
-      "resolution": "All four C12 cases/assertions retained with the owned fence; inspect persisted state using the external provider after old lease revocation. Existing twenty-eight real adapter cases remain decisive."
+      "resolution": "All four C12 cases/assertions retained with the owned fence; inspect persisted state using the external provider after old lease revocation. Existing twenty-eight real adapter cases remain decisive.",
+      "validation": "run43653791489/job132627774817:4pass0fail45expect"
     }
   ],
   "shared_findings": [
@@ -92,5 +93,13 @@
     "paths": 6,
     "status": "NOT_APPLIED_TO_SOURCE_NOT_TYPECHECKED_NOT_RUNTIME_TESTED",
     "text_verification": "Root reconstructed all six files against pinned08ff preimages; every output blob matches. Independent reviewer compared fourteen hunks and seven updated dependencies. No runtime/UI execution."
+  },
+  "canonical_producer_gate": {
+    "status": "PASS_W3",
+    "source": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+    "run": 43653193008,
+    "job": 132625941654,
+    "prior_failed_run": 43652473765,
+    "resolution": "Source observer test composition corrected; producer, registry and all assertions retained; full canonical lifecycle and replay nowpass."
   }
 }
