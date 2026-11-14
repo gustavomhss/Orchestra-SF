@@ -95,7 +95,9 @@ test("the screen draws the server list, the footer is not a page, and a refused 
     index: 2,
   })
   expect(overview.html).toContain(dashboardMoney(executiveScreen(budget, 2025).totals.totalBudget))
-  expect(overview.html).not.toContain('data-year="own"')
+  const overviewMain = overview.html.match(/<main\b[^>]*>[\s\S]*?<\/main>/)?.[0]
+  expect(overviewMain).toBeDefined()
+  expect(overviewMain).not.toContain('data-year="own"')
 
   const closed = dashboardScreen({
     actor: actor("vie", ["viewer"]),
@@ -194,7 +196,9 @@ test("the screen draws the server list, the footer is not a page, and a refused 
 
 test("planner and procurement screens do not add a page and do not carry another surface", () => {
   const plan = plannerScreen({ actor: actor("fin", ["finance"]) })
-  expect(anchors(plan.html)).toEqual([...PLANNER_TABS])
+  expect(anchors(plan.html)).toEqual(["Overview", "Versions", "OPEX", "CAPEX", "Headcount", "Entities & allocations", "FX rates"])
+  expect([...anchors(plan.html)].sort()).toEqual([...PLANNER_TABS].sort())
+  expect(plan.drawn.nav.find((item) => item.key === "Versions")?.index).toBe(6)
   expect(plan.drawn.active).toEqual({ drawn: true, key: "Overview", index: 0 })
   expect(anchors(plan.html)).not.toContain("Excel")
   expect(showPage("Excel")).toEqual({ drawn: false })

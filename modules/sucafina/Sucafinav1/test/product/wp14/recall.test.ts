@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../../../product/contracts/canonical.ts"
+import { decideSfRecallInvalidation } from "../../../product/decision-memory/invalidation.ts"
 import { deriveSfMemoryOwner } from "../../../product/decision-memory/atlas-projection.ts"
 import { planSfRecallInvalidation, rankSfRecalledCases, rankSfRecalledCasesAuthorized, sfRecallCacheKey } from "../../../product/decision-memory/recall.ts"
 import type { BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
@@ -19,8 +20,7 @@ const scope: RecallScope = { installationId: "install", projectId: "project", pr
 const entry = { taskId: "sf-work:prior:event", attempted: ["renewal"], failedWith: [], stoppedAt: "chosen", lesson: "Compare", ref: `sf-evidence:v1:${bundle.refId}:${bundle.refDigest}` }
 const projection = { kind: "task", owner, entry, sourceEventId: "event", evidenceRefs: [bundle, ref] }
 const authorizedProjection: DomainProjection = { context: { installationId: "install", projectId: "project", principalRef: "alice", accessRevision: "a1", policyVersion: "p1", surface: "planner", period: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", sourceRefs: [], capabilities: ["read"] }, version: 1, engineVersion: "test-v1", components: [], values: [], missing: [] }
-const ledgerEvent = { id: "event", caseRef: { id: "prior", incarnation: "one", version: 1 }, kind: "choice-recorded", principalRef: "alice", at: "2026-01-01T00:00:00Z", consideredActions: ["renewal"], factualGaps: [], lifecycleState: "chosen", rationale: "Compare", evidenceRefs: [ref], outputDigest: "e".repeat(64) } as const
-const candidate = { entry, envelope: { ...projection, kind: "task", projectionDigest: digestSfValue(projection), caseRef: { id: "prior", incarnation: "one", version: 1 }, accessRevision: "a1", ...maps, dependencies: [ref], schemaVersion: 1, eventId: "atlas-event", writerPrincipalRef: "alice", scannerReceipt: { name: "fixture", version: "1", status: "clean", digest: "c".repeat(64) }, createdAt: "2026-01-01T00:00:00Z" }, case: { context: { installationId: "install", projectId: "project", principalRef: "alice", accessRevision: "a1", policyVersion: "p1", kind: "ui" }, case: { id: "prior", incarnation: "one", version: 1, state: "chosen", objective: "Renew", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: [], participants: ["alice"], sourceRefs: [ref], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [ledgerEvent] }, events: [ledgerEvent], evidenceRefs: [ref], checkedAt: "2026-01-01T00:00:00Z" }, features, resolutions: [{ ref: bundle, state: "fresh", accessRevision: "a1", checkedAt: "2026-01-01T00:00:00Z", currentRef: bundle, authorizedProjection }, { ref, state: "fresh", accessRevision: "a1", checkedAt: "2026-01-01T00:00:00Z", currentRef: ref, authorizedProjection }], atlasTrace: { module: "@orchestra/atlas-boundary/business-memory-ports", operation: "createMemoryRead.recall", recordDigest: "c".repeat(64) }, accessRevision: "a1" } as const satisfies AuthorizedMemoryProjection
+const candidate = { entry, envelope: { ...projection, kind: "task", projectionDigest: digestSfValue(projection), caseRef: { id: "prior", incarnation: "one", version: 1 }, accessRevision: "a1", ...maps, dependencies: [ref], schemaVersion: 1, eventId: "atlas-event", writerPrincipalRef: "alice", scannerReceipt: { name: "fixture", version: "1", status: "clean", digest: "c".repeat(64) }, createdAt: "2026-01-01T00:00:00Z" }, case: { context: { installationId: "install", projectId: "project", principalRef: "alice", accessRevision: "a1", policyVersion: "p1", kind: "ui" }, case: { id: "prior", incarnation: "one", version: 1, state: "chosen", objective: "Renew", horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: [], participants: ["alice"], sourceRefs: [ref], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }, events: [], evidenceRefs: [ref], checkedAt: "2026-01-01T00:00:00Z" }, features, resolutions: [{ ref: bundle, state: "fresh", accessRevision: "a1", checkedAt: "2026-01-01T00:00:00Z", currentRef: bundle, authorizedProjection }, { ref, state: "fresh", accessRevision: "a1", checkedAt: "2026-01-01T00:00:00Z", currentRef: ref, authorizedProjection }], atlasTrace: { module: "@orchestra/atlas-boundary/business-memory-ports", operation: "createMemoryRead.recall", recordDigest: "c".repeat(64) }, accessRevision: "a1" } as const satisfies AuthorizedMemoryProjection
 
 describe("authorized recall", () => {
   test("explains an Atlas candidate and rejects a different decision type", () => {
@@ -28,13 +28,6 @@ describe("authorized recall", () => {
     expect(results[0]?.matchedCriteria).toContain("decision-type")
     expect(results[0]?.candidateCaseRef.id).toBe("prior")
     expect(rankSfRecalledCases({ scope, features: { ...features, decisionType: "unrelated" }, candidates: [candidate] })).toEqual([])
-  })
-  test("keeps an authorized historical event after the case advances, but rejects removed ledger or access", () => {
-    const current = { ...candidate, case: { ...candidate.case, case: { ...candidate.case.case, version: 2 } } }
-    expect(rankSfRecalledCases({ scope, features, candidates: [current] })).toHaveLength(1)
-    expect(rankSfRecalledCases({ scope, features, candidates: [{ ...current, case: { ...current.case, case: { ...current.case.case, ledger: [] } } }] })).toEqual([])
-    expect(rankSfRecalledCases({ scope, features, candidates: [{ ...current, case: { ...current.case, case: { ...current.case.case, participants: [] } } }] })).toEqual([])
-    expect(rankSfRecalledCases({ scope, features, candidates: [{ ...candidate, case: { ...candidate.case, case: { ...candidate.case.case, version: 0 } } }] })).toEqual([])
   })
   test("allows an authorized historical source without treating a changed version as current", () => {
     const original = candidate.resolutions[1]
@@ -71,4 +64,27 @@ describe("authorized recall", () => {
     expect(planSfRecallInvalidation(scope, { ...scope, accessRevision: "a2" })).toEqual({ invalidate: true, reasons: ["access-revision"], reauthorize: true })
     expect(planSfRecallInvalidation(scope, scope)).toEqual({ invalidate: false, reasons: [], reauthorize: true })
   })
+})
+
+test("invalidation follows the envelope dependencies and fails closed on revocation", () => {
+  const input = { previous: scope, current: scope, dependencies: [bundle, ref], resolutions: candidate.resolutions }
+  expect(decideSfRecallInvalidation(input)).toMatchObject({ status: "reuse", reauthorize: true })
+  expect(decideSfRecallInvalidation({ ...input, current: { ...scope, sourceVersions: { ...scope.sourceVersions, unrelated: 2 } } })).toMatchObject({ status: "reuse" })
+  const changed = { ...ref, target: { ...ref.target, version: 2 } }
+  const currentRef = { ...changed, refDigest: digestSfEvidenceRef(changed) }
+  const current = { ...scope, sourceVersions: { ...scope.sourceVersions, [ref.refDigest]: 2 } }
+  expect(decideSfRecallInvalidation({ ...input, current })).toEqual({ status: "unavailable", reauthorize: true })
+  expect(decideSfRecallInvalidation({ ...input, current, resolutions: [candidate.resolutions[0], { ...candidate.resolutions[1], state: "historical", currentRef, differences: [{ field: "price", before: 100, after: 120 }] }] })).toMatchObject({ status: "invalidate", reasons: ["source-version"] })
+  expect(decideSfRecallInvalidation({ ...input, resolutions: [candidate.resolutions[0]] })).toEqual({ status: "unavailable", reauthorize: true })
+  expect(decideSfRecallInvalidation({ ...input, resolutions: [candidate.resolutions[0], { ...candidate.resolutions[1], state: "revoked" }] })).toEqual({ status: "unavailable", reauthorize: true })
+})
+
+test("recall features require an authorized case and an unambiguous decision type", async () => {
+  const { deriveAuthorizedRecallFeatures } = await import("../../../product/decision-memory/case-features.ts")
+  const call: TrustedDomainContext = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "alice", requestId: "request", accessRevision: "a1", policyVersion: "p1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease }
+  const basis = { id: "coverage", version: 1, decisionType: "renewal", categoryIds: [], additionalCategoryIds: [], sourceRefs: [ref] }
+  const projection = { ...candidate.case, case: { ...candidate.case.case, costCoverageBases: [basis] } }
+  expect(deriveAuthorizedRecallFeatures(projection, call)).toEqual({ decisionType: "renewal", horizon: "2027-01-01/2027-12-31", components: [], restrictions: [], resultAvailable: false })
+  expect(deriveAuthorizedRecallFeatures({ ...projection, case: { ...projection.case, costCoverageBases: [basis, { ...basis, decisionType: "purchase" }] } }, call)).toBeUndefined()
+  expect(deriveAuthorizedRecallFeatures(projection, { ...call, binding: { ...call.binding, principalRef: "bob" } })).toBeUndefined()
 })

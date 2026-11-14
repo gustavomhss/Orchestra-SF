@@ -3,6 +3,7 @@ import type { MemoryRecord, NamedScanner } from "@orchestra/atlas-boundary/busin
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessMemoryEnvelope, MemoryWriteReceipt, SfAtlasProjection } from "../contracts/business-context.ts"
 import type { DecisionCasePort, DomainPortHost } from "../contracts/ports.ts"
+import type { DecisionCase } from "../contracts/decisions.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
@@ -10,6 +11,7 @@ import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../decision-memory/atlas-p
 import { rankSfRecalledCasesAuthorized } from "../decision-memory/recall.ts"
 import type { AuthorizedMemoryProjection, RecallFeatures, RecallScope } from "../decision-memory/recall.ts"
 import { createSfAtlasDurableMemory } from "./atlas-store.ts"
+import { sfRunSourceFence } from "../ai/run-store.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
@@ -17,7 +19,8 @@ type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]
 export function createSfAtlasMemory(input: {
   state: SfProductStatePort
   cases: DecisionCasePort
-  host: Pick<DomainPortHost, "requestFor" | "revalidate">
+  authorizeCase?: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
+  host: Pick<DomainPortHost, "requestFor" | "revalidate" | "persistence">
   evidence: Pick<BusinessContextService, "resolve">
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   scanner: NamedScanner
@@ -28,25 +31,54 @@ export function createSfAtlasMemory(input: {
     async emitFromLedger(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<MemoryWriteReceipt> {
       const unavailable = (reason: string): MemoryWriteReceipt => ({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: input.scanner.name, version: input.scannerVersion, status: "unavailable" }, reason })
       const request = input.host.requestFor(call)
-      if (ref.kind !== "case-event" || !request || request.signal.aborted || !input.scannerVersion.trim() || !await input.host.revalidate(call)) return unavailable("authority-unavailable")
+      if (ref.kind !== "case-event" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || !request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable("authority-unavailable")
       try { sfEvidenceSourceMaps([ref]) } catch { return unavailable("invalid-evidence") }
-      if (ref.target.evidenceRefs.flatMap(expandEvidence).some((dependency) => dependency.kind === "case-event")) return unavailable("nested-case-event-unavailable")
+      const key = JSON.stringify([ref.target.caseId, ref.target.caseIncarnation, ref.target.eventId])
+      const captured = await input.state.read(request, "atlas", (state) => ({ versions: state.versions, item: state.outbox[key] })).catch(() => undefined)
+      if (!captured || captured.status !== "ok" || !captured.value.item) return unavailable("outbox-unavailable")
+      if (digestSfValue(captured.value.item.eventRef) !== digestSfValue(ref)) return { ...unavailable("idempotency-content-changed"), status: "conflict" }
+      // A durable receipt is a recovery result, not a second append. Reauthorize it without rerunning the scanner.
+      if (captured.value.item.state === "settled") {
+        const replay = await input.state.read(request, "outbox", (state, actor) => {
+          const value = state.cases[ref.target.caseId]
+          const event = value?.ledger.find((item) => item.id === ref.target.eventId)
+          return value && value.incarnation === ref.target.caseIncarnation && value.participants.includes(actor.principalRef) &&
+            actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
+            event && event.caseRef.id === ref.target.caseId && event.caseRef.incarnation === ref.target.caseIncarnation && event.caseRef.version === ref.target.caseVersion &&
+            event.outputDigest === ref.target.outputDigest && digestSfValue(event.evidenceRefs) === digestSfValue(ref.target.evidenceRefs)
+            ? { item: state.outbox[key], value } : undefined
+        }).catch(() => undefined)
+        if (!replay || replay.status !== "ok" || !replay.value || digestSfValue(replay.value.item) !== digestSfValue(captured.value.item)) return unavailable("outbox-unavailable")
+        const authorized = input.authorizeCase ? await input.authorizeCase(replay.value.value, call) :
+          (await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)).status === "ok"
+        if (!authorized || !await input.host.revalidate(call)) return unavailable("case-unavailable")
+        const current = await input.state.read(request, "cases", (state) => ({ value: state.cases[ref.target.caseId], item: state.outbox[key] })).catch(() => undefined)
+        if (!current || current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(replay.value) || !await input.host.revalidate(call)) return unavailable("case-unavailable")
+        return captured.value.item.receipt.status === "committed" ? { ...captured.value.item.receipt, status: "already-committed" } : captured.value.item.receipt
+      }
       const found = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)
       if (found.status !== "ok") return unavailable("case-unavailable")
+      if (!input.scannerVersion.trim() || !input.host.persistence.transactionAll || !input.host.persistence.currentSnapshots) return unavailable("scanner-or-source-fence-unavailable")
+      const sourceFences = (snapshots: Record<"dashboard" | "planner" | "procurement", Parameters<typeof sfRunSourceFence>[0]>) => ({
+        dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
+      })
+      const before = await input.host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: sourceFences(snapshots) }), { signal: request.signal }).catch(() => undefined)
+      if (!before) return unavailable("source-fence-unavailable")
       const mapped = mapSfAtlasEntry({ kind: "task", projection: found.value, eventId: ref.target.eventId, bundleRef: ref })
       if (mapped.status !== "mapped") return unavailable("projection-unavailable")
       const dependencies = ref.target.evidenceRefs.flatMap(expandEvidence)
       const resolutions = await Promise.all(dependencies.map((dependency) => input.evidence.resolve(dependency, call)))
       if (!dependencies.length || resolutions.some((resolution) => resolution.state !== "fresh" || !resolution.authorizedProjection || resolution.accessRevision !== call.binding.accessRevision) || !await input.host.revalidate(call)) return unavailable("source-unavailable")
       const maps = sfEvidenceSourceMaps(mapped.projection.evidenceRefs)
-      const key = JSON.stringify([ref.target.caseId, ref.target.caseIncarnation, ref.target.eventId])
-      const atlas = await input.state.read(request, "atlas", (state) => state.versions.atlas).catch(() => undefined)
-      const outbox = await input.state.read(request, "outbox", (state) => ({ version: state.versions.outbox, item: state.outbox[key] })).catch(() => undefined)
-      if (!atlas || !outbox || atlas.status !== "ok" || outbox.status !== "ok" || !outbox.value.item || digestSfValue(outbox.value.item.eventRef) !== digestSfValue(ref)) return unavailable("outbox-unavailable")
-      if (outbox.value.item.state === "settled") return outbox.value.item.receipt.status === "committed" ? { ...outbox.value.item.receipt, status: "already-committed" } : outbox.value.item.receipt
       const digest = digestSfValue({ ref, projection: mapped.projection, maps })
       if (!await input.host.revalidate(call)) return unavailable("authority-unavailable")
-      const saved = await input.state.transaction(request, { namespace: "atlas", expectedStorageVersion: atlas.value, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: outbox.value.version }], idempotencyKey: `atlas:${key}`, commandDigest: digest, targetRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }), targetIncarnation: ref.target.caseIncarnation }, async (state, authority) => {
+      const checks = (["cases", "documents", "receipts"] as const).filter((namespace) => namespace === "cases" ||
+        dependencies.some((dependency) => namespace === "documents" ? dependency.kind === "document" : dependency.kind === "receipt"))
+      const saved = await input.state.transaction(request, { namespace: "atlas", expectedStorageVersion: captured.value.versions.atlas, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: captured.value.versions.outbox }],
+        checkNamespaces: checks.map((namespace) => ({ namespace, expectedStorageVersion: captured.value.versions[namespace] })), sourceFence: "all",
+        idempotencyKey: `atlas:${key}`, commandDigest: digest, targetRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }), targetIncarnation: ref.target.caseIncarnation }, async (state, authority) => {
+        const locked = input.host.persistence.currentSnapshots?.()
+        if (!locked || digestSfValue(sourceFences(locked)) !== digestSfValue(before)) return { commit: false, value: unavailable("source-changed-before-commit") }
         const item = state.outbox[key]
         const current = state.cases[ref.target.caseId]
         if (!item || item.state !== "pending" || digestSfValue(item.eventRef) !== digestSfValue(ref) || !current || current.incarnation !== ref.target.caseIncarnation || !current.ledger.some((event) => event.id === ref.target.eventId && digestSfValue(event) === digestSfValue(found.value.events.find((candidate) => candidate.id === event.id))) || authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion) return { commit: false, value: unavailable("stale-authority-or-ledger") }
@@ -83,7 +115,7 @@ export function createSfAtlasMemory(input: {
         return { commit: true, value: receipt }
       }).catch(() => undefined)
       if (!saved) return unavailable("commit-unavailable")
-      if (saved.status === "preview") return unavailable("unexpected-state-preview")
+      if (saved.status === "preview") return saved.value
       if ("reason" in saved) return unavailable(saved.reason)
       if (!await input.host.revalidate(call)) return unavailable("authority-unavailable")
       return saved.value
@@ -124,9 +156,6 @@ export function createSfAtlasMemory(input: {
           const maps = sfEvidenceSourceMaps(originals)
           if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return { status: "unavailable" as const }
         } catch { return { status: "unavailable" as const } }
-        if (envelope.dependencies.flatMap(expandEvidence).some((ref) => ref.kind === "case-event") || envelope.evidenceRefs.some((ref) =>
-          ref.kind === "case-event" && ref.target.evidenceRefs.flatMap(expandEvidence).some((dependency) => dependency.kind === "case-event")))
-          return { status: "unavailable" as const }
         const refs = [...new Map(originals.flatMap(expandEvidence).map((ref) => [ref.refDigest, ref])).values()]
         const resolutions = await Promise.all(refs.map((ref) => input.evidence.resolve(ref, call)))
         for (const [index, resolution] of resolutions.entries()) {

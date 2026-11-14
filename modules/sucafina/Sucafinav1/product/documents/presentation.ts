@@ -15,10 +15,16 @@ import type { SfDocumentReader } from "./evidence-resolver.ts"
 
 /** Resolve display metadata only through the current authorized asset and evidence. */
 export function createSfDocumentPresentation(input: { host: DomainPortHost; assets: AssetPersistence; services: AssetServices; state: SfProductStatePort; documents: SfDocumentReadPort; reader: SfDocumentReader; origin: string; mount: string }) {
-  return async (ref: BusinessEvidenceRef, context: TrustedDomainContext): Promise<PortResult<{ title: string; href?: string }>> => {
+  return async (ref: BusinessEvidenceRef, context: TrustedDomainContext): Promise<PortResult<{ title: string; href?: string; excerpt: string; location: string }>> => {
     const request = input.host.requestFor(context)
     if (ref.kind !== "document" || !request || !URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin || new URL(request.url).origin !== input.origin || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(input.mount) || !Object.is(input.host.persistence, input.assets) || !await input.host.revalidate(context)) return { status: "denied", reason: "document-access-unavailable" }
     if ((await resolveSfDocumentEvidence(ref, context, input.reader)).state !== "fresh") return { status: "stale", reason: "document-evidence-unavailable" }
+    const resolved = await input.reader(ref.target.documentId, context, ref.target.fieldCandidateId, ref)
+    if (resolved.status !== "ok") return { status: "unavailable", reason: "document-evidence-unavailable" }
+    const source = resolved.store.sources().find((item) => item.id === ref.target.ragSourceId)
+    if (!source || resolved.incarnation !== ref.target.incarnation || resolved.revision !== ref.target.revision || resolved.blobDigest !== ref.target.blobDigest.value) return { status: "stale", reason: "document-changed" }
+    const excerpt = source.text.slice(ref.target.segment.start, ref.target.segment.end)
+    if (new Bun.CryptoHasher("sha256").update(excerpt).digest("hex") !== ref.target.segment.textDigest.value) return { status: "unavailable", reason: "document-evidence-unavailable" }
     const document = await input.documents.read(ref.target.documentId, context)
     if (document.status !== "ok") return document
     if (document.value.incarnation !== ref.target.incarnation || document.value.revision !== ref.target.revision || document.value.blobDigest.value !== ref.target.blobDigest.value || !document.value.fileName.trim()) return { status: "stale", reason: "document-changed" }
@@ -43,9 +49,9 @@ export function createSfDocumentPresentation(input: { host: DomainPortHost; asse
     const current = await input.state.read(request, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.documents[`asset:${ref.target.documentId}`] : undefined)
     if (current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(entry) || !await input.documents.revalidate(ref.target.documentId, { incarnation: entry.incarnation, revision: entry.revision, blobDigest: entry.blobDigest }, context) || !await input.host.revalidate(context) || request.signal.aborted) return { status: "stale", reason: "document-changed" }
     const now = await input.host.environment(request)
-    if (!Number.isFinite(Date.parse(now.at)) || Date.parse(linked.expires) <= Date.parse(now.at) || !await input.host.revalidate(context)) return { status: "stale", reason: "document-link-expired" }
+    if (!Number.isFinite(Date.parse(now.at)) || Date.parse(linked.expires) <= Date.parse(now.at) || !await resolved.revalidate() || !await input.host.revalidate(context)) return { status: "stale", reason: "document-link-expired" }
     const url = new URL(`${input.mount}/${entry.surface}?${linked.query}`, input.origin)
     if (url.origin !== input.origin || url.pathname !== `${input.mount}/${entry.surface}`) return { status: "unavailable", reason: "document-link-unavailable" }
-    return { status: "ok", value: { title: document.value.fileName, href: `${url.pathname}${url.search}` } }
+    return { status: "ok", value: { title: document.value.fileName, href: `${url.pathname}${url.search}`, excerpt, location: `text:${ref.target.segment.start}-${ref.target.segment.end}` } }
   }
 }

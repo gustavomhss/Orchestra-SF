@@ -102,3 +102,16 @@ test("milestone date scope isolates the selected dates and omits current private
   project.milestones[0]!.name = "New current label"
   expect(projectDashboardScope(changed, admin, selector, asOf)).not.toEqual(before)
 })
+
+test("milestone status is observed only in a period containing today", () => {
+  const state: Snapshot = { data: { projects: [{ id: "p", milestones: [{ id: "m", name: "Launch", date: "2026-03-05", status: "upcoming" }] }] }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const current = { page: "Portfolio Dashboard", fields: ["milestoneDates"], period: { start: "2026-01-01", end: "2026-12-31" } }
+  const historical = { ...current, period: { start: "2026-03-01", end: "2026-03-31" } }
+  const before = projectDashboardScope(state, admin, current, asOf)!
+  const old = projectDashboardScope(state, admin, historical, asOf)!
+  expect(before.selected.milestoneDates).toMatchObject([{ status: "upcoming" }])
+  expect(JSON.stringify(old.selected)).not.toContain("upcoming")
+  ;(state.data.projects as { milestones: { status: string }[] }[])[0]!.milestones[0]!.status = "late"
+  expect(projectDashboardScope(state, admin, current, asOf)).not.toEqual(before)
+  expect(projectDashboardScope(state, admin, historical, asOf)).toEqual(old)
+})

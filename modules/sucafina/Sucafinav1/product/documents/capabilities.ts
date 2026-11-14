@@ -68,7 +68,8 @@ export async function extractDocumentEvidence(request: DocumentExtractRequest, c
     return [{ schema: "sf-document-v1" as const, snapshot, evidence, schemaRef: schema.value.id, schemaVersion: schema.value.version }]
   })
   const loaded = await input.state.read(hostRequest, "documents", (state) => documentAsset(state, request.documentRef))
-  if (loaded.status !== "ok") return { status: loaded.status === "preview" ? "unavailable" : loaded.status, reason: loaded.status === "preview" ? "state-preview" : loaded.reason }
+  if ("reason" in loaded) return { status: loaded.status, reason: loaded.reason }
+  if (loaded.status !== "ok") return { status: "unavailable", reason: "state-preview" }
   if (!loaded.value) return { status: "unavailable", reason: "document-unavailable" }
   if (!(await input.host.revalidate(context)) || !(await input.documents.revalidate(request.documentRef, { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }, context))) return { status: "stale", reason: "document-changed" }
   const saved = await input.state.transaction(hostRequest, { namespace: "documents", domainSurface: loaded.value.surface, expectedStorageVersion: loaded.storageVersion, idempotencyKey: operationId, commandDigest: digestSfValue({ request, document: document.value.blobDigest, schema: schema.value }), targetRef: document.value.documentId, targetIncarnation: document.value.incarnation }, async (state, authority, snapshot) => {
@@ -119,6 +120,7 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
   const records = loaded.value.filter((value): value is StoredDocumentEvidence | StoredDocumentIndex => !!value && typeof value === "object" && ((value as StoredDocumentEvidence).schema === "sf-document-v1" || (value as StoredDocumentIndex).schema === "sf-document-index-v1")).filter((record) => !!record.snapshot && (!request.documentRefs || request.documentRefs.includes(record.snapshot.documentRef)))
   const matches: EvidenceSearchResult["matches"][number][] = []
   const seen = new Set<string>()
+  const sources = new Map<string, () => Promise<boolean>>()
   for (const record of records.slice(0, 100)) {
     if (matches.length >= request.limit) break
     const installationId = record.schema === "sf-document-v1" ? record.evidence.ref.installationId : record.installationId
@@ -146,9 +148,10 @@ export async function searchDocumentEvidence(request: KnowledgeSearchRequest, co
       if (!(await document.revalidate()) || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
       seen.add(checkedRef.refId)
       matches.push({ documentRef: checkedRef, text: request.query, lexicalScore: 1 })
+      sources.set(documentId, document.revalidate)
     }
   }
-  if (!(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
+  if ((await Promise.all([...sources.values()].map((revalidate) => revalidate().catch(() => false)))).some((current) => !current) || hostRequest.signal.aborted || !(await input.host.revalidate(context))) return { status: "unavailable", reason: "authority-changed" }
   return { status: "ok", value: { matches, limitations: ["lexical-exact-match", ...(records.length > 100 ? ["document-scan-limited"] : [])] } }
 }
 

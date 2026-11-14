@@ -3,6 +3,7 @@ import JSZip from "jszip"
 import { createReport } from "../runtime/reports.ts"
 import { download } from "../runtime/downloads.ts"
 import { empty } from "./fixture/persistence.ts"
+import { exportFixture, extractReportText } from "./product/wp07/export-fixture.ts"
 
 const actor = { id: "admin", canWrite: true, roles: ["admin"] }
 const environment = {
@@ -78,6 +79,23 @@ test("Word is an actual DOCX presenter script with all bullets rather than slide
       })
     ).ok,
   ).toBe(false)
+})
+
+test("legacy report keeps all 25 projects and long notes once in both formats", async () => {
+  const fixture = exportFixture()
+  for (const format of ["pptx", "docx"] as const) {
+    const result = await createReport(structuredClone(fixture.legacy), actor, environment, { format, year: 2026, topics: ["All Projects"] })
+    if (!result.ok) throw new Error("Legacy report refused")
+    const extracted = await extractReportText(result.bytes, format)
+    const text = extracted.text.replace(/\s/gu, "")
+    for (let index = 1; index <= 25; index++) {
+      const id = String(index).padStart(2, "0")
+      expect(text.split(`LEGACY-PROJECT-${id}`).length - 1).toBe(1)
+      expect(text.split(`END-NOTE-${id}`).length - 1).toBe(1)
+    }
+    if (format === "pptx") expect(extracted.pages!).toBeLessThan(30)
+  }
+  expect(await createReport(fixture.legacy, actor, environment, { format: "docx", year: 2026, topics: ["All Projects", "All Projects"] })).toMatchObject({ ok: false, status: 422 })
 })
 
 test("report scopes never expose talent and unauthorized Executive Summary cannot bypass page visibility", async () => {

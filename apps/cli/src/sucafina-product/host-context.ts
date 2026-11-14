@@ -68,8 +68,11 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   if (!input.installationId.trim() || !path.isAbsolute(input.directory) || path.resolve(input.directory) !== input.directory) throw new Error("SF_HOST_PLACEMENT_INVALID")
   const directory = AbsolutePath.make(input.directory)
   const bundle = await createResidentAiBundle({ root: input.sourceRoot, manifestPath: path.join(input.sourceRoot, "manifests/resident.json") })
-  const selected = bundle.profiles.map((profile) => ({ profile, manifestDigest: bundle.manifestDigest,
-    skills: bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id)), operationIds: profile.allowedOperations }))
+  const selected = bundle.profiles.map((profile) => {
+    const skills = bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id))
+    return { profile, manifestDigest: bundle.manifestDigest, skills,
+      operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))) }
+  })
   const state: { identity?: ReturnType<SfHostRuntime["identity"]>; store?: SessionStore.Interface; api?: SfNativeHostApi;
     models?: SfHostServices["models"]; configuration?: string; generation: number } = { generation: 0 }
   const requests = new Map<string, Request>()
@@ -605,14 +608,14 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         const data = await Effect.runPromise(Effect.gen(function* () {
           const catalog = yield* Catalog.Service
           const mcp = yield* Mcp.Service
-          return { models: yield* catalog.model.available(), servers: yield* mcp.list() }
+          return { models: yield* catalog.model.available(), servers: yield* mcp.config() }
         }).pipe(Effect.provide(locations.get(identity.location)))).catch(() => undefined)
         if (!data || state.identity !== identity) throw new Error("SF_CATALOG_UNAVAILABLE")
         // Public metadata only; credentials, provider headers and endpoint configuration remain opaque.
         const digest = digestSfValue({ models: data.models.map((model) => ({ providerID: model.providerID, id: model.id,
           api: { id: model.api.id, type: model.api.type }, variants: model.variants.map((variant) => variant.id).toSorted(), limit: model.limit }))
           .toSorted((left, right) => `${left.providerID}:${left.id}`.localeCompare(`${right.providerID}:${right.id}`)),
-          servers: data.servers.toSorted((left, right) => left.name.localeCompare(right.name)) })
+          servers: data.servers })
         if (state.configuration !== digest) { state.configuration = digest; state.generation += 1 }
         return data.models.map((model) => ({ providerID: model.providerID, id: model.id }))
       }

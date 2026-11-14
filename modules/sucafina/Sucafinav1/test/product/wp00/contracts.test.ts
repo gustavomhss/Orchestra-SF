@@ -79,6 +79,30 @@ test("a conditioned comparison cannot publish a complete difference", () => {
   expect(decodeSfContributionOutput("ScenarioComparison", { ...comparison, completeDifference: 30000 }).ok).toBe(false)
 })
 
+test("commercial comparison admits traceable score and currency details without widening its schema", () => {
+  const proposal = { proposalRef: "quote-1", eligible: true, score: 80, convertedAmount: 108, evidenceRefs: [], issues: [], components: { technical: 80, price: 75, commercial: 80, overall: 80 }, money: { originalAmount: 100, originalCurrency: "EUR", baseCurrency: "USD", fxRate: 1.08, fxSource: "submitted" } }
+  const value = { requestRef: "request-1", requestVersion: 1, currency: "USD", proposals: [proposal], ranking: ["quote-1"], conditions: [], sourceRefs: [], weights: { technical: 60, commercial: 40, technicalCriteria: [{ name: "quality", weight: 100 }], commercialCriteria: [{ name: "price", weight: 100, automatic: true }] }, selection: { proposalRef: "quote-1", reason: "documented selection" } }
+  expect(decodeSfContributionOutput("CommercialComparison", value).ok).toBe(true)
+  expect(decodeSfContributionOutput("CommercialComparison", { ...value, proposals: [{ ...proposal, money: { ...proposal.money, fxSource: "invented" } }] }).ok).toBe(false)
+  expect(decodeSfContributionOutput("CommercialComparison", { ...value, proposals: [{ ...proposal, components: { ...proposal.components, hidden: 1 } }] }).ok).toBe(false)
+})
+
+test("alternative contribution preserves the deterministic draft boundary", () => {
+  const horizon = { start: "2027-01-01", end: "2027-12-31" }
+  const coverage = { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [], coverageState: "pending", entries: [], derivedMissingCategoryIds: ["training"] }
+  const value = { caseRef: "case:one:inc", proposal: { id: "alternative", version: 1, title: "Alternative", scenario: { baseRef: "base", operations: [], assumptions: [] }, result: { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [], unresolvedConditions: ["training"], restrictions: [], comparisonStatus: "conditioned", costCoverage: coverage, knownSubtotal: null, total: null } }, costCoverageBasis: { id: "basis", version: 1, decisionType: "renewal-transition-v1", categoryIds: ["training"], additionalCategoryIds: [], sourceRefs: [] }, coverageRef: "coverage", domainApplied: false }
+  expect(decodeSfContributionOutput("AlternativeDraft", value).ok).toBe(true)
+  expect(decodeSfContributionOutput("AlternativeDraft", { ...value, domainApplied: true }).ok).toBe(false)
+  expect(decodeSfContributionOutput("AlternativeDraft", { ...value, proposal: { ...value.proposal, result: { ...value.proposal.result, total: 0 } } }).ok).toBe(false)
+})
+
+test("a KPI comparison retains a separate versioned source context", () => {
+  const comparison = { metricRef: "metric", comparisonRef: "prior", context, version: 1, engineVersion: "engine", values: [] }
+  const projection = { context, version: 2, engineVersion: "engine", components: [], values: [], missing: [], comparison }
+  expect(decodeSfOperationOutput("sf_dashboard_read", projection).ok).toBe(true)
+  expect(decodeSfOperationOutput("sf_dashboard_read", { ...projection, comparison: { ...comparison, context: { ...context, period: undefined } } }).ok).toBe(false)
+})
+
 test("renewal inventory cannot omit training or invent a new decision inventory", () => {
   const basis = { id: "basis-1", version: 1, decisionType: "renewal-transition-v1", categoryIds: RENEWAL_TRANSITION_CATEGORIES, additionalCategoryIds: [], sourceRefs: [] }
   expect(requiredSfCostCategories(basis)).toEqual(RENEWAL_TRANSITION_CATEGORIES)

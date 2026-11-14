@@ -79,10 +79,11 @@ function assembleSfBusinessContext(host: {
       return records
     },
     async emitFromLedger(ref, call) {
-      const source = await resolve(ref, call)
-      if (ref.kind !== "case-event" || source.state !== "fresh" || !(await host.revalidate(call))) {
+      // The writer checks fresh sources for a new append and separately reauthorizes recovery of a durable receipt.
+      if (ref.kind !== "case-event" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || !(await host.revalidate(call))) {
         return { status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "source unavailable" }
       }
+      try { sfEvidenceSourceMaps([ref]) } catch { return { status: "unavailable", sourceEventId: ref.target.eventId, scanner: { name: "", version: "", status: "unavailable" }, reason: "invalid evidence" } }
       const receipt = await host.emitFromLedger(ref, call)
       if (!(await host.revalidate(call))) return { status: "unavailable", sourceEventId: ref.target.eventId, scanner: { name: "", version: "", status: "unavailable" }, reason: "authority unavailable" }
       return receipt
@@ -215,7 +216,7 @@ export function createSfAtlasBusiness(input: {
   })
   const context = assembled.service
   resolveAncestry = assembled.resolveAncestry
-  const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
+  const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
   return { context, memory, capabilities }
 }

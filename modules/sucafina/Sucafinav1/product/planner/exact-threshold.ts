@@ -66,7 +66,7 @@ export function createPlannerExactThreshold(input: { units: ReturnType<typeof cr
   }
 }
 
-function exactComponents(scenario: ScenarioResult, target: string, amount: number) {
+export function exactComponents(scenario: ScenarioResult, target: string, amount: number) {
   const targetComponents = scenario.components.filter((component) => component.id === target)
   if (targetComponents.length !== 1 || targetComponents[0]!.amount !== amount || scenario.knownSubtotal === null || !Number.isFinite(scenario.knownSubtotal)) return false
   if (scenario.components.some((component) => component.currency !== "USD" || component.amount === null || !Number.isFinite(component.amount) || component.evidenceState === "absent" || !component.sourceRefs.length)) return false

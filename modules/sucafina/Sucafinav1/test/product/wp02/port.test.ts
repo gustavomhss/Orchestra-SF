@@ -7,6 +7,8 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { resolve } from "../../../src/identity.ts"
+import { computeBudgetTotals } from "../../../src/dashboard-accounts.ts"
+import type { BudgetData } from "../../../src/dashboard-accounts.ts"
 import { testPersistence } from "../../fixture/persistence.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -28,6 +30,7 @@ test("dashboard port reads canonical effective budget and rejects stale and unau
   expect(result.status).toBe("ok")
   if (result.status === "ok") {
     expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.totalBudget", value: 1300 }))
+    expect(result.value.components.reduce((total, component) => total + (component.amount ?? 0), 0)).toBe(1300)
     expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.effectiveMonthlyBudget[0]", value: 200 }))
     expect(result.value.context.currency).toBe("unspecified")
     expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:actual", value: 0, period: { start: "2026-01-01", end: "2026-01-31" }, evidenceState: "confirmed" }))
@@ -61,6 +64,96 @@ test("dashboard port reads canonical effective budget and rejects stale and unau
   expect(await port.read({ selectionRef: "budget", period, fields: ["budgetMetrics"] }, binding)).toMatchObject({ status: "stale" })
   access.enabled = false
   expect(await port.read({ selectionRef: "budget", period, fields: ["budgetMetrics"] }, binding)).toMatchObject({ status: "denied" })
+})
+
+function monthlyBudgetLedger() {
+  return {
+    opexOwners: [{ id: "o", budget: 1200 }],
+    capexProjects: [{ id: "p", budget: 2400 }],
+    opexEntries: Array.from({ length: 12 }, (_, index) => ({ id: `opex-${index + 1}`, ownerId: "o", year: 2026, month: index + 1, budget: 0, actual: 0, forecast: 0 })),
+    capexEntries: Array.from({ length: 12 }, (_, index) => ({ id: `capex-${index + 1}`, projId: "p", year: 2026, month: index + 1, budget: 0, actual: 0, forecast: 0 })),
+  }
+}
+
+async function readBudgetLedger(data: BudgetData, selectedPeriod = period, field: "budgetMetrics" | "budgetSeries" = "budgetMetrics") {
+  const state = initial()
+  state.data = { ...state.data, ...data }
+  const storage = testPersistence({ dashboard: state })
+  const page = "Budget Overview"
+  const port = createDashboardPort({ host: {
+    persistence: storage.persistence,
+    authenticate: async (_request, context) => resolve("admin", [...context!.roleMap], (group) => group === "admins"),
+    environment: async () => environment,
+    requestFor: () => new Request("https://example.test"),
+    revalidate: async () => true,
+  }, sources: {
+    resolveDashboardSource: async (_reference, _binding, selection) => {
+      if (!selection) return { status: "unavailable", reason: "selection-required" }
+      const scoped = projectDashboardScope(storage.state.dashboard, actor, { page, ...selection }, environment.at)
+      if (!scoped) return { status: "unavailable", reason: "scope-unavailable" }
+      const evidence: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: "budget-ledger",
+        installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed",
+        target: { surface: "dashboard", recordType: "dashboard-page", recordId: page, incarnation: "inc", version: 1,
+          fields: [...selection.fields], period: selection.period, projectionDigest: digestSfValue(scoped) } }
+      evidence.refDigest = digestSfEvidenceRef(evidence)
+      return { status: "ok", value: { page, evidence } }
+    },
+    resolveDashboardMetric: async () => ({ status: "unavailable", reason: "not-registered" }),
+  } })
+  return port.read({ selectionRef: "budget-ledger", period: selectedPeriod, fields: [field] }, binding)
+}
+
+test("C02 sums all distinct monthly OPEX and CAPEX ledger rows while retaining SD02 budget fallback", async () => {
+  const base = monthlyBudgetLedger()
+  const data = { ...base,
+    opexEntries: [...base.opexEntries, { id: "opex-january-extra", ownerId: "o", year: 2026, month: 1, budget: 900, actual: 50, forecast: 75 }],
+    capexEntries: [...base.capexEntries, { id: "capex-january-extra", projectId: "p", year: 2026, month: 1, budget: 1800, actual: 20, forecast: 25 }],
+  }
+  expect(new Set([...data.opexEntries, ...data.capexEntries].map((row) => row.id)).size).toBe(26)
+  const canonical = computeBudgetTotals(data, 2026)
+  expect(canonical).toMatchObject({ opexActual: 50, opexForecast: 75, capexActual: 20, capexForecast: 25, totalActual: 70, totalForecast: 100, totalBudget: 3600 })
+  const result = await readBudgetLedger(data)
+  expect(result.status).toBe("ok")
+  if (result.status !== "ok") return
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:actual", value: canonical.totalActual, evidenceState: "confirmed" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:forecast", value: canonical.totalForecast, evidenceState: "confirmed" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.totalActual", value: canonical.totalActual, evidenceState: "confirmed" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.totalForecast", value: canonical.totalForecast, evidenceState: "confirmed" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.totalBudget", value: canonical.totalBudget, evidenceState: "estimated" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:effective", value: 300, evidenceState: "estimated" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:basis", value: "annual-fallback" }))
+  const january = await readBudgetLedger(data, { start: "2026-01-01", end: "2026-01-31" }, "budgetSeries")
+  expect(january.status).toBe("ok")
+  if (january.status === "ok") {
+    expect(january.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:actual", value: 70, evidenceState: "confirmed" }))
+    expect(january.value.values).toContainEqual(expect.objectContaining({ id: "budget:2026-01:forecast", value: 100, evidenceState: "confirmed" }))
+    expect(january.value.values.some((value) => value.id.includes("totalActual") || value.id.startsWith("budget:2026-02:"))).toBe(false)
+  }
+})
+
+test("C02 keeps a missing value in any additional monthly ledger row unknown instead of summing it as zero", async () => {
+  for (const kind of ["opex", "capex"] as const) {
+    for (const measure of ["actual", "forecast"] as const) {
+      const base = monthlyBudgetLedger()
+      const extra = { id: `${kind}-january-missing-${measure}`, year: 2026, month: 1,
+        ...(kind === "opex" ? { ownerId: "o" } : { projectId: "p" }),
+        actual: measure === "actual" ? undefined : 50, forecast: measure === "forecast" ? undefined : 75 }
+      const data = { ...base, opexEntries: kind === "opex" ? [...base.opexEntries, extra] : base.opexEntries,
+        capexEntries: kind === "capex" ? [...base.capexEntries, extra] : base.capexEntries }
+      const result = await readBudgetLedger(data)
+      expect(result.status).toBe("ok")
+      if (result.status !== "ok") throw new Error(`budget ledger unavailable: ${kind}/${measure}`)
+      const total = measure === "actual" ? "totalActual" : "totalForecast"
+      const known = measure === "actual" ? "forecast" : "actual"
+      expect(result.value.values).toContainEqual(expect.objectContaining({ id: `budget:2026-01:${measure}`, value: null, evidenceState: "absent" }))
+      expect(result.value.values).toContainEqual(expect.objectContaining({ id: `budgetMetrics.2026.${total}`, value: null, evidenceState: "absent" }))
+      expect(result.value.missing).toContainEqual({ field: `budget:2026-01:${measure}`, reason: "missing" })
+      expect(result.value.missing).toContainEqual({ field: `budgetMetrics.2026.${total}`, reason: "missing" })
+      expect(result.value.values).toContainEqual(expect.objectContaining({ id: `budget:2026-01:${known}`, value: known === "actual" ? 50 : 75, evidenceState: "confirmed" }))
+      expect(result.value.values).toContainEqual(expect.objectContaining({ id: `budget:2026-02:${measure}`, value: 0, evidenceState: "confirmed" }))
+      expect(result.value.values).toContainEqual(expect.objectContaining({ id: "budgetMetrics.2026.totalBudget", value: 3600, evidenceState: "estimated" }))
+    }
+  }
 })
 
 test("dashboard views remove restricted talent and deny invalid pages", () => {
@@ -176,7 +269,7 @@ test("executive measurements preserve month, year-to-date and annual periods", a
 
 test("milestone dates can be selected historically without claiming historical status", async () => {
   const state = initial()
-  state.data.projects = [{ id: "p", notes: "restricted-project-note", milestones: [{ id: "m", name: "Launch", date: "2026-03-05", status: "done", notes: "restricted-milestone-note" }, { id: "outside", name: "Outside", date: "2026-09-01", status: "late" }] }]
+  state.data.projects = [{ id: "p", notes: "restricted-project-note", milestones: [{ id: "m", name: "Launch", date: "2026-03-05", status: "done", notes: "restricted-milestone-note" }, { id: "undated", name: "No date" }, { id: "outside", name: "Outside", date: "2026-09-01", status: "late" }] }]
   const storage = testPersistence({ dashboard: state })
   const selectedPeriod = { start: "2026-02-01", end: "2026-05-31" }
   const page = "Portfolio Dashboard"
@@ -189,11 +282,24 @@ test("milestone dates can be selected historically without claiming historical s
   if (result.status !== "ok") return
   expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:date", value: "2026-03-05", period: { start: "2026-03-05", end: "2026-03-05" } }))
   expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:name", value: "Launch" }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:undated:date", value: null, evidenceState: "absent", period: selectedPeriod }))
+  expect(result.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:undated:name", value: "No date" }))
+  expect(result.value.missing).toContainEqual({ field: "milestone:p:undated:date", reason: "missing" })
   expect(JSON.stringify(result)).not.toContain("restricted-project-note")
   expect(JSON.stringify(result)).not.toContain("restricted-milestone-note")
   expect(JSON.stringify(result)).not.toContain("milestone:p:outside")
   expect(result.value.values.some((value) => value.id.endsWith(":status"))).toBe(false)
-  expect(dashboardBiPresentation("BI08", result.value).timeline?.items).toEqual([{ label: "Launch", dateValueId: "milestone:p:m:date", state: "unknown" }])
+  expect(dashboardBiPresentation("BI08", result.value).timeline?.items).toEqual([{ label: "Launch", dateValueId: "milestone:p:m:date", state: "unknown" }, { label: "No date", dateValueId: "milestone:p:undated:date", state: "unknown" }])
+  evidence.target.period = period
+  evidence.target.projectionDigest = digestSfValue(projectDashboardScope(storage.state.dashboard, actor, { page, fields: ["milestoneDates"], period }, environment.at))
+  evidence.refDigest = digestSfEvidenceRef(evidence)
+  const current = await port.read({ selectionRef: "milestones", period, fields: ["milestoneDates"] }, binding)
+  expect(current.status).toBe("ok")
+  if (current.status === "ok") {
+    expect(current.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:m:status", value: "done", period: { start: "2026-11-13", end: "2026-11-13" } }))
+    expect(dashboardBiPresentation("BI08", current.value).timeline?.items.find((item) => item.dateValueId === "milestone:p:m:date")?.state).toBe("unknown")
+  }
+  evidence.target.period = selectedPeriod
   ;(storage.state.dashboard.data.projects as unknown[]).push({ id: "duplicate", milestones: [{ id: "x", name: "Hidden", date: "2026-03-10" }] }, { id: "duplicate", milestones: [{ id: "x", name: "Hidden too", date: "2026-03-11" }] }, { id: "valid", milestones: [{ id: "", name: "No identifier", date: "2026-03-12" }] })
   evidence.target.projectionDigest = digestSfValue(projectDashboardScope(storage.state.dashboard, actor, { page, fields: ["milestoneDates"], period: selectedPeriod }, environment.at))
   evidence.refDigest = digestSfEvidenceRef(evidence)

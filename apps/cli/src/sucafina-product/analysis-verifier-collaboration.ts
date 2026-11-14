@@ -68,7 +68,8 @@ export function createSfQuestionVerifier(dependencies: SfAnalysisDependencies & 
         const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
         if (current.status !== "ok" || current.value.case.version !== request.caseRef.version) return undefined
         const pending = [...current.value.case.alternatives.flatMap((alternative) => alternative.result.costCoverage.entries), ...current.value.case.choices.flatMap((choice) => choice.costCoverage.entries)].filter((entry) => entry.status === "pending")
-        if (value.unresolvedConditions.some((condition) => !pending.some((entry) => entry.categoryId === condition.category && entry.reason === condition.reason && entry.questionRef === condition.questionRef))) return undefined
+        const missing = [...current.value.case.alternatives.flatMap((alternative) => alternative.result.costCoverage.derivedMissingCategoryIds), ...current.value.case.choices.flatMap((choice) => choice.costCoverage.derivedMissingCategoryIds)]
+        if (value.unresolvedConditions.some((condition) => !pending.some((entry) => entry.categoryId === condition.category && entry.reason === condition.reason && entry.questionRef === condition.questionRef) && !(condition.reason === "missing-required-cost-category" && missing.includes(condition.category) && !condition.questionRef && !condition.evidenceRefs.length))) return undefined
         const refs = [...value.relations.flatMap((relation) => [relation.from, relation.to, ...relation.evidenceRefs]), ...value.unresolvedConditions.flatMap((condition) => condition.evidenceRefs)]
         if (refs.some((ref) => !current.value.evidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return undefined
         if (value.relations.length) {

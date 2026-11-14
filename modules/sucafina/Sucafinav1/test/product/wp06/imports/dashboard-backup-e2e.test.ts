@@ -32,15 +32,17 @@ test("human JSON restore keeps private state and returns the same receipt after 
     await store.initializeSources("dashboard")
     await store.initializeSources("planner")
     await store.initializeSources("procurement")
-    await store.transaction("dashboard", async (snapshot) => { snapshot.data.risks = [{ id: "r1", name: "Before" }]; snapshot.data.roleMap = []; snapshot.data.budgetLineIds = { protected: "current" }; return { commit: true, value: undefined } })
+    const trustedDocument = { id: "doc-1", key: "contracts/contract-1/doc-1" }
+    await store.transaction("dashboard", async (snapshot) => { snapshot.data.risks = [{ id: "r1", name: "Before" }]; snapshot.data.roleMap = []; snapshot.data.budgetLineIds = { protected: "current" }; snapshot.data.contracts = [{ id: "contract-1", name: "Trusted contract", docs: [trustedDocument] }]; return { commit: true, value: undefined } })
     const code = await identity.enroll()
     const session = await identity.handle(new Request(`http://localhost:4110/sucafina/auth/local?code=${code}`))
     const cookie = session!.headers.get("set-cookie")!.split(";")[0]!
     const request = new Request("http://localhost:4110/sucafina/dashboard", { method: "POST", headers: { cookie, origin: "http://localhost:4110" } })
     const principal = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: await identity.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") }) }))
     if (!principal) throw new Error("missing operator")
+    await store.transaction("dashboard", async (snapshot) => { snapshot.data.access = { [principal.id]: { assigned: ["contracts"] } }; return { commit: true, value: undefined } })
     const access = { installationId: operator.installationId, projectId: "project", principalRef: principal.id, policyVersion: "policy", accessRevision: "access" }
-    const ui = createSfUiAuthority({ privateCommands: sfHumanActions.map((action) => `sf-human:${action}`), authorize: async () => access, createId: randomUUID, now: () => Date.parse(at), commandIdentity: async (_, operation) => operation })
+    const ui = createSfUiAuthority({ privateCommands: sfHumanActions.map((action) => `sf-human:${action}`), authorize: async () => access, createId: randomUUID, now: () => Date.parse(at), commandIdentity: async (_, operation, digest) => digestSfValue({ operation, digest }) })
     const human = createSfHumanAuthority({ origin: "http://localhost:4110", ui })
     const host = { persistence: store, authenticate: identity.authenticate, environment: async () => ({ at, id: randomUUID, directory: [] }), requestFor: (context: TrustedDomainContext) => context.kind === "ui" ? ui.requestFor(context) : undefined, revalidate: async (context: TrustedDomainContext) => context.kind === "ui" && await ui.revalidate(context) }
     const actorFor = async (snapshot: Parameters<typeof roleMap>[0]) => {
@@ -80,19 +82,28 @@ test("human JSON restore keeps private state and returns the same receipt after 
       return { status: "ok" as const, value: { page: "IT Risks", evidence } }
     }
     const imports = createSfImportHost({ host, assets: store, services: { scan: async () => true, signingKey: randomBytes(32) }, state, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeTarget, authorizeAdmission: (payload, context) => human.authorize(context, "imports.admit", payload), preview: { revalidate: host.revalidate }, apply: { revalidate: host.revalidate, confirm: (manifest, context) => human.authorize(context, "imports.apply", { manifestId: manifest.id, version: manifest.version }) }, planner: { resolveTarget: async () => ({ status: "unavailable", reason: "not-used" }), verifyTarget: () => false }, dashboard: { resolveTarget, verifyScope: verifyDashboardImportTarget } })
-    const bytes = new TextEncoder().encode(JSON.stringify({ risks: [{ id: "r1", name: "After" }], roleMap: [{ protected: "forged" }], budgetLineIds: { protected: "forged" } }))
-    const digest = new Bun.CryptoHasher("sha256").update(bytes).digest("hex")
-    const admission = await human.admit(request, "imports.admit", { target, format: "json", digest })
-    if (admission.status !== "ok") throw new Error(admission.reason)
-    const file = await imports.admit({ target, format: "json", bytes }, admission.value)
-    human.finish(admission.value)
-    expect(file.status).toBe("ok")
-    if (file.status !== "ok") return
-    const selection = { admittedFileRef: file.value.ref, format: "json", options: {} }
-    const previewGrant = await ui.admit(request, "sf_import_preview", digestSfValue(selection))
-    if (previewGrant.status !== "ok" || !await ui.validate(previewGrant.value, "sf_import_preview", digestSfValue(selection))) throw new Error("preview grant")
-    const preview = await imports.preview(selection, previewGrant.value)
-    ui.finish(previewGrant.value)
+    const previewBackup = async (data: Record<string, unknown>) => {
+      const bytes = new TextEncoder().encode(JSON.stringify(data))
+      const digest = new Bun.CryptoHasher("sha256").update(bytes).digest("hex")
+      const admission = await human.admit(request, "imports.admit", { target, format: "json", digest })
+      if (admission.status !== "ok") throw new Error(admission.reason)
+      const file = await imports.admit({ target, format: "json", bytes }, admission.value)
+      human.finish(admission.value)
+      if (file.status !== "ok") throw new Error(file.reason)
+      const selection = { admittedFileRef: file.value.ref, format: "json" as const, options: {} }
+      const previewGrant = await ui.admit(request, "sf_import_preview", digestSfValue(selection))
+      if (previewGrant.status !== "ok" || !await ui.validate(previewGrant.value, "sf_import_preview", digestSfValue(selection))) throw new Error("preview grant")
+      const result = await imports.preview(selection, previewGrant.value)
+      ui.finish(previewGrant.value)
+      return result
+    }
+    expect((await previewBackup({ risks: [{ id: "r1", name: "Removed contract attempt" }], contracts: [], roleMap: [], access: {}, budgetLineIds: {} })).status).toBe("needs-input")
+    expect((await previewBackup({ risks: [{ id: "r1", name: "New attachment attempt" }], contracts: [{ id: "contract-1", docs: [{ id: "doc-forged", key: "contracts/contract-1/forged" }] }] })).status).toBe("needs-input")
+    const afterRejectedBackups = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data) }))
+    expect(afterRejectedBackups.contracts).toEqual([{ id: "contract-1", name: "Trusted contract", docs: [trustedDocument] }])
+    expect(afterRejectedBackups.access).toEqual({ [principal.id]: { assigned: ["contracts"] } })
+    expect(afterRejectedBackups.risks).toEqual([{ id: "r1", name: "Before" }])
+    const preview = await previewBackup({ risks: [{ id: "r1", name: "After" }], contracts: [{ id: "contract-1", name: "Edited business fields" }], roleMap: [{ protected: "forged" }], access: { [principal.id]: { assigned: ["risks"] } }, budgetLineIds: { protected: "forged" } })
     expect(preview.status).toBe("ok")
     if (preview.status !== "ok") return
     const applyInput = { manifestId: preview.value.id, version: preview.value.version }
@@ -103,6 +114,8 @@ test("human JSON restore keeps private state and returns the same receipt after 
     expect(after.data.risks).toEqual([{ id: "r1", name: "After" }])
     expect(after.data.roleMap).toEqual([])
     expect(after.data.budgetLineIds).toEqual({ protected: "current" })
+    expect(after.data.access).toEqual({ [principal.id]: { assigned: ["contracts"] } })
+    expect(after.data.contracts).toEqual([{ id: "contract-1", name: "Edited business fields", docs: [trustedDocument] }])
     expect(after.data.__sfProductV1).toBeDefined()
     expect(await apply()).toEqual(first)
     expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.audit.length }))).toBe(after.audit.length)
