@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.s0-c.integration-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 189,
+  "logical_actor": "S0-C",
+  "epoch": "S0-C-e21-browser189",
+  "effective_model": "GPT-6",
+  "runtime_session_id": null,
+  "session_id_disclosure": "NOT_EXPOSED; Astra-specific runtime not asserted",
+  "actor": "ChatGPT via connected GitHub MCP",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "source_packet_sha": "51c636f2c05e722b5fab51463fe3a8bd52f39cfc",
+  "observed_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+  "observed_tree": "5cee64807f55d0ec169801795712844051c47e16",
+  "prior_authority": "162 revoked for future writes by explicit fence/CAS; no claim of process termination",
+  "predecessor_material": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "original_intake_preserved": 23,
+  "source_release_verified": [
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181
+  ],
+  "verified_preimages": 11,
+  "verified_postimages": 11,
+  "code_committed": false,
+  "route": {
+    "integrator": 189,
+    "compiler": 190,
+    "product_ci": 191
+  },
+  "native_goal": "paused",
+  "global_release": false,
+  "local_tests": "NOT_RUN_PROHIBITED",
+  "note": "ACK confirms input and authority only, not code integration or runtime validation; subsequent product commit and consumption receipts required."
+}
