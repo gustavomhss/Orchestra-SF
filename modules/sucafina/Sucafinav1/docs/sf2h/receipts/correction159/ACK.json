@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.review-correction-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 159,
+  "slot": "N28",
+  "pr": 152,
+  "branch": "sf-ux-n28",
+  "epoch": "ux-native-n28-e2-browser159",
+  "effective_model": "GPT-6",
+  "execution_actor": "ChatGPT (via GitHub MCP)",
+  "github_principal": "gustavomhss",
+  "session_id": null,
+  "session_id_status": "NOT_EXPOSED",
+  "preflight": "VERIFIED_STATIC",
+  "expected_head": "12e4f098ac9e7ed3035de7a7c66d4a26d8f47dcd",
+  "observed_head": "12e4f098ac9e7ed3035de7a7c66d4a26d8f47dcd",
+  "observed_tree": "cdcc2b3c0ce724eb69e72551ce568727e93b09dc",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/S0-FENCE.json",
+    "blob": "5dc357153e1968543cd5c22a0e8b58f42d875007",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "previous_runtime_termination_not_claimed": true
+  },
+  "preimages": {
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts": "ce8f1423df32e6dc7eb4fde0a1c066bc71c3db9b",
+    "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts": "b12487eff9524cd679d6bc9a6b23236bd5f68af3"
+  },
+  "producer_pins": {
+    "packages/schema/src/sucafina/reviews.ts": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+    "apps/cli/src/sucafina-product/dashboard-http.ts": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+    "apps/cli/src/sucafina-product/extended-http.ts": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a"
+  },
+  "findings": [
+    "PRE147-R02-01",
+    "PRE147-R02-02",
+    "PRE147-R02-03"
+  ],
+  "finding_evidence": "CONFIRMED_STATIC_CURRENT_U32_PREIMAGES; NO_RUNTIME_PROOF",
+  "allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/**"
+  ],
+  "local_tests": "NOT_RUN",
+  "integration": "132_ONLY",
+  "compiler": "149_ONLY",
+  "ci": "150_ONLY",
+  "native_goal": "paused",
+  "global_release": false
+}
