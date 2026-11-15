@@ -1,0 +1,25 @@
+{
+  "schema": "sf2h.native-ui.pr-receipt.v1",
+  "order": "A10",
+  "lease": "ux-native-a10-e1",
+  "branch": "sf-ux-a10",
+  "branch_head_at_pr": "cfc33456f7e441a20c2a41d9d1594dbafc798986",
+  "branch_tree_at_pr": "34c6e14bf13aea2829c065f31cec2728db817e29",
+  "pull_request": {
+    "number": 138,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/138",
+    "base": "sf2-stack",
+    "head": "sf-ux-a10",
+    "draft": true,
+    "merged": false
+  },
+  "authoritative_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A10/handoff-e1.json",
+  "code_leaf_commit": "936afcfbaea05238fe273e0a64240c0b0354ee0e",
+  "note": "PR diff includes earlier native-ui planning because working and base branches diverged. Only A10 exclusive leaf blobs from handoff are integration authority. No branch-wide merge, no local tests, no deployment or Goal resume.",
+  "verification": {
+    "branch_head_matches_pr": true,
+    "pr_open": true,
+    "mergeable_at_observation": true,
+    "draft": true
+  }
+}
