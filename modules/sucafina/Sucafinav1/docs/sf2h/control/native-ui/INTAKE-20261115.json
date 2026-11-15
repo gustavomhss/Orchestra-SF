@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h.ux.campaign-intake.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_status": "CONTINUING_LATE",
+  "state": "INCORPORATED_FOR_EXECUTION_PREFLIGHT; NOT_ALL_OUTPUTS_ADMITTED",
+  "authorization": "User explicitly requested incorporating completed UX/UI plan into this execution pipeline; routine preparation authorized.",
+  "immutable_canonical": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "ux": {
+    "head": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "original_pr": 76,
+    "dispatch_pr": 99,
+    "old_review_pr": 91,
+    "orders": 78,
+    "surfaces": 70,
+    "operations": 305,
+    "first_wave_roles": 20,
+    "first_wave_authors": 19,
+    "existing_coordinator_alias": 1,
+    "remaining_orders": 58,
+    "remaining_outputs": [
+      "U10.overview",
+      "U13.complete"
+    ]
+  },
+  "proof": {
+    "documentary_run": 43724291296,
+    "result": "PASS_DOCUMENTARY_ONLY",
+    "independent_review": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/N0-INTAKE-20261115.json",
+    "n0_complete_go": false
+  },
+  "operational_overlay": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/FIRST-WAVE-OVERLAY.json",
+  "product_head_observed": "23f91b44f84c9bf61249844d9a7eac2782d1bce0",
+  "material_observed": "9dddec6a0a1825a2080569d94605e7dccb5cd056",
+  "next_actions": [
+    "114 acknowledge same-instance C00 adoption and reconcile familysource/currentheads",
+    "recheck localized N0 fixes and semantic drift per family",
+    "prepare one branch per19author after per-outputadmission;record realACK/model/session/lease and capacity",
+    "fill ready slots from the unique78-order queue as first outputs finish;no duplicate77A-E queue"
+  ],
+  "native_goal": "paused;no new supervisor/controller created",
+  "GLOBAL_RELEASE": false
+}

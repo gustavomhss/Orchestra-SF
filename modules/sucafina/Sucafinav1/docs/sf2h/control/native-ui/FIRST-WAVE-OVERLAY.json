@@ -1,0 +1,1843 @@
+{
+  "schema": "sf2h.ux.first-wave.overlay.v1",
+  "state": "PREPARED_N0_PENDING_PER_OUTPUT_PREFLIGHT",
+  "source": {
+    "ux_head": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    }
+  },
+  "routing": {
+    "integrator": {
+      "mission": 114,
+      "actor": "S0-C sole integrator successor106, user-appointed mission114",
+      "lease": "S0-C-e17-browser114",
+      "branch": "sf2-stack",
+      "mode": "C00_ALIAS_OF_SAME_EXISTING_SESSION; no additional writer",
+      "adoption_ack": "PENDING"
+    },
+    "product_ci": {
+      "mission": 120,
+      "lease": "product-ci-browser120",
+      "ack_sha": "f29dd5a9765437bf23fbc21e10d62eacc3680ed0"
+    },
+    "compiler": {
+      "mission": 119,
+      "lease": "gate-tooling-browser119",
+      "ack_sha": "037aa957c9153db698e4cea04f774a744107e5bf"
+    }
+  },
+  "global_rules": [
+    "User authorized incorporation of UX; no additional user confirmation is needed for routine scope decisions.",
+    "Original 15WP74tasks17contracts1610criteria and all release gates preserved. UX adds native UI realization, no MVP or replacement acceptance.",
+    "20 roles means SAME existing integrator/C00 plus19 potential authors; no20newwriters, no duplicatedsupervisor/CI, no claimed real slots before actualACK.",
+    "Read pinned card mission and required_reads, not obsolete card.prompt actor routing. This overlay takes precedence only on actor routing, bounded entrypoints, F01 clarification and generated-code discipline; contracts remain pinned.",
+    "Parallel deterministic authoring uses exact frozen interfaces; producer implementations gate integration/qualification causally, not global authoring. No stubs or mock installed proof.",
+    "Before each write: actual actor/session/model, branch/base/tree/source-family blobs, contract digests, owner release/preimage check, S0+same114admission and bounded lease/ACK recorded. Silence never revokes writers.",
+    "ctx.installations select=ids is independent of directory LocationMiddleware; select=location uses its own validated Location branch as CONTRACTS2.1. Reconcile F01 work-order generic middleware wording accordingly.",
+    "U10.queue and U13.pr-approval get only their increment exports. U10.overview/U13.complete and all58remaining orders stay required.",
+    "C00 generated SDK ownership means generation ONLY; after Protocol/ServerHttpApi changes run bun run generate in packages/client via authorizedenvironment; never hand-edit generated/generated-effect.",
+    "GitHub remote MCP/CAS noforce/no devmerge/deploy/Azure/engines/restart/secrets. Tests, validators,parser/typecheck exclusively Actions per UX protocol;120product/119compiler exactSHA/dedup. NativeGoal stayspaused.",
+    "GLOBAL_RELEASE remains false until full sameC acceptance including nativeUI, consumers, original8CI+epic+AM+3FINAL+G7C/G8D+Dprovenance."
+  ],
+  "cards": [
+    {
+      "seat": "C00",
+      "order_id": "I00",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/I00.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/navigation.ts",
+        "packages/app-shell/src/orchestra/chapter-route.tsx",
+        "packages/app-shell/src/orchestra/sidebar.tsx",
+        "packages/app-shell/src/app.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/entrypoints/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/route-manifest.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/index.ts",
+        "packages/app-shell/src/i18n/orchestra.ts",
+        "packages/schema/src/sucafina/index.ts",
+        "packages/schema/src/sucafina.ts",
+        "packages/client/src/sucafina/index.ts",
+        "packages/client/src/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/index.ts",
+        "apps/cli/src/sucafina-product/installation.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "packages/app-shell/e2e/playwright.production.config.ts",
+        "apps/desktop/src/main/ipc.ts",
+        "apps/desktop/src/preload/index.ts",
+        "apps/desktop/src/preload/types.ts",
+        "apps/desktop/src/renderer/index.tsx",
+        "packages/app-shell/src/context/platform.tsx",
+        "packages/protocol/src/api.ts",
+        "packages/server/src/handlers.ts",
+        "packages/server/src/routes.ts",
+        "apps/cli/src/commands/handlers/serve.ts",
+        "apps/desktop/src/main/index.ts",
+        "apps/desktop/src/main/owned-serve.ts",
+        "apps/desktop/src/main/dock-channel.ts",
+        "packages/client/src/generated/**",
+        "packages/client/src/generated-effect/**",
+        "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "packages/schema/package.json",
+        "packages/client/package.json",
+        "packages/app-shell/src/context/server.tsx",
+        "packages/schema/src/sucafina/operation-registry.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "packages/app-shell/src/context/layout-route.ts",
+        "packages/app-shell/src/context/language.tsx",
+        "packages/app-shell/src/orchestra/shell/navigation-commands.tsx",
+        "packages/app-shell/src/orchestra/compact-navigation.ts",
+        "packages/app-shell/src/orchestra/shell/mobile-navigation.tsx"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "surface-specs",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "surface-specs",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/I00.json"
+        ],
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "symbol": "SfOperationRegistry",
+          "signature": "CONTRACTS §6.1–6.2 and host-signatures; complete closed metadata only, zero family imports."
+        },
+        {
+          "path": "packages/schema/src/sucafina/index.ts",
+          "symbol": "SfNativeOperationBindings",
+          "signature": "Readonly candidate-admitted codec bindings per host-signatures; only actual included schemas, injected into transport/broker. Missing binding returns contract-unavailable before network, no fallback."
+        }
+      ],
+      "depend_on_integration": [],
+      "depend_on_qualification": [],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": "sf2-stack",
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W01",
+      "order_id": "D01",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/D01.json",
+      "owns": [
+        "apps/desktop/src/main/sucafina/**",
+        "apps/desktop/src/preload/sucafina.ts",
+        "apps/desktop/src/renderer/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/D01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "apps/desktop/src/main/sucafina/index.ts",
+          "symbol": "createSfDesktopBroker",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        },
+        {
+          "path": "apps/desktop/src/preload/sucafina.ts",
+          "symbol": "createSfDesktopPreloadCapability",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        },
+        {
+          "path": "apps/desktop/src/renderer/sucafina.ts",
+          "symbol": "createSfDesktopCapability",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+          "symbol": "attachSfNativeEnrollment",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        }
+      ],
+      "depend_on_integration": [
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W02",
+      "order_id": "F01",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F01.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/**",
+        "packages/schema/src/sucafina/context.ts",
+        "packages/client/src/sucafina/context.ts",
+        "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+        "packages/protocol/src/groups/sucafina.ts",
+        "packages/server/src/sucafina-installations.ts",
+        "packages/server/src/handlers/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/context.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "contract_refs": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "transport",
+          "ui-change-review",
+          "ui-frame"
+        ],
+        "surfaces": [
+          "UI67"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/entry",
+          "contract-catalog.json#/sources/identity",
+          "contract-catalog.json#/sources/server-routes"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "symbol": "SfContextProvider",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "symbol": "useSfContext",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "symbol": "SfContextPage",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+          "symbol": "createSfContextHandler",
+          "signature": "(deps: Omit<SfNativeHostDependencies, \"readContext\">) => { readonly readContext: (request: Request) => Promise<SfContextResult>; readonly handle: (request: Request) => Promise<Response> }",
+          "type_source": "apps/cli/src/sucafina-product/native-ui/router.ts; server-only type import"
+        },
+        {
+          "path": "packages/client/src/sucafina/context.ts",
+          "symbol": "createSfContextClient",
+          "signature": "CONTRACTS.md §6.1; only ctx.context. Discovery uses the normal generated SDK method; no duplicate wrapper and no login/logout JSON methods."
+        }
+      ],
+      "depend_on_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W03",
+      "order_id": "F02",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F02.json",
+      "owns": [
+        "packages/client/src/sucafina/transport.ts",
+        "packages/client/src/sucafina/transport/**",
+        "packages/schema/src/sucafina/common.ts",
+        "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "apps/cli/src/sucafina-product/native-ui/transport/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F02.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/identity"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "symbol": "createSfTransport",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+          "symbol": "mountSfNativeProjections",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+          "symbol": "SfNativeHostDependencies",
+          "signature": "CONTRACTS.md §6.1 server-only readonly type; never exported to Schema/Client"
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "symbol": "SfTransport",
+          "signature": "host-signatures.ts; Client transport interface, Schema/common owns only the pure DTO/result/operation shapes."
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "symbol": "createSfAuthActions",
+          "signature": "CONTRACTS.md §6.1 exact auth/navigation signature; no generic JSON login handler."
+        }
+      ],
+      "depend_on_integration": [
+        "F01"
+      ],
+      "depend_on_qualification": [
+        "F01"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W04",
+      "order_id": "F03",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F03.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+        "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts"
+      ],
+      "authoring_locks": [
+        "surface-specs",
+        "ui-frame"
+      ],
+      "contract_refs": [
+        "surface-specs",
+        "ui-frame"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F03.json"
+        ],
+        "contracts": [
+          "surface-specs",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfPageFrame",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "symbol": "SfStatePanel",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfContextBar",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfChartFrame",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "symbol": "SfRunState",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "depend_on_integration": [],
+      "depend_on_qualification": [],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W05",
+      "order_id": "F04",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F04.json",
+      "owns": [
+        "packages/app-shell/e2e/sucafina/native/fixture/**",
+        "packages/app-shell/e2e/sucafina/native/fixture.ts",
+        "packages/app-shell/test-browser/sucafina-native/fixture/**"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "surface-specs",
+        "transport",
+        "ui-frame"
+      ],
+      "contract_refs": [
+        "ctx",
+        "surface-specs",
+        "transport",
+        "ui-frame"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F04.json"
+        ],
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [],
+      "depend_on_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W06",
+      "order_id": "S01",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S01.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s01.ts",
+        "packages/app-shell/test-browser/sucafina-native/s01.test.ts"
+      ],
+      "authoring_locks": [
+        "ui-frame",
+        "ui-table"
+      ],
+      "contract_refs": [
+        "ui-frame",
+        "ui-table"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S01.json"
+        ],
+        "contracts": [
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "symbol": "SfDataTable",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "symbol": "SfListDetail",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "symbol": "SfRecordDetail",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "depend_on_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W07",
+      "order_id": "S02",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S02.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+        "packages/app-shell/test-browser/sucafina-native/s02.test.ts"
+      ],
+      "authoring_locks": [
+        "ui-frame",
+        "ui-grid"
+      ],
+      "contract_refs": [
+        "ui-frame",
+        "ui-grid"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S02.json"
+        ],
+        "contracts": [
+          "ui-frame",
+          "ui-grid"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+          "symbol": "SfMonthlyGrid",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "depend_on_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W08",
+      "order_id": "S03",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S03.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+        "packages/app-shell/test-browser/sucafina-native/s03.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "contract_refs": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S03.json"
+        ],
+        "contracts": [
+          "ctx",
+          "transport",
+          "ui-change-review",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.ts",
+          "symbol": "createSfDraft",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "symbol": "SfChangeReview",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/index.tsx",
+          "symbol": "SfReceiptView",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "depend_on_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W09",
+      "order_id": "S04",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S04.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+        "packages/app-shell/test-browser/sucafina-native/s04.test.ts"
+      ],
+      "authoring_locks": [
+        "files",
+        "ui-evidence",
+        "ui-frame"
+      ],
+      "contract_refs": [
+        "files",
+        "ui-evidence",
+        "ui-frame"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S04.json"
+        ],
+        "contracts": [
+          "files",
+          "ui-evidence",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx",
+          "symbol": "SfEvidencePanel",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx",
+          "symbol": "SfAttachmentField",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "depend_on_integration": [
+        "F03",
+        "A06"
+      ],
+      "depend_on_qualification": [
+        "F03",
+        "A06"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W10",
+      "order_id": "S05",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S05.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+        "packages/app-shell/test-browser/sucafina-native/s05.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "reviews",
+        "ui-collaboration",
+        "ui-frame"
+      ],
+      "contract_refs": [
+        "ctx",
+        "domain-read",
+        "reviews",
+        "ui-collaboration",
+        "ui-frame"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S05.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "reviews",
+          "ui-collaboration",
+          "ui-frame"
+        ],
+        "surfaces": [
+          "UI51",
+          "UI52",
+          "UI53"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfRelations",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfThread",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfQuestion",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfConfirmation",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "depend_on_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W11",
+      "order_id": "A03",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A03.json",
+      "owns": [
+        "packages/schema/src/sucafina/procurement.ts",
+        "packages/client/src/sucafina/procurement.ts",
+        "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+        "packages/schema/src/sucafina/procurement/**",
+        "packages/client/src/sucafina/procurement/**",
+        "apps/cli/src/sucafina-product/native-ui/procurement/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "procurement",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "procurement",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A03.json"
+        ],
+        "contracts": [
+          "ctx",
+          "procurement",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/procurement-scenario",
+          "contract-catalog.json#/sources/renderer-CAP24",
+          "contract-catalog.json#/sources/renderer-CAP25",
+          "contract-catalog.json#/sources/renderer-CAP26",
+          "contract-catalog.json#/sources/renderer-CAP27",
+          "contract-catalog.json#/sources/renderer-CAP28",
+          "contract-catalog.json#/sources/sourcing"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/procurement.ts",
+          "symbol": "SfProcurement",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/procurement.ts",
+          "symbol": "createSfProcurementClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+          "symbol": "createSfProcurementProjectionHandlers",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W12",
+      "order_id": "U10",
+      "output_id": "U10.queue",
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U10.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/**"
+      ],
+      "authoring_locks": [
+        "bi",
+        "ctx",
+        "procurement",
+        "surface-specs",
+        "ui-bi",
+        "ui-frame",
+        "ui-table"
+      ],
+      "contract_refs": [
+        "bi",
+        "ctx",
+        "procurement",
+        "surface-specs",
+        "ui-bi",
+        "ui-frame",
+        "ui-table"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U10.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "procurement",
+          "surface-specs",
+          "ui-bi",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP24"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/procurement-scenario",
+          "contract-catalog.json#/sources/renderer-CAP24",
+          "contract-catalog.json#/sources/sourcing"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/index.tsx",
+          "symbol": "SfProcurementQueueView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "U21"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W13",
+      "order_id": "U13",
+      "output_id": "U13.pr-approval",
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U13.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/**"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "procurement",
+        "surface-specs",
+        "ui-change-review",
+        "ui-frame",
+        "ui-table"
+      ],
+      "contract_refs": [
+        "ctx",
+        "procurement",
+        "surface-specs",
+        "ui-change-review",
+        "ui-frame",
+        "ui-table"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U13.json"
+        ],
+        "contracts": [
+          "ctx",
+          "procurement",
+          "surface-specs",
+          "ui-change-review",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP26"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/renderer-CAP26"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+          "symbol": "SfPrApprovalView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W14",
+      "order_id": "A01",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A01.json",
+      "owns": [
+        "packages/schema/src/sucafina/domain.ts",
+        "packages/client/src/sucafina/domain.ts",
+        "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "packages/schema/src/sucafina/domain/**",
+        "packages/client/src/sucafina/domain/**",
+        "apps/cli/src/sucafina-product/native-ui/domain/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/dashboard",
+          "contract-catalog.json#/sources/entry",
+          "contract-catalog.json#/sources/renderer-CAP01",
+          "contract-catalog.json#/sources/renderer-CAP03",
+          "contract-catalog.json#/sources/renderer-CAP04",
+          "contract-catalog.json#/sources/renderer-CAP05",
+          "contract-catalog.json#/sources/renderer-CAP09",
+          "contract-catalog.json#/sources/renderer-CAP10",
+          "contract-catalog.json#/sources/renderer-CAP13",
+          "contract-catalog.json#/sources/renderer-CAP14",
+          "contract-catalog.json#/sources/renderer-CAP15",
+          "contract-catalog.json#/sources/renderer-CAP16"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/domain.ts",
+          "symbol": "SfDomain",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/domain.ts",
+          "symbol": "createSfDomainClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/domain.ts",
+          "symbol": "createSfDomainProjectionHandlers",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W15",
+      "order_id": "A02",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A02.json",
+      "owns": [
+        "packages/schema/src/sucafina/planner.ts",
+        "packages/client/src/sucafina/planner.ts",
+        "apps/cli/src/sucafina-product/native-ui/planner.ts",
+        "packages/schema/src/sucafina/planner/**",
+        "packages/client/src/sucafina/planner/**",
+        "apps/cli/src/sucafina-product/native-ui/planner/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "planner",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "planner",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A02.json"
+        ],
+        "contracts": [
+          "ctx",
+          "planner",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/forecast",
+          "contract-catalog.json#/sources/planner",
+          "contract-catalog.json#/sources/renderer-CAP17",
+          "contract-catalog.json#/sources/renderer-CAP18",
+          "contract-catalog.json#/sources/renderer-CAP19",
+          "contract-catalog.json#/sources/renderer-CAP20",
+          "contract-catalog.json#/sources/renderer-CAP21",
+          "contract-catalog.json#/sources/renderer-CAP22",
+          "contract-catalog.json#/sources/renderer-CAP23"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/planner.ts",
+          "symbol": "SfPlanner",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/planner.ts",
+          "symbol": "createSfPlannerClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/planner.ts",
+          "symbol": "createSfPlannerProjectionHandlers",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W16",
+      "order_id": "A04",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A04.json",
+      "owns": [
+        "packages/schema/src/sucafina/decisions.ts",
+        "packages/client/src/sucafina/decisions.ts",
+        "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+        "packages/schema/src/sucafina/decisions/**",
+        "packages/client/src/sucafina/decisions/**",
+        "apps/cli/src/sucafina-product/native-ui/decisions/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "decisions",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "decisions",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A04.json"
+        ],
+        "contracts": [
+          "ctx",
+          "decisions",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/choice",
+          "contract-catalog.json#/sources/decision-apply",
+          "contract-catalog.json#/sources/decision-controls",
+          "contract-catalog.json#/sources/portfolio",
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/decisions.ts",
+          "symbol": "SfDecisions",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/decisions.ts",
+          "symbol": "createSfDecisionsClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+          "symbol": "createSfDecisionsProjectionHandlers",
+          "signature": "CONTRACTS.md: exact new projection IDs only, preserving producer Request/auth and original typed shapes"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W17",
+      "order_id": "A05",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A05.json",
+      "owns": [
+        "packages/schema/src/sucafina/portfolio.ts",
+        "packages/client/src/sucafina/portfolio.ts",
+        "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+        "packages/schema/src/sucafina/portfolio/**",
+        "packages/client/src/sucafina/portfolio/**",
+        "apps/cli/src/sucafina-product/native-ui/portfolio/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "portfolio",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "portfolio",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A05.json"
+        ],
+        "contracts": [
+          "ctx",
+          "portfolio",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/portfolio"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/portfolio.ts",
+          "symbol": "SfPortfolio",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/portfolio.ts",
+          "symbol": "createSfPortfolioClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W18",
+      "order_id": "A06",
+      "output_id": null,
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A06.json",
+      "owns": [
+        "packages/schema/src/sucafina/files.ts",
+        "packages/client/src/sucafina/files.ts",
+        "apps/cli/src/sucafina-product/native-ui/files.ts",
+        "packages/schema/src/sucafina/files/**",
+        "packages/client/src/sucafina/files/**",
+        "apps/cli/src/sucafina-product/native-ui/files/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "files",
+        "transport"
+      ],
+      "contract_refs": [
+        "ctx",
+        "files",
+        "transport"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A06.json"
+        ],
+        "contracts": [
+          "ctx",
+          "files",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/document-scenario",
+          "contract-catalog.json#/sources/documents",
+          "contract-catalog.json#/sources/imports"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/files.ts",
+          "symbol": "SfFiles",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/files.ts",
+          "symbol": "createSfFilesClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    },
+    {
+      "seat": "W19",
+      "order_id": "U11",
+      "output_id": "U11.title-save",
+      "state": "NOT_LAUNCHED_NO_GO",
+      "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U11.json",
+      "owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "files",
+        "procurement",
+        "surface-specs",
+        "ui-change-review",
+        "ui-evidence",
+        "ui-frame",
+        "ui-table"
+      ],
+      "contract_refs": [
+        "ctx",
+        "files",
+        "procurement",
+        "surface-specs",
+        "ui-change-review",
+        "ui-evidence",
+        "ui-frame",
+        "ui-table"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U11.json"
+        ],
+        "contracts": [
+          "ctx",
+          "files",
+          "procurement",
+          "surface-specs",
+          "ui-change-review",
+          "ui-evidence",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP25"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/procurement-scenario",
+          "contract-catalog.json#/sources/renderer-CAP25",
+          "contract-catalog.json#/sources/sourcing"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/index.tsx",
+          "symbol": "SfRequestTitleEdit",
+          "signature": "(props: SfSurfaceProps) => JSX.Element; mounted by I00 in Requests detail, not new route"
+        }
+      ],
+      "depend_on_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03",
+        "S04"
+      ],
+      "actual_actor": null,
+      "actual_session": null,
+      "requested_model": null,
+      "effective_model": null,
+      "branch": null,
+      "lease": null,
+      "source_family_repins": null,
+      "owner_ack": null
+    }
+  ],
+  "remaining_orders": [
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A15",
+    "Q01",
+    "Q02",
+    "U01",
+    "U02",
+    "U03",
+    "U04",
+    "U05",
+    "U06",
+    "U07",
+    "U08",
+    "U09",
+    "U12",
+    "U14",
+    "U15",
+    "U16",
+    "U17",
+    "U18",
+    "U19",
+    "U20",
+    "U21",
+    "U22",
+    "U23",
+    "U24",
+    "U25",
+    "U26",
+    "U27",
+    "U28",
+    "U29",
+    "U30",
+    "U31",
+    "U32",
+    "U33",
+    "U34",
+    "U35",
+    "U36",
+    "U37",
+    "U38",
+    "U39",
+    "U40",
+    "U41",
+    "U42",
+    "U43",
+    "U44",
+    "U45",
+    "U46",
+    "U47",
+    "R01",
+    "R02",
+    "R03",
+    "A07"
+  ],
+  "residual_outputs": [
+    "U10.overview",
+    "U13.complete"
+  ]
+}

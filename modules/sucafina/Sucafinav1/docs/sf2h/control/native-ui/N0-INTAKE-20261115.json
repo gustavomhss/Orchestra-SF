@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.ux.n0.independent-intake.v1",
+  "state": "FIX_FIRST_LOCALIZED",
+  "reviewer": {
+    "task": "/root/ux_n0_review",
+    "requested_model": "gpt-6.1-terra",
+    "provider_model_attestation": null,
+    "independent_of_ux_authorship": true,
+    "wrote_product": false,
+    "executed_tests": false
+  },
+  "sources": {
+    "ux_head": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "ux_tree": "3508c5d238dbde6a1391e7137f7dbaeed31757de",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "material": "9dddec6a0a1825a2080569d94605e7dccb5cd056",
+    "material_tree": "da2c6c21f67b2e644d9027dcad9c986a28b39f85",
+    "actions": 43724291296,
+    "job": 132842733633
+  },
+  "coverage": {
+    "orders_retrieved_individually": 78,
+    "orders_structurally_inspected": 78,
+    "task_ids_matched": 74,
+    "canonical_index_distinct_ids": 1610,
+    "full_1610_texts_read": false,
+    "full_78_texts_read": false,
+    "foundations_and_pilot_detailed": true,
+    "path_claims_vs_operational_packs_checked": [
+      52,
+      81,
+      95,
+      96,
+      109,
+      110,
+      111,
+      112,
+      113,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "literal_collisions_found": 0,
+    "live_leases_all_verified": false
+  },
+  "findings": [
+    {
+      "id": "UX-N0-ROUTING",
+      "severity": "HIGH",
+      "finding": "Original cards use old integrator105/product101/compiler45",
+      "disposition": "Superseded only operationally by overlay with actual114/120/119; no modification of pinned contracts or old receipts."
+    },
+    {
+      "id": "UX-N0-F01",
+      "severity": "HIGH",
+      "finding": "F01 generic LocationMiddleware instruction conflicts with CONTRACTS2.1 IDs branch without directory",
+      "source_blob": "c8707ac3b5248395044edce851bfb8487817c9bb",
+      "disposition": "Overlay explicitly binds discriminated ctx.installations select=ids|location; directory LocationMiddleware required only location branch; sourceIds do not depend on stale directory."
+    },
+    {
+      "id": "UX-N0-SOURCE-DRIFT",
+      "severity": "PER_FAMILY_HOLD",
+      "finding": "C57 differs from old entry/identity/application/Procurement/dashboard/workbench source pins",
+      "disposition": "Repin blobs and reconcile semantic deltas per consuming family before its GO; hash change alone is not incompatible and not a global deterministic authoring barrier."
+    },
+    {
+      "id": "UX-N0-INCREMENTS",
+      "severity": "MEDIUM",
+      "finding": "W12 queue card lists overview export outside allowed prefix; W13 PR card lists full approvals export outside prefix",
+      "disposition": "Overlay filters entrypoints to bounded increment owns; full output retained in remaining queue."
+    }
+  ],
+  "limits": "Independent partial/delta N0, not complete N0 approval by all families, not product FINAL/CI/typecheck. No GO invented."
+}
