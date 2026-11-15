@@ -186,7 +186,14 @@ export function createSfReviewsProjectionHandlers(input: Input) {
         : fail("unavailable", "review-read-unavailable", 503)
     } finally { authority.ui.finish(call) }
   }
-  return (request: Request, surface: string): Promise<Response | undefined> =>
+  const run = (request: Request, surface: string): Promise<Response | undefined> =>
     reviews?.readScope ? reviews.readScope.run(request, () => handle(request, surface)) :
     handle(request, surface)
+  // F02 router accepts exactly {operationId, handle(originalRequest)}. The
+  // surface is the reviews domain, not a user-controlled URL/body field.
+  return {
+    operationId: "projection.review" as const,
+    handle: async (request: Request): Promise<Response> =>
+      await run(request, "dashboard") ?? fail("unavailable", "review-route-unavailable", 503),
+  }
 }
