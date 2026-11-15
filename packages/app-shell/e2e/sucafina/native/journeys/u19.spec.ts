@@ -56,7 +56,7 @@ test("U19 UI44 requires genuine selected results and A05-issued sensitivity unit
   page, nativeHarness,
 }) => {
   await mounted(page, nativeHarness)
-  await page.goto(route(nativeHarness.manifest.target, "/orchestra/sf-sensitivity"))
+  await page.goto(route(nativeHarness.manifest.target, "/orchestra/sf-portfolio/sensitivity"))
   const root = page.locator("[data-sf-sensitivity]")
   await expect(root).toBeVisible()
   await expect(root).toHaveAttribute("data-sf-surface", "UI44")
@@ -78,7 +78,7 @@ test("U19 cross-owner context cannot expose case, portfolio combinations or sens
     /^(denied|unavailable|invalid|session-expired)$/)
   await expect(scenario.locator(".sf-u19-combination")).toHaveCount(0)
   const wrongInstallation = { ...manifest.target, installationId: manifest.wrongInstallation.installationId }
-  await page.goto(route(wrongInstallation, "/orchestra/sf-sensitivity"))
+  await page.goto(route(wrongInstallation, "/orchestra/sf-portfolio/sensitivity"))
   const sensitivity = page.locator("[data-sf-sensitivity]")
   await expect(sensitivity).toBeVisible()
   await expect(sensitivity.locator('[data-sf-state]')).toHaveAttribute("data-sf-state",
@@ -91,7 +91,7 @@ for (const width of [320, 768, 1024, 1280, 1440]) {
   }) => {
     await mounted(page, nativeHarness)
     await page.setViewportSize({ width, height: 900 })
-    await page.goto(route(nativeHarness.manifest.target, "/orchestra/sf-sensitivity"))
+    await page.goto(route(nativeHarness.manifest.target, "/orchestra/sf-portfolio/sensitivity"))
     const root = page.locator("[data-sf-sensitivity]")
     await expect(root).toBeVisible()
     await expect(root.locator('[data-sf-state]')).toHaveAttribute("data-sf-state", /^(ready|partial|empty)$/)
