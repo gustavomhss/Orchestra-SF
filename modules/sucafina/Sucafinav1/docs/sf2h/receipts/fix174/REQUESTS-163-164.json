@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.fix174.requests.v1",
+  "mission": 174,
+  "epoch": "native-fix-e1-browser174",
+  "integrateFirst": {
+    "owner": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "sourceBranch": "sf-ux-w15",
+    "sourcePostBlob": "0a85a3f33bc384196100ee75c974102e04f9868a",
+    "sourcePath": "packages/schema/src/sucafina/planner.ts",
+    "sourcePreBlob": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+    "consumerHeadAtHandoff": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "consumerTreeAtHandoff": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "consumerPreBlob": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+    "onlyAfterCasPreimageAndOwnerRelease": true
+  },
+  "compiler163": {
+    "owner": 163,
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "executeOnlyAfterIntegration": true,
+    "requiredNewProductInput": "0a85a3f33bc384196100ee75c974102e04f9868a",
+    "existingWorkflow": "existing hosted compiler wrapper; no new workflow",
+    "scope": [
+      "packages/schema: bun typecheck",
+      "packages/client: bun typecheck",
+      "apps/cli: bun typecheck",
+      "SDK generation/diff only if required by real descriptor/contract delta; generated code remains 163-only",
+      "guards and source/consumer export compatibility via existing checks"
+    ],
+    "referenceRun": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "material": "690a34cdd81c12d7311f3717c19679b950276161",
+      "conclusion": "failure"
+    },
+    "dedup": "Do not rerun unchanged failed W/S or duplicate active requests. New W must contain postBlob plus source owners and current contracts."
+  },
+  "productCI164": {
+    "owner": 164,
+    "branch": "sf-ci-validation",
+    "pr": 106,
+    "executeOnlyAfterIntegration": true,
+    "selectedPackage": "modules/sucafina",
+    "testSelector": "Sucafinav1/test/native-ui-contract/planner.test.ts",
+    "existingDispatcherOnly": true,
+    "sameExistingSpecs": true,
+    "noMirrorTest": true,
+    "referenceRun": {
+      "run": 43765725305,
+      "job": 132970248049,
+      "material": "690a34cdd81c12d7311f3717c19679b950276161",
+      "plannerResult": "11 PASS; decisions import failed separately"
+    },
+    "browserRunReference": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "cause": "F03/S01/S05 independent component suites, not Planner proof"
+    },
+    "dedup": "Only request after source blob change is actually composed; record W/tree/S/request blob/job + actual verdict. No scope widening."
+  },
+  "globalRelease": false,
+  "nativeGoal": "paused",
+  "checks": "NOT_RUN"
+}

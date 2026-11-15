@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h.fix174.evidence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 174,
+  "order": "A02",
+  "branch": "sf-ux-w15",
+  "pr": 116,
+  "epoch": "native-fix-e1-browser174",
+  "effectiveModel": "GPT-6",
+  "sessionId": null,
+  "githubActor": "gustavomhss",
+  "fence": {
+    "previousEpoch": "ux-native-w15-e3",
+    "revokedForFutureWrites": true,
+    "ackCommit": "056f1ac648466630a276cc2d7977ebcf70bfdbff"
+  },
+  "status": "ARTIFACT_READY_UNINTEGRATED",
+  "source": {
+    "headBeforeAck": "10812b42de20a8275e82b47ca8bfccc9364af226",
+    "headBeforePatch": "056f1ac648466630a276cc2d7977ebcf70bfdbff",
+    "treeBeforePatch": "9017930ad69e3c48a55a5d4ecd2217d1c89cd1fb",
+    "sourcePath": "packages/schema/src/sucafina/planner.ts",
+    "blobBefore": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+    "blobAfter": "0a85a3f33bc384196100ee75c974102e04f9868a",
+    "commitAfter": null,
+    "treeAfter": null
+  },
+  "consumer": {
+    "owner": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "headBefore": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "treeBefore": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "sourcePath": "packages/schema/src/sucafina/planner.ts",
+    "blobBefore": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+    "headAfter": null,
+    "treeAfter": null,
+    "blobAfter": null,
+    "disposition": "PENDING_INTEGRATION_BY_162_ONLY"
+  },
+  "contract": {
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "catalogBlob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contractBlob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "plannerTestBlob": "1630180b74a5775280e4c90038849f9df99b87ff",
+    "scope": "Type-level legacyInput correlation only; original schema definitions/semantics unchanged"
+  },
+  "change": {
+    "totalBindings": 39,
+    "domainPageGet": 7,
+    "domainCommands": 29,
+    "plannerPorts": 3,
+    "changedCalls": 29,
+    "changedFiles": [
+      "packages/schema/src/sucafina/planner.ts"
+    ],
+    "testFilesUnchanged": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+    ],
+    "schemaConstraintsUnchanged": true,
+    "changedCaptures": [
+      "CAP17.import-workbook",
+      "CAP18.save",
+      "CAP18.delete",
+      "CAP18.spread",
+      "CAP18.reset",
+      "CAP18.import-workbook",
+      "CAP19.save",
+      "CAP19.delete",
+      "CAP19.spread",
+      "CAP19.reset",
+      "CAP19.import-workbook",
+      "CAP20.save",
+      "CAP20.delete",
+      "CAP20.sync",
+      "CAP20.import-workbook",
+      "CAP21.save",
+      "CAP21.delete",
+      "CAP21.common",
+      "CAP21.import-workbook",
+      "CAP22.save",
+      "CAP22.delete",
+      "CAP22.import-workbook",
+      "CAP23.save",
+      "CAP23.copy",
+      "CAP23.official",
+      "CAP23.lock",
+      "CAP23.unlock",
+      "CAP23.delete",
+      "CAP23.import-workbook"
+    ],
+    "causalErrors": [
+      "TS2322 planner.ts:250",
+      "TS2345 planner.ts:336,350,364,378,417,431,445,459,498,512,526,565,579,593,632,646,685,699,713,727,741,755"
+    ],
+    "cause": "Unbound P inferred from nested indexed type collapses keyof to common import-workbook; unproven nested generic schema in Schema.Struct.values",
+    "fix": "Capability literal first; action keyof CommandValues[capability], concrete Values extends Schema.Top combined with selected schema; page literal from capability mapping"
+  },
+  "requirements": {
+    "exactly12Months": "UNCHANGED",
+    "zeroAndNull": "UNCHANGED",
+    "forecastSource": "UNCHANGED",
+    "versionsAndCAS": "UNCHANGED",
+    "sourceConstraints190": "UNCHANGED",
+    "isMinLengthIsMaxLength133": "UNCHANGED",
+    "unknownActions": "closed by typed key",
+    "unknownPayloads": "original specific schemas retained"
+  },
+  "checks": {
+    "localTypecheck": "NOT_RUN_PROHIBITED",
+    "localTests": "NOT_RUN_PROHIBITED",
+    "hostedCompiler163": "NOT_RUN_NEW_BLOB_PENDING_162",
+    "hostedPlannerCI164": "NOT_RUN_NEW_BLOB_PENDING_162",
+    "historicalCompiler163": "FAIL_OLD_W_43766055614",
+    "historicalPlanner164": "11_PASS_OLD_W_43765725305_NOT_TRANSFERABLE"
+  },
+  "blocked": [
+    "INTEGRATION_162",
+    "QUALIFICATION_163",
+    "QUALIFICATION_164"
+  ],
+  "nativeGoal": "paused",
+  "globalRelease": false
+}
