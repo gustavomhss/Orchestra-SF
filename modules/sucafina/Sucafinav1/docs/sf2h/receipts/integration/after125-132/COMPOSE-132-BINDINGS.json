@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h.integration132.binding.v1",
+  "epoch": "S0-C-e19-browser132",
+  "source_head": "49da652cc093c6c392f43e89a58eb839640ddafd",
+  "product_files": [
+    {
+      "path": "packages/schema/package.json",
+      "preimage": "9173f337a981d93e5edc2ea44916e27e066b8685",
+      "mode": "modify",
+      "new_exports": [
+        "analyses",
+        "bi",
+        "collaboration",
+        "domain",
+        "memory",
+        "operations",
+        "people",
+        "reviews",
+        "routines",
+        "work"
+      ]
+    },
+    {
+      "path": "packages/client/package.json",
+      "preimage": "515e7bbb3859639886f1a3b3065d700d4193b8ad",
+      "mode": "modify",
+      "new_exports": [
+        "analyses",
+        "bi",
+        "collaboration",
+        "domain",
+        "memory",
+        "operations",
+        "people",
+        "reviews",
+        "routines",
+        "work",
+        "bindings"
+      ]
+    },
+    {
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "preimage": null,
+      "mode": "add"
+    }
+  ],
+  "source_contract_families": 14,
+  "guards": [
+    "Schema.decodeUnknownOption source schema",
+    "Schema.Json wire",
+    "exact operation ID and metadata match",
+    "duplicate rejection",
+    "bytes/navigation unavailable",
+    "transport retains authority"
+  ],
+  "intent": "Expose concrete published schema and client exports and one checked codec map; no second backend or fabricated response",
+  "postimages": "READ_BACK_AFTER_CAS",
+  "typecheck": "NOT_RUN_128",
+  "tests": "NOT_RUN_129",
+  "release": false
+}
