@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.compiler149.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 149,
+  "epoch": "compiler-e3-browser149",
+  "state": "ACTIVE_USER_APPOINTED",
+  "actual_actor": "fresh ChatGPT conversation assigned to mission149",
+  "effective_model": "GPT-6",
+  "runtime_session_id": null,
+  "runtime_session_id_status": "NOT_EXPOSED_BY_RUNTIME",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "initial_head": "a762ab905e48595d24a2f285a692b24a5c7f73e7",
+  "initial_tree": "1b4fd4fb8f121481ebdabe639a51ef3776752c08",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance149/S0-FENCE.json",
+    "blob": "73dd5e497febbef9e5f07d2a3aa08aceb0b3fe56",
+    "expected_head": "a762ab905e48595d24a2f285a692b24a5c7f73e7",
+    "previous_epoch": "compiler-e2-browser128",
+    "previous_future_writes": "REVOKED_BY_S0",
+    "previous_runtime_termination": "NOT_VERIFIED"
+  },
+  "instructions": {
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "packet": "149.json@81fbb8364ca474db8f718faad20c9235519e98fe",
+    "predecessor": "128.json@81fbb8364ca474db8f718faad20c9235519e98fe",
+    "additional_nested_agents": "NONE_FOUND_IN_AUTHORIZED_WRITE_PATH_ANCESTORS"
+  },
+  "adopted_history": {
+    "candidate": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+    "run": 43738074189,
+    "job": 132884987559,
+    "artifact": 14171118214,
+    "checks": 23,
+    "passed": 15,
+    "failed": 8,
+    "sdk": "FAILED_INPUT_SCHEMA_UNION",
+    "bundle": "BUNDLE_DRIFT",
+    "guard_gates": 56,
+    "carry_to_new_candidate_as_PASS": false
+  },
+  "product_snapshot": {
+    "integrator": 132,
+    "epoch": "S0-C-e19-browser132",
+    "branch": "sf2-stack",
+    "observed_head": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "observed_tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+    "context_blob": "423050658692902ddb94358574762906fc06ccff",
+    "protocol_blob": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+    "sdk_query_fix136_integrated": false,
+    "expected_context_blob": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+    "expected_protocol_blob": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+    "expected_test_blob": "d0d54dca9245feb151f9f6cf6015f344cfe741e2"
+  },
+  "tooling": {
+    "workflow_blob": "d6bcd5a31af9f6be4a86b0caa4b0e2a656697f29",
+    "builder_blob": "9d495d8ebbe127d664120abcfd0188d6c40da28d",
+    "verifier_blob": "ef96a75e4e8e16b048740cba02539ae45a70c580"
+  },
+  "authority": {
+    "single_integrator": 132,
+    "compiler": 149,
+    "product_ci": 150,
+    "goal": "paused",
+    "global_release": false
+  },
+  "checks": {
+    "new_candidate": "NOT_RUN",
+    "sdk_generation": "NOT_RUN_AFTER_136_INTEGRATION",
+    "reason": "sf2-stack observed source still uses C64 preimages; do not repeat same SDK failure",
+    "local_tests": "PROHIBITED"
+  },
+  "next": "Inspect latest sf2-stack and actual consumer ACK after mission136 exact three-file integration; then pin coherent C SHA/tree and dispatch one causal hosted compiler/SDK run from existing sf-compiler-c53 workflow. No C64 duplicate."
+}
