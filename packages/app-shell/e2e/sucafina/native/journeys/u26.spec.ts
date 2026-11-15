@@ -14,7 +14,7 @@ function realCase() {
   const caseId = process.env.SF_NATIVE_N30_CASE_ID
   const incarnation = process.env.SF_NATIVE_N30_CASE_INCARNATION
   const version = process.env.SF_NATIVE_N30_CASE_VERSION
-  if (!caseId || !incarnation || !version || !/^\\d+$/.test(version) || Number(version) < 1)
+  if (!caseId || !incarnation || !version || !/^\d+$/.test(version) || Number(version) < 1)
     throw new Error("CI120 must provide the real N30 case ID, incarnation and version")
   return { caseId, incarnation, version }
 }
