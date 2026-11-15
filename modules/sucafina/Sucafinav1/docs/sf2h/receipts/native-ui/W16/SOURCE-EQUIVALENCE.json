@@ -1,0 +1,706 @@
+{
+  "schema": "sf2h.native-ui.W16.A04.source-equivalence.v1",
+  "mission": "UX20-W16",
+  "order": "A04",
+  "owner": "W16",
+  "base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "admission": "PENDING_114_PER_OUTPUT",
+  "authoring_state": "BLOCKED_OWNER",
+  "qualification": "NOT_RUN",
+  "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "contractCatalogBlob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+  "sources": {
+    "choice": {
+      "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+      "blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+      "semanticDelta": "SAME_BLOB"
+    },
+    "decision-apply": {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+      "semanticDelta": "SAME_BLOB"
+    },
+    "decision-controls": {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "semanticDelta": "SAME_BLOB"
+    },
+    "portfolio": {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "semanticDelta": "SAME_BLOB"
+    },
+    "workbench": {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "semanticDelta": "C58 readRequestBody 65536 with fatal UTF8; optional bound X-SF-Creation-Scope for sf_case_draft; 409 for conflict, 400 for needs-input; do not restore historical source"
+    }
+  },
+  "operationCount": 21,
+  "operations": [
+    {
+      "operationId": "decisions.choice.read",
+      "kind": "existing-http",
+      "effect": "read",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "choice",
+      "sourceBlob": "369c71b4505360a9742b4b9a64585438f63cec47",
+      "sourceSelector": "format=json branch; optional case query",
+      "schemaExport": "SfDecisionsChoiceRead",
+      "fixedQuery": {
+        "sf": "current-choice",
+        "format": "json"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "choice",
+        "selector": "format=json branch; optional case query",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "choice",
+        "selector": "format=json branch; optional case query",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.command.sf_case_draft",
+      "kind": "existing-http",
+      "effect": "prepare",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "workbench",
+      "sourceBlob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "sourceSelector": "mode=workbench-command;decodeSfOperationInput/Output(sf_case_draft)",
+      "schemaExport": "SfDecisionsCommandSfCaseDraft",
+      "fixedQuery": {
+        "sf": "workbench-command"
+      },
+      "fixedBodyDiscriminator": {
+        "operation": "sf_case_draft"
+      },
+      "inputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench-command;decodeSfOperationInput/Output(sf_case_draft)",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench-command;decodeSfOperationInput/Output(sf_case_draft)",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": 65536,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.command.sf_change_prepare",
+      "kind": "existing-http",
+      "effect": "prepare",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "workbench",
+      "sourceBlob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "sourceSelector": "mode=workbench-command;decodeSfOperationInput/Output(sf_change_prepare)",
+      "schemaExport": "SfDecisionsCommandSfChangePrepare",
+      "fixedQuery": {
+        "sf": "workbench-command"
+      },
+      "fixedBodyDiscriminator": {
+        "operation": "sf_change_prepare"
+      },
+      "inputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench-command;decodeSfOperationInput/Output(sf_change_prepare)",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench-command;decodeSfOperationInput/Output(sf_change_prepare)",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": 65536,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.command.sf_question_prepare",
+      "kind": "existing-http",
+      "effect": "prepare",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "workbench",
+      "sourceBlob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "sourceSelector": "mode=workbench-command;decodeSfOperationInput/Output(sf_question_prepare)",
+      "schemaExport": "SfDecisionsCommandSfQuestionPrepare",
+      "fixedQuery": {
+        "sf": "workbench-command"
+      },
+      "fixedBodyDiscriminator": {
+        "operation": "sf_question_prepare"
+      },
+      "inputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench-command;decodeSfOperationInput/Output(sf_question_prepare)",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench-command;decodeSfOperationInput/Output(sf_question_prepare)",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": 65536,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.controls.read",
+      "kind": "existing-http",
+      "effect": "read",
+      "method": "GET",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "decision-controls",
+      "sourceBlob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "sourceSelector": "format=json; case/source/scenario/baseline/parameter query",
+      "schemaExport": "SfDecisionsControlsRead",
+      "fixedQuery": {
+        "sf": "decision-controls",
+        "format": "json"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "format=json; case/source/scenario/baseline/parameter query",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "format=json; case/source/scenario/baseline/parameter query",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.current-choice-prepare",
+      "kind": "existing-http",
+      "effect": "prepare",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "choice",
+      "sourceBlob": "369c71b4505360a9742b4b9a64585438f63cec47",
+      "sourceSelector": "valid(payload,mode=current-choice-prepare);runtime human action",
+      "schemaExport": "SfDecisionsCurrentChoicePrepare",
+      "fixedQuery": {
+        "sf": "current-choice-prepare"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "choice",
+        "selector": "valid(payload,mode=current-choice-prepare);runtime human action",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "choice",
+        "selector": "valid(payload,mode=current-choice-prepare);runtime human action",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.current-choice-promote",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "choice",
+      "sourceBlob": "369c71b4505360a9742b4b9a64585438f63cec47",
+      "sourceSelector": "valid(payload,mode=current-choice-promote);runtime human action",
+      "schemaExport": "SfDecisionsCurrentChoicePromote",
+      "fixedQuery": {
+        "sf": "current-choice-promote"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "choice",
+        "selector": "valid(payload,mode=current-choice-promote);runtime human action",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "choice",
+        "selector": "valid(payload,mode=current-choice-promote);runtime human action",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-add-question",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "portfolio",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "sourceSelector": "actions[decision-add-question];valid(mode,payload);withCase;producer dispatch",
+      "schemaExport": "SfDecisionsDecisionAddQuestion",
+      "fixedQuery": {
+        "sf": "decision-add-question"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-add-question];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-add-question];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-answer-question",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "portfolio",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "sourceSelector": "actions[decision-answer-question];valid(mode,payload);withCase;producer dispatch",
+      "schemaExport": "SfDecisionsDecisionAnswerQuestion",
+      "fixedQuery": {
+        "sf": "decision-answer-question"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-answer-question];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-answer-question];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-apply",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "decision-apply",
+      "sourceBlob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+      "sourceSelector": "createProcurementDecisionHttp branch decision-apply",
+      "schemaExport": "SfDecisionsDecisionApply",
+      "fixedQuery": {
+        "sf": "decision-apply"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "decision-apply",
+        "selector": "createProcurementDecisionHttp branch decision-apply",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "decision-apply",
+        "selector": "createProcurementDecisionHttp branch decision-apply",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-choose",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "portfolio",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "sourceSelector": "actions[decision-choose];valid(mode,payload);withCase;producer dispatch",
+      "schemaExport": "SfDecisionsDecisionChoose",
+      "fixedQuery": {
+        "sf": "decision-choose"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-choose];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-choose];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-condition",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "decision-controls",
+      "sourceBlob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "sourceSelector": "valid(payload,mode=decision-condition)",
+      "schemaExport": "SfDecisionsDecisionCondition",
+      "fixedQuery": {
+        "sf": "decision-condition"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-condition)",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-condition)",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-coverage",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "decision-controls",
+      "sourceBlob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "sourceSelector": "valid(payload,mode=decision-coverage)",
+      "schemaExport": "SfDecisionsDecisionCoverage",
+      "fixedQuery": {
+        "sf": "decision-coverage"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-coverage)",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-coverage)",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-criteria",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "decision-controls",
+      "sourceBlob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "sourceSelector": "valid(payload,mode=decision-criteria)",
+      "schemaExport": "SfDecisionsDecisionCriteria",
+      "fixedQuery": {
+        "sf": "decision-criteria"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-criteria)",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-criteria)",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-prepare-changes",
+      "kind": "existing-http",
+      "effect": "prepare",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "portfolio",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "sourceSelector": "actions[decision-prepare-changes];valid(mode,payload);withCase;producer dispatch",
+      "schemaExport": "SfDecisionsDecisionPrepareChanges",
+      "fixedQuery": {
+        "sf": "decision-prepare-changes"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-prepare-changes];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-prepare-changes];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-promote",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "portfolio",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "sourceSelector": "actions[decision-promote];valid(mode,payload);withCase;producer dispatch",
+      "schemaExport": "SfDecisionsDecisionPromote",
+      "fixedQuery": {
+        "sf": "decision-promote"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-promote];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-promote];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-recover",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "decision-apply",
+      "sourceBlob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+      "sourceSelector": "createProcurementDecisionHttp branch decision-recover",
+      "schemaExport": "SfDecisionsDecisionRecover",
+      "fixedQuery": {
+        "sf": "decision-recover"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "decision-apply",
+        "selector": "createProcurementDecisionHttp branch decision-recover",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "decision-apply",
+        "selector": "createProcurementDecisionHttp branch decision-recover",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-review",
+      "kind": "existing-http",
+      "effect": "read",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "portfolio",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "sourceSelector": "actions[decision-review];valid(mode,payload);withCase;producer dispatch",
+      "schemaExport": "SfDecisionsDecisionReview",
+      "fixedQuery": {
+        "sf": "decision-review"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-review];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "portfolio",
+        "selector": "actions[decision-review];valid(mode,payload);withCase;producer dispatch",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "decisions.decision-select-portfolio",
+      "kind": "existing-http",
+      "effect": "mutation",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "sourceRef": "decision-controls",
+      "sourceBlob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "sourceSelector": "valid(payload,mode=decision-select-portfolio)",
+      "schemaExport": "SfDecisionsDecisionSelectPortfolio",
+      "fixedQuery": {
+        "sf": "decision-select-portfolio"
+      },
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-select-portfolio)",
+        "rule": "Exact admitted query/body fields, literals, optionality and bounds in this pinned source branch. No additions or fallback casting."
+      },
+      "outputRef": {
+        "sourceRef": "decision-controls",
+        "selector": "valid(payload,mode=decision-select-portfolio)",
+        "rule": "Exact JSON or bytes returned by this pinned admitted producer branch; preserve status, refs, revisions and receipts."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "projection.case",
+      "kind": "new-projection",
+      "effect": "read",
+      "method": "GET",
+      "pathTemplate": "{mount}/api/ui/projections/case",
+      "sourceRef": "workbench",
+      "sourceBlob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "sourceSelector": "mode=workbench-case: decodeSfOperationInput/Output(sf_case_read), contextualCaseReturn",
+      "schemaExport": "SfProjectionCase",
+      "fixedQuery": null,
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "contractRef": "CONTRACTS.md#53-projeções-adicionais-onde-o-produtor-só-renderiza-html",
+        "body": "absent",
+        "query": {
+          "caseRef": "required canonical CaseReadRequest.caseRef",
+          "returnTo": "optional original contextualCaseReturn grammar"
+        },
+        "unknownKeys": "reject",
+        "duplicates": "reject",
+        "boundsSourceRef": "workbench"
+      },
+      "outputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench-case: decodeSfOperationInput/Output(sf_case_read), contextualCaseReturn",
+        "rule": "Minimal authorized JSON extraction of the same producer data before HTML rendering, retaining original admission/current/revalidate/finish. CONTRACTS.md sections 3.4 and 5."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    },
+    {
+      "operationId": "projection.cases",
+      "kind": "new-projection",
+      "effect": "read",
+      "method": "GET",
+      "pathTemplate": "{mount}/api/ui/projections/cases",
+      "sourceRef": "workbench",
+      "sourceBlob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "sourceSelector": "mode=workbench: listed -> encodeCaseRef -> sf_case_read each visible case",
+      "schemaExport": "SfProjectionCases",
+      "fixedQuery": null,
+      "fixedBodyDiscriminator": null,
+      "inputRef": {
+        "contractRef": "CONTRACTS.md#53-projeções-adicionais-onde-o-produtor-só-renderiza-html",
+        "body": "absent",
+        "query": {},
+        "unknownKeys": "reject",
+        "duplicates": "reject",
+        "boundsSourceRef": "workbench"
+      },
+      "outputRef": {
+        "sourceRef": "workbench",
+        "selector": "mode=workbench: listed -> encodeCaseRef -> sf_case_read each visible case",
+        "rule": "Minimal authorized JSON extraction of the same producer data before HTML rendering, retaining original admission/current/revalidate/finish. CONTRACTS.md sections 3.4 and 5."
+      },
+      "maxRequestBytes": null,
+      "automaticRetry": false
+    }
+  ],
+  "negativeCases": [
+    {
+      "id": "A04-NEG01",
+      "condition": "unknown operation/payload key or invalid union discriminant",
+      "expected": "reject before dispatch; no opaque generic body"
+    },
+    {
+      "id": "A04-NEG02",
+      "condition": "unauthorized principal, source participant or redacted field",
+      "expected": "preserve denied without listing case/title/evidence or inferred identity"
+    },
+    {
+      "id": "A04-NEG03",
+      "condition": "caseRef id/incarnation/version changed since read, source drift, CAS expectedVersion mismatch",
+      "expected": "stale/conflict/denied as issued by producer; no conversion to ok"
+    },
+    {
+      "id": "A04-NEG04",
+      "condition": "current-choice promotion missing reviewDigest/source binding or invalid scenario/result digest",
+      "expected": "reject/needs-input; no unreviewed promotion"
+    },
+    {
+      "id": "A04-NEG05",
+      "condition": "decision-apply and recover with C12 outcome unknown",
+      "expected": "do not retry automatically, new intent or fake receipt; consult canonical recovery producer"
+    },
+    {
+      "id": "A04-NEG06",
+      "condition": "returnTo mismatched to case evidence or external location",
+      "expected": "reject via contextualCaseReturn and never emit mismatched private link"
+    },
+    {
+      "id": "A04-NEG07",
+      "condition": "cross-origin, stale owner, creation-scope mismatch or host revalidation failure",
+      "expected": "preserve original producer denial, original Request and scope header"
+    },
+    {
+      "id": "A04-NEG08",
+      "condition": "absent/null/zero source values",
+      "expected": "preserve exact original wire fields/types and optionality; no frontend-derived defaults"
+    },
+    {
+      "id": "A04-NEG09",
+      "condition": "POST read, prepare or mutation",
+      "expected": "transport supplies valid Idempotency-Key with no automatic mutation retry"
+    },
+    {
+      "id": "A04-NEG10",
+      "condition": "projection.cases uninitialized or unauthorized listing",
+      "expected": "do not create synthetic empty successful list or call out to HTML parser"
+    }
+  ],
+  "ownerPaths": [
+    "packages/schema/src/sucafina/decisions.ts",
+    "packages/client/src/sucafina/decisions.ts",
+    "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts"
+  ],
+  "sharedPaths": "none authorized; proposed exact pre/post patch only to 114",
+  "dependencies": {
+    "authoring": [
+      "ctx",
+      "decisions",
+      "transport"
+    ],
+    "integration": [
+      "F01",
+      "F02"
+    ],
+    "qualification": [
+      "F01",
+      "F02"
+    ]
+  },
+  "taskRefs": [
+    "WP11.T01",
+    "WP11.T02",
+    "WP11.T03",
+    "WP11.T04"
+  ],
+  "testDispatcher": "120",
+  "compiler": "119",
+  "testEvidence": "NOT_RUN",
+  "note": "Preflight mapping is not shipped schema/client/adapter; no operation is claimed installed before explicit 114 admission."
+}
