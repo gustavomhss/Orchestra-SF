@@ -442,13 +442,80 @@ export const SfOperationAvailability = Schema.Union([
 ]).annotate({ identifier: "Sucafina.OperationAvailability" })
 export type SfOperationAvailability = Schema.Schema.Type<typeof SfOperationAvailability>
 const ResourceStatus = Schema.Literals(["ready", "partial", "denied", "unavailable"])
-export const SfResourceAvailability = Schema.Struct({
-  family: Schema.String,
-  resource: Schema.String,
-  state: ResourceStatus,
-  operations: Schema.Array(SfOperationAvailability),
-}).annotate({ identifier: "Sucafina.ResourceAvailability" })
-export type SfResourceAvailability = SfResourceKey & Schema.Schema.Type<typeof SfResourceAvailability>
+const ResourceOperations = Schema.Array(SfOperationAvailability)
+export const SfResourceAvailability = Schema.Union([
+  Schema.Struct({ family: Schema.Literal("ctx"), resource: Schema.Literal("context"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP01"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP02"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP03"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP04"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP05"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP06"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP07"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP08"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP09"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP10"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP11"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP12"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP13"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP14"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP15"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("CAP16"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("home"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("work"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("search"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("local-admin"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("views"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("hot-topic-proposal"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("questions"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("threads"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("relations"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("domain-read"), resource: Schema.Literal("confirmations"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("planner"), resource: Schema.Literal("CAP17"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("planner"), resource: Schema.Literal("CAP18"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("planner"), resource: Schema.Literal("CAP19"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("planner"), resource: Schema.Literal("CAP20"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("planner"), resource: Schema.Literal("CAP21"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("planner"), resource: Schema.Literal("CAP22"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("planner"), resource: Schema.Literal("CAP23"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("procurement"), resource: Schema.Literal("CAP24"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("procurement"), resource: Schema.Literal("CAP25"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("procurement"), resource: Schema.Literal("CAP26"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("procurement"), resource: Schema.Literal("CAP27"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("procurement"), resource: Schema.Literal("CAP28"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("cases"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("case-intent"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("alternatives"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("assumptions"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("choice"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("prepared-changes"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("decisions"), resource: Schema.Literal("receipts"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("portfolio"), resource: Schema.Literal("campaign"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("portfolio"), resource: Schema.Literal("results"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("portfolio"), resource: Schema.Literal("sensitivity"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("files"), resource: Schema.Literal("import-admit"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("files"), resource: Schema.Literal("import-preview"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("files"), resource: Schema.Literal("import-apply"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("files"), resource: Schema.Literal("documents"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("files"), resource: Schema.Literal("evidence"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("files"), resource: Schema.Literal("document-scenario"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("files"), resource: Schema.Literal("exports"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("reviews"), resource: Schema.Literal("agenda"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("reviews"), resource: Schema.Literal("preserved"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("reviews"), resource: Schema.Literal("compare"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("reviews"), resource: Schema.Literal("report-export"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("bi"), resource: Schema.Literal("catalog"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("bi"), resource: Schema.Literal("visual"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("routine-runs"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("residents"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("signals"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("similar-cases"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("outcomes"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("analysis"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("routine-admission"), state: ResourceStatus, operations: ResourceOperations }),
+  Schema.Struct({ family: Schema.Literal("intelligence"), resource: Schema.Literal("schedules"), state: ResourceStatus, operations: ResourceOperations })
+]).annotate({ identifier: "Sucafina.ResourceAvailability" })
+export type SfResourceAvailability = Schema.Schema.Type<typeof SfResourceAvailability>
 export const SfContext = Schema.Struct({
   stamp: SfContextStamp,
   contractRevision: Schema.Literal("sf-native-ui/1"),
@@ -462,9 +529,7 @@ export const SfContext = Schema.Struct({
   })),
   availability: Schema.Array(SfResourceAvailability),
 }).annotate({ identifier: "Sucafina.Context" })
-export type SfContext = Omit<Schema.Schema.Type<typeof SfContext>, "availability"> & {
-  readonly availability: readonly SfResourceAvailability[]
-}
+export interface SfContext extends Schema.Schema.Type<typeof SfContext> {}
 export const SfContextResult = Schema.Union([
   Schema.Struct({ status: Schema.Literal("ok"), value: SfContext }),
   Schema.Struct({ status: Schema.Literal("unauthenticated") }),
