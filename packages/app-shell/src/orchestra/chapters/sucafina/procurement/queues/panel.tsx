@@ -1,4 +1,5 @@
 import { createMemo, For, Show } from "solid-js"
+import "./queue.css"
 import type { JSX } from "solid-js"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
@@ -258,7 +259,7 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
       onLayoutMode={props.onLayoutMode}
     >
       <Show when={authorized()}>
-        <fieldset aria-label={props.translate("sf.u10.queue.filters")}>
+        <fieldset class="sf-procurement-queue-filters" aria-label={props.translate("sf.u10.queue.filters")}>
           <legend>{props.translate("sf.u10.queue.filters")}</legend>
           <label>
             {props.translate("sf.u10.queue.status")}
