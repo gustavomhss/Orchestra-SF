@@ -1,0 +1,113 @@
+{
+  "schema": "sf2h.native-ui.artifact-ready.v1",
+  "seat": "W17",
+  "order": "A05",
+  "output": "A05",
+  "branch": "sf-ux-w17",
+  "lease": "ux-native-w17-e2",
+  "actor": {
+    "github_login": "gustavomhss",
+    "model_actual": "GPT-6",
+    "requested_label": "Astra",
+    "session_id": null
+  },
+  "state": "ARTIFACT_READY_ASSIGNED_SCOPE",
+  "not_integrated": true,
+  "not_qualified": true,
+  "global_release": false,
+  "predecessor": {
+    "fence_head": "7f82184799d70ae95c3f02d8ed8509df70b37670",
+    "preserved_head": "50a3f3c94b1c702742f7b24289b26977bc002b81",
+    "ack_e2": "2ee8bc45970dd870425fa47a30d95d899ecd238c"
+  },
+  "authored": {
+    "implementation_commit": "e7a6acf323bea1913c79025fdf1ac4ce69151847",
+    "coverage_fix_commit": "3f5e279a432dbadd6533587de07e3d5232cca744",
+    "tree": "d9b8dc5206453e6cc11a3f1da0428e08b7efe671"
+  },
+  "paths": [
+    {
+      "path": "packages/schema/src/sucafina/portfolio.ts",
+      "preimage": null,
+      "postimage": "2ba680ae66d493b8f04c5d921773ac3a56f66829",
+      "role": "10 closed input and domain PortResult output schemas; evidence recursion, result statuses and case CAS"
+    },
+    {
+      "path": "packages/client/src/sucafina/portfolio.ts",
+      "preimage": null,
+      "postimage": "deee4c7e9b353d167eb2a5d0fdfc64146e4f03b6",
+      "role": "10 explicit typed methods over F02 SfTransport, no automatic retry or URL construction"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+      "preimage": null,
+      "postimage": "1deddaa0aa2efdeaea11bd0621182830edd6dc77",
+      "role": "exact 10-operation source mapping; delegates same Request to existing createSfPortfolioHttp"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+      "preimage": null,
+      "postimage": "5453346c462d1f0f3e21db5b3822c502713ab294",
+      "role": "closed operation set, CAS, refusals, zero/null financial states, outcome-unknown one-shot"
+    }
+  ],
+  "source": {
+    "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+    "expected_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "observed_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "equivalence": "same original C58 pinned source; no producer rewrite"
+  },
+  "matrix": [
+    "portfolio.decision-portfolio-evaluate",
+    "portfolio.decision-portfolio-preview",
+    "portfolio.decision-portfolio-read",
+    "portfolio.decision-portfolio-reconcile",
+    "portfolio.decision-portfolio-results",
+    "portfolio.decision-prepare-portfolio",
+    "portfolio.decision-promote-portfolio",
+    "portfolio.decision-sensitivity-evaluate",
+    "portfolio.decision-sensitivity-read",
+    "portfolio.decision-sensitivity-units"
+  ],
+  "semantics": {
+    "transport": "F02 SfTransport only, preserves status/header/source envelope; no generated SDK/API change",
+    "authority": "Original Request to createSfPortfolioHttp; original human admit -> caseFor/current scope -> host revalidate -> human finish",
+    "reference": "CaseRef id/incarnation/positive version, provenance evidence identities, exact source selection and digests; producer owns CAS",
+    "mutations": "No automatic retry, especially after network loss/outcome-unknown; a new authorized source read and human intent are required",
+    "conditional": "No client financial recalculation, no treating null as zero or unknown threshold as exact; preserve original eligibility, coverage, refusal states",
+    "reconciliation": "Original source read-only reconciliation (not C12 receipt or new apply)"
+  },
+  "integration": {
+    "owner": "114",
+    "kind": "SHARED_PATH_PATCH_ONLY",
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/INTEGRATION-FRAGMENTS-e2.md",
+    "dependencies": [
+      "F01 ctx owner",
+      "F02 typed transport and native host router",
+      "I00 public exports and codec registrations",
+      "Authenticated installed producer and host authority"
+    ],
+    "package_preimages": {
+      "packages/schema/package.json": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+      "packages/client/package.json": "4cd0244e98ff18b5e65d3c2808196705095b6691"
+    },
+    "generated_changes": "NONE",
+    "API_protocol_changes": "NONE"
+  },
+  "checks": {
+    "local_tests": "NOT_RUN (explicitly forbidden)",
+    "unit_tests": "NOT_RUN",
+    "actions": "NOT_RUN; request to 120 after integration",
+    "typecheck": "NOT_RUN; 119 owner",
+    "guards": "NOT_RUN; 119 owner",
+    "desktop_proof": "NOT_RUN",
+    "installed_auth_proof": "NOT_RUN"
+  },
+  "statuses": {
+    "schema": "CODE_AUTHORED_NOT_TYPECHECKED",
+    "client": "CODE_AUTHORED_DEPENDS_F02",
+    "cli": "CODE_AUTHORED_DEPENDS_I00_MOUNT",
+    "spec": "WRITTEN_NOT_RUN"
+  },
+  "handoff": "Implementer has not changed any other writer's files, generated files, integration registries, or native Goal; 114 may integrate after tests by 120/compiler 119."
+}
