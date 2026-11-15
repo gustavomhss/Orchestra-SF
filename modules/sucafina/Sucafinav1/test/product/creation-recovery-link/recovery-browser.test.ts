@@ -177,6 +177,8 @@ test("111/browser: same opaque pending key survives lost ACK, restart and normal
     page.on("pageerror", (error) => errors.push(error.message))
     const base = server.url.origin + "/sf/dashboard"
     const fill = async () => {
+      // The normal form lives in a closed details element until a person opens it.
+      await page.locator("details:has(form[data-decision-create]) > summary").click()
       await page.getByLabel("Decision objective").fill("Deliberately identical")
       await page.getByLabel("Start", { exact: true }).fill("2027-01-01")
       await page.getByLabel("End", { exact: true }).fill("2027-12-31")
