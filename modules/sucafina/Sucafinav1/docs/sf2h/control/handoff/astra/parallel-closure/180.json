@@ -1,0 +1,532 @@
+{
+  "schema": "sf2h.compiler-browser-fix173-184.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "n": 180,
+  "title": "Memória — import público compatível",
+  "branch": "sf-ux-a14",
+  "pr": 136,
+  "order": "A14",
+  "previous": "ux-native-a14-e1",
+  "slot": "N08",
+  "files": [
+    "packages/schema/src/sucafina/memory.ts"
+  ],
+  "epoch": "native-fix-e1-browser180",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/",
+  "expected_head": "a359cb6d9016cc18cedb863cb7ec20fe7242d804",
+  "fence": {
+    "schema": "sf2h.causal-fix-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 180,
+    "branch": "sf-ux-a14",
+    "previous_epoch": "ux-native-a14-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "next_epoch": "native-fix-e1-browser180",
+    "previous_head": "3ff8f4096f7da7ee19a483f1668cfc5d4b76d946",
+    "scope_paths": [
+      "packages/schema/src/sucafina/memory.ts"
+    ],
+    "authority": "S0 under user instruction advance all independent work with freshbrowser sessions",
+    "reason": "New actual compiler163 failure on integratedW690a34",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrative sourceauthorityfence only, no processkill/tokenrevocation/deathbysilence claimed. Reconcile anylatecommits beforeeffects withoutreset/force.",
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "mission": 180,
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "write_paths": [
+    "packages/schema/src/sucafina/memory.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/**"
+  ],
+  "protected_paths": [
+    "Allothersourcebranches/allowlists,sharedregistry/host/localentry/globali18n/packageexports/generated/engines/Azure;162ownsI00andonlyproductintegration.",
+    "Originalplans/oracles/fixtures/timeouts/approvalrules;testsareproductcodebutnotaproofuntilhostedactualrun.171ownsA12work,172ownsF01CLIcontext;AM165–170qualificationnamespacesreadonly."
+  ],
+  "routing": {
+    "integrator": "162/PR65/S0-C-e20-browser162",
+    "compiler": "163/PR107/compiler-e4-browser163",
+    "product_ci": "164/PR106/product-ci-e4-browser164",
+    "A12_owner": 171,
+    "F01_owner": 172
+  },
+  "material": {
+    "compiler_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139,
+    "compiler_artifact": 14182790522,
+    "version": "effect4.0.0-beta.83,Bun1.3.14,Ubuntu24.04",
+    "current_consumer_observed": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb"
+  },
+  "full_work_order": {
+    "id": "A14",
+    "title": "Bindings finos: Memória e reavaliação",
+    "kind": "adapter",
+    "status": "PLANNED_NOT_AUTHORIZED",
+    "priority": 3,
+    "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+    "owns": [
+      "packages/schema/src/sucafina/memory.ts",
+      "packages/client/src/sucafina/memory.ts",
+      "apps/cli/src/sucafina-product/native-ui/memory.ts",
+      "packages/schema/src/sucafina/memory/**",
+      "packages/client/src/sucafina/memory/**",
+      "apps/cli/src/sucafina-product/native-ui/memory/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+    ],
+    "may_write_shared_registry": false,
+    "canonical": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "task_refs": [
+        "WP14.T01",
+        "WP14.T02",
+        "WP14.T03",
+        "WP14.T04",
+        "WP14.T05"
+      ],
+      "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+    },
+    "surfaces": [],
+    "exports": [
+      "SfMemory",
+      "createSfMemoryClient"
+    ],
+    "depends_authoring": [
+      {
+        "lock": "ctx",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "intelligence",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "transport",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      }
+    ],
+    "depends_integration": [
+      "F01",
+      "F02"
+    ],
+    "depends_qualification": {
+      "work_orders": [
+        "F01",
+        "F02"
+      ],
+      "external": [],
+      "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+    },
+    "consumes": {
+      "contracts": [
+        "ctx",
+        "intelligence",
+        "transport"
+      ],
+      "producer_exports": [
+        {
+          "order": "F01",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        },
+        {
+          "order": "F02",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        }
+      ],
+      "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+      "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+      "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+      "operation_refs": [
+        "contract-catalog.json#/operations/intelligence.memory-catalog",
+        "contract-catalog.json#/operations/intelligence.memory-condition",
+        "contract-catalog.json#/operations/intelligence.memory-conditions",
+        "contract-catalog.json#/operations/intelligence.memory-materiality",
+        "contract-catalog.json#/operations/intelligence.memory-outcome",
+        "contract-catalog.json#/operations/intelligence.memory-outcome-selection",
+        "contract-catalog.json#/operations/intelligence.memory-signals"
+      ],
+      "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+    },
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/schema/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/A14.json"
+      ],
+      "contracts": [
+        "ctx",
+        "intelligence",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": [
+        "contract-catalog.json#/sources/memory"
+      ]
+    },
+    "deliver": [
+      "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
+      "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
+      "Publish operation/field/source equivalence and current-access/redaction negative cases."
+    ],
+    "acceptance_cases": [
+      {
+        "id": "A14-AC01",
+        "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "A14-AC02",
+        "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "A14-AC03",
+        "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+        "status": "PLANNED_NOT_RUN"
+      }
+    ],
+    "gates": {
+      "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+      "test_files": [
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+      ],
+      "typecheck_packages": [
+        "apps/cli",
+        "packages/client",
+        "packages/schema"
+      ],
+      "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+      "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+      "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+    },
+    "stop": [
+      "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+      "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+      "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+      "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+      "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+      "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+    ],
+    "handoff": {
+      "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+      "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+      "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+    },
+    "entrypoints": [
+      {
+        "path": "packages/schema/src/sucafina/memory.ts",
+        "symbol": "SfMemory",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "packages/client/src/sucafina/memory.ts",
+        "symbol": "createSfMemoryClient",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      }
+    ],
+    "server_leaf_policy": "Existing JSON operations are called directly through typed client. Do not create a duplicate server forwarder; optional server allowlist is reserved only for an explicitly frozen missing projection."
+  },
+  "predecessor_packet": {
+    "schema": "sf2h.native-ui.wave2-author.v1",
+    "mission_id": "UX-A14",
+    "order": "A14",
+    "title": "Bindings finos: Memória e reavaliação",
+    "branch": "sf-ux-a14",
+    "state": "PREPARED_NOT_STARTED",
+    "actor": null,
+    "effective_model": null,
+    "session_id": null,
+    "lease_epoch": "ux-native-a14-e1",
+    "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "source": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+    },
+    "authority": "S0 user-authorized further parallel browser work: per-output authoring grant on exclusive paths is given by this packet. After ACK real + current HEAD/path/source preflight, write code directly. Do not wait for114 permission for exclusive leaves. Old COMMON sentence requiring114 admission before leaf authoring superseded for this order only; contract scope and actual host controls preserved.",
+    "original_work_order": {
+      "id": "A14",
+      "title": "Bindings finos: Memória e reavaliação",
+      "kind": "adapter",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "priority": 3,
+      "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+      "owns": [
+        "packages/schema/src/sucafina/memory.ts",
+        "packages/client/src/sucafina/memory.ts",
+        "apps/cli/src/sucafina-product/native-ui/memory.ts",
+        "packages/schema/src/sucafina/memory/**",
+        "packages/client/src/sucafina/memory/**",
+        "apps/cli/src/sucafina-product/native-ui/memory/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+      ],
+      "may_write_shared_registry": false,
+      "canonical": {
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "task_refs": [
+          "WP14.T01",
+          "WP14.T02",
+          "WP14.T03",
+          "WP14.T04",
+          "WP14.T05"
+        ],
+        "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+      },
+      "surfaces": [],
+      "exports": [
+        "SfMemory",
+        "createSfMemoryClient"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes": {
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "producer_exports": [
+          {
+            "order": "F01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F02",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          }
+        ],
+        "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+        "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+        "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+        "operation_refs": [
+          "contract-catalog.json#/operations/intelligence.memory-catalog",
+          "contract-catalog.json#/operations/intelligence.memory-condition",
+          "contract-catalog.json#/operations/intelligence.memory-conditions",
+          "contract-catalog.json#/operations/intelligence.memory-materiality",
+          "contract-catalog.json#/operations/intelligence.memory-outcome",
+          "contract-catalog.json#/operations/intelligence.memory-outcome-selection",
+          "contract-catalog.json#/operations/intelligence.memory-signals"
+        ],
+        "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+      },
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A14.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/memory"
+        ]
+      },
+      "deliver": [
+        "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
+        "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
+        "Publish operation/field/source equivalence and current-access/redaction negative cases."
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A14-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A14-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A14-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "handoff": {
+        "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+        "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+        "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/memory.ts",
+          "symbol": "SfMemory",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/memory.ts",
+          "symbol": "createSfMemoryClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "server_leaf_policy": "Existing JSON operations are called directly through typed client. Do not create a duplicate server forwarder; optional server allowlist is reserved only for an explicitly frozen missing projection."
+    },
+    "write_paths": [
+      "packages/schema/src/sucafina/memory.ts",
+      "packages/client/src/sucafina/memory.ts",
+      "apps/cli/src/sucafina-product/native-ui/memory.ts",
+      "packages/schema/src/sucafina/memory/**",
+      "packages/client/src/sucafina/memory/**",
+      "apps/cli/src/sucafina-product/native-ui/memory/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+    ],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A14/",
+    "frozen_contract_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    "source_binding_pins": {
+      "memory": {
+        "path": "apps/cli/src/sucafina-product/memory-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "f727d5250024df7338491321c36e7055d7c18f74",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "f727d5250024df7338491321c36e7055d7c18f74",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      }
+    },
+    "routing": {
+      "integrator": "114/S0-C-e17-browser114/PR65, sole stack and shared-path writer",
+      "product_ci": "120/PR106",
+      "compiler": "119/PR107"
+    },
+    "mission": "Implement complete assigned schema/client/projection adapter plus meaningful authored specs, directly in owned product paths. Deliver one complete PR to sf2-stack with exact blobs, shared integration patches, coverage and handoff. Planning/readiness inventory alone is not delivery.",
+    "instructions": [
+      "Read applicable AGENTS, this FULL packet including original_work_order, whole assigned work-order and its required contracts/source bindings/canonical criterion pointers. No unrelated packs.",
+      "Verify initial branch/head, compare only relevant C58 producer delta vs historical catalog. Record semantic impact and real actor/model/session if exposed, source hashes/allowlist/lease in own ACK before edits. Unknown IDs stay unknown. No new user approval or central admission loop for routine implementation.",
+      "Contracts permit independent authoring against frozen public exports while producers are written; dependencies gate integration and qualification. No producer stubs, clones, permissive opaque schemas or private Core/Server import into client.",
+      "Keep exact operation catalog/types/field semantics, Request provenance, auth/ACL/revocation, null/zero, CAS/idempotency and source version behavior. Use existing JSON routes directly. Only HTML projections explicitly assigned may be new server leaves, no duplicate REST forwarders.",
+      "No shared registry/index/package exports/i18n/generated edits. Provide complete pre/post patches to114 for composition. No merge whole inherited UX cohort;114 consumes source blobs selectively.",
+      "A09 preserves native readiness HOLD for real Schedule/Relay/resident producers; no engine changes. A12 v2 remains opt-in and unavailable until real producer is released, without suppressing legacy/v1 work. A15 resident inventory must be actual installed whitelist/grants, not fabricated five/18/8/39.",
+      "At complete-unit handoff request surgical hosted checks from120, compiler119. No local tests/validators/parser/typecheck, no new dispatcher/workflow/CI infra, no premature epic. Report NOT_RUN if dependencies not integrated; source artifact is not qualified.",
+      "GitHub remote MCP only, CAS expected-head/forcefalse; same own branch. Preserve others work, native Goal paused, no controller/devmerge/deploy/Azure/engines/runtime restart/secret access.",
+      "Release includes all15WP74tasks17contracts1610criteria and full UX; GLOBAL_RELEASE only original+UX final predicate. Final independent reviews remain separate from authors."
+    ],
+    "global_release": false
+  },
+  "goal": "Corrigir import público da folhaSchema que impede typecheckClient.",
+  "actions": [
+    "TS5097linha2:import.ts semallowImportingTsExtensions noClient. LerexportpatternSchema/Client e ajustarapenasformaimport/typeprovenance compadrãoexistente; nãoglobaltsconfig/bypass.",
+    "NãoalterarMemória/Atlas/ACL/decoder, nãoadicionar teste espelhandoimport e nãorodar suitesglobais.163executatypecheckClient/Schema apósconsumo; preservarcódigooriginalA14."
+  ],
+  "diagnostics": [
+    "../schema/src/sucafina/memory.ts(2,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled."
+  ],
+  "required_reads": [
+    "AGENTSapplicable, fixedsf2h-planSTART/WORKFLOW/executionCOMMON and relevantoriginalfullcriteria/contractpointers",
+    "ThisFULLpacket,ownfullnativeUIworkorder+required_reads+mandatorycontractattachments at normativecbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Fullpredecessorhandoff and existingownedsource/tests at fencedbranch; current162consumerpreimages/dependencyclosure beforeediting",
+    "Actualcompiler163RESULTS/GUARDS/HANDOFF andlogs, actualCI164FINDINGS/REQUESTS/RUNS; diagnosefromactualfailedstep, notmetadataalone"
+  ],
+  "precedence": "Currentepoch/allowlist/routing prevails overold IDs/hold-admissiontext; original completecontractbehaviorandcriteriaunchanged. Sourcebranches maydiverge fromconsumer:protectedsourceauthoringdoesnotprohibit162consumingexactreleasedpatches.",
+  "rules": [
+    "NewbrowserSESSIONonly,samebranch+PRpreserveallhistory.ConfirmHEAD/fence/preimagesandACKactualmodel/sessiononlyifexposed+epoch+SHAsbeforewrites;latepredecessoractivityreconcilewithoutreset/force,noprocessdeathinferred.",
+    "Readactualcode/dependenciesandinstalledAPIbeforeedit. Fixsourcecauseendtoendwithinboundedallowlist;noany/casts/schemaUnknown/permissiveschemas/upgradeEffect/oracleweakening/stub/fakediscoverytomasktypefailure.",
+    "TestsAREHOSTEDONLYthrough164singleproductdispatcher;163compilerSDKguards. No localtest/parser/validator/typecheck/build, noowndispatch/extraCIworkflow orprematurefullEPIC.163/164mustdedupactualrequests/runsandinputhashes,notrerununchangedfailedinput.",
+    "RemoteONLYGitHubMCPwithCASexpected_headforcefalse;nogh/gitpush,wholesalehistoricalmerge/devmerge/deploy/Azure/enginechange/secrets/runtime restart ornewnativeGoal/controller. Goalpaused.",
+    "Firstdeliveractualsourcefix,notanotherinventory. Reuseexistingmeaningfulspecs;addregressiononlyifnewbehaviorgapandwithingrant,notatestmirroringatinyimport/genericchange. Requestscopechecksafter162materialization;missingproofNOT_RUN.",
+    "OnePR→sf2-stack,fullpatch+source/consumerprepostSHA/tree/blobs,criterion/findingmap,evidencerealorNOT_RUN,exact163/164requestandterminalhandoff.162onlyintegrator;sourceARTIFACT_READYnotGLOBAL_RELEASE.",
+    "Ifexactfilealreadyfixedincurrent162material,doreadbackandcloseasCONSUMED_WITH_PROOF_POINTERwithoutduplicatingcode/run. Sharedseamgoesto162asinerttypedfullpatch;donotwaitfordependentproofstocompleteindependentsourcefix.",
+    "Preserveall15WPs/74tasks/17contracts/1610criteria. MandatoryfinalsameC8CI/epic/AM01–06/3independentFINAL/validD/C-G7D-G8/remoteproofunchanged."
+  ]
+}

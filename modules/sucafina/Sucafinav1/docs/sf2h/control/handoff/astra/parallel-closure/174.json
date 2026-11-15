@@ -1,0 +1,621 @@
+{
+  "schema": "sf2h.compiler-browser-fix173-184.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "n": 174,
+  "title": "Planner — catálogo tipado por superfície",
+  "branch": "sf-ux-w15",
+  "pr": 116,
+  "order": "A02",
+  "previous": "ux-native-w15-e3",
+  "files": [
+    "packages/schema/src/sucafina/planner.ts",
+    "packages/schema/src/sucafina/planner/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+  ],
+  "epoch": "native-fix-e1-browser174",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/",
+  "expected_head": "10812b42de20a8275e82b47ca8bfccc9364af226",
+  "fence": {
+    "schema": "sf2h.causal-fix-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 174,
+    "branch": "sf-ux-w15",
+    "previous_epoch": "ux-native-w15-e3",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "next_epoch": "native-fix-e1-browser174",
+    "previous_head": "2817298f2982c34d90574f84e5a5537cc388c508",
+    "scope_paths": [
+      "packages/schema/src/sucafina/planner.ts",
+      "packages/schema/src/sucafina/planner/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+    ],
+    "authority": "S0 under user instruction advance all independent work with freshbrowser sessions",
+    "reason": "New actual compiler163 failure on integratedW690a34",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrative sourceauthorityfence only, no processkill/tokenrevocation/deathbysilence claimed. Reconcile anylatecommits beforeeffects withoutreset/force.",
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "mission": 174,
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "write_paths": [
+    "packages/schema/src/sucafina/planner.ts",
+    "packages/schema/src/sucafina/planner/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/**"
+  ],
+  "protected_paths": [
+    "Allothersourcebranches/allowlists,sharedregistry/host/localentry/globali18n/packageexports/generated/engines/Azure;162ownsI00andonlyproductintegration.",
+    "Originalplans/oracles/fixtures/timeouts/approvalrules;testsareproductcodebutnotaproofuntilhostedactualrun.171ownsA12work,172ownsF01CLIcontext;AM165–170qualificationnamespacesreadonly."
+  ],
+  "routing": {
+    "integrator": "162/PR65/S0-C-e20-browser162",
+    "compiler": "163/PR107/compiler-e4-browser163",
+    "product_ci": "164/PR106/product-ci-e4-browser164",
+    "A12_owner": 171,
+    "F01_owner": 172
+  },
+  "material": {
+    "compiler_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139,
+    "compiler_artifact": 14182790522,
+    "version": "effect4.0.0-beta.83,Bun1.3.14,Ubuntu24.04",
+    "current_consumer_observed": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb"
+  },
+  "full_work_order": {
+    "id": "A02",
+    "title": "Bindings finos: Planner",
+    "kind": "adapter",
+    "status": "PLANNED_NOT_AUTHORIZED",
+    "priority": 3,
+    "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+    "owns": [
+      "packages/schema/src/sucafina/planner.ts",
+      "packages/client/src/sucafina/planner.ts",
+      "apps/cli/src/sucafina-product/native-ui/planner.ts",
+      "packages/schema/src/sucafina/planner/**",
+      "packages/client/src/sucafina/planner/**",
+      "apps/cli/src/sucafina-product/native-ui/planner/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+    ],
+    "may_write_shared_registry": false,
+    "canonical": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "task_refs": [
+        "WP03.T01",
+        "WP03.T02",
+        "WP03.T03",
+        "WP03.T04",
+        "WP03.T05"
+      ],
+      "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+    },
+    "surfaces": [],
+    "exports": [
+      "SfPlanner",
+      "createSfPlannerClient",
+      "createSfPlannerProjectionHandlers"
+    ],
+    "depends_authoring": [
+      {
+        "lock": "ctx",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "planner",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "transport",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      }
+    ],
+    "depends_integration": [
+      "F01",
+      "F02"
+    ],
+    "depends_qualification": {
+      "work_orders": [
+        "F01",
+        "F02"
+      ],
+      "external": [],
+      "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+    },
+    "consumes": {
+      "contracts": [
+        "ctx",
+        "planner",
+        "transport"
+      ],
+      "producer_exports": [
+        {
+          "order": "F01",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        },
+        {
+          "order": "F02",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        }
+      ],
+      "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+      "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+      "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+      "operation_refs": [
+        "contract-catalog.json#/operations/domain.command.CAP17.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP18.delete",
+        "contract-catalog.json#/operations/domain.command.CAP18.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP18.reset",
+        "contract-catalog.json#/operations/domain.command.CAP18.save",
+        "contract-catalog.json#/operations/domain.command.CAP18.spread",
+        "contract-catalog.json#/operations/domain.command.CAP19.delete",
+        "contract-catalog.json#/operations/domain.command.CAP19.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP19.reset",
+        "contract-catalog.json#/operations/domain.command.CAP19.save",
+        "contract-catalog.json#/operations/domain.command.CAP19.spread",
+        "contract-catalog.json#/operations/domain.command.CAP20.delete",
+        "contract-catalog.json#/operations/domain.command.CAP20.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP20.save",
+        "contract-catalog.json#/operations/domain.command.CAP20.sync",
+        "contract-catalog.json#/operations/domain.command.CAP21.common",
+        "contract-catalog.json#/operations/domain.command.CAP21.delete",
+        "contract-catalog.json#/operations/domain.command.CAP21.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP21.save",
+        "contract-catalog.json#/operations/domain.command.CAP22.delete",
+        "contract-catalog.json#/operations/domain.command.CAP22.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP22.save",
+        "contract-catalog.json#/operations/domain.command.CAP23.copy",
+        "contract-catalog.json#/operations/domain.command.CAP23.delete",
+        "contract-catalog.json#/operations/domain.command.CAP23.import-workbook",
+        "contract-catalog.json#/operations/domain.command.CAP23.lock",
+        "contract-catalog.json#/operations/domain.command.CAP23.official",
+        "contract-catalog.json#/operations/domain.command.CAP23.save",
+        "contract-catalog.json#/operations/domain.command.CAP23.unlock",
+        "contract-catalog.json#/operations/domain.page.CAP17",
+        "contract-catalog.json#/operations/domain.page.CAP18",
+        "contract-catalog.json#/operations/domain.page.CAP19",
+        "contract-catalog.json#/operations/domain.page.CAP20",
+        "contract-catalog.json#/operations/domain.page.CAP21",
+        "contract-catalog.json#/operations/domain.page.CAP22",
+        "contract-catalog.json#/operations/domain.page.CAP23",
+        "contract-catalog.json#/operations/planner.forecast.prepare",
+        "contract-catalog.json#/operations/planner.monthly.apply",
+        "contract-catalog.json#/operations/planner.monthly.preview"
+      ],
+      "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+    },
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/schema/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/A02.json"
+      ],
+      "contracts": [
+        "ctx",
+        "planner",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": [
+        "contract-catalog.json#/sources/application",
+        "contract-catalog.json#/sources/forecast",
+        "contract-catalog.json#/sources/planner",
+        "contract-catalog.json#/sources/renderer-CAP17",
+        "contract-catalog.json#/sources/renderer-CAP18",
+        "contract-catalog.json#/sources/renderer-CAP19",
+        "contract-catalog.json#/sources/renderer-CAP20",
+        "contract-catalog.json#/sources/renderer-CAP21",
+        "contract-catalog.json#/sources/renderer-CAP22",
+        "contract-catalog.json#/sources/renderer-CAP23"
+      ]
+    },
+    "deliver": [
+      "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
+      "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
+      "Publish operation/field/source equivalence and current-access/redaction negative cases.",
+      "Adapter uses existing planner.monthly.preview/apply, monthly-edit.ts and monthly-host.ts for selected range TSV; map UI month index 0..11 to MonthDraft.month 1..12 exactly once, validate per-row CAS and preserve rejected text/partial outcomes. No custom formula/FX/number engine."
+    ],
+    "acceptance_cases": [
+      {
+        "id": "A02-AC01",
+        "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "A02-AC02",
+        "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "A02-AC03",
+        "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "A02-TSV",
+        "expected": "Real host preview/apply per-row CAS, invalid/locked/revision conflict/partial committed rows; no duplicated parser or replay.",
+        "status": "PLANNED_NOT_RUN"
+      }
+    ],
+    "gates": {
+      "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+      "test_files": [
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+      ],
+      "typecheck_packages": [
+        "apps/cli",
+        "packages/client",
+        "packages/schema"
+      ],
+      "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+      "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+      "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+    },
+    "stop": [
+      "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+      "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+      "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+      "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+      "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+      "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+    ],
+    "handoff": {
+      "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+      "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+      "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+    },
+    "entrypoints": [
+      {
+        "path": "packages/schema/src/sucafina/planner.ts",
+        "symbol": "SfPlanner",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "packages/client/src/sucafina/planner.ts",
+        "symbol": "createSfPlannerClient",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/planner.ts",
+        "symbol": "createSfPlannerProjectionHandlers",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      }
+    ],
+    "server_leaf_policy": "HTML-only CAP projections and explicitly cataloged additional projection IDs for this owner; existing JSON operations are reused directly."
+  },
+  "predecessor_packet": {
+    "schema": "sf2h.native-ui.author-packet.v1",
+    "mission_id": "UX20-W15",
+    "seat": "W15",
+    "work_order_id": "A02",
+    "output_id": null,
+    "title": "Bindings finos: Planner",
+    "state": "PREPARED_USER_AUTHORIZED_OUTPUT_PREFLIGHT",
+    "requested_model": "Astra (user browser); record actual model when exposed",
+    "effective_model": null,
+    "actual_session_id": null,
+    "actual_actor": null,
+    "branch": "sf-ux-w15",
+    "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "cohort_base": "resolve branch initial head; same immutable shared cohort commit for all19",
+    "source": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+    },
+    "common_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/campaign-overlay/COMMON.md",
+    "work_order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A02.json",
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/schema/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/A02.json"
+      ],
+      "contracts": [
+        "ctx",
+        "planner",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": [
+        "contract-catalog.json#/sources/application",
+        "contract-catalog.json#/sources/forecast",
+        "contract-catalog.json#/sources/planner",
+        "contract-catalog.json#/sources/renderer-CAP17",
+        "contract-catalog.json#/sources/renderer-CAP18",
+        "contract-catalog.json#/sources/renderer-CAP19",
+        "contract-catalog.json#/sources/renderer-CAP20",
+        "contract-catalog.json#/sources/renderer-CAP21",
+        "contract-catalog.json#/sources/renderer-CAP22",
+        "contract-catalog.json#/sources/renderer-CAP23"
+      ]
+    },
+    "write_paths": [
+      "packages/schema/src/sucafina/planner.ts",
+      "packages/client/src/sucafina/planner.ts",
+      "apps/cli/src/sucafina-product/native-ui/planner.ts",
+      "packages/schema/src/sucafina/planner/**",
+      "packages/client/src/sucafina/planner/**",
+      "apps/cli/src/sucafina-product/native-ui/planner/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+    ],
+    "test_write_grants": [],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W15/",
+    "lease": {
+      "reserved_epoch": "ux-native-w15-e1",
+      "state": "RESERVED_NOT_ACTIVE; publish real ACK and per-output admission",
+      "integrator": "same current114 C00, no second supervisor"
+    },
+    "frozen_contract_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    "authoring_locks": [
+      "ctx",
+      "planner",
+      "transport"
+    ],
+    "contract_refs": [
+      "ctx",
+      "planner",
+      "transport"
+    ],
+    "source_binding_pins": {
+      "application": {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+        "changed": true,
+        "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+      },
+      "forecast": {
+        "path": "modules/sucafina/Sucafinav1/product/interface/forecast-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "b814872f18556d1137820cfb33c46048066a1c6e",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "b814872f18556d1137820cfb33c46048066a1c6e",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "planner": {
+        "path": "modules/sucafina/Sucafinav1/product/interface/planner-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP17": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP18": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP19": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP20": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP21": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP22": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP23": {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      }
+    },
+    "entrypoints": [
+      {
+        "path": "packages/schema/src/sucafina/planner.ts",
+        "symbol": "SfPlanner",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "packages/client/src/sucafina/planner.ts",
+        "symbol": "createSfPlannerClient",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/planner.ts",
+        "symbol": "createSfPlannerProjectionHandlers",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      }
+    ],
+    "integration_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "qualification_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "affected_test_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+    ],
+    "scope_clarifications": [],
+    "delivery": "Complete assigned output; one PR to sf2-stack, exactprepost/patch/tests/dependencies and ARTIFACT_READY handoff to114; do not edit sharedpaths or wait for unrelated services."
+  },
+  "goal": "Restaurar inferência tipada do catálogo de comandos por superfície.",
+  "actions": [
+    "Erro em250:catálogo inteiro passado ondeTopesperado, subsequentesCAP18–23 save/delete/spread/reset/common/copy/official/lock/unlock tipadoscomo únicoimport-workbook. Corrigir seleção porcapability/surface e generics preservandotodososcomandos reais einputs, não convertertudo emstring/schemaTop permissivo.",
+    "Preservar exactly12meses,0/null,forecast/source/versions/CAS,190sourceconstraints e fixisMinLength/isMaxLength133. Reusarplanner.test existente; nãoalargar assertionouSchema para sócompilar."
+  ],
+  "diagnostics": [
+    "src/sucafina/planner.ts(250,54): error TS2322: Type '{ readonly CAP17: { readonly \"import-workbook\": Struct<{ readonly versionId: optionalKey<String>; readonly sheets: $Record<String, $Array<$Record<String, Union<readonly [String, Finite, Boolean, Null]>>>>; readonly newVersion: optionalKey<...>; readonly removeMissing: optionalKey<...>; readonly versions: optionalKey...' is not assignable to type 'Top'.",
+    "src/sucafina/planner.ts(336,30): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(350,30): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(364,30): error TS2345: Argument of type '\"spread\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(378,30): error TS2345: Argument of type '\"reset\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(417,31): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(431,31): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(445,31): error TS2345: Argument of type '\"spread\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(459,31): error TS2345: Argument of type '\"reset\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(498,35): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(512,35): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(526,35): error TS2345: Argument of type '\"sync\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(565,48): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(579,48): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(593,48): error TS2345: Argument of type '\"common\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(632,34): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(646,34): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(685,34): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(699,34): error TS2345: Argument of type '\"copy\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(713,34): error TS2345: Argument of type '\"official\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(727,34): error TS2345: Argument of type '\"lock\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(741,34): error TS2345: Argument of type '\"unlock\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "src/sucafina/planner.ts(755,34): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(250,54): error TS2322: Type '{ readonly CAP17: { readonly \"import-workbook\": Struct<{ readonly versionId: optionalKey<String>; readonly sheets: $Record<String, $Array<$Record<String, Union<readonly [String, Finite, Boolean, Null]>>>>; readonly newVersion: optionalKey<...>; readonly removeMissing: optionalKey<...>; readonly versions: optionalKey...' is not assignable to type 'Top'.",
+    "../schema/src/sucafina/planner.ts(336,30): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(350,30): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(364,30): error TS2345: Argument of type '\"spread\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(378,30): error TS2345: Argument of type '\"reset\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(417,31): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(431,31): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(445,31): error TS2345: Argument of type '\"spread\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(459,31): error TS2345: Argument of type '\"reset\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(498,35): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(512,35): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(526,35): error TS2345: Argument of type '\"sync\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(565,48): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(579,48): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(593,48): error TS2345: Argument of type '\"common\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(632,34): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(646,34): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(685,34): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(699,34): error TS2345: Argument of type '\"copy\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(713,34): error TS2345: Argument of type '\"official\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(727,34): error TS2345: Argument of type '\"lock\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(741,34): error TS2345: Argument of type '\"unlock\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../schema/src/sucafina/planner.ts(755,34): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(250,54): error TS2322: Type '{ readonly CAP17: { readonly \"import-workbook\": Struct<{ readonly versionId: optionalKey<String>; readonly sheets: $Record<String, $Array<$Record<String, Union<readonly [String, Finite, Boolean, Null]>>>>; readonly newVersion: optionalKey<...>; readonly removeMissing: optionalKey<...>; readonly versions: optionalKey...' is not assignable to type 'Top'.",
+    "../../../packages/schema/src/sucafina/planner.ts(336,30): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(350,30): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(364,30): error TS2345: Argument of type '\"spread\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(378,30): error TS2345: Argument of type '\"reset\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(417,31): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(431,31): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(445,31): error TS2345: Argument of type '\"spread\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(459,31): error TS2345: Argument of type '\"reset\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(498,35): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(512,35): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(526,35): error TS2345: Argument of type '\"sync\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(565,48): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(579,48): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(593,48): error TS2345: Argument of type '\"common\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(632,34): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(646,34): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(685,34): error TS2345: Argument of type '\"save\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(699,34): error TS2345: Argument of type '\"copy\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(713,34): error TS2345: Argument of type '\"official\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(727,34): error TS2345: Argument of type '\"lock\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(741,34): error TS2345: Argument of type '\"unlock\"' is not assignable to parameter of type '\"import-workbook\"'.",
+    "../../../packages/schema/src/sucafina/planner.ts(755,34): error TS2345: Argument of type '\"delete\"' is not assignable to parameter of type '\"import-workbook\"'."
+  ],
+  "required_reads": [
+    "AGENTSapplicable, fixedsf2h-planSTART/WORKFLOW/executionCOMMON and relevantoriginalfullcriteria/contractpointers",
+    "ThisFULLpacket,ownfullnativeUIworkorder+required_reads+mandatorycontractattachments at normativecbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Fullpredecessorhandoff and existingownedsource/tests at fencedbranch; current162consumerpreimages/dependencyclosure beforeediting",
+    "Actualcompiler163RESULTS/GUARDS/HANDOFF andlogs, actualCI164FINDINGS/REQUESTS/RUNS; diagnosefromactualfailedstep, notmetadataalone"
+  ],
+  "precedence": "Currentepoch/allowlist/routing prevails overold IDs/hold-admissiontext; original completecontractbehaviorandcriteriaunchanged. Sourcebranches maydiverge fromconsumer:protectedsourceauthoringdoesnotprohibit162consumingexactreleasedpatches.",
+  "rules": [
+    "NewbrowserSESSIONonly,samebranch+PRpreserveallhistory.ConfirmHEAD/fence/preimagesandACKactualmodel/sessiononlyifexposed+epoch+SHAsbeforewrites;latepredecessoractivityreconcilewithoutreset/force,noprocessdeathinferred.",
+    "Readactualcode/dependenciesandinstalledAPIbeforeedit. Fixsourcecauseendtoendwithinboundedallowlist;noany/casts/schemaUnknown/permissiveschemas/upgradeEffect/oracleweakening/stub/fakediscoverytomasktypefailure.",
+    "TestsAREHOSTEDONLYthrough164singleproductdispatcher;163compilerSDKguards. No localtest/parser/validator/typecheck/build, noowndispatch/extraCIworkflow orprematurefullEPIC.163/164mustdedupactualrequests/runsandinputhashes,notrerununchangedfailedinput.",
+    "RemoteONLYGitHubMCPwithCASexpected_headforcefalse;nogh/gitpush,wholesalehistoricalmerge/devmerge/deploy/Azure/enginechange/secrets/runtime restart ornewnativeGoal/controller. Goalpaused.",
+    "Firstdeliveractualsourcefix,notanotherinventory. Reuseexistingmeaningfulspecs;addregressiononlyifnewbehaviorgapandwithingrant,notatestmirroringatinyimport/genericchange. Requestscopechecksafter162materialization;missingproofNOT_RUN.",
+    "OnePR→sf2-stack,fullpatch+source/consumerprepostSHA/tree/blobs,criterion/findingmap,evidencerealorNOT_RUN,exact163/164requestandterminalhandoff.162onlyintegrator;sourceARTIFACT_READYnotGLOBAL_RELEASE.",
+    "Ifexactfilealreadyfixedincurrent162material,doreadbackandcloseasCONSUMED_WITH_PROOF_POINTERwithoutduplicatingcode/run. Sharedseamgoesto162asinerttypedfullpatch;donotwaitfordependentproofstocompleteindependentsourcefix.",
+    "Preserveall15WPs/74tasks/17contracts/1610criteria. MandatoryfinalsameC8CI/epic/AM01–06/3independentFINAL/validD/C-G7D-G8/remoteproofunchanged."
+  ]
+}

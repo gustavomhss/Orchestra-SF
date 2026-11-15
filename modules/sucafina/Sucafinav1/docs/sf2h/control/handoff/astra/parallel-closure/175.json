@@ -1,0 +1,412 @@
+{
+  "schema": "sf2h.compiler-browser-fix173-184.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "n": 175,
+  "title": "Portfólio — generics do decoder",
+  "branch": "sf-ux-w17",
+  "pr": 134,
+  "order": "A05",
+  "previous": "ux-native-w17-e3",
+  "files": [
+    "packages/schema/src/sucafina/portfolio.ts",
+    "packages/schema/src/sucafina/portfolio/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+  ],
+  "epoch": "native-fix-e1-browser175",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/",
+  "expected_head": "b1238d1d43308739f915111708d88bfb729d4799",
+  "fence": {
+    "schema": "sf2h.causal-fix-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 175,
+    "branch": "sf-ux-w17",
+    "previous_epoch": "ux-native-w17-e3",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "next_epoch": "native-fix-e1-browser175",
+    "previous_head": "d6be25ce2c64a353871cbb4991b846a35a2f525b",
+    "scope_paths": [
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "authority": "S0 under user instruction advance all independent work with freshbrowser sessions",
+    "reason": "New actual compiler163 failure on integratedW690a34",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrative sourceauthorityfence only, no processkill/tokenrevocation/deathbysilence claimed. Reconcile anylatecommits beforeeffects withoutreset/force.",
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "mission": 175,
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "write_paths": [
+    "packages/schema/src/sucafina/portfolio.ts",
+    "packages/schema/src/sucafina/portfolio/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/**"
+  ],
+  "protected_paths": [
+    "Allothersourcebranches/allowlists,sharedregistry/host/localentry/globali18n/packageexports/generated/engines/Azure;162ownsI00andonlyproductintegration.",
+    "Originalplans/oracles/fixtures/timeouts/approvalrules;testsareproductcodebutnotaproofuntilhostedactualrun.171ownsA12work,172ownsF01CLIcontext;AM165–170qualificationnamespacesreadonly."
+  ],
+  "routing": {
+    "integrator": "162/PR65/S0-C-e20-browser162",
+    "compiler": "163/PR107/compiler-e4-browser163",
+    "product_ci": "164/PR106/product-ci-e4-browser164",
+    "A12_owner": 171,
+    "F01_owner": 172
+  },
+  "material": {
+    "compiler_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139,
+    "compiler_artifact": 14182790522,
+    "version": "effect4.0.0-beta.83,Bun1.3.14,Ubuntu24.04",
+    "current_consumer_observed": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb"
+  },
+  "full_work_order": {
+    "id": "A05",
+    "title": "Bindings finos: Portfólio e sensibilidade",
+    "kind": "adapter",
+    "status": "PLANNED_NOT_AUTHORIZED",
+    "priority": 3,
+    "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+    "owns": [
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/client/src/sucafina/portfolio.ts",
+      "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "packages/client/src/sucafina/portfolio/**",
+      "apps/cli/src/sucafina-product/native-ui/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "may_write_shared_registry": false,
+    "canonical": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "task_refs": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+    },
+    "surfaces": [],
+    "exports": [
+      "SfPortfolio",
+      "createSfPortfolioClient"
+    ],
+    "depends_authoring": [
+      {
+        "lock": "ctx",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "portfolio",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "transport",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      }
+    ],
+    "depends_integration": [
+      "F01",
+      "F02"
+    ],
+    "depends_qualification": {
+      "work_orders": [
+        "F01",
+        "F02"
+      ],
+      "external": [],
+      "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+    },
+    "consumes": {
+      "contracts": [
+        "ctx",
+        "portfolio",
+        "transport"
+      ],
+      "producer_exports": [
+        {
+          "order": "F01",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        },
+        {
+          "order": "F02",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        }
+      ],
+      "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+      "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+      "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+      "operation_refs": [
+        "contract-catalog.json#/operations/portfolio.decision-portfolio-evaluate",
+        "contract-catalog.json#/operations/portfolio.decision-portfolio-preview",
+        "contract-catalog.json#/operations/portfolio.decision-portfolio-read",
+        "contract-catalog.json#/operations/portfolio.decision-portfolio-reconcile",
+        "contract-catalog.json#/operations/portfolio.decision-portfolio-results",
+        "contract-catalog.json#/operations/portfolio.decision-prepare-portfolio",
+        "contract-catalog.json#/operations/portfolio.decision-promote-portfolio",
+        "contract-catalog.json#/operations/portfolio.decision-sensitivity-evaluate",
+        "contract-catalog.json#/operations/portfolio.decision-sensitivity-read",
+        "contract-catalog.json#/operations/portfolio.decision-sensitivity-units"
+      ],
+      "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+    },
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/schema/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/A05.json"
+      ],
+      "contracts": [
+        "ctx",
+        "portfolio",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": [
+        "contract-catalog.json#/sources/portfolio"
+      ]
+    },
+    "deliver": [
+      "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
+      "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
+      "Publish operation/field/source equivalence and current-access/redaction negative cases."
+    ],
+    "acceptance_cases": [
+      {
+        "id": "A05-AC01",
+        "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "A05-AC02",
+        "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "A05-AC03",
+        "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+        "status": "PLANNED_NOT_RUN"
+      }
+    ],
+    "gates": {
+      "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+      "test_files": [
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+      ],
+      "typecheck_packages": [
+        "apps/cli",
+        "packages/client",
+        "packages/schema"
+      ],
+      "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+      "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+      "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+    },
+    "stop": [
+      "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+      "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+      "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+      "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+      "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+      "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+    ],
+    "handoff": {
+      "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+      "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+      "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+    },
+    "entrypoints": [
+      {
+        "path": "packages/schema/src/sucafina/portfolio.ts",
+        "symbol": "SfPortfolio",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "packages/client/src/sucafina/portfolio.ts",
+        "symbol": "createSfPortfolioClient",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      }
+    ],
+    "server_leaf_policy": "Existing JSON operations are called directly through typed client. Do not create a duplicate server forwarder; optional server allowlist is reserved only for an explicitly frozen missing projection."
+  },
+  "predecessor_packet": {
+    "schema": "sf2h.native-ui.author-packet.v1",
+    "mission_id": "UX20-W17",
+    "seat": "W17",
+    "work_order_id": "A05",
+    "output_id": null,
+    "title": "Bindings finos: Portfólio e sensibilidade",
+    "state": "PREPARED_USER_AUTHORIZED_OUTPUT_PREFLIGHT",
+    "requested_model": "Astra (user browser); record actual model when exposed",
+    "effective_model": null,
+    "actual_session_id": null,
+    "actual_actor": null,
+    "branch": "sf-ux-w17",
+    "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "cohort_base": "resolve branch initial head; same immutable shared cohort commit for all19",
+    "source": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+    },
+    "common_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/campaign-overlay/COMMON.md",
+    "work_order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A05.json",
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/schema/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/A05.json"
+      ],
+      "contracts": [
+        "ctx",
+        "portfolio",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": [
+        "contract-catalog.json#/sources/portfolio"
+      ]
+    },
+    "write_paths": [
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/client/src/sucafina/portfolio.ts",
+      "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "packages/client/src/sucafina/portfolio/**",
+      "apps/cli/src/sucafina-product/native-ui/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "test_write_grants": [],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/",
+    "lease": {
+      "reserved_epoch": "ux-native-w17-e1",
+      "state": "RESERVED_NOT_ACTIVE; publish real ACK and per-output admission",
+      "integrator": "same current114 C00, no second supervisor"
+    },
+    "frozen_contract_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    "authoring_locks": [
+      "ctx",
+      "portfolio",
+      "transport"
+    ],
+    "contract_refs": [
+      "ctx",
+      "portfolio",
+      "transport"
+    ],
+    "source_binding_pins": {
+      "portfolio": {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      }
+    },
+    "entrypoints": [
+      {
+        "path": "packages/schema/src/sucafina/portfolio.ts",
+        "symbol": "SfPortfolio",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "packages/client/src/sucafina/portfolio.ts",
+        "symbol": "createSfPortfolioClient",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      }
+    ],
+    "integration_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "qualification_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "affected_test_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "scope_clarifications": [],
+    "delivery": "Complete assigned output; one PR to sf2-stack, exactprepost/patch/tests/dependencies and ARTIFACT_READY handoff to114; do not edit sharedpaths or wait for unrelated services."
+  },
+  "goal": "Corrigir generics de decode/checkstrict compatíveis com Effect instalado.",
+  "actions": [
+    "TS2345linhas256/260:tipoS nãoatendeDecoder<unknown,never>. Ler API de decode/Schema reais e ajustar constraints/inferência preservando inputoriginal/recursão e rejeição deextras135.",
+    "Nada deany,castearreadonlygenéricoaDecoder ou removerstrictvalidation para compilar. Reusarportfolio.test existente e pedir163typechecks apósconsumo; teste164somente secomportamentodeltaca aproximadamente."
+  ],
+  "diagnostics": [
+    "src/sucafina/portfolio.ts(256,48): error TS2345: Argument of type 'S' is not assignable to parameter of type 'Decoder<unknown, never>'.",
+    "src/sucafina/portfolio.ts(260,34): error TS2345: Argument of type 'S' is not assignable to parameter of type 'Decoder<unknown, never>'.",
+    "../schema/src/sucafina/portfolio.ts(256,48): error TS2345: Argument of type 'S' is not assignable to parameter of type 'Decoder<unknown, never>'.",
+    "../schema/src/sucafina/portfolio.ts(260,34): error TS2345: Argument of type 'S' is not assignable to parameter of type 'Decoder<unknown, never>'.",
+    "../../../packages/schema/src/sucafina/portfolio.ts(256,48): error TS2345: Argument of type 'S' is not assignable to parameter of type 'Decoder<unknown, never>'.",
+    "../../../packages/schema/src/sucafina/portfolio.ts(260,34): error TS2345: Argument of type 'S' is not assignable to parameter of type 'Decoder<unknown, never>'."
+  ],
+  "required_reads": [
+    "AGENTSapplicable, fixedsf2h-planSTART/WORKFLOW/executionCOMMON and relevantoriginalfullcriteria/contractpointers",
+    "ThisFULLpacket,ownfullnativeUIworkorder+required_reads+mandatorycontractattachments at normativecbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Fullpredecessorhandoff and existingownedsource/tests at fencedbranch; current162consumerpreimages/dependencyclosure beforeediting",
+    "Actualcompiler163RESULTS/GUARDS/HANDOFF andlogs, actualCI164FINDINGS/REQUESTS/RUNS; diagnosefromactualfailedstep, notmetadataalone"
+  ],
+  "precedence": "Currentepoch/allowlist/routing prevails overold IDs/hold-admissiontext; original completecontractbehaviorandcriteriaunchanged. Sourcebranches maydiverge fromconsumer:protectedsourceauthoringdoesnotprohibit162consumingexactreleasedpatches.",
+  "rules": [
+    "NewbrowserSESSIONonly,samebranch+PRpreserveallhistory.ConfirmHEAD/fence/preimagesandACKactualmodel/sessiononlyifexposed+epoch+SHAsbeforewrites;latepredecessoractivityreconcilewithoutreset/force,noprocessdeathinferred.",
+    "Readactualcode/dependenciesandinstalledAPIbeforeedit. Fixsourcecauseendtoendwithinboundedallowlist;noany/casts/schemaUnknown/permissiveschemas/upgradeEffect/oracleweakening/stub/fakediscoverytomasktypefailure.",
+    "TestsAREHOSTEDONLYthrough164singleproductdispatcher;163compilerSDKguards. No localtest/parser/validator/typecheck/build, noowndispatch/extraCIworkflow orprematurefullEPIC.163/164mustdedupactualrequests/runsandinputhashes,notrerununchangedfailedinput.",
+    "RemoteONLYGitHubMCPwithCASexpected_headforcefalse;nogh/gitpush,wholesalehistoricalmerge/devmerge/deploy/Azure/enginechange/secrets/runtime restart ornewnativeGoal/controller. Goalpaused.",
+    "Firstdeliveractualsourcefix,notanotherinventory. Reuseexistingmeaningfulspecs;addregressiononlyifnewbehaviorgapandwithingrant,notatestmirroringatinyimport/genericchange. Requestscopechecksafter162materialization;missingproofNOT_RUN.",
+    "OnePR→sf2-stack,fullpatch+source/consumerprepostSHA/tree/blobs,criterion/findingmap,evidencerealorNOT_RUN,exact163/164requestandterminalhandoff.162onlyintegrator;sourceARTIFACT_READYnotGLOBAL_RELEASE.",
+    "Ifexactfilealreadyfixedincurrent162material,doreadbackandcloseasCONSUMED_WITH_PROOF_POINTERwithoutduplicatingcode/run. Sharedseamgoesto162asinerttypedfullpatch;donotwaitfordependentproofstocompleteindependentsourcefix.",
+    "Preserveall15WPs/74tasks/17contracts/1610criteria. MandatoryfinalsameC8CI/epic/AM01–06/3independentFINAL/validD/C-G7D-G8/remoteproofunchanged."
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "schema": "sf2h.causal-fix173-184-index.v1",
+  "campaign": "sf2h-integral-20261112",
+  "state": "PREPARED_NOT_STARTED",
+  "native_goal": "paused",
+  "global_release": false,
+  "missions": [
+    {
+      "mission": 173,
+      "title": "Decisões — compatibilidade completa com Effect",
+      "branch": "sf-ux-w16",
+      "pr": 135,
+      "epoch": "native-fix-e1-browser173",
+      "expected_head": "c18ccbbf7c69c2df731019cc40832b2b337200e7",
+      "write_paths": [
+        "packages/schema/src/sucafina/decisions.ts",
+        "packages/schema/src/sucafina/decisions/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/**"
+      ]
+    },
+    {
+      "mission": 174,
+      "title": "Planner — catálogo tipado por superfície",
+      "branch": "sf-ux-w15",
+      "pr": 116,
+      "epoch": "native-fix-e1-browser174",
+      "expected_head": "10812b42de20a8275e82b47ca8bfccc9364af226",
+      "write_paths": [
+        "packages/schema/src/sucafina/planner.ts",
+        "packages/schema/src/sucafina/planner/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/**"
+      ]
+    },
+    {
+      "mission": 175,
+      "title": "Portfólio — generics do decoder",
+      "branch": "sf-ux-w17",
+      "pr": 134,
+      "epoch": "native-fix-e1-browser175",
+      "expected_head": "b1238d1d43308739f915111708d88bfb729d4799",
+      "write_paths": [
+        "packages/schema/src/sucafina/portfolio.ts",
+        "packages/schema/src/sucafina/portfolio/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/**"
+      ]
+    },
+    {
+      "mission": 176,
+      "title": "Operações — contrato SelectionResolved",
+      "branch": "sf-ux-a11",
+      "pr": 143,
+      "epoch": "native-fix-e1-browser176",
+      "expected_head": "9344dda9486e803de2fae26179dada71b2f20314",
+      "write_paths": [
+        "packages/schema/src/sucafina/operations.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/**"
+      ]
+    },
+    {
+      "mission": 177,
+      "title": "Domínio — fechamento dos módulos de projeção",
+      "branch": "sf-ux-w14",
+      "pr": 133,
+      "epoch": "native-fix-e1-browser177",
+      "expected_head": "32b69bd448c3141f2d68e39a8021d4ef0bbc31eb",
+      "write_paths": [
+        "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "apps/cli/src/sucafina-product/native-ui/domain/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/**"
+      ]
+    },
+    {
+      "mission": 178,
+      "title": "Pessoas — campos e transações tipados",
+      "branch": "sf-ux-a10",
+      "pr": 138,
+      "epoch": "native-fix-e1-browser178",
+      "expected_head": "e7a8296ee2afadd94c6b875fe5c263351ee60062",
+      "write_paths": [
+        "apps/cli/src/sucafina-product/native-ui/people.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/**"
+      ]
+    },
+    {
+      "mission": 179,
+      "title": "Rotinas — disponibilidade real do handler",
+      "branch": "sf-ux-a09",
+      "pr": 140,
+      "epoch": "native-fix-e1-browser179",
+      "expected_head": "30e68e97d6a9ea66141c32ff493de27413d11b94",
+      "write_paths": [
+        "apps/cli/src/sucafina-product/native-ui/routines.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/**"
+      ]
+    },
+    {
+      "mission": 180,
+      "title": "Memória — import público compatível",
+      "branch": "sf-ux-a14",
+      "pr": 136,
+      "epoch": "native-fix-e1-browser180",
+      "expected_head": "a359cb6d9016cc18cedb863cb7ec20fe7242d804",
+      "write_paths": [
+        "packages/schema/src/sucafina/memory.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/**"
+      ]
+    },
+    {
+      "mission": 181,
+      "title": "Desktop — codec de matrícula",
+      "branch": "sf-ux-w01",
+      "pr": 145,
+      "epoch": "native-fix-e1-browser181",
+      "expected_head": "bf031bef97d474da68888662d39bcc844a342f06",
+      "write_paths": [
+        "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/desktop-enrollment.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/**"
+      ]
+    },
+    {
+      "mission": 182,
+      "title": "Frame — estados e privacidade do gráfico",
+      "branch": "sf-ux-w04",
+      "pr": 129,
+      "epoch": "native-fix-e1-browser182",
+      "expected_head": "cd2257b601be744ad27faa502c8057a49e241a01",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+        "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/**"
+      ]
+    },
+    {
+      "mission": 183,
+      "title": "Tabela — provider real no teste de navegador",
+      "branch": "sf-ux-w06",
+      "pr": 125,
+      "epoch": "native-fix-e1-browser183",
+      "expected_head": "b81044b9c573f0a887788cd21d4eb3a255582d0a",
+      "write_paths": [
+        "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/**"
+      ]
+    },
+    {
+      "mission": 184,
+      "title": "Colaboração — conteúdo e resultado desconhecido",
+      "branch": "sf-ux-w10",
+      "pr": 119,
+      "epoch": "native-fix-e1-browser184",
+      "expected_head": "fd69ed12f556470dfbc1ff4d9096ccf3d04ef8c7",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+        "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/**"
+      ]
+    }
+  ],
+  "existing": "162integrates,163compiles,164tests;165–170AMqualification,171A12,172F01remainunmodified. New12sourcebranchesfenced; no nativeworkerslaunched."
+}

@@ -1,0 +1,382 @@
+{
+  "schema": "sf2h.compiler-browser-fix173-184.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "n": 184,
+  "title": "Colaboração — conteúdo e resultado desconhecido",
+  "branch": "sf-ux-w10",
+  "pr": 119,
+  "order": "S05",
+  "files": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+    "packages/app-shell/test-browser/sucafina-native/s05.test.ts"
+  ],
+  "previous": "ux-native-w10-e1; S05-test aux authority from140 explicitly revoked for this path only",
+  "epoch": "native-fix-e1-browser184",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/",
+  "expected_head": "fd69ed12f556470dfbc1ff4d9096ccf3d04ef8c7",
+  "fence": {
+    "schema": "sf2h.causal-fix-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 184,
+    "branch": "sf-ux-w10",
+    "previous_epoch": "ux-native-w10-e1; S05-test aux authority from140 explicitly revoked for this path only",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "next_epoch": "native-fix-e1-browser184",
+    "previous_head": "43b4f8e7fcedfe5de0e3bd47d8375475cae77c32",
+    "scope_paths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts"
+    ],
+    "authority": "S0 under user instruction advance all independent work with freshbrowser sessions",
+    "reason": "New actual correctedbrowserCI164 failure on genuine selectedtests",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrative sourceauthorityfence only, no processkill/tokenrevocation/deathbysilence claimed. Reconcile anylatecommits beforeeffects withoutreset/force.",
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "mission": 184,
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+    "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/**"
+  ],
+  "protected_paths": [
+    "Allothersourcebranches/allowlists,sharedregistry/host/localentry/globali18n/packageexports/generated/engines/Azure;162ownsI00andonlyproductintegration.",
+    "Originalplans/oracles/fixtures/timeouts/approvalrules;testsareproductcodebutnotaproofuntilhostedactualrun.171ownsA12work,172ownsF01CLIcontext;AM165–170qualificationnamespacesreadonly."
+  ],
+  "routing": {
+    "integrator": "162/PR65/S0-C-e20-browser162",
+    "compiler": "163/PR107/compiler-e4-browser163",
+    "product_ci": "164/PR106/product-ci-e4-browser164",
+    "A12_owner": 171,
+    "F01_owner": 172
+  },
+  "material": {
+    "compiler_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139,
+    "compiler_artifact": 14182790522,
+    "version": "effect4.0.0-beta.83,Bun1.3.14,Ubuntu24.04",
+    "browser_run": 43766970018,
+    "browser_job": 132974180913,
+    "current_consumer_observed": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb"
+  },
+  "full_work_order": {
+    "id": "S05",
+    "title": "Componentes de relações, threads e confirmação",
+    "kind": "shared",
+    "status": "PLANNED_NOT_AUTHORIZED",
+    "priority": 2,
+    "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+    "owns": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts"
+    ],
+    "may_write_shared_registry": false,
+    "canonical": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "task_refs": [
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T03",
+        "WP08.T06"
+      ],
+      "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+    },
+    "surfaces": [
+      "UI51",
+      "UI52",
+      "UI53"
+    ],
+    "exports": [
+      "SfRelations",
+      "SfThread",
+      "SfQuestion",
+      "SfConfirmation"
+    ],
+    "depends_authoring": [
+      {
+        "lock": "ctx",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "domain-read",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "reviews",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "ui-collaboration",
+        "source": "component-locks.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "ui-frame",
+        "source": "component-locks.json",
+        "requires": "FROZEN with digest in launch record"
+      }
+    ],
+    "depends_integration": [
+      "F03"
+    ],
+    "depends_qualification": {
+      "work_orders": [
+        "F03"
+      ],
+      "external": [],
+      "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+    },
+    "consumes": {
+      "contracts": [
+        "ctx",
+        "domain-read",
+        "reviews",
+        "ui-collaboration",
+        "ui-frame"
+      ],
+      "producer_exports": [
+        {
+          "order": "F03",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        }
+      ],
+      "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+      "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+      "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+      "operation_refs": [],
+      "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+    },
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/app-shell/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "component-signatures.ts",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/S05.json"
+      ],
+      "contracts": [
+        "ctx",
+        "domain-read",
+        "reviews",
+        "ui-collaboration",
+        "ui-frame"
+      ],
+      "surfaces": [
+        "UI51",
+        "UI52",
+        "UI53"
+      ],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": []
+    },
+    "deliver": [
+      "Implement only the frozen public component contract; consumers receive export/props/slots manifest.",
+      "Publish accessibility/state examples and exact consumer registration fragment.",
+      "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write.",
+      "Expose pure callback components only. U44 owns UI51–UI53 route pages and A13 calls; S05 neither creates a page wrapper nor performs fetch."
+    ],
+    "acceptance_cases": [
+      {
+        "id": "S05-AC01",
+        "expected": "Relations need no mandatory case; material scope, incarnation/version, pending correlation and current access are retained.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "S05-AC02",
+        "expected": "No consumer copies private source or implements a parallel component.",
+        "status": "PLANNED_NOT_RUN"
+      }
+    ],
+    "gates": {
+      "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+      "test_files": [
+        "packages/app-shell/test-browser/sucafina-native/s05.test.ts"
+      ],
+      "typecheck_packages": [
+        "packages/app-shell"
+      ],
+      "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+      "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+      "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+    },
+    "stop": [
+      "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+      "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+      "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+      "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+      "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+      "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+    ],
+    "handoff": {
+      "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+      "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+      "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+    },
+    "i18n_exports": [
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+        "en_symbol": "SF_S05_COPY",
+        "pt_br_symbol": "SF_S05_COPY_BR",
+        "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+      }
+    ],
+    "entrypoints": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+        "symbol": "SfRelations",
+        "signature": "COMPONENT-CONTRACTS.md exact public signature"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+        "symbol": "SfThread",
+        "signature": "COMPONENT-CONTRACTS.md exact public signature"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+        "symbol": "SfQuestion",
+        "signature": "COMPONENT-CONTRACTS.md exact public signature"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+        "symbol": "SfConfirmation",
+        "signature": "COMPONENT-CONTRACTS.md exact public signature"
+      }
+    ]
+  },
+  "original_source_ack": {
+    "schema": "sf2h.native-ui.author-ack.v1",
+    "mission_id": "UX20-W10",
+    "work_order_id": "S05",
+    "output_id": "S05",
+    "seat": "W10",
+    "actor": {
+      "kind": "new-user-chat-session",
+      "requested_model": "Astra",
+      "actual_model": "GPT-6",
+      "session_id": "not-exposed",
+      "name": "W10"
+    },
+    "authority": {
+      "integrator": "114 / S0-C-e17-browser114",
+      "branch": "sf2-stack",
+      "admission": "REQUESTED_PER_OUTPUT_NOT_YET_CONFIRMED",
+      "controller_created": false,
+      "dispatcher_created": false
+    },
+    "branch": {
+      "name": "sf-ux-w10",
+      "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+      "tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+      "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4"
+    },
+    "lease": {
+      "epoch": "ux-native-w10-e1",
+      "status": "ACK_PUBLISHED_RESERVATION_PENDING_114_ADMISSION"
+    },
+    "write_paths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/**"
+    ],
+    "source_pins": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+      "collaboration_http": "ccae839a2bc35634554a2ac2721d345671c16f77",
+      "collaboration_routes": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+      "source_material": "C58"
+    },
+    "contract_blobs": {
+      "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "component_contracts": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "component_locks": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "contracts": "94553a3119826ef1c44271966233dd58042ddd70",
+      "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "surface_specs": "d62847af81dffdc129312e71e69692081fd74b75",
+      "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+      "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "execution_protocol_expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "execution_protocol_observed": "4a50abfee84335d2ca4db7e3351af144248c9fd1"
+    },
+    "drift": {
+      "protocol": "two authority/dispatcher nomenclature lines differ (15,53), S05 public contracts unaffected; COMMON overrides legacy 101/45 with 120/119",
+      "source": "collaboration/http.ts and http-routes.ts same blob as locked C58; no producer implementation imported into browser"
+    },
+    "authoring_dependencies": [
+      "ctx",
+      "domain-read",
+      "reviews",
+      "ui-collaboration",
+      "ui-frame"
+    ],
+    "integration_dependency": "F03",
+    "surfaces": [
+      "UI51",
+      "UI52",
+      "UI53"
+    ],
+    "consumer": "U44",
+    "preflight": "S05 public props/types frozen; source restrictions verified; lease activation awaits 114 intake",
+    "tests": {
+      "policy": "GitHub Actions only; runner120",
+      "state": "NOT_RUN"
+    },
+    "no_external_messages": true
+  },
+  "goal": "Preservar conteúdo exato do rascunho da thread emunknown/unavailable semleak entreowners.",
+  "actions": [
+    "Run43766970018s05.test.ts156:apósoutcome-unknown→Checkoriginaloutcome→unavailable,textareaespera'  Keep whitespace  ',recebe'new comment'. Causaconfirmar pelo callback/generation/reset decontroledraft,semrelaxarassert/string.",
+    "Preservar espaços/CRLF/conteúdo/incarnation/version pormesmoowner;reconciliação éread-only,nuncareplayPOST. Mudançadeowner/revogação/denieddeveaindapurgarconteúdoprivado. Não corrigirumcasocongelandooestadooutrodono.",
+    "FonteW10antigaeS05fixture140diferemdoCexecutado. Leractualpost140consumer,applyapenasdeltaUI/testelegítimo;preservar realPlatformprovider/imports, não sobrescrevercompreimageold."
+  ],
+  "diagnostics": [],
+  "browser_log_excerpt": "2026-11-15T22:03:55.3152105Z test-browser/sucafina-native/page-frame.test.ts:\n2026-11-15T22:03:56.1192283Z test-browser/sucafina-native/page-frame.test.ts:\n2026-11-15T22:03:56.1200789Z       at mount (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts:57:21)\n2026-11-15T22:03:56.1202035Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts:118:22)\n2026-11-15T22:03:56.1203048Z (fail) loading, filtered empty, partial and outcome unknown remain distinct without fake zero [5.03ms]\n2026-11-15T22:03:56.1207878Z Received: \"Current sourcePartial coverageYou do not have access to this content.\"\n2026-11-15T22:03:56.1208951Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts:182:43)\n2026-11-15T22:03:56.1209727Z (fail) denied chart does not expose its previous owner's context or SVG [2.56ms]\n2026-11-15T22:03:56.1213470Z Expected: 0\n2026-11-15T22:03:56.1213678Z Received: 1\n2026-11-15T22:03:56.1214312Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts:25:42)\n2026-11-15T22:03:56.1215083Z (fail) F03 frame and state DOM suite (hosted by mission120) [694.24ms]\n2026-11-15T22:03:56.1215543Z test-browser/sucafina-native/s01.test.ts:\n2026-11-15T22:03:56.7388103Z test-browser/sucafina-native/s01.test.ts:\n2026-11-15T22:03:56.7393614Z       at fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:120:21)\n2026-11-15T22:03:56.7394258Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:128:18)\n2026-11-15T22:03:56.7394853Z (fail) table uses opaque row identity, native semantics, controlled sort/page and explicit gestures [7.28ms]\n2026-11-15T22:03:56.7400690Z       at fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:120:21)\n2026-11-15T22:03:56.7401309Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:162:18)\n2026-11-15T22:03:56.7401902Z (fail) row action reason and button remain sibling elements with intact authority and keyboard gates [0.53ms]\n2026-11-15T22:03:56.7409152Z       at fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:120:21)\n2026-11-15T22:03:56.7409771Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:209:18)\n2026-11-15T22:03:56.7410361Z (fail) single detail retains same-owner list, filter DOM, scroll and returns focus to the same ref [0.41ms]\n2026-11-15T22:03:56.7415454Z       at fixture (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:120:21)\n2026-11-15T22:03:56.7416300Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:237:18)\n2026-11-15T22:03:56.7417148Z (fail) filtered-empty differs from empty, and denied/session-expired never leave private rows in the DOM [0.16ms]\n2026-11-15T22:03:56.7418494Z       at runBrowserLane (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s01.test.ts:23:29)\n2026-11-15T22:03:56.7419020Z (fail) S01 authorized components in the Orchestra browser lane [616.22ms]\n2026-11-15T22:03:57.3471299Z test-browser/sucafina-native/s05.test.ts:\n2026-11-15T22:03:57.8666830Z Expected: \"  Keep whitespace  \"\n2026-11-15T22:03:57.8667029Z Received: \"new comment\"\n2026-11-15T22:03:57.8667455Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/test-browser/sucafina-native/s05.test.ts:156:77)\n2026-11-15T22:03:57.8668064Z (fail) S05 thread preserves exact content, incarnation and version; unknown outcome only reconciles [8.44ms]",
+  "required_reads": [
+    "AGENTSapplicable, fixedsf2h-planSTART/WORKFLOW/executionCOMMON and relevantoriginalfullcriteria/contractpointers",
+    "ThisFULLpacket,ownfullnativeUIworkorder+required_reads+mandatorycontractattachments at normativecbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Fullpredecessorhandoff and existingownedsource/tests at fencedbranch; current162consumerpreimages/dependencyclosure beforeediting",
+    "Actualcompiler163RESULTS/GUARDS/HANDOFF andlogs, actualCI164FINDINGS/REQUESTS/RUNS; diagnosefromactualfailedstep, notmetadataalone"
+  ],
+  "precedence": "Currentepoch/allowlist/routing prevails overold IDs/hold-admissiontext; original completecontractbehaviorandcriteriaunchanged. Sourcebranches maydiverge fromconsumer:protectedsourceauthoringdoesnotprohibit162consumingexactreleasedpatches.",
+  "rules": [
+    "NewbrowserSESSIONonly,samebranch+PRpreserveallhistory.ConfirmHEAD/fence/preimagesandACKactualmodel/sessiononlyifexposed+epoch+SHAsbeforewrites;latepredecessoractivityreconcilewithoutreset/force,noprocessdeathinferred.",
+    "Readactualcode/dependenciesandinstalledAPIbeforeedit. Fixsourcecauseendtoendwithinboundedallowlist;noany/casts/schemaUnknown/permissiveschemas/upgradeEffect/oracleweakening/stub/fakediscoverytomasktypefailure.",
+    "TestsAREHOSTEDONLYthrough164singleproductdispatcher;163compilerSDKguards. No localtest/parser/validator/typecheck/build, noowndispatch/extraCIworkflow orprematurefullEPIC.163/164mustdedupactualrequests/runsandinputhashes,notrerununchangedfailedinput.",
+    "RemoteONLYGitHubMCPwithCASexpected_headforcefalse;nogh/gitpush,wholesalehistoricalmerge/devmerge/deploy/Azure/enginechange/secrets/runtime restart ornewnativeGoal/controller. Goalpaused.",
+    "Firstdeliveractualsourcefix,notanotherinventory. Reuseexistingmeaningfulspecs;addregressiononlyifnewbehaviorgapandwithingrant,notatestmirroringatinyimport/genericchange. Requestscopechecksafter162materialization;missingproofNOT_RUN.",
+    "OnePR→sf2-stack,fullpatch+source/consumerprepostSHA/tree/blobs,criterion/findingmap,evidencerealorNOT_RUN,exact163/164requestandterminalhandoff.162onlyintegrator;sourceARTIFACT_READYnotGLOBAL_RELEASE.",
+    "Ifexactfilealreadyfixedincurrent162material,doreadbackandcloseasCONSUMED_WITH_PROOF_POINTERwithoutduplicatingcode/run. Sharedseamgoesto162asinerttypedfullpatch;donotwaitfordependentproofstocompleteindependentsourcefix.",
+    "Preserveall15WPs/74tasks/17contracts/1610criteria. MandatoryfinalsameC8CI/epic/AM01–06/3independentFINAL/validD/C-G7D-G8/remoteproofunchanged."
+  ]
+}

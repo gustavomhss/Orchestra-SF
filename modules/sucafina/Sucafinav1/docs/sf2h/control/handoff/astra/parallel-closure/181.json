@@ -1,0 +1,353 @@
+{
+  "schema": "sf2h.compiler-browser-fix173-184.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "n": 181,
+  "title": "Desktop — codec de matrícula",
+  "branch": "sf-ux-w01",
+  "pr": 145,
+  "order": "D01",
+  "files": [
+    "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/desktop-enrollment.test.ts"
+  ],
+  "previous": "ux-native-w01-e2",
+  "epoch": "native-fix-e1-browser181",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/",
+  "expected_head": "bf031bef97d474da68888662d39bcc844a342f06",
+  "fence": {
+    "schema": "sf2h.causal-fix-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 181,
+    "branch": "sf-ux-w01",
+    "previous_epoch": "ux-native-w01-e2",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "next_epoch": "native-fix-e1-browser181",
+    "previous_head": "e14016af508d44f6dde1a0a972e3a6ea375ac794",
+    "scope_paths": [
+      "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/desktop-enrollment.test.ts"
+    ],
+    "authority": "S0 under user instruction advance all independent work with freshbrowser sessions",
+    "reason": "New actual compiler163 failure on integratedW690a34",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrative sourceauthorityfence only, no processkill/tokenrevocation/deathbysilence claimed. Reconcile anylatecommits beforeeffects withoutreset/force.",
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "mission": 181,
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "write_paths": [
+    "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/desktop-enrollment.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/**"
+  ],
+  "protected_paths": [
+    "Allothersourcebranches/allowlists,sharedregistry/host/localentry/globali18n/packageexports/generated/engines/Azure;162ownsI00andonlyproductintegration.",
+    "Originalplans/oracles/fixtures/timeouts/approvalrules;testsareproductcodebutnotaproofuntilhostedactualrun.171ownsA12work,172ownsF01CLIcontext;AM165–170qualificationnamespacesreadonly."
+  ],
+  "routing": {
+    "integrator": "162/PR65/S0-C-e20-browser162",
+    "compiler": "163/PR107/compiler-e4-browser163",
+    "product_ci": "164/PR106/product-ci-e4-browser164",
+    "A12_owner": 171,
+    "F01_owner": 172
+  },
+  "material": {
+    "compiler_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139,
+    "compiler_artifact": 14182790522,
+    "version": "effect4.0.0-beta.83,Bun1.3.14,Ubuntu24.04",
+    "current_consumer_observed": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb"
+  },
+  "full_work_order": {
+    "id": "D01",
+    "title": "Broker desktop e sessão Microsoft isolada",
+    "kind": "foundation",
+    "status": "PLANNED_NOT_AUTHORIZED",
+    "priority": 1,
+    "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+    "owns": [
+      "apps/desktop/src/main/sucafina/**",
+      "apps/desktop/src/preload/sucafina.ts",
+      "apps/desktop/src/renderer/sucafina.ts",
+      "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+    ],
+    "may_write_shared_registry": false,
+    "canonical": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "task_refs": [
+        "WP00.T04",
+        "WP10.T01"
+      ],
+      "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+    },
+    "surfaces": [],
+    "exports": [
+      "createSfDesktopBroker",
+      "createSfDesktopPreloadCapability",
+      "createSfDesktopCapability",
+      "attachSfNativeEnrollment"
+    ],
+    "depends_authoring": [
+      {
+        "lock": "ctx",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "transport",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      }
+    ],
+    "depends_integration": [
+      "F02"
+    ],
+    "depends_qualification": {
+      "work_orders": [
+        "F02"
+      ],
+      "external": [
+        "Microsoft authorized test identities and live native auth surface"
+      ],
+      "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+    },
+    "consumes": {
+      "contracts": [
+        "ctx",
+        "transport"
+      ],
+      "producer_exports": [
+        {
+          "order": "F02",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        }
+      ],
+      "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+      "microcopy": "SURFACE-SPECS.md COPY-02 and surface-manifest.json#/copy/desktop; the five exact main-native copy keys, locale rule and safe default IDs are frozen.",
+      "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+      "operation_refs": [],
+      "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+    },
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts",
+        "route-signatures.ts"
+      ],
+      "local": [
+        "work-orders/D01.json"
+      ],
+      "contracts": [
+        "ctx",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": []
+    },
+    "deliver": [
+      "Implement narrow main-process broker using isolated Session partition per approved server/installation and fixed operation allowlist.",
+      "Login window uses the same partition; preserve issuer/tenant/resource membership and current provider grants.",
+      "Validate mainFrame sender and owner generation; abort/remove cookies on logout and owner disposal.",
+      "Downloads/upload pickers follow existing desktop permission/save-dialog paths; renderer cannot choose arbitrary URLs or headers.",
+      "Implement broker.test.ts inside the owned main/sucafina subtree; fixture asserts sender, operation allowlist, owner epoch, cookie partition and upload/download mediation.",
+      "Use existing authenticated AppDockSocket per-launch channel for local enrollment: main/CLI request-reply stays outside HTTP and renderer; no token stdout/log/cookie import. Explicit unmanaged loopback chooser parses original open-local.html only as data.",
+      "Use the exact four entrypoints and constructor dependencies from CONTRACTS §6.1. Approved connection registry and lifecycle are injected by I00; serverKey received from a renderer never approves or registers a connection.",
+      "Native connection consent uses only COPY-02/SF_DESKTOP_COPY and SF_DESKTOP_COPY_BR in the owned main copy.ts. Cancel is default/cancelId 0; main never imports APP dictionaries. Register and release use exact generation-bound typed channels; a connection can be released before bind.",
+      "For remote ids selection, do not require Location.directory from unrelated current SDK owner; registry registration still validates connection+consent, then broker uses loaded installation identity. Auth return marker is dashboard?sf=native-return with opaque one-use ref, not new /auth/native-return exception."
+    ],
+    "acceptance_cases": [
+      {
+        "id": "D01-AC01",
+        "expected": "oc://renderer can complete authorized business read/action through broker; web success alone does not qualify desktop.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "D01-AC02",
+        "expected": "Wrong sender, stale owner, unknown operation, URL/header injection and cross-install partition are rejected before request.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "D01-AC03",
+        "expected": "Logout invalidates in-flight results and session state; no secret/cookie enters renderer storage or logs.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "D01-77-LOGIN",
+        "expected": "Remote deep link A loads after prior connection B, login return stays in Session partition and validates original A; no renderer token or URL injection; auth marker expires and cannot be reused.",
+        "status": "PLANNED_NOT_RUN"
+      }
+    ],
+    "gates": {
+      "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+      "test_files": [
+        "apps/desktop/src/main/sucafina/broker.test.ts"
+      ],
+      "typecheck_packages": [
+        "apps/desktop",
+        "apps/cli"
+      ],
+      "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+      "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+      "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+    },
+    "stop": [
+      "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+      "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+      "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+      "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+      "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+      "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+    ],
+    "handoff": {
+      "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+      "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+      "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+    },
+    "entrypoints": [
+      {
+        "path": "apps/desktop/src/main/sucafina/index.ts",
+        "symbol": "createSfDesktopBroker",
+        "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+      },
+      {
+        "path": "apps/desktop/src/preload/sucafina.ts",
+        "symbol": "createSfDesktopPreloadCapability",
+        "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+      },
+      {
+        "path": "apps/desktop/src/renderer/sucafina.ts",
+        "symbol": "createSfDesktopCapability",
+        "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+        "symbol": "attachSfNativeEnrollment",
+        "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+      }
+    ],
+    "i18n_exports": [
+      {
+        "path": "apps/desktop/src/main/sucafina/copy.ts",
+        "en_symbol": "SF_DESKTOP_COPY",
+        "pt_br_symbol": "SF_DESKTOP_COPY_BR",
+        "source": "SURFACE-SPECS.md COPY-02 and surface-manifest.json#/copy/desktop",
+        "registry": "desktop-main-only; never imported into app-shell/orchestra.ts",
+        "locale": "app.getLocale(): pt* -> pt-BR; otherwise en",
+        "defaultId": 0,
+        "cancelId": 0
+      }
+    ]
+  },
+  "original_source_ack": {
+    "schema": "sf2h.native-ui.successor-author-ack.v1",
+    "mission_id": "UX20-W01-R2",
+    "seat": "W01",
+    "order": "D01",
+    "output": "D01",
+    "campaign": "sf2h-integral-20261112",
+    "actor": {
+      "github_login": "gustavomhss",
+      "effective_model": "GPT-6",
+      "requested_model": "Astra",
+      "session_id": "not exposed",
+      "session_role": "new successor, GitHub connector"
+    },
+    "epoch": "ux-native-w01-e2",
+    "supersedes_epoch": "ux-native-w01-e1",
+    "original_epoch_revoked": true,
+    "branch": "sf-ux-w01",
+    "observed_head": "dcec1c431673e24c25b52b650b9aa689901749c0",
+    "observed_tree": "1e14f6470d661b9e06db18f5946d567f402a3caf",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W01/S0-FENCE-e2.json",
+    "state": "ACK_REAL_SUCCESSOR_E2_AUTHORING",
+    "admission": "S0 exclusive authoring authorized in W01-e2; only W01 leaves, test grants and receipts",
+    "material_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "contracts": {
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81"
+    },
+    "consumes": [
+      "ctx",
+      "transport"
+    ],
+    "source_delta_reconciled": [
+      "entry@04fa7d53",
+      "identity@473b9dbf"
+    ],
+    "dependency_for_integration": [
+      "F02",
+      "I00/114 composition"
+    ],
+    "previous_handoff": "HANDOFF-PREAUTH-W01.md",
+    "write_paths": [
+      "apps/desktop/src/main/sucafina/**",
+      "apps/desktop/src/preload/sucafina.ts",
+      "apps/desktop/src/renderer/sucafina.ts",
+      "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+    ],
+    "test_grants": [
+      "packages/app-shell/test-browser/sucafina-native/w01-d01.test.ts"
+    ],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W01/",
+    "restrictions": [
+      "GitHub MCP/CAS expected-head force=false",
+      "no local tests",
+      "no generated edits",
+      "no shared path edits",
+      "no merge/deploy/Azure",
+      "no Goal resume"
+    ],
+    "tests": "NOT_RUN",
+    "global_release": false
+  },
+  "goal": "Validar realmente campo de matrícula desktop antes de usá-lo como string.",
+  "actions": [
+    "TS2322linha47:unknown→string. Lerclosedcodec e identidade/campos do formulário, validar/estreitar campo real semasstring/String(arbitrary),sem aceitaremail como identidade/papel.",
+    "PreservarD01 sete métodosfechados,serverboundauthoridade,nonce/returnintent/origin,recusadedadoausente. LeaseapenasfolhaCLI/teste; renderer/preload/main/registrysharedsópatchinertepar162. ReusarprovasD01/negativeenrollment, specnovaapenaspara boundaryrealdescoberta."
+  ],
+  "diagnostics": [
+    "src/sucafina-product/native-ui/desktop-enrollment.ts(47,73): error TS2322: Type 'unknown' is not assignable to type 'string'."
+  ],
+  "required_reads": [
+    "AGENTSapplicable, fixedsf2h-planSTART/WORKFLOW/executionCOMMON and relevantoriginalfullcriteria/contractpointers",
+    "ThisFULLpacket,ownfullnativeUIworkorder+required_reads+mandatorycontractattachments at normativecbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Fullpredecessorhandoff and existingownedsource/tests at fencedbranch; current162consumerpreimages/dependencyclosure beforeediting",
+    "Actualcompiler163RESULTS/GUARDS/HANDOFF andlogs, actualCI164FINDINGS/REQUESTS/RUNS; diagnosefromactualfailedstep, notmetadataalone"
+  ],
+  "precedence": "Currentepoch/allowlist/routing prevails overold IDs/hold-admissiontext; original completecontractbehaviorandcriteriaunchanged. Sourcebranches maydiverge fromconsumer:protectedsourceauthoringdoesnotprohibit162consumingexactreleasedpatches.",
+  "rules": [
+    "NewbrowserSESSIONonly,samebranch+PRpreserveallhistory.ConfirmHEAD/fence/preimagesandACKactualmodel/sessiononlyifexposed+epoch+SHAsbeforewrites;latepredecessoractivityreconcilewithoutreset/force,noprocessdeathinferred.",
+    "Readactualcode/dependenciesandinstalledAPIbeforeedit. Fixsourcecauseendtoendwithinboundedallowlist;noany/casts/schemaUnknown/permissiveschemas/upgradeEffect/oracleweakening/stub/fakediscoverytomasktypefailure.",
+    "TestsAREHOSTEDONLYthrough164singleproductdispatcher;163compilerSDKguards. No localtest/parser/validator/typecheck/build, noowndispatch/extraCIworkflow orprematurefullEPIC.163/164mustdedupactualrequests/runsandinputhashes,notrerununchangedfailedinput.",
+    "RemoteONLYGitHubMCPwithCASexpected_headforcefalse;nogh/gitpush,wholesalehistoricalmerge/devmerge/deploy/Azure/enginechange/secrets/runtime restart ornewnativeGoal/controller. Goalpaused.",
+    "Firstdeliveractualsourcefix,notanotherinventory. Reuseexistingmeaningfulspecs;addregressiononlyifnewbehaviorgapandwithingrant,notatestmirroringatinyimport/genericchange. Requestscopechecksafter162materialization;missingproofNOT_RUN.",
+    "OnePR→sf2-stack,fullpatch+source/consumerprepostSHA/tree/blobs,criterion/findingmap,evidencerealorNOT_RUN,exact163/164requestandterminalhandoff.162onlyintegrator;sourceARTIFACT_READYnotGLOBAL_RELEASE.",
+    "Ifexactfilealreadyfixedincurrent162material,doreadbackandcloseasCONSUMED_WITH_PROOF_POINTERwithoutduplicatingcode/run. Sharedseamgoesto162asinerttypedfullpatch;donotwaitfordependentproofstocompleteindependentsourcefix.",
+    "Preserveall15WPs/74tasks/17contracts/1610criteria. MandatoryfinalsameC8CI/epic/AM01–06/3independentFINAL/validD/C-G7D-G8/remoteproofunchanged."
+  ]
+}
