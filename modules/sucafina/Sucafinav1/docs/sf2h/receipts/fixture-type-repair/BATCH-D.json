@@ -1,0 +1,19 @@
+{
+  "schema": "sf2h-fixture-type-repair-batch-v1",
+  "mission": 118,
+  "batch": "D",
+  "source_parent": "9ad4e71b966c86ec60dc5432803476464691c518",
+  "source_tree": "65d89004f40863604ae9a3d9cec178b5647dc693",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "preimage_blob_sha": "d4f8162b24dd9c4e97aff176e2dc4410b079271a",
+      "change": "Replace removed withAnalysisCase with canonical withCase and allowHistoricalRetry; same old selected version 1 remains scoped while C08 has version 2; mid-scope selectedCase is unavailable and mutation of selected argument is caught at egress"
+    }
+  ],
+  "proof": "apps/cli/src/sucafina-product/business-services.ts:269-285 and case-port.ts:68-103; no oracle changed",
+  "not_run": [
+    "typecheck 119",
+    "surgical test 120"
+  ]
+}
