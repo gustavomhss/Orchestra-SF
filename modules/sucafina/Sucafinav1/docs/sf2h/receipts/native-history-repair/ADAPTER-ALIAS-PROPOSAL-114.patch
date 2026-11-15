@@ -1,0 +1,16 @@
+# ADAPTER READ-ONLY PROPOSAL — NOT APPLIED by actor115
+# Applies only at blob preimage dfde682c3233b36b7c172459f4bc1788c8f7e4b3; owner114 must re-read and authorize.
+# Proposed complete postimage git blob d70e2e66488d5f4e40d963d664d05a254034e32b; no branch ref points to that blob.
+diff --git a/apps/cli/src/sucafina-product/routine-native-adapter.ts b/apps/cli/src/sucafina-product/routine-native-adapter.ts
+index dfde682c3233b36b7c172459f4bc1788c8f7e4b3..d70e2e66488d5f4e40d963d664d05a254034e32b 100644
+--- a/apps/cli/src/sucafina-product/routine-native-adapter.ts
++++ b/apps/cli/src/sucafina-product/routine-native-adapter.ts
+@@ -189,6 +189,7 @@
+   const readAdmission = async (scope: Scope, reference: string) => {
+     const record = await scope.resources.records.readAdmission(reference)
+-    if (!record || record.reference !== reference) return hold("unavailable", "native-routine-admission-unavailable")
++    if (!record || (record.reference !== reference && record.authorizationID !== reference))
++      return hold("unavailable", "native-routine-admission-unavailable")
+     await checkPlan(scope, record.revision, false)
+     return record
+   }

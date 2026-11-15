@@ -1,0 +1,21 @@
+{
+  "schema": "sf2h-native-history115-compile-request-v1",
+  "source_W": "2eab3b6df7cbeb1be791a8e451e507b67f8b2f37",
+  "source_tree": "a80f87cb7b964d1b8f1b5b385bd65e86e7b989d4",
+  "owner": 119,
+  "when": "after 114 composition of W115 and adapter alias, on new material C/tree",
+  "commands": [
+    "(cd modules/sucafina && bun typecheck)",
+    "(cd apps/cli && bun typecheck)"
+  ],
+  "diagnostics_to_close": [
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts:48:5 TS2322",
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts:55:83 TS2345",
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts:60:66 TS2345"
+  ],
+  "check_new_file": "modules/sucafina/Sucafinav1/test/product/native-history-repair/historical-contract.test.ts",
+  "status": "REQUESTED_NOT_RUN",
+  "no_suppression": true,
+  "no_local_tests": true,
+  "global_release": false
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h-native-history115-test-request-v1",
+  "source_W": "2eab3b6df7cbeb1be791a8e451e507b67f8b2f37",
+  "source_tree": "a80f87cb7b964d1b8f1b5b385bd65e86e7b989d4",
+  "existing_failed_run": 43707901079,
+  "existing_failed_job": 132792877003,
+  "waiting_for": "114 composes adapter canonical-authorization alias patch and owned source W115 into new material C with new tree",
+  "owner": 120,
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+    "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+    "Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+    "Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+    "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+    "Sucafinav1/test/product/native-consumer-repair/observe.test.ts",
+    "Sucafinav1/test/product/native-consumer-repair/deadline.test.ts",
+    "Sucafinav1/test/product/native-history-repair/historical-contract.test.ts"
+  ],
+  "env": {},
+  "os": "linux",
+  "no_local_tests": true,
+  "no_epic": true,
+  "no_duplicate_C53": true,
+  "readiness": "OFF",
+  "expected": "original historical-read positive status ok AND all 7 originals plus new regression controls PASS; no Task authority",
+  "status": "REQUESTED_NOT_RUN",
+  "note": "Do not dispatch this selection on W115 or C54 without adapter fix; original C53 failure remains."
+}
