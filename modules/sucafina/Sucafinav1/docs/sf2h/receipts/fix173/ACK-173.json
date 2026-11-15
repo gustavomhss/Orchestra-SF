@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.causal-fix-author-ack.v1",
+  "mission": 173,
+  "order": "A04",
+  "epoch": "native-fix-e1-browser173",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w16",
+  "pr": 135,
+  "actual_actor": {
+    "model": "GPT-6",
+    "requested_model": "Astra",
+    "session_id": null,
+    "session_id_status": "not exposed"
+  },
+  "fence": {
+    "previous_epoch": "ux-native-w16-e3",
+    "authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "runtime_termination_claimed": false
+  },
+  "preflight": {
+    "head": "c18ccbbf7c69c2df731019cc40832b2b337200e7",
+    "tree": "0127a0cc446c2c7731018beda3b51ad35514107b",
+    "source_blobs": {
+      "packages/schema/src/sucafina/decisions/source-contracts.ts": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "packages/schema/src/sucafina/decisions.ts": "f648fe7011029920f7915ee9225b066da30be4c9",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts": "6183175ebce968280b61668085d27771697a4b64"
+    },
+    "compiler": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "status": "FAILURE",
+      "source": "690a34cdd81c12d7311f3717c19679b950276161",
+      "effect": "4.0.0-beta.83"
+    },
+    "ci164": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "status": "FAILURE",
+      "note": "separate native UI suites, not decisions qualification"
+    }
+  },
+  "owns": [
+    "packages/schema/src/sucafina/decisions.ts",
+    "packages/schema/src/sucafina/decisions/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/**"
+  ],
+  "obligations": [
+    "Fix all incompatible Effect beta.83 schema declarations in owned source, preserve closed 21 operations and prior negative regressions",
+    "No local test, typecheck, parser or build; 162 integrates, 163 compiler, 164 CI",
+    "Write only own source and receipt, no shared or foreign paths"
+  ],
+  "state": "ACK_SOURCE_AUTHORIZED_NOT_VALIDATED",
+  "goal": "paused",
+  "global_release": false
+}
