@@ -263,3 +263,63 @@ test("the projection router retains original Request identity and rejects duplic
   expect((await route(repeated))?.status).toBe(400)
   expect(received).toBe(request)
 })
+
+test("projection POST enforces the catalog byte cap before invoking the original handler", async () => {
+  let called = 0
+  let received: Request | undefined
+  const route = mountSfNativeProjections({
+    mount: "/sucafina",
+    context: {
+      readContext: async () => ({ status: "denied" }),
+      handle: async () => Response.json({ status: "denied" }, { status: 403 }),
+    },
+    handlers: [{
+      operationId: "routines.catalog",
+      handle: async (request) => {
+        called++
+        received = request
+        return Response.json({ status: "ok" })
+      },
+    }],
+  })
+  const url = "https://sf.example.test/sucafina/api/ui/routines/catalog"
+
+  const oversized = new Request(url, { method: "POST", headers: { "content-length": "65537" } })
+  expect((await route(oversized))?.status).toBe(413)
+  expect(called).toBe(0)
+
+  const malformed = new Request(url, { method: "POST", headers: { "content-length": "0001" } })
+  expect((await route(malformed))?.status).toBe(400)
+  expect(called).toBe(0)
+
+  const atLimit = new Request(url, { method: "POST", headers: { "content-length": "65536" } })
+  expect((await route(atLimit))?.status).toBe(200)
+  expect(called).toBe(1)
+  expect(received).toBe(atLimit)
+})
+
+test("projection GET without maxRequestBytes stays bodyless and preserves Request identity", async () => {
+  let received: Request | undefined
+  const route = mountSfNativeProjections({
+    mount: "/sucafina",
+    context: {
+      readContext: async () => ({ status: "denied" }),
+      handle: async () => Response.json({ status: "denied" }, { status: 403 }),
+    },
+    handlers: [{
+      operationId: "projection.search",
+      handle: async (request) => {
+        received = request
+        return Response.json({ status: "ok" })
+      },
+    }],
+  })
+  const url = "https://sf.example.test/sucafina/api/ui/projections/search"
+  const request = new Request(url)
+  expect((await route(request))?.status).toBe(200)
+  expect(received).toBe(request)
+
+  const bodyDeclared = new Request(url, { headers: { "content-length": "1" } })
+  expect((await route(bodyDeclared))?.status).toBe(400)
+  expect(received).toBe(request)
+})

@@ -51,10 +51,18 @@ export function mountSfNativeProjections(options: Readonly<{
       throw new Error("SF_NATIVE_NOT_A_PROJECTION")
     }
     if (routes.has(path)) throw new Error("SF_NATIVE_DUPLICATE_PROJECTION_ROUTE")
+    // The frozen registry is a literal union: body caps exist only on
+    // operations that declare them. A POST projection must never mount
+    // without its own valid bound; GET projections have no request body.
+    const maxRequestBytes = "maxRequestBytes" in meta ? meta.maxRequestBytes : undefined
+    if (meta.method === "POST" &&
+        (maxRequestBytes === undefined || !Number.isSafeInteger(maxRequestBytes) || maxRequestBytes <= 0)) {
+      throw new Error("SF_NATIVE_PROJECTION_LIMIT_MISSING")
+    }
     routes.set(path, {
       method: meta.method,
       handler: candidate.handle,
-      ...(meta.maxRequestBytes !== undefined ? { maxRequestBytes: meta.maxRequestBytes } : {}),
+      ...(maxRequestBytes !== undefined ? { maxRequestBytes } : {}),
     })
   }
 
