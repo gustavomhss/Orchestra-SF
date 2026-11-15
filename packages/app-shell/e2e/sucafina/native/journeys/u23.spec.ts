@@ -99,7 +99,7 @@ test.describe("N27/U23 — real native import and export leaves", () => {
     const start = leaf.getByLabel("Period start")
     const end = leaf.getByLabel("Period end")
     const destination = leaf.getByLabel("Destination", { exact: true })
-    const generate = leaf.getByRole("button", { name: "Generate preview" })
+    const generate = leaf.getByRole("button", { name: /Generate preview|Gerar prévia/ })
     const find = leaf.getByRole("button", { name: "Find destinations" })
 
     await start.fill(january.start)

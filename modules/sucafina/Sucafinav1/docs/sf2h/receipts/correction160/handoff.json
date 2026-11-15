@@ -55,7 +55,7 @@
       {
         "path": "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
         "pre_blob": "adeb55aa710ccf64209f96c196c6fe13c9a29d59",
-        "post_blob": "e9518d0c9dfdb8779123b92624af276abf470579"
+        "post_blob": "9e67742d5da58405c5fe4be40b7d989c44e1490b"
       }
     ],
     "owner_paths_only": true,
@@ -119,7 +119,11 @@
       "local_build": "NOT_RUN",
       "compiler_or_ci": "NOT_RUN",
       "reason": "Explicit mission fence: 149 compiles; 150 selects CI after coherent inputs, no local checks or dispatcher."
-    }
+    },
+    "notes": [
+      "Import primary CTA expected in EN or pt-BR; actual producer periods and readable file remain mandatory.",
+      "The final branch carries a small accessibility/test-locale follow-up after the initial source commit."
+    ]
   },
   "shared_seams": {
     "no_shared_seam_modified": true,
