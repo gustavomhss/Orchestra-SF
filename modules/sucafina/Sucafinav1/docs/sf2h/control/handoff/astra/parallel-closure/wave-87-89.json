@@ -1,0 +1,26 @@
+{
+  "state": "PREPARED_NOT_STARTED",
+  "missions": [
+    {
+      "number": 87,
+      "branch": "minimal-first-save",
+      "expected_head": "dfa65de05a104bd50b4cad7a341eeb811420fdc2",
+      "pr": 92
+    },
+    {
+      "number": 88,
+      "branch": "export-visual-proof",
+      "expected_head": "5f5a76b8369b4f375e5f8bf24deae1c1cbef5cd5",
+      "pr": 93
+    },
+    {
+      "number": 89,
+      "branch": "planner-p03-finish",
+      "expected_head": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+      "pr": null
+    }
+  ],
+  "native_goal": "paused; no new supervisor or controller",
+  "scope": "Three manual-browser sessions authorized by user; no automated spawn or remote CI dispatched",
+  "ownership": "87 source82 continuation;88 reader83 continuation;89 source76/result-store terminal plus unassigned Planner proposal;71 remains sole stack integrator;45 remains dispatcher;all ACKs must reconcile live authority before write"
+}

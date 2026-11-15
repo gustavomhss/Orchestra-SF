@@ -1,0 +1,44 @@
+{
+  "number": 88,
+  "id": "export-reader-finish",
+  "branch": "export-visual-proof",
+  "pr": 93,
+  "expected_head": "5f5a76b8369b4f375e5f8bf24deae1c1cbef5cd5",
+  "base_sha": "5f5a76b8369b4f375e5f8bf24deae1c1cbef5cd5",
+  "actor": "Export evidence implementer; not a FINAL independent reviewer",
+  "actor_pack": "execution/actors/S3-R3.json (coverage reference only; authorship excludes this instance from FINAL review)",
+  "lease_epoch": "export-reader-browser88",
+  "inputs": [
+    "PR93@5f5a76b8369b4f375e5f8bf24deae1c1cbef5cd5 STATUS-83.json",
+    "source66@097e05ea951f19a3e856461ccc361848cb5a49ae; exact generator and OWNER-REQUEST",
+    "mission83 own reader patch; 86 egress source owner;75 scanner separate workflow"
+  ],
+  "write_paths": [
+    ".github/workflows/test-ci.yml (somente reader SF export validado, preservar dispatcher45)",
+    "script/sf2h/export-visual/",
+    "modules/sucafina/Sucafinav1/test/product/export-visual-proof/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-reader-finish/"
+  ],
+  "mission": "Continuar PR93. Completar leitor e executar geração/inspeção visual dos 14 arquivos reais, sem fingir recuperar artifacts históricos ausentes.",
+  "acceptance": [
+    "Cobrir todos os formatos da matriz66, inclusive CSV/HTML/JSON além DOCX/PPTX/XLSX. Nada de reconstruções mock dos documentos.",
+    "Gerar outputs novos com source SHA/inputs identificados via request central cirúrgico; históricos têm zero artifacts e não são origem dos novos bytes. Publicar originais/manifesto + gallery legível por página/sheet/slide e inspeção específica.",
+    "SHA256 antes/depois do reader idêntico, conversões em _inspection separado, ferramentas/versões registradas. Manter veredito funcional/exit status separado do visual; falha EA66 vai para86, não mascarar.",
+    "Não editar exporters/layout48/application86. Reconciliar workflow real e entregar patch limitado à71; não tomar a lane45 ou criar segunda plataforma. Se navegador não permitir abrir outputs, registrar limitação precisa e entregar gallery e inspecionar tudo possível, sem aprovar invisível."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "consumer": "71 sole integrator;45 central checks;S0 release authority",
+  "common": [
+    "Campanha sf2h-integral-20261112; T0 2026-11-13T04:01:10Z. Plano imutável dbf9547211d9b0fade619790de7c19c0869b7c7d. Preservar 15 WPs, 74 tasks, 17 contratos e 1610 critérios. Não reiniciar Goal, relógio ou supervisor.",
+    "Ler AGENTS aplicáveis, START.md, WORKFLOW.md, execution/COMMON.md, pack completo atribuído e anexos/critérios pertinentes no plano fixado. Ler código e dependências reais antes de editar. Retomada por checkpoint e delta.",
+    "GitHub remoto somente MCP, CAS expected-head, force false. Sem gh/git push, merge em dev, Azure, deploy, credenciais, engine changes, políticas financeiras, restart desktop/server ou mensagens externas. Sidebar e Azure pertencem às sessões do usuário.",
+    "71 é único integrador de sf2-stack; 45 mantém dispatcher/checks. Antes de escrever publicar ACK com modelo/sessão efetivamente observados, heads, inputs, paths e lease. Reler handoff e ACKs/comentários: silêncio não revoga writer. Se existir ACK posterior concorrente, continuar em testes/artefatos disjuntos e encaminhar patch ao owner; não sobrescrever nem aguardar inativo.",
+    "Testes de produto exclusivamente cirúrgicos em GitHub Actions pela interface existente test:ci/request. Reutilizar requests/runs por árvore/seleção/configuração; coordenar dispatcher existente. Não rodar bun test local, testes pesados locais, epic/full suite nem criar outro dispatcher. Typecheck bun typecheck e guards segundo AGENTS/interface autorizada; registrar NOT_RUN quando não executado.",
+    "Trabalhar até entrega verificável da unidade. Corrigir causas sem enfraquecer oráculos/fixtures/seleções, aumentar timeouts ou inventar PASS. Evidência antiga continua histórica. Entregar commits remotos, PR, source/tree/pre-post, testes W/S/run/job/resultados, critérios e lacunas, patch completo, pedido de ACK71 e handoff terminal/lease encerrada. Sem merge. Fonte verde não é GLOBAL_RELEASE."
+  ]
+}
