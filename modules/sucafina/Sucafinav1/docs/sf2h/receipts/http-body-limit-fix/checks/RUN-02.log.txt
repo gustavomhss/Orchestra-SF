@@ -1,0 +1,66 @@
+RUNNER: node
+2026-11-15T03:27:26.6749685Z ##[endgroup]
+2026-11-15T03:27:27.2431662Z ✖ Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency and private error responses (46.387815ms)
+2026-11-15T03:27:27.2450990Z ℹ Runtime node v24.22.2; production NodeHttpServer and SF composition
+2026-11-15T03:27:27.2466914Z ✖ Node runtime: global stream budget cuts off chunked data and preserves binary octets (5.484218ms)
+2026-11-15T03:27:27.2470499Z ✖ Node runtime: disconnected/truncated input aborts the original Request and releases its reader (4.839356ms)
+2026-11-15T03:27:27.2773465Z ℹ tests 3
+2026-11-15T03:27:27.2773915Z ℹ suites 0
+2026-11-15T03:27:27.2774211Z ℹ pass 0
+2026-11-15T03:27:27.2774458Z ℹ fail 3
+2026-11-15T03:27:27.2774704Z ℹ cancelled 0
+2026-11-15T03:27:27.2775011Z ℹ skipped 0
+2026-11-15T03:27:27.2775261Z ℹ todo 0
+2026-11-15T03:27:27.2775541Z ℹ duration_ms 571.848172
+2026-11-15T03:27:27.2787171Z 
+2026-11-15T03:27:27.2787537Z ✖ failing tests:
+2026-11-15T03:27:27.2787675Z 
+2026-11-15T03:27:27.2787952Z test at Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs:90:1
+2026-11-15T03:27:27.2788860Z ✖ Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency and private error responses (46.387815ms)
+2026-11-15T03:27:27.2790040Z   TypeError [ERR_IMPORT_ATTRIBUTE_MISSING]: Module "file:///home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" needs an import attribute of "type: json"
+2026-11-15T03:27:27.2790832Z       at validateAttributes (node:internal/modules/esm/assert:110:15)
+2026-11-15T03:27:27.2791185Z       at defaultLoadSync (node:internal/modules/esm/load:163:3)
+2026-11-15T03:27:27.2791552Z       at #loadAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:806:12)
+2026-11-15T03:27:27.2791900Z       at #loadSync (node:internal/modules/esm/loader:838:53)
+2026-11-15T03:27:27.2792206Z       at ModuleLoader.load (node:internal/modules/esm/loader:787:26)
+2026-11-15T03:27:27.2792573Z       at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:498:31)
+2026-11-15T03:27:27.2792976Z       at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:564:36)
+2026-11-15T03:27:27.2793331Z       at afterResolve (node:internal/modules/esm/loader:611:52)
+2026-11-15T03:27:27.2793684Z       at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:617:12)
+2026-11-15T03:27:27.2794061Z       at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+2026-11-15T03:27:27.2794362Z     code: 'ERR_IMPORT_ATTRIBUTE_MISSING'
+2026-11-15T03:27:27.2794556Z   }
+2026-11-15T03:27:27.2794633Z 
+2026-11-15T03:27:27.2794939Z test at Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs:139:1
+2026-11-15T03:27:27.2795487Z ✖ Node runtime: global stream budget cuts off chunked data and preserves binary octets (5.484218ms)
+2026-11-15T03:27:27.2796241Z   TypeError [ERR_IMPORT_ATTRIBUTE_MISSING]: Module "file:///home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" needs an import attribute of "type: json"
+2026-11-15T03:27:27.2796887Z       at validateAttributes (node:internal/modules/esm/assert:110:15)
+2026-11-15T03:27:27.2797218Z       at defaultLoadSync (node:internal/modules/esm/load:163:3)
+2026-11-15T03:27:27.2797571Z       at #loadAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:806:12)
+2026-11-15T03:27:27.2797911Z       at #loadSync (node:internal/modules/esm/loader:838:53)
+2026-11-15T03:27:27.2798294Z       at ModuleLoader.load (node:internal/modules/esm/loader:787:26)
+2026-11-15T03:27:27.2798822Z       at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:498:31)
+2026-11-15T03:27:27.2799400Z       at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:564:36)
+2026-11-15T03:27:27.2800057Z       at afterResolve (node:internal/modules/esm/loader:611:52)
+2026-11-15T03:27:27.2800581Z       at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:617:12)
+2026-11-15T03:27:27.2801185Z       at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+2026-11-15T03:27:27.2801603Z     code: 'ERR_IMPORT_ATTRIBUTE_MISSING'
+2026-11-15T03:27:27.2801870Z   }
+2026-11-15T03:27:27.2801983Z 
+2026-11-15T03:27:27.2802213Z test at Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs:154:1
+2026-11-15T03:27:27.2802859Z ✖ Node runtime: disconnected/truncated input aborts the original Request and releases its reader (4.839356ms)
+2026-11-15T03:27:27.2803661Z   TypeError [ERR_IMPORT_ATTRIBUTE_MISSING]: Module "file:///home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" needs an import attribute of "type: json"
+2026-11-15T03:27:27.2804313Z       at validateAttributes (node:internal/modules/esm/assert:110:15)
+2026-11-15T03:27:27.2804626Z       at defaultLoadSync (node:internal/modules/esm/load:163:3)
+2026-11-15T03:27:27.2805013Z       at #loadAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:806:12)
+2026-11-15T03:27:27.2805358Z       at #loadSync (node:internal/modules/esm/loader:838:53)
+2026-11-15T03:27:27.2805661Z       at ModuleLoader.load (node:internal/modules/esm/loader:787:26)
+2026-11-15T03:27:27.2806119Z       at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:498:31)
+2026-11-15T03:27:27.2806508Z       at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:564:36)
+2026-11-15T03:27:27.2806851Z       at afterResolve (node:internal/modules/esm/loader:611:52)
+2026-11-15T03:27:27.2807199Z       at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:617:12)
+2026-11-15T03:27:27.2807576Z       at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {
+2026-11-15T03:27:27.2807864Z     code: 'ERR_IMPORT_ATTRIBUTE_MISSING'
+2026-11-15T03:27:27.2808050Z   }
+2026-11-15T03:27:27.2844466Z ##[error]Process completed with exit code 1.
+2026-11-15T03:27:27.3355897Z

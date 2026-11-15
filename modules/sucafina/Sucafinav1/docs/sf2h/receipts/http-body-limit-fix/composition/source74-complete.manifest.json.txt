@@ -1,0 +1,194 @@
+{
+  "schema": "sf2h.http-body-limit-fix.complete-source-patch.v1",
+  "mission": 74,
+  "state": "INERT_SOURCE_PATCH_NOT_RUNTIME_EVIDENCE",
+  "base_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "source_commit": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "source_commit_note": "All ten postimage Git blob identities were read back from this published source commit through GitHub MCP and bound to this material snapshot. This commit identity does not assert any runtime qualification.",
+  "authored_at_utc": "2026-11-15 03:46:00 UTC",
+  "counts": {
+    "product_paths": 3,
+    "test_paths": 7,
+    "total_paths": 10,
+    "modified": 2,
+    "added": 8
+  },
+  "patch": {
+    "path": "source74-complete.patch.txt",
+    "blob_sha": "c806c83724238d676c53036412704b960cd6d059",
+    "sha256": "a0dbebbd5f3cece5cb4cbf141cd8f83b74c685c1233f7a9ef617bed8744f92a5",
+    "bytes": 85530
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "role": "product",
+      "change": "modified",
+      "mode": "100644",
+      "preimage": {
+        "blob_sha": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "bytes": 5315
+      },
+      "postimage": {
+        "blob_sha": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+        "sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+        "bytes": 9786
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "role": "product",
+      "change": "modified",
+      "mode": "100644",
+      "preimage": {
+        "blob_sha": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "sha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+        "bytes": 25541
+      },
+      "postimage": {
+        "blob_sha": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+        "sha256": "948b190b53a725c673ac9a57cdf587d20a3f0c2ec351db4af1fc46fd7dd6fab1",
+        "bytes": 25782
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "role": "product",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+        "sha256": "ca824aaed4746dcfab581e14d67aacc3e3e513ba18fa1e8f35c3e835d367019c",
+        "bytes": 5077
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+      "role": "test",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "7d0ccfe23def8601eb152b8cbe45ddb1df40456d",
+        "sha256": "f27191332fa859bca0444a2924a3b723ff5728ebfd29bb9267405e22ff380b12",
+        "bytes": 2594
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts",
+      "role": "test",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "c8865ac73ae4932ba79c8e90c38ce5ee78b3486c",
+        "sha256": "adce9a0393fc72a8f3d865581ce3b8166991e180f0bc9ee66c8ec181ac0c6d27",
+        "bytes": 4303
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs",
+      "role": "test",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "1323d00bed4eb829140bf76d0c74b08435071beb",
+        "sha256": "13aa52e1dc36575cd7a0dea7eb886eebbcaef4e6081045e7fa98928097598dbb",
+        "bytes": 11518
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "role": "test",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "878b41f8b050c1d37d55df44028845f1093ac5df",
+        "sha256": "bcb25ff735101fc23c38afb31c05641687e26c5e16303dcf50929af9e4caff9c",
+        "bytes": 16881
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "role": "test",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "49ad5f84d98804f7ff5836c2b24044b6b1a0b294",
+        "sha256": "10cca7f54be15fb39b19e68a1d500780d17c4c3527e05ffe8ff1c74d3af2470e",
+        "bytes": 8741
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts",
+      "role": "test",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "b4f4360d23ee709c36582f060d4ca4382d1e11d5",
+        "sha256": "b4560fa89fc45205ea16a0421a7abc308cf20f7d01ea6d226d5daeccf47aec2a",
+        "bytes": 8377
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+      "role": "test",
+      "change": "added",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha": "869a66168c1b43189b2291f50a80742761ce6043",
+        "sha256": "9404764e3c9b2e2e1b62bbbf1118f695ee850c00d7374f207a04e4ecdd664b14",
+        "bytes": 12477
+      }
+    }
+  ],
+  "preimage_basis": {
+    "existing_paths": "Exact original file bytes fetched from the pinned base through GitHub MCP; Git blob identities compared during artifact authoring.",
+    "new_helper": {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "base_read": "GitHub contents API returned NOT_FOUND/404 at the pinned base."
+    },
+    "new_tests": {
+      "directory": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix",
+      "base_read": "GitHub contents API returned NOT_FOUND/404 for this directory at the pinned base; every listed test file has a null preimage."
+    }
+  },
+  "companion_composition": {
+    "readme": "README.txt",
+    "five_path_package": "compose-74.patch.txt",
+    "microsoft_map_and_fixture_patch": "microsoft-map-74.patch.txt",
+    "microsoft_map_postimage": "microsoft49-composition-74.json.txt",
+    "composition_manifest": "COMPOSITION-MANIFEST.json.txt",
+    "application_order": "This complete-source patch contains three product paths and seven test paths. The five-path compose-74 package overlaps those same three product paths and additionally carries the Microsoft map/fixture. Apply the complete-source patch plus the separate microsoft-map-74 patch, or apply compose-74 plus only the seven new test-file hunks. Never apply overlapping product hunks twice. Reconcile actual target preimages before any application.",
+    "map_excluded_from_ten_source_paths": true,
+    "fixture_excluded_from_ten_source_paths": true,
+    "external_budget_proposal": "owner-25mib/owner.patch.txt",
+    "external_budget_note": "The separate owner proposal is inert and not included in this source patch. It requires its own authorized integration, compiler checks, transport qualification and refreshed Microsoft mapping if serve.ts changes."
+  },
+  "execution_in_this_authoring_operation": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "ci_dispatches": 0,
+    "product_or_test_writes": 0,
+    "operations": [
+      "Read source/preimage bytes and GitHub MCP source-file identities",
+      "Compute Git blob and SHA-256 identities",
+      "Generate unified diff",
+      "Write only these two inert composition artifacts; a separate reviewer receipt records static analysis"
+    ]
+  },
+  "claims": [
+    "Artifact authoring and content identity only; no runtime, compiler, integration, campaign or acceptance result is asserted.",
+    "Actual Actions W/S/run/job/results belong to the parent qualification receipts.",
+    "Source evidence does not qualify the installed stack or replace independent review and final campaign gates."
+  ]
+}

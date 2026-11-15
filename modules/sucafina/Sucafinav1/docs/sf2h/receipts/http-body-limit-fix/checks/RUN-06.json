@@ -1,0 +1,273 @@
+{
+  "schema": "sf2h.mission74.surgical-run.v1",
+  "sequence": 6,
+  "state": "PASS_SCOPED_AUTHENTICATED_CONSUMERS",
+  "kind": "bun",
+  "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "W_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+  "S": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+  "S_tree": "8956a7b86c3dfd0d21ba0e89fe6581c4a75d1d11",
+  "branch": "ci-run-linux-astra-wp74-d2a1227a-a19093cc-01",
+  "envelope": {
+    "only_changed_path": ".ci-run.json",
+    "blob": "f37fadf144b8256932693a65d4477c19655eb39c",
+    "single_parent": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "product_test_config_fixture_blobs_identical": true
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "a19093cc48a0aa4db01a1e2c060c5e924616b36f69faedbfee63f1d5a90a31d6",
+  "run": {
+    "id": 43673697145,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673697145",
+    "attempt": 1,
+    "head_sha": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "jobs": [
+    {
+      "id": 132689107232,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132689554298,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "bun": "1.3.14",
+    "os": "ubuntu-24.04",
+    "platform": "Production NodeHttpServer adapter under Bun node:http compatibility; independent actualNode24 proof is RUN-05"
+  },
+  "result": {
+    "tests": 15,
+    "pass": 15,
+    "fail": 0,
+    "expect_calls": 341,
+    "actual_selected_files": [
+      "./Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts"
+    ],
+    "omni": {
+      "scope": "declared",
+      "nonce": "7386bedfeda3e2beeac88c372e91d7ba",
+      "nonce_matches_job_environment": true,
+      "verdict": "not applicable",
+      "detail": "focused: no declaring test ran"
+    }
+  },
+  "covered": [
+    "Workbench actual SQLite/operator identity/C08/dispatcher, exact65536 UTF8 bytes, multibyte excess, missing/lying/excessive CL",
+    "InvalidJSON/invalidUTF8/readfailure/truncation/abort/chunksvazios reject before admission or durable domain writes",
+    "OriginalRequest equality across authentication/admission/command and dispatcher; idempotent retry retained",
+    "Actual NodeHttpServer/BodyLimit/production bridge including chunked oversize full413 JSON+remoteEOF without clientEOF",
+    "Authorized98358-byte BMP upload preserves exactSQLitebytes/CAS/audit; corrupt digest rejected422; logout/auth and CSRF negatives",
+    "Canonical Microsoft entry plus NodeHttpServer/production bridge: login/cookies/Secure/HttpOnly/SameSite/no-store, fixedHTTPS origin, forgedforwarded removed,CSRF/session/logout/hostrefusal,413private,spans0 and no syntheticsecret logs"
+  ],
+  "limits": [
+    "OIDC/Graph peer is synthetic cryptographic fixture; no Azure/B2B/native qualification.",
+    "Binary scanner fixture admits only exactdigest/length/type; no ClamD deployment claim.",
+    "25MiB global Content-Length contract path and procurementconfiguredcaps>16MiB need ownercomposition.",
+    "Historical Microsoft map fixture is unchanged in W; full existing mapped suites need71's normative map composition."
+  ],
+  "artifacts": [],
+  "local_product_execution": false,
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,134 @@
+{
+  "schema": "sf2h.http-body-limit-fix.owner-with-map-proposal.v1",
+  "state": "SUPPLEMENTAL_INERT_NOT_APPLIED_NOT_RUN",
+  "source74_W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "source74_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+  "purpose": "Complete the existing owner25MiB proposal with its exact Microsoft canonical-byte map and fixture lookup. Apply only after the complete source74 release unit and microsoft-map-74 proposal have been composed.",
+  "artifact_root": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition",
+  "application_order": [
+    "Complete source74 three product files and seven test/helper files, preserving the full dependency closure.",
+    "Apply microsoft-map-74.patch.txt to activate map74 and its fixture postimage.",
+    "Apply this owner-with-map.patch.txt atomically as one supplemental five-file change after owner authority and exact-preimage/CAS reconciliation."
+  ],
+  "preconditions": {
+    "installation_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+    "entry_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+    "fixture_after_map74_blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+    "owner_server_cli_preimages": "The exact three preimages listed below; do not silently overwrite drift.",
+    "base_commit": "No moving target HEAD is assumed. The listed exact material preimages, not inherited map target_base fields, are the application preconditions."
+  },
+  "files": [
+    {
+      "path": "packages/server/src/body-limit.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+        "sha256": "2035683c0397d879432c7db98e6d11c7ed8200fd509ec57a2cc15869f848a5ee",
+        "bytes": 2461,
+        "artifact": "owner-25mib/preimages/body-limit.ts.txt"
+      },
+      "postimage": {
+        "blob": "fff47ebb99a8265d49b49bc2c2e1f2473d23c5e2",
+        "sha256": "5c58ad903b087094062855ccb29624a5c7c9c9ed408687498ea29520c8933dfa",
+        "bytes": 3133,
+        "artifact": "owner-25mib/postimages/body-limit.ts.txt"
+      }
+    },
+    {
+      "path": "packages/server/src/routes.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+        "sha256": "9465ae38e78394abad85a37273bbd24e7b20b00508de4fe92f057ecc576e1b82",
+        "bytes": 7021,
+        "artifact": "owner-25mib/preimages/routes.ts.txt"
+      },
+      "postimage": {
+        "blob": "79b3de68654ffeb0c7c117374da88e37bf04a0e3",
+        "sha256": "a0640ddcaab8f87c6d53f661be2cfa0c0f7ff0b3d2d90e5df7cf6c79e4693473",
+        "bytes": 7185,
+        "artifact": "owner-25mib/postimages/routes.ts.txt"
+      }
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "bytes": 8960,
+        "artifact": "owner-25mib/preimages/serve.ts.txt"
+      },
+      "postimage": {
+        "blob": "131358924c1130b1c77440e6ed6baf61059861a2",
+        "sha256": "4360982e33319b71e5f045bbf3a1edc4241289eae9689d9c3e5b9a4e76b72d3b",
+        "bytes": 9696,
+        "artifact": "owner-25mib/postimages/serve.ts.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/microsoft49-composition-74-25mib.json",
+      "mode": "100644",
+      "action": "add",
+      "preimage": null,
+      "postimage": {
+        "blob": "41e1b329fa2135d3dc0801da002bd9fb18df0926",
+        "sha256": "5a91a877690a334ad7e6f983d3f992615b806644d342787e970a18875531fa2b",
+        "bytes": 2411,
+        "artifact": "owner-25mib/microsoft49-composition-74-25mib.json.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+        "sha256": "6d8ba7820763c2461dccb118020352e11b05389a27fe8f322fcc6519b9e3594c",
+        "bytes": 3615,
+        "artifact": "owner-25mib/integration-fixture-74.preimage.ts.txt"
+      },
+      "postimage": {
+        "blob": "88f622aa755c9b747d03588ed10db7f9cbac497d",
+        "sha256": "e2c03e64b2833413d512313b9d38f9b46814ef67d3a28fd9dfc8e8f4001e1c8d",
+        "bytes": 3633,
+        "artifact": "owner-25mib/integration-fixture-with-map.ts.txt"
+      }
+    }
+  ],
+  "patch": {
+    "blob": "11be474e4a0dec88fced5408258308319668c387",
+    "sha256": "871e87c8d3e3e2c90790f2762a4e932c20463f7fc1f22615b3b664a274eb71aa",
+    "bytes": 9624,
+    "artifact": "owner-25mib/owner-with-map.patch.txt"
+  },
+  "subsumes": {
+    "artifact": "owner-25mib/owner.patch.txt",
+    "scope": "All three old owner code changes are included byte-for-byte. Do not apply both patches; use this supplemental five-file unit.",
+    "prior_regeneration_dependency": "For these exact postimages, map regeneration is completed by this supplement. Regenerate only if target reconciliation changes installation.ts, serve.ts or local/entry.ts again."
+  },
+  "map_change": "Compared with map74, change only the serve.ts canonical postimage_blob/postimage_sha256/bytes. Installation74 and original local/entry remain identical. All source49 identity pairs and inherited provenance fields are retained.",
+  "fixture_change": "Compared with the already-proposed map74 fixture postimage, change only the one map lookup path. No schema, release, manifest, pre/postimage, sourcepair, filecount, uniqueness, installed-byte or canonical-import fence is removed or weakened.",
+  "preserved_historical_inputs": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration",
+    "The primary microsoft49-composition-74.json remains unchanged and valid for its exact pre-owner composition."
+  ],
+  "material_input_status": "The added .json map and .ts fixture are normative material test inputs only after owner71 applies this patch. Files emitted here have .txt extensions and are inert proposals; this manifest is not a final qualification receipt.",
+  "inherited_map_metadata": "target_base and target_preimage fields retain historical49/55 provenance and are not current CAS preconditions. Use this supplemental manifest for current exact preimages.",
+  "owner_policy": "Only an explicit loaded installation, POST at its exact mount/dashboard, one upload=contract parameter and no sf parameter receives 26214400 bytes. All other requests retain limitFor. Invalid trusted policy values fail closed. No unbounded override.",
+  "remaining_gates": [
+    "Owner71/server/CLI authority and rebase of any target drift against the listed exact preimages.",
+    "Real full-listener declared and chunked authenticated contract uploads above16MiB through25MiB, exact limit and25MiB+1; malformed selectors, foreign mounts and unrelated default-route limits.",
+    "Workbench65536, Request identity, single consumption, abort/disconnect, authentication/origin/proxy and Microsoft privacy regressions on the complete candidate.",
+    "Mission45 compiler/typecheck/guards and later composed-candidate qualification. Source74 R5/R6 results do not qualify this supplemental patch."
+  ],
+  "verification": "NOT_RUN. Only inert text construction, pre/postimage identity calculation and exact field preservation during construction. No product import, test, patch application, typecheck, guard, build or CI.",
+  "applied_to_source74": false,
+  "applied_to_target71": false,
+  "tested_candidate": null,
+  "GLOBAL_RELEASE": false
+}

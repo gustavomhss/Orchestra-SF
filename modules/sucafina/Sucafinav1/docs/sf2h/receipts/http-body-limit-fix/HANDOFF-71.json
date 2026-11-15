@@ -1,0 +1,263 @@
+{
+  "schema": "sf2h.mission74.handoff71.v1",
+  "mission": 74,
+  "consumer": 71,
+  "source_branch": "http-body-limit-fix",
+  "source_commit": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "source_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+  "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "control_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+  "PR": "https://github.com/gustavomhss/Orchestra-SF/pull/85",
+  "state": "READY_FOR_INTEGRATION_REVIEW_NOT_DONE",
+  "observed_at": "2026-11-15 03:51:47 UTC",
+  "release_unit": {
+    "atomic_material_paths": [
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "preimage": {
+          "blob_sha": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+          "bytes": 5315
+        },
+        "postimage": {
+          "blob_sha": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+          "sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+          "bytes": 9786
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "preimage": {
+          "blob_sha": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "sha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+          "bytes": 25541
+        },
+        "postimage": {
+          "blob_sha": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+          "sha256": "948b190b53a725c673ac9a57cdf587d20a3f0c2ec351db4af1fc46fd7dd6fab1",
+          "bytes": 25782
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+          "sha256": "ca824aaed4746dcfab581e14d67aacc3e3e513ba18fa1e8f35c3e835d367019c",
+          "bytes": 5077
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "7d0ccfe23def8601eb152b8cbe45ddb1df40456d",
+          "sha256": "f27191332fa859bca0444a2924a3b723ff5728ebfd29bb9267405e22ff380b12",
+          "bytes": 2594
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "c8865ac73ae4932ba79c8e90c38ce5ee78b3486c",
+          "sha256": "adce9a0393fc72a8f3d865581ce3b8166991e180f0bc9ee66c8ec181ac0c6d27",
+          "bytes": 4303
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "1323d00bed4eb829140bf76d0c74b08435071beb",
+          "sha256": "13aa52e1dc36575cd7a0dea7eb886eebbcaef4e6081045e7fa98928097598dbb",
+          "bytes": 11518
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "878b41f8b050c1d37d55df44028845f1093ac5df",
+          "sha256": "bcb25ff735101fc23c38afb31c05641687e26c5e16303dcf50929af9e4caff9c",
+          "bytes": 16881
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "49ad5f84d98804f7ff5836c2b24044b6b1a0b294",
+          "sha256": "10cca7f54be15fb39b19e68a1d500780d17c4c3527e05ffe8ff1c74d3af2470e",
+          "bytes": 8741
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "b4f4360d23ee709c36582f060d4ca4382d1e11d5",
+          "sha256": "b4560fa89fc45205ea16a0421a7abc308cf20f7d01ea6d226d5daeccf47aec2a",
+          "bytes": 8377
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+        "preimage": null,
+        "postimage": {
+          "blob_sha": "869a66168c1b43189b2291f50a80742761ce6043",
+          "sha256": "9404764e3c9b2e2e1b62bbbf1118f695ee850c00d7374f207a04e4ecdd664b14",
+          "bytes": 12477
+        }
+      }
+    ],
+    "new_packages": [],
+    "workflow_changes": [],
+    "Protocol_HttpApi_changes": false,
+    "client_generation_required": false,
+    "complete_source_patch": "composition/source74-complete.patch.txt"
+  },
+  "source_validation": {
+    "Node": {
+      "run": 43673455601,
+      "job": 132688348708,
+      "S": "4185f64af08e01c885c471db0988a2da3c951841",
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0
+    },
+    "Bun": {
+      "run": 43673697145,
+      "job": 132689107232,
+      "S": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+      "pass": 15,
+      "fail": 0,
+      "expect_calls": 341,
+      "omni": "not applicable; nonce bound to job"
+    }
+  },
+  "source_history_index": "INDEX.json",
+  "mechanism": [
+    "A zero-read-ahead wrapper owns one lazy raw reader and rejects before enqueuing a chunk that exceeds the byte budget.",
+    "Content-Length is a preflight hint plus exactEOF consistency check, never an allocation size or substitute for byte counting.",
+    "Workbench decoder requires validUTF8 and parses only the bounded65536-byte result before admission.",
+    "The final Request is constructed before domain authentication and remains identical through context/command/dispatch; no clone after binding.",
+    "Cancellation releases raw reader/listeners without destroying the socket before413 can flush; unfinished responses close the connection. Error output is generic/private."
+  ],
+  "composition": {
+    "target_readback": {
+      "commit": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+      "observed_at": "2026-11-15 03:51:47 UTC",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "sha": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "previous_sha": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "changed": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "sha": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "previous_sha": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "changed": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+          "sha": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+          "previous_sha": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+          "changed": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "sha": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "previous_sha": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "changed": false
+        },
+        {
+          "path": "apps/cli/src/commands/handlers/serve.ts",
+          "sha": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+          "previous_sha": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+          "changed": false
+        },
+        {
+          "path": "packages/server/src/body-limit.ts",
+          "sha": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+          "previous_sha": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+          "changed": false
+        },
+        {
+          "path": "packages/server/src/routes.ts",
+          "sha": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+          "previous_sha": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+          "changed": false
+        }
+      ],
+      "interpretation": "All7 relevant live target preimages remained byte-identical at this readback. Reconcile liveHEAD, addition preconditions and owner authority again before intake. No target write/qualification by74."
+    },
+    "primary_plan": [
+      "Apply the complete10-path source74 patch or equivalent exactblob intake, plus evidence as needed.",
+      "Apply microsoft-map-74.patch.txt to add the new normative map and change only the active fixture lookup. compose-74.patch.txt is an overlapping convenience patch for3product+2map paths; do not reapply those3product hunks twice.",
+      "Keep historical55 map and every49archive byte unchanged; no canonical-hash/schema/source-pair/count/uniqueness checks may be suppressed.",
+      "If owner25MiB policy is accepted, apply the complete owner-with-map supplement after the primary composition. It includes server/routes/serve plus a dedicated new map and fixture lookup for that exact serve postimage.",
+      "Read-only Decisions52 transport proposal must be rebased on74; do not overwrite the bounded stream with its old sanitized.arrayBuffer whole-buffering postimage.",
+      "Compose only terminally released72/73/52 units through their owners; their current changes and larger procurement caps need exactcandidate rechecks."
+    ]
+  },
+  "authority": {
+    "lease_epoch": "http-limit-browser74",
+    "source_writer_state": "ENDED_AT_TERMINAL_HANDOFF_PUBLICATION",
+    "remaining_source_product_writes": false,
+    "consumer_ACK": "REQUESTED_AFTER_PINNED_HANDOFF; not claimed received",
+    "next_step": "71 acknowledges exactW/tree/completeunit and owns target integration.45 owns compiler/guards. Source74 does not write sf2-stack or assume another writer is idle.",
+    "effective_model": null,
+    "session_id": null,
+    "configured_identity": "GPT-6 Astra Pro",
+    "identity_note": "No provider execution receipt or stable native campaign session ID exposed."
+  },
+  "holds": [
+    {
+      "id": "H74-45",
+      "owner": 45,
+      "state": "REQUESTED_NOT_RUN",
+      "requirement": "bun typecheck in apps/cli and modules/sucafina; bun run check:guards --base origin/dev with exact real dev/merge-base. Source tests and static review do not replace these checks.",
+      "concrete_payload": "checks/REQUEST-45.json"
+    },
+    {
+      "id": "H74-MAP",
+      "owner": 71,
+      "state": "COMPLETE_INERT_PATCH_NOT_APPLIED",
+      "requirement": "Compose the complete10-path source unit and the new Microsoft map/fixture lookup atomically, preserving all49/55 archive/schema/count/source-pair/canonical-hash fences. Recheck the mapped Microsoft suites on the exact composed tree.",
+      "concrete_payload": "composition/microsoft-map-74.patch.txt"
+    },
+    {
+      "id": "H74-25MIB",
+      "owner": "71 plus server/CLI path owners",
+      "state": "COMPLETE_INERT_OWNER_PATCH_NOT_QUALIFIED",
+      "requirement": "Inherited global Content-Length preflight rejects contracts above16MiB before the handler's25MiB business limit. Apply/review the explicit finite installation policy and exact corresponding serve map before claiming declared16–25MiB preservation. Qualify declared/chunked25MiB/+1, malformed selectors, unrelated routes and explicit lower caps.",
+      "concrete_payload": "composition/owner-25mib/owner-with-map.patch.txt",
+      "source_behavior": "W preserves the25MiB contract stream budget when inherited host limit is16MiB; explicit lower limits still prevail. Global declared-length preflight is unchanged."
+    },
+    {
+      "id": "H74-PROCUREMENT",
+      "owner": "71 and73/domain/installation owners",
+      "state": "POLICY_ALIGNMENT_REQUIRED",
+      "requirement": "Procurement's trusted uploadCap/maxFileSize may exceed16MiB. Source74 respects the finite host budget; it does not claim that arbitrary larger configured business budgets pass. Choose and expose a finite trusted installation policy from the canonical settings/owner before qualifying that range; do not invent an unbounded/global override."
+    },
+    {
+      "id": "H74-COMPOSED",
+      "owner": "71,45,S0 and required independent reviewers",
+      "state": "NOT_RUN",
+      "requirement": "Source green is not integrated C proof. Exact-candidate checks, all applicable Microsoft/map rechecks, final eight selections, AM01–06, independent reviews and C/G7,D/G8 remain mandatory."
+    }
+  ],
+  "proof_limits": [
+    "The Node24 probe uses productiontransport with a local installation and observation handler; it is not business/native/Microsoftidentity proof.",
+    "Bun consumers use realSQLite/auth/C08/domain; OIDC/Graph and exactdigestscanner are explicitly synthetic boundaries.",
+    "Microsoft fullgraph importability under bareNode24 failed beforebehavior inR2; noJSONloader/config override was introduced.",
+    "No body-consumption proof applies universally to handlers that ignore their body and mutate before reading.",
+    "Finaleightselections/AM01–06/independentreviews/C-G7/D-G8 remain with their owners; this terminalsourcehandoff is not globalDONE."
+  ],
+  "GLOBAL_RELEASE": false
+}

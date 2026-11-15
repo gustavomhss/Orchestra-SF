@@ -3,8 +3,8 @@
   "mission": 74,
   "consumer": 45,
   "state": "REQUESTED_NOT_RUN",
-  "W": "8bb8322e97adcbc2f10cd1af2a4190cd3bf9c2b6",
-  "W_tree": "852245912e74f21a2b43df63c20c2e1651dc82fd",
+  "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "W_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
   "branch": "http-body-limit-fix",
   "PR": 85,
   "commands": [
@@ -25,7 +25,7 @@
       "base_rule": "Resolve and record the actual origin/dev commit and merge-base on the hosted runner. If dev changed since this observation, record the new exact base and invalidate any dedup key that depended on the old base. Never substitute the candidate as guard base."
     }
   ],
-  "scope": "M70-HTTP-01: consumption-time byte limits in installation.ts, runtime/request-body.ts and product/interface/http.ts, plus seven own test/fixture files. W includes the test-deadline and Node/Bun lifecycle corrections; no product bytes changed after b0f52c02.",
+  "scope": "M70-HTTP-01; finalW5 contains3 authorized product paths and7 test/fixture paths. Productblobs unchanged sinceb0f52c02; alltests now qualified atW5. No Protocol/HttpApi/config/package/workflow change.",
   "authority": {
     "owner": 45,
     "source": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/composed-compiler-gates.json",
@@ -119,29 +119,34 @@
   "deduplication": "Before admission, compare the exact finalized product tree, commands/cwds, workflow/validator identities, effective runtime/config/dependencies and actual dev base against existing and in-flight requests. Reattach only a truly matching run with complete evidence; do not duplicate an in-flight key or transfer an older green.",
   "generation": "NOT_REQUESTED: no public Protocol/Server HttpApi, Atlas generation surface, workflow, package dependency or compiler configuration change in product74. The separate server/CLI owner25MiB proposal is inert and excluded from W.",
   "source_tests": {
-    "status": "SEPARATE_SURGICAL_TESTS_NOT_COMPILER_PROOF",
-    "current": {
-      "W": "8bb8322e97adcbc2f10cd1af2a4190cd3bf9c2b6",
-      "S": "410e8d5258c7e3946061977bf4d83536e5b23f36",
-      "run": 43672712025,
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672712025",
-      "status": "in_progress",
-      "conclusion": null
+    "status": "PASS_SCOPED_NOT_COMPILER_PROOF",
+    "Node": {
+      "run": 43673455601,
+      "job": 132688348708,
+      "S": "4185f64af08e01c885c471db0988a2da3c951841",
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0
     },
-    "prior": [
-      {
-        "run": 43672107164,
-        "conclusion": "failure",
-        "pass": 12,
-        "fail": 3
-      },
-      {
-        "run": 43672317792,
-        "conclusion": "failure",
-        "reason": "Microsoft Bun-domain JSON import under Node before behavior"
-      }
+    "Bun": {
+      "run": 43673697145,
+      "job": 132689107232,
+      "S": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+      "pass": 15,
+      "fail": 0,
+      "expect_calls": 341,
+      "omni": "not applicable; nonce bound to job"
+    },
+    "receipts": [
+      "checks/RUN-05.json",
+      "checks/RUN-06.json"
     ],
-    "rule": "Final source test receipts will bind exact W/S. Never transfer these results to compiler/guards or composed candidate71."
+    "prior_failures_preserved": [
+      "RUN-01",
+      "RUN-02",
+      "RUN-03",
+      "RUN-04"
+    ]
   },
   "composition_limit": "The new Microsoft map/fixture and the separate BodyLimit/routes/serve owner proposal are inert artifacts in this source.71 must compose authorized complete releases, preserve historical49/55 and reconcile any52 transport proposal before requesting checks for its actual candidate. Source74 checks cannot certify that composition, AM01-06, C/G7 or D/G8.",
   "template": {
@@ -151,9 +156,10 @@
     "comment_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888007959"
   },
   "publication": {
-    "state": "PINNED_REQUEST_FOR_OWNER45",
-    "request_comment_url": null,
-    "note": "The root will send the pinned file to PR32 immediately after CAS publication. The returned conversation URL is recorded in the final handoff. No check dispatch or owner45 ref write."
+    "state": "REQUESTED_NOT_RUN",
+    "initial_request_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888604049",
+    "prior_update_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888628258",
+    "final_update": "A final pinnedW5/receipt-envelope update is sent to PR32 after terminal CAS readback; deduplicate any already-admitted work."
   },
   "GLOBAL_RELEASE": false,
   "proof_limits": [
@@ -161,5 +167,9 @@
     "No local product tests/checks, no takeover of owner45 workflow/ref.",
     "No skip, ignored diagnostic, synthetic approval or broad suite.",
     "Source tests are separate from compiler/guard acceptance; GLOBAL_RELEASE=false."
-  ]
+  ],
+  "delivery_guard": {
+    "state": "REQUESTED_NOT_RUN",
+    "rule": "Also run requiredguard for the actual evidence-only terminal delivery commit supplied in PR32/PR85 after CAS. Verify its delta fromW5 is restricted to ownreceipt paths and preserves every product/test/config/fixture blob."
+  }
 }

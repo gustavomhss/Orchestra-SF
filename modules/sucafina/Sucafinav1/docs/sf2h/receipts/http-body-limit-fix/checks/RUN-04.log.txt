@@ -1,0 +1,26 @@
+RUNNER: node
+2026-11-15T03:36:26.7619510Z ##[endgroup]
+2026-11-15T03:36:47.2328679Z ✖ Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency and private error responses (20003.850967ms)
+2026-11-15T03:36:47.2331219Z ℹ Runtime node v24.22.2; production NodeHttpServer and SF composition
+2026-11-15T03:37:07.2414229Z ✖ Node runtime: global stream budget cuts off chunked data and preserves binary octets (20010.234943ms)
+2026-11-15T03:37:07.2464072Z ✔ Node runtime: disconnected/truncated input aborts the original Request and releases its reader (8.075778ms)
+2026-11-15T03:37:07.2588471Z ℹ tests 3
+2026-11-15T03:37:07.2588796Z ℹ suites 0
+2026-11-15T03:37:07.2589029Z ℹ pass 1
+2026-11-15T03:37:07.2589245Z ℹ fail 0
+2026-11-15T03:37:07.2589465Z ℹ cancelled 2
+2026-11-15T03:37:07.2589708Z ℹ skipped 0
+2026-11-15T03:37:07.2589913Z ℹ todo 0
+2026-11-15T03:37:07.2590175Z ℹ duration_ms 40466.967362
+2026-11-15T03:37:07.2593967Z 
+2026-11-15T03:37:07.2594249Z ✖ failing tests:
+2026-11-15T03:37:07.2594405Z 
+2026-11-15T03:37:07.2594779Z test at Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs:93:1
+2026-11-15T03:37:07.2596140Z ✖ Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency and private error responses (20003.850967ms)
+2026-11-15T03:37:07.2596689Z   'test timed out after 20000ms'
+2026-11-15T03:37:07.2596869Z 
+2026-11-15T03:37:07.2597200Z test at Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs:150:1
+2026-11-15T03:37:07.2598011Z ✖ Node runtime: global stream budget cuts off chunked data and preserves binary octets (20010.234943ms)
+2026-11-15T03:37:07.2598542Z   'test timed out after 20000ms'
+2026-11-15T03:37:07.2651993Z ##[error]Process completed with exit code 1.
+2026-11-15T03:37:07.3149917Z

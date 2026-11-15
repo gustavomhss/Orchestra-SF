@@ -1,0 +1,36 @@
+{
+  "schema": "sf2h.mission74.terminal.v1",
+  "mission": 74,
+  "lease_epoch": "http-limit-browser74",
+  "state": "SOURCE_WRITER_ENDED_ON_PUBLICATION_ACK71_REQUESTED",
+  "authored_at": "2026-11-15 03:51:47 UTC",
+  "source": {
+    "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+    "branch": "http-body-limit-fix",
+    "PR": 85
+  },
+  "delivery_commit_binding": "The commit containing this receipt; its exactSHA/tree are recorded in PR85 and the pinnedPR65 handoff after CAS readback.",
+  "source_validation": {
+    "Node": "RUN-05:3PASS",
+    "Bun": "RUN-06:15PASS/341assertions",
+    "compiler_guards": "REQUESTED_NOT_RUN"
+  },
+  "remaining_source_product_writes": false,
+  "authority_after_publication": {
+    "integration": 71,
+    "compiler_guards": 45,
+    "final_epic_acceptance": "S0",
+    "consumer_ACK": "REQUESTED_NOT_ASSUMED_RECEIVED"
+  },
+  "holds": [
+    "H74-45",
+    "H74-MAP",
+    "H74-25MIB",
+    "H74-PROCUREMENT",
+    "H74-COMPOSED"
+  ],
+  "plan_and_T0_unchanged": true,
+  "no_merge_deploy_or_global_release": true,
+  "GLOBAL_RELEASE": false
+}

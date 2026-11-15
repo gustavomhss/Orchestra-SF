@@ -1,0 +1,259 @@
+{
+  "schema": "sf2h.mission74.surgical-run.v1",
+  "sequence": 5,
+  "state": "PASS_SCOPED_NODE_TRANSPORT",
+  "kind": "node",
+  "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "W_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+  "S": "4185f64af08e01c885c471db0988a2da3c951841",
+  "S_tree": "c641e7e4b054260c33d75bcf6ec498b97f34cf7f",
+  "branch": "ci-run-linux-astra-wp74-d2a1227a-2ed756e2-01",
+  "envelope": {
+    "only_changed_path": ".ci-run.json",
+    "blob": "21cfb7efb92362a97eb1d7f0325f6ad54e3d6204",
+    "single_parent": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "product_test_config_fixture_blobs_identical": true
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "node",
+    "args": [
+      "./Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs"
+    ],
+    "env": {}
+  },
+  "request_sha256": "2ed756e2426e7e8d824af847fcb83cd4a3e6c3ebcf0c261566f5f8f17afbd8c9",
+  "run": {
+    "id": 43673455601,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673455601",
+    "attempt": 1,
+    "head_sha": "4185f64af08e01c885c471db0988a2da3c951841",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "jobs": [
+    {
+      "id": 132688348708,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132688756632,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "node": "24.22.2",
+    "runner": "node --experimental-strip-types --test",
+    "os": "ubuntu-24.04",
+    "not_bun_assertion": true
+  },
+  "result": {
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "omni": "Node runner does not load Bun omni control; no printed verdict or omni coverage claimed"
+  },
+  "covered": [
+    "Actual NodeHttpServer/production composition local boundary",
+    "65536 UTF8 bytes, invalidJSON with full400 response, chunked oversize413 before request EOF",
+    "Excessive declared CL before handler; understated CL; delegated Workbench budget",
+    "Global stream budget and explicit smaller host budget; binary octet digest",
+    "Host/origin refusal and private503 handler failure",
+    "Actual socket close/destroyed and zero data/readable readers; incomplete framing preserved",
+    "Disconnect aborts identical originalRequest; active IncomingMessage close/destroyed/aborted"
+  ],
+  "oracle_correction": "R4 waited on IncomingMessage.close even for completed early responses. Node resOnFinish removes that request from incoming queue before socket close. This run measures actual socket lifetime and reader release, retaining request close/destroyed for disconnect. No production change or timeout increase.",
+  "limits": [
+    "Probe handler is transport observation, not business/native/Microsoft identity proof.",
+    "Microsoft legacy graph JSON imports are not qualified under Node; canonical Microsoft component suite runs separately under Bun.",
+    "The full global CL16–25MiB contract policy is not included in this probe."
+  ],
+  "artifacts": [],
+  "local_product_execution": false,
+  "GLOBAL_RELEASE": false
+}
