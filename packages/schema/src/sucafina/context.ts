@@ -1,7 +1,6 @@
 /**
- * NORMATIVE PLANNING SPECIFICATION — F01 public context/route types.
- * No runtime, parser implementation or authority is provided here.
- * Product location: packages/schema/src/sucafina/context.ts (F01).
+ * Frozen F01 public context/route types and wire schemas.
+ * Runtime codecs validate types, not authority or admission.
  * packages/app-shell/.../context/contracts.ts REEXPORTS these public types and
  * adds SfSurfaceProps; Client/Protocol/Desktop never import app-shell types.
  * This file is derived from the frozen surface-manifest routes, not a generic
