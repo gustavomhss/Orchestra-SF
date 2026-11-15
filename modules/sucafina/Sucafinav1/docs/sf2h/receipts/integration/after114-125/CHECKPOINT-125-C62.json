@@ -1,0 +1,113 @@
+{
+  "schema": "sf2h.integration125.checkpoint.v1",
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S0-C/C00/I00",
+  "integrator": 125,
+  "lease": "S0-C-e18-browser125",
+  "predecessor": {
+    "seat": 114,
+    "epoch": "S0-C-e17-browser114",
+    "revoked_by_S0": true,
+    "actual_process_termination_unverified": true
+  },
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "pr_state": "OPEN_DRAFT",
+  "fence_initial": "9cbff3e4a111b4eaa5376c5419f5991ece67e492",
+  "ack_commit": "22a9d20dddbdbc2f8d9dbd426bd3720a4b6e0a85",
+  "baseline_C58": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "material": {
+    "candidate": "C62",
+    "sha": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+    "tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+    "status": "COMPOSED_UNQUALIFIED",
+    "paths_composed_since_C58": 81,
+    "commits": [
+      {
+        "candidate": "C59",
+        "sha": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+        "tree": "5739761dca6948484851820ccb23d4f7230f8165",
+        "parent": "22a9d20dddbdbc2f8d9dbd426bd3720a4b6e0a85",
+        "count": 3
+      },
+      {
+        "candidate": "C60",
+        "sha": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+        "tree": "667e4245b01875e6c3df83afae7630303ed146af",
+        "parent": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+        "count": 6
+      },
+      {
+        "candidate": "C61",
+        "sha": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+        "tree": "60bc1f0d8a795f8f83a86636e9a30c9021b97ab7",
+        "parent": "45edb28515f5a337e37c550b376941c6f9e4f1ce",
+        "count": 42
+      },
+      {
+        "candidate": "C62",
+        "sha": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+        "tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+        "parent": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+        "count": 30
+      }
+    ],
+    "all_postimages_checked_remotely": true
+  },
+  "source_counts": {
+    "121/PR117": 3,
+    "122/PR126": 5,
+    "122/PR126 shared owner patch": 1,
+    "W02/F01": 12,
+    "W03/F02": 4,
+    "W04/F03": 8,
+    "W07/S02": 5,
+    "W08/S03": 6,
+    "125/I00": 9,
+    "W05/F04": 7,
+    "W06/S01": 8,
+    "W09/S04": 8,
+    "W10/S05": 5
+  },
+  "contract": {
+    "closed_catalog_count": 305,
+    "metadata_registry": "packages/schema/src/sucafina/operation-registry.ts",
+    "operation_codec_admissions": "NOT_COMPLETE",
+    "f01_f02": "COMPOSED_NOT_HOST_CONNECTED",
+    "shared_dictionary": "COMPOSED_EN_PT_PARITY",
+    "publisher": "I00 125",
+    "versioned_native_owner_fence": "UNPROVEN_NOT_WIRED",
+    "return_intents": "UNPROVEN",
+    "desktop_broker": "NOT_COMPOSED"
+  },
+  "gates": {
+    "local_tests": "NOT_RUN_BY_125",
+    "hosted_compiler_119": "NOT_RUN_FOR_C62",
+    "hosted_ci_120": "NOT_RUN_FOR_C62",
+    "native_installed_proof": "NOT_PROVEN",
+    "desktop_installed_proof": "NOT_PROVEN",
+    "copy_editional_gate": "UNQUALIFIED",
+    "release": false
+  },
+  "restrictions": [
+    "No force, reset, raw envelope merge, dev merge, Azure/deploy, fake receipt, or Goal restart",
+    "Operations without authoritative codec and producer must fail contract-unavailable",
+    "Do not replay ambiguous writes; retain CAS, owner and revocation semantics",
+    "Only 120 Actions dispatch; 119 compiler; route source defects to author"
+  ],
+  "residual_queue": [
+    "119 PR107: compiler+guards same material tree; regenerated epic exact bytes vs script + guard55",
+    "120 PR106: de-duplicated surgical Actions exact C62 SHA/tree/spec selectors including 121/122 and native pure tests; no installed claim",
+    "I00: install context/F02 router after real identity.handle/prepare, mount Axx only after admitted source, owner precondition within actual transaction, return-intent lifecycle, canonical codecs",
+    "D01/W01 desktop broker, F04 installed host/manifest real principal proofs",
+    "A01-A15 W11-19 and wave2 adapters intake only finished and S0-authorized exact leaves; no duplicate writers",
+    "123 PR132: nine regression fixes and WP08 timeout owner routing, no out-of-allowlist patches",
+    "Legacy WP acceptance/gates P03 M31 MI07 DOCX/XLSX three FINAL outputs not met"
+  ],
+  "source_limitations": [
+    "Canonical local START/WORKFLOW and S0-C local agent file inaccessible through GitHub and Remote Desktop Commander offline",
+    "Session ID not exposed; no evidence process 114 terminated"
+  ],
+  "durable": true
+}

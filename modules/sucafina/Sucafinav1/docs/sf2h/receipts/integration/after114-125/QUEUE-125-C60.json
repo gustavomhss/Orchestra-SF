@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.integration125.queue.v1",
+  "status": "RUNNING_BROWSER_SESSION_NO_ASYNC_GUARANTEE",
+  "campaign": "sf2h-integral-20261112",
+  "lease": "S0-C-e18-browser125",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "predecessor": {
+    "actor": 114,
+    "lease": "S0-C-e17-browser114",
+    "revoked_by": "S0",
+    "runtime_termination_observed": false,
+    "predecessor_queue_is_stale": true
+  },
+  "material": {
+    "candidate": "C60",
+    "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+    "tree": "667e4245b01875e6c3df83afae7630303ed146af",
+    "composed_paths_since_C58": 9,
+    "qualification": "NONE",
+    "global_release": false
+  },
+  "integrated": [
+    {
+      "candidate": "C59",
+      "mission": 121,
+      "files": 3,
+      "commit": "a0d7296dbaebfe14126cb174133dff2bf04fc71a"
+    },
+    {
+      "candidate": "C60",
+      "mission": 122,
+      "files": 6,
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338"
+    }
+  ],
+  "pending": [
+    {
+      "source": "119 compiler",
+      "pr": 107,
+      "need": "Tooling v2+real epic artifact/generation, hosted compiler on new composed W; 22 TS errors originally C58, guard55 external reviewer decision"
+    },
+    {
+      "source": "120 CI",
+      "pr": 106,
+      "need": "dedup exact C60 W/tree/new SNAPSHOT then surgical creation browser ordered startup→96→111→lifecycle and HTTP; 122 report+BI+HTTP tests; no duplicate unchanged run"
+    },
+    {
+      "source": "123",
+      "pr": 132,
+      "need": "Owner routing for six proposed causal patches, no out-of-grant adoption; WP08 timeout OPEN"
+    },
+    {
+      "source": "UX foundation",
+      "prs": [
+        131,
+        129,
+        124,
+        122,
+        123
+      ],
+      "need": "review exact source leaf/handoff, F01/F02/S03 atomic wiring, F03 visual; no raw envelope merge"
+    },
+    {
+      "source": "UX19",
+      "need": "All independent 11 e2 + 9 wave2 already launched; intake only real ready outputs and author epochs; no duplicate launches"
+    },
+    {
+      "source": "legacy",
+      "need": "95+110 native,99/109 P03 original FAIL, 102 XLSX visual,124 DOCX/112, AM01-06, three FINAL, eight final selectors and guards C/D"
+    }
+  ],
+  "constraints": [
+    "sole CAS writer force false",
+    "no local tests, builds, deploy, dev merge, reset, native Goal restart",
+    "no false PASS",
+    "no standalone CI dispatcher"
+  ],
+  "next": "Compose authorized ready exclusive UX leaves with atomic contract dependency and shared I00 wiring, then route hosted checks via 119/120; maintain exact source→candidate receipts"
+}

@@ -2,11 +2,18 @@ import path from "node:path"
 import { defineConfig } from "@playwright/test"
 import config from "../playwright.config"
 import { wp04BrowserSelected } from "./sucafina/wp04/selection"
+import { nativeSpecSelected } from "./sucafina/native/fixture/selection"
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
 // The existing CI runner supplies an exact filename regex. This only starts the
 // declared real Procurement fixture; it changes no grep, selector or CI allowlist.
 const wp04 = wp04BrowserSelected(process.argv.slice(2)) && !process.argv.includes("--list")
+const sfNative = nativeSpecSelected(process.argv.slice(2))
+// I00 starts the real host before collection; no synthetic webServer or legacy WP04 substitution.
+if (sfNative && (process.env.GITHUB_ACTIONS !== "true" ||
+    !process.env.SF_NATIVE_INSTALLED_MANIFEST || !process.env.SF_NATIVE_CANDIDATE_SHA)) {
+  throw new Error("F04_NATIVE_REAL_HOST_MANIFEST_AND_CANDIDATE_REQUIRED")
+}
 
 // defineConfig(config, override) concatenates webServer entries, which starts dev and preview on one port.
 export default defineConfig({
