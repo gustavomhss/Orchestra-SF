@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.causal-fix176.inert-consumer-patch.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 176,
+  "epoch": "native-fix-e1-browser176",
+  "owner_to_apply": 162,
+  "target_branch": "sf2-stack",
+  "source_branch": "sf-ux-a11",
+  "source_pr": 143,
+  "status": "INERT_FOR_162_ONLY_NOT_APPLIED_TO_CONSUMER",
+  "operation_id": "domain.page.CAP12",
+  "file": "packages/schema/src/sucafina/operations.ts",
+  "unified_diff": "diff --git a/packages/schema/src/sucafina/operations.ts b/packages/schema/src/sucafina/operations.ts\n--- a/packages/schema/src/sucafina/operations.ts\n+++ b/packages/schema/src/sucafina/operations.ts\n@@ -294,7 +294,7 @@ export const SfDomainPageCap12 = {\n     Schema.Struct({\n       status: Schema.Literal(\"ok\"), context: SfContextStamp,\n       value: Schema.Struct({\n-        capabilityId: Schema.Literal(\"CAP12\"), selection: SelectionResolved,\n+        capabilityId: Schema.Literal(\"CAP12\"), selection: SelectionResolvedCAP12,\n         data: SfOperationsPageData.CAP12, versions: Versions,\n         allowedActionIds: Schema.Array(Schema.String),\n       }),\n",
+  "cause": "CAP12 output selection references nonexistent SelectionResolved; declared SelectionResolvedCAP12 preserves CAP12-specific year/month, secYear, securityMonth and own aliases.",
+  "source": {
+    "initial_commit": "9344dda9486e803de2fae26179dada71b2f20314",
+    "initial_tree": "7bec6f0ae6ecfe580dfaa0a9c1b111aa9cba95b8",
+    "ack_commit": "5ce441418d044a94d70d3433f89bd33e3182daca",
+    "ack_tree": "27fb42d2c9f279afccf3bc894db4245365930a0b",
+    "code_fix_commit": "05d1687e8697d204ce970da7d20363359c8243ca",
+    "code_fix_tree": "73c21bed5ff07df16ba0f476b440b05366c178e5",
+    "before_blob": "d1f3b9b23c4d4ee2442f293ddb0816063062b63f",
+    "after_blob": "d2f9e89c5815dff4207769f75c263d908c474ca1"
+  },
+  "consumer_preimage": {
+    "branch": "sf2-stack",
+    "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "operations_blob": "d1f3b9b23c4d4ee2442f293ddb0816063062b63f"
+  },
+  "consumer_proposed_afterimage": {
+    "candidate_tree_uncommitted": "ae2ce8d5f4212383df483cd59dbc1f3b1c4f76ee",
+    "operations_blob": "d2f9e89c5815dff4207769f75c263d908c474ca1",
+    "post_commit": null,
+    "applied": false
+  },
+  "hunk": {
+    "line": 297,
+    "before": "        capabilityId: Schema.Literal(\"CAP12\"), selection: SelectionResolved,",
+    "after": "        capabilityId: Schema.Literal(\"CAP12\"), selection: SelectionResolvedCAP12,"
+  },
+  "other_paths": {
+    "test": "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts",
+    "test_pre_blob": "0a692b53eadcab8eb619ee49298c3fa97516f70a",
+    "test_post_blob": "0a692b53eadcab8eb619ee49298c3fa97516f70a",
+    "all_other_files_unmodified": true
+  },
+  "consumed_contract_blobs": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "application_rules": [
+    "162 must re-read latest sf2-stack HEAD/tree/blob and check source SHA and ownership.",
+    "If consumer already has the exact post blob, close as CONSUMED_WITH_PROOF_POINTER and do not duplicate.",
+    "If preimage still matches, apply just this hunk/blob on the current tree; GitHub MCP expected_sha CAS, force=false; never merge the branch wholesale.",
+    "If consumer drifted, reconcile semantics and preserve other commits; publish actual consumer post-commit/tree/blob and consumption ACK.",
+    "Only after coherent integrated W/tree exists, ask 163 compiler and 164 hosted product checks, deduplicated by exact input fingerprint."
+  ],
+  "runtime": {
+    "local_tests": "NOT_RUN",
+    "hosted_test_on_postfix_W": "NOT_RUN",
+    "hosted_compiler_on_postfix_W": "NOT_RUN",
+    "native_goal": "paused",
+    "global_release": false
+  }
+}
