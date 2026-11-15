@@ -13,3 +13,7 @@
 **Actual previous runs:** 163 compiler FAIL old W 690a34; 164 Planner 11 PASS old W 690a34, but decisions source import blocked and later unrelated browser lanes failed on W 6d42. No new run and no local test/typecheck/parser/build/validator; **NOT_RUN for this new blob**.
 
 **Handoff:** 162 sole integrator must reconcile HEAD + preblob and adopt this released file exactly; no shared seam modification required. After 162 integrates, 163 owns scoped package typecheck/SDK/guards; 164 owns the existing hosted Planner test. Do not dispatch identical failed inputs, expand suites, merge/deploy/restart, or declare native Goal/release.
+
+## Verified source patch commit / readback
+
+Patch commit: [f02f99b34ab390c526989c5ac1c1b4ea13cf5e66](https://github.com/gustavomhss/Orchestra-SF/commit/f02f99b34ab390c526989c5ac1c1b4ea13cf5e66); patch tree: `648e47c89e812f6ec0090c3e8284113de42288de`. GitHub re-read of `packages/schema/src/sucafina/planner.ts` yielded blob `0a85a3f33bc384196100ee75c974102e04f9868a` and exactly 29 capability-keyed `legacyInput` calls. GitHub compare ACK→patch commit showed exactly the five authorized changed paths (one source, four receipts). Historical planner test blob remains `1630180b74a5775280e4c90038849f9df99b87ff` and was not edited or executed. This receipt-only follow-up does not change the released source blob; 162 consumes the exact file from patch commit.
