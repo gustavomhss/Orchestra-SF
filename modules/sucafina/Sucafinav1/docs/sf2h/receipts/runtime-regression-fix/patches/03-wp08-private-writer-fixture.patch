@@ -1,0 +1,43 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts b/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts
+index ca0e83b316f368be5ede080f881db86743bd0435..0000000 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts
+@@ -75,21 +75,23 @@
+       return { state: result.status === "ok" && digestSfValue(result.value) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
+     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
+     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
+-    const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => actor.active && candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
+-    const cases = createDecisionCasePort({ host, state, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => {
+-    const request = host.requestFor(context)
+-    const selectedDigest = digestSfValue(value)
+-    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
+-    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
+-  }, evidence, createId: randomUUID, now: () => at })
+-    const draft = { objective: "Review the current delivery and assign its follow-up", horizon: period, currency: "USD", criteria: ["Delivery follow-up is resolved"], sourceRefs: [source] }
+-    const decision = admitted(await cases.draft(draft, await readContext("sf_case_draft", draft)), "case draft")
+-    const caseRef = encodeCaseRef(decision)
+-    const contextFor = async (context: TrustedDomainContext) => ({ status: "ok" as const, value: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "procurement" as const, period, currency: "USD", sourceRefs: [], capabilities: [] } })
+-    const collections = createProcurementCollectionRegistry({ host, scopedSources: persistence, contextFor })
+-    const individual = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor })
+-    const procurement = createProcurementPort({ ...host, ...collections, resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent, readContractSource: async () => ({ status: "unavailable", reason: "not-selected" }) })
+-    const factory = createCollaborationHost({ host, state, creationTarget, scopedSources: persistence, evidence, cases, procurement, collections, human, authority, caseSelectionWrites: new WeakSet(),
++    // A selection writer token must be the exact same private object in C08 and the host.
++    const caseSelectionWrites = new WeakSet<object>()
++    const state = createSfProductState({ persistence, caseSelectionWrites, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => actor.active && candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
++    const cases = createDecisionCasePort({ host, state, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => {
++    const request = host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, evidence, createId: randomUUID, now: () => at })
++    const draft = { objective: "Review the current delivery and assign its follow-up", horizon: period, currency: "USD", criteria: ["Delivery follow-up is resolved"], sourceRefs: [source] }
++    const decision = admitted(await cases.draft(draft, await readContext("sf_case_draft", draft)), "case draft")
++    const caseRef = encodeCaseRef(decision)
++    const contextFor = async (context: TrustedDomainContext) => ({ status: "ok" as const, value: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "procurement" as const, period, currency: "USD", sourceRefs: [], capabilities: [] } })
++    const collections = createProcurementCollectionRegistry({ host, scopedSources: persistence, contextFor })
++    const individual = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor })
++    const procurement = createProcurementPort({ ...host, ...collections, resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent, readContractSource: async () => ({ status: "unavailable", reason: "not-selected" }) })
++    const factory = createCollaborationHost({ host, state, creationTarget, scopedSources: persistence, evidence, cases, procurement, collections, human, authority, caseSelectionWrites,
+       // The selected real fixture has no canonical Dashboard signal. A nonempty or
+       // unavailable producer result must fail this absence, never become an empty queue.
+       workSignals: async (_selectionRef, selectedPeriod, context) => {
