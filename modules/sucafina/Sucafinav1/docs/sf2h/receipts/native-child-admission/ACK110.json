@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h-native-child-admission-ack-v1",
+  "mission": 110,
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "branch": "native-child-admission",
+  "base_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "lease_epoch": "native-child-browser110",
+  "actor": "S0-B Task descendant C15 contributor (new ChatGPT conversation)",
+  "model_observed": "GPT-6",
+  "astra_runtime_observed": false,
+  "chat_session_id": "not exposed",
+  "github_authenticated_actor": "gustavomhss",
+  "execution_status": "CONTINUING_LATE",
+  "inputs": [
+    {
+      "source": "mission110",
+      "ref": "7e56fa8bd9f3ea288ad9625be7b4b2ab8dd56314",
+      "blob": "2cd41a8165c8b8671ea5028d188ff510c4e8ad1c"
+    },
+    {
+      "source": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "source": "execution/COMMON.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "source": "execution/actors/S0-B.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "source": "64 API-NOTES/capability contract",
+      "ref": "4d0421669054a131de0df0c95994b45229ab354e"
+    },
+    {
+      "source": "95 producer",
+      "branch": "native-host-provider",
+      "head": "9757b5e7ee974684cff32a5a452f7dc5aefc0555"
+    },
+    {
+      "source": "90/103 consumer",
+      "prs": [
+        96
+      ]
+    },
+    {
+      "source": "106 integrator",
+      "branch": "sf2-stack",
+      "head": "49dded7b4fa955ff2e0282f9ef2ffd59ddd277b3"
+    }
+  ],
+  "write_paths": [
+    "apps/cli/src/sucafina-product/native-child-admission.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-child-admission/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-child-admission/"
+  ],
+  "forbidden": [
+    "native-host.ts",
+    "token-gate.ts",
+    "native-authority-provider.ts",
+    "routine-native-*",
+    "core engines",
+    "host-context.ts (patch artifact only)"
+  ],
+  "authority": "No engine ownership or native C15/Task Session authority granted by this ACK. Component source cannot self-mint descendant tickets.",
+  "test_status": "NOT_RUN; product tests by107, compiler/guards by108",
+  "readiness": "OFF",
+  "watch": "OFF",
+  "global_release": false,
+  "checkpoint": "Implement isolated SF Task middleware; supply full, non-applied integration patches to 95/106; require owner ACKs."
+}
