@@ -4,7 +4,8 @@
 // Only the admitted producer can change admissionState/attachments/recordVersion.
 import { createEffect, createSignal, createUniqueId, For, Match, Show, Switch, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
-import type { SfAttachmentFieldProps, SfFileAdmission, SfFileSelectionRef, SfMessage } from "./types"
+import type { SfAttachmentFieldProps, SfMessage } from "../evidence/types"
+import type { SfFileSelectionRef } from "@orchestra/schema/sucafina/context"
 import {
   canAdmitSelected,
   canRequestDownload,
@@ -93,7 +94,7 @@ export function SfAttachmentField(props: SfAttachmentFieldProps): JSX.Element {
 
       <Switch>
         <Match when={props.admissionState.kind === "selected"}>
-          <Show when={props.admissionState.kind === "selected"}>
+          <Show when={props.admissionState.kind === "selected" ? props.admissionState : undefined}>
             {(phase) => (
               <div class="sf-s04-row" role="group" aria-label={language.t("orchestra.sf.s04.attachments.selected")}>
                 <p role="status">{language.t("orchestra.sf.s04.attachments.selected")}</p>
@@ -122,7 +123,7 @@ export function SfAttachmentField(props: SfAttachmentFieldProps): JSX.Element {
           <p role="status" aria-live="polite">{language.t("orchestra.sf.s04.attachments.admitted")}</p>
         </Match>
         <Match when={props.admissionState.kind === "blocked" || props.admissionState.kind === "scanner-unavailable" || props.admissionState.kind === "failed"}>
-          <Show when={props.admissionState.kind === "blocked" || props.admissionState.kind === "scanner-unavailable" || props.admissionState.kind === "failed"}>
+          <Show when={props.admissionState.kind === "blocked" || props.admissionState.kind === "scanner-unavailable" || props.admissionState.kind === "failed" ? props.admissionState : undefined}>
             {(phase) => (
               <div role="alert">
                 <p>{phase().kind === "scanner-unavailable"
