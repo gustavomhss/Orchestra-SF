@@ -1,0 +1,126 @@
+{
+  "schema": "sf2h.integration106.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_status": "CONTINUING_LATE",
+  "mission": 106,
+  "mission_sha": "7e56fa8bd9f3ea288ad9625be7b4b2ab8dd56314",
+  "mission_blob": "1f967e47e0f51fbf549c61d83723f73248d00e48",
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "plan_actor_pack": "execution/actors/S0-C.json",
+  "actor": "S0-C sole sf2-stack integrator successor105",
+  "lease_epoch": "S0-C-e16-browser106",
+  "lease_state": "ACTIVE_USER_APPOINTED",
+  "effective_model": "GPT-6",
+  "requested_session_label": "Astra",
+  "runtime_session_id": null,
+  "runtime_session_id_reason": "not exposed by available connector",
+  "github_authenticated_actor": "gustavomhss",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "pr_state": "OPEN_DRAFT",
+  "previous_lease": "S0-C-e15-browser105",
+  "previous_lease_state": "ENDED_BY_INTEGRATOR105",
+  "initial_head": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "initial_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "initial_head_parent": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "last_material": {
+    "candidate": "C53",
+    "sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "status": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED"
+  },
+  "previous_material": {
+    "candidate": "C52",
+    "sha": "751741abf263fff6f002907c53fcbac973ccde63"
+  },
+  "confirmation": "HEAD matches expected mission106; last parent C53; terminal105 comparison is exactly four documentary receipts; no later stack integrator authority observed before ACK; CAS required for all future updates",
+  "read_inputs": [
+    {
+      "path": "AGENTS.md",
+      "sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "sha": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+      "sha": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/HANDOFF-TERMINAL-105.md",
+      "ref": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/CHECKPOINT-105-C53.json",
+      "ref": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/GATE-QUEUE-105.json",
+      "ref": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07"
+    }
+  ],
+  "scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "write_paths": [
+    "sf2-stack selective released product integration only",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/resume-c53-106/"
+  ],
+  "reserved_owners": {
+    "52": "UI/shared host/PR40",
+    "95": "native producer/PR104",
+    "96": "creation reload/PR103",
+    "99": "P03/PR95",
+    "101": "historical product CI/PR106, mission107 successor after reconcile",
+    "102": "XLSX/PR105",
+    "108": "compiler/guards",
+    "109": "P03 assistance",
+    "110": "native assistance",
+    "111": "HTTP adapter assistance",
+    "112": "visual preliminary review",
+    "113": "integrity preliminary review"
+  },
+  "intake_snapshot": {
+    "95": "NO_EXPLICIT_RELEASE_NATIVE_PRODUCER_C15; source head 9757b5e7ee974684cff32a5a452f7dc5aefc0555",
+    "96": "SOURCE_PATCH_READY; OWNER52_SHARED_HOST_UI_APPROVAL_PENDING; source head 3ef1bbf2188275f5bc6ebaeed162a069ad3ae351",
+    "99": "P03_F2_ORIGINAL_FAIL_43682515795",
+    "102": "SOURCE_PRINT_PATCH_READY; PRODUCT_CI_AND_VISUAL_PROOF_PENDING; source W 104bf61f67da9740024f38427c1580ba29f36e99",
+    "103": "ALREADY_COMPOSED_C52",
+    "104": "ALREADY_COMPOSED_C53",
+    "product_C53": "NOT_RUN_101_REQUESTED; 107 authoritative successor only after reconcile",
+    "guards_C53": "NOT_RUN; 108 only compiler/guards"
+  },
+  "constraints": [
+    "non-force expected-head CAS, no source branch edits",
+    "selective full preimage/postimage/dependency closure readback",
+    "no local tests / no product CI dispatch from integrator",
+    "no dev/control merge, deploy, Azure, engines, secrets, restarts, Goal",
+    "no UI20/sidebar takeover",
+    "no original oracles/fixtures/timeouts/policy changes",
+    "no GLOBAL_RELEASE"
+  ],
+  "acceptance": {
+    "G7_C": "OPEN",
+    "G8_D": "OPEN",
+    "eight_final_selectors": "NOT_RUN",
+    "epic": "NOT_RUN",
+    "AM01_AM06": "NOT_PROVEN",
+    "independent_FINAL": "NOT_SIGNED",
+    "GLOBAL_RELEASE": false
+  },
+  "next": "Reconcile live owner outputs; integrate only explicitly authorized and released complete deltas with CAS and append-only checkpoint; route CI to 107 and compiler/guards to108; preserve open holds."
+}
