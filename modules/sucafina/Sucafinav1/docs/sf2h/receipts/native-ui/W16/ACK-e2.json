@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.native-ui.successor-ack.v1",
+  "mission_id": "UX20-W16-R2",
+  "seat": "W16",
+  "output": "A04",
+  "state": "AUTHORING_ACK_REAL",
+  "actor": {
+    "model_actual": "GPT-6",
+    "requested_label": "Astra",
+    "github_login": "gustavomhss",
+    "session_id": null,
+    "session_id_status": "not exposed by ChatGPT/GitHub connector"
+  },
+  "branch": "sf-ux-w16",
+  "lease_epoch": "ux-native-w16-e2",
+  "previous_epoch": "ux-native-w16-e1",
+  "previous_epoch_state": "REVOKED_FOR_FUTURE_ACCEPTANCE",
+  "observed_head": "bad9cbccfb75fbd46b8826925c15781286c6fc6c",
+  "observed_tree": "212ad9eb16be3c0bccc16bd7f9b6929cb0487d15",
+  "expected_fence_head": "bad9cbccfb75fbd46b8826925c15781286c6fc6c",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/S0-FENCE-e2.json",
+  "authoring_authority": {
+    "admission_commit": "8852ed4a060f6eb3b49c142b894852d0af49740f",
+    "scope": "S0 e2 fenced succession of A04 exclusive leaves; integration remains114"
+  },
+  "source_material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "contracts": {
+    "CONTRACTS": "94553a3119826ef1c44271966233dd58042ddd70",
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "source_blobs": {
+    "choice": "369c71b4505360a9742b4b9a64585438f63cec47",
+    "decision-apply": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+    "decision-controls": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+    "portfolio": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "workbench": "78574180369c9495cbe5e5d3e569bb500fbff277"
+  },
+  "source_drift": "C58 workbench bounded UTF-8 body, conditional X-SF-Creation-Scope, conflict/needs-input preserved; no rollback",
+  "write_paths": [
+    "packages/schema/src/sucafina/decisions.ts",
+    "packages/client/src/sucafina/decisions.ts",
+    "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+    "packages/schema/src/sucafina/decisions/**",
+    "packages/client/src/sucafina/decisions/**",
+    "apps/cli/src/sucafina-product/native-ui/decisions/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/**"
+  ],
+  "routing": {
+    "integrator": "114 / PR65",
+    "CI": "120 / PR106",
+    "compiler": "119 / PR107"
+  },
+  "constraints": {
+    "local_tests": false,
+    "shared_writes": false,
+    "force": false,
+    "reset": false,
+    "merge": false,
+    "deploy": false,
+    "goal_resume": false
+  },
+  "claimed_status": {
+    "installed_operations": 0,
+    "tests": "NOT_RUN",
+    "integrated": false,
+    "qualified": false,
+    "global_release": false
+  }
+}
