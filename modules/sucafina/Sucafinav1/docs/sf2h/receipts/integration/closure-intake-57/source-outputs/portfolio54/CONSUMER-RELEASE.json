@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.consumer-release.v1",
+  "mission": 54,
+  "epoch": "portfolio-performance-browser54",
+  "state": "TERMINAL_PARTIAL_RELEASE_WITH_HELD_FINDING",
+  "consumer_requested": 47,
+  "consumer_ACK": "REQUESTED_NOT_RECEIVED",
+  "source_product": "06df1210f0f2049c972dfb2852396de34f31c683",
+  "source_product_tree": "7150512610093d91f252fd300d4d4ceb5e06588d",
+  "evidence_parent": "3ddef304796987b97a66bc27f7e47c5ddd1334fa",
+  "terminal_identity": "Git commit containing this file and HANDOFF-FINAL.md",
+  "analysis": {
+    "state": "READY_FOR_SELECTIVE_REVIEW_AND_REQUIRED_GATES",
+    "preblob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+    "postblob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+    "qualified_scope": "Only8implementation/authority controls,87expect, on fixedR1W/S",
+    "tested_W": "a233ec7e4ed4c55eeca6feb0344b5ec20b4880fb",
+    "S": "91f4ccfe03fa8d4a07730d6480d7bb1814fa4483",
+    "run": 43657504574,
+    "job": 132639209366,
+    "integrated_acceptance": false,
+    "P03_fix_demonstrated": false,
+    "selective_patch": "integration/analysis-controls.patch"
+  },
+  "P03": {
+    "state": "HELD_FAIL",
+    "closed": false,
+    "run": 43657763534,
+    "job": 132640020742,
+    "budget_ms": 180000,
+    "original_expect_lines": 72,
+    "actual_expect_calls": 24
+  },
+  "P02": {
+    "state": "HISTORICAL_50_PASS_PRESERVED",
+    "history_tests": 22,
+    "run": 43653550785,
+    "reexecuted_by54": false,
+    "proof_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+    "history_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188"
+  },
+  "patches": {
+    "complete": {
+      "path": "integration/complete.patch",
+      "blob": "93b48f13105e9ac00143e5cb87570e3d98550790",
+      "paths": 6,
+      "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5"
+    },
+    "selective": {
+      "path": "integration/analysis-controls.patch",
+      "blob": "c7253ad9c7cf1be0cd4b92064d5425f53c4b715a",
+      "paths": 2
+    },
+    "runtime_v2": {
+      "path": "external/runtime-fresh-copies/v2/proposal.patch",
+      "blob": "388f6980dd4654f85475ed08346136e092eeba96",
+      "state": "INERT_NOT_APPLIED_NOT_RUN",
+      "timeout_fix_demonstrated": false,
+      "requires_owner_grant": true
+    }
+  },
+  "current_target": {
+    "target": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "target_tree": "644e41cfc5e8b291b4bf61bd16c8dcae41b14d1b",
+    "symbol": "C21",
+    "delta_from_C20": "Agenda39 plus integration receipts. No changes to6patchpaths,28preservedpaths or runtime preimage in complete GitHub compare.",
+    "executed_on_C21": false,
+    "preimages_compatible": true
+  },
+  "observed_integrator_documents": {
+    "terminal47": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "authority47_blob": "076d2b0c277c7101b387e3d76ff80d3423d85c8a",
+    "ACK55": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+    "ACK55_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "meaning": "Observed repository documents declare47ended/55successor. This is not new authorization from this mission's user and grants54no stack write."
+  },
+  "intake_rules": [
+    "Reconcile actual authority and HEAD before any intake; no branch wholesale copy.",
+    "Apply only exact selected preimages. Complete6path patch includes released50 P02/history; preserve all28 KEEP/P01/oracles and Finance34/Memory40/CurrentChoice46.",
+    "A new integration candidate needs its own required gates/evidence; R1PASS is limited to exactW/S and8controls.",
+    "Keep originalP03 HELD until all72originalassertions finish within180000ms with realproducers.",
+    "Route runtimev2 and precise trace to actual authorized owner; no54runtime edit or proposalPASS.",
+    "Do not infer consumerACK from receipt publication."
+  ],
+  "gates": {
+    "owner": 45,
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "request": "checks/REQUEST-45.json"
+  },
+  "full_criteria_promoted": 0,
+  "GLOBAL_RELEASE": false
+}

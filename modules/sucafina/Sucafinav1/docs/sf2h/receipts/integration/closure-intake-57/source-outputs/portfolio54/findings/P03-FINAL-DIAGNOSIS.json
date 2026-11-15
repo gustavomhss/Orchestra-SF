@@ -1,0 +1,292 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.causal-finding.v1",
+  "mission": 54,
+  "status": "HELD_FAIL",
+  "closed": false,
+  "tested_W": "a233ec7e4ed4c55eeca6feb0344b5ec20b4880fb",
+  "R2": {
+    "schema": "sf2h.portfolio-p03-performance.hosted-result.v1",
+    "mission": 54,
+    "id": "R2",
+    "state": "FAIL",
+    "run": 43657763534,
+    "job": 132640020742,
+    "attempt": 1,
+    "W": "a233ec7e4ed4c55eeca6feb0344b5ec20b4880fb",
+    "W_tree": "37a4862008996b104a18e36c05dde10d838c4d37",
+    "S": "ee77344f24bfc50f33bdcf86d2019e210790dce8",
+    "S_tree": "5d03bd76c63b706912e8ced50b0082bfef32e06c",
+    "request_blob": "4620fe7c5235107089dc8a0ae32b6915cb46e2a9",
+    "request_path": "ci/R2-request.json",
+    "selection": "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "tests": 1,
+    "pass": 0,
+    "fail": 1,
+    "errors": 1,
+    "expect_calls": 24,
+    "test_elapsed_ms": 180014.84,
+    "suite_seconds": 180.2,
+    "budget_ms": 180000,
+    "fixture_budget_ms": 180000,
+    "nonce": "4c8717382361e7d548b5faa45d66a15d",
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "omni_proven": false,
+    "cleanup": {
+      "job": 132641284928,
+      "state": "PASS",
+      "snapshot_branch_deleted": true
+    },
+    "changed_from_50": "Qualified analysis read-before-bind implementation plus exact boundary diagnostics, on fixed C20 dependency composition. Not an unchanged repeat.",
+    "qualification_order": {
+      "R1_controls_success_before_R2_dispatch": true
+    },
+    "last_semantic_phase": "omitted:complete",
+    "last_status": "stale after deadline",
+    "unreached": [
+      "successful omitted portfolio",
+      "chosen choice confirmation",
+      "confirmed training40000",
+      "total250000 and simultaneous ceiling/advantage failure",
+      "later original history/replay/revocation assertions"
+    ],
+    "conclusion": "P03 still HELD. Reaching the budget is not a semantic producer failure proof or a full scenario PASS."
+  },
+  "concrete_call": {
+    "path": "product/portfolio/analysis.ts",
+    "call": "Independent final input.bindings.read immediately after the new previousBinding read",
+    "started_ms": 167068,
+    "ended_ms": 180008,
+    "duration_ms": 12940,
+    "deadline_during_call": true,
+    "before": [
+      "selectionAgain",
+      "analysis final revalidate"
+    ],
+    "evidence": "comparison.bind count stays1; previousBinding read completed at167068; following independent read begins at167068 and exits after fixture deadline. The private bind's returned read is included in bind time, not a separately wrapped public read."
+  },
+  "measured_intervals": [
+    {
+      "call": "analysis.persist",
+      "start": 86980,
+      "end": 148047,
+      "duration": 61067
+    },
+    {
+      "call": "comparison.bind inside persist",
+      "start": 93779,
+      "end": 122449,
+      "duration": 28670
+    },
+    {
+      "call": "persist final public binding read",
+      "start": 129114,
+      "end": 148047,
+      "duration": 18933
+    },
+    {
+      "call": "analysis new read-before-bind",
+      "start": 148069,
+      "end": 167068,
+      "duration": 18999
+    },
+    {
+      "call": "analysis independent final binding read",
+      "start": 167068,
+      "end": 180008,
+      "duration": 12940,
+      "truncated_by_deadline": true
+    }
+  ],
+  "counts_at_end": {
+    "storage.transaction.dashboard": {
+      "calls": 13544,
+      "completed": 13544,
+      "elapsedMs": 261549,
+      "maximumMs": 6583
+    },
+    "storage.transaction.planner": {
+      "calls": 37120,
+      "completed": 37120,
+      "elapsedMs": 99590,
+      "maximumMs": 28
+    },
+    "storage.currentSnapshots": {
+      "calls": 233,
+      "completed": 233,
+      "elapsedMs": 677,
+      "maximumMs": 8
+    },
+    "planner.compareScenarios": {
+      "calls": 23,
+      "completed": 23,
+      "elapsedMs": 143649,
+      "maximumMs": 6583
+    },
+    "rules.evaluate": {
+      "calls": 106,
+      "completed": 106,
+      "elapsedMs": 165903,
+      "maximumMs": 3079
+    },
+    "analysis.evaluate": {
+      "calls": 2,
+      "completed": 2,
+      "elapsedMs": 138811,
+      "maximumMs": 125653
+    },
+    "analysis.select": {
+      "calls": 2,
+      "completed": 2,
+      "elapsedMs": 39358,
+      "maximumMs": 26201
+    },
+    "comparison.proofs": {
+      "calls": 4,
+      "completed": 4,
+      "elapsedMs": 183,
+      "maximumMs": 48
+    },
+    "analysis.persist": {
+      "calls": 1,
+      "completed": 1,
+      "elapsedMs": 61067,
+      "maximumMs": 61067
+    },
+    "comparison.bind": {
+      "calls": 1,
+      "completed": 1,
+      "elapsedMs": 28670,
+      "maximumMs": 28670
+    },
+    "comparison.verifyBinding": {
+      "calls": 9,
+      "completed": 9,
+      "elapsedMs": 55052,
+      "maximumMs": 6583
+    },
+    "comparison.read": {
+      "calls": 3,
+      "completed": 3,
+      "elapsedMs": 50872,
+      "maximumMs": 18999
+    }
+  },
+  "host_prefix": {
+    "c08.read.cases": {
+      "calls": 10024,
+      "elapsedMs": 54691,
+      "maximumMs": 17
+    },
+    "host.revalidate": {
+      "calls": 121982,
+      "elapsedMs": 1349,
+      "maximumMs": 6
+    },
+    "operation-source": {
+      "calls": 32902,
+      "elapsedMs": 1092,
+      "maximumMs": 3
+    },
+    "operation-coverage": {
+      "calls": 17342,
+      "elapsedMs": 17,
+      "maximumMs": 2
+    },
+    "c08.read.preferences": {
+      "calls": 96,
+      "elapsedMs": 420,
+      "maximumMs": 8
+    },
+    "c08.transaction.preferences": {
+      "calls": 3,
+      "elapsedMs": 50,
+      "maximumMs": 23
+    },
+    "classified-source": {
+      "calls": 39,
+      "elapsedMs": 0,
+      "maximumMs": 0
+    },
+    "classified-coverage": {
+      "calls": 41,
+      "elapsedMs": 789,
+      "maximumMs": 29
+    },
+    "c08.transaction.cases": {
+      "calls": 6,
+      "elapsedMs": 160,
+      "maximumMs": 30
+    },
+    "planner.verifySourceOnly": {
+      "calls": 3890,
+      "elapsedMs": 6331,
+      "maximumMs": 7
+    },
+    "planner.verifyOperation": {
+      "calls": 3890,
+      "elapsedMs": 47349,
+      "maximumMs": 21
+    },
+    "planner.verifySourceProjection": {
+      "calls": 7780,
+      "elapsedMs": 5365,
+      "maximumMs": 6
+    }
+  },
+  "implemented_change": {
+    "path": "product/portfolio/analysis.ts",
+    "pre": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+    "post": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+    "before_static": "Fresh persist already binds, then analysis used an unconditional duplicate bind for a new result. bind validates then returns another canonical read.",
+    "after_measured": "One persist bind; added previousBinding read completes and avoids duplicate bind; independent final read retained.",
+    "bounded_work_delta": "Two-criterion success path: duplicate bind18 evaluations replaced by read12:6 canonical evaluations avoided. Static callgraph calculation, not measured before/after CPU.",
+    "R1_proof": "First evaluation binds once; exact retry binds zero additional times and preserves C08/id count/durable snapshots. Revalidation retains2comparisonreads,2bindingreads,4historicalscenarioreads,1replay."
+  },
+  "before_after_limits": {
+    "prior50_R2": {
+      "run": 43654501551,
+      "test_ms": 180020.75,
+      "rules": 104,
+      "omitted_rule_delta": 84,
+      "omitted_rule_elapsed_inclusive_ms": 134062
+    },
+    "current54_R2": {
+      "run": 43657763534,
+      "test_ms": 180014.84,
+      "rules": 106,
+      "omitted_rule_delta": 86,
+      "omitted_rule_elapsed_inclusive_ms": 137256
+    },
+    "interpretation": "Both original scenarios are deadline-censored and use different composition/diagnostics. More completed rule calls before deadline is not a proved speedup; no full-journey wall-time gain claimed."
+  },
+  "timing_limits": [
+    "Async counters include callbacks/awaits and can overlap/nest; never sum as CPU or attribute their full duration to cloning.",
+    "currentSnapshots is timed synchronously:233calls,677ms,about0.38% of180000ms. This entry point alone is not the dominant cost.",
+    "Planner37120transactions/99590ms and dashboard13544/261549ms establish high repeated volume, not exclusive copy time or exact root/nested hit counts.",
+    "Early stale after the deadline does not prove a source/rule changed."
+  ],
+  "actual_callgraph": [
+    "production.assess -> analysis.evaluate -> select -> historical alternative -> proofs -> canonical compare -> readByRequest -> planner.persist",
+    "planner.persist -> canonical precompare -> C08 write -> comparison.bind(validate + private read) -> canonical postcompare -> public comparison.read(two independent validate calls)",
+    "analysis -> C08 read -> previousBinding canonical read -> retained independent canonical binding read -> selectionAgain -> revalidate(inspect -> explicit replay -> inspect)",
+    "comparison.validate -> C08/proofs -> verifyBinding canonical comparison -> rules.evaluate; comparison.read invokes validate twice around a fresh binding read",
+    "readPortfolioSnapshot existing roots use dashboard; nested Planner reads clone private planner; dashboard reads clone mutable target, then opaque state callbacks receive structuredClone(state)."
+  ],
+  "rejected_shortcuts": [
+    "No permission/binding/result reuse across independent observations.",
+    "No read-scope expansion or parallel reordering of callbacks.",
+    "No removal of replay,selectionAgain,initial/final C08/case/source/Request/lease checks.",
+    "No unproved micro-optimization rerun in production.ts; tiny digest/ref loops do not explain measured seconds."
+  ],
+  "outside_owner": {
+    "target": "runtime/local-store.ts",
+    "proposal": "external/runtime-fresh-copies/v2/proposal.patch",
+    "state": "INERT_NOT_APPLIED_NOT_RUN",
+    "causal_scope": "Nested non-target Planner copies in existing dashboard roots become fresh plan materializations; all observations still execute.",
+    "uncovered": "Mutable dashboard clone and independent state-provider structuredClone remain. Exact factory count/copy time unmeasured; not a demonstrated180sfix.",
+    "other_boundary": "Canonical comparison/persistence/metric producer owners must preserve their initial/final observations while qualifying implementation cost.",
+    "route": "Consumer47 to actual authorized runtime/producer owner, with current authority reconciliation;54 has no grant to apply outside paths."
+  },
+  "next_required": "Owner qualifies copy isolation,mutable target/rejection/poison/abort/reader/freshness controls and measures existing copy vs callback segments before a materially changed original P03. No unchanged rerun.",
+  "GLOBAL_RELEASE": false
+}

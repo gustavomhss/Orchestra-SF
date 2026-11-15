@@ -1,0 +1,15 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.static-review.v1",
+  "source": "06df1210f0f2049c972dfb2852396de34f31c683",
+  "reviewer": "authority_tests read-only helper",
+  "status": "NO_STATIC_BLOCKER_OBSERVED",
+  "runtime_status": "SEPARATE_R1_RESULT",
+  "observations": [
+    "Exact public binding read ordinals1persist,2newread,3independentfinal.",
+    "CAS callback runs after canonical read return; no broadened scope.",
+    "All72expect lines and order byte-identical;180000 unchanged.",
+    "Direct revalidate observers2comparison,2binding,4scenario,1replay retained.",
+    "All instrumentation delegates existing calls once; no additional domain reads."
+  ],
+  "campaign_FINAL_review": false
+}

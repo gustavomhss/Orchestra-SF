@@ -1,0 +1,29 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.checks-request.v1",
+  "mission": 54,
+  "owner": 45,
+  "W": "a233ec7e4ed4c55eeca6feb0344b5ec20b4880fb",
+  "tree": "37a4862008996b104a18e36c05dde10d838c4d37",
+  "source": "06df1210f0f2049c972dfb2852396de34f31c683",
+  "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "state": "REQUESTED_NOT_RUN",
+  "interface_observation": {
+    "branch": "astra-compose",
+    "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "path": ".github/workflows/sf2-scoped-check.yml",
+    "status": "ABSENT",
+    "mission45_blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de"
+  },
+  "generation": "No Protocol/HttpApi change",
+  "scope": "No workflow takeover; no typecheck/guard claim transferred from predecessors."
+}

@@ -65,8 +65,11 @@ export function createPortfolioAnalysis(input: {
       const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: saved.value.resultRef }, context))
       if (stored.status !== "ok") return stored
       if (stored.value.kind !== "comparison" || stored.value.resultRef !== saved.value.resultRef || stored.value.requestDigest !== requestDigest || digestSfValue(stored.value.caseRef) !== digestSfValue(selected.caseRef) || stored.value.resultDigest !== digestSfValue(stored.value.result) || digestSfValue(stored.value.result) !== digestSfValue(comparison.value)) return { status: "stale", reason: "portfolio-comparison-changed" }
-      const previousBinding = resultRef ? await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context) : undefined
-      if (!previousBinding || previousBinding.status !== "ok") {
+      // Canonical persistence may have already bound this newly written C08.
+      // Observe that binding now; an absent/invalid binding still takes the recovery
+      // path, and the independent read and revalidation below remain mandatory.
+      const previousBinding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+      if (previousBinding.status !== "ok") {
         const binding = await input.bindings.bind({ caseRef: selected.caseRef, resultRef: saved.value.resultRef, request: compare, expectedRules: proofs.value }, context)
         if (binding.status !== "ok") return binding
       }

@@ -1,0 +1,48 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.external-proposal.v2",
+  "mission": 54,
+  "status": "INERT_NOT_APPLIED_NOT_RUN",
+  "supersedes": "../MANIFEST.json and v1 proposal for owner review; prior evidence kept immutable",
+  "target": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+  "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+  "latest_compatible_target": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "preblob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+  "proposed_postblob": "72315f8947ed902993b07e94e0e050ef70fefd09",
+  "patch_blob": "388f6980dd4654f85475ed08346136e092eeba96",
+  "patch_reconstructs_postimage": true,
+  "source_ref_modified": false,
+  "stack_ref_modified": false,
+  "W_contains_proposal": false,
+  "owner": "Runtime/LocalStore owner assigned through the authorized integration chain. Handoff consumer requested47. No54write grant.",
+  "timeout_fix_demonstrated": false,
+  "hosted_tests": "NOT_RUN",
+  "mechanism": "Nested non-target Planner copies in existing dashboard roots become fresh plan materializations; all observations still execute.",
+  "uncovered": "Mutable dashboard clone and independent state-provider structuredClone remain. Exact factory count/copy time unmeasured; not a demonstrated180sfix.",
+  "observations_preserved": [
+    "same SQL admission of all3surfaces per root",
+    "fresh independent object per copy",
+    "same mutabletarget clone/validation",
+    "transactionAll unchanged",
+    "same locks,poisoning,scope,readers,abort and authcallbacks",
+    "new SQL observation in every independent root"
+  ],
+  "memory": "Shared memo limits only strings; up to2non-target captured plans can remain while root reachable, including closed roots held by AsyncLocalStorage descendants. Not a total heap budget.",
+  "required_owner_qualification": [
+    "Record root/nested+surface counts and synchronous copy/materialize time separate from callback time on existing invocations without extra reads.",
+    "Mutable target mutation visibility; previous copies isolated; accessors/cycles/functions/nonfinite/symbols/malformed metadata rejected.",
+    "Non-target nested/current copies isolated including undefined,-0,__proto__,sparse arrays and fallback thresholds.",
+    "transactionAll preserves mutable all-surface behavior.",
+    "Swallowed nested writes/blob writes poison root; aborts/outstanding readers reject as before.",
+    "Fresh SQL revisions and Request/lease/source revocation across independent operations.",
+    "Same semantic producer counts,callback order,all72assertions,180000test/fixturedeadlines;then original P03 only after materially qualified change."
+  ],
+  "review": {
+    "status": "NO_SEMANTIC_BLOCKER_IDENTIFIED_IN_BOUNDED_STATIC_REVIEW",
+    "reviewers": [
+      "causal_callgraph",
+      "mission_contract"
+    ],
+    "not_runtime_PASS": true
+  },
+  "causal_evidence": "../../../findings/P03-FINAL-DIAGNOSIS.json"
+}
