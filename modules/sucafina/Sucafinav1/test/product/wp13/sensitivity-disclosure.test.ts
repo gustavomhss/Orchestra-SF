@@ -30,7 +30,7 @@ test("conditioned exact sensitivity keeps both consumer disclosures and every or
   expect(found.value.thresholdEvidence).toEqual({ state: "exact", value: 55000, evidenceRefs: evidence })
   expect(found.value.evaluated).toEqual(before.result.evaluated)
   expect(found.value.costCoverageRefs).toEqual(["baseline-coverage", "selected-coverage"])
-  expect(found.value.unresolvedConditions.slice(0, 2)).toEqual(before.result.unresolvedConditions)
+  expect(found.value.unresolvedConditions.slice(0, 2)).toEqual([...before.result.unresolvedConditions])
   expect(found.value.unresolvedConditions.map((condition) => condition.id)).toEqual(["sample:missing-category:training", "sample:preview-not-applied", "known-components-threshold", "sample-low:baseline-pending", "known-subtotal-threshold"])
   expect(found.value.unresolvedConditions.find((condition) => condition.id === "known-components-threshold")?.reason).toContain("55000 USD applies only to the known components")
   expect(found.value.unresolvedConditions.find((condition) => condition.id === "known-subtotal-threshold")?.reason).toContain("known subtotal differences")
@@ -81,7 +81,9 @@ test("union retains original source and baseline gaps while rebuilding Intellige
   const original = input()
   const horizon = { start: "2027-01-01", end: "2027-12-31" }
   const scenario: ScenarioResult = { id: "original", version: 1, components: [], currency: "USD", horizon, sourceRefs: evidence, unresolvedConditions: ["unconfirmed-source"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 210000, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "selected", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: evidence, coverageState: "pending", entries: [], derivedMissingCategoryIds: ["training"] } }
-  original.originalScenarios = [{ resultRef: "original-source", scenario, coverageRef: "selected-coverage" }, { resultRef: "original-baseline", scenario: { ...scenario, costCoverage: { ...scenario.costCoverage, derivedMissingCategoryIds: ["support"] } }, coverageRef: "baseline-coverage" }]
+  const pendingCoverage = scenario.costCoverage
+  if (pendingCoverage.coverageState !== "pending") throw new Error("Synthetic sensitivity coverage must remain pending")
+  original.originalScenarios = [{ resultRef: "original-source", scenario, coverageRef: "selected-coverage" }, { resultRef: "original-baseline", scenario: { ...scenario, costCoverage: { ...pendingCoverage, derivedMissingCategoryIds: ["support"] } }, coverageRef: "baseline-coverage" }]
   const certificateOnly = { refDigest: "certificate-only-unit-test" } as unknown as BusinessEvidenceRef
   original.exact = { value: 55000, evidenceRefs: [certificateOnly, ...evidence] }
   const before = structuredClone(original)

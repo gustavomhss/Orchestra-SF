@@ -80,7 +80,12 @@ test("real confirmation and case selection keep v7 January valid after global v8
     const state = createSfProductState({ caseSelectionWrites, persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
     // Exactly the canonical host's private authority; one closure is shared by both consumers.
     const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
-    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
+    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (value, context) => {
+    const request = host.requestFor(context)
+    const selectedDigest = digestSfValue(value)
+    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
+    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
+  }, evidence, createId: randomUUID, now: () => at })
     const draft = { objective: "Review January material changes", horizon: period, currency: "USD", criteria: ["January has a current human review"], sourceRefs: [source] }
     const decision = ok(await cases.draft(draft, await readContext("sf_case_draft", draft)), "case draft")
     const caseRef = encodeCaseRef(decision)

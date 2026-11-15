@@ -127,7 +127,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const forecastProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) =>
       fixture.stage("forecast:verify", () => producer.verifier.verify(prepared.value, analysisRequest, call)))
     if (forecastProof.status !== "ok") throw new Error(forecastProof.reason)
-    expect(forecastProof.value.promptContext?.importPreview.manifest).toEqual(chosen)
+    expect((forecastProof.value.promptContext && "importPreview" in forecastProof.value.promptContext ? forecastProof.value.promptContext.importPreview.manifest : undefined)).toEqual(chosen)
     const forecastPrompt = sfAnalysisPrompt(analysisRequest.objective, forecastProof.value)
     const native = await fixture.bind("sf-explicar-forecast", prepared.value, forecastPrompt)
     expect(native.requestedModel).not.toHaveProperty("variant")
@@ -163,7 +163,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     const forecastReference = await fixture.importHttp(new Request(forecastLink, { headers: { cookie: app.cookie } }), "planner")
     if (!forecastReference) throw new Error("Rendered import reference unavailable")
     const reference = await readNativeResponse<{ manifest: ImportManifest; detail: ImportDetail }>(forecastReference)
-    expect(forecastProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
+    expect((forecastProof.value.promptContext && "importPreview" in forecastProof.value.promptContext ? forecastProof.value.promptContext.importPreview : undefined)).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
     expect(reference.manifest).toEqual(chosen)
     expect(reference.manifest.domainApplied).toBe(false)
     expect(reference.manifest.issues).toEqual(chosen.issues)
@@ -202,7 +202,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       fixture.stage("intent:verify", () => intentProducer.verifier.verify(intentPrepared.value, intentRequest, call)))
     if (intentProof.status !== "ok") throw new Error(intentProof.reason)
     expect(intentProof.status).toBe("ok")
-    expect(intentProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
+    expect((intentProof.value.promptContext && "importPreview" in intentProof.value.promptContext ? intentProof.value.promptContext.importPreview : undefined)).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
     const intentPrompt = sfAnalysisPrompt(intentRequest.objective, intentProof.value)
     const intentNative = await fixture.bind("sf-enquadrar-decisao", intentPrepared.value, intentPrompt)
     expect(intentNative.promptAdmission?.prompt.text).toBe(intentPrompt)
@@ -321,7 +321,7 @@ async function prepareImportWorkbook(fixture: Parameters<Parameters<typeof withN
 }
 
 function renderedPreviewUrl(output: ContributionEnvelope, origin: string) {
-  const html = contribution(output, { mount: "/sucafina" })
+  const html = contribution(output)
   const href = /<a href="([^"]+)" data-import-preview-link>/.exec(html)?.[1]
   if (!href) throw new Error("Persisted contribution has no preview link")
   const url = new URL(href.replaceAll("&amp;", "&"), origin)

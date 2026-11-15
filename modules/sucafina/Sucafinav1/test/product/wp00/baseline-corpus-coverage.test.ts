@@ -57,7 +57,7 @@ test("new requirements and journeys retain explicit owners without claiming exec
     expect(row.tasks.every((task) => /^WP\d{2}\.T\d{2}$/.test(task))).toBe(true)
   }
   expect(journeys.journeys.map((journey) => journey.id)).toEqual(["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08"])
-  expect(journeys.journeys.every((journey) => journey.fixtureBindings.length > 0 && journey.executionStatus === "NOT_RUN")).toBe(true)
+  expect(journeys.journeys.every((journey) => "fixtureBindings" in journey && Array.isArray(journey.fixtureBindings) && journey.fixtureBindings.length > 0 && "executionStatus" in journey && journey.executionStatus === "NOT_RUN")).toBe(true)
 })
 
 test("native domain role fixtures retain restricted and unaffiliated entry behavior", () => {

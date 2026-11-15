@@ -228,6 +228,7 @@ test("native recall keeps the bound case and uses one explicit scoped candidate 
     recall: async () => { throw new Error("Selection orchestration must not replace the real Atlas reader") },
     readOriginal: async () => { throw new Error("Selection orchestration must not invent a protected capture") },
     readOriginalCapture: async () => { throw new Error("Selection orchestration must not invent an authenticated Atlas capture") },
+    readOriginalRecords: async () => { throw new Error("Selection orchestration must not invent original protected Atlas records") },
   }
   const observed = { ranked: 0, scopedFeatures: 0, scopedContinuity: 0, active: true }
   const base: Parameters<typeof createSfCaseRecall>[0] = {

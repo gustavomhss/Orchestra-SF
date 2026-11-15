@@ -3,6 +3,8 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
+import type { Snapshot } from "../../../../runtime/contract.ts"
+import type { BlobTransaction } from "../../../../runtime/assets.ts"
 import { observeMemoryPersistence } from "./persistence-observer.ts"
 
 function latch() {
@@ -24,7 +26,7 @@ test("Memory persistence observer preserves real nested, queued, cancelled and e
     const pending: Promise<unknown>[] = []
     try {
       const value = { identity: "retained" }
-      expect(await driver.transaction("dashboard", async (snapshot, blobs) => {
+      expect(await driver.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
         snapshot.data.amount = 1
         await blobs.put("real", new Uint8Array([1, 2, 3]), "application/octet-stream")
         return { commit: true, value }
@@ -33,7 +35,7 @@ test("Memory persistence observer preserves real nested, queued, cancelled and e
       expect(await driver.transactionAll(async (snapshots) => {
         snapshots.planner.data.amount = 2
         snapshots.procurement.data.amount = 3
-        expect(await driver.transaction("dashboard", async (snapshot, blobs) => {
+        expect(await driver.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
           expect(snapshot.data.amount).toBe(1)
           expect(await blobs.get("real")).toEqual(new Uint8Array([1, 2, 3]))
           return { commit: false, value: "nested" }

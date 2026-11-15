@@ -274,7 +274,7 @@ test("confirmed C17 document is published and recalled by real Atlas, then withh
       authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call),
       dashboard: product.dashboard, dashboardIssue: createDashboardSourceIssuer({ host, scopedSources: app.store }),
       dashboardRecords: createDashboardRecordEvidenceHost({ host, scopedSources: app.store, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: app.store }) }),
-      procurement: product.procurement, procurementResolve: product.resolveProcurement, documentRead: service.documents.reader,
+      procurement: product.procurement, procurementResolve: { resolve: product.resolveProcurement }, documentRead: service.documents.reader,
       scanner: { spec, version }, now: () => app.at,
       caseForEvidence: async (digest, call) => {
         const ref = selectedCase

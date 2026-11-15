@@ -21,7 +21,7 @@ async function createInstalledIntegrityFixture(localSnapshotReaders: boolean) {
     if (result.status === "ok") await raw.afterRead?.()
     return ordinal === raw.unavailableAt ? { status: "unavailable" as const, reason: "test-integrity-read-unavailable" } : result
   } }
-  const state: SfProductStatePort = { ...f.fixture.state, read: async (request, namespace, inspect) => {
+  const state: typeof f.fixture.state = { ...f.fixture.state, read: async (request, namespace, inspect) => {
     const result = await f.fixture.state.read(request, namespace, inspect)
     if (namespace !== "reviews") return result
     const ordinal = ++proof.calls

@@ -76,7 +76,12 @@ test("contextual request → explicit confirmation → one canonical Hot Topic �
     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
     const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => actor.active && candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
-    const cases = createDecisionCasePort({ host, state, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context), evidence, createId: randomUUID, now: () => at })
+    const cases = createDecisionCasePort({ host, state, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => {
+    const request = host.requestFor(context)
+    const selectedDigest = digestSfValue(value)
+    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
+    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
+  }, evidence, createId: randomUUID, now: () => at })
     const draft = { objective: "Review the current delivery and assign its follow-up", horizon: period, currency: "USD", criteria: ["Delivery follow-up is resolved"], sourceRefs: [source] }
     const decision = admitted(await cases.draft(draft, await readContext("sf_case_draft", draft)), "case draft")
     const caseRef = encodeCaseRef(decision)

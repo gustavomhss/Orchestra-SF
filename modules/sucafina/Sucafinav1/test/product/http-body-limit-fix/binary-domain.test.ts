@@ -7,9 +7,10 @@ test("Authorized binary domain upload preserves exact bytes, CAS and SQLite with
   const f = await binaryFixture("http://localhost:43174")
   const upload = (bytes: Uint8Array, version = 3, cookie = f.cookie) => {
     const input = streamedBody(bytes, 1021)
-    const request = new Request(`${f.origin}${f.uploadPath(version)}`, {
+    const options: RequestInit & { duplex: "half" } = {
       method: "POST", body: input.stream, headers: { cookie, origin: f.origin, "content-type": "image/bmp" }, duplex: "half",
-    })
+    }
+    const request = new Request(`${f.origin}${f.uploadPath(version)}`, options)
     return { input, response: f.handler(request) }
   }
   try {
