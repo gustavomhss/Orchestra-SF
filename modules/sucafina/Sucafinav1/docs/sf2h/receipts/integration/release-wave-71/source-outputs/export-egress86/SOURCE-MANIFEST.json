@@ -1,0 +1,102 @@
+{
+  "schema": "sf2h.export-egress-privacy.source.v1",
+  "mission": 86,
+  "campaign": "sf2h-integral-20261112",
+  "branch": "procurement-privacy-fix",
+  "pr": 86,
+  "product_commit": "e890d8cd79138dcb036a980c877319708dd220ac",
+  "product_tree": "0dbb975c39c771caa0f7126566c6b79fcb417148",
+  "parents": {
+    "ACK86": "8982a35a7a86bf04beb0850c24b74b1486c66932",
+    "E73": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "kind": "modified",
+      "preimage": {
+        "git_blob_sha1": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+        "sha256": "698c57d99e29f38fc2ddf324c3edfd995e49ececb2dfd52aa30b64ab7ec0899a"
+      },
+      "postimage": {
+        "git_blob_sha1": "a0deff8a3b272019f472aa2f93499d1940a78370",
+        "sha256": "2d135eeb4cf4c8959a8f260f0e82890e1ce56eccb7aee149d25e817f77bb6cf9"
+      },
+      "lines": 891
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "kind": "modified",
+      "preimage": {
+        "git_blob_sha1": "d622fa8463ee6d05a5c03de6517381045b6f0241",
+        "sha256": "512e5b7a1e64e9e5f40cee473aa52d4c25c75593d71eb25510a504cbea7cd95b"
+      },
+      "postimage": {
+        "git_blob_sha1": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+        "sha256": "7fdbd4f257de9abddfc1f1f97749b88b456643850998620e650c5ce5a310c86c"
+      },
+      "lines": 1053
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts",
+      "kind": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha1": "382a03b707dce748c6251f120ce0d7299de62c82",
+        "sha256": "08098fdf3e568a22c1e0d035283de8d4d5e6f52bb616220b8d5cf1a793ee2026"
+      },
+      "lines": 139
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts",
+      "kind": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha1": "f4cedb5da62893dad1b6f8e498d9a1b6be9545f3",
+        "sha256": "07f7d762fb4dfd5dfbd361ce612182149ddc0f03084f7509ec1d7a10e7f7132b"
+      },
+      "lines": 26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts",
+      "kind": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha1": "4b350694202e438c04aa72b7b52a62411178fb1c",
+        "sha256": "fa84eaa3931e7f1a5e715b0ada3de895ff3cfb853af338d09099305432b72444"
+      },
+      "lines": 90
+    }
+  ],
+  "patch": {
+    "path": "source-and-tests.patch",
+    "format": "git unified diff, all 5 material files, no docs",
+    "sha256": "3276020359611fdac21612bddf36512054b8f9a9dd2a64dd8046d5e53679cd83",
+    "size_bytes": 19827
+  },
+  "repro_66": {
+    "source_branch": "export-artifact-proof",
+    "source_commit": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+    "test_original_blob": "4b350694202e438c04aa72b7b52a62411178fb1c",
+    "copied_without_changes": true,
+    "evidence_original_blob": "f4cedb5da62893dad1b6f8e498d9a1b6be9545f3",
+    "evidence_copied_without_changes": true
+  },
+  "legacy_73": {
+    "approved_one_assertion_403_to_404": true,
+    "original_blob": "d622fa8463ee6d05a5c03de6517381045b6f0241",
+    "post_blob": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+    "target_71_observed_same_postimage": true,
+    "visible_dual_role_403_preserved": true
+  },
+  "source_composition_only": true,
+  "source_ci": {
+    "W": "e890d8cd79138dcb036a980c877319708dd220ac",
+    "S": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+    "run": 43675046935,
+    "job": 132693228267,
+    "pass": 50,
+    "fail": 0
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -711,7 +711,7 @@ async function serveDownload(
 ): Promise<Response> {
   const query = new URL(request.url).searchParams
   const kind = query.get("download") ?? ""
-  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor }>(async (snapshot) => {
+  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor; sourceDigest: string }>(async (snapshot) => {
     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
     if (!principal || !principal.id || principal.id.startsWith("local:"))
       return { commit: false, value: reply("Authentication required", 401) }
@@ -767,7 +767,7 @@ async function serveDownload(
         })
     return {
       commit: readsMembers && rows(snapshot.data.members).length > 0,
-      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor },
+      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor, sourceDigest: downloadSnapshotDigest(snapshot) },
     }
   })
   if (prepared instanceof Response)
@@ -781,6 +781,21 @@ async function serveDownload(
   request.signal.throwIfAborted()
   const file = await download(kind, prepared.snapshot, prepared.actor, environment, query)
   request.signal.throwIfAborted()
+  // Re-authorize AFTER generation. Neither a captured actor nor a completed export authorizes egress.
+  const current = await transaction(async (snapshot) => {
+    const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+    if (!principal || !principal.id || principal.id.startsWith("local:")) return { commit: false, value: 403 }
+    const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
+    const actor: Actor = { id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles }
+    if (JSON.stringify(actor) !== JSON.stringify(prepared.actor)) return { commit: false, value: 403 }
+    return { commit: false, value: downloadSnapshotDigest(snapshot) === prepared.sourceDigest ? 200 : 409 }
+  })
+  request.signal.throwIfAborted()
+  if (current !== 200)
+    return new Response(request.method === "HEAD" ? null : current === 403 ? "Access denied" : "Export source changed; download again.", {
+      status: current,
+      headers: { "Cache-Control": "no-store" },
+    })
   if (!file.ok)
     return request.method === "HEAD"
       ? new Response(null, {
@@ -796,6 +811,10 @@ async function serveDownload(
       "X-Content-Type-Options": "nosniff",
     },
   })
+}
+/** The captured public surface and its versions, not private product state or read audits, define legacy export provenance. */
+function downloadSnapshotDigest(snapshot: Snapshot) {
+  return createHash("sha256").update(JSON.stringify({ data: publicSfData(snapshot.data), versions: snapshot.versions })).digest("hex")
 }
 function canViewProcurementRequest(snapshot: Snapshot, actor: { id: string; roles: string[] }, id: string) {
   const records = object(object(snapshot.data.store).requests)

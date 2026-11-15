@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.export-egress-privacy.actions.v1",
+  "mission": 86,
+  "state": "SOURCE_SELECTED_TESTS_PASS",
+  "product_commit": "e890d8cd79138dcb036a980c877319708dd220ac",
+  "product_tree": "0dbb975c39c771caa0f7126566c6b79fcb417148",
+  "snapshot_commit": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+  "snapshot_tree": "2a19ba72e7dc786654c8c37819f9b2449cf9704c",
+  "snapshot_parent": "e890d8cd79138dcb036a980c877319708dd220ac",
+  "snapshot_only_delta": ".ci-run.json",
+  "snapshot_request_git_blob": "cd0b61f48684ab44577edf86ac07c86dffdd191d",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/procurement-runtime.test.ts",
+      "./Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts",
+      "./Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts",
+      "./Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+      "./Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+      "./Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "branch": "ci-run-linux-m86-e890d8cd-r1",
+  "run_id": 43675046935,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675046935",
+  "run_attempt": 1,
+  "event": "push",
+  "head_sha": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+  "conclusion": "success",
+  "job_id": 132693228267,
+  "job_conclusion": "success",
+  "cleanup_job_id": 132693604323,
+  "cleanup_conclusion": "success",
+  "results": {
+    "pass": 50,
+    "fail": 0,
+    "files": 6,
+    "expect_calls": 1077,
+    "bun_time": "1.61s",
+    "legacy_procurement_full_file": 17,
+    "original_66_repro": 1,
+    "new_86": 5,
+    "source73": 27,
+    "filtered_out": 0
+  },
+  "environment": "ubuntu-24.04; bun test; synthetic identities/data with real HTTP/application, C08 role resolution, SQLite and Office generation",
+  "omni": {
+    "verdict": "not applicable",
+    "reason": "No omni spawn; no Omni qualification credit"
+  },
+  "evidence": {
+    "job_log_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675046935/job/132693228267",
+    "excerpt": "checks/R1-pass-lines.txt"
+  },
+  "not_claimed": [
+    "Current composed target qualification",
+    "ClamD real acceptance; owner75",
+    "Native/enterprise Microsoft identity",
+    "Runner compiler/typecheck or guards45",
+    "Full epic final 8 selections",
+    "Independent 84 review",
+    "AM01-AM06 and C/G7 D/G8"
+  ],
+  "GLOBAL_RELEASE": false
+}

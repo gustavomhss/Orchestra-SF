@@ -1,0 +1,17 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/procurement-runtime.test.ts",
+    "./Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts",
+    "./Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts",
+    "./Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+    "./Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+    "./Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}

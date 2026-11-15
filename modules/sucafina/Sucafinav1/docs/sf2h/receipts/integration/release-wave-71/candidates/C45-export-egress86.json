@@ -1,0 +1,820 @@
+{
+  "schema": "sf2h.integration71.candidate.v1",
+  "candidate": "C45",
+  "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+  "parent": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "parentTree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+  "writer": "S0-C-e13-browser71",
+  "source": {
+    "branch": "procurement-privacy-fix",
+    "pr": 86,
+    "terminal": "fe27e295f3cfdf5707716e47021c269d643bc30e",
+    "terminal_tree": "ecdb27690d87301e20d1f7b86c76b30cd6d7aed5",
+    "W": "e890d8cd79138dcb036a980c877319708dd220ac",
+    "W_tree": "0dbb975c39c771caa0f7126566c6b79fcb417148",
+    "authority_blob": "74329c0e057515be1200628c91618d8d7c750888",
+    "lease": "egress-privacy-browser86",
+    "lease_status": "ENDED_SOURCE_RELEASED",
+    "archiveTree": "55a1f2ffb8d0d698e0fd97136fcf406c6f7522a5",
+    "archiveBlobs": 11
+  },
+  "files": [
+    {
+      "mission": 86,
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "mode": "100644",
+      "pre": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+      "post": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "kind": "modified",
+      "review_unit": "source86-terminal-five-path-unit-four-new-deltas"
+    },
+    {
+      "mission": 86,
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "382a03b707dce748c6251f120ce0d7299de62c82",
+      "kind": "added",
+      "review_unit": "source86-terminal-five-path-unit-four-new-deltas"
+    },
+    {
+      "mission": 86,
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "f4cedb5da62893dad1b6f8e498d9a1b6be9545f3",
+      "kind": "added",
+      "review_unit": "source86-terminal-five-path-unit-four-new-deltas"
+    },
+    {
+      "mission": 86,
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "4b350694202e438c04aa72b7b52a62411178fb1c",
+      "kind": "added",
+      "review_unit": "source86-terminal-five-path-unit-four-new-deltas"
+    }
+  ],
+  "already_satisfied": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "post": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+      "status": "ALREADY_SATISFIED_EXACT_POSTIMAGE_SINCE_C37",
+      "action": "NO_REAPPLICATION"
+    }
+  ],
+  "completeUnit": "All five released source paths accounted: four exact material changes and one previously composed identical legacy oracle; no partial branch snapshot.",
+  "review": "reviews/export-egress86.json",
+  "sourceArchive": "source-outputs/export-egress86",
+  "sourceProof": {
+    "schema": "sf2h.integration71.source86.validation-readback.v1",
+    "status": "SOURCE_R1_50_PASS_VERIFIED_COMPOSED_NOT_RUN",
+    "created_utc": "2026-11-15T04:44:59.208954+00:00",
+    "source": {
+      "mission": 86,
+      "branch": "procurement-privacy-fix",
+      "PR": 86,
+      "terminal": "fe27e295f3cfdf5707716e47021c269d643bc30e",
+      "terminal_tree": "ecdb27690d87301e20d1f7b86c76b30cd6d7aed5",
+      "W": "e890d8cd79138dcb036a980c877319708dd220ac",
+      "W_tree": "0dbb975c39c771caa0f7126566c6b79fcb417148",
+      "S": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+      "S_tree": "2a19ba72e7dc786654c8c37819f9b2449cf9704c",
+      "authority_blob": "74329c0e057515be1200628c91618d8d7c750888",
+      "authority": {
+        "schema": "sf2h.export-egress-privacy.authority-final.v1",
+        "mission": 86,
+        "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+        "branch": "procurement-privacy-fix",
+        "pr": 86,
+        "lease_epoch": "egress-privacy-browser86",
+        "ACK": "8982a35a7a86bf04beb0850c24b74b1486c66932",
+        "material_W": "e890d8cd79138dcb036a980c877319708dd220ac",
+        "material_tree": "0dbb975c39c771caa0f7126566c6b79fcb417148",
+        "snapshot_S": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+        "snapshot_tree": "2a19ba72e7dc786654c8c37819f9b2449cf9704c",
+        "receipt_commit": "Containing CAS commit, bound by PR/readback",
+        "writer": "GPT-6 via GitHub MCP; session identifier not exposed",
+        "consumer": 71,
+        "independent_reviewer": 84,
+        "source_tests": "50 PASS/0 FAIL at run43675046935",
+        "compiler_guards": "NOT_RUN",
+        "integration": "NOT_DONE_BY_86",
+        "further_product_writes": "Require explicit new lease",
+        "GLOBAL_RELEASE": false
+      }
+    },
+    "request": {
+      "path": ".ci-run.json",
+      "blob": "cd0b61f48684ab44577edf86ac07c86dffdd191d",
+      "sha256": "fd2f99fc620eb5ec031bc2267438756e0c241e55dc8c33de669dc202242a6a28",
+      "exact_text": "{\n  \"package\": \"sucafina\",\n  \"packageSelector\": \"packages/sucafina\",\n  \"directory\": \"modules/sucafina\",\n  \"runner\": \"bun\",\n  \"args\": [\n    \"./Sucafinav1/test/procurement-runtime.test.ts\",\n    \"./Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts\",\n    \"./Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts\",\n    \"./Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts\",\n    \"./Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts\",\n    \"./Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts\",\n    \"--timeout\",\n    \"120000\"\n  ],\n  \"env\": {}\n}\n",
+      "exact_payload": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/procurement-runtime.test.ts",
+          "./Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts",
+          "./Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts",
+          "./Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+          "./Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+          "./Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      }
+    },
+    "run": {
+      "id": 43675046935,
+      "head_sha": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 132693228267,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "success"
+        },
+        {
+          "id": 132693604323,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ]
+    },
+    "verification": {
+      "W_tree_verified": true,
+      "S_tree_verified": true,
+      "S_exact_sole_parent_W": true,
+      "W_to_S_only_ci_request": true,
+      "actual_request_equals_terminal_receipt": true,
+      "actual_full_job_log_bytes": 90940,
+      "actual_full_job_log_sha256": "f537e56b85717e8541bcfc2c7b844d967b461b35fe30997e0776a15078b2a2b6",
+      "by_file": {
+        "Sucafinav1/test/procurement-runtime.test.ts": {
+          "pass": 17,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts": {
+          "pass": 1,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts": {
+          "pass": 5,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts": {
+          "pass": 17,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts": {
+          "pass": 4,
+          "fail": 0
+        },
+        "Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts": {
+          "pass": 6,
+          "fail": 0
+        }
+      },
+      "actual_test_counts": {
+        "pass": 50,
+        "fail": 0,
+        "files": 6,
+        "expect_calls": 1077,
+        "bun_time": "1.61s",
+        "legacy_procurement_full_file": 17,
+        "original_66_repro": 1,
+        "new_86": 5,
+        "source73": 27,
+        "filtered_out": 0
+      },
+      "actual_pass_lines": [
+        "(pass) procurement required pages contain functional controls or nonempty read views [9.92ms]",
+        "(pass) procurement direct write without canWrite fails atomically [0.72ms]",
+        "(pass) request fields survive creation, save, submission and actual holder decisions [7.69ms]",
+        "(pass) supplier creation persists and deletion never reuses its SUP allocation [1.62ms]",
+        "(pass) complete procurement field roundtrip and frozen approvals survive settings edits [20.96ms]",
+        "(pass) bank changes encrypt, reset active validation, audit only fields and protect actor views [2.59ms]",
+        "(pass) unknown pages and actions, missing keys, and invalid PR reject without mutation [1.16ms]",
+        "(pass) request ownership, self-approval flag and independent record versions are enforced [1.83ms]",
+        "(pass) render escapes persisted values and the PO document excludes banking [4.31ms]",
+        "(pass) imported high-water marks and deleted requests do not reuse issued numbers [1.20ms]",
+        "(pass) asset metadata survives business transitions and deletion returns the deleted record [0.96ms]",
+        "(pass) ordinary nested form rows decode and numeric supplier references remain linked [2.26ms]",
+        "(pass) dual-role request transitions retain porta authorization without permitting foreign PR edits [3.68ms]",
+        "(pass) missing and invalid encryption keys fail closed on bank writes without altering state [1.77ms]",
+        "(pass) nested supplier bank material is excluded recursively from audits and history [0.83ms]",
+        "(pass) decision and supplier revalidation notices carry symbolic roles without fake directory IDs [2.39ms]",
+        "(pass) actual browser-shaped nested arrays omit untouched repeat placeholders and preserve zero thresholds [0.94ms]",
+        "(pass) EA66-LEGACY-EGRESS revocation after the authenticated SQLite read must suppress generated bytes [163.39ms]",
+        "(pass) EA86 egress: grant-revoked after initial SQLite read, before response [39.96ms]",
+        "(pass) EA86 egress: session-revoked after initial SQLite read, before response [29.75ms]",
+        "(pass) EA86 egress: source-changed after initial SQLite read, before response [44.89ms]",
+        "(pass) EA86 egress: private-only-drift after initial SQLite read, before response [40.36ms]",
+        "(pass) EA86 egress: head-grant-revoked after initial SQLite read, before response [33.61ms]",
+        "(pass) M73 save: requester-only sees identical missing/hidden responses at equal and divergent versions [41.13ms]",
+        "(pass) M73 submit_pr: requester-only sees identical missing/hidden responses at equal and divergent versions [34.86ms]",
+        "(pass) M73 submit_sourcing: requester-only sees identical missing/hidden responses at equal and divergent versions [32.69ms]",
+        "(pass) M73 select_quote: requester-only sees identical missing/hidden responses at equal and divergent versions [32.64ms]",
+        "(pass) M73 submit_po: requester-only sees identical missing/hidden responses at equal and divergent versions [59.50ms]",
+        "(pass) M73 approve: requester-only sees identical missing/hidden responses at equal and divergent versions [30.71ms]",
+        "(pass) M73 reject: requester-only sees identical missing/hidden responses at equal and divergent versions [34.89ms]",
+        "(pass) M73 issue: requester-only sees identical missing/hidden responses at equal and divergent versions [30.79ms]",
+        "(pass) M73 cancel: requester-only sees identical missing/hidden responses at equal and divergent versions [28.96ms]",
+        "(pass) M73 delete: requester-only sees identical missing/hidden responses at equal and divergent versions [29.56ms]",
+        "(pass) M73 inherited object identifiers are absent across all request commands and versions [132.12ms]",
+        "(pass) M73 visible requests retain exact conflict content before action and stage validation [62.96ms]",
+        "(pass) M73 real save, submission, rejection and approval preserve holder authority, CAS and submitted amounts [76.48ms]",
+        "(pass) M73 canonical self-approval settings retain both allowed and blocked behavior without changing thresholds [52.05ms]",
+        "(pass) M73 create ignores caller-selected record IDs and preserves creation CAS without foreign metadata [54.76ms]",
+        "(pass) M73 independent SQLite instances enforce one successful CAS and retain privacy after restart [44.32ms]",
+        "(pass) M73 visible cancellation and draft deletion retain their stage restrictions and allocations [42.30ms]",
+        "(pass) M73 quote upload hides missing and foreign requests before consuming scanner capacity [21.41ms]",
+        "(pass) M73 signed-po upload hides missing and foreign requests before consuming scanner capacity [20.34ms]",
+        "(pass) M73 invalid principal  cannot probe request uploads [18.93ms]",
+        "(pass) M73 invalid principal local:synthetic73 cannot probe request uploads [18.02ms]",
+        "(pass) M73 submitted FX remains canonical while fallback and C02 display clean base amounts after current FX changes [12.84ms]",
+        "(pass) M73 the order difference formats both figures without changing its canonical tolerance or amounts [7.08ms]",
+        "(pass) M73 display preserves missing in the fallback and C02 paths [4.12ms]",
+        "(pass) M73 display preserves null in the fallback and C02 paths [3.81ms]",
+        "(pass) M73 display preserves zero in the fallback and C02 paths [4.65ms]",
+        "(pass) M73 display preserves fractional precision in the fallback and C02 paths [3.73ms]"
+      ],
+      "legacy_egress_observed": {
+        "status": 403,
+        "sessionRevoked": true,
+        "revocations": 1,
+        "generatedContentLeaked": false,
+        "nextRequestStatus": 401
+      },
+      "logged_original_DOCX": {
+        "bytes": 8884,
+        "sha256": "3c7c6e9b020dee82540f0d0ca127f4a79108e053450e0248930cef9b8aa5dc03",
+        "zip_magic": true,
+        "scope": "Source synthetic identity/data, actual Office bytes; no render/installed proof"
+      },
+      "no_filtered_tests": true
+    },
+    "owner45_obligation": {
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-egress-privacy/HANDOFF.md",
+      "source_blob": "2aa5ada19eaaaf2718f42c6995dc9749f753f031",
+      "verbatim": "**45**: compile/typecheck e guard `bun run check:guards --base origin/dev` sobre W e depois candidato final via lane própria. Não executados nesta missão e sem waiver.",
+      "exact_guard_command_as_published": "bun run check:guards --base origin/dev",
+      "compiler_package_cwd_argv": "NOT_SPECIFIED_IN_HANDOFF",
+      "no_REQUEST45_json_in_exact_checks_directory": true,
+      "directory_entries": [
+        {
+          "name": "R1-pass-lines.txt",
+          "sha": "c2c84dcd7c4c40c6018d5c8cee8255786f50b01e",
+          "type": "file"
+        },
+        {
+          "name": "R1.json",
+          "sha": "d92fb9859e8b99ad7ddf4ae49202b574e6506f66",
+          "type": "file"
+        },
+        {
+          "name": "R1.request.json",
+          "sha": "cd0b61f48684ab44577edf86ac07c86dffdd191d",
+          "type": "file"
+        }
+      ],
+      "disposition": "Publish/resolve concrete authorized owner45 command selection; do not invent REQUEST45 payload."
+    },
+    "scope_limit": [
+      "SourceR1 is W86, not current C44/C45; zero composed execution.",
+      "Source50PASS includes full17legacy cases, unchanged66repro1, new86five cases and73regressions27; previous66FAIL remains historical.",
+      "Source provides full unfiltered legacy recipe requested by73, but composition must be bound to final candidate.",
+      "ClamD75, auth85, transport74, Reports48/C28, native/provider/AM/global acceptance remain separate."
+    ],
+    "execution": {
+      "product_tests": 0,
+      "typechecks": 0,
+      "guards": 0,
+      "builds": 0,
+      "remote_writes": 0,
+      "CI_dispatches": 0
+    },
+    "GLOBAL_RELEASE": false
+  },
+  "semantic": [
+    "Reauthorize effective principal and C08 roles after byte generation in a second read-only transaction; changed authority returns403 without export bytes.",
+    "Digest the entire public snapshot data and versions; changed public state returns409 without bytes; __sfProductV1-only drift is excluded by existing publicSfData.",
+    "Original captured export is retained; no automatic regeneration, command replay, policy change, or scanner/HTTP/auth replacement.",
+    "Legacy66 repro and evidence helper are byte-identical with403 intact. Full17legacy+27privacy73+1original66+5new86 source cases passed; original legacy hidden403→404 was already composed by71 inC37."
+  ],
+  "dependencyReconciliation": {
+    "schema": "sf2h.mission71.source86.dependency-consumer-subreview.v1",
+    "status": "READY_TO_COMPOSE_HELD",
+    "source": {
+      "terminal": "fe27e295f3cfdf5707716e47021c269d643bc30e",
+      "W": "e890d8cd79138dcb036a980c877319708dd220ac",
+      "tree": "0dbb975c39c771caa0f7126566c6b79fcb417148"
+    },
+    "target": {
+      "sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+      "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d"
+    },
+    "review_scope": {
+      "literal_import_edges": 51,
+      "unique_relative_targets": 19,
+      "additional_package_lock_export_transitive_pins": 4,
+      "source_target_bindings": 23,
+      "current_and_source_identical": 17,
+      "full_owned_product_patch_review": "Parent /root; all5 postimages, full patch19827bytes/8hunks, exact reconstruction. Subreview read application import block and4 product hunks, full3 new test/helpers.",
+      "full_current_dependencies_read": [
+        "runtime/downloads.ts",
+        "runtime/reports.ts",
+        "runtime/artifact.ts",
+        "product/integration/public-state.ts",
+        "modules/sucafina/package.json"
+      ],
+      "earlier_full_review_reused": [
+        "59 read-root contract",
+        "72 composed LocalStore d9eaac043514141abb2f1f978a6fd2ceaf4040d6 and auth lifecycle",
+        "73 application privacy boundary",
+        "75 shell unit",
+        "66 export artifact contract"
+      ]
+    },
+    "preimages": {
+      "application": {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+        "mode": "100644",
+        "actual_current_tree_verified": true
+      },
+      "legacy_oracle": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "blob": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+        "disposition": "ALREADY_EXACT_FROM73; do not reapply old d622fa preimage or overwrite fixture"
+      },
+      "new_test_prefix": {
+        "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy",
+        "exists": false,
+        "parentTree": "e0490b179594f9416d6d67c816869a92ff2d2d67",
+        "missingAt": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy"
+      }
+    },
+    "unit": {
+      "source_paths": 5,
+      "current_deltas": 4,
+      "current_new_files": 3,
+      "application_post": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "whole_branch_copy": false
+    },
+    "dependencies": {
+      "bindings": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+          "source": "880be9582a60bd41bf62e435f38827ff79749931",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+            "exists": true,
+            "blob": "880be9582a60bd41bf62e435f38827ff79749931",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+          "source": "97d5062f42def4199cb16c1ae4502fdd982da68c",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+            "exists": true,
+            "blob": "97d5062f42def4199cb16c1ae4502fdd982da68c",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/product/integration/public-state.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+          "source": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+            "exists": true,
+            "blob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/admin.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "source": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+            "exists": true,
+            "blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/application.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+          "source": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+            "exists": true,
+            "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/assets.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "source": "9e9bac976b503409de65868a366f352ca1e65071",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+            "exists": true,
+            "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/contract.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+          "source": "4b4ef9038d78d36e24450b574e9327c93f9b2a57",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+            "exists": true,
+            "blob": "4b4ef9038d78d36e24450b574e9327c93f9b2a57",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+          "source": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+            "exists": true,
+            "blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/downloads.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "source": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+            "exists": true,
+            "blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/local-store.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "source": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+            "exists": true,
+            "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/procurement.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+          "source": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+            "exists": true,
+            "blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/ui.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+          "source": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+            "exists": true,
+            "blob": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/workbooks.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+          "source": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+            "exists": true,
+            "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "3bce4efb437a68b31860c995cc92d97e35e16076"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/src/identity.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+          "source": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+            "exists": true,
+            "blob": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "3bce4efb437a68b31860c995cc92d97e35e16076"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/src/initial-settings.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+          "source": "412d55047a1b6dda686ce1054c15b20307217577",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+            "exists": true,
+            "blob": "412d55047a1b6dda686ce1054c15b20307217577",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "3bce4efb437a68b31860c995cc92d97e35e16076"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/src/nav.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+          "source": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+            "exists": true,
+            "blob": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "3bce4efb437a68b31860c995cc92d97e35e16076"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/src/requests.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "source": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+            "exists": true,
+            "blob": "f1573e02df562db7569f53931d7a4524a108ad4b",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "3bce4efb437a68b31860c995cc92d97e35e16076"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/src/screen-shell.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts",
+          "source": "f4cedb5da62893dad1b6f8e498d9a1b6be9545f3",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts",
+            "exists": false,
+            "parentTree": "e0490b179594f9416d6d67c816869a92ff2d2d67",
+            "missingAt": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts"
+        },
+        {
+          "path": "modules/sucafina/porta/act.ts",
+          "source": "fe257cef702f6459d510d823d18377da34888dbf",
+          "target": {
+            "path": "modules/sucafina/porta/act.ts",
+            "exists": true,
+            "blob": "fe257cef702f6459d510d823d18377da34888dbf",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "eb64343013d7a908bd9d8fa61aeb5ff6896d289b"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/porta/act.ts"
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "source": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+          "target": {
+            "path": "modules/sucafina/package.json",
+            "exists": true,
+            "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "33af9a48c5426f177e4671febb4a6109809e772e"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/package.json"
+        },
+        {
+          "path": "bun.lock",
+          "source": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+          "target": {
+            "path": "bun.lock",
+            "exists": true,
+            "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "4d4b149917a2c74cfeb73e45774fe098666c208d"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/bun.lock"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+          "source": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+            "exists": true,
+            "blob": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/reports.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+          "source": "99895e048e1e78e5e8594805291239b7871bf554",
+          "target": {
+            "path": "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+            "exists": true,
+            "blob": "109d41eddc857e1aa19b43f91527caffd0ff8179",
+            "mode": "100644",
+            "type": "blob",
+            "parentTree": "8accea80f7936984b5cac62c95bb9d3f58f4eb2c"
+          },
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e890d8cd79138dcb036a980c877319708dd220ac/modules/sucafina/Sucafinav1/runtime/artifact.ts"
+        }
+      ],
+      "expected_nonunit_differences": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "keep": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+          "reason": "59 adds optional root-read capability; transaction/snapshot/Actor contract used by86 remains intact."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "keep": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+          "reason": "Keep composed59 read roots/fences and72 durable bounded auth/fresh reads/lifecycle.86 performs existing canonical transactions and does not replace store."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "keep": "f1573e02df562db7569f53931d7a4524a108ad4b",
+          "reason": "Keep75 command/file UX corrections and same renderer export signatures.86 changes server egress only."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+          "keep": "109d41eddc857e1aa19b43f91527caffd0ff8179",
+          "reason": "66 adds artifact validation helpers; ArtifactResult bytes/name/type union stays compatible with86 download() call. Do not regress metadata/ZIP checks."
+        }
+      ],
+      "package": {
+        "path": "modules/sucafina/package.json",
+        "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+        "jszip": "3.10.1",
+        "saxes": "5.0.1",
+        "unchanged_source_current": true
+      },
+      "lock": {
+        "path": "bun.lock",
+        "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+        "unchanged_source_current": true
+      },
+      "missing_unreleased_dependencies": []
+    },
+    "semantic_review": [
+      "Production86 adds a second canonical transaction after asynchronous export generation; request abort is checked before/after generation and after the final read. Fresh authentication/roles must equal captured actor or403; public material+versions digest drift gives409; failed egress returns no-store without attachment bytes, HEAD remains bodyless.",
+      "The digest uses publicSfData recursively excluding __sfProductV1 and excludes read audits; it includes current public data and versions. private-only fixture drift remains successful and cannot disclose the private marker. Read roots and72 auth semantics remain unchanged.",
+      "Current downloads/reports retain their existing ArtifactResult producers and66 content behavior. Download receives the already-captured public snapshot; the new fence suppresses delivery without reconstructing or mutating producer bytes.",
+      "Five new egress scenarios use a wrapper that delegates the real SQLite transaction and original returned result, then schedules actual role/session/source change after completion. Tests assert real generated DOCX positive content, exactly one mutation and two authentications,403/409/no attachment/no-store, HEAD no bytes, next denial or fresh changed source.",
+      "The copied EA66 legacy oracle remains strict: authorized real DOCX positive control, synthetic session revocation after actual read, durable snapshot unchanged, next request401, generated bytes suppressed with403. No positive authority response is fabricated.",
+      "Three new files are complete. Legacy procurement oracle already matches the73 approved postimage5c25f1; no further weakening or lowering of its expectations is necessary."
+    ],
+    "qualification": {
+      "source": "Reported source50PASS/0FAIL remains exact86 W/S only; primary source run reconciliation is owned by root/native catalog.",
+      "current": "C44+86 NOT_RUN; source59/72/75/66 drift means source PASS is not current composed/installed PASS.",
+      "checks_owner": "A45 compiler/generation/guards only",
+      "functional_owner": "S0 or separately authorized functional qualifier",
+      "holds": [
+        "C28 inherited holds",
+        "P03/MI07 and other held financial/runtime cases",
+        "native/live AM",
+        "installed surface and full export corpus requalification",
+        "eight final recipes,three FINAL sessions,C-G7/D-G8"
+      ]
+    },
+    "blockers": [],
+    "execution": {
+      "remote_write": false,
+      "product_import_or_execution": false,
+      "compiler": false,
+      "test": false,
+      "build": false,
+      "guard": false,
+      "CI_dispatch": false
+    },
+    "artifacts": [
+      "direct-imports.json",
+      "dependency-bindings-readback.json",
+      "dependency-review.json",
+      "dependency-fulltext-cache.json"
+    ],
+    "GLOBAL_RELEASE": false
+  },
+  "criteria": {
+    "schema": "sf2h.export-egress-privacy.trace.v1",
+    "change_groups": [
+      {
+        "id": "EGRESS-86",
+        "criteria": [
+          "EA66-LEGACY-EGRESS-REVOCATION",
+          "CAMP.INV.04",
+          "WP04.INV.03"
+        ],
+        "paths": [
+          "runtime/application.ts",
+          "test/product/export-egress-privacy/*"
+        ],
+        "cases": [
+          "EA66 unchanged legacy repro",
+          "EA86 persisted grant revoke403",
+          "session revoke403",
+          "source mutation409",
+          "private-only source drift200",
+          "HEAD revoke403 no body"
+        ],
+        "result": "SOURCE_PASS_NOT_COMPOSED"
+      },
+      {
+        "id": "PRIVACY-73-LEGACY",
+        "criteria": [
+          "M70-ISO-01",
+          "WP04.INV.01",
+          "WP04.INV.02",
+          "WP04.T05.CHK.05"
+        ],
+        "paths": [
+          "test/procurement-runtime.test.ts"
+        ],
+        "cases": [
+          "Exactly one hidden-request403→404",
+          "visible dual-role403 preserved",
+          "complete unfiltered 17 legacy tests",
+          "all 27 M73 source tests"
+        ],
+        "result": "SOURCE_PASS_NOT_COMPOSED"
+      }
+    ],
+    "scope": {
+      "WP": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610,
+      "plan_unchanged": true,
+      "global_acceptance": false
+    },
+    "mandatory": [
+      "84 independent source/composition recheck",
+      "71 composed-candidate intake/ACK",
+      "45 compiler/typecheck/guards",
+      "75 ClamD and installed operations",
+      "eight final selections/AM01–AM06/three FINAL reviews/C-G7 D-G8"
+    ],
+    "GLOBAL_RELEASE": false
+  },
+  "held": [
+    "C45 functional proof, compiler/guards45 and independent84 recheck remain NOT_RUN.",
+    "M70-ISO-01 and EA66 legacy egress fix composed; acceptance/recheck remain OPEN.",
+    "Microsoft-routes.test.ts:162 expected403/observed404 in85 is distinct and unchanged; the broader85 run remainsFAIL.",
+    "C28 Reports and original P03/M31/MI07, installed journeys, actual native/AM/final8/3FINAL/C-G7D-G8 remain separate."
+  ],
+  "execution": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "builds": 0,
+    "guards": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}
