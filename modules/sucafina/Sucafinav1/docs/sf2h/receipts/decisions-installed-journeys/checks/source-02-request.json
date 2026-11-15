@@ -1,0 +1,23 @@
+{
+  "schema": "sf-m52-source-check-request-v2",
+  "mission": 52,
+  "state": "REQUESTED",
+  "at": "2026-11-15 04:23:39 UTC",
+  "source_parent": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
+  "active_owned_code": "56239d138ed4ae7cac9ac6b01e68a3ee78d1bf4f",
+  "workflow": ".github/workflows/astra-wp11-check.yml",
+  "workflow_blob": "3b361b6b22c7c5628d6b149321f73934ea5f9a84",
+  "trigger_branch": "astra-check-wp11",
+  "selection": [
+    "modules/sucafina bun typecheck",
+    "bun run check:guards --base origin/dev"
+  ],
+  "timeout_minutes": 30,
+  "previous_run": 43661892542,
+  "scope": "Source52 only. Shared P9 proposals remain inert. Not candidate whole-composition or owner45 global gates.",
+  "dedup": {
+    "recent_runs": 100,
+    "active_wp11": 0
+  },
+  "GLOBAL_RELEASE": false
+}
