@@ -71,7 +71,7 @@ export function createScenarioBiSource(host: ScenarioBiHost): BiPresentationPort
   }
 }
 
-/** Mount the canonical cost producer over persisted C08 observations. Earlier
+/** Mount the canonical cost and period producers over persisted C08 observations. Earlier
  * baseline case versions remain historical; their identities are never rewritten. */
 export function createScenarioCostBiHost(input: {
   host: DomainPortHost
@@ -84,7 +84,7 @@ export function createScenarioCostBiHost(input: {
   type View = { projection: DomainProjection; presentation: BiPresentation }
   const readView = (incoming: BiViewRequest, context: TrustedDomainContext): Promise<PortResult<View>> => readPortfolioSnapshot<PortResult<View>>(input.host, context, incoming, async () => {
     const request = structuredClone(incoming)
-    if (request.viewId !== "BI09") return { status: "unavailable", reason: "unsupported-cost-view" }
+    if (request.viewId !== "BI09" && request.viewId !== "BI10") return { status: "unavailable", reason: "unsupported-cost-view" }
     if (!await input.host.revalidate(context)) return { status: "denied", reason: "scenario-cost-authority-unavailable" }
     const readSource = async () => {
       const forwarded = structuredClone(request)
@@ -124,7 +124,7 @@ export function createScenarioCostBiHost(input: {
     const observed = await observe()
     if (observed.status !== "ok") return observed
     // All financial values, deltas and running endpoints come from this producer.
-    const planned = plannerScenarioBiPresentation(projection, observed.value.pair, "BI09")
+    const planned = plannerScenarioBiPresentation(projection, observed.value.pair, request.viewId)
     if (planned.status !== "ok") return planned
     const again = await readSource()
     if (again.status !== "ok") return again
