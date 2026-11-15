@@ -331,6 +331,11 @@ export async function exportPlanner(
         from: { row: 1, column: 1 },
         to: { row: sheet.rowCount, column: sheet.columnCount },
       }
+    configureXlsxPrint(sheet,
+      sheet.name === "OPEX" || sheet.name === "CAPEX" ? 2 : 1,
+      ["Info", "Rate cards", "FX rates"].includes(sheet.name) ? 9 : 8,
+      sheet.name !== "FX rates",
+      sheet.name !== "Info")
   })
   return {
     ok: true,
@@ -338,6 +343,30 @@ export async function exportPlanner(
     type,
     bytes: new Uint8Array(await workbook.xlsx.writeBuffer()),
   }
+}
+
+/**
+ * Limit printed content to populated rows/columns. Wide financial ledgers retain
+ * two landscape A3 page-widths instead of shrinking 22–24 columns into tiny type;
+ * height is intentionally unbounded so later records remain readable.
+ */
+function configureXlsxPrint(
+  sheet: Worksheet,
+  pagesWide: number,
+  paperSize: 8 | 9,
+  landscape: boolean,
+  repeatHeader: boolean,
+) {
+  const setup = sheet.pageSetup
+  setup.paperSize = paperSize
+  setup.orientation = landscape ? "landscape" : "portrait"
+  setup.fitToPage = true
+  setup.fitToWidth = pagesWide
+  setup.fitToHeight = 0
+  setup.pageOrder = pagesWide > 1 ? "overThenDown" : "downThenOver"
+  setup.margins = { left: 0.25, right: 0.25, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
+  setup.printArea = `A1:${sheet.getColumn(sheet.columnCount).letter}${sheet.rowCount}`
+  if (repeatHeader) setup.printTitlesRow = "1:1"
 }
 
 function scalar(value: unknown): string | number | boolean | null {
@@ -476,6 +505,7 @@ export async function exportMembers(
       column.width = 22
     })
     sheet.views = [{ state: "frozen", ySplit: 1 }]
+    configureXlsxPrint(sheet, 1, 8, true, true)
   })
   return {
     ok: true,
