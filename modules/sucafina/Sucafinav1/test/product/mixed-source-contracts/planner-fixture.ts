@@ -33,7 +33,7 @@ export const mixedPeriod = { start: "2026-01-01", end: "2026-12-31" }
 
 // Synthetic identity and C08 membership; real SQLite, source issuers, mixed
 // scenario, authority, Atlas capture and scanner. No original or grant is seeded.
-export async function createMixedPlannerFixture(deadline: ReturnType<typeof compositionTestDeadline>) {
+export async function createMixedPlannerFixture(deadline: ReturnType<typeof compositionTestDeadline>, options: { amount?: number | null } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-mixed-contracts-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(join(directory, "store"))
@@ -88,7 +88,7 @@ export async function createMixedPlannerFixture(deadline: ReturnType<typeof comp
   })
   if (!(await execute({ page: "Settings", action: "reset", version: 0, values: {} })).ok) throw new Error("Real Settings initialization failed")
   const created = await execute({ page: "Requests", action: "create", version: 0, values: { pr: { title: "Mixed contract source", type: "service",
-    description: "Real mutable source for mixed historical authorization", estAmount: 100, recurring: false, expenseType: "OPEX", costCenter: "IT",
+    description: "Real mutable source for mixed historical authorization", estAmount: options.amount === undefined ? 100 : options.amount, recurring: false, expenseType: "OPEX", costCenter: "IT",
     needBy: "2026-12-01", justification: "Compare a read-only external hypothesis" } } })
   if (!created.ok) throw new Error("Real request creation failed")
   const requestId = String(object(created.value).number)

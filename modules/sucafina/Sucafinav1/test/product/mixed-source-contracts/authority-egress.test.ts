@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { DomainProjection } from "../../../product/contracts/context.ts"
 import type { PlannerPort } from "../../../product/contracts/ports.ts"
 import { createSfProcurementCompositePlanner } from "../../../../../../apps/cli/src/sucafina-product/procurement-composite-planner.ts"
 import { authorizeSfCompositeProcurementOperations } from "../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts"
@@ -146,6 +147,101 @@ test("mixed preview refuses a real C08 membership change between its protected c
     expect(await f.audit()).toEqual(race.after)
     console.info("SF_MIXED_AUTHORITY_PROOF", JSON.stringify({ mutation: "C08-membership", eventFired: race.fired,
       sourceFenceReads: race.reads, producerStatus: result?.status, effectsDigest: digestSfValue(race.after), financialEffect: false }))
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("mixed authority accepts canonical value evidence and rejects corrupted copies of actual Procurement observations", async () => {
+  const deadline = compositionTestDeadline("mixed-canonical-procurement-values", 105_000)
+  try {
+    const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
+    const original = await f.business.context.resolve(f.refs.procurement, f.call)
+    expect(original.state).toBe("fresh")
+    if (!original.authorizedProjection || !("components" in original.authorizedProjection)) throw new Error("Real canonical Procurement projection unavailable")
+    expect(original.authorizedProjection.engineVersion).toBe("procurement-v1")
+    expect(original.authorizedProjection.context.sourceRefs).toEqual([])
+    expect(original.authorizedProjection.components).toEqual([])
+    expect(original.authorizedProjection.values.find((value) => value.id === "originalAmount")).toMatchObject({
+      value: 100, currency: "USD", granularity: "record", sourceRefs: [f.refs.procurement], drilldown: f.refs.procurement, evidenceState: "estimated" })
+    const before = await f.audit()
+    const verify = (resolve = f.business.context.resolve) =>
+      authorizeSfCompositeProcurementOperations({ host: f.authority.host, resolve }, f.decision, f.alternative, f.call)
+    expect(await verify()).toBe(true)
+    const foreignBase = { ...f.refs.procurement, target: { ...f.refs.procurement.target, recordId: "another-request" }, refDigest: "" }
+    const foreign = { ...foreignBase, refDigest: digestSfEvidenceRef(foreignBase) }
+    const amount = (projection: DomainProjection, update: Partial<DomainProjection["values"][number]>): DomainProjection => ({ ...projection,
+      values: projection.values.map((value) => value.id === "originalAmount" ? { ...value, ...update } : value) })
+    const corruptions: { name: string; change: (projection: DomainProjection) => DomainProjection }[] = [
+      { name: "engine", change: (value) => ({ ...value, engineVersion: "substitute-engine" }) },
+      { name: "version", change: (value) => ({ ...value, version: value.version + 1 }) },
+      { name: "principal", change: (value) => ({ ...value, context: { ...value.context, principalRef: "other" } }) },
+      { name: "installation", change: (value) => ({ ...value, context: { ...value.context, installationId: "other" } }) },
+      { name: "policy", change: (value) => ({ ...value, context: { ...value.context, policyVersion: "other" } }) },
+      { name: "access", change: (value) => ({ ...value, context: { ...value.context, accessRevision: "other" } }) },
+      { name: "currency", change: (value) => ({ ...value, context: { ...value.context, currency: "EUR" } }) },
+      { name: "horizon", change: (value) => ({ ...value, context: { ...value.context, period: { start: "2026-02-01", end: "2026-12-31" } } }) },
+      { name: "component", change: (value) => ({ ...value, components: [f.alternative.result.components[0]!] }) },
+      { name: "missing-amount", change: (value) => ({ ...value, values: value.values.filter((entry) => entry.id !== "originalAmount") }) },
+      { name: "duplicate-amount", change: (value) => ({ ...value, values: [...value.values, value.values.find((entry) => entry.id === "originalAmount")!] }) },
+      { name: "unbound-amount", change: (value) => amount(value, { sourceRefs: [] }) },
+      { name: "foreign-amount", change: (value) => amount(value, { sourceRefs: [foreign] }) },
+      { name: "foreign-drilldown", change: (value) => amount(value, { drilldown: foreign }) },
+      { name: "non-numeric-amount", change: (value) => amount(value, { value: "100" }) },
+      { name: "non-finite-amount", change: (value) => amount(value, { value: NaN }) },
+      { name: "wrong-amount-currency", change: (value) => amount(value, { currency: "EUR" }) },
+      { name: "wrong-amount-period", change: (value) => amount(value, { period: { start: "2026-02-01", end: "2026-12-31" } }) },
+      { name: "wrong-granularity", change: (value) => amount(value, { granularity: "month" }) },
+      { name: "hypothetical-original", change: (value) => amount(value, { evidenceState: "hypothetical" }) },
+      { name: "foreign-context-source", change: (value) => ({ ...value, context: { ...value.context, sourceRefs: [{ surface: "procurement",
+        type: f.refs.procurement.target.recordType, id: "another-request", incarnation: f.refs.procurement.target.incarnation,
+        version: f.refs.procurement.target.version, fields: ["originalAmount"], period: value.context.period, observedAt: f.clock.at }] } }) },
+    ]
+    const outcomes: { fault: string; observations: number; allowed: boolean }[] = []
+    for (const fault of corruptions) {
+      const observation = { reads: 0 }
+      const allowed = await verify(async (ref, call) => {
+        const genuine = await f.business.context.resolve(ref, call)
+        expect(genuine.state).toBe("fresh")
+        if (!genuine.authorizedProjection || !("components" in genuine.authorizedProjection)) throw new Error("Real observation missing before corruption")
+        observation.reads++
+        // Faults affect only copies returned by a wrapper around a successful
+        // real read. No forged observation is used for any positive assertion.
+        return { ...genuine, authorizedProjection: fault.change(structuredClone(genuine.authorizedProjection)) }
+      })
+      expect(observation.reads).toBeGreaterThan(0)
+      expect(allowed).toBe(false)
+      outcomes.push({ fault: fault.name, observations: observation.reads, allowed })
+    }
+    expect(await verify()).toBe(true)
+    const latest = await f.business.context.resolve(f.refs.procurement, f.call)
+    const { checkedAt: _originalAt, ...originalMaterial } = original
+    const { checkedAt: _latestAt, ...latestMaterial } = latest
+    expect(latestMaterial).toEqual(originalMaterial)
+    expect(latest.authorizedProjection).toEqual(original.authorizedProjection)
+    expect(await f.audit()).toEqual(before)
+    console.info("SF_MIXED_CANONICAL_SHAPE_PROOF", JSON.stringify({ engine: original.authorizedProjection.engineVersion,
+      contextSources: original.authorizedProjection.context.sourceRefs.length, components: original.authorizedProjection.components.length,
+      reference: f.refs.procurement.refId, projectionDigest: digestSfValue(original.authorizedProjection), outcomes, financialEffect: false }))
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("mixed canonical Procurement retains a real absent estimate as unresolved evidence", async () => {
+  const deadline = compositionTestDeadline("mixed-canonical-absent-estimate", 105_000)
+  try {
+    const f = await createMixedPlannerFixture(deadline, { amount: null })
+    const source = await f.business.context.resolve(f.refs.procurement, f.call)
+    expect(source.state).toBe("fresh")
+    if (!source.authorizedProjection || !("components" in source.authorizedProjection)) throw new Error("Real missing-estimate source unavailable")
+    expect(source.authorizedProjection.values.find((value) => value.id === "originalAmount")).toMatchObject({
+      value: null, currency: "USD", evidenceState: "absent", sourceRefs: [f.refs.procurement], drilldown: f.refs.procurement })
+    expect(source.authorizedProjection.missing).toContainEqual({ field: "baseAmount", reason: "unavailable" })
+    expect(f.alternative.result.total).toBeNull()
+    expect(f.alternative.result.comparisonStatus).toBe("conditioned")
+    const before = await f.audit()
+    const allowed = await authorizeSfCompositeProcurementOperations({ host: f.authority.host, resolve: f.business.context.resolve }, f.decision, f.alternative, f.call)
+    expect(allowed).toBe(true)
+    expect(await f.audit()).toEqual(before)
+    console.info("SF_MIXED_CANONICAL_SHAPE_PROOF", JSON.stringify({ fixture: "real-absent-estimate", allowed,
+      reference: f.refs.procurement.refId, projectionDigest: digestSfValue(source.authorizedProjection), financialEffect: false }))
   } finally { await deadline.close() }
 }, 120_000)
 
