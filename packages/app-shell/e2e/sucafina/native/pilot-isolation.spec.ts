@@ -137,13 +137,28 @@ test.describe("Q01 P0/P1 installed pilot against the real procurement producer",
   test("Q01-P1-DENIED: second real approver cannot accept someone else's held PR", async ({ page, nativeHarness }) => {
     const target = await proveRole(page, nativeHarness, "denied")
     const read = await actualProjection(page, target, "CAP26")
-    // A denied actor's genuine projection must not include the holder's pending
-    // approval action; absence of a fabricated button is not a 403 receipt.
-    const authorizedQueue = read.data.requests.filter((item) =>
+    // Reading another person's PR may be legal even though approving it is not.
+    // Never infer forbidden READ access from a denied MUTATION capability.
+    const visible = read.data.requests.filter((item) =>
       record(item.pr) && item.pr.title === p1Title)
-    expect(authorizedQueue).toHaveLength(0)
-    await page.goto(nativeUrl(target, "/orchestra/sf-procurement/approvals"))
-    await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
-    await expect(page.getByRole("button", { name: "Approve", exact: true })).toHaveCount(0)
+    expect(visible.length).toBeLessThanOrEqual(1)
+    if (visible.length === 1) {
+      const id = requestId(visible[0]!.number)
+      const approvalState = visible[0]!.prApproval
+      const steps = record(approvalState) &&
+        Array.isArray(approvalState.steps) ? approvalState.steps : []
+      expect(steps.some((step) => record(step) &&
+        step.holderId === nativeHarness.manifest.actors.holder &&
+        step.status === "pending")).toBe(true)
+      await page.goto(nativeUrl(target,
+        "/orchestra/sf-procurement/approvals/" + encodeSfRouteRef(id) + "/review"))
+      await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
+      await expect(page.getByRole("button", { name: "Approve", exact: true })).toHaveCount(0)
+      await expect(page.locator('[data-sf-state="denied"], [data-sf-state="ready"]')).toBeVisible()
+    } else {
+      await page.goto(nativeUrl(target, "/orchestra/sf-procurement/approvals"))
+      await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
+      await expect(page.getByText(p1Title, { exact: true })).toHaveCount(0)
+    }
   })
 })

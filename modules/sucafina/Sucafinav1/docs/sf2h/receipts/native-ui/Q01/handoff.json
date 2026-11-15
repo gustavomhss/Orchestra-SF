@@ -41,7 +41,7 @@
       "output": "Q01.pilot",
       "path": "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts",
       "preimage": null,
-      "postimage": "94b428893c5f0c4e3fb8f45f5a8900fcffacb681",
+      "postimage": "291717f643345c7c277c0b58b394d9135ba3c830",
       "cases": [
         "Q01-P0-PR-TITLE-CAS-LOST",
         "Q01-P1-HOLDER",
@@ -343,5 +343,8 @@
     "lease_terminal": "ARTIFACT_READY_HANDOFF",
     "merge_permission": false,
     "requalify_after_integration": true
-  }
+  },
+  "notes": [
+    "Pilot denied actor check permits authorized PR read but must never authorize another holder's approve action; no fake 403"
+  ]
 }
