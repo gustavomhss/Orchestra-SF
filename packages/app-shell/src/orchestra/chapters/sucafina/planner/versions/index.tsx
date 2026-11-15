@@ -35,6 +35,7 @@ type Review = Readonly<{
   version: PlannerVersion | null
   proposed: EditableVersion
   first: boolean
+  copyNameProvided: boolean
   idempotencyKey: string
 }>
 const key = (value: keyof typeof SF_U46_COPY | "sf.common.loading" | "sf.common.empty" |
@@ -77,7 +78,8 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     busy: boolean
     outcome: "idle" | "unknown" | "failed" | "conflict" | "succeeded"
     error: string | undefined
-    verified: Readonly<{ ref: SfOperationRef; action: CommandAction; versionId: string }> | undefined
+    verified: Readonly<{ ref: SfOperationRef; action: CommandAction; versionId: string;
+      expected: number; requestNumber: number; beforeCount: number }> | undefined
   }>({ layout: "single", draft: undefined, draftId: undefined, copyName: "",
     review: undefined, busy: false, outcome: "idle", error: undefined, verified: undefined })
   let commandAbort: AbortController | undefined
@@ -168,9 +170,9 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     if (version && version.year !== proposed.year && (version.locked || version.official)) return
     const request: Review = {
       ref: crypto.randomUUID() as SfOperationRef, action, versionId: version?.id ?? "", expected: revision,
-      version, proposed, first, idempotencyKey: crypto.randomUUID(),
+      version, proposed, first, copyNameProvided: !!screen.copyName.trim(), idempotencyKey: crypto.randomUUID(),
     }
-    screen.draft?.setPhase("reviewing")
+    if (action === "save" && !first) screen.draft?.setPhase("reviewing")
     setScreen({ review: request, busy: false, outcome: "idle", error: undefined })
   }
 
@@ -188,12 +190,41 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         return
       }
     }
+    if (request.action === "save" && !request.first) {
+      const draft = screen.draft?.snapshot()
+      if (screen.draftId !== request.versionId || draft?.availability !== "active" ||
+          draft.conflict || draft.baseVersion !== request.expected ||
+          draft.value.name !== request.proposed.name || draft.value.year !== request.proposed.year) {
+        setScreen({ outcome: "conflict", error: "stale" })
+        return
+      }
+    }
     const generation = model.owner.generation()
+    const beforeCount = page()?.data.versions.length ?? 0
     const abort = new AbortController()
     commandAbort = abort
     setScreen({ busy: true, outcome: "idle", error: undefined })
-    screen.draft?.setPhase("submitting")
     try {
+      if (request.action === "save" && !request.first && screen.draft) {
+        const reviewedPayload = JSON.stringify({
+          operationId: op.save, versionId: request.versionId, expected: request.expected,
+          name: request.proposed.name, year: request.proposed.year,
+        })
+        const digestBytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(reviewedPayload))
+        if (abort.signal.aborted || generation !== model.owner.generation()) return
+        const digest = Array.from(new Uint8Array(digestBytes), (byte) =>
+          byte.toString(16).padStart(2, "0")).join("")
+        screen.draft.setPending({
+          operationRef: request.ref, idempotencyKey: request.idempotencyKey,
+          payloadDigest: digest, expectedVersion: request.expected,
+        })
+        const admitted = screen.draft.snapshot()
+        if (admitted.availability !== "active" || admitted.pendingOperation?.operationRef !== request.ref) {
+          setScreen({ outcome: "conflict", error: "stale", busy: false })
+          return
+        }
+        screen.draft.setPhase("submitting")
+      }
       const client = createSfPlannerClient(ready.transport)
       const options = { signal: abort.signal, idempotencyKey: request.idempotencyKey }
       const command = { page: "Versions" as const, id: request.versionId || undefined,
@@ -205,7 +236,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         }, options)
         : request.action === "copy"
           ? await client["domain.command.CAP23.copy"]({
-            ...command, action: "copy", values: screen.copyName.trim() ? { name: request.proposed.name } : {},
+            ...command, action: "copy", values: request.copyNameProvided ? { name: request.proposed.name } : {},
           }, options)
           : request.action === "official"
             ? await client["domain.command.CAP23.official"]({ ...command, action: "official", values: {} }, options)
@@ -217,34 +248,52 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       if (abort.signal.aborted || model.owner.generation() !== generation || screen.review?.ref !== request.ref) return
       if (result.kind !== "response") {
         setScreen({ outcome: result.reason === "outcome-unknown" ? "unknown" : "failed", busy: false, error: result.reason })
-        screen.draft?.setPhase(result.reason === "outcome-unknown" ? "outcome-unknown" : "failed")
+        if (request.action === "save" && !request.first)
+          screen.draft?.setPhase(result.reason === "outcome-unknown" ? "outcome-unknown" : "failed")
         return
       }
       if (!result.body.ok) {
         setScreen({ outcome: result.body.status === 409 ? "conflict" : "failed", busy: false,
           error: result.body.errors?.join("; ") ?? String(result.body.status) })
-        screen.draft?.setPhase(result.body.status === 409 ? "conflict" : "failed")
+        if (request.action === "save" && !request.first)
+          screen.draft?.setPhase(result.body.status === 409 ? "conflict" : "failed")
         return
       }
       // The write's success is not a projection and is not a fabricated receipt.
       // Only the following authorized page read may mark the retained draft clean.
       setScreen({ busy: false, outcome: "succeeded", error: undefined,
-        verified: { ref: request.ref, action: request.action, versionId: request.versionId } })
+        verified: { ref: request.ref, action: request.action, versionId: request.versionId,
+          expected: request.expected, requestNumber: model.view.request + 1, beforeCount } })
       model.refresh()
     } catch (error) {
       if (abort.signal.aborted || model.owner.generation() !== generation) return
       console.error("Sucafina Planner version command failed", error instanceof Error ? error.name : "unknown")
       setScreen({ busy: false, outcome: "unknown", error: "outcome-unknown" })
-      screen.draft?.setPhase("outcome-unknown")
+      if (request.action === "save" && !request.first) screen.draft?.setPhase("outcome-unknown")
     }
   }
 
   createEffect(() => {
     const verified = screen.verified
     const current = page()
-    if (!verified || !current || model.view.state !== "ready" && model.view.state !== "empty") return
+    if (!verified || !current || model.view.loadedRequest < verified.requestNumber ||
+        (model.view.state !== "ready" && model.view.state !== "empty")) return
     const projected = current.data.versions.find((version) => version.id === verified.versionId)
     const revision = projected && current.versions["versions:" + projected.id]?.version
+    const reviewed = screen.review
+    const proven = verified.action === "save" ? verified.versionId
+      ? !!projected && revision !== undefined && revision !== verified.expected &&
+        projected.name === reviewed?.proposed.name && projected.year === reviewed.proposed.year
+      : current.data.versions.length > verified.beforeCount
+      : verified.action === "copy" ? current.data.versions.length > verified.beforeCount
+      : verified.action === "official" ? !!projected?.official && projected.locked
+      : verified.action === "lock" ? !!projected?.locked
+      : verified.action === "unlock" ? !!projected && !projected.locked
+      : verified.action === "delete" && !projected
+    if (!proven) {
+      setScreen({ verified: undefined, outcome: "conflict", error: "stale" })
+      return
+    }
     if (verified.action === "save" && projected && revision !== undefined && screen.draft) {
       screen.draft.confirmSave({
         kind: "projected", operationRef: verified.ref, baseVersion: revision,
@@ -440,7 +489,13 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                     base={reviewBase(request())}
                     current={reviewBase(request())}
                     proposed={reviewProposed(request())}
-                    effects={[]}
+                    effects={[{
+                      id: request().ref, domain: "planner", title: data(copy.t(key("sf.u46." + request().action as keyof typeof SF_U46_COPY))),
+                      state: "proposed", details: [{
+                        path: "action", label: msg("sf.u46.actions"),
+                        value: textValue(copy.t(key(("sf.u46." + request().action) as keyof typeof SF_U46_COPY))),
+                      }],
+                    }]}
                     coverage={{ state: "complete", summary: msg("sf.u46.reviewScope"), reasons: [],
                       knownCount: 1, expectedCount: 1 }}
                     blockingReasons={model.can(request().action) ? [] : [msg("sf.u46.reviewScope")]}
@@ -452,8 +507,20 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                     state={screen.outcome === "unknown" ? "outcome-unknown" :
                       screen.outcome === "conflict" ? "conflict" : "ready"}
                     onConfirm={() => { void submit(request()) }}
-                    onCancel={() => setScreen({ review: undefined, error: undefined })}
-                    onRevise={() => setScreen({ review: undefined, error: undefined })}
+                    onCancel={() => {
+                      if (request().action === "save") {
+                        const snapshot = screen.draft?.snapshot()
+                        if (snapshot?.availability === "active") screen.draft?.setPhase(snapshot.dirty ? "dirty" : "clean")
+                      }
+                      setScreen({ review: undefined, error: undefined })
+                    }}
+                    onRevise={() => {
+                      if (request().action === "save") {
+                        const snapshot = screen.draft?.snapshot()
+                        if (snapshot?.availability === "active") screen.draft?.setPhase(snapshot.dirty ? "dirty" : "clean")
+                      }
+                      setScreen({ review: undefined, error: undefined })
+                    }}
                     onReconcile={model.refresh}
                   />
                 )}

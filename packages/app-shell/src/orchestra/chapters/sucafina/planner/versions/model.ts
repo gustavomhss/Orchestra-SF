@@ -60,8 +60,9 @@ export function useSfPlannerVersions(props: SfSurfaceProps<"CAP23">) {
     state: SfUiState
     page: VersionPage | undefined
     request: number
+    loadedRequest: number
     reason: string | undefined
-  }>({ state: "loading", page: undefined, request: 0, reason: undefined })
+  }>({ state: "loading", page: undefined, request: 0, loadedRequest: -1, reason: undefined })
   let pending: AbortController | undefined
 
   createEffect(() => {
@@ -99,7 +100,7 @@ export function useSfPlannerVersions(props: SfSurfaceProps<"CAP23">) {
       }
       const body = result.body
       if (body.status === "ok") {
-        setView({ state: body.value.data.versions.length ? "ready" : "empty", page: body.value, reason: undefined, request })
+        setView({ state: body.value.data.versions.length ? "ready" : "empty", page: body.value, reason: undefined, request, loadedRequest: request })
         return
       }
       setView({

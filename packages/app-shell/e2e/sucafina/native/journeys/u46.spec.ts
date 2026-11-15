@@ -6,7 +6,7 @@ import { nativeInstalledFixture as test } from "../fixture"
 test.use({ trace: "off" })
 
 type Target = Readonly<{
-  shellOrigin: string; chapterHref: string; serverKey: string; projectId: string; installationId: string
+  shellOrigin: string; chapterHref: string; serverKey: string; projectId: string; installationId: string; mount: string
 }>
 function href(target: Target, leaf: "versions" | "compare") {
   const url = new URL("/orchestra/sf-planner/versions" + (leaf === "compare" ? "/compare" : ""), target.shellOrigin)
@@ -62,12 +62,17 @@ test("U46 — reviewing copy/official/lock never writes before explicit confirma
   await mounted(page, target)
   const surface = page.locator('[data-sf-surface="CAP23"]')
   const table = surface.getByRole("table")
-  const actionable = table.getByRole("button", { name: "copy", exact: true }).filter({ visible: true })
+  const actionable = table.getByRole("button", { name: "copy", exact: true })
   await expect(actionable).not.toHaveCount(0)
-  const copyButton = actionable.filter({ enabled: true })
-  await expect(copyButton).not.toHaveCount(0)
-  // The first row is the deliberate actor-selected source for this journey.
-  await copyButton.nth(0).click()
+  let authorizedRow: number | undefined
+  for (let index = 0; index < await actionable.count(); index++) {
+    if (await actionable.nth(index).isVisible() && await actionable.nth(index).isEnabled()) {
+      authorizedRow = index
+      break
+    }
+  }
+  expect(authorizedRow, "F04 must provide a real actor allowed to copy a version").toBeDefined()
+  await actionable.nth(authorizedRow!).click()
   const review = surface.locator('[data-component="sf-change-review"]')
   await expect(review).toBeVisible()
   await expect(review.getByRole("button", { name: /Confirm/i })).toBeEnabled()
@@ -102,8 +107,11 @@ test("U46 — comparison is read-only and refuses a cross-year default", async (
     await expect(monthly.locator("tbody tr")).toHaveCount(12)
     // The same exact source ref cannot be selected twice.
     const selectedRef = await left.inputValue()
-    await expect(right.locator("option").filter({ has: page.locator(":scope") })
-      .filter({ hasText: await left.locator("option:checked").innerText() })).toBeDisabled()
+    const disabledDuplicate = await right.locator("option").evaluateAll(
+      (options, ref) => options.some((element) =>
+        (element as HTMLOptionElement).value === ref && (element as HTMLOptionElement).disabled), selectedRef,
+    )
+    expect(disabledDuplicate).toBe(true)
     expect(selectedRef).not.toBe(await right.inputValue())
   } else {
     await expect(right).toBeDisabled()
