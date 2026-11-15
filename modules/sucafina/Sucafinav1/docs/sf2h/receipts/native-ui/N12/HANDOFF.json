@@ -1,0 +1,268 @@
+{
+  "schema": "sf2h.native-ui.author-handoff.v1",
+  "slot": "N12",
+  "epoch": "ux-native-n12-e1",
+  "title": "Dashboard executivo e Hot Topics",
+  "status": "ARTIFACT_READY_BLOCKED_INTEGRATION_QUALIFICATION",
+  "owner": "N12",
+  "integrator": "125",
+  "compiler_owner": "119",
+  "ci_owner": "120",
+  "target_branch": "sf2-stack",
+  "branch": "sf-ux-n12",
+  "base_sha": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "artifact_head_before_receipt": "06a9a3985d37c1aa5f3a5cb179538e51f6525ce4",
+  "source_pins": {
+    "modules/sucafina/Sucafinav1/runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "apps/cli/src/sucafina-product/dashboard-http.ts": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+    "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+    "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts": "de499e6d34af826add34bee4125bcfba4e57ddb8"
+  },
+  "contract_pins": {
+    "root": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/",
+    "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json",
+    "component_signatures": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/component-signatures.ts",
+    "host_signatures": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/host-signatures.ts",
+    "route_signatures": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/route-signatures.ts",
+    "surface_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/surface-manifest.json",
+    "operation_catalog": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/contract-catalog.json"
+  },
+  "ack_commit": "6b16bdbaf4e051f3a2c39548a41dbeef59363acd",
+  "shared_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N12/SHARED-PATCH-125.md",
+    "preimage": "ABSENT",
+    "postimage_sha": "611b0e2fab0073925151ad1a4d1da9b57a8fe04e",
+    "owner": "125",
+    "applied": false,
+    "shared_orchestra_preimage": "91e526cd53e2c020f36efacb60ecad250a4da11b",
+    "shared_orchestra_postimage": "NOT_APPLIED"
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u02.spec.ts",
+      "preimage": "ABSENT",
+      "postimage_sha": "2779866b3070cf9383965b56db15fccb3ee3fb3a",
+      "size_bytes": 5255,
+      "provenance": "E2E_FOR_120"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u38.spec.ts",
+      "preimage": "ABSENT",
+      "postimage_sha": "5528f8a57afe7d9f639051e29ae8dd17c97ad298",
+      "size_bytes": 5398,
+      "provenance": "E2E_FOR_120"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u02.ts",
+      "preimage": "ABSENT",
+      "postimage_sha": "3a4d4608663d3487e360cb0c245f3d1d23ea7951",
+      "size_bytes": 8198,
+      "provenance": "BILINGUAL_COPY"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+      "preimage": "ABSENT",
+      "postimage_sha": "676304ddf6f024edaec0ddad8364aef3f1ec959b",
+      "size_bytes": 7244,
+      "provenance": "BILINGUAL_COPY"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
+      "preimage": "ABSENT",
+      "postimage_sha": "b7e9f11870053cd45a0d30d11d8c440620fb33d8",
+      "size_bytes": 7961,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/edit.tsx",
+      "preimage": "ABSENT",
+      "postimage_sha": "819ed95518d272bf9554bb995f8e2db883bd075c",
+      "size_bytes": 10099,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
+      "preimage": "ABSENT",
+      "postimage_sha": "50120ee3ae66adc0d3f5e0b98d616253e85f6c2d",
+      "size_bytes": 13889,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/reader.ts",
+      "preimage": "ABSENT",
+      "postimage_sha": "82412de6c04f321489230873bea2e5c863a37f02",
+      "size_bytes": 7580,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/u02.css",
+      "preimage": "ABSENT",
+      "postimage_sha": "35baff67918e6e6140b4a1549ec52f71b0b96f80",
+      "size_bytes": 3077,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/edit.tsx",
+      "preimage": "ABSENT",
+      "postimage_sha": "aa4e817c66296c052bd3c8d620668f38e209698d",
+      "size_bytes": 11978,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/index.tsx",
+      "preimage": "ABSENT",
+      "postimage_sha": "4d862e9c6803c6f912cfc41056e5aef48fd82921",
+      "size_bytes": 13359,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+      "preimage": "ABSENT",
+      "postimage_sha": "180c543613ea5291429f8e7f9955f1ce8faa2233",
+      "size_bytes": 22010,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/reader.ts",
+      "preimage": "ABSENT",
+      "postimage_sha": "5e3c5a1021eb36c2575998b9e8f5433c07780249",
+      "size_bytes": 5597,
+      "provenance": "PRODUCT_CODE"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+      "preimage": "ABSENT",
+      "postimage_sha": "3694418532bc75ea2bfcc9b411c39839faf6d922",
+      "size_bytes": 2665,
+      "provenance": "PRODUCT_CODE"
+    }
+  ],
+  "exports": {
+    "CAP01": "SfDashboardExecutiveView in packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
+    "CAP03": "SfDashboardBudgetView in packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
+    "CAP02": "SfHotTopicsView in packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/index.tsx",
+    "UI54": "SfHotTopicProposalView in packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+    "U02_i18n": [
+      "SF_U02_COPY",
+      "SF_U02_COPY_BR"
+    ],
+    "U38_i18n": [
+      "SF_U38_COPY",
+      "SF_U38_COPY_BR"
+    ]
+  },
+  "acceptance": [
+    {
+      "id": "U02-AC01",
+      "status": "ARTIFACT_READY_NOT_QUALIFIED",
+      "coverage": "CAP01 CAP03 source projections, versioned source controls, budget known totals, source periods/owner; no backend calculation or invented monetary currency"
+    },
+    {
+      "id": "U02-AC02",
+      "status": "ARTIFACT_READY_NOT_QUALIFIED",
+      "coverage": "Owner-fenced reads, F03 state panels, local attention priority, S03 edit/review/pending; requires integration-authorized real source"
+    },
+    {
+      "id": "U02-AC03",
+      "status": "ARTIFACT_READY_NOT_QUALIFIED",
+      "coverage": "Responsive token CSS authored; 320/768/1024/1280/1440 and 200%/400% not executed"
+    },
+    {
+      "id": "U38-AC01",
+      "status": "ARTIFACT_READY_NOT_QUALIFIED",
+      "coverage": "CAP02 topic source CRUD; UI54 first-party workbench, preparation, C12 review digest, producer apply and source receipt; no synthesized proposal mutation"
+    },
+    {
+      "id": "U38-AC02",
+      "status": "ARTIFACT_READY_NOT_QUALIFIED",
+      "coverage": "F01 owner fencing, list/filtered-empty/not-found, source-version review, read-only/denied, S03 drafts, lost-response pending; producer record history remains unavailable unless returned"
+    },
+    {
+      "id": "U38-AC03",
+      "status": "ARTIFACT_READY_NOT_QUALIFIED",
+      "coverage": "Responsive token CSS authored; keyboard/reflow matrix execution pending"
+    }
+  ],
+  "qualification": {
+    "local_tests": "NOT_RUN_PER_N12_S0",
+    "typecheck": "NOT_RUN_COMPILER_119",
+    "e2e": "NOT_RUN_CI_120",
+    "ci_plan": "N12 owned u02.spec.ts and u38.spec.ts only plus transitive dependent suites through 120 dispatcher",
+    "require_real_installed_harness": true,
+    "env": [
+      "SF_NATIVE_E2E_EXECUTIVE_URL",
+      "SF_NATIVE_E2E_BUDGET_URL",
+      "SF_NATIVE_E2E_HOT_TOPICS_URL",
+      "SF_NATIVE_E2E_HOT_TOPIC_DETAIL_URL",
+      "SF_NATIVE_E2E_HOT_TOPIC_EDIT_URL",
+      "SF_NATIVE_E2E_HOT_TOPIC_ID",
+      "SF_NATIVE_E2E_HOT_TOPIC_PROPOSAL_URL"
+    ],
+    "gates": [
+      "F01",
+      "F02",
+      "F03",
+      "A01",
+      "A10",
+      "A13",
+      "S01",
+      "S03",
+      "S05",
+      "125 I00",
+      "119 compiler",
+      "120 CI"
+    ]
+  },
+  "restrictions": {
+    "no_shared_writes": true,
+    "no_local_tests": true,
+    "no_new_dispatcher": true,
+    "no_merge_dev": true,
+    "no_deploy": true,
+    "goal_paused": true,
+    "protected_sources_unchanged": true
+  },
+  "next_actions": [
+    "125 review SHARED-PATCH-125.md and integrate exact 4 native entries plus bilingual copy on current sf2-stack",
+    "119 run bun typecheck in packages/app-shell after integrated candidates",
+    "120 run u02.spec.ts and u38.spec.ts on installed, authorized harness only",
+    "125 reconcile diffs/qualification and issue source-of-truth receipt without inferring release"
+  ],
+  "unresolved": [
+    "I00 shared registry and global copy excluded from N12 lease",
+    "Review and installed browser proof unavailable until integrator/CI",
+    "No producer-backed monthly effective budget series in CAP03 domain.page; do not infer charts",
+    "UI54 proposal source / receipts require authorized live case, choice and prepared change"
+  ],
+  "authored_files": 14,
+  "release": "N12_AUTHOR_HANDOFF_ARTIFACT_READY; no global release assertion",
+  "launch_material": {
+    "pin_commit": "b187c2b765c0a47cdc2317ebc083a61187ad58ac",
+    "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/launch30/N12.json",
+    "work_orders": [
+      "U02",
+      "U38"
+    ]
+  },
+  "contract_sha_at_lease": {
+    "manifest": "3d444da59c661faa17d23798f8a212a71d3d8f6d",
+    "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route_signatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "operation_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1"
+  },
+  "pr": {
+    "number": 162,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/162",
+    "base": "sf2-stack",
+    "head": "sf-ux-n12",
+    "draft": true
+  },
+  "lease_terminal": "HANDOFF_ARTIFACT_READY_WAITING_125_INTEGRATION",
+  "test_execution_authority": {
+    "compiler": "119",
+    "journeys": "120",
+    "local": "DENIED_BY_CAMPAIGN"
+  }
+}
