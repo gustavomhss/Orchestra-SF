@@ -1,0 +1,117 @@
+name: sf-operations-scanner
+
+# Campaign75's request-only snapshots use a dedicated prefix, so test-ci does not run a duplicate selection.
+on:
+  push:
+    branches: ["sf-ops75-*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf2h-operations75
+  cancel-in-progress: false
+
+jobs:
+  operations:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact request snapshot
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Setup request validator Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.15"
+
+      - name: Validate campaign, source and exact selection
+        id: request
+        run: |
+          set -euo pipefail
+          export SF_OPERATIONS_SNAPSHOT_HEAD="$(git rev-parse HEAD)"
+          export SF_OPERATIONS_SNAPSHOT_PARENT="$(git show -s --format=%P HEAD)"
+          export SF_OPERATIONS_SNAPSHOT_CHANGED="$(git diff-tree --no-commit-id --name-only -r HEAD)"
+          git diff --exit-code HEAD -- .ci-run.json .github/workflows/sf-operations-scanner.yml script/sf2h/operations-scanner
+          node script/sf2h/operations-scanner/request.mjs
+
+      - name: Setup Bun using the existing action
+        uses: ./.github/actions/setup-bun
+
+      - name: ripgrep
+        uses: ./.github/actions/ripgrep
+
+      - name: omni binaries
+        uses: ./.github/actions/omni-binaries
+
+      # Keep the existing Playwright Node/extraction path.
+      - name: Setup Playwright Node
+        if: steps.request.outputs.kind == 'journeys'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.15"
+
+      - name: Install Chromium
+        if: steps.request.outputs.kind == 'journeys'
+        working-directory: packages/app-shell
+        run: bunx playwright install --with-deps chromium
+
+      - name: Prepare ephemeral real ClamD
+        run: bash script/sf2h/operations-scanner/setup.sh
+
+      - name: Run tests
+        id: tests
+        env:
+          ORCHESTRA_OMNI_CONTROL: ${{ steps.request.outputs.omni_control }}
+          OPERATIONS_SELECTION: ${{ steps.request.outputs.kind }}
+        run: |
+          set -euo pipefail
+          node script/sf2h/operations-scanner/request.mjs integrity
+          if [ "$OPERATIONS_SELECTION" = controls ]; then
+            nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+            printf '%s\n' "$nonce" > test-ci-evidence/omni-nonce.txt
+            export ORCHESTRA_OMNI_CONTROL_NONCE="$nonce"
+            echo "omni control nonce: $nonce"
+            args=()
+            while IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.request.args[]' test-ci-evidence/request.json)
+            cd modules/sucafina
+            GITHUB_ACTIONS=false bun test "${args[@]}" 2>&1 | tee "$GITHUB_WORKSPACE/test-ci-evidence/bun.log"
+            exit 0
+          fi
+          args=()
+          while IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.playwrightArgs[]' test-ci-evidence/request.json)
+          cd packages/app-shell
+          bun run test:e2e:local "${args[@]}" --list --reporter=json > "$GITHUB_WORKSPACE/test-ci-evidence/playwright-selection.json"
+          node "$GITHUB_WORKSPACE/script/sf2h/operations-scanner/request.mjs" selection
+          PLAYWRIGHT_HTML_OUTPUT_DIR="$GITHUB_WORKSPACE/packages/app-shell/e2e/playwright-report" \
+          PLAYWRIGHT_JSON_OUTPUT_NAME="$GITHUB_WORKSPACE/test-ci-evidence/playwright-runtime.json" \
+            bun run test:e2e:local "${args[@]}" --trace retain-on-failure --reporter=html,line,json,./e2e/utils/flaky-reporter.ts
+
+      - name: Verify the existing Omni verdict for controls
+        if: always() && steps.request.outputs.kind == 'controls' && (steps.tests.outcome == 'success' || steps.tests.outcome == 'failure')
+        run: node script/sf2h/operations-scanner/request.mjs verify-control
+
+      - name: Stop only this job's ClamD processes
+        if: always() && steps.request.outputs.admitted == 'true'
+        run: bash script/sf2h/operations-scanner/cleanup.sh
+
+      - name: Upload exact selection and scanner evidence
+        if: always() && steps.request.outputs.admitted == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: operations75-${{ steps.request.outputs.kind }}-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            test-ci-evidence
+            ${{ runner.temp }}/sf-operations75-*/evidence/
+            packages/app-shell/e2e/test-results
+            packages/app-shell/e2e/playwright-report

@@ -1,0 +1,158 @@
+{
+  "schema": "sf2h.operations75.candidate-input-expectations.v1",
+  "scope": "Thirty release/config/original-selector blobs to reconcile against explicit71 C; this is not evidence that C exists",
+  "paths": [
+    {
+      "path": ".github/workflows/sf-operations-scanner.yml",
+      "expected_blob": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "expected_blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+      "reason": "Released73 combined unit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "expected_blob": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+      "reason": "Released63 retained"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "expected_blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "reason": "Released local identity"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "expected_blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "reason": "Released73 combined unit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "expected_blob": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+      "expected_blob": "b241896293521d42c1b86d82d193328d48f0bcd7",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+      "expected_blob": "d44a80b24c4c098c0dbbc2c466e7d3e091961980",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "expected_blob": "458c33783954d9b8465f289690718a4fe8c34ec6",
+      "reason": "Released63 retained"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "expected_blob": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c",
+      "reason": "Released63 retained"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+      "expected_blob": "3c735804c3956fc5df98113f8f76050da35c74b0",
+      "reason": "Released73 combined unit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/fixture.ts",
+      "expected_blob": "e49a76773ff655645b524c5f588b9a1065d5987a",
+      "reason": "Released73 combined unit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+      "expected_blob": "85874c506608803bb9d3fcd8c3acb87d60200b0d",
+      "reason": "Released73 combined unit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+      "expected_blob": "5ce4f670c4558e312ef1ea0eec72dd9f00e3897b",
+      "reason": "Released73 combined unit"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "expected_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "reason": "Original production config"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "expected_blob": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+      "reason": "Released63 retained"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "expected_blob": "c229bc6e85d2474d057a21859d0d88055100a078",
+      "reason": "Released63 retained"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "expected_blob": "5cac657f5f9de9b6de9a9c63dc45c67886724b84",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "reason": "All five originals unchanged"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "expected_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "reason": "Released63 host"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "expected_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "reason": "Existing host selector"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "expected_blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+      "reason": "Existing Playwright entry"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "expected_blob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "reason": "Original budgets config"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/cleanup.sh",
+      "expected_blob": "034be3399187c8b8683c166987795f210a7421c2",
+      "reason": "Released63 retained"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/README.md",
+      "expected_blob": "83f0cb7243387ca045e5a7db6367f5a579f01d2f",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/request.mjs",
+      "expected_blob": "f9c4284774bec233a4ea92e70f1646709a234e16",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/select.mjs",
+      "expected_blob": "4b4dabacea4c2b47daec81a9de95c61b5ca78fc4",
+      "reason": "Released63 retained"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "expected_blob": "f7618e0097b78679f8c34749e93474c8dc93641b",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "expected_blob": "ab355db12fb384949f433f6d2d15445f3dcd2dfa",
+      "reason": "Released75 W4 exact postimage"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/tools.lock.json",
+      "expected_blob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+      "reason": "Released63 retained"
+    }
+  ],
+  "mismatch": "Reconcile exact diff and owner release before execution; do not overwrite target or relabel source PASS",
+  "GLOBAL_RELEASE": false
+}

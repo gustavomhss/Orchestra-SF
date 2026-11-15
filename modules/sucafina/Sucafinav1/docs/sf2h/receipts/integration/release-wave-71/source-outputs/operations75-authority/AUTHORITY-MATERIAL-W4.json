@@ -1,0 +1,128 @@
+{
+  "schema": "sf2h.operations75.material-release-authority.v1",
+  "mission": 75,
+  "state": "MATERIAL_W4_RELEASED_FROZEN",
+  "campaign": "sf2h-integral-20261112",
+  "at": "2026-11-15T03:51:00Z",
+  "authority": {
+    "source_ack": "55c309e3b39f11a09c1796afc755535d4eb70295",
+    "epoch": "operations-finish-browser75",
+    "remote_writer": "75 root",
+    "target_integrator": 71,
+    "compiler_owner": 45,
+    "final_acceptance_owner": "S0",
+    "new_lease_created": false
+  },
+  "material": {
+    "work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+    "release_envelope": "a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa",
+    "readiness_checkpoint": "fe75bb51c7719b757299dfd30d1793189308ae75",
+    "complete_patch_sha256": "672747464f84b869363dbc0a869f31cc051ef438e931b2d48e3c72ad0330a6e0",
+    "paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "postimage_blob": "f1573e02df562db7569f53931d7a4524a108ad4b"
+      },
+      {
+        "path": ".github/workflows/sf-operations-scanner.yml",
+        "postimage_blob": "6ebcdcb66802627f5af8f13d2c35989bb7719337"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/README.md",
+        "postimage_blob": "83f0cb7243387ca045e5a7db6367f5a579f01d2f"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/request.mjs",
+        "postimage_blob": "f9c4284774bec233a4ea92e70f1646709a234e16"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/setup.sh",
+        "postimage_blob": "ab355db12fb384949f433f6d2d15445f3dcd2dfa"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/service.mjs",
+        "postimage_blob": "f7618e0097b78679f8c34749e93474c8dc93641b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+        "postimage_blob": "d44a80b24c4c098c0dbbc2c466e7d3e091961980"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+        "postimage_blob": "b241896293521d42c1b86d82d193328d48f0bcd7"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "postimage_blob": "5cac657f5f9de9b6de9a9c63dc45c67886724b84"
+      }
+    ],
+    "source_result": "R3 7PASS/0FAIL/150expects",
+    "source_run": 43672349552,
+    "source_job": 132684956460
+  },
+  "freeze_rule": "75 will not change these product/test/workflow/script bytes during this intake.71 consumes the exact released W4 unit and its closure, never a moving branch HEAD. D1/D2 and this checkpoint contain receipts only.",
+  "active_phase": {
+    "state": "ACTIVE_FOR_QUALIFICATION_AND_RECEIPTS_ONLY",
+    "allowed": [
+      "Publish own receipts and existing PR coordination",
+      "Reconcile exact71 C/tree/consumed units",
+      "Reserve/deduplicate and create authorized request-only S child of71 C",
+      "Execute unchanged five original journeys through existing qualified75 Actions resource",
+      "Inspect real reports/artifacts and publish their actual results"
+    ],
+    "material_writes_paused": true,
+    "stack_writes_allowed": false,
+    "runtime_procurement_writes_allowed": false,
+    "generic45_lane_writes_allowed": false
+  },
+  "dependency73": {
+    "state": "RECEIVED_EXPLICIT_TERMINAL_RELEASE",
+    "terminal": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+    "work": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "procurement_post": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "application_post": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+    "complete_unit_required": true
+  },
+  "intake71": {
+    "authorized_to_consume_now": true,
+    "required": [
+      "Fresh target/current-authority and preimage reconciliation",
+      "Apply nine exact75 postimages and entire released73 unit while preserving target material",
+      "Publish C/tree/manifest/ACK for75 journeys"
+    ],
+    "final_browser_evidence_is_intake_prerequisite": false,
+    "source75_fully_ended_is_intake_prerequisite": false,
+    "authority_basis": {
+      "commit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/integration-release-wave.json",
+      "blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+      "clauses": [
+        "execution[3]: consume explicit released immutable units; no in-flight HEAD intake",
+        "execution[4]: construct candidate before requiring final proof"
+      ]
+    }
+  },
+  "ci_ownership": {
+    "campaign_resource_owner": 75,
+    "state": "ACTIVE_UNTIL_JOURNEY_RESULT_AND_TERMINAL_HANDOFF",
+    "generic_checks_owner": 45,
+    "target_composition_owner": 71,
+    "planned_terminal_maintenance_recipient": 71,
+    "currently_inflight": []
+  },
+  "subsequent_causal_failure": "If a real journey exposes an owned material defect,75 records the causal result and a fresh bounded material-phase checkpoint before any new owned edit, publishes a new immutable W/release and requests71 recomposition. A foreign defect goes to its authorized owner. This frozen W4 release remains unchanged.",
+  "request_prepared": {
+    "body_sha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+    "ids": [
+      "OP-PROC-01",
+      "OP-PROC-02",
+      "OP-PROC-03",
+      "OP-IMPORT-01",
+      "OP-DOC-01"
+    ],
+    "state": "NOT_DISPATCHED_NO_COMPOSED_C_ACK"
+  },
+  "terminal_status": "Not the final authority receipt:75 remains active for the scoped qualification phase. No claim of background execution after a terminal reply.",
+  "GLOBAL_RELEASE": false
+}

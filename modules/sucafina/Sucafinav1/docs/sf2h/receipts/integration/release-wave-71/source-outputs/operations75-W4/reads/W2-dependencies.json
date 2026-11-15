@@ -1,0 +1,208 @@
+{
+  "source63": "f0682b3ca9a792dcef2166a867aa06974e242874",
+  "ci_reads": [
+    {
+      "purpose": "source-workflow",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": ".github/workflows/test-ci.yml",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "purpose": "request-validator",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "script/test-ci-request.ts",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "purpose": "source-setup",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "66bd6df24499027328f22b598e50268023287071"
+    },
+    {
+      "purpose": "source-service",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "c6d3edbe33e014efae925aaa36ab36701bb7147d"
+    },
+    {
+      "purpose": "source-lock",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "script/sf2h/operations-scanner/tools.lock.json",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc"
+    },
+    {
+      "purpose": "source-live-tests",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c"
+    },
+    {
+      "purpose": "source-journeys",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "bab6a804e5f082cc60eb6f27209070b552981035"
+    },
+    {
+      "purpose": "source-config",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+    },
+    {
+      "purpose": "source-bun-action",
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": ".github/actions/setup-bun/action.yml",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "blob": "e2cda5b54676d4d1c35785aaef7aa69d66944597"
+    },
+    {
+      "purpose": "upstream-config",
+      "repository": "Cisco-Talos/clamav",
+      "path": "etc/clamd.conf.sample",
+      "ref": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+      "blob": "73be60eae8a266743e75b668dd606eb20436f067"
+    },
+    {
+      "purpose": "upstream-freshclam-config",
+      "repository": "Cisco-Talos/clamav",
+      "path": "etc/freshclam.conf.sample",
+      "ref": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+      "blob": "cc437ebf4a97884cfb7d3395ec213181a14e0de3"
+    },
+    {
+      "purpose": "upstream-command-parser",
+      "repository": "Cisco-Talos/clamav",
+      "path": "clamd/session.c",
+      "ref": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+      "blob": "83b197c897379a5b3d8b996e4f89df74ba610e13"
+    }
+  ],
+  "private_reads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "sha": "5a146c7a1c05598bdc67596e282ce150c720e9c0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sha": "d43a630254142bc5e5fb3589d1120a328abf2d1c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "sha": "ddc5323d714c58de2d5b47eed2563176099f15b5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "sha": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "sha": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+    },
+    {
+      "path": "bun.lock",
+      "sha": "e3f0c6443c12dd16cb66030f75e2f71f16508098"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "sha": "d60be2f87aa210c9700fba276932a6f443264e4f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "sha": "4845de24285df2459991da7d9895aad95eb93b19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "sha": "d4847ae8096764205e00ccfaedf36a9f84f66a83"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "sha": "4edac56f32a082a0944a88fe5f231bc5aa739690"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "sha": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "sha": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "sha": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "sha": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+      "sha": "0d42f5242acd3d1c93bc110422285b96975b8ea0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "sha": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "sha": "eddc60289524c374f970ea226632a030fc9b994d"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "sha": "53a1f34779598545cde83295c8ff98b861fabb72"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/document-authority.ts",
+      "sha": "5cf7795dd466f0d2ec6eaa084194ff3c31d6f728"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "sha": "bab6a804e5f082cc60eb6f27209070b552981035"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "sha": "8230eb28f322dde255382b74280192f39844724d"
+    }
+  ],
+  "upstream_asset": {
+    "url": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+    "name": "clamav-1.5.4.linux.x86_64.deb",
+    "bytes": 105819396,
+    "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886"
+  },
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "target_seen": "947a4add941893c8247b95a5ce6386468313838b",
+  "status": "READ_AND_STATIC_REVIEW_ONLY"
+}

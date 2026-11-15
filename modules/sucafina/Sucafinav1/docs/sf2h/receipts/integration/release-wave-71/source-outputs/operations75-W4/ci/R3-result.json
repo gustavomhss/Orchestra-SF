@@ -1,0 +1,550 @@
+{
+  "schema": "sf2h.operations75.hosted-result.v1",
+  "selection": "controls",
+  "run": 43672349552,
+  "job": 132684956460,
+  "run_attempt": 1,
+  "work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+  "work_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+  "snapshot": "209c613895a2555ba7de8befc33f1bd41b263f62",
+  "snapshot_tree": "659cae7dbdc9cbe9cad4387e1498a39a1c3ae90a",
+  "request_sha256": "e339ac1cb8e4741ccf7fe623015ec3bfa5a2050c431c7aa7423b0104ce08edcb",
+  "request_blob": "4b701472aa497c4c5d518ee20e47152daf3caaa1",
+  "branch": "sf-ops75-d50287e998b2ce339ac1cb8e41",
+  "workflow": ".github/workflows/sf-operations-scanner.yml",
+  "outcome": "PASS_COMPONENT_CONTROLS",
+  "tests": {
+    "executed": 7,
+    "pass": 7,
+    "fail": 0,
+    "skipped": 0,
+    "expect_calls": 150,
+    "files": 3,
+    "duration_ms": 1500,
+    "cases": [
+      "(pass) real ClamD INSTREAM accepts clean, rejects EICAR and accepts clean again [61.58ms]",
+      "(pass) real ClamD size-limit error is rejected while both real daemons remain responsive [11.11ms]",
+      "(pass) real ClamD outage fails closed after the owned error daemon is stopped [334.26ms]",
+      "(pass) real ClamD rejects unknown and malformed INSTREAM commands and remains healthy [12.08ms]",
+      "(pass) real private import admission persists clean bytes and rejects EICAR without durable effects [352.09ms]",
+      "(pass) real private supplier upload commits clean bytes and rejects EICAR before mutation [72.78ms]",
+      "(pass) private import and supplier upload fail closed against the stopped owned real daemon [80.78ms]"
+    ]
+  },
+  "observed": {
+    "setup": {
+      "schema": "sf2h.operations63.scanner-setup.v1",
+      "status": "READY",
+      "root": "/home/runner/work/_temp/sf-operations75-43672349552-1.24s1KK",
+      "productSnapshot": "209c613895a2555ba7de8befc33f1bd41b263f62",
+      "runId": "43672349552",
+      "runAttempt": "1",
+      "branch": "sf-ops75-d50287e998b2ce339ac1cb8e41",
+      "startedAt": "2026-11-15T03:27:36.152Z",
+      "syntheticDatabase": false,
+      "productQualification": "NOT_RUN",
+      "completedAt": "2026-11-15T03:27:53.679Z",
+      "services": {
+        "main": {
+          "port": 3310,
+          "ping": "PONG",
+          "version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+          "listen_inode": "17304"
+        },
+        "error": {
+          "port": 3311,
+          "ping": "PONG",
+          "version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+          "listen_inode": "18578"
+        }
+      },
+      "controls": "PASS_DAEMON_ONLY"
+    },
+    "databases": {
+      "origin": "database.clamav.net",
+      "freshclamCompleted": true,
+      "testDatabasesEnabled": true,
+      "officialDatabaseOnly": true,
+      "syntheticDatabase": false,
+      "files": [
+        {
+          "name": "bytecode.cvd",
+          "bytes": 281702,
+          "sha256": "6d4aa01f219e988060fc419f495d07f27e0cdf1a2cccc065971da922c76f7ffb"
+        },
+        {
+          "name": "daily.cvd",
+          "bytes": 23450445,
+          "sha256": "a99edfb87ac6246137214caa2b3f238297e02f376954f64096392d4b1e773731"
+        },
+        {
+          "name": "main.cvd",
+          "bytes": 89072577,
+          "sha256": "0b2182d229f46981ec8f535382222f7c9dfdd656b250ad47988b910a8d302365"
+        }
+      ]
+    },
+    "daemon_controls": {
+      "scope": "Direct ClamD provisioning controls, not the product adapter or browser journeys",
+      "controls": [
+        {
+          "kind": "main",
+          "clean": "stream: OK",
+          "eicar": "stream: Eicar-Test-Signature FOUND",
+          "cleanAfter": "stream: OK"
+        },
+        {
+          "kind": "error",
+          "clean": "stream: OK",
+          "eicar": "stream: Eicar-Test-Signature FOUND",
+          "cleanAfter": "stream: OK"
+        }
+      ],
+      "sizeError": "INSTREAM size limit exceeded. ERROR"
+    },
+    "service": {
+      "run_id": "43672349552",
+      "run_attempt": "1",
+      "github_sha": "209c613895a2555ba7de8befc33f1bd41b263f62",
+      "work_directory": "/home/runner/work/_temp/sf-operations75-43672349552-1.24s1KK",
+      "main": {
+        "pid": 3809,
+        "port": 3310,
+        "host": "127.0.0.1",
+        "executable": "/home/runner/work/_temp/sf-operations75-43672349552-1.24s1KK/root/usr/local/sbin/clamd",
+        "config": "/home/runner/work/_temp/sf-operations75-43672349552-1.24s1KK/clamd-main.conf",
+        "start_time": "18873",
+        "listen_inode": "17304"
+      },
+      "error": {
+        "pid": 3817,
+        "port": 3311,
+        "host": "127.0.0.1",
+        "executable": "/home/runner/work/_temp/sf-operations75-43672349552-1.24s1KK/root/usr/local/sbin/clamd",
+        "config": "/home/runner/work/_temp/sf-operations75-43672349552-1.24s1KK/clamd-error.conf",
+        "start_time": "18886",
+        "listen_inode": "18578"
+      }
+    },
+    "cleanup": {
+      "at": "2026-11-15T03:27:55.881Z",
+      "results": [
+        {
+          "kind": "main",
+          "pid": 3809,
+          "startTime": "18873",
+          "status": "STOPPED"
+        },
+        {
+          "kind": "error",
+          "status": "ABSENT"
+        }
+      ],
+      "state": "STOPPED",
+      "evidencePreserved": true
+    },
+    "omni": {
+      "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "qualification": "component controls, no native parity claim"
+    },
+    "product_controls": [
+      {
+        "label": "OPERATIONS63_REAL_CLAMD",
+        "observation": {
+          "sha": "209c613895a2555ba7de8befc33f1bd41b263f62",
+          "run": "43672349552",
+          "version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026| COMMANDS: SCAN QUIT RELOAD PING CONTSCAN VERSIONCOMMANDS VERSION END SHUTDOWN MULTISCAN FILDES STATS IDSESSION INSTREAM DETSTATSCLEAR DETSTATS ALLMATCHSCAN",
+          "clean_bytes": 278528,
+          "eicar_bytes": 68,
+          "clean": true,
+          "eicar": false,
+          "clean_after": true
+        }
+      },
+      {
+        "label": "OPERATIONS63_REAL_ERROR",
+        "observation": {
+          "response": "INSTREAM size limit exceeded. ERROR\u0000",
+          "admitted": false,
+          "main_clean": true
+        }
+      },
+      {
+        "label": "OPERATIONS63_REAL_DOWN",
+        "observation": {
+          "pid": 3817,
+          "connection_refused": true,
+          "admitted": false,
+          "main_clean": true
+        }
+      },
+      {
+        "label": "OPERATIONS75_REAL_MALFORMED",
+        "observation": {
+          "sha": "209c613895a2555ba7de8befc33f1bd41b263f62",
+          "run": "43672349552",
+          "replies": [
+            {
+              "command": "zOPERATIONS75_UNKNOWN",
+              "response": "UNKNOWN COMMAND",
+              "clean_after": true
+            },
+            {
+              "command": "zINSTREAM trailing-garbage",
+              "response": "UNKNOWN COMMAND",
+              "clean_after": true
+            }
+          ]
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-validate",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "target",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "human-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "file-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-validate",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "target",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "human-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "file-admit",
+          "status": "denied",
+          "reason": "file-not-accepted"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-validate",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "target",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "human-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "file-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_PRIVATE_IMPORT",
+        "observation": {
+          "clean": true,
+          "eicar": false,
+          "clean_after": true,
+          "denied_durable_effects": 0
+        }
+      },
+      {
+        "label": "OPERATIONS75_PRIVATE_UPLOAD",
+        "observation": {
+          "clean": true,
+          "eicar": false,
+          "clean_after": true,
+          "denied_durable_effects": 0
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "ui-validate",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "target",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "human-admit",
+          "status": "ok"
+        }
+      },
+      {
+        "label": "OPERATIONS75_IMPORT_GATE",
+        "observation": {
+          "stage": "file-admit",
+          "status": "denied",
+          "reason": "file-not-accepted"
+        }
+      },
+      {
+        "label": "OPERATIONS75_PRIVATE_DOWN",
+        "observation": {
+          "connection_refused": true,
+          "import_admitted": false,
+          "upload_admitted": false,
+          "denied_durable_effects": 0,
+          "main_clean": true
+        }
+      }
+    ]
+  },
+  "artifact": {
+    "id": 14145385503,
+    "sha256": "3c850b7e0a7ce11cdfae73be98e2d1c4ca2c0378549cd7fa991f76dfb45d7edd",
+    "bytes": 18829,
+    "downloaded_and_hash_verified": true,
+    "files": [
+      {
+        "path": "bun.log",
+        "bytes": 3744,
+        "sha256": "2d5aba96e166b952861c510143dc2dff4e2bf90b21b6fd88ee3d29340f6be576"
+      },
+      {
+        "path": "omni-nonce.txt",
+        "bytes": 33,
+        "sha256": "740896b0808ef10c7be2c83e6408481eead12a0b134d9a8693db32589ac1429c"
+      },
+      {
+        "path": "omni.json",
+        "bytes": 237,
+        "sha256": "c4cdbd28eccee5b5a42b91e0dd60b9a6b04a20ab2c4f13e40c4324caf2a3657d"
+      },
+      {
+        "path": "request.json",
+        "bytes": 3084,
+        "sha256": "aee47b10d1f4d46fbf733371e137d6cd2e8dae643cce2ae8e0a39e5181cd3e1d"
+      },
+      {
+        "path": "scanner/clamd-error-output.log",
+        "bytes": 2698,
+        "sha256": "c9cfbe9e11cd771e8811628604a91a365346641e504f2d670f6e9311fc99f3e6"
+      },
+      {
+        "path": "scanner/clamd-error.conf.txt",
+        "bytes": 775,
+        "sha256": "85d6095c631a514e33b4ae202b456d8640afa5485603b8e3329423643ae43dde"
+      },
+      {
+        "path": "scanner/clamd-error.log",
+        "bytes": 3491,
+        "sha256": "fb6e17c5ca1aa363b0a7ed6135880d7844198dc3c8e810d6afcf2defec87a6fa"
+      },
+      {
+        "path": "scanner/clamd-ldd.txt",
+        "bytes": 725,
+        "sha256": "62f5a7836d998ae4a6c8363e5311986aea3e0f5570ccd75efb2206c6b1938927"
+      },
+      {
+        "path": "scanner/clamd-main-output.log",
+        "bytes": 3294,
+        "sha256": "59c9daa82e1e7c4de5ab14a22f7867076e35f34d4fddb2afc7aec674e2aeb216"
+      },
+      {
+        "path": "scanner/clamd-main.conf.txt",
+        "bytes": 777,
+        "sha256": "4cebd61f2ca6e02de3d55b5560169a56a48831f25987e86451ea24ec4864fe80"
+      },
+      {
+        "path": "scanner/clamd-main.log",
+        "bytes": 4087,
+        "sha256": "9eb89d0ebd6c4440127b87133a5b32be8aa53b2ae1715ce539d37adf8f8cc08a"
+      },
+      {
+        "path": "scanner/clamd-version.txt",
+        "bytes": 13,
+        "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+      },
+      {
+        "path": "scanner/cleanup.json",
+        "bytes": 278,
+        "sha256": "f5375715f8e330c4adf401ec50290810bc9c575eab3a66fc5bc662996410e19c"
+      },
+      {
+        "path": "scanner/configuration.json",
+        "bytes": 781,
+        "sha256": "dce2b85c66fb8a150d5ee286d8413de9d56944f06fbab238bbc47e2bff386c41"
+      },
+      {
+        "path": "scanner/daemon-controls.json",
+        "bytes": 472,
+        "sha256": "6ead66ba9f7bb6a9fee31fcbbac90fc604c7abe5c2fd79e2a373e0a6cfdf0f00"
+      },
+      {
+        "path": "scanner/databases.json",
+        "bytes": 623,
+        "sha256": "4a8420ed9fcac659be8794ccc14219078a63222ce8986a918317c4207b9158d6"
+      },
+      {
+        "path": "scanner/freshclam-ldd.txt",
+        "bytes": 943,
+        "sha256": "71066c715c66d6f328f8d8b96d95b82faba6e581b9e4934b4c82fcb59b95e022"
+      },
+      {
+        "path": "scanner/freshclam-output.log",
+        "bytes": 1279,
+        "sha256": "d76530b880fe36beea2eab67a16bdc2b166a31ea05b25241cfc079ddcb0b36e1"
+      },
+      {
+        "path": "scanner/freshclam-version.txt",
+        "bytes": 13,
+        "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+      },
+      {
+        "path": "scanner/freshclam.conf.txt",
+        "bytes": 480,
+        "sha256": "78ff1bc61bfd52eb38d7c9397888ea285ac33a9889545e3eea1dd4eadd367cda"
+      },
+      {
+        "path": "scanner/freshclam.log",
+        "bytes": 1346,
+        "sha256": "14f5af26857ad349d7a3fafcbd2492b51004afe8a6a0a24299ce61749c3e4001"
+      },
+      {
+        "path": "scanner/package-info.txt",
+        "bytes": 399,
+        "sha256": "2a491cadb125eb384cfec5c47e830192e0dbbdcb6aceb1c2069e488f4aebb498"
+      },
+      {
+        "path": "scanner/package-sha256.txt",
+        "bytes": 76,
+        "sha256": "193571005c024b5ab90d90d4406a4cd9f3d0a50b572e71c140ce2aa7525f47c8"
+      },
+      {
+        "path": "scanner/package.json",
+        "bytes": 776,
+        "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8"
+      },
+      {
+        "path": "scanner/process-error.json",
+        "bytes": 382,
+        "sha256": "6744aa29d2f65d46541f5645db3f1667a32de8217395feac6d519d14e7d51395"
+      },
+      {
+        "path": "scanner/process-main.json",
+        "bytes": 381,
+        "sha256": "0f6afdf3ad3c273b50524330b99febfe6d9a6d144539a8391024bb071fa13148"
+      },
+      {
+        "path": "scanner/service.json",
+        "bytes": 866,
+        "sha256": "b54afe58abba748061b4be5dc26297738a134197d8b5799596d7f89d5021e5ac"
+      },
+      {
+        "path": "scanner/setup.json",
+        "bytes": 835,
+        "sha256": "665017cb565e2b26e390737de5dd3aae87d6aa293b0a6ea7dcd86fd94df106a6"
+      },
+      {
+        "path": "scanner/tools.lock.json",
+        "bytes": 2276,
+        "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929"
+      },
+      {
+        "path": "scanner/version.conf",
+        "bytes": 192,
+        "sha256": "87d87802ce135ffea911a25a8a019b1f9fc9f46abbdce3eb8556a22db56f6ee8"
+      }
+    ]
+  },
+  "log": {
+    "path": "logs/R3.log.txt",
+    "sha256": "abd6f917fd229ad8ab06e2bf61cda089e0d0d121b51f5c9dfeb2400391743c4d",
+    "bytes": 70322
+  },
+  "scope": [
+    "Actual pinned engine and official databases, readiness/liveness/discriminating controls",
+    "Actual product adapter over INSTREAM; actual malformed request refusal",
+    "Real installed factories/authentication and private SQLite persistence; EICAR/down no durable snapshot/blob effects",
+    "In-process HTTP component controls; does not replace five installed listener/browser journeys",
+    "No native/Omni parity claim; Omni verdict is not applicable",
+    "W4 source result is not a result on a later71 candidate"
+  ],
+  "remaining": [
+    "Release73 and71 composition",
+    "Five original journeys on composed candidate",
+    "Compiler/typechecks/guards45",
+    "All broader251criteria/AM/final campaign gaps retained"
+  ],
+  "GLOBAL_RELEASE": false
+}

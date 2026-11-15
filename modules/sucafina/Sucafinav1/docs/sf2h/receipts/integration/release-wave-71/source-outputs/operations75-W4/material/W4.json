@@ -1,0 +1,33 @@
+{
+  "schema": "sf2h.operations75.material-increment.v1",
+  "increment": "W4",
+  "parent": "3e3a23ad86e7895a4f5405ade0ce084a813b9f24",
+  "delta": [
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "pre": "2285b66ca1395ea9f3041ee3a09e458c7d11096c",
+      "post": "ab355db12fb384949f433f6d2d15445f3dcd2dfa"
+    }
+  ],
+  "cause": {
+    "run": 43672005574,
+    "job": 132683887580,
+    "failure": "FreshClam TestDatabases child creates engine without transferring config certificate path; compiled global cert path absent",
+    "tests_executed": 0
+  },
+  "change": "Set official CVD_CERTS_DIR to extracted usr/local/etc/certs only for FreshClam update/timeout process; child engine inherits it.",
+  "review": {
+    "root": "read one-line delta and R2 artifact",
+    "normative_review": "independent official source confirmation of CVD_CERTS_DIR in cl_engine_new and FreshClam fork/test call",
+    "runtime": "NOT_RUN; causal R3 required"
+  },
+  "preserved": [
+    "TestDatabases yes",
+    "OfficialDatabaseOnly yes",
+    "pinned official signatures/package",
+    "budgets",
+    "request env validator",
+    "no global path/service/export"
+  ],
+  "GLOBAL_RELEASE": false
+}

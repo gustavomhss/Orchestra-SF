@@ -1,0 +1,47 @@
+{
+  "schema": "sf2h.operations75.owner45-request.v1",
+  "state": "REQUESTED_NOT_RUN",
+  "owner": 45,
+  "requester": 75,
+  "consumer": 71,
+  "work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+  "tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:spawn-imports"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "hosted_only": true,
+  "no_owner_takeover": true,
+  "dev_observation": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "dev_requirement": "Reconcile actual origin/dev and record inspected base; old observation is not a lease",
+  "dedup": "W/tree/commands/config/dev; preserve existing45 lane and checks; if a new75 material W supersedes before execution use explicitly updated request",
+  "source_scope": "W1 screen-shell plus W2 eight owned scanner/fixture/control files; no Protocol/ServerHttpApi changes",
+  "scanner75": {
+    "workflow": ".github/workflows/sf-operations-scanner.yml",
+    "run": 43672349552,
+    "state": "PASS_7_CONTROLS",
+    "selection": "controls",
+    "owner": 75
+  },
+  "originals": "Wait explicit71 composition containing released73+75; run by75, not duplicated by45",
+  "GLOBAL_RELEASE": false,
+  "supersedes_source": "W2/W3 pins; TS/compiler inputs unchanged throughW4, scanner setup only"
+}

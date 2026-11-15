@@ -1,0 +1,26 @@
+{
+  "schema": "sf2h.operations75.procurement73-request.v1",
+  "state": "FORWARDED_NOT_APPLIED_BY75",
+  "mission": 75,
+  "owner": 73,
+  "target": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+  "source63": "f0682b3ca9a792dcef2166a867aa06974e242874",
+  "target_branch_observed": "procurement-privacy-fix",
+  "target_head_observed": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "target_preimage_reconfirmed": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+  "patch_source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/procurement-ui/procurement-money.patch",
+  "patch_blob": "6f6f67e42eb3aed2db7823311d1c3034a12e2b5b",
+  "patch_local": "procurement-money73.patch",
+  "postimage_proposal": "0a0dd9eb2299df05e8c6bc14cd4dc67313b64c25",
+  "original_manifest_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/external/procurement-ui/procurement-money.manifest.json",
+  "cause": "Four display lines/seven interpolations expose floating-point residue. Existing display convention Number(value.toPrecision(15)); canonical financial values and snapshots unchanged.",
+  "evidence": {
+    "case": "OP-PROC-02",
+    "run": 43668156670,
+    "expected": "30240 USD",
+    "observed": "30240.000000000004 USD"
+  },
+  "requested_action": "73 reconcile with ISO01/current HEAD, apply only presentation hunks under its lease, qualify and publish explicit release/pre-post/patch.71 composes;75 never writes this live path.",
+  "communication": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6888324751",
+  "qualified": false
+}

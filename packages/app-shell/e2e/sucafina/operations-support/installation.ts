@@ -98,15 +98,81 @@ export function createOperationsInstallation(input: {
     documentEvidenceList: documents.documents.list,
     extraDescriptors: [...imports.descriptors, ...documents.descriptors],
   })
+  // Test-fixture diagnostics stay private to Actions and preserve each original
+  // call, Request, authority result and public response. Only the first failed
+  // gate of import-admit is recorded; names, selectors, bytes and credentials
+  // never enter these bounded records.
+  type AdmissionDiagnostic = { stage: "ui-admit" | "ui-validate" | "target" | "human-admit" | "file-admit"; status: string; reason?: string }
+  const admissionDiagnostics: AdmissionDiagnostic[] = []
+  const contextRequests = new WeakMap<object, Request>()
+  const failedRequests = new WeakSet<Request>()
+  const diagnosticReasons = new Set([
+    "invalid-ui-operation", "ui-authority-unavailable", "ui-identity-unavailable", "ui-authority-changed",
+    "authority-unavailable", "human-command-unavailable", "source-authority-unavailable", "source-access-unavailable",
+    "source-unavailable", "source-changed", "source-or-authority-changed", "target-access-unavailable",
+    "human-authority-required", "file-not-accepted", "file-admission-unavailable", "file-catalog-unavailable",
+    "file-admission-conflict", "file-access-unavailable", "invalid-file-admission",
+  ])
+  const observeAdmission = (request: Request | undefined, stage: AdmissionDiagnostic["stage"], result: { status: string; reason?: string }) => {
+    if (!request || new URL(request.url).searchParams.get("sf") !== "import-admit" ||
+      failedRequests.has(request) || admissionDiagnostics.length >= 32) return
+    if (result.status !== "ok") failedRequests.add(request)
+    const status = ["ok", "denied", "unavailable", "stale", "conflict", "needs-input"].includes(result.status) ? result.status : "unavailable"
+    const entry = { stage, status, ...(result.reason ? { reason: diagnosticReasons.has(result.reason) ? result.reason : "withheld" } : {}) }
+    admissionDiagnostics.push(entry)
+    console.info("OPERATIONS75_IMPORT_GATE " + JSON.stringify(entry))
+  }
+  const ui: typeof authority.ui = {
+    ...authority.ui,
+    admit: async (request, operation, digest) => {
+      const result = await authority.ui.admit(request, operation, digest)
+      if (result.status === "ok") contextRequests.set(result.value, request)
+      observeAdmission(request, "ui-admit", result)
+      return result
+    },
+    validate: async (context, operation, digest) => {
+      const result = await authority.ui.validate(context, operation, digest)
+      observeAdmission(contextRequests.get(context), "ui-validate", { status: result ? "ok" : "denied", ...(result ? {} : { reason: "authority-unavailable" }) })
+      return result
+    },
+    finish: (context) => { contextRequests.delete(context); authority.ui.finish(context) },
+  }
+  const human: typeof authority.human = {
+    ...authority.human,
+    admit: async (request, action, payload) => {
+      const result = await authority.human.admit(request, action, payload)
+      if (result.status === "ok") contextRequests.set(result.value, request)
+      observeAdmission(request, "human-admit", result)
+      return result
+    },
+    finish: (context) => { contextRequests.delete(context); authority.human.finish(context) },
+  }
+  const importService: typeof imports = {
+    ...imports,
+    prepareTarget: async (selection, context) => {
+      const result = await imports.prepareTarget(selection, context)
+      observeAdmission(contextRequests.get(context), "target", result)
+      return result
+    },
+    imports: {
+      ...imports.imports,
+      admit: async (file, context) => {
+        const result = await imports.imports.admit(file, context)
+        observeAdmission(contextRequests.get(context), "file-admit", result)
+        return result
+      },
+    },
+  }
   const importHttp = createSfImportHttp({
     origin: input.origin, mount: input.mount,
-    runtime: () => ({ ui: authority.ui, human: authority.human, service: imports }),
+    runtime: () => ({ ui, human, service: importService }),
   })
   const documentHttp = createSfDocumentHttp({
     origin: input.origin, mount: input.mount,
     runtime: () => ({ ui: authority.ui, human: authority.human, ...documents }),
   })
   return {
+    admissionDiagnostics: () => structuredClone(admissionDiagnostics),
     application: createApplication(input.mount, {
       persistence: input.persistence,
       authenticate: input.authenticate,

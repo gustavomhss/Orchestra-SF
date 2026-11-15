@@ -1,0 +1,102 @@
+{
+  "schema": "sf2h.operations75.hosted-result.v1",
+  "selection": "controls",
+  "run": 43671662128,
+  "job": 132682829681,
+  "run_attempt": 1,
+  "work": "7be41d01c1d64fc3a067ba9a465a3522d9d040a8",
+  "work_tree": "467e99cd61489102607f200ce3b48b9d670808d6",
+  "snapshot": "51bf918908992b71b59f98489edb571da6026584",
+  "snapshot_tree": "87a1decaa06a00d8fa6a3dba29fde06e51cdacdb",
+  "request_sha256": "e339ac1cb8e4741ccf7fe623015ec3bfa5a2050c431c7aa7423b0104ce08edcb",
+  "branch": "sf-ops75-7be41d01c1d6ce339ac1cb8e41",
+  "workflow": ".github/workflows/sf-operations-scanner.yml",
+  "outcome": "FAIL_SETUP",
+  "tests": {
+    "executed": 0,
+    "expected": 7,
+    "status": "NOT_RUN_BLOCKED_SETUP"
+  },
+  "observed": {
+    "request_guard": "PASS",
+    "package": {
+      "bytes": 105819396,
+      "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+      "size_and_hash": "PASS",
+      "extraction": "PASS"
+    },
+    "failure": "clamd --version requires parsing config first; default /usr/local/etc/clamd.conf absent in intentionally uninstalled package",
+    "signatures": "NOT_RUN",
+    "daemons": "NOT_STARTED",
+    "readiness": "NOT_RUN",
+    "cleanup": {
+      "step": "PASS",
+      "receipt": "STOPPED",
+      "main": "ABSENT",
+      "error": "ABSENT",
+      "evidencePreserved": true
+    },
+    "ci_dependencies": "PASS setup-bun/ripgrep/omni",
+    "clamd_ldd": "PASS; freshclam ldd not reached"
+  },
+  "artifact": {
+    "id": 14144666197,
+    "sha256": "3aa8a0128e35dc1cdebbb0ec729d3a0a413bfc4c668c5fbec358fb711896a544",
+    "bytes": 5746,
+    "downloaded_and_hash_verified": true,
+    "files": [
+      {
+        "path": "request.json",
+        "sha256": "20290068ead764306c2a649aa345e7b6be0ee6dde9f75d273fa6e1e6583d2c9a",
+        "bytes": 3084
+      },
+      {
+        "path": "scanner/clamd-ldd.txt",
+        "sha256": "26f62e7515ce2ac69244a17daca6861c947b0fc8eaa9c13a9dfd18889ce987e4",
+        "bytes": 725
+      },
+      {
+        "path": "scanner/clamd-version.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "scanner/cleanup.json",
+        "sha256": "e024893322c3813efedda76306d43535681eaaaf9c1fce56395c02909cf9a447",
+        "bytes": 230
+      },
+      {
+        "path": "scanner/package-info.txt",
+        "sha256": "2a491cadb125eb384cfec5c47e830192e0dbbdcb6aceb1c2069e488f4aebb498",
+        "bytes": 399
+      },
+      {
+        "path": "scanner/package-sha256.txt",
+        "sha256": "d78ba8e65371dbf678e8c472acc1fcf7b4612728daa9acee562175b1ff7d7e76",
+        "bytes": 76
+      },
+      {
+        "path": "scanner/package.json",
+        "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8",
+        "bytes": 776
+      },
+      {
+        "path": "scanner/setup.json",
+        "sha256": "7a37f506579ba4a8dd9ab53bc5644109eca1748b9b714519f184a75915212166",
+        "bytes": 487
+      },
+      {
+        "path": "scanner/tools.lock.json",
+        "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929",
+        "bytes": 2276
+      }
+    ]
+  },
+  "log": {
+    "path": "logs/R1.log.txt",
+    "sha256": "7cfca26b005479d27bcd58433c15593321ad61fc8a6f94d404c62f37e9542ee6",
+    "bytes": 58361
+  },
+  "corrective_action": "Explicit job-local version configuration for both clamd and freshclam; no global configuration or service",
+  "GLOBAL_RELEASE": false
+}

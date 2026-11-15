@@ -1,0 +1,28 @@
+{
+  "status": "PREPARED_NOT_PUBLISHED_NOT_RUN",
+  "source_work": "3e3a23ad86e7895a4f5405ade0ce084a813b9f24",
+  "path": "script/sf2h/operations-scanner/setup.sh",
+  "preimage_blob": "2285b66ca1395ea9f3041ee3a09e458c7d11096c",
+  "postimage_blob": "ab355db12fb384949f433f6d2d15445f3dcd2dfa",
+  "postimage_sha256": "43f675022aa15555bbf234417b0a25431a925825197fb19354211f52006c8231",
+  "patch_sha256": "9c85c6c5b0c870aa038e901de2ecc26430febb1af0891d169d431f9b067ac036",
+  "cause": "FreshClam TestDatabases invokes fc_test_database, which creates a new libclamav engine without the application config cert directory. cl_engine_new uses CVD_CERTS_DIR before the compiled default.",
+  "change": "Prefix only the FreshClam update invocation and its timeout parent with process-scoped CVD_CERTS_DIR pointing to the extracted, verified package certificates.",
+  "official_source": {
+    "ref": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+    "freshclam_c": "09a4bb0deaba56f88a8e25c8bef5a80ec2b863e8",
+    "libfreshclam_c": "165be70f065d096c03db9ddd7800b2be8bf19211",
+    "libclamav_others_c": "d191ae25f7d5a612dec2c929cb2d1e97fee85f8d"
+  },
+  "preserved": [
+    "TestDatabases yes",
+    "official signature verification",
+    "OfficialDatabaseOnly yes",
+    "package and database provenance",
+    "explicit configs",
+    "bounded timeout300s",
+    "request env allowlist",
+    "no global export/service/path"
+  ],
+  "local_product_tests": "NOT_RUN"
+}

@@ -1,0 +1,75 @@
+{
+  "scope": "Artifact reconstruction only; no product/test executable ran",
+  "patch_sha256": "672747464f84b869363dbc0a869f31cc051ef438e931b2d48e3c72ad0330a6e0",
+  "preimage_basis": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+  "source": "d50287e998b2f42f548bce3b72b75e16eff40043",
+  "path_count": 9,
+  "unexpected_paths": [],
+  "matches": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "blob": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "sha256": "19166a31635538554cd66bb9b489f850a2093c9a9d430f5acf91cc6ad7ce8508",
+      "bytes": 51342,
+      "exact": true
+    },
+    {
+      "path": ".github/workflows/sf-operations-scanner.yml",
+      "blob": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+      "sha256": "91adf931b72c3a88a0252b9010c835fceeec1abcb609cfce26c9a414da9c1189",
+      "bytes": 5045,
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/README.md",
+      "blob": "83f0cb7243387ca045e5a7db6367f5a579f01d2f",
+      "sha256": "e9a8e5050afbd42c395e0c05d21daf2c36e025a0bd30fe219e14637ed8204371",
+      "bytes": 7725,
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/request.mjs",
+      "blob": "f9c4284774bec233a4ea92e70f1646709a234e16",
+      "sha256": "d6cea591f1045391d9b15bc514d6c3b60e69294f9a8d8bc8ea2a4d94f5ed870e",
+      "bytes": 7363,
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "blob": "ab355db12fb384949f433f6d2d15445f3dcd2dfa",
+      "sha256": "43f675022aa15555bbf234417b0a25431a925825197fb19354211f52006c8231",
+      "bytes": 4344,
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "blob": "f7618e0097b78679f8c34749e93474c8dc93641b",
+      "sha256": "3f907fd08f4afdb059b125a451f6b6ca473a326bb41cbbbbba53a7de1c855eaa",
+      "bytes": 13979,
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+      "blob": "d44a80b24c4c098c0dbbc2c466e7d3e091961980",
+      "sha256": "d5ae0a60f974828d7c4f455cccb37eb674e28d6ae42546a0012a0a1d62f1a59e",
+      "bytes": 2882,
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+      "blob": "b241896293521d42c1b86d82d193328d48f0bcd7",
+      "sha256": "d39b94eb2f0c95e3bc45963d0be85e7684012c04fb085576a822d05abfe31e95",
+      "bytes": 14948,
+      "exact": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "blob": "5cac657f5f9de9b6de9a9c63dc45c67886724b84",
+      "sha256": "f218b696dcc011d8c06f278708677944c43bf17fe970c9bec1873283b6d7f21e",
+      "bytes": 10232,
+      "exact": true
+    }
+  ],
+  "product_tests": "NOT_RUN_LOCALLY",
+  "status": "EXACT_POSTIMAGES_REPRODUCED"
+}

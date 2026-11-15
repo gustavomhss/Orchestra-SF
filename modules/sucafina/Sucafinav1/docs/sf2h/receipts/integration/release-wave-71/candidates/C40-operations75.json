@@ -1,0 +1,233 @@
+{
+  "schema": "sf2h.integration71.candidate.v1",
+  "candidate": "C40",
+  "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+  "parent": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+  "parentTree": "6975ec3f93801e081f14091343f6c2f2d1b57252",
+  "writer": "S0-C-e13-browser71",
+  "source": {
+    "branch": "operations-scanner-proof",
+    "pr": 78,
+    "predecessor63_terminal": "f0682b3ca9a792dcef2166a867aa06974e242874",
+    "ack75": "55c309e3b39f11a09c1796afc755535d4eb70295",
+    "W4": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "W4_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+    "release_commit": "a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa",
+    "release_tree": "7d2ead93e01e987de9ac4b12782365b620385aae",
+    "release_blob": "2fda256cb01fc49cac71a18a564ba3b2583e27e0",
+    "manifest_blob": "5f4cc3d72b94bc81b24f464de04270eecda45633",
+    "closure_blob": "2a29c02638488cfe5224d5ff8305f20f104d7bac",
+    "release_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-installed-finish/",
+    "release_status": "RELEASED_FOR_SELECTIVE_COMPOSITION_WITH_HOLDS",
+    "not_terminal": true,
+    "current_authority_head_observed": "c1cb7e6d9d16bcbb92fb25f5f42de342b5a554ba",
+    "current_authority_blob": "c97939487b2dc2b8da75496a0deff6aa7f5be8a6",
+    "current_authority_path": "AUTHORITY-MATERIAL-W4.json",
+    "frozen_material_state": "MATERIAL_W4_RELEASED_FROZEN",
+    "active_phase": "ACTIVE_FOR_QUALIFICATION_AND_RECEIPTS_ONLY",
+    "material_writes_paused": true,
+    "source_lease": "operations-finish-browser75",
+    "source_lease_ended": false,
+    "material_intake_authorized_now": true,
+    "terminal_owner": "75 retains campaign resource until actual journey result and terminal handoff;71 stack writer;45 compiler;S0 final acceptance",
+    "head_after_release_delta": "Two commits,14 receipt additions only; no source material changes. Do not copy moving branch HEAD.",
+    "W4_release_delta": "44 receipt additions only; S is separate request-only child",
+    "archiveTree": "7880b9a38084ed4ff61e3fd349719f80600e3675",
+    "archiveBlobs": 89
+  },
+  "files": [
+    {
+      "mission": 75,
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "mode": "100644",
+      "pre": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "post": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "kind": "modified",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": ".github/workflows/sf-operations-scanner.yml",
+      "mode": "100644",
+      "pre": null,
+      "post": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+      "kind": "added",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": "script/sf2h/operations-scanner/README.md",
+      "mode": "100644",
+      "pre": "1cca813f15c94cd397825a42c28ac9b9020212df",
+      "post": "83f0cb7243387ca045e5a7db6367f5a579f01d2f",
+      "kind": "modified",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": "script/sf2h/operations-scanner/request.mjs",
+      "mode": "100644",
+      "pre": null,
+      "post": "f9c4284774bec233a4ea92e70f1646709a234e16",
+      "kind": "added",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "mode": "100644",
+      "pre": "66bd6df24499027328f22b598e50268023287071",
+      "post": "ab355db12fb384949f433f6d2d15445f3dcd2dfa",
+      "kind": "modified",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "mode": "100644",
+      "pre": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+      "post": "f7618e0097b78679f8c34749e93474c8dc93641b",
+      "kind": "modified",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "d44a80b24c4c098c0dbbc2c466e7d3e091961980",
+      "kind": "added",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "b241896293521d42c1b86d82d193328d48f0bcd7",
+      "kind": "added",
+      "review_unit": "source75-frozen-W4"
+    },
+    {
+      "mission": 75,
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "mode": "100644",
+      "pre": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "post": "5cac657f5f9de9b6de9a9c63dc45c67886724b84",
+      "kind": "modified",
+      "review_unit": "source75-frozen-W4"
+    }
+  ],
+  "review": "reviews/operations75.json",
+  "sourceArchive": "source-outputs/operations75-W4",
+  "frozenAuthorityArchive": "source-outputs/operations75-authority",
+  "authorityDisposition": {
+    "releaseFrozen": true,
+    "sourceLeaseEnded": false,
+    "sourceActiveFor": "qualification and receipts only",
+    "unitConsumableNow": true,
+    "actualCIResourceOwner": 75,
+    "stackWriter": 71,
+    "compilerOwner": 45,
+    "finalOwner": "S0",
+    "workflowMaintenanceTransfer": "PENDING_OWNER75_TERMINAL"
+  },
+  "required73": {
+    "candidate": "C37",
+    "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "completeUnit": true,
+    "procurement": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "application": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+    "oracle": "5c25f109c4df835761e8aba8351686174ac6d7aa"
+  },
+  "workflow": {
+    "control_commit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "control_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/operations-installed-finish.json",
+    "control_blob": "a886e2f2d8d6cc3529c1b1f5613313665876b02d",
+    "authority_basis": "Explicit owned .github/workflows/sf-operations-scanner.yml allowed when existing lane insufficient. Existing test-ci has no scanner setup and belongs45;75 adds only its scoped resource and reuses canonical validator/package actions.",
+    "path": ".github/workflows/sf-operations-scanner.yml",
+    "blob": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+    "event": "push only",
+    "branch_patterns": [
+      "sf-ops75-*"
+    ],
+    "no_workflow_dispatch": true,
+    "no_pull_request_trigger": true,
+    "no_schedule": true,
+    "composition_on_sf2_stack_triggers_this_workflow": false,
+    "generic_lane": {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "trigger": "push ci-run-*",
+      "modified": false,
+      "duplicate_with_sf_ops75": false
+    },
+    "guard": [
+      "Exact repository name/id, push LinuxX64, read-only contents permission, noncancelling single campaign concurrency",
+      "Pinned checkout/setup-node/upload-artifact actions; checkout exact github.sha and no persisted credentials",
+      "Request max16KiB; exact two accepted selections through unchanged canonical validateRequest and envallowlist",
+      "Full productSHA, request canonicalSHA256, controls sourceBranch operations-scanner-proof or journeys sf2-stack",
+      "Dedicated branch suffix encodes product prefix, selection, request hash and attempt1-99",
+      "Snapshot HEAD==github.sha, exactly one full parent==productSHA, exclusive .ci-run.json delta",
+      "Workflow/scripts/config/exact test hashes recorded and rechecked immediately before execution",
+      "Journeys list must contain exactly original fiveIDs, one test each; canonical Playwright args enforce workers1/retries0/repeat1"
+    ],
+    "composition_authorization": "Including these reviewed source bytes into sf2-stack does not dispatch this workflow. No CI request or ref is created by71; actual qualification remains queued to existing authorized75 and checks45.",
+    "runner": "ubuntu-24.04",
+    "job_budget_minutes": 45,
+    "cleanup": "always after admitted request, ownership-checked PID/executable/start time/config; only job-local files removed",
+    "capability_owner": 75,
+    "maintenance_handoff_to71": "FUTURE_PENDING_TERMINAL; not accepted as already transferred",
+    "noDispatchBy71": true
+  },
+  "proof": {
+    "source": "R3 actual7PASS/0FAIL/150expects realClamD limited controls",
+    "composedFiveOriginals": "NOT_RUN",
+    "criteria": "251NOT_RUN;10 historical gaps retained",
+    "notTransferred": "source/runtime/private admission evidence is not installed browser acceptance"
+  },
+  "held": {
+    "five_originals": [
+      "OP-PROC-01",
+      "OP-PROC-02",
+      "OP-PROC-03",
+      "OP-IMPORT-01",
+      "OP-DOC-01"
+    ],
+    "five_originals_status": "NOT_RUN75_ON_COMPOSED_C",
+    "fixed_budgets": {
+      "test_ms": 60000,
+      "expect_ms": 10000,
+      "retries": 0,
+      "repeat": 1,
+      "workers": 1
+    },
+    "checks45": "NOT_RUN",
+    "criteria": {
+      "total": 251,
+      "WP04": 111,
+      "WP06": 140,
+      "mission75_all_NOT_RUN": 251,
+      "closed": 0,
+      "baseline_historical_gaps": 10,
+      "full_obligations_closed": 0
+    },
+    "separate_holds": [
+      "C06broad consumers/formats/changes/revocation/recreate/incarnations",
+      "Import preview/Apply/durable receipt/lost-delivery browserrecovery",
+      "Document schema/extraction/confirmation/postaccepting-scan revocation",
+      "Native/Omni/AM/human timing/eightfinalselections/threeFINAL/C-G7/D-G8",
+      "All inherited C28functional obligations"
+    ],
+    "lease_closeout": "75 terminalresource handoff pending after scopedqualification"
+  },
+  "dependencies": "Five exact current preimages read atC39;3 upgrades apply only over released63 bytes; other8 source63 paths preserved. Auth72/BI62 current changes retained and require composed revalidation.",
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}

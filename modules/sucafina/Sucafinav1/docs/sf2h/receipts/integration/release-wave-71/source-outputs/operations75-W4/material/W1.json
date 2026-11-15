@@ -1,0 +1,28 @@
+{
+  "schema": "sf2h.operations75.material-increment.v1",
+  "increment": "W1",
+  "parent": "55c309e3b39f11a09c1796afc755535d4eb70295",
+  "delta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "pre": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "post": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "origin": "Reviewed inert63 field-errors.patch; activated under75 authority"
+    }
+  ],
+  "cause": "Rendered data-error-for description survived old cleanup and accumulated with data-field-error response message.",
+  "change": "Remove both known error producers and only their exact aria-describedby token; preserve unrelated descriptions, input values and existing focus behavior.",
+  "review": {
+    "reviewer": "normative_review",
+    "mode": "read-only static",
+    "mandatory_findings": 0,
+    "limits": [
+      "No runtime execution",
+      "Two independent causes of invalidity on one field not demonstrated by inspected Procurement producers",
+      "Original OP-PROC03 does not explicitly assert focus"
+    ]
+  },
+  "validation": "NOT_RUN; exact OP-PROC03 original retained for hosted journey qualification",
+  "procurement73": "external/REQUEST73.json; no direct write",
+  "GLOBAL_RELEASE": false
+}
