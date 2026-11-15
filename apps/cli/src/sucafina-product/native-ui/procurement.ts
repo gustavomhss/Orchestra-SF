@@ -142,17 +142,21 @@ function approvalGroups(
   requests: readonly Record<string, unknown>[], actorId: string, queue: ProcurementQueueView | undefined,
 ) {
   const valid = requests.filter(hasRequestShape)
-  const groups = queue
-    ? procurementApprovalGroups(queue, actorId)
-    : approvalQueue(valid, actorId)
-  const fromRows = (arr: readonly { id: string }[]) =>
-    arr.map((row) => valid.find((request) => request.number === row.id)).filter((row): row is RequestView & Record<string, unknown> => row !== undefined)
-      .map((row) => selectRequest(row, true))
-  return queue ? {
-    waitingForYou: fromRows(groups.waitingForYou),
-    waitingForOthers: fromRows(groups.waitingForOthers),
-    unassigned: fromRows(groups.unassigned),
-  } : {
+  if (queue) {
+    const groups = procurementApprovalGroups(queue, actorId)
+    const fromRows = (arr: readonly { id: string }[]) =>
+      arr.flatMap((row) => {
+        const request = valid.find((request) => request.number === row.id)
+        return request ? [selectRequest(request, true)] : []
+      })
+    return {
+      waitingForYou: fromRows(groups.waitingForYou),
+      waitingForOthers: fromRows(groups.waitingForOthers),
+      unassigned: fromRows(groups.unassigned),
+    }
+  }
+  const groups = approvalQueue(valid, actorId)
+  return {
     waitingForYou: groups.waitingForYou.map((row) => selectRequest(row, true)),
     waitingForOthers: groups.waitingForOthers.map((row) => selectRequest(row, true)),
     unassigned: groups.unassigned.map((row) => selectRequest(row, true)),
@@ -270,6 +274,8 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
     // Source controls/actor are checked again under the original producer's lock.
     let prepared: Exclude<Awaited<ReturnType<NonNullable<typeof deps.application.productView>>>, Response> | undefined
     try {
+      // Prepare the original environment outside the lock, as Application already does.
+      const environment = await deps.application.environment(request)
       const productView = await deps.application.productView?.(request, "procurement", page)
       if (productView instanceof Response)
         return refusal("unavailable", "procurement-producer-unavailable")
@@ -300,7 +306,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
           return { commit: false, value: { status: "stale" as const, reason: "procurement-source-changed" } }
         const view = contribution.domain.view(
           { ...snapshot, data: publicSfData(snapshot.data) }, actor,
-          await deps.application.environment(request),
+          environment,
         )
         const projection = pageData(capability, view, actor, prepared?.data ?? {})
         if (!projection)
@@ -330,7 +336,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
         return refusal("stale", "procurement-actions-changed")
       return response(result, 200)
     } catch {
-      return refusal(request.signal.aborted ? "unavailable" : "unavailable", "procurement-read-unavailable")
+      return refusal("unavailable", "procurement-read-unavailable")
     } finally {
       prepared?.finish()
     }
