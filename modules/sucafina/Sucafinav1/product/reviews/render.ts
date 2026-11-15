@@ -140,7 +140,37 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
           columnWidths: [4900, 2100, 2906],
           rows: [
             new TableRow({ tableHeader: true, children: ["Captured value", "Period", "Sources"].map((label) => new TableCell({ shading: { fill: "E4ECE6" }, children: [new Paragraph({ children: [new TextRun({ text: label, bold: true, size: 20 })] })] })) }),
-            ...section.table.map((row) => new TableRow({ children: [row.value, row.period, row.sources].map((text, column) => new TableCell({ margins: { top: 100, bottom: 100, left: 100, right: 100 }, children: [new Paragraph({ children: fitSlideText(text, { fontSize: 10, boxWidthInches: [4900, 2100, 2906][column]! / 1440, marginInches: 0.1 }).map((fragment, index) => new TextRun({ text: fragment, size: 20, ...(index ? { break: 1 } : {}) })), widowControl: false, spacing: { after: 0, line: 240 } })] })) })),
+            ...section.table.flatMap((row, rowIndex) => {
+              const widths = [4900, 2100, 2906] as const
+              const fragments = [row.value, row.period, row.sources].map((text, column) =>
+                fitSlideText(text, { fontSize: 10, boxWidthInches: widths[column]! / 1440, marginInches: 0.1 }))
+              // A Word row split across a page does not repeat its first cell. Bound each
+              // physical row before cantSplit; never mark an arbitrarily tall row unsplittable.
+              const linesPerRow = 12
+              const rowCount = Math.ceil(Math.max(...fragments.map((cell) => cell.length)) / linesPerRow)
+              const identifier = row.value.slice(0, row.value.indexOf(": "))
+              const identifierLines = fitSlideText(identifier, { fontSize: 10, boxWidthInches: widths[0] / 1440, marginInches: 0.1 })
+              const periodLines = fragments[1]
+              const label = identifierLines.slice(0, 2).join(" ") + (identifierLines.length > 2 ? "…" : "")
+              const periodLabel = periodLines.slice(0, 2).join(" ") + (periodLines.length > 2 ? "…" : "")
+              return Array.from({ length: rowCount }, (_, part) => new TableRow({
+                cantSplit: true,
+                children: fragments.map((cell, column) => {
+                  const lines = cell.slice(part * linesPerRow, (part + 1) * linesPerRow)
+                  const continuation = part === 0 ? undefined
+                    : column === 0 ? `Record ${rowIndex + 1} · ${label || "captured value"} (continued)`
+                    : column === 1 ? `Period: ${periodLabel} (continued)`
+                    : "Sources (continued from the same captured record)"
+                  return new TableCell({
+                    margins: { top: 100, bottom: 100, left: 100, right: 100 },
+                    children: [
+                      ...(continuation ? [new Paragraph({ children: [new TextRun({ text: continuation, bold: true, size: 18 })], widowControl: false, spacing: { after: 0, line: 240 } })] : []),
+                      ...(lines.length ? [new Paragraph({ children: lines.map((line, index) => new TextRun({ text: line, size: 20, ...(index ? { break: 1 } : {}) })), widowControl: false, spacing: { after: 0, line: 240 } })] : []),
+                    ],
+                  })
+                }),
+              }))
+            }),
           ],
         })] : []),
       ]),
