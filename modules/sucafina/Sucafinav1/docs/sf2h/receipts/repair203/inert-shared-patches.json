@@ -1,0 +1,25 @@
+{
+  "schema": "sf2h.inert-shared-patch.v1",
+  "mission": 203,
+  "authority": "189_only",
+  "branch": "sf2-stack",
+  "semantics": "Proposal only; strict preimage CAS and owner release required. No shared path modified by 203.",
+  "changes": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "expected_integrator_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "preblob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "postblob": "c5de0aa5ed378dc83a7fec1babd5fccee8b64050",
+      "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/inert-router.ts.diff",
+      "not_applied": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "expected_integrator_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "preblob": "0789f34911cd97d82a870dcee2f17fa37c8b4578",
+      "postblob": "1d0e5816d15865b2df8459c6535980b65d27f20c",
+      "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/inert-transport.test.ts.diff",
+      "not_applied": true
+    }
+  ]
+}
