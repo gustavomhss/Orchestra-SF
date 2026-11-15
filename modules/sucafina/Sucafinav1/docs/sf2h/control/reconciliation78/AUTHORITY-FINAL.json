@@ -1,0 +1,40 @@
+{
+  "schema": "sf2h.reconciliation78.authority-final.v1",
+  "mission": 78,
+  "actor": "S0-A traceability delta auditor",
+  "branch": "scope-delta-audit",
+  "lease_epoch": "scope-audit-browser78",
+  "state": "HANDOFF_TERMINAL_DOCUMENTARY_LEASE_ENDS_ON_SUCCESSFUL_PUBLICATION",
+  "containing_commit": "CONTAINING_COMMIT_RESOLVED_BY_GITHUB_TREE_AND_PR_HANDOFF",
+  "write_scope": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/control/reconciliation78/"
+  ],
+  "scope_completion": "Canonical ledger + source/target delta + finite queue + documentary PR + S0/71 handoff",
+  "product_completion": "NOT_CLAIMED",
+  "candidate": {
+    "name": "C31",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "observed_at_utc": "2026-11-15T03:17:23Z",
+    "qualification": "HOLD_NOT_RUN",
+    "cutoff_rule": "Bounded immutable snapshot. Later branch movement requires a new delta; no live-head guarantee."
+  },
+  "consumer": {
+    "integration": 71,
+    "compiler_checks": 45,
+    "epic_final_acceptance": "S0",
+    "ack": "REQUESTED_NOT_ASSUMED"
+  },
+  "remaining_for78": "Only publication readback/PR handoff metadata; no product or control authority transferred.",
+  "source_ownership": "Explicit terminals59/61/63/64/65/66/48 recorded.52/62/67/68/69 preserved at their pinned nonterminal states.71 alone writes stack;72/73/74/75/76/77 keep assigned scopes and must reconcile their own ACK.",
+  "no_silence_inference": true,
+  "session_id": null,
+  "model_effective": null,
+  "execution_by78": {
+    "product": "NONE",
+    "tests": "NONE",
+    "CI_dispatch": "NONE",
+    "other_branch_writes": "NONE"
+  },
+  "new_work_requires": "Explicit new documentary scope or consumer feedback; never takeover of product/source authority."
+}

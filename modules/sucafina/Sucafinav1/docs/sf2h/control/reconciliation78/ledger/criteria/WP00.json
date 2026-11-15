@@ -1,0 +1,5006 @@
+{
+  "schema": "sf2h.reconciliation78.criteria.v1",
+  "group": "WP00",
+  "count": 85,
+  "rule": "Historical full-criterion assessments preserved verbatim. Scoped delta evidence and current C qualification are distinct. No source PASS/intake/ACK/plan/commit becomes DONE.",
+  "criteria": [
+    {
+      "id": "WP00.DOD.01",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/axioms/dod/0",
+      "text_sha256": "8e60452d58db730c629cc0c57412bd10e66d9e0474fc2d58dd03039a253ec821",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/0",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.DOD.01",
+        "SCOPE-69:WP00.DOD.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.DOD.01"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.DOD.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.DOD.02",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/axioms/dod/1",
+      "text_sha256": "581844035512e2ace0c9d8ba4502c803f51869d1c0f1fe9183282d236fe7db4a",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/1",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.DOD.02",
+        "SCOPE-69:WP00.DOD.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.DOD.02"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.DOD.02"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.DOD.10",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/axioms/dod/2",
+      "text_sha256": "418561a4187fc91957a1789f76ba07703176a5a46e968031a1327cb39625c305",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/2",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.DOD.10",
+        "SCOPE-69:WP00.DOD.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.DOD.10"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.DOD.10"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.DOD.40",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/axioms/dod/3",
+      "text_sha256": "46d2a5e6bcceb2b493b9e1a002efdb88537c06d303a7eb600c7b2cf8c1ed9915",
+      "owning_task": null,
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/3",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.DOD.40",
+        "SCOPE-69:WP00.DOD.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.DOD.40"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.DOD.40"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.INV.01",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/axioms/invariants/0",
+      "text_sha256": "4a0253bcdd1dffb60b7058caa7b90c0105c1e2d97a598fb7f052052bd9c7a589",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/4",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.INV.01",
+        "SCOPE-69:WP00.INV.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.INV.01"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.INV.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.INV.02",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/axioms/invariants/1",
+      "text_sha256": "1a91a850fe311875f3fca9f3faa89db3cfbafa475023f0719819799ab4d0be9e",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/5",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.INV.02",
+        "SCOPE-69:WP00.INV.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.INV.02"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.INV.02"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.INV.10",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/axioms/invariants/2",
+      "text_sha256": "0606fce5774324f2f161d73d2d1b67c98438e68565a14ea39f37019d93deaf71",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/6",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.INV.10",
+        "SCOPE-69:WP00.INV.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.INV.10"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.INV.10"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.INV.40",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/axioms/invariants/3",
+      "text_sha256": "83ef806df2597432eda3a84fc0d81b2d56072447165e417b43cff1370350b160",
+      "owning_task": null,
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/7",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.INV.40",
+        "SCOPE-69:WP00.INV.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.INV.40"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.INV.40"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.QLT.01",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/axioms/quality_standards/0",
+      "text_sha256": "db81f6767d5a0fbfd635985ae0e47640a076a41edd8fa80c8c348462d9e83861",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/8",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.QLT.01",
+        "SCOPE-69:WP00.QLT.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.QLT.01"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.QLT.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.QLT.02",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/axioms/quality_standards/1",
+      "text_sha256": "41ae126ba435dfdf94da4292f3bf27a2efe0e216ae957d7f8938f6e13f536c19",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/9",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.QLT.02",
+        "SCOPE-69:WP00.QLT.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.QLT.02"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.QLT.02"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.QLT.10",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/axioms/quality_standards/2",
+      "text_sha256": "403165f4c1979410c66639580fc3e4f70352d895c0f3bbbae3440e5f9ac38de2",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/10",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.QLT.10",
+        "SCOPE-69:WP00.QLT.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.QLT.10"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.QLT.10"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.QLT.40",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/axioms/quality_standards/3",
+      "text_sha256": "ef5901c51235d0428d1bd3e3b8a471454831c60222d1a69a997b7fa27725cfbb",
+      "owning_task": null,
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/11",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.QLT.40",
+        "SCOPE-69:WP00.QLT.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.QLT.40"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.QLT.40"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.CMP.01",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/completeness_criteria/0",
+      "text_sha256": "53f7e1d685c9d635e5d4b8b9c2d9a6dbdf4db786e04e370f2a83a7a29e721290",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/12",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.CMP.01",
+        "SCOPE-69:WP00.CMP.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.CMP.01"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.CMP.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.CMP.02",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/completeness_criteria/1",
+      "text_sha256": "7e3c7672820a2c5570d60f14bdadeae0cb691796eb881b5581da07fb12af7a9d",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/13",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.CMP.02",
+        "SCOPE-69:WP00.CMP.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.CMP.02"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.CMP.02"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.CMP.10",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/completeness_criteria/2",
+      "text_sha256": "e6ca5af07c6e43aee0672ea10f784e4028267884df194e2405e18eb257a5a8e6",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/14",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.CMP.10",
+        "SCOPE-69:WP00.CMP.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.CMP.10"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.CMP.10"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.CMP.40",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/completeness_criteria/3",
+      "text_sha256": "06e0361cc863a87b31daee0922799f5984381679ce4b53d58951f2d09f1e8da2",
+      "owning_task": null,
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/15",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.CMP.40",
+        "SCOPE-69:WP00.CMP.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.CMP.40"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.CMP.40"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.SUC.01",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/success_criteria/0",
+      "text_sha256": "b39569c22b84d4391812c344507bceef75af0c4f2b7799598db1f567bb02506e",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/16",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.SUC.01",
+        "SCOPE-69:WP00.SUC.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.SUC.01"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.SUC.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.SUC.02",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/success_criteria/1",
+      "text_sha256": "b40ed75d71b5777ea6f0a30784c89aaf6c5d8b84c8a8405db4de7cf963ae81cf",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/17",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.SUC.02",
+        "SCOPE-69:WP00.SUC.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.SUC.02"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.SUC.02"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.SUC.10",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/success_criteria/2",
+      "text_sha256": "06dd2db94e7088ff3beedf93affeccda7784123c96e9e03215dbfb816ffea5ea",
+      "owning_task": null,
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/18",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.SUC.10",
+        "SCOPE-69:WP00.SUC.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.SUC.10"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.SUC.10"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.SUC.40",
+      "wp": "WP00",
+      "entity_id": "WP00",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/axioms/success_criteria/3",
+      "text_sha256": "cab26a9f67e2b9dcf59c16cf62ff375e8a00d208a724edebf4700fe98e5be1c8",
+      "owning_task": null,
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/19",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER",
+        "CONTRACT-TREES",
+        "MEASUREMENT-GAP",
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.SUC.40",
+        "SCOPE-69:WP00.SUC.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64,
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.SUC.40"
+          ],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.SUC.40"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T01.DOD.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T01",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/0/axioms/dod/0",
+      "text_sha256": "12db743bc4e7b6cf38705834588784c4b6da5e63fb1621098f4e3c65336f2ffe",
+      "owning_task": "WP00.T01",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/20",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T01.INV.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T01",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/0/axioms/invariants/0",
+      "text_sha256": "1145097ee63ede28b3fc841558548098bedc030fdaa6759f8f9450576baf9d91",
+      "owning_task": "WP00.T01",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/21",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T01.QLT.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T01",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/0/axioms/quality_standards/0",
+      "text_sha256": "b84e67ba7f4b12ff8ebbe3b477cc472587c52d5271d7dad1e90781c57c4dfac8",
+      "owning_task": "WP00.T01",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/22",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T01.CMP.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T01",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/0/axioms/completeness_criteria/0",
+      "text_sha256": "208dfb49e01a301370cfebd90a25199c16c85ac683b95435b59d2ab0c1617988",
+      "owning_task": "WP00.T01",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/23",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T01.SUC.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T01",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/0/axioms/success_criteria/0",
+      "text_sha256": "85727cac21b44b1f4f391543836beb0deae8817a21333bc94a1d176e63d5edbe",
+      "owning_task": "WP00.T01",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/24",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T01.CHK.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T01",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/0/checks/0",
+      "text_sha256": "43c2978665a3f9146a3aed28e12c580293ac765260f4fb6dc2f752d85cb4d55e",
+      "owning_task": "WP00.T01",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/25",
+      "baseline_assessment": {
+        "implemented": "YES",
+        "proven": "YES",
+        "integrated": "YES",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "YES",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "YES",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "YES",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T01.CHK.02",
+      "wp": "WP00",
+      "entity_id": "WP00.T01",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/0/checks/1",
+      "text_sha256": "e133a2b7b37bda05a7408d6e5c962462d950d95c46f3afe93b163eface88aa99",
+      "owning_task": "WP00.T01",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/26",
+      "baseline_assessment": {
+        "implemented": "YES",
+        "proven": "YES",
+        "integrated": "YES",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "BASELINE-CONSUMER"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "YES",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "YES",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "YES",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.DOD.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/dod/0",
+      "text_sha256": "9b5e5784774cdfed9fb8bdb99b0b53edb7c8cae7caca80e5a361de8c479edc72",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/27",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.DOD.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/dod/1",
+      "text_sha256": "190422b243faa245925ca99ff37245a2dce164984cbe70d8c130b236d557b722",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/28",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.DOD.60",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/dod/2",
+      "text_sha256": "abec2e0fa9044d486effeb7da6d7a6ed750ec90638b9fb064d96dc194d13ce32",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/29",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.INV.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/invariants/0",
+      "text_sha256": "37796b3afa7393a470be414651d03666891594c5f919d5c5c8f957078949e47a",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/30",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.INV.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/invariants/1",
+      "text_sha256": "df40cf1dea20f63da3e334606bb03d3f00d755ff925b7bef8b07575deb9903bb",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/31",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.INV.60",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/invariants/2",
+      "text_sha256": "dc23b75710b6fa9eff5c870529a1bbfb0360275daa229965835c7a679c6b680e",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/32",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.QLT.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/quality_standards/0",
+      "text_sha256": "f12cbc25ae8c36a70e86de18a7ba6ab457a78c35e031fdc1fd48a3d4bbdb116a",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/33",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.QLT.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/quality_standards/1",
+      "text_sha256": "5d64c6e9505b48b9e0feab5cfe7ec5d4592b0bb7234206a8987e20f9d775608c",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/34",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.QLT.60",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/quality_standards/2",
+      "text_sha256": "15e373235f902447cb0076062248a8988041ec76587d14942dc447f18fccc9e2",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/35",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CMP.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/completeness_criteria/0",
+      "text_sha256": "f954812a563d8b49e5804198b2c295eb43496c07bf1b13eb4ba8638b033ceeab",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/36",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CMP.02",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/completeness_criteria/1",
+      "text_sha256": "dc39bc63e05424f63f824ec251abf5b85f9aa7c1509f60fa2013ea7e8059dd1e",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/37",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CMP.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/completeness_criteria/2",
+      "text_sha256": "b4efda86441691ff6f4e4e1069855f6b64162910eaf089b537fe7d4b4caf5716",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/38",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CMP.60",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/completeness_criteria/3",
+      "text_sha256": "a387509c16b26ee461409c74283872dc898e5f09fae6572e784818476f6e60cf",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/39",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.SUC.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/success_criteria/0",
+      "text_sha256": "9d5660e0d430ab87cba55ece402602ea227b27219f9c16e1fa2714c7108a9a32",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/40",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.SUC.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/success_criteria/1",
+      "text_sha256": "fa3a39540bafecf5518f6247e6fb3c692aaebf3475f965231424057f052cfa9a",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/41",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.SUC.60",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/1/axioms/success_criteria/2",
+      "text_sha256": "93b2aa8fd9c28936b5aeaa6bee13d2b7e1c91eda63e4641c53ba1d264b728f74",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/42",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CHK.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/1/checks/0",
+      "text_sha256": "f1080727bb1913c71a31e4706669741db590b81efd69e2f08adf8df47b9bfcee",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/43",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CHK.02",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/1/checks/1",
+      "text_sha256": "fa45590de9df53694914f44e3a1d88fb09a2837b7e2c61f99f29124a9793441d",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/44",
+      "baseline_assessment": {
+        "implemented": "YES",
+        "proven": "YES",
+        "integrated": "YES",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "YES",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "YES",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "YES",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CHK.03",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/1/checks/2",
+      "text_sha256": "e45c5250187316594574a1975ca61c2f980a098fcf7e1c2ef6feb78f1a1c321a",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/45",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CHK.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/1/checks/3",
+      "text_sha256": "d4abc5a56822fbc90925565d08b2465b270986a682f37cdbc1d0723154fcdaee",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/46",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CHK.11",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/1/checks/4",
+      "text_sha256": "0bcf0d991a67ec64428326242ca396bbf18d7e15293692f4c2d4eb64f4d9872b",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/47",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CHK.12",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/1/checks/5",
+      "text_sha256": "5f6dc4f6018aa06fce24627394f19b761ca70542c240c7ee35e4fc69d11f23d8",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/48",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T02.CHK.60",
+      "wp": "WP00",
+      "entity_id": "WP00.T02",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/1/checks/6",
+      "text_sha256": "efeb3c371a988c7f4f8906c0ef36c561e68debdd6675da8464e8b68fba04b02d",
+      "owning_task": "WP00.T02",
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/49",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "CONTRACT-TREES"
+      ],
+      "delta_event_refs": [],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "NO_NEW_CRITERION_SPECIFIC_OBSERVATION",
+          "source_missions": []
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.DOD.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/2/axioms/dod/0",
+      "text_sha256": "c58c4fc2b4e50fbdc7e2f43f9796a01d855472219276e34574a6b68fb5de6c6f",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/50",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.DOD.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.DOD.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.INV.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/2/axioms/invariants/0",
+      "text_sha256": "6387f09c985e9053612c5f5a95c5cd3716549120703dd6c160f476f23e253442",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/51",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.INV.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.INV.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.QLT.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/2/axioms/quality_standards/0",
+      "text_sha256": "c8758869f8d14b6f0d3f603811867b1b8fd07356afbe2ccc1902667d7a3dc89f",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/52",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.QLT.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.QLT.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.QLT.02",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/2/axioms/quality_standards/1",
+      "text_sha256": "3be4402a65ba31b8a56f2ddaebca17d49099b64b1a441b62a0c7c4c5a13f71b9",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/53",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.QLT.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.QLT.02"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.CMP.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/2/axioms/completeness_criteria/0",
+      "text_sha256": "8a70e31765c3974fd744a1ec0fa90a004840283b26c48ddbf76a1d97ebd74e5f",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/54",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.CMP.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.CMP.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.SUC.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/2/axioms/success_criteria/0",
+      "text_sha256": "56d72506d47ff4d1bb6ee09f08356ceb63a00b8ef6a813ba31945345337fe751",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/55",
+      "baseline_assessment": {
+        "implemented": "PARTIAL",
+        "proven": "PARTIAL",
+        "integrated": "PARTIAL",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.SUC.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.SUC.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "PARTIAL",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.CHK.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/2/checks/0",
+      "text_sha256": "3b85df8606be3aacba31ee7e5e1cfc94296ce64ae942fc49cd395bdf5a2bb76e",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/56",
+      "baseline_assessment": {
+        "implemented": "YES",
+        "proven": "YES",
+        "integrated": "YES",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.CHK.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "YES",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "YES",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.CHK.01"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "YES",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.CHK.02",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/2/checks/1",
+      "text_sha256": "aec2a92b2f9527ceed61cfa9754678bc89c41129e36f37460aa8a6246e389ea7",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/57",
+      "baseline_assessment": {
+        "implemented": "YES",
+        "proven": "YES",
+        "integrated": "YES",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.CHK.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "YES",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "YES",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.CHK.02"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "YES",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T03.CHK.03",
+      "wp": "WP00",
+      "entity_id": "WP00.T03",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/2/checks/2",
+      "text_sha256": "c4760f91fc387445c526500e3a8fa477cf1330489cf0085332f2b08b917b1b13",
+      "owning_task": "WP00.T03",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/58",
+      "baseline_assessment": {
+        "implemented": "YES",
+        "proven": "YES",
+        "integrated": "YES",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "MEASUREMENT-GAP"
+      ],
+      "delta_event_refs": [
+        "SCOPE-69:WP00.T03.CHK.03"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "YES",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            69
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "YES",
+          "new_observation_refs": [],
+          "scope_trace_refs": [
+            "SCOPE-69:WP00.T03.CHK.03"
+          ],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "YES",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.DOD.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/dod/0",
+      "text_sha256": "9f0aeea24a1ee3ddbc4b9385a90bdb4ae646ac3cbdcd1783f965a66a377f0df9",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/59",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.DOD.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.DOD.01"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.DOD.02",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/dod/1",
+      "text_sha256": "45dfe43cf8f2104a0d4b05da582ab0e44c6587283cf2016efa6f2c4890056453",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/60",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.DOD.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.DOD.02"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.DOD.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/dod/2",
+      "text_sha256": "99e8f73af23c3adaf6222a8e0962014d7bb5e3193b90f2d22312e17c314c9d6b",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/61",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.DOD.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.DOD.10"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.DOD.40",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "dod",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/dod/3",
+      "text_sha256": "f44f3cef39d7768c872f4d4ff1e820d08da2ffcd479ef37832abe433a8201569",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/62",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.DOD.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.DOD.40"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.INV.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/invariants/0",
+      "text_sha256": "80a937d65c221bd9eee2f57fbbc3a3bb8e0082718a701790b061b1765b6ca661",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/63",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.INV.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.INV.01"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.INV.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/invariants/1",
+      "text_sha256": "3317349af5f7f152936ff3c8b7910aecb09363e30cf4bbbe49b9143be0d3ab49",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/64",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.INV.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.INV.10"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.INV.40",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "invariants",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/invariants/2",
+      "text_sha256": "1cd4c5cf00a906f59940a41d8e19acb30dc668d9b092a286945d581928c3045f",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/65",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.INV.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.INV.40"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.QLT.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/quality_standards/0",
+      "text_sha256": "40c8e81ef519c2340224726af0347a083e4dd5537b366a6ef3d9b093c2f97bde",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/66",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.QLT.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.QLT.01"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.QLT.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/quality_standards/1",
+      "text_sha256": "528d33c79fbbcc0424505e54973aa06fe7a2363bd15ba402f0ee6190ca3b58dd",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/67",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.QLT.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.QLT.10"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.QLT.40",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "quality_standards",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/quality_standards/2",
+      "text_sha256": "340879f1f584be270e0e962c5ecb755629ebf28d993d7df5578265990b034001",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/68",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.QLT.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.QLT.40"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CMP.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/completeness_criteria/0",
+      "text_sha256": "3d5f5d7ec1126473265f6e0ebc2c5c0329617f956a975d2055aa3ee2d0745d7b",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/69",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CMP.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CMP.01"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CMP.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/completeness_criteria/1",
+      "text_sha256": "d62ae2c0672a3234a914960699c4b3c50eb3d5f8b5869e3cc8bbcfaca081ac14",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/70",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CMP.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CMP.10"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CMP.40",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "completeness_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/completeness_criteria/2",
+      "text_sha256": "e574241458f7e99fba231e8f59c7b41f097449e3fcd44c8faad62424d38945ad",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/71",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CMP.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CMP.40"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.SUC.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/success_criteria/0",
+      "text_sha256": "7519142efb24eda15e1afc83221cdd366d6602016d50399fce59215eee20e559",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/72",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.SUC.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.SUC.01"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.SUC.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/success_criteria/1",
+      "text_sha256": "e58717fde77c18d0b121eef6fdc895600dd426464b72c4bc0086019466936011",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/73",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.SUC.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.SUC.10"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.SUC.40",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "success_criteria",
+      "canonical_pointer": "/work_packages/0/tasks/3/axioms/success_criteria/2",
+      "text_sha256": "fdd16f7eb02387ff6746d969a6b1c1cc878e711e10c535a34800b6a114402428",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/74",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.SUC.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.SUC.40"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.01",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/0",
+      "text_sha256": "51912955993b980d262af729197fe87f9837630fee63874163125882ec5e1adc",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/75",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.01"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.01"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.02",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/1",
+      "text_sha256": "9933ee88680f386060e614f64992e38671e5c55badc698f2803ce4b05fc9dc35",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/76",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.02"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.02"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.03",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/2",
+      "text_sha256": "a68d06e1e61b88ea002804e5e6078e2e7a72cf8fa024662ac009b90bec0def47",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/77",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.03"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.03"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.04",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/3",
+      "text_sha256": "c216f5a0c9b895825bbf549d640607acf20cd1756c662c675ccf93ebdcc27cc6",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/78",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.04"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.04"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.10",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/4",
+      "text_sha256": "263d4ced3156460f38deb868cafd8ac7eec5ee2f4a64159dbeb340f235e43f56",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/79",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.10"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.10"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.11",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/5",
+      "text_sha256": "72d49dfc550f5cd44b5734d2657dc735cfc75919ce6ff23ec6c8470aec08be07",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/80",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.11"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.11"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.12",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/6",
+      "text_sha256": "86052f7f2a73a96e765d3d48cbd8b5add96e1623331744c423dd3b9a2540bfd6",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01"
+      ],
+      "integrated_proofs": [],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/81",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.12"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.12"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.40",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/7",
+      "text_sha256": "766fbc7428d041e7e282c98956131634e9e6efe1fba8597aacfed2ffefa857b7",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/82",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.40"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.40"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.41",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/8",
+      "text_sha256": "b6e60740f50467d37e0311bf477f5923bd1bd3c53a6ca33d50433a0cb0a199b4",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/83",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.41"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.41"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    },
+    {
+      "id": "WP00.T04.CHK.42",
+      "wp": "WP00",
+      "entity_id": "WP00.T04",
+      "family": "check",
+      "canonical_pointer": "/work_packages/0/tasks/3/checks/9",
+      "text_sha256": "49ad0b3274c30a144eae86a19679b4444845ca0f9e7077fd6e6f00e5764261e8",
+      "owning_task": "WP00.T04",
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "baseline_source_ref": "BASE-WP00",
+      "baseline_row_pointer": "/criteria/84",
+      "baseline_assessment": {
+        "implemented": "UNKNOWN",
+        "proven": "UNKNOWN",
+        "integrated": "UNKNOWN",
+        "accepted": "NOT_ACCEPTED"
+      },
+      "baseline_findings": [
+        "NATIVE-QUALIFICATION"
+      ],
+      "delta_event_refs": [
+        "SRC-64:WP00.T04.CHK.42"
+      ],
+      "axes": {
+        "implementation": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "current_delta": "SCOPED_OBSERVATIONS_ONLY",
+          "source_missions": [
+            64
+          ]
+        },
+        "source_proof": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "new_observation_refs": [
+            "SRC-64:WP00.T04.CHK.42"
+          ],
+          "scope_trace_refs": [],
+          "full_criterion_promoted": false
+        },
+        "integration": {
+          "inherited_full_criterion_assessment": "UNKNOWN",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "consumed_source_unit_refs": [
+            "SRC-64"
+          ],
+          "unconsumed_released_unit_refs": [],
+          "full_criterion_integration": "NOT_INFERRED_FROM_UNIT_POSTIMAGES"
+        },
+        "candidate_qualification": {
+          "state": "NOT_ESTABLISHED",
+          "candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+          "evidence": null,
+          "acceptance": "NOT_ACCEPTED"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,3768 @@
+{
+  "schema": "sf2h.reconciliation78.inherited-delta.v1",
+  "rule": "Historical observations remain immutable; presence/consumption is not product acceptance. These inventories overlap and must not be summed into a DONE count.",
+  "anomalies": [
+    {
+      "id": "X29-THRESHOLD",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/0",
+        "record": {
+          "audit_partition": "root",
+          "id": "X29-THRESHOLD",
+          "classification": "FAILED_INTEGRATED_PROOF",
+          "owner": "WP10.T01 / WP13.T03",
+          "task_ids": [
+            "WP10.T01",
+            "WP13.T03"
+          ],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+            "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp10/portfolio-composition/portfolio-exact-threshold.test.ts"
+          ],
+          "sources": [
+            "ROOT-29-c09-runs_X29-dispatch.json"
+          ],
+          "run_id": 43628663680,
+          "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+          "S": "d356d543298835b09b0452777fbd76cdaea77c85",
+          "observation": "Run agora completed/failure: fixture.complete8721ms; host.evaluate-and-store276519ms, aborto cooperativo ao total285245ms. Leitura/retry/revogação não alcançados. A redução de4→2 transações não demonstra fechamento da jornada.",
+          "next_action": "Instrumentar/fixar a causa dominante no caminho real após preservar os gates fonte/autoridade já verdes; não aumentar orçamento ou somar tempos inclusivos."
+        }
+      },
+      "delta78": {
+        "state": "CAUSE_OPEN_OWNER76",
+        "note": "59 R2 is scoped PASS; original P03 still timed out. Preserve72assertion lines/180000ms; no unchanged retry.",
+        "action_refs": [
+          "M78-Q76"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "MEMORY-INTEGRITY",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/1",
+        "record": {
+          "audit_partition": "root",
+          "id": "MEMORY-INTEGRITY",
+          "classification": "FAILED_SAFETY_INVARIANT",
+          "owner": "WP10/S0-B missão memory-integrity-preflight PR29",
+          "task_ids": [
+            "WP10.T07",
+            "WP10.T01"
+          ],
+          "paths": [
+            "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+            "apps/cli/src/sucafina-product/host-context.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+          ],
+          "sources": [
+            "ROOT-55-HANDOFF.md",
+            "ROOT-29-c09-reconciliation.json"
+          ],
+          "observation": "No estado A27, Atlas recusa projeção persistida corrompida mas staleAccess.preflight retorna ok. O timeout antigo deixou de ser a causa desse teste. Negativos finais de revogação não foram alcançados.",
+          "next_action": "Validar identidade/headers/projeção/digest no reader instalado; preservar histórico autorizado e metadata-only stale.preserve; consumir entrega da missão atual."
+        }
+      },
+      "delta78": {
+        "state": "HISTORICAL_INTAKE_EXISTS_QUALIFICATION_OPEN",
+        "note": "40 consumed historically;69 current source work remains owner-held. Original MI07/C17 proof unresolved.",
+        "action_refs": [
+          "M78-Q69"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "MULTIHEAD-CONSUMPTION",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/2",
+        "record": {
+          "audit_partition": "root",
+          "id": "MULTIHEAD-CONSUMPTION",
+          "classification": "OVERLAPPING_ORIGINS",
+          "owner": "S0 / WP10",
+          "task_ids": [
+            "WP10.T01"
+          ],
+          "paths": [
+            "apps/cli/src/sucafina-product/business-services.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+            "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+          ],
+          "sources": [
+            "ROOT-44-R04-critical-overlaps.json",
+            "ROOT-29-c09-diagnostics_wp10-pr59-financial-gate-reachability.md"
+          ],
+          "observation": "PR42 ainda tem FIN001–003; PR29 já contém verifyScenarioOperations, factory state/authorizeCase/authorizeEvidence e prefixo portfolio. Wrapper C11 e callback workSignals também já existem em29. Reaplicar remédio de árvore antiga pode regredir o produtor novo.",
+          "next_action": "Escolher por blob/preimage e consumidor; não substituir arquivos integrais nem tratar status de PR42 como status de29."
+        }
+      },
+      "delta78": {
+        "state": "RELEASES_RECOVERED_CURRENT_INTAKE_PARTIAL",
+        "note": "59/63/64 now inC31; three pending released units remain. Original histories preserved.",
+        "action_refs": [
+          "INTAKE-61",
+          "INTAKE-65",
+          "INTAKE-66"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "INHERITED-PR-DIFF",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/3",
+        "record": {
+          "audit_partition": "root",
+          "id": "INHERITED-PR-DIFF",
+          "classification": "INHERITED_BRANCH_DIFF",
+          "owner": "S0 evidential intake",
+          "task_ids": [
+            "WP10.T01",
+            "WP10.T05"
+          ],
+          "paths": [
+            "intel-resume...sf2-control"
+          ],
+          "sources": [],
+          "observation": "intel-resume já contém commits de produto. Compare inicial control...intel diverge ahead60/behind21 e retorna300files (cap da API); o total real não foi inferido. Esta missão adiciona somente seus namespaces e preserva os ancestrais.",
+          "next_action": "Revisar o delta do novo commit e admitir apenas seus blobs evidenciais; nunca mergear a branch inteira em produto."
+        }
+      },
+      "delta78": {
+        "state": "SELECTIVE_INTAKE_REQUIRED",
+        "note": "Never merge inherited multihead branch wholesale. Use complete owned unit with pre/post and current dependency closure.",
+        "action_refs": [
+          "INTAKE-61",
+          "INTAKE-65",
+          "INTAKE-66"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "NO-ACCEPTED-C",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/4",
+        "record": {
+          "audit_partition": "root",
+          "id": "NO-ACCEPTED-C",
+          "classification": "ACCEPTANCE_ABSENT",
+          "owner": "S0 / revisores independentes",
+          "task_ids": [
+            "WP10.T03",
+            "WP10.T04",
+            "WP10.T05"
+          ],
+          "paths": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/"
+          ],
+          "sources": [
+            "ROOT-44-HANDOFF-S0.md",
+            "ROOT-44-R06-owner-findings.json"
+          ],
+          "observation": "Não foi encontrado C aceito/GLOBAL_RELEASE nos heads e recibos consultados; evidências multi-head não são candidato final.",
+          "next_action": "Estabilizar C, executar gates pela autoridade competente e obter3pareceres no mesmoC; depoisD arquiva sem reatribuir execução."
+        }
+      },
+      "delta78": {
+        "state": "OPEN",
+        "note": "C31 construction does not establish accepted C or D.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "OPS-REV-01",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/5",
+        "record": {
+          "audit_partition": "ops",
+          "id": "OPS-REV-01",
+          "title": "Sourcing money fix consumed; export consumers still disagree",
+          "scope": "WP04.T03",
+          "classification": "FIX_CONSUMED_WITH_FAILED_CONSUMER",
+          "owner": "WP04/S2-A; astra-operations; runtime download owner; WP10 intake",
+          "criteria_ids": [
+            "WP04.T03.CHK.03",
+            "WP04.T03.DOD.02",
+            "WP04.T03.SUC.02"
+          ],
+          "related_criteria_ids": [
+            "WP04.INV.02",
+            "WP04.CMP.02",
+            "WP04.T03.CMP.01",
+            "WP04.T04.QLT.02"
+          ],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+            "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+            "modules/sucafina/Sucafinav1/runtime/downloads.ts"
+          ],
+          "proofs": [
+            {
+              "source_id": "OPS-S-859beefcd8df",
+              "pr": 57,
+              "published_head": "2a185e05967f611d63796684379761ded991092b",
+              "W": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+              "S": "fb440a03e4d712e0d6f40f021997b31a80943a3d",
+              "run_id": 43626658534,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626658534",
+              "claim": "Isolated monetary fix, including real domain progression, frozen sourcing and future PO.",
+              "aggregate_conclusion": "success",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            },
+            {
+              "source_id": "OPS-S-d85ce1ba94ae",
+              "pr": 34,
+              "published_head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+              "W": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+              "S": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+              "run_id": 43628901747,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747",
+              "claim": "10 scoped passes and 2 export failures; monetary and WP14 fixture consumed, runtime/downloads still defective.",
+              "aggregate_conclusion": "failure",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            }
+          ],
+          "next_action": "Apply the owner-reviewed runtime/downloads hunk d47538f593c2b563e34c75434044def6e070de58 after checking the current preimage; preserve frozen sourcing and label the future PO separately; retain a case per actual PO line.",
+          "consumer_state": "monetary.ts c9a224b12c13b7cec506be90527300caa7e984fd consumed in PR34; downloads fa365f9d350be341348ab69d789e40779c8b9756 still produces the two failures.",
+          "limits": [
+            "No all-green result: run43628901747 is failure.",
+            "Current PO total expected200/currentFX2 is rendered108/submittedFX1.08; line totals40/60 observed100/100.",
+            "Scope is published deterministic fixtures, not commercial or human acceptance."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "HISTORICAL_BLOB_CONSUMED_SEPARATE_EGRESS_GAP",
+        "note": "Current monetary source exists;66 legacy export revocation remains a distinct reproduced source failure.",
+        "action_refs": [
+          "EXPORT66-LEGACY-EGRESS"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "OPS-REV-02",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/6",
+        "record": {
+          "audit_partition": "ops",
+          "id": "OPS-REV-02",
+          "title": "PR intent can be acknowledged without applying the requested PR fields",
+          "scope": "WP04.T02",
+          "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+          "owner": "WP04/S2-A; procurement-apply; astra-operations/WP10 intake",
+          "criteria_ids": [
+            "WP04.QLT.10",
+            "WP04.T02.SUC.02"
+          ],
+          "related_criteria_ids": [
+            "WP04.DOD.02"
+          ],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+            "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+            "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts"
+          ],
+          "proofs": [
+            {
+              "source_id": "OPS-S-3f4243a3e27d",
+              "pr": 60,
+              "published_head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+              "W": "897484c9a472bd43d17cabe56552f2f8fa890185",
+              "S": "9c45f18de1f9bd3d5647e37ef35cb3d5e2855277",
+              "run_id": 43626285237,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626285237",
+              "claim": "Ten scoped Apply/preparation cases; ignored PR intent/no-op is refused, real allowed PR effect and replay remain.",
+              "aggregate_conclusion": "success",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            }
+          ],
+          "next_action": "Consume the three PR60 product files as one reviewed delta; reject noneditable stage/no-op at preparation and verify requested PR fields after the domain command before producing a success receipt.",
+          "consumer_state": "All three PR60 fix blobs differ from PR34; the old body still verifies unrelated fields/history but not that PR intent became the persisted state.",
+          "limits": [
+            "Run success belongs to PR60 W897484c9 and S9c45f18d, not current PR34 or a common C.",
+            "Static check on the fix snapshot has a retained external WP14 fixture failure; do not transfer that old fixture failure to PR34 after its later update."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "HISTORICAL_INTAKE_EXISTS_NEW65_PENDING",
+        "note": "19/32 intake is historical;65 source recovery and minimal first-save are distinct remaining obligations.",
+        "action_refs": [
+          "INTAKE-65",
+          "C12-MINIMAL-FIRST-SAVE"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "OPS-REV-03",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/7",
+        "record": {
+          "audit_partition": "ops",
+          "id": "OPS-REV-03",
+          "title": "Document search limits count records before authorized distinct sources",
+          "scope": "WP06.T05",
+          "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+          "owner": "WP06/S2-C; operations-fixes; astra-operations/WP10 intake",
+          "criteria_ids": [
+            "WP06.T05.CMP.19",
+            "WP06.T05.QLT.18"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+          ],
+          "proofs": [
+            {
+              "source_id": "OPS-S-93de10a5788d",
+              "pr": 52,
+              "published_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+              "W": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+              "S": "56b5b3dcd409aa65ced84244999a01f9042570a0",
+              "run_id": 43626678715,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626678715",
+              "claim": "Search counts authorized distinct document identities, protects metadata witness, revalidates at egress.",
+              "aggregate_conclusion": "success",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            }
+          ],
+          "next_action": "Intake PR52 capabilities.ts after preimage review; authorize source identity before counting, deduplicate document identity rather than fields, preserve authorized101st metadata witness and revalidate all egress sources.",
+          "consumer_state": "PR34 blob6b655187d4444cff5b8966e868ba163191adfc42 still calls records.slice(0,100) before source authorization/dedup; PR52 blob2753c07ee03472d35d3b93789e3cb9ba309f6a41 is absent.",
+          "limits": [
+            "Scoped cardinality fixture uses synthetic byte policy; HTTP/current withdrawal are real-service cases.",
+            "No whole PDF/DOCX/text/native/MCP acceptance inherited from this fix."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "OLD_ORPHAN_STATICALLY_PRESENT",
+        "note": "documents/capabilities.ts exact2753c07 present. Do not reimplement stale orphan; installed proof remains open.",
+        "action_refs": [
+          "M78-Q75"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "OPS-REV-04",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/8",
+        "record": {
+          "audit_partition": "ops",
+          "id": "OPS-REV-04",
+          "title": "Import admission must recover owned bytes after uncertain catalog outcome",
+          "scope": "WP06.T03",
+          "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+          "owner": "WP06/S2-C; import-recovery; astra-operations/WP10 intake",
+          "criteria_ids": [
+            "WP06.QLT.03"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/imports/staged-files.ts"
+          ],
+          "proofs": [
+            {
+              "source_id": "OPS-S-94e7c21f9e16",
+              "pr": 58,
+              "published_head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+              "W": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+              "S": "a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+              "run_id": 43626093062,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626093062",
+              "claim": "Fourteen scoped admission/Apply cases on W1; admission proof and bytes retained atomically.",
+              "aggregate_conclusion": "success",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            },
+            {
+              "source_id": "OPS-S-519f356b1111",
+              "pr": 58,
+              "published_head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+              "W": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+              "S": "0a3857a4f3c9f3824c09b6aa76d155d6295e9ed9",
+              "run_id": 43627493939,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627493939",
+              "claim": "Four Apply cases on W2, actual runtime reconstruction and exact receipt recovery; ten W1 admission cases not rerun at W2.",
+              "aggregate_conclusion": "success",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            }
+          ],
+          "next_action": "Intake PR58 admission proof+bytes transaction; keep original expiry and full identity digest, preserve uncertain/legacy orphan bytes, then recover only an authorized proof-bound exact intention.",
+          "consumer_state": "PR34 staged-files.ts b24558f415f48921b43255169ec0cc82d7037ddb lacks the PR58 private admission proof0d42f5242acd3d1c93bc110422285b96975b8ea0.",
+          "limits": [
+            "Legacy orphan with no proof is preserved/refused, not silently adopted or deleted.",
+            "Apply restart proof does not prove every format/native/browser journey."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "OLD_ORPHAN_STATICALLY_PRESENT",
+        "note": "imports/staged-files.ts exact0d42f524 present. Presence does not prove full runtime consumption.",
+        "action_refs": [
+          "M78-Q75"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "D-OPS-01",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/9",
+        "record": {
+          "audit_partition": "ops",
+          "id": "D-OPS-01",
+          "title": "Repeated document form submission creates a new schema and conflicts with existing candidate",
+          "scope": "WP06.T05",
+          "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+          "owner": "WP06/S2-C; operations-fixes; WP10 intake",
+          "criteria_ids": [
+            "WP06.SUC.10",
+            "WP06.QLT.10",
+            "WP06.DOD.04",
+            "WP06.CMP.04",
+            "WP06.T05.DOD.01"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+            "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+            "apps/cli/src/sucafina-product/document-services.ts"
+          ],
+          "proofs": [
+            {
+              "source_id": "OPS-S-f2778ff1ed75",
+              "pr": 52,
+              "published_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+              "W": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+              "S": "96da0ee1011e4a47086830c0a4bde00b878f54e5",
+              "run_id": 43625203326,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625203326",
+              "claim": "Eight scoped real service/SQLite/Chromium schema-extract replay cases, including postcommit503 and already confirmed candidate.",
+              "aggregate_conclusion": "success",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            }
+          ],
+          "next_action": "Consume PR52 schemas/workbench as a pair, reuse a current authorized equivalent schema while preserving candidates, retain exact same-page extraction keys and verify changed-schema/source/ACL refusal.",
+          "consumer_state": "PR34 schemas50e20b20/workbenchd9769a4f retain per-operation schema identity and fresh extraction UUIDs. PR52 schemasfbe4b704/workbench3d21a461 are not consumed.",
+          "limits": [
+            "Recovery intent is same-page memory only; page reload recovery is not established.",
+            "A parser or lower API test with constant schema did not exercise the failing two-submit consumer."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "OLD_ORPHAN_STATICALLY_PRESENT",
+        "note": "documents/schemas.ts fbe4b704 and workbench.ts3d21a461 present.",
+        "action_refs": [
+          "M78-Q75"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "UI-C12-RELOAD-INTAKE",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/10",
+        "record": {
+          "audit_partition": "ops",
+          "id": "UI-C12-RELOAD-INTAKE",
+          "title": "Dashboard reload recovery published on ui-recovery, absent from interface-resume",
+          "scope": "WP01.T03",
+          "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+          "owner": "WP01/S1-A; ui-recovery; WP02 consumer; WP10 intake",
+          "criteria_ids": [
+            "WP01.T03.DOD.01",
+            "WP01.T03.CMP.01",
+            "WP02.T02.DOD.01",
+            "WP02.T04.QLT.01"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts"
+          ],
+          "proofs": [
+            {
+              "source_id": "OPS-S-d861191cce97",
+              "pr": 43,
+              "published_head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+              "W": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+              "S": "519571ec1c90454b8a1eacf94f156dcc9c296f9f",
+              "run_id": 43616465145,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616465145",
+              "claim": "31pass/1fail on eight files; row scopes support shell/ACK components, C12 lost reply/reload fails.",
+              "aggregate_conclusion": "failure",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            },
+            {
+              "source_id": "OPS-S-a3217c2cbe96",
+              "pr": 46,
+              "published_head": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+              "W": "db56ec7fe2d1bf78dd2b26f13d708a79f9b23c71",
+              "S": "1ae238b3119d0759902e100ac2a779001564489a",
+              "run_id": 43620348596,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620348596",
+              "claim": "Scoped recovery cases and preserved failed/positive observations from this exact W/S; the first run is not all-green.",
+              "aggregate_conclusion": "failure",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            },
+            {
+              "source_id": "OPS-S-a3217c2cbe96",
+              "pr": 46,
+              "published_head": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+              "W": "c38a9eb54297baf20df47d296c8d25471ab341b9",
+              "S": "a5a2396c106a7762084ade10740bd7033c238960",
+              "run_id": 43620823146,
+              "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620823146",
+              "claim": "Scoped recovery cases and preserved failed/positive observations from this exact W/S; the first run is not all-green.",
+              "aggregate_conclusion": "success",
+              "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+            }
+          ],
+          "next_action": "Review and intake PR46 dashboard-workbench blob06a4f77b after reconciling the PR43 ACK changes; preserve exact body/key/reviewDigest, authorize at the host and keep ambiguous/incomplete ACK pending.",
+          "consumer_state": "PR43 dashboard-workbench c92748938661f561a7f99d16049c35d0b4ce345c still requires one bounded-discovery match to restore; PR46 permits exact authorized replay when omitted, with ambiguity/denial protections.",
+          "limits": [
+            "PR46 run43620348596 aggregate failure includes scoped passes; run43620823146 success supports its new cases only.",
+            "First-save lookup and shared Apply receipt lookup remain external dependencies, not solved by retaining a pending marker."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "OLD_ORPHAN_STATICALLY_PRESENT_NEW_PROOF_GAP",
+        "note": "interface/dashboard-workbench.ts06a4f77b present; minimal first-save lookup after reload still requires producer and UI consumption.",
+        "action_refs": [
+          "C12-MINIMAL-FIRST-SAVE",
+          "M78-Q52"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "UI-FIRST-SAVE-LOOKUP",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/11",
+        "record": {
+          "audit_partition": "ops",
+          "id": "UI-FIRST-SAVE-LOOKUP",
+          "title": "First-save lost ACK plus reload has no authorized outcome lookup",
+          "scope": "WP02.T02",
+          "classification": "UNDELIVERED_PRODUCER_SEAM_WITH_SAFE_PENDING_UI",
+          "owner": "WP10/compose source authority; WP02/S1-B and WP01/S1-A consumer",
+          "criteria_ids": [
+            "WP01.T03.DOD.01",
+            "WP02.T02.DOD.01",
+            "WP02.T04.DOD.01",
+            "WP02.T04.SUC.01"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+            "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+          ],
+          "proofs": [],
+          "next_action": "Publish the authorized original-intent-to-draftRef outcome lookup, then wire the pending marker to it; preserve private values out of history and do not infer identity from title, order or target.",
+          "consumer_state": "PR46 intentionally blocks a new save after reload rather than guessing the committed draft; no success-recovery endpoint is supplied in the inspected slice.",
+          "limits": [
+            "Absence is scoped to the pinned inspected producer/consumer records, not a claim about uninspected future heads."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "CONCRETE_THREE_PATH_PROPOSAL_HELD",
+        "note": "65 prepared lookup proposal;52 owns UI,67 shares Dashboard consumers. Explicit path authority needed.",
+        "action_refs": [
+          "C12-MINIMAL-FIRST-SAVE"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "UI-SOURCE-HANDOFFS",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/12",
+        "record": {
+          "audit_partition": "ops",
+          "id": "UI-SOURCE-HANDOFFS",
+          "title": "Physical create identity, draft replay ordering and readable-draft continuity remain proposals",
+          "scope": "WP02.T04",
+          "classification": "UNCONSUMED_OUTPUT_AND_SHARED_PATH_OVERLAP",
+          "owner": "ui-source/WP02; WP10/source-lifecycle and hot-topic host; WP01 consumer",
+          "criteria_ids": [
+            "WP02.T04.DOD.01",
+            "WP02.T04.SUC.01",
+            "WP02.T04.CHK.01",
+            "WP02.T04.CMP.01"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+            "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+            "modules/sucafina/Sucafinav1/product/integration/hot-topic-host.ts",
+            "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+            "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+          ],
+          "proofs": [],
+          "next_action": "Resolve three NOT_APPLIED PR48 proposals with the owner: atomic create reservation/finalization, previous exact receipt before newer case-version rejection, and current read/physical-continuity admission for an unsaved draft. Intake only after source preimage and semantic review.",
+          "consumer_state": "PR48 delivered hot-topics051be54a is absent from PR43 hot-topics9b959a09; proposed atomic hot-topicscfc9d98 variant depends on lifecycle/host and is not the delivered blob.",
+          "limits": [
+            "The proposal syntax/apply checks are not runtime proof.",
+            "PR48 run43620533033 and run43620871410 remain aggregate failures; foreign static diagnoses were not made into native or common-C acceptance."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "OWNER_HELD_SCOPED_DELTA",
+        "note": "67 has isolated source changes;59 source-lifecycle consumedC29. No broad overwrite.",
+        "action_refs": [
+          "M78-Q67",
+          "M78-Q76"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "UI-C05-REVIEW-MOUNT",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/13",
+        "record": {
+          "audit_partition": "ops",
+          "id": "UI-C05-REVIEW-MOUNT",
+          "title": "WholeReview/history consumer proof depends on external mount and producer",
+          "scope": "WP02.T03",
+          "classification": "EXTERNAL_PROOF_NOT_TRANSFERABLE_TO_FIXED_BASE",
+          "owner": "WP10/compose; WP07 review producer; WP01/WP02 consumer",
+          "criteria_ids": [
+            "WP01.T02.DOD.01",
+            "WP02.T03.DOD.01",
+            "WP02.T03.SUC.01"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "apps/cli/src/sucafina-product/host-context.ts",
+            "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+            "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts"
+          ],
+          "proofs": [],
+          "next_action": "Compose historical review reader with evidence:context only after BusinessContext exists; intake the published thread-context producer; preserve original1300 snapshot after source2400 and distinguish explicit new2400 review with current ACL.",
+          "consumer_state": "PR45 own base and external proof input differ in host sources; equal test blobs do not transfer the successful external snapshot assertions to the base.",
+          "limits": [
+            "Own run43621128874:6pass; external run43621543227:4pass2fail2errors from missing thread-context.",
+            "Current common compose outcome is outside this subaudit and must use root/collaboration evidence."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "REPORTS48_INTEGRATED_PROOF_HELD",
+        "note": "45/45 Reports postimages present throughC31; four original browser journeys remain unclosed.",
+        "action_refs": [
+          "REPORTS48-POST-CAUSE"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "UI-WORK-ACK-CONSUMPTION",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/14",
+        "record": {
+          "audit_partition": "ops",
+          "id": "UI-WORK-ACK-CONSUMPTION",
+          "title": "Work and selection uncertain outcomes need actual producer ACK correlation",
+          "scope": "WP01.T03",
+          "classification": "CONSUMER_SLICE_PUBLISHED_WITH_EXTERNAL_PRODUCER_DEPENDENCY",
+          "owner": "ui-work/WP01; Collaboration/WP05; WP10 compose",
+          "criteria_ids": [
+            "WP01.T03.DOD.01",
+            "WP01.T03.INV.01",
+            "WP01.T03.CMP.01"
+          ],
+          "related_criteria_ids": [],
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+            "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+            "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+            "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts"
+          ],
+          "proofs": [],
+          "next_action": "Reconcile PR47 consumer ACK guards with current Collaboration receipts and conflict-to409 producer intake; compare exact producer bodies and W/S before qualifying reply loss/reload and first-cycle reuse.",
+          "consumer_state": "PR47 readback at the recorded Collaboration input does not contain durable exact outcome receipts in recipient-actions/case-selection. Later Collaboration fixes must be assessed by its owner audit rather than extrapolated here.",
+          "limits": [
+            "The ui-work matrix is a scoped overlay, not new proof of all WP01 criteria.",
+            "No claim that the newest outside-scope Collaboration head still lacks a fix."
+          ]
+        }
+      },
+      "delta78": {
+        "state": "LATER_CONSUMER_PRESENT_FULL_PROOF_UNKNOWN",
+        "note": "Later work-collaboration consumer exists; typed original evidence is still needed. Do not close full criterion from file presence.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "FIN-AN01",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/15",
+        "record": {
+          "audit_partition": "finance",
+          "id": "FIN-AN01",
+          "type": "OVERLAPPING_IMPLEMENTATIONS_UNCONSUMED_FIX",
+          "task_ids": [
+            "WP11.T01",
+            "WP13.T01"
+          ],
+          "finding_ids": [
+            "FIN-IND-001",
+            "FIN-IND-002",
+            "FIN-IND-003"
+          ],
+          "source_refs": [
+            "FIN-SRC-031",
+            "FIN-SRC-029",
+            "FIN-SRC-067",
+            "FIN-SRC-030",
+            "FIN-SRC-004"
+          ],
+          "description": "Finance42 retains an old caller/provider combination while root verified compatible or fixed code in PR29. Reconcile paired signatures and authority prefixes, not independent snippets. Do not overwrite cross-tree facts with one global issue state.",
+          "next_action_id": "FIN-A01"
+        }
+      },
+      "delta78": {
+        "state": "STALE_HEAD_COMPARISON_RECONCILED",
+        "note": "Compare current material candidate rather than isolated Finance42. Full semantic acceptance remains open.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "FIN-AN02",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/16",
+        "record": {
+          "audit_partition": "finance",
+          "id": "FIN-AN02",
+          "type": "UNAPPLIED_PROPOSAL",
+          "task_ids": [
+            "WP13.T03",
+            "WP11.T02"
+          ],
+          "source_refs": [
+            "FIN-SRC-021",
+            "FIN-SRC-035"
+          ],
+          "description": "PR56 coverage issue proposal is still unapplied at Finance42: current blob equals stated preimage 9f7e12113b38e73befb64f99a94fb8ca28d05eee. No measured improvement or correctness conclusion from patch text alone.",
+          "next_action_id": "FIN-A05"
+        }
+      },
+      "delta78": {
+        "state": "HISTORICAL_54_56_INTAKE_EXISTS_CAUSE_OPEN",
+        "note": "54/56 alreadyC27;76 owns causal producer cost. Do not repeat old coverage proposal as new implementation.",
+        "action_refs": [
+          "M78-Q76"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "FIN-AN03",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/17",
+        "record": {
+          "audit_partition": "finance",
+          "id": "FIN-AN03",
+          "type": "UNCONSUMED_OUTPUT",
+          "task_ids": [
+            "WP03.T01",
+            "WP05.T05"
+          ],
+          "source_refs": [
+            "FIN-SRC-043",
+            "FIN-SRC-045",
+            "FIN-SRC-004"
+          ],
+          "description": "BI09/BI10 Planner producer and projectedScenario adapter exist. Published PR32 reconciliation says binding absent; those composed CLI files are absent entirely at Finance42. Exact paths queried 404 and directory listing confirmed. Current product consumer path is unknown/incomplete, not nonexistent producer.",
+          "next_action_id": "FIN-A03"
+        }
+      },
+      "delta78": {
+        "state": "BI_PRODUCER_INTEGRATED_INSTALLED_PROOF_OWNER62",
+        "note": "38 historically consumedC14.62 still owns installed proof with no terminal release at source pin.",
+        "action_refs": [
+          "M78-Q62"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "FIN-AN04",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/18",
+        "record": {
+          "audit_partition": "finance",
+          "id": "FIN-AN04",
+          "type": "UNCONSUMED_INTERFACE_FIX",
+          "task_ids": [
+            "WP05.T04"
+          ],
+          "source_refs": [
+            "FIN-SRC-065",
+            "FIN-SRC-066",
+            "FIN-SRC-049",
+            "FIN-SRC-004"
+          ],
+          "description": "Finance42 scope filters milestones without valid dates and port skips non-string dates, although BI08 renderer can preserve undated rows. Owner Interface pin31 already supplies newer scope/port blobs in reconciliation; producer fix remains unconsumed in Finance42.",
+          "next_action_id": "FIN-A03"
+        }
+      },
+      "delta78": {
+        "state": "CURRENT_CONSUMER_CHECK_REQUIRED",
+        "note": "Undated milestone behavior requires current BI/Dashboard consumer evidence; preserve uncertainty.",
+        "action_refs": [
+          "M78-Q62",
+          "M78-Q67"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "FIN-AN05",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/19",
+        "record": {
+          "audit_partition": "finance",
+          "id": "FIN-AN05",
+          "type": "UNCONSUMED_OUTPUTS",
+          "task_ids": [
+            "WP13.T01",
+            "WP13.T04",
+            "WP11.T04"
+          ],
+          "source_refs": [
+            "FIN-SRC-058",
+            "FIN-SRC-061",
+            "FIN-SRC-057",
+            "FIN-SRC-004"
+          ],
+          "description": "Published consumer deltas identify campaign and historical readers not wired and optional reconciliation not supplied in owner composition at its pin. Current Finance product returns portfolio-reconciliation-producer-unavailable without input.reconciliation. A directory or export alone is not consumption. Root must resolve later owner states before opening duplicate work.",
+          "next_action_id": "FIN-A04"
+        }
+      },
+      "delta78": {
+        "state": "HISTORICAL_PARTIAL_INTAKES_FULL_PROOF_UNKNOWN",
+        "note": "C18/C20/C23 evidence is not full current campaign/historical reader qualification.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "FIN-AN06",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/20",
+        "record": {
+          "audit_partition": "finance",
+          "id": "FIN-AN06",
+          "type": "SOURCE_CONSUMER_TRANSACTION_MISMATCH",
+          "task_ids": [
+            "WP11.T01",
+            "WP13.T03",
+            "WP13.T04",
+            "WP05.T05"
+          ],
+          "source_refs": [
+            "FIN-SRC-004"
+          ],
+          "description": "Historical DELTA01 traces nested transactionAll from readSourceFences inside a readonly root, poisoning the lease. Source chain belongs to pinned PR32 and must be compared with root current PR29. It is not proof of current installed execution.",
+          "next_action_id": "FIN-A09"
+        }
+      },
+      "delta78": {
+        "state": "SOURCE_CAPABILITY59_NOW_IN_C29",
+        "note": "Read-only source capability consumed. Transaction/cost and full producer/consumer qualification remain distinct.",
+        "action_refs": [
+          "M78-Q76",
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "FIN-AN07",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/21",
+        "record": {
+          "audit_partition": "finance",
+          "id": "FIN-AN07",
+          "type": "STALE_NARRATIVE_VS_PUBLISHED_RUN",
+          "task_ids": [
+            "WP11.T02",
+            "WP13.T03"
+          ],
+          "source_refs": [
+            "FIN-RUN-43630462257",
+            "FIN-RUN-43630618176"
+          ],
+          "description": "Frozen PR42 body says S5/check running, but queried GitHub runs are terminal: S5 success and package check failure. Run outcomes override stale narrative for their exact pins; neither is a progress percentage.",
+          "next_action_id": "FIN-A05"
+        }
+      },
+      "delta78": {
+        "state": "NARRATIVE_STALENESS_RECONCILED_BY_RUN_PINS",
+        "note": "Use exact run and material identities; retain failed results and source limits.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "ACK-PRODUCER-UNCONSUMED",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/22",
+        "record": {
+          "audit_partition": "collab",
+          "id": "ACK-PRODUCER-UNCONSUMED",
+          "type": "unconsumed_output",
+          "owners": [
+            "WP08",
+            "WP10",
+            "WP01"
+          ],
+          "tasks": [
+            "WP08.T02",
+            "WP08.T06",
+            "WP10.T06",
+            "WP01.T04"
+          ],
+          "sources": [
+            "ack-validation",
+            "recipient-actions",
+            "collab-authority",
+            "host44-recipient",
+            "host29-recipient",
+            "ui47-work"
+          ],
+          "finding": "PR54 proposal was applied by PR41; exact recipient mutationReceipt producer exists and scoped cases pass. PR44 recipient-actions blob4c93bd36 and PR29 blob45f31b1f differ from producer22c6309. PR47 UI neither checks mutationReceipt nor persists pending intent across reload; it refuses recipient reply success unconditionally.",
+          "next_action": "Intake exact owner delta and implement/review receipt consumer with stable retry intent. Do not reopen producer work as Boolean-only."
+        }
+      },
+      "delta78": {
+        "state": "OLD_ORPHAN_STATICALLY_PRESENT",
+        "note": "recipient-actions.ts22c6309c present; full callback/consumer evidence remains separate.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "REUSE-PROPOSAL-SUPERSEDED",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/23",
+        "record": {
+          "audit_partition": "collab",
+          "id": "REUSE-PROPOSAL-SUPERSEDED",
+          "type": "overlapping_change",
+          "owners": [
+            "WP08",
+            "WP10",
+            "WP01"
+          ],
+          "tasks": [
+            "WP08.T06",
+            "WP10.T06",
+            "WP01.T04"
+          ],
+          "sources": [
+            "pr-61",
+            "answer-reuse",
+            "host44-reuse",
+            "host29-reuse"
+          ],
+          "finding": "PR61 NOT_APPLIED optimization is an alternative to owner PR41 W6 closure, not a cumulative patch. Composed answer-reuse134ce5cd differs from current012175e4. Original UI case exceeded5s; attachment404 occurred at an unmounted fixture route and does not prove product denial or attachment success.",
+          "next_action": "Select current owner closure, retire superseded proposal reference, qualify current recipientAuthority and original deadline in actual consumer."
+        }
+      },
+      "delta78": {
+        "state": "OWNER_CLOSURE_PRESENT",
+        "note": "answer-reuse.ts012175e4 is current owner path. OldPR61 alternative is not a cumulative patch.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "G03-FUNCTIONAL-VS-RUN",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/24",
+        "record": {
+          "audit_partition": "collab",
+          "id": "G03-FUNCTIONAL-VS-RUN",
+          "type": "evidence_boundary",
+          "owners": [
+            "WP08",
+            "WP01",
+            "WP10"
+          ],
+          "tasks": [
+            "WP08.T01",
+            "WP07.T02"
+          ],
+          "sources": [
+            "pr-53",
+            "run-43625362178",
+            "code-collaboration-case-selection.ts"
+          ],
+          "finding": "G03 functional expected409 selection-not-committed is published; run conclusion is failure due typecheck. Current PR41 uses cd9a678 case-selection. Functional success cannot be promoted into whole-run or common-C PASS.",
+          "next_action": "Retain exact functional receipt and resolve composition/static gate separately."
+        }
+      },
+      "delta78": {
+        "state": "FUNCTIONAL_BLOB_PRESENT_RUN_LIMIT_RETAINED",
+        "note": "case-selection.tscd9a6788 present. Preserve workflow outcome and runtime envelope limits.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "WORK-SIGNALS-STALE-FINDING",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/25",
+        "record": {
+          "audit_partition": "collab",
+          "id": "WORK-SIGNALS-STALE-FINDING",
+          "type": "superseded_finding",
+          "owners": [
+            "WP10",
+            "WP08",
+            "WP14"
+          ],
+          "tasks": [
+            "WP08.T04",
+            "WP14.T04",
+            "WP10.T06"
+          ],
+          "sources": [
+            "host29-business",
+            "host44-business",
+            "wp14-criteria"
+          ],
+          "finding": "Published WP14 consumer finding that createCollaborationHost lacks workSignals is historical. PR29 business-services385dd199 mounts workSignals via current bridge; PR44 b3595989 does not. recipientAuthority absent from both inspected callers.",
+          "next_action": "Preserve/consume existing PR29 binding; qualify actual work projection and authority instead of creating a duplicate callback."
+        }
+      },
+      "delta78": {
+        "state": "OLD_CORRECTION_PRESENT_NO_DUPLICATE_FIX",
+        "note": "OldPR29 callback correction is integrated; full work-signals consumer evidence not invented.",
+        "action_refs": [
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "WP12-ONE-BLOB-OVERLAP",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/26",
+        "record": {
+          "audit_partition": "collab",
+          "id": "WP12-ONE-BLOB-OVERLAP",
+          "type": "overlapping_change",
+          "owners": [
+            "WP12",
+            "WP10"
+          ],
+          "tasks": [
+            "WP12.T02",
+            "WP12.T04"
+          ],
+          "sources": [
+            "intel-w7",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts"
+          ],
+          "finding": "PR39 and PR36 share32 of33 AI source blobs. analysis-port.ts differs:47e25de4 (PR39) versus f1127503 (PR36). PR36 W7 explicitly adds cancellation/ready-reader pinning while retaining W6 behavior; newest PR39 also evolves that file.",
+          "next_action": "Reconcile the exact semantic delta in analysis-port only; preserve common32 blobs and do not replace a whole directory or infer its tests carry forward."
+        }
+      },
+      "delta78": {
+        "state": "CURRENT_BLOB_IDENTIFIED_SEMANTIC_CHOICE_UNKNOWN",
+        "note": "ai/analysis-port.ts47e25de4 current PR39 blob; do not silently overwrite withPR36 alternative.",
+        "action_refs": [
+          "M78-Q68",
+          "M78-FINAL-QUALIFICATION"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "WP14-EIGHT-BLOB-OVERLAP",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/27",
+        "record": {
+          "audit_partition": "collab",
+          "id": "WP14-EIGHT-BLOB-OVERLAP",
+          "type": "overlapping_change",
+          "owners": [
+            "WP14",
+            "WP10"
+          ],
+          "tasks": [
+            "WP14.T01",
+            "WP14.T02",
+            "WP14.T03",
+            "WP14.T04"
+          ],
+          "sources": [
+            "intel-w7",
+            "wp14-criteria",
+            "pr-36",
+            "pr-38"
+          ],
+          "finding": "PR38 and PR36 memory directories share9 of17 source blobs.8 differing paths: invalidation,materiality,outcome-selection,outcome,recall,signal-list,signal-registry,signal-work. Later independent changes must be reconciled, not overlaid wholesale.",
+          "next_action": "Create path-by-path intake decisions with pre/post blobs and preserve both dependency/security deltas."
+        }
+      },
+      "delta78": {
+        "state": "EXACT_RECONCILIATION_REQUIRED",
+        "note": "Preserve current candidate and genuine owner deltas; overlap alone grants no new writer.",
+        "action_refs": [
+          "M78-Q69",
+          "M78-WP14-PURE-IO"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "WP14-PURE-LAYER-IO",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/28",
+        "record": {
+          "audit_partition": "collab",
+          "id": "WP14-PURE-LAYER-IO",
+          "type": "ownership_mismatch",
+          "owners": [
+            "WP14",
+            "WP10"
+          ],
+          "tasks": [
+            "WP14.T04",
+            "WP10.T01"
+          ],
+          "sources": [
+            "code-decision-memory-signal-registry.ts",
+            "wp14-criteria"
+          ],
+          "finding": "createSfSignalRegistry reads/transacts preferences under product/decision-memory; published owner findings also identify outcome-selection. This violates canonical pure-layer invariants. Proposed host relocation remains NOT_APPLIED.",
+          "next_action": "Transfer concrete C08 IO to WP10 authorized host, retain pure WP14 transformations, then qualify existing callers."
+        }
+      },
+      "delta78": {
+        "state": "CONFIRMED_CURRENT_STATIC_FAIL_THREE_CRITERIA",
+        "note": "Two exact WP14 files still perform state.read/transaction in C31; owner lease UNKNOWN.",
+        "action_refs": [
+          "M78-WP14-PURE-IO"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "WP14-NONEMPTY-OUTCOME-UNWITNESSED",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/29",
+        "record": {
+          "audit_partition": "collab",
+          "id": "WP14-NONEMPTY-OUTCOME-UNWITNESSED",
+          "type": "unconsumed_output_unverified",
+          "owners": [
+            "WP14",
+            "WP07",
+            "WP10"
+          ],
+          "tasks": [
+            "WP14.T03",
+            "WP07.T03"
+          ],
+          "sources": [
+            "wp14-criteria",
+            "code-decision-memory-outcome.ts",
+            "review-compare"
+          ],
+          "finding": "Actual memory/outcome/review source wiring is published; no inspected receipt demonstrates a nonempty observed outcome persisted and reopened in a real saved review with revocation. This is unknown consumption, not absence of code.",
+          "next_action": "Attach a nonempty actual observed/baseline/review/after-reload receipt with source access and incompatible/missing variants."
+        }
+      },
+      "delta78": {
+        "state": "FULL_WITNESS_UNKNOWN",
+        "note": "69 Atlas and Reports consumer proof do not establish nonempty full path automatically.",
+        "action_refs": [
+          "M78-Q69",
+          "REPORTS48-POST-CAUSE"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "WP12-HUMAN-NOT-NATIVE",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/30",
+        "record": {
+          "audit_partition": "collab",
+          "id": "WP12-HUMAN-NOT-NATIVE",
+          "type": "orphan_native_output_witness",
+          "owners": [
+            "WP12",
+            "WP10"
+          ],
+          "tasks": [
+            "WP12.T01",
+            "WP12.T02",
+            "WP12.T03"
+          ],
+          "sources": [
+            "wp12-consumers",
+            "wp12-evidence",
+            "wp12-run23",
+            "pr-39",
+            "run-43619631569"
+          ],
+          "finding": "W28 human Forecast/KPI, BI public-selection and Question Work flows pass. Six catalogue observations are empty; zero native inference, typed native outputs or native consumers.18 sources/loading receipts and human fixtures cannot substitute for18 AM01 output+consumer witnesses.",
+          "next_action": "Resolve authorized native binding and connect the existing typed outputs to actual consumers; preserve green human-route receipts separately."
+        }
+      },
+      "delta78": {
+        "state": "BLOCKED_AUTHENTICATED_NATIVE_CAPABILITIES",
+        "note": "64 component158PASS/68 bindings do not prove authenticated provider turn or native Task/Relay lifecycle.",
+        "action_refs": [
+          "NATIVE64-AUTHENTICATED-ORIGIN",
+          "M78-Q68"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    },
+    {
+      "id": "C07-NATIVE-RESULT-NOT-PROVEN",
+      "baseline": {
+        "source": {
+          "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/anomalies.json"
+        },
+        "pointer": "/anomalies/31",
+        "record": {
+          "audit_partition": "collab",
+          "id": "C07-NATIVE-RESULT-NOT-PROVEN",
+          "type": "unconsumed_output_unverified",
+          "owners": [
+            "WP09",
+            "WP10",
+            "WP12"
+          ],
+          "tasks": [
+            "WP09.T01",
+            "WP09.T07",
+            "WP09.T06",
+            "WP12.T04"
+          ],
+          "sources": [
+            "routine-factory",
+            "routine-lifecycle",
+            "host29-routines",
+            "host44-routines",
+            "wp09-criteria"
+          ],
+          "finding": "Factory/adapters and current host callsites exist, but a real published/admitted Relay/skill/output/consumer chain is not established by inspected receipts. Historical Schedule test substituted the native provider.",
+          "next_action": "Qualify existing optional native binding and actual C07 current-principal/admission/result route; no new platform."
+        }
+      },
+      "delta78": {
+        "state": "BLOCKED_AUTHENTICATED_NATIVE_CAPABILITIES",
+        "note": "Native64 installed admission remains fail-closed/activationHELD until authentic capability contract is supplied.",
+        "action_refs": [
+          "NATIVE64-AUTHENTICATED-ORIGIN"
+        ],
+        "current_candidate": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "full_criterion_closed": false
+      }
+    }
+  ],
+  "static_old_orphan_postimages": [
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "blob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "blob": "fbe4b70444d4a7341a30372c754842a5aca3ce70"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+      "blob": "3d21a461c88da2372eae57d0e066ff59d9f21f55"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+      "blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "blob": "22c6309c61b27b89914086a7602bf3bea61a988b"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "blob": "012175e4acc2be40547089b43f248144beb6c712"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+      "blob": "cd9a67887f41986243809672572c972440c832ec"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243"
+    },
+    {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb"
+    }
+  ],
+  "static_presence_limit": "Exact blobs at faa30; unchanged paths throughC31 according to full target delta. Runtime full-output acceptance remains unknown.",
+  "canonical_outputs": {
+    "source": {
+      "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/output-consumption.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/output-consumption.json"
+    },
+    "structural_orphans": 0,
+    "invalid_consumer_task_refs": [],
+    "outputs": [
+      {
+        "canonical_output": {
+          "id": "AI-NATIVE",
+          "producer_task": "WP12.T01",
+          "ready_minute": 13,
+          "consumer_tasks": [
+            "WP10.T06"
+          ],
+          "consume_not_before": 13,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json"
+          ],
+          "acceptance": "Profile+skill com conteúdo/digest reais; manifest não referencia fonte ausente.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-native.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "declared_checkpoint_or_task_phase"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "wp12-criteria",
+          "code-ai-analysis-port.ts",
+          "code-ai-contribution-reader.ts",
+          "code-ai-resident.ts",
+          "wp12-evidence",
+          "wp12-consumers",
+          "wp12-run23",
+          "pr-39",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T06": [
+            "ROOT-20-criterion-map.json",
+            "ROOT-44-R06-owner-findings.json"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "NATIVE-CASE",
+          "producer_task": "WP11.T01",
+          "ready_minute": 14,
+          "consumer_tasks": [
+            "WP10.T01",
+            "WP10.T06"
+          ],
+          "consume_not_before": 14,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/decisions/case-port.ts::createDecisionCasePort"
+          ],
+          "acceptance": "CasoC09 mínimo real, actor/version/incarnation; providerC08 persiste até 18.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/handoffs/native-case.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "declared_checkpoint_or_task_phase"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "FIN-SRC-001",
+          "FIN-SRC-003",
+          "FIN-SRC-004",
+          "FIN-SRC-007"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T01": [
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-44-R06-owner-findings.json",
+            "ROOT-44-R04-critical-overlaps.json"
+          ],
+          "WP10.T06": [
+            "ROOT-20-criterion-map.json",
+            "ROOT-44-R06-owner-findings.json"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "NATIVE-PLANNER",
+          "producer_task": "WP03.T01",
+          "ready_minute": 15,
+          "consumer_tasks": [
+            "WP10.T01",
+            "WP10.T06"
+          ],
+          "consume_not_before": 15,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/planner/port.ts::createPlannerPort.compareForecast"
+          ],
+          "acceptance": "C02/C10 real; cálculo do motor, sem I/Oparaleloouvaloresroteirizados.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/handoffs/native-planner.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "declared_checkpoint_or_task_phase"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "FIN-SRC-001",
+          "FIN-SRC-008",
+          "FIN-SRC-004",
+          "FIN-SRC-007",
+          "FIN-SRC-009"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T01": [
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-44-R06-owner-findings.json",
+            "ROOT-44-R04-critical-overlaps.json"
+          ],
+          "WP10.T06": [
+            "ROOT-20-criterion-map.json",
+            "ROOT-44-R06-owner-findings.json"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "NATIVE-RUNTIME",
+          "producer_task": "WP10.T06",
+          "ready_minute": 16,
+          "consumer_tasks": [
+            "WP10.T01",
+            "WP00.T04"
+          ],
+          "consume_not_before": 16,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts::registerSfResidentAgents",
+            "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts::loadSfSkill",
+            "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts::createSfBusinessMcpBridge",
+            "apps/cli/src/sucafina-product/contribution.ts"
+          ],
+          "acceptance": "AgentV2/loader/Tools.Service/bridgeprivada; scopedgrantporchamada e prova direta negativa.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/native-runtime.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "declared_checkpoint_or_task_phase"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "OPS-S-98ca7625be24"
+        ],
+        "producer_task_evidence_refs": [
+          "ROOT-20-criterion-map.json",
+          "ROOT-44-R06-owner-findings.json"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T01": [
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-44-R06-owner-findings.json",
+            "ROOT-44-R04-critical-overlaps.json"
+          ],
+          "WP00.T04": [
+            "ROOT-20-criterion-map.json",
+            "ROOT-20-stop-handoff.json"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "NATIVE-COMPOSE",
+          "producer_task": "WP10.T01",
+          "ready_minute": 18,
+          "consumer_tasks": [
+            "WP00.T04"
+          ],
+          "consume_not_before": 18,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/local/entry.ts",
+            "modules/sucafina/Sucafinav1/runtime/host.ts",
+            "apps/cli/src/host.ts",
+            "apps/cli/src/commands/handlers/serve.ts"
+          ],
+          "acceptance": "Roots reais compõem caso, ator, modelo, perfil, skill, ponte MCP e porta Planner; recibo GNATIVE18-20.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/native-compose.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "declared_checkpoint_or_task_phase"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "ROOT-29-c09-reconciliation.json",
+          "ROOT-44-R06-owner-findings.json",
+          "ROOT-44-R04-critical-overlaps.json"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP00.T04": [
+            "ROOT-20-criterion-map.json",
+            "ROOT-20-stop-handoff.json"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "DOC-REF",
+          "producer_task": "WP06.T05",
+          "ready_minute": 20,
+          "consumer_tasks": [
+            "WP10.T07"
+          ],
+          "consume_not_before": 20,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts::resolveSfDocumentEvidence",
+            "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts::createSfDocumentEvidenceAdapter"
+          ],
+          "acceptance": "Resolver documental real com revisão/trecho/hash/incarnação/ACL.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-ref.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "OPS-S-93de10a5788d",
+          "OPS-S-f2778ff1ed75",
+          "OPS-S-f5329f0b79e7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T07": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-55-evidence.json",
+            "ROOT-55-HANDOFF.md"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "ATLAS-MAP",
+          "producer_task": "WP14.T05",
+          "ready_minute": 20,
+          "consumer_tasks": [
+            "WP10.T07"
+          ],
+          "consume_not_before": 20,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts::mapSfAtlasEntry"
+          ],
+          "acceptance": "Tradução pura owner/kind/entry; sem PR/seat fictício e sem persistência.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/handoffs/atlas-map.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "wp14-criteria",
+          "code-decision-memory-atlas-projection.ts",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T07": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-55-evidence.json",
+            "ROOT-55-HANDOFF.md"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "ATLAS-PACKAGE",
+          "producer_task": "WP10.T07",
+          "ready_minute": 20,
+          "consumer_tasks": [
+            "WP10.T07",
+            "WP12.T02"
+          ],
+          "consume_not_before": 20,
+          "artifacts": [
+            "@orchestra/atlas-boundary/business-memory-ports",
+            "@orchestra/atlas-boundary/native-memory",
+            "modules/atlas/packages/adapter-io/src/native-bound.ts",
+            "modules/atlas/boundary/src/generated/native-memory.js",
+            "modules/atlas/boundary/src/generated/native-memory.d.ts",
+            "modules/atlas/boundary/src/generated/business-memory-ports.js",
+            "modules/atlas/boundary/src/generated/business-memory-ports.d.ts"
+          ],
+          "acceptance": "Factory ports e scanner real resolvem pelos dois subpaths públicos. Quatro artefatos canônicos gerados; AST prova zero spawning/computed imports no novo bundle e a ligação exata a native-memory. check:spawn-imports raiz e check:generated passam sem modificar allowlist/guard. Receipt identifica candidato, digests, comando e saídas; sem prova mantém HOLD.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/atlas-package.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+          "ROOT-29-c09-reconciliation.json",
+          "ROOT-55-evidence.json",
+          "ROOT-55-HANDOFF.md"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T07": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-55-evidence.json",
+            "ROOT-55-HANDOFF.md"
+          ],
+          "WP12.T02": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "PROTECTED-STORE",
+          "producer_task": "WP10.T01",
+          "ready_minute": 25,
+          "consumer_tasks": [
+            "WP10.T07"
+          ],
+          "consume_not_before": 25,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/integration/",
+            "Persistence.transaction(dashboard, callback)"
+          ],
+          "acceptance": "Store da instalação C08 real; facade DurableMemory síncrona no snapshot local e commit assíncrono após callback.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/protected-store.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "ROOT-29-code-integration_public-state.ts",
+          "ROOT-29-code-integration_source-lifecycle.ts",
+          "ROOT-29-code-integration_planner-sources.ts",
+          "OPS-S-87bd98f11cb3",
+          "OPS-S-ec3aaeeac8b2",
+          "FIN-SRC-062",
+          "FIN-SRC-145",
+          "FIN-SRC-146",
+          "FIN-SRC-147",
+          "FIN-SRC-148",
+          "FIN-SRC-149",
+          "FIN-SRC-150",
+          "FIN-SRC-151",
+          "FIN-SRC-152",
+          "FIN-SRC-153",
+          "FIN-SRC-154",
+          "FIN-SRC-155",
+          "FIN-SRC-156",
+          "FIN-SRC-157",
+          "FIN-SRC-158",
+          "FIN-SRC-159"
+        ],
+        "producer_task_evidence_refs": [
+          "ROOT-29-c09-reconciliation.json",
+          "ROOT-44-R06-owner-findings.json",
+          "ROOT-44-R04-critical-overlaps.json"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T07": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-55-evidence.json",
+            "ROOT-55-HANDOFF.md"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "AI-CATALOG-PORT",
+          "producer_task": "WP12.T01",
+          "ready_minute": 25,
+          "consumer_tasks": [
+            "WP12.T02"
+          ],
+          "consume_not_before": 25,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/ai/profiles/",
+            "modules/sucafina/Sucafinav1/product/ai/manifests/"
+          ],
+          "acceptance": "Registry/schema/builder de manifest; pré-requisito da fase runtime T02, não da autoria fontes 10-25.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-catalog.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "declared_checkpoint_or_task_phase"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "OPS-S-7c8e4fbc1cfd",
+          "OPS-S-44ae99b0bd6e",
+          "code-ai-manifests-resident.json"
+        ],
+        "producer_task_evidence_refs": [
+          "wp12-criteria",
+          "code-ai-analysis-port.ts",
+          "code-ai-contribution-reader.ts",
+          "code-ai-resident.ts",
+          "wp12-evidence",
+          "wp12-consumers",
+          "wp12-run23",
+          "pr-39",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP12.T02": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "SKILLS-FINANCE-PORTFOLIO",
+          "producer_task": "WP12.T02",
+          "ready_minute": 29,
+          "consumer_tasks": [
+            "WP12.T02"
+          ],
+          "consume_not_before": 29,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md"
+          ],
+          "acceptance": "Seis fontes no SHA recebido; lease S1 fecha 29, a fonte de forecast já era antecipada em 13.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-finance-portfolio.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "wp12-criteria",
+          "code-ai-analysis-port.ts",
+          "code-ai-contribution-reader.ts",
+          "wp12-evidence",
+          "wp12-consumers",
+          "wp12-run23",
+          "pr-39",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP12.T02": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "DOC-EXTRACT",
+          "producer_task": "WP06.T05",
+          "ready_minute": 35,
+          "consumer_tasks": [
+            "WP12.T02",
+            "WP10.T07",
+            "WP09.T04"
+          ],
+          "consume_not_before": 35,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/documents/"
+          ],
+          "acceptance": "Três formatos admitidos, confirmação, refusalrevogação e fonte privada.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/handoffs/doc-extract.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "OPS-S-6e3ffe99d3ea",
+          "OPS-S-b784fb26bd96",
+          "OPS-S-7e3730174dd2",
+          "OPS-S-c5149ab7c977",
+          "OPS-S-88a910c7883a",
+          "OPS-S-ddacdc4d90e9",
+          "OPS-S-56135d28b2a4",
+          "OPS-S-cba3c2f1e387",
+          "OPS-S-9e3c20986274",
+          "OPS-S-721599c8e33b",
+          "OPS-S-8045767f69a4",
+          "OPS-S-9f4c6e236795",
+          "OPS-S-46a408e21f2c",
+          "OPS-S-da128f508971",
+          "OPS-S-e6edf8e7d951",
+          "OPS-S-3eba9b2af252",
+          "OPS-S-4b17656f5375",
+          "OPS-S-bdb4a3f32e6d",
+          "OPS-S-44ab740eae62",
+          "OPS-S-79c00c4140c8",
+          "OPS-S-c1fa46032b94",
+          "OPS-S-6d8abe70efb7"
+        ],
+        "producer_task_evidence_refs": [
+          "OPS-S-93de10a5788d",
+          "OPS-S-f2778ff1ed75",
+          "OPS-S-f5329f0b79e7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP12.T02": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ],
+          "WP10.T07": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-reconciliation.json",
+            "ROOT-55-evidence.json",
+            "ROOT-55-HANDOFF.md"
+          ],
+          "WP09.T04": [
+            "wp09-criteria"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "SKILLS-MAESTRO-REVIEWER",
+          "producer_task": "WP12.T02",
+          "ready_minute": 38,
+          "consumer_tasks": [
+            "WP12.T02",
+            "WP12.T03"
+          ],
+          "consume_not_before": 38,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+            "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md"
+          ],
+          "acceptance": "Cinco fontes no SHA recebido; lease S3 fecha 38, Revisor tem execução/instruções próprias.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-maestro-reviewer.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "wp12-criteria",
+          "code-ai-analysis-port.ts",
+          "code-ai-contribution-reader.ts",
+          "wp12-evidence",
+          "wp12-consumers",
+          "wp12-run23",
+          "pr-39",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP12.T02": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ],
+          "WP12.T03": [
+            "wp12-criteria",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "code-ai-analysis-port.ts",
+            "intel-w7"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "AI-FULL",
+          "producer_task": "WP12.T02",
+          "ready_minute": 42,
+          "consumer_tasks": [
+            "WP10.T06",
+            "WP12.T03",
+            "WP09.T07"
+          ],
+          "consume_not_before": 42,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+          ],
+          "acceptance": "Cinco perfis e 18 sources com hashes reais; compra/sharedsete completa dos por S4-B.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-full.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof",
+          "contract_alias": "AI-CATALOG"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "OPS-S-7c8e4fbc1cfd",
+          "code-ai-manifests-resident.json"
+        ],
+        "producer_task_evidence_refs": [
+          "wp12-criteria",
+          "code-ai-analysis-port.ts",
+          "code-ai-contribution-reader.ts",
+          "wp12-evidence",
+          "wp12-consumers",
+          "wp12-run23",
+          "pr-39",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T06": [
+            "ROOT-20-criterion-map.json",
+            "ROOT-44-R06-owner-findings.json"
+          ],
+          "WP12.T03": [
+            "wp12-criteria",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "code-ai-analysis-port.ts",
+            "intel-w7"
+          ],
+          "WP09.T07": [
+            "wp09-criteria",
+            "code-routines-recipes.ts",
+            "routine-factory"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "WP14-LEASE",
+          "producer_task": "WP14.T02",
+          "ready_minute": 43,
+          "consumer_tasks": [
+            "WP14.T03",
+            "WP14.T04"
+          ],
+          "consume_not_before": 43,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/decision-memory/",
+            "modules/sucafina/Sucafinav1/test/product/wp14/"
+          ],
+          "acceptance": "S4 fecha escrita; S0-C aceita head/lease antes de T03; sem persistência concreta WP14.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/handoffs/wp14-lease.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "declared_checkpoint_or_task_phase"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "OPS-S-e1ac049503fa",
+          "OPS-S-f7aa8a2b6ded",
+          "FIN-SRC-067",
+          "code-decision-memory-atlas-projection.ts",
+          "code-decision-memory-materiality.ts",
+          "code-decision-memory-recall.ts",
+          "code-decision-memory-outcome.ts",
+          "code-decision-memory-signal-registry.ts",
+          "wp14-memory-tree"
+        ],
+        "producer_task_evidence_refs": [
+          "wp14-criteria",
+          "code-decision-memory-recall.ts",
+          "code-decision-memory-atlas-projection.ts",
+          "host44-business",
+          "host29-business",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP14.T03": [
+            "wp14-criteria",
+            "code-decision-memory-outcome.ts",
+            "intel-w7"
+          ],
+          "WP14.T04": [
+            "wp14-criteria",
+            "code-decision-memory-signal-registry.ts",
+            "code-decision-memory-recall.ts",
+            "host44-business",
+            "host29-business",
+            "code-collaboration-case-selection.ts",
+            "intel-w7"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "ATLAS-ROUNDTRIP",
+          "producer_task": "WP10.T07",
+          "ready_minute": 45,
+          "consumer_tasks": [
+            "WP12.T02",
+            "WP14.T02",
+            "WP10.T02"
+          ],
+          "consume_not_before": 45,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts::createSfAtlasMemory"
+          ],
+          "acceptance": "Append/readreaiscominstalação/actor/owner, ledger/hash/commit e scanner; nãofecharrestartantesdeexecutá-lo.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/atlas-roundtrip.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+          "ROOT-29-c09-reconciliation.json",
+          "ROOT-55-evidence.json",
+          "ROOT-55-HANDOFF.md"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP12.T02": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ],
+          "WP14.T02": [
+            "wp14-criteria",
+            "code-decision-memory-recall.ts",
+            "code-decision-memory-atlas-projection.ts",
+            "host44-business",
+            "host29-business",
+            "intel-w7"
+          ],
+          "WP10.T02": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-runs_W29_C29-terminal.json",
+            "ROOT-29-c09-W30-preparation.md",
+            "WP10-LATE-HANDOFF.md",
+            "WP10-LATE-runs_W30_U30-terminal.json"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "MCP-FULL",
+          "producer_task": "WP10.T06",
+          "ready_minute": 45,
+          "consumer_tasks": [
+            "WP10.T02",
+            "WP01.T05",
+            "WP09.T07"
+          ],
+          "consume_not_before": 45,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+          ],
+          "acceptance": "Runtime/registry dos 8 packs com AI-FULL; cada operação aguarda o produtor real no tempo identificado, sem sucesso stub.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/mcp-full.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "ROOT-29-code-host-binding_sf-mcp-bridge.ts",
+          "OPS-S-2bba73def3b3",
+          "FIN-SRC-143"
+        ],
+        "producer_task_evidence_refs": [
+          "ROOT-20-criterion-map.json",
+          "ROOT-44-R06-owner-findings.json"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP10.T02": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-runs_W29_C29-terminal.json",
+            "ROOT-29-c09-W30-preparation.md",
+            "WP10-LATE-HANDOFF.md",
+            "WP10-LATE-runs_W30_U30-terminal.json"
+          ],
+          "WP01.T05": [
+            "OPS-S-24a87fda4e40",
+            "OPS-S-8ef37def8c7a",
+            "OPS-S-c787f52e4800",
+            "OPS-S-d861191cce97"
+          ],
+          "WP09.T07": [
+            "wp09-criteria",
+            "code-routines-recipes.ts",
+            "routine-factory"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "ATLAS-FULL",
+          "producer_task": "WP10.T07",
+          "ready_minute": 55,
+          "consumer_tasks": [
+            "WP12.T04",
+            "WP14.T02",
+            "WP14.T03",
+            "WP14.T04",
+            "WP09.T07",
+            "WP07.T04",
+            "WP10.T02"
+          ],
+          "consume_not_before": 55,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts::createSfBusinessContext",
+            "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts::createSfAtlasMemory",
+            "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts::createSfAtlasDurableMemory"
+          ],
+          "acceptance": "BCS/persistência/Atlas/documentos/refsatuaisligados; AM05 prova independente/restart/ACLfinalaté 75.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/handoffs/atlas-full.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [],
+        "producer_task_evidence_refs": [
+          "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+          "ROOT-29-c09-reconciliation.json",
+          "ROOT-55-evidence.json",
+          "ROOT-55-HANDOFF.md"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP12.T04": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ],
+          "WP14.T02": [
+            "wp14-criteria",
+            "code-decision-memory-recall.ts",
+            "code-decision-memory-atlas-projection.ts",
+            "host44-business",
+            "host29-business",
+            "intel-w7"
+          ],
+          "WP14.T03": [
+            "wp14-criteria",
+            "code-decision-memory-outcome.ts",
+            "intel-w7"
+          ],
+          "WP14.T04": [
+            "wp14-criteria",
+            "code-decision-memory-signal-registry.ts",
+            "code-decision-memory-recall.ts",
+            "host44-business",
+            "host29-business",
+            "code-collaboration-case-selection.ts",
+            "intel-w7"
+          ],
+          "WP09.T07": [
+            "wp09-criteria",
+            "code-routines-recipes.ts",
+            "routine-factory"
+          ],
+          "WP07.T04": [
+            "wp07-criteria",
+            "review-render",
+            "code-reviews-selection.ts"
+          ],
+          "WP10.T02": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-runs_W29_C29-terminal.json",
+            "ROOT-29-c09-W30-preparation.md",
+            "WP10-LATE-HANDOFF.md",
+            "WP10-LATE-runs_W30_U30-terminal.json"
+          ]
+        },
+        "delivery_state": "UNKNOWN",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      },
+      {
+        "canonical_output": {
+          "id": "MEMORY-CONSUMPTION",
+          "producer_task": "WP14.T04",
+          "ready_minute": 68,
+          "consumer_tasks": [
+            "WP01.T05",
+            "WP07.T04",
+            "WP08.T04",
+            "WP09.T06",
+            "WP12.T04",
+            "WP10.T02"
+          ],
+          "consume_not_before": 68,
+          "artifacts": [
+            "modules/sucafina/Sucafinav1/product/decision-memory/"
+          ],
+          "acceptance": "Deduplicação/invalidação/observado consumidos reais até 75; entrega 68 preserva 7 minfinaisdeconsumo.",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/handoffs/memory-consumption.json",
+          "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+          "status": "PLANNED_NOT_PRODUCED",
+          "consumer_phase": "integration_or_proof"
+        },
+        "structural_orphan": false,
+        "missing_canonical_consumer_tasks": [],
+        "observed_artifact_source_refs": [
+          "OPS-S-e1ac049503fa",
+          "OPS-S-f7aa8a2b6ded",
+          "FIN-SRC-067",
+          "code-decision-memory-atlas-projection.ts",
+          "code-decision-memory-materiality.ts",
+          "code-decision-memory-recall.ts",
+          "code-decision-memory-outcome.ts",
+          "code-decision-memory-signal-registry.ts",
+          "wp14-memory-tree"
+        ],
+        "producer_task_evidence_refs": [
+          "wp14-criteria",
+          "code-decision-memory-signal-registry.ts",
+          "code-decision-memory-recall.ts",
+          "host44-business",
+          "host29-business",
+          "code-collaboration-case-selection.ts",
+          "intel-w7"
+        ],
+        "consumer_task_evidence_refs": {
+          "WP01.T05": [
+            "OPS-S-24a87fda4e40",
+            "OPS-S-8ef37def8c7a",
+            "OPS-S-c787f52e4800",
+            "OPS-S-d861191cce97"
+          ],
+          "WP07.T04": [
+            "wp07-criteria",
+            "review-render",
+            "code-reviews-selection.ts"
+          ],
+          "WP08.T04": [
+            "wp08-criteria",
+            "code-collaboration-relations.ts",
+            "code-collaboration-handoff.ts",
+            "recipient-actions",
+            "answer-reuse",
+            "code-collaboration-case-selection.ts",
+            "review-answer-source",
+            "collab-authority",
+            "ack-validation",
+            "ack-handoff",
+            "pr-54",
+            "pr-61",
+            "pr-53",
+            "host29-business",
+            "host44-business",
+            "ui47-work",
+            "host44-recipient",
+            "host29-recipient",
+            "host44-reuse",
+            "host29-reuse"
+          ],
+          "WP09.T06": [
+            "wp09-criteria",
+            "code-routines-schedule.ts",
+            "code-routines-capabilities.ts",
+            "routine-lifecycle",
+            "routine-factory"
+          ],
+          "WP12.T04": [
+            "wp12-criteria",
+            "code-ai-analysis-port.ts",
+            "code-ai-contribution-reader.ts",
+            "wp12-evidence",
+            "wp12-consumers",
+            "wp12-run23",
+            "pr-39",
+            "intel-w7"
+          ],
+          "WP10.T02": [
+            "ROOT-29-c09-runs_W28_criterion-crosswalk-preflight.json",
+            "ROOT-29-c09-runs_W29_C29-terminal.json",
+            "ROOT-29-c09-W30-preparation.md",
+            "WP10-LATE-HANDOFF.md",
+            "WP10-LATE-runs_W30_U30-terminal.json"
+          ]
+        },
+        "delivery_state": "PARTIAL_LOCATED",
+        "consumption_state": "UNKNOWN_FULL_OUTPUT",
+        "accepted": "NOT_ACCEPTED",
+        "limit": "Literal artifact/path matches only; directory/package aliases are not expanded into fictitious exports. Consumer evidence is a locator, not proof that the entire output was consumed. Historical PLANNED_NOT_PRODUCED stays inside the immutable canonical output and is not used as current state.",
+        "next_action": "For each declared artifact/export, compare producer and chosen consumer pre/post blobs, then attach the named behavior proof. Use anomalies.json for already confirmed unconsumed deltas."
+      }
+    ],
+    "canonical_task_output_dependencies": [
+      {
+        "consumer_task": "WP00.T04",
+        "phase": "GNATIVE18-20",
+        "requires": [
+          "AI-NATIVE",
+          "NATIVE-CASE",
+          "NATIVE-PLANNER",
+          "NATIVE-RUNTIME",
+          "NATIVE-COMPOSE"
+        ],
+        "window": [
+          18,
+          20
+        ]
+      },
+      {
+        "consumer_task": "WP12.T02",
+        "phase": "implementation against typed catalog port 25-42; full runtime consumption 42-75",
+        "requires": [
+          "AI-CATALOG-PORT"
+        ],
+        "window": [
+          25,
+          42
+        ],
+        "not_a_gate_for": "source authoring 10-25",
+        "full_runtime_requires": [
+          "AI-FULL"
+        ],
+        "full_runtime_window": [
+          42,
+          75
+        ],
+        "full_runtime_note": "AI-CATALOG é o alias técnico do catálogo completo entregue por AI-FULL em T+42; AI-CATALOG-PORT é a interface anterior de construção."
+      },
+      {
+        "consumer_task": "WP10.T07",
+        "phase": "domain/document adaptation 20-35",
+        "requires": [
+          "DOC-REF",
+          "ATLAS-MAP",
+          "ATLAS-PACKAGE"
+        ],
+        "window": [
+          20,
+          35
+        ]
+      },
+      {
+        "consumer_task": "WP10.T07",
+        "phase": "durable Atlas 35-55",
+        "requires": [
+          "PROTECTED-STORE"
+        ],
+        "window": [
+          35,
+          55
+        ]
+      },
+      {
+        "consumer_task": "WP10.T06",
+        "phase": "load fullresident 42-45",
+        "requires": [
+          "AI-FULL"
+        ],
+        "window": [
+          42,
+          45
+        ]
+      },
+      {
+        "consumer_task": "WP14.T03",
+        "phase": "exclusive writer 43-56",
+        "requires": [
+          "WP14-LEASE"
+        ],
+        "window": [
+          43,
+          56
+        ]
+      }
+    ],
+    "delta_rule": "19 canonical handoffs preserve producer/consumer tasks. The canonical PLANNED_NOT_PRODUCED label is planning metadata; new source/target receipts below are independent observations, not redefinition of the plan.",
+    "runtime_consumption": "UNKNOWN_FULL_OUTPUT_UNLESS_EXACT_RECEIPT_PROVES_IT",
+    "delta_refs": [
+      "source-deltas.json",
+      "target-refresh.json",
+      "authority-observations.json"
+    ]
+  },
+  "pending56": {
+    "source": {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/pending-owners-final.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/pending-owners-final.json"
+    },
+    "ids": [
+      "C05-INSTALLED-CLOSURE",
+      "C12-FINANCE-ORACLE-COMPATIBILITY",
+      "C12-POSTTERMINAL-FIXTURE-A20",
+      "C12-RECOVERY",
+      "C17-BETWEEN-OBSERVATIONS",
+      "CURRENT-CHOICE-COHORT",
+      "DECISIONS-COVERAGE-CAS-GRAPH",
+      "E2E-DECISIONS",
+      "E2E-OPERATIONS",
+      "E2E-REPORTS",
+      "FIN-IND-005",
+      "FIN22-LEGACY-FIXTURE-ASSEMBLY",
+      "M27-BI09-WATERFALL-MOUNT",
+      "M27-C05-FIRST-AGENDA",
+      "M29-ATLAS-003",
+      "M31-BOOTSTRAP",
+      "M31-C12-PROOF",
+      "M31-CHECK-LANES",
+      "M31-CHECKS",
+      "M31-COVERAGE",
+      "M31-CRITERIA-REMAINDERS",
+      "M31-FINANCIAL-APPROVAL",
+      "M31-HISTORICAL-READ",
+      "M31-NATIVE",
+      "M31-NUMERIC-RULE",
+      "M31-PRECHOICE-PROCUREMENT",
+      "M31-PROCUREMENT-EVIDENCE",
+      "M33-DEC31-SHARED-PERIOD-QUALIFICATION",
+      "M35-C17-ORIGINAL-REVALIDATION",
+      "M40-PROPOSAL35-RECURSION",
+      "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "M44-CANDIDATE-REBIND",
+      "M45-COMPOSED-COMPILER-QUALIFICATION",
+      "MEMORY-HISTORY-MI07",
+      "MEMORY-INTEGRITY",
+      "NATIVE-AM-REVIEW",
+      "OPERATIONS24-REAL-SCANNER",
+      "OPERATIONS24-REVISION49-PROVENANCE",
+      "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR",
+      "REPORTS25-canonical-reports-evidence",
+      "REPORTS25-distinct-legitimate-recipient",
+      "REPORTS25-nonplain-c05-source-lease",
+      "REPORTS25-real-composition-w-and-actions",
+      "REPORTS25-reports-e2e-typecheck",
+      "REPORTS36-SOURCE-NOMINAL-FAILED-SETUP",
+      "ROUTINES-NATIVE-ADMISSION",
+      "ROUTINES30-background-cancel-business-artifact",
+      "ROUTINES30-composed-validation",
+      "ROUTINES30-knowledge-upstream",
+      "ROUTINES30-native-provider-and-return-after-reload",
+      "ROUTINES30-native-watch",
+      "ROUTINES30-publication-plan-human-admission",
+      "ROUTINES30-real-request-maestro-task-owner",
+      "TYPECHECK-GUARDS",
+      "WP13-P02-C12-RECEIPT-SCOPE",
+      "WP13-SEMANTIC-UNION"
+    ],
+    "source_record_digests": {
+      "FIN-IND-005": "df27d0e4a14f9b0679cf78b8a301ed73931e502a8e5238dcfd3b236fa952d1ae",
+      "FIN22-LEGACY-FIXTURE-ASSEMBLY": "444423bc6cf2fcf447d3f4580ff39384037ca17a1334ed1d00ad7e05d3169a6a",
+      "C12-RECOVERY": "6fb7cd8724b7741b5978bdd9c0ca6abd48951de72e71d147917054f67ee5f011",
+      "C12-FINANCE-ORACLE-COMPATIBILITY": "a6ec8e1d4a93fe4ec7fb3dbe2d3b65f0b1d2734b097b1926c1e283e01f8c0866",
+      "MEMORY-INTEGRITY": "9f5ae30675376ce17e534b9bba3e6edbc6607d2be1a0f2602b5b1f6842b5caf2",
+      "MEMORY-HISTORY-MI07": "23d041243c2f8cd9a53833bafd4909c3ad7e20d8fcc35097dda794d4a04a7055",
+      "C17-BETWEEN-OBSERVATIONS": "87f1afc04e4d5515380f5b1ab4417ef745fa3e04bc1abbb1b32ef0c513bd95c1",
+      "WP13-SEMANTIC-UNION": "cf4a7aa05f3f28fb1fd247d354784cbcab6d7d944e11ac44f91cee79dee0eba3",
+      "WP13-P02-C12-RECEIPT-SCOPE": "2240879b4c5f5983c7e3831ab9c76031464ad5c802a2bc20efa2e085caa11774",
+      "CURRENT-CHOICE-COHORT": "1684557fdc1f9121de2c2e4773af8b4531b45c528e62eaadf4362c905a9b775b",
+      "E2E-OPERATIONS": "aca278e69319d787d778cf590f7660c970daa7493783d6bdbdc5410af6f10ec1",
+      "OPERATIONS24-REVISION49-PROVENANCE": "a99f70d893056904209e0bc1aaf878619f2a56956938e90593a178d3c990d326",
+      "OPERATIONS24-REAL-SCANNER": "8db51b7a9a49bc5bc9d267553b1b6025ab539fbdc1e6da402451bad4a06ed630",
+      "E2E-DECISIONS": "c32964c9df2a9770de1d67b52621bc3bb08f89bfd2eca8bbf7624fe479308988",
+      "DECISIONS-COVERAGE-CAS-GRAPH": "2cd912a36eb20b2186a51d5b64440143d4cf33adaf24597fbf0d8d2cf0b12ddf",
+      "C05-INSTALLED-CLOSURE": "d382ef76fb237cce47df34941f80970d9453faf3b9d090e4fbd4ebf89d0a9a2b",
+      "E2E-REPORTS": "8f63f52e9ea2db4d420d70c5ac9ced7612e06e21029983ae9d3b82f7649bd974",
+      "TYPECHECK-GUARDS": "6feb236b46407183f0ca5baade7b1734159da864f538d92e8cd5fc7ba789bec9",
+      "ROUTINES-NATIVE-ADMISSION": "b0841fecd2e51857880a2248564a695eeea1221dc7cb115fca262a665ce43a03",
+      "NATIVE-AM-REVIEW": "a0a8931190bc8dc0dbbfb0ce062bdbb996a10170381e47a2e119f867348afd39",
+      "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR": "35c6736db5925691b2cb76846f6d779fdeaa963fa9eb0d71eeb4b890a6a7a3f4",
+      "M29-ATLAS-003": "5bc6a648b29d79765b78fc5c71454143fb86e44c8dfa33332a5513ed16d5252c",
+      "REPORTS25-distinct-legitimate-recipient": "6b2b7cabee7bff5c21bf7f61f9d8b1527ec1e2436e823014db4dfd6c4b89dda2",
+      "REPORTS25-nonplain-c05-source-lease": "6f57f3a6ce5458dd99f496ba9faaf716d295318d0c19dae990f44bf912214bc5",
+      "REPORTS25-real-composition-w-and-actions": "9afcb0ca0c0a613a5c0636c1d80bfe9cc3653587f8f20c92115f2cf31285ba7e",
+      "REPORTS25-reports-e2e-typecheck": "05dbe34d21164707c9b554599f3723b3865c0387c525ddd97dbf40778e8846dc",
+      "REPORTS25-canonical-reports-evidence": "0e9ab23ab5ecf82f115047171fd64de9f62b225070f35d4872f679c60c4eb91c",
+      "ROUTINES30-real-request-maestro-task-owner": "da2992932d861a6a52ecfdf75105fc87f4946f1cc40f4119eef2faa1fd389035",
+      "ROUTINES30-publication-plan-human-admission": "b8fbfa31825a764f03b0cd9cccf97d243bf4ee985e6f45a7653d2db77b6ea4a1",
+      "ROUTINES30-native-provider-and-return-after-reload": "d9a73154bd0697a080c9766899fd58801ef0777ebee635a7b18a7beb1698f080",
+      "ROUTINES30-knowledge-upstream": "99ea03fc923cf0f9ffe10d069d578f90ffb517cab374a14ffadec382fa82adb3",
+      "ROUTINES30-native-watch": "1c79a28a2dd5d02add903416fc82a071b4ecd980a3de53d47be525802dc925dd",
+      "ROUTINES30-background-cancel-business-artifact": "1bda636615bbf4715b8b97c00daf77f6326e2a077dbf55c652e8e8af434d1e43",
+      "ROUTINES30-composed-validation": "81f81e5ee0d0660d284ba63a7d8c8144307d94f0aaebb7f46db305dc38ad40f0",
+      "M31-BOOTSTRAP": "53911a1ab0f3786d0a5a6f51c46eaa483d0b6448ec018e25e72e03b47968fe38",
+      "M31-COVERAGE": "107ddbcf714fa2a388c3e4c04d3b70d163e62225fcd11c147cb07ecf2614a018",
+      "M31-NUMERIC-RULE": "bef0f5fd7d145d02ee7ec8db15d6a13d21a22e874be2670c670b997d0faf64bc",
+      "M31-PROCUREMENT-EVIDENCE": "f80c6a23974032a2cf6c300dd1066f506f045ef0337a7408aa07b3d50b5a9204",
+      "M31-HISTORICAL-READ": "51c2c123190c09f4f5dc769e5c40eb79546bbef98f9ac3a702889b4692c9be8d",
+      "M31-PRECHOICE-PROCUREMENT": "4c049e713e7675ab5656be3e580aa385d6ad4bd9da816f6e15bb8e7c9623ce43",
+      "M31-FINANCIAL-APPROVAL": "13308cb1ac8c8dc60ad5a1c4f3c3d82b4bc3d4b61bf43d8696a9711801ff321d",
+      "M31-C12-PROOF": "6818169d854d004ae44e211c52f6d0da6936cc4020831d73bacbddc1d58de737",
+      "M31-CRITERIA-REMAINDERS": "42e3477716f757637727e5c5a315c5b385c10bebe34cbaacdc4eceedd7c2f57e",
+      "M31-NATIVE": "5db613b63e272c590e6a3ba4cd6f588c904c25d6b7562a50737b781ba5b69094",
+      "M31-CHECKS": "9dc79003e7dc7587c4a7b15d69e409c1be2143d61af415333a9f6861df846c53",
+      "M31-CHECK-LANES": "988f39fb1c2764fc1fc86c772ba6e1aeb591c1c8baea8f0cc67600bb08aab74b",
+      "M33-DEC31-SHARED-PERIOD-QUALIFICATION": "ed3e3ea8e610004cbaa4e15eaf2339aff1448b2db05089a245f25d5cfae74b8d",
+      "C12-POSTTERMINAL-FIXTURE-A20": "63a6e66c099b51f5c05ed2b3adedb57d56291a23dfcbd2501d8b6fd38fe53566",
+      "M27-BI09-WATERFALL-MOUNT": "d91d705dee35c18d412b31b6d9a8b9d4b304fc4eb0cea6167cc61918b6928b04",
+      "M27-C05-FIRST-AGENDA": "56a01b6d58fecf7a9c467f29d842c2b1e38e40e33fb40c86f6c1cb46be6982ca",
+      "M35-C17-ORIGINAL-REVALIDATION": "9c31125e162ae62e1ee126fcd70550bed2bf5a3e37401771677fcf179a5dbd73",
+      "M40-PROPOSAL35-RECURSION": "1ee83677dc65a59a774ae5463ddcd28d66b48d0e7623c96b925f6f0da245fa5d",
+      "M42-R36-AMBIGUOUS-THREAD-READ-PURGE": "7cf0c052b7d65a48dccc7e964a584c9abe7697f28e5a564e3fa6c786b613bc60",
+      "REPORTS36-SOURCE-NOMINAL-FAILED-SETUP": "4b679bae3dfdee6f3f92cbab3df9a83eb94cc38df2ec186c50acffd1636ec9ec",
+      "M45-COMPOSED-COMPILER-QUALIFICATION": "2f9199ae6c8d0cefa3819d24293534b589d0151349b670893c75b430a0069312",
+      "M44-CANDIDATE-REBIND": "d77454d4f3e6c9d92fbc9b4636dac6804485eb8444c6bb34dcaabef832dd943a"
+    },
+    "closed_by78": [],
+    "history_rule": "Retain all56 exact prior IDs and source digests; current routing uses next-actions.json. No closure inferred from release or intake."
+  },
+  "findings": {
+    "source": {
+      "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/finding-routing-final.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/finding-routing-final.json"
+    },
+    "pre60_original_ids": [
+      "M31-FINANCIAL-APPROVAL",
+      "M41-AUTHENTICATED-NATIVE-ADMISSION",
+      "M41-WATCH-SCHEDULE",
+      "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "WP13-P02-HISTORY-FINAL-CAS",
+      "WP13-P03-SEMANTIC-SOURCE-TIMEOUT",
+      "M47-P43-HANDOFF-FAULT-BOUNDARY",
+      "M35-C17-ORIGINAL-REVALIDATION",
+      "MI07",
+      "DECISIONS-FIVE-INSTALLED-JOURNEYS",
+      "BI38-INSTALLED-FULL-NUMERIC",
+      "M47-CHECKS-EXACT-CANDIDATE",
+      "M46-COMPOSED-C",
+      "M46-SHARED-UI",
+      "M46-NUMERIC-LITERAL",
+      "M46-TYPECHECK-EXTERNAL",
+      "M46-NATIVE-RESIDENT",
+      "M39-C9-DISCOVERY-AFTER-LARGE-CAPTURE",
+      "M49-COMPOSED-AUTH-INSTALLATION",
+      "M49-LIVE-MICROSOFT-B2B",
+      "M51-MI07-PROCUREMENT-CAPTURE-BLOCKED",
+      "M55-45-SUPPORTED-INTERFACE",
+      "M55-RUNTIME56-DEPENDENCY",
+      "M57-SHARED53-APPLICATION-ADMISSION",
+      "M57-MIXED53-REAL-HISTORY-AUTHORITY",
+      "M57-RUNTIME56-UNFILTERED-ORACLE",
+      "M57-P03-QUALIFICATION58-FAIL",
+      "M57-INTEGRITY-01"
+    ],
+    "new60_ids": [
+      "M60-R48-RELEASE-QUALIFICATION",
+      "M60-R48-AGENDA-ADMISSION-CLASSIFICATION",
+      "M60-R48-NOMINAL-TRANSPORT",
+      "M60-D52-RELEASE-PENDING",
+      "M60-D52-MICROSOFT-MAP-PRESERVATION",
+      "M60-D52-COMPARE-DEADLINE",
+      "M60-D52-PROCUREMENT-QUEUE",
+      "M60-D52-TRANSPORT-PROOF",
+      "M60-R59-DISPOSAL-POISON",
+      "M60-R48-HOT-TOPIC-CREATION"
+    ],
+    "all_current_ids": [
+      "M31-FINANCIAL-APPROVAL",
+      "M41-AUTHENTICATED-NATIVE-ADMISSION",
+      "M41-WATCH-SCHEDULE",
+      "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "WP13-P02-HISTORY-FINAL-CAS",
+      "WP13-P03-SEMANTIC-SOURCE-TIMEOUT",
+      "M47-P43-HANDOFF-FAULT-BOUNDARY",
+      "M35-C17-ORIGINAL-REVALIDATION",
+      "MI07",
+      "DECISIONS-FIVE-INSTALLED-JOURNEYS",
+      "BI38-INSTALLED-FULL-NUMERIC",
+      "M47-CHECKS-EXACT-CANDIDATE",
+      "M46-COMPOSED-C",
+      "M46-SHARED-UI",
+      "M46-NUMERIC-LITERAL",
+      "M46-TYPECHECK-EXTERNAL",
+      "M46-NATIVE-RESIDENT",
+      "M39-C9-DISCOVERY-AFTER-LARGE-CAPTURE",
+      "M49-COMPOSED-AUTH-INSTALLATION",
+      "M49-LIVE-MICROSOFT-B2B",
+      "M51-MI07-PROCUREMENT-CAPTURE-BLOCKED",
+      "M55-45-SUPPORTED-INTERFACE",
+      "M55-RUNTIME56-DEPENDENCY",
+      "M57-SHARED53-APPLICATION-ADMISSION",
+      "M57-MIXED53-REAL-HISTORY-AUTHORITY",
+      "M57-RUNTIME56-UNFILTERED-ORACLE",
+      "M57-P03-QUALIFICATION58-FAIL",
+      "M57-INTEGRITY-01",
+      "M60-R48-RELEASE-QUALIFICATION",
+      "M60-R48-AGENDA-ADMISSION-CLASSIFICATION",
+      "M60-R48-NOMINAL-TRANSPORT",
+      "M60-D52-RELEASE-PENDING",
+      "M60-D52-MICROSOFT-MAP-PRESERVATION",
+      "M60-D52-COMPARE-DEADLINE",
+      "M60-D52-PROCUREMENT-QUEUE",
+      "M60-D52-TRANSPORT-PROOF",
+      "M60-R59-DISPOSAL-POISON",
+      "M60-R48-HOT-TOPIC-CREATION"
+    ],
+    "closed_by78": [],
+    "new70_findings": [
+      {
+        "id": "M70-AUTH-01",
+        "title": "Estado de autenticação pode crescer sem retenção/capacidade limitada",
+        "severity": "P2 / MEDIUM",
+        "mandatory": true,
+        "status": "CONFIRMED_BY_SOURCE_NOT_EXECUTED",
+        "criteria": [
+          "mission70.acceptance[0] (session/storage)",
+          "WP10.T03.QLT.01",
+          "WP10.T03.QLT.40"
+        ],
+        "reviewer": "/root + /root/identity_review",
+        "authorship": {
+          "reviewers_authored_product_in_this_session": false,
+          "source_provenance": "Microsoft49; current C27 local-store integration. Full historical model/session identities are not independently established; no FINAL independence gate is claimed."
+        },
+        "preconditions": [
+          "Instalação Microsoft ativa e ingresso alcançável com Host/origem configurados.",
+          "Para challenges: discovery/authorization disponível; nenhum login concluído é necessário.",
+          "Para logout: prefixo público de cookie conhecido e handle de 64 hex; Origin correta não autentica um cliente HTTP."
+        ],
+        "evidence": [
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+            "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+            "lines": {
+              "start": 62,
+              "end": 78
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-identity.ts#L62-L78",
+            "why": "retire cria marcador durável e entrada no Map para qualquer handle sintaticamente aceito; só limpa expirados do Map ao executar novo retire."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+            "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+            "lines": {
+              "start": 119,
+              "end": 142
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-identity.ts#L119-L142",
+            "why": "logout sem sessão válida chama retire; GET login cria challenge novo sem retirar o anterior."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+            "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+            "lines": {
+              "start": 94,
+              "end": 109
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-identity.ts#L94-L109",
+            "why": "expiração impede uso da sessão, mas não elimina o payload."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+            "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+            "lines": {
+              "start": 366,
+              "end": 388
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-store.ts#L366-L388",
+            "why": "put UPSERT; get filtra expires_at; take/remove apagam exclusivamente uma chave."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+            "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+            "lines": {
+              "start": 162,
+              "end": 173
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L162-L173",
+            "why": "rotas de autenticação são atendidas antes da autenticação de negócio."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+            "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+            "lines": {
+              "start": 123,
+              "end": 123
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L123-L123",
+            "why": "agendamento de jobs habilitado pelo perfil operator; busca limitada não encontrou retenção de autenticação nesses jobs."
+          }
+        ],
+        "causal_sequence": [
+          "GET /auth/login gera state único e persiste challenge criptografado. Abandonar o callback conserva a linha depois do expires_at.",
+          "Uma sessão legítima que vence sem logout também deixa seu payload criptografado na tabela; o filtro de expiração recusa autenticação e não realiza exclusão.",
+          "POST /auth/logout com um handle nunca emitido, porém sintaticamente válido, cria revoked-session/revoked-login e entrada retiring antes de tentar remover a chave original inexistente.",
+          "Cada handle diferente cria uma linha adicional. Os marcadores têm validade de 8h/8h10m. As entradas do Map permanecem até um novo retire remover as expiradas; cada retire percorre suas entradas. Não existe quota demonstrada nesse caminho.",
+          "Busca textual integral nos 36 arquivos runtime e 12 local fixados encontrou usos da tabela apenas em local-store.ts e exclusões por chave, sem sweep por expiração."
+        ],
+        "impact": "Crescimento persistente da tabela, retenção desnecessária de ciphertext de autenticação e consumo de memória/CPU/SQLite. Indisponibilidade é impacto potencial, não medido.",
+        "excluded_claims": [
+          "Não demonstra plaintext de tokens.",
+          "Não demonstra sessão expirada aceita.",
+          "Não demonstra bypass OIDC nem CSRF de navegador.",
+          "Não afirma ausência de rate limit/GC administrados fora do conjunto inspecionado."
+        ],
+        "reproduction": {
+          "executed": false,
+          "method": "sequência causal de fonte; proposta para fixture isolada do writer",
+          "steps": [
+            "Medir contagem da tabela sem imprimir payloads; iniciar N logins sem callbacks; avançar além do TTL e executar a manutenção normal.",
+            "Em outro caso, concluir uma sessão e deixá-la vencer sem logout; observar retenção e recusa da sessão separadamente.",
+            "Enviar um número pequeno e controlado de logouts com handles distintos nunca emitidos, origem correta e sem sessão legítima; observar linhas e Map.",
+            "Após correção, verificar expurgo limitado e ausência de novos marcadores para handles nunca emitidos; não executar carga destrutiva."
+          ]
+        },
+        "correction": {
+          "artifact": "REMEDIATION70.md#auth-01",
+          "required": [
+            "Registrar duravelmente emissão/consumo/revogação e correlação de callback em andamento.",
+            "Não persistir revogação para handle nunca emitido; preservar cancelamento de challenge já consumido por callback pendente.",
+            "Implementar expurgo por lotes fora de leituras/transações de negócio e capacidade compartilhada de emissão.",
+            "Reter fences até nenhum callback/sessão derivada admissível poder sobreviver; preservar criptografia e idempotência."
+          ]
+        },
+        "owner": "60 encaminha para owner ativo de autenticação49/sucessor e runtime/local-store59; 70 não materializa produto. Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60.",
+        "recheck": {
+          "required": true,
+          "executor": "writer e lane Actions autorizada, coordenada por60/45",
+          "independent_reviewer": "Revisor independente designado, sem autoria da correção",
+          "cases": [
+            "logout durante redemption e antes/depois do write de sessão",
+            "refresh/Graph concorrente com logout",
+            "duas instâncias e restart",
+            "callback duplicado e GC concorrente",
+            "expiração sem retornar a endpoint",
+            "handles nunca emitidos e limite de emissão"
+          ]
+        },
+        "disposition": "FIX_FIRST; não reclassificar como opcional para encerrar."
+      },
+      {
+        "id": "M70-ISO-01",
+        "title": "Status HTTP distingue requisição Procurement oculta de ID inexistente",
+        "severity": "P2 / MEDIUM",
+        "mandatory": true,
+        "status": "CONFIRMED_BY_SOURCE_NOT_EXECUTED",
+        "criteria": [
+          "CAMP.INV.04",
+          "CAMP.CMP.02",
+          "CAMP.CMP.03",
+          "C03",
+          "C08",
+          "WP10.T03.QLT.40"
+        ],
+        "reviewer": "/root + /root/isolation_review; contraleitura /root/identity_review",
+        "authorship": {
+          "reviewers_authored_product_in_this_session": false,
+          "source_provenance": "Domínio Procurement e Application canônicos integrados; proprietário exato da correção deve ser designado por60."
+        },
+        "preconditions": [
+          "Ator A autenticado, canWrite, nome próprio no diretório e somente papel requester em Procurement.",
+          "Requisição de B possui createdBy diferente de A; A não tem buyer/approver/supplier admin/admin/viewer.",
+          "ID candidato conhecido ou fornecido ao cenário; não se afirma enumeração prática de UUIDs.",
+          "Request POST válido e mesma origem."
+        ],
+        "evidence": [
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+            "blob": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+            "lines": {
+              "start": 3,
+              "end": 8
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/src/requests.ts#L3-L8",
+            "why": "requester-only vê apenas createdBy próprio."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+            "blob": "412d55047a1b6dda686ce1054c15b20307217577",
+            "lines": {
+              "start": 129,
+              "end": 145
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/src/nav.ts#L129-L145",
+            "why": "requester pode acessar a página Requests."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+            "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+            "lines": {
+              "start": 84,
+              "end": 128
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L84-L128",
+            "why": "autenticação/role/canWrite/diretório precedem execute, sem ACL desse ID."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+            "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+            "lines": {
+              "start": 456,
+              "end": 507
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L456-L507",
+            "why": "schema aceita action save, id string, versão inteira não negativa e values vazio."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+            "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+            "lines": {
+              "start": 473,
+              "end": 487
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/procurement.ts#L473-L487",
+            "why": "ausência 404; invisível e versão divergente 409; versão coincidente chega à negativa save 403."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+            "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+            "lines": {
+              "start": 100,
+              "end": 102
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/contract.ts#L100-L102",
+            "why": "conflito compara versão antes da negativa de edição."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+            "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+            "lines": {
+              "start": 347,
+              "end": 350
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L347-L350",
+            "why": "status do domínio vira status HTTP e result.ok=false impede commit."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+            "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+            "lines": {
+              "start": 510,
+              "end": 521
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L510-L521",
+            "why": "safeFailure redige campos, mas conserva status."
+          }
+        ],
+        "causal_sequence": [
+          "Enviar save para ID inexistente retorna404 na linha475.",
+          "Enviar o mesmo comando para ID invisível existente retorna409 se a versão diverge; o payload privado é removido nessa branch.",
+          "Se a versão coincide, requester A não satisfaz prEdit/sourceEdit/poEdit e save retorna403 na linha487.",
+          "A camada HTTP preserva404/409/403. Logo a existência é distinguível sem acertar a versão; tentativas também distinguem acerto de versão."
+        ],
+        "impact": "Divulgação de existência de registro fora do escopo e observação de igualdade de versão por status. Não há leitura de campos privados nem alteração demonstradas.",
+        "excluded_claims": [
+          "Não demonstra obtenção do autor, conteúdo ou enumeração de IDs desconhecidos.",
+          "Não demonstra commit: todos os ramos usados retornam ok:false.",
+          "Não é bypass financeiro/aprovação."
+        ],
+        "reproduction": {
+          "executed": false,
+          "endpoint": "POST <mount>/procurement",
+          "headers": {
+            "Content-Type": "application/json",
+            "Origin": "<origem pública configurada>",
+            "Cookie": "<sessão válida de A; não incluir valor em receipt>"
+          },
+          "body": {
+            "page": "Requests",
+            "action": "save",
+            "id": "<candidate-id>",
+            "version": 0,
+            "values": {}
+          },
+          "expected_from_source": [
+            {
+              "target": "ID ausente",
+              "status": 404
+            },
+            {
+              "target": "PR invisível de B com versão positiva",
+              "status": 409
+            },
+            {
+              "target": "mesma PR invisível com versão corrente enviada",
+              "status": 403
+            }
+          ]
+        },
+        "correction": {
+          "artifact": "REMEDIATION70.md#iso-01",
+          "required": [
+            "Para ações sobre registro existente, decidir visibilidade antes de expor existência/CAS/versão.",
+            "Usar a mesma resposta pública para registro inexistente e inacessível, sem stored/by/currentVersionCAS privados.",
+            "Preservar CAS409 para atores autorizados, criação e regras atuais de transição/holder/alçada."
+          ]
+        },
+        "owner": "60 encaminha ao owner canônico Procurement e coordena Application somente se necessário. Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60.",
+        "recheck": {
+          "required": true,
+          "executor": "writer/lane autorizada",
+          "independent_reviewer": "Revisor independente designado, sem autoria da correção",
+          "cases": [
+            "A requester-only vs B creator",
+            "ID ausente e invisível produzem status/corpo equivalentes",
+            "save/approve/reject e versão igual/divergente",
+            "A com acesso legítimo conserva conflito409 e CAS",
+            "nenhuma escrita/audit/effect em negativas"
+          ]
+        },
+        "disposition": "FIX_FIRST; privacidade de status faz parte da resposta."
+      },
+      {
+        "id": "M70-HTTP-01",
+        "title": "Body sem Content-Length perde o limite incremental na ponte Node → Web",
+        "severity": "P2 / MEDIUM",
+        "mandatory": true,
+        "status": "CONFIRMED_BY_SOURCE_NOT_EXECUTED",
+        "criteria": [
+          "mission70.acceptance[1] (Node/Effect body seam)",
+          "C08",
+          "WP10.T03.QLT.01",
+          "WP10.T03.QLT.40"
+        ],
+        "reviewer": "/root + /root/http_review; contraleitura /root/identity_review",
+        "authorship": {
+          "reviewers_authored_product_in_this_session": false,
+          "source_provenance": "Microsoft49/55 instalação; host C27 e Effect4.0.0-beta.83. Proposta52 não integrada."
+        },
+        "preconditions": [
+          "Instalação SF e runtime Workbench disponíveis.",
+          "Ingresso aceita body sem Content-Length, Host e Origin configurados, Content-Type application/json.",
+          "Sem limite externo independente mais restritivo demonstrado; o ambiente implantado não foi inspecionado."
+        ],
+        "evidence": [
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "packages/server/src/body-limit.ts",
+            "blob": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+            "lines": {
+              "start": 25,
+              "end": 43
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/server/src/body-limit.ts#L25-L43",
+            "why": "Content-Length é verificado; MaxBodySize é fornecido, sem contador próprio do middleware."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "apps/cli/src/sucafina-product/installation.ts",
+            "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+            "lines": {
+              "start": 38,
+              "end": 49
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/installation.ts#L38-L49",
+            "why": "HttpServerRequest.toWeb recebe o request Node sanitizado."
+          },
+          {
+            "repository": "Effect-TS/effect",
+            "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+            "path": "packages/effect/src/unstable/http/HttpServerRequest.ts",
+            "blob": "83e6c3e6f9d0f12ce2eb4ccec969459f9f99c7a4",
+            "lines": {
+              "start": 1032,
+              "end": 1059
+            },
+            "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/effect/src/unstable/http/HttpServerRequest.ts#L1032-L1059",
+            "why": "toWeb usa self.stream no caminho Node; Web Request prévia é caminho diferente."
+          },
+          {
+            "repository": "Effect-TS/effect",
+            "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+            "path": "packages/platform-node/src/NodeHttpIncomingMessage.ts",
+            "blob": "2461e86c785d6f7435c8e4cc533f450329d9cc44",
+            "lines": {
+              "start": 117,
+              "end": 139
+            },
+            "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/platform-node/src/NodeHttpIncomingMessage.ts#L117-L139",
+            "why": "stream chama fromReadable sem MaxBodySize; arrayBuffer consulta esse limite."
+          },
+          {
+            "repository": "Effect-TS/effect",
+            "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+            "path": "packages/platform-node-shared/src/NodeStream.ts",
+            "blob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+            "lines": {
+              "start": 361,
+              "end": 393
+            },
+            "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/platform-node-shared/src/NodeStream.ts#L361-L393",
+            "why": "pull não conta o total; cleanup do readable existe."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+            "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+            "lines": {
+              "start": 90,
+              "end": 103
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/interface/http.ts#L90-L103",
+            "why": "request.text precede verificação de65536 bytes e ui.admit."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+            "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+            "lines": {
+              "start": 60,
+              "end": 86
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L60-L86",
+            "why": "product handler é chamado antes do parser base limitado e da autenticação da página."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+            "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+            "lines": {
+              "start": 128,
+              "end": 141
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L128-L141",
+            "why": "Workbench recebe serviços do host e compõe fallback product."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+            "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+            "lines": {
+              "start": 233,
+              "end": 239
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts#L233-L239",
+            "why": "ausência de pessoa só redireciona GET; POST segue ao handler."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "apps/cli/src/sucafina-product/host-context.ts",
+            "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+            "lines": {
+              "start": 800,
+              "end": 803
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/host-context.ts#L800-L803",
+            "why": "identidade de host instalado habilita runtime, não sessão Microsoft do caller."
+          },
+          {
+            "repository": "gustavomhss/Orchestra-SF",
+            "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "path": "apps/cli/src/sucafina-product/host-context.ts",
+            "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+            "lines": {
+              "start": 836,
+              "end": 852
+            },
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/host-context.ts#L836-L852",
+            "why": "cadeia productHttp antecede fallback; services disponíveis por identidade do host."
+          }
+        ],
+        "causal_sequence": [
+          "Sem Content-Length, a rejeição por tamanho declarado não ocorre.",
+          "toWeb converte self.stream em ReadableStream; o getter Node utilizado não aplica MaxBodySize.",
+          "Com runtime disponível, sf=workbench-command passa fences públicos de origem/Host e roteamento.",
+          "request.text acumula o body antes deEOF; só então verifica65536 bytes e posteriormente admite o usuário.",
+          "Parser limitado da aplicação base não cobre o caso, porque product já recebeu o request antes dele."
+        ],
+        "impact": "Ausência de cutoff incremental permite consumo de memória proporcional ao corpo antes da autenticação/admissão. Indisponibilidade é potencial e depende da exposição; nenhum OOM foi provocado ou observado.",
+        "excluded_claims": [
+          "Não demonstra leitura privada ou mutação sem autorização.",
+          "Não afirma ausência de timeouts, falta absoluta de cleanup ou inexistência de proxy limit.",
+          "Não é finding de duplex ausente: duplex half já existe.",
+          "Não atribui comportamento executado de chunked aos testes GET."
+        ],
+        "reproduction": {
+          "executed": false,
+          "endpoint": "POST <mount>/dashboard?sf=workbench-command",
+          "method": "listener Node real em fixture isolada",
+          "steps": [
+            "Disponibilizar runtime; usar Host/Origin públicos corretos, application/json, sem cookie e sem Content-Length.",
+            "Transmitir mais de65536 bytes em quantidade controlada, mantendo EOF pendente por intervalo limitado.",
+            "Depois da correção, observar corte/413 ao ultrapassar teto, antes deEOF, com cleanup e sem chegar ao consumidor protegido. Não gerar carga destrutiva."
+          ]
+        },
+        "correction": {
+          "artifact": "REMEDIATION70.md#http-01",
+          "required": [
+            "Limite incremental na rota antes de text/buffer e limite efetivo na ponte Node→Web.",
+            "Propagar cutoff/413 sem expor causa privada; cancelar e liberar reader preservando abort/disconnect.",
+            "Reconciliar16MiB global com limites próprios, incluindo contrato25MiB; preservar uploads binários válidos.",
+            "Integrar qualquer solução52 somente com release, mapa novo e fixture coerentes, seguida de prova no candidato composto."
+          ]
+        },
+        "owner": "60 coordena owner ativo do transporte Microsoft49/52 e host; sem mudança de engine por70. Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60.",
+        "recheck": {
+          "required": true,
+          "executor": "writer e Actions autorizada",
+          "independent_reviewer": "Revisor independente designado, sem autoria da correção",
+          "cases": [
+            "POST JSON válido e inválido no listener Node",
+            "sem Content-Length/chunked excedendo limite",
+            "Content-Length excessivo",
+            "binário autorizado dentro do limite de negócio",
+            "abort/disconnect antes/depois de leitura",
+            "origem/Host/forwarded/privacy negativas"
+          ]
+        },
+        "disposition": "FIX_FIRST; prova fonte já exige correção, e G02 exige qualificação composta."
+      }
+    ],
+    "new78_static_finding": "WP14-PURE-LAYER-IO",
+    "history_preserved_by_immutable_reference": true
+  },
+  "old_common_actions": {
+    "source": {
+      "ref": "e3e51706b7ddcf46e5f29db098d88c5cdcde890d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/remaining-work.json",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e3e51706b7ddcf46e5f29db098d88c5cdcde890d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/20261114T191555Z/remaining-work.json"
+    },
+    "records": [
+      {
+        "id": "FIN-A01",
+        "owner": "WP10 / S0 composition",
+        "task_ids": [
+          "WP11.T01",
+          "WP13.T01"
+        ],
+        "paths": [
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts"
+        ],
+        "dependencies": [
+          "Select one common product composition head",
+          "Root PR29 verified fix identities"
+        ],
+        "next_action": "Compare the already-published PR29 verifier, case-event producer/caller pair and campaign private-prefix guard against Finance42; consume a compatible set on the product owner branch, preserving private authority and canonical port semantics. This evidence session does not edit product.",
+        "accountable_pool": "RW16",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A02",
+        "owner": "WP01 / WP10",
+        "task_ids": [
+          "WP05.T01"
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts"
+        ],
+        "dependencies": [
+          "FIN-A01"
+        ],
+        "next_action": "FIN004 selector é constatação de Finance42. PR29/W30 já alcança ready/output e a falha atual é cancel visível; consumir missão forecast-cancel-visibility PR45 quando entregue, preservando click/Enter409 e sem repetir correção antiga já presente no candidato escolhido.",
+        "accountable_pool": "RW03",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A03",
+        "owner": "WP10 with WP05, WP03 and WP02",
+        "task_ids": [
+          "WP05.T01",
+          "WP05.T02",
+          "WP05.T03",
+          "WP05.T04",
+          "WP05.T05",
+          "WP03.T01",
+          "WP03.T05"
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+          "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+          "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+          "apps/cli/src/sucafina-product/bi-services.ts"
+        ],
+        "dependencies": [
+          "FIN-A01",
+          "FIN-A09"
+        ],
+        "next_action": "Gap observado em Finance42 ou no pin histórico PR32; conferir a implementação escolhida de PR29 antes de alterar. Consume the existing BI09/BI10 projectedScenario producer, reserving BI11 to its own adapter; reconcile Interface undated-milestone producer fix with Finance renderer. Inventory the eight actual chart consumers and their source/version/ACL wiring on one chosen composition.",
+        "accountable_pool": "RW07",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A04",
+        "owner": "WP10 with WP13, WP11 and WP12",
+        "task_ids": [
+          "WP13.T01",
+          "WP13.T02",
+          "WP13.T04",
+          "WP11.T04"
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
+        ],
+        "dependencies": [
+          "FIN-A01",
+          "FIN-A09"
+        ],
+        "next_action": "Wire the existing campaign producer, historical proposal/candidate readers and optional reconciliation host in the owner composition. Preserve exact selection, source commitments and human choice; trace the resulting real-domain receipts to WP11/WP12.",
+        "accountable_pool": "RW16",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A05",
+        "owner": "WP13 / WP11 with WP03 and WP10",
+        "task_ids": [
+          "WP13.T03",
+          "WP13.T02",
+          "WP11.T02",
+          "WP11.T03",
+          "WP05.T05"
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+        ],
+        "dependencies": [
+          "FIN-A01",
+          "FIN-A09"
+        ],
+        "next_action": "Use the published S3 phase trace to inspect remaining repeated reads in confirmed.exact -> confirmed.preview; evaluate PR56 proposal against the unchanged coverage-preview blob without silently applying it. In a later authorized validation session retain one original choice and prove 210000 conditioned, 250000/-10000 after training, 15000 accepted and 15001 refused, history/replay/reopen and revocation.",
+        "accountable_pool": "RW14",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A06",
+        "owner": "WP03 with WP01 / WP10",
+        "task_ids": [
+          "WP03.T02",
+          "WP03.T03",
+          "WP03.T04",
+          "WP03.T05"
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+          "modules/sucafina/Sucafinav1/product/planner/headcount-host.ts",
+          "modules/sucafina/Sucafinav1/product/planner/catalog-host.ts",
+          "modules/sucafina/Sucafinav1/product/planner/overview-host.ts",
+          "modules/sucafina/Sucafinav1/product/planner/versions-host.ts"
+        ],
+        "dependencies": [
+          "FIN-A01"
+        ],
+        "next_action": "Reconcile the already published Planner page ports with actual page consumers for monthly edit/rebase/spread/reset, HR, catalogs/FX, overview and versions; make a per-flow installed proof checklist referencing existing producer receipts and explicit missing observations.",
+        "accountable_pool": "RW05",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A07",
+        "owner": "WP10 / S0 acceptance",
+        "task_ids": [
+          "WP03.T01",
+          "WP03.T02",
+          "WP03.T03",
+          "WP03.T04",
+          "WP03.T05",
+          "WP05.T01",
+          "WP05.T02",
+          "WP05.T03",
+          "WP05.T04",
+          "WP05.T05",
+          "WP11.T01",
+          "WP11.T02",
+          "WP11.T03",
+          "WP11.T04",
+          "WP13.T01",
+          "WP13.T02",
+          "WP13.T03",
+          "WP13.T04"
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/host-binding/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/"
+        ],
+        "dependencies": [
+          "FIN-A01",
+          "FIN-A03",
+          "FIN-A04",
+          "FIN-A05",
+          "FIN-A06",
+          "FIN-A08",
+          "FIN-A09"
+        ],
+        "next_action": "On the separately authorized common composition C, attach exact UI/native/MCP/C17 results to criterion IDs and decision/receipt versions; preserve NOT_ACCEPTED until this common evidence exists. Prepare the source/run manifests now; do not dispatch CI in the reconciliation session.",
+        "accountable_pool": "RW21",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A08",
+        "owner": "WP11 with WP04 / WP10",
+        "task_ids": [
+          "WP11.T03",
+          "WP11.T04",
+          "WP13.T04"
+        ],
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "modules/sucafina/Sucafinav1/product/decisions/receipts.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts"
+        ],
+        "dependencies": [
+          "FIN-A01",
+          "FIN-A04"
+        ],
+        "next_action": "Reconcile human choice, prepared changes, partial success and real-domain receipt consumers on the chosen owner composition; preserve destination permissions, retries and historical choice snapshots and identify which exact receipt assertions remain unobserved.",
+        "accountable_pool": "RW12",
+        "counted_once": true
+      },
+      {
+        "id": "FIN-A09",
+        "owner": "WP10 transaction/composition",
+        "task_ids": [
+          "WP03.T01",
+          "WP05.T05",
+          "WP11.T01",
+          "WP11.T02",
+          "WP13.T03",
+          "WP13.T04"
+        ],
+        "paths": [
+          "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+        ],
+        "dependencies": [
+          "Select compatible owner source-fence API and transaction policy"
+        ],
+        "next_action": "Gap observado em Finance42 ou no pin histórico PR32; conferir a implementação escolhida de PR29 antes de alterar. Reconcile readSourceFences with an inherited readonly root: use the already available detached observation mechanism while retaining pre/in/post fences, Request identity and poisoned-lease refusal. Confirm the applicable normative ordering decision with existing owner artifacts.",
+        "accountable_pool": "RW16",
+        "counted_once": true
+      }
+    ],
+    "rule": "Historical shared actions. Review corresponding anomaly delta before any replay; no new estimates or ownership changes."
+  }
+}
