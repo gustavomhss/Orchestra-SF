@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h.review-correction-ack.v1",
+  "mission": 156,
+  "slot": "N10",
+  "epoch": "ux-native-n10-e2-browser156",
+  "campaign": "sf2h-integral-20261112",
+  "state": "ACK_S0_CONFIRMED",
+  "actor": {
+    "interface": "ChatGPT GitHub MCP",
+    "authenticated_github_login": "gustavomhss",
+    "effective_model": "GPT-6",
+    "runtime_session_id": null,
+    "astra_session_claim": false
+  },
+  "branch": "sf-ux-n10",
+  "pr": 147,
+  "base_branch": "sf2-stack",
+  "expected_head": "fb67474bb2e399047de5a36e2906821e6d0e7348",
+  "expected_tree": "a75a42b4c5fd85260dd19920d87ee8201be987e9",
+  "s0_fence": {
+    "blob": "983dbef1be035515281410dcd7c6e680416ccefc",
+    "next_epoch": "ux-native-n10-e2-browser156",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "runtime_termination_claimed": false
+  },
+  "preimage": {
+    "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx": "724b6ce9cc60d63c0b1b315297a4417f433a6ead",
+    "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx": "f6c892046752446417e122dbaf740d3d69836ec0",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts": "bf94e13ee695ad6f6bd3d58d4f4697e550ddaae3",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u42.ts": "21673e1ceac0e1451e426ad538eb335f9f5531ac",
+    "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts": "1ab35888186a8d669515a634874f4e0ab6c44a0d",
+    "packages/app-shell/e2e/sucafina/native/journeys/u42.spec.ts": "e55e5437d2ebd118c89e23a4de52720e880352c9"
+  },
+  "additional_read_blobs": {
+    "app_context": "592eef8206c665a1fc908934e258b286fe85609e",
+    "navigation_state": "dc264d8c97163922134d09285e1c8d3a38027760",
+    "schema_work_sf2_stack": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+    "transport_sf2_stack": "ff509a7b742b81939a15f0439ca7f4a3d4b858e9",
+    "registry_sf2_stack": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+    "adapter_sf2_stack": "402b8a4599807d403065e561a427e230ae5981cb",
+    "surface_specs_normative": "d62847af81dffdc129312e71e69692081fd74b75"
+  },
+  "findings": [
+    "PRE-R01-146-003",
+    "PRE-R01-146-005"
+  ],
+  "dependencies": {
+    "integrator": "132/PR65",
+    "a12": "153/PR144",
+    "compiler": "149/PR107",
+    "ci": "150/PR106"
+  },
+  "policy": "Writes restricted to current mission156 allowlist and correction156 receipts; no runtime/transport edits or invented route/endpoint; no local validation; no reset/force.",
+  "validation": "NOT_RUN",
+  "blockers_preflight": [
+    "GET projection.search places free-form q into HTTP request URL; no admitted POST-read search route.",
+    "SfContextHandle exposes no route builder/authorized navigation action for the real caseRef; NAV-01 forbids constructing leaf-local href."
+  ],
+  "source_ready_is_release": false,
+  "goal": "paused"
+}
