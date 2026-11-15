@@ -1,0 +1,54 @@
+{
+  "mission": 121,
+  "campaign": "sf2h-integral-20261112",
+  "state": "ACK_OBSERVED_PRE_EDIT",
+  "lease_epoch": "creation-proof-repair-e1-browser121",
+  "actor": "121",
+  "branch": "creation-proof-repair",
+  "expected_head": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "expected_tree": "647b024075265fc76d6253c99bec00a82618f816",
+  "observed_model": "GPT-6",
+  "observed_session_id": null,
+  "note_session": "No stable browser or agent session identifier exposed; this is the active ChatGPT conversation using the connected GitHub API, not a spawned native Astra session.",
+  "tool": "connected GitHub, remote CAS; no local CI or shell",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "2dc0f8f1640495a84d1207710c50a9dabfd66bde",
+  "source_commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "authoritative_sources": [
+    {
+      "owner": 96,
+      "pr": 103,
+      "branch": "creation-reload-fix",
+      "head": "3ef1bbf2188275f5bc6ebaeed162a069ad3ae351"
+    },
+    {
+      "owner": 111,
+      "pr": 109,
+      "branch": "creation-recovery-link",
+      "head": "bd65179c3ce1da921974c686439d3877f735f852"
+    }
+  ],
+  "preimages": {
+    "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts": "8cf4f844307206880abd163e4f836a582670e617",
+    "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts": "46ab9222309a5856e931d033261f3438b1ce939b",
+    "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts": "eda13fa8d39b6dd378849ca57ce9b710bbe40e87"
+  },
+  "authorized_write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-proof-repair/**"
+  ],
+  "integration": {
+    "integrator": "114/PR65",
+    "dispatcher": "120/PR106",
+    "compiler": "119/PR107"
+  },
+  "constraints": [
+    "Do not change other owners' branches or sf2-stack/dev",
+    "Do not run tests locally",
+    "No additional dispatcher, merge, deploy, Azure or paused Goal reactivation",
+    "Browser selection startup -> two creation browser consumers -> lifecycle last",
+    "No type casts/any/ts-ignore or removed assertions"
+  ]
+}
