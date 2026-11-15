@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h.p03-causal-closure.ack.v1",
+  "mission": 99,
+  "status": "ACK_IN_PROGRESS",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "2fd08cec836e79639aa2b6c7d7511e1271dacfbf",
+  "branch": "planner-p03-finish",
+  "pr": 95,
+  "lease_epoch": "p03-causal-browser99",
+  "identity": {
+    "transport": "GitHub connected MCP; CAS update_ref; force=false",
+    "github_actor": "gustavomhss",
+    "github_actor_id": 228147811,
+    "model_observed": "GPT-6",
+    "astra_external_attestation": false,
+    "session_id": null,
+    "agents_spawned": 0
+  },
+  "reconciled": {
+    "source_head_before_ack": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+    "source_tree_before_ack": "d47cf1f0e050e2cebe00fbf645f1065ea5f1e3e3",
+    "terminal89_ends_writing": true,
+    "terminal89_lease_epoch": "planner-p03-browser89",
+    "terminal89_ack_by_71_not_observed": true,
+    "target_sf2_stack": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+    "target_result_store_blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+    "branch_analysis_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+    "branch_verifier_blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+    "branch_state_provider_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+    "original_p03_test_blob": "47b5358c8dda3179045499388ce98871576a2aa9"
+  },
+  "inputs": [
+    "mission99 full @2fd08ce",
+    "AGENTS.md root",
+    "START.md, WORKFLOW.md, COMMON.md and S4-B full @dbf9547",
+    "terminal89 HANDOFF-71.md, TERMINAL89.json, CI-RECEIPT89.json",
+    "external PORTFOLIO-ANALYSIS89.patch, OPERATION-VERIFIER89.patch, exact pre/postimages",
+    "result-store.ts and stored-scenarios.ts @source89 and sf2-stack"
+  ],
+  "write_paths": [
+    "product/portfolio/analysis.ts",
+    "product/planner/operation-verifier.ts",
+    "product/host-binding/state-provider.ts P03 read/clone only",
+    "product/decisions/result-store.ts only causal 89 unit",
+    "product/planner/stored-scenarios.ts only causal 89 unit",
+    "test/product/p03-causal-closure/",
+    "test/product/planner-p03-finish/ only diagnostic",
+    "docs/sf2h/receipts/p03-causal-closure/"
+  ],
+  "prohibited": [
+    "auth/local-store",
+    "application86",
+    "transport94",
+    "cost-coverage80",
+    "UI52",
+    "source-lifecycle97",
+    "runtime90/native95",
+    "renderer98",
+    "sidebar",
+    "new Goal/controller",
+    "local bun test",
+    "epic CI",
+    "merge/deploy"
+  ],
+  "C15_owner": "71 sole integrator of sf2-stack",
+  "CI_dispatcher": "45",
+  "P03_original": {
+    "status": "FAIL @ historical76, NOT_RUN 99",
+    "assertions": 72,
+    "timeout_ms": 180000,
+    "run": 43673511994,
+    "job": 132688523969
+  },
+  "no_global_release": true
+}
