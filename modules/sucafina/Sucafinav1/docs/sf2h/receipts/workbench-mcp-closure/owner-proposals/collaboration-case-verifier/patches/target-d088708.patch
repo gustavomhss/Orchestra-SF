@@ -1,0 +1,38 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts b/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts
+@@ -76,7 +76,10 @@
+     const source = issued.value.evidence
+     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
+     const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
+-    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
++    // This collaboration fixture composes no scenario-operation authority. Its
++    // selected cases must remain empty of alternatives, choices and prepared writes.
++    const verifyScenarioOperations = async (value: DecisionCase, context: TrustedDomainContext) => value.alternatives.length === 0 && value.choices.length === 0 && value.preparedChanges.length === 0 && await host.revalidate(context)
++    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations, evidence, createId: randomUUID, now: () => at })
+     const caseDraft = { objective: "Review January answers", horizon: workPeriod, currency: "USD", criteria: ["January has a current answer"], sourceRefs: [source] }
+     const caseContext = ok(await ui.admit(request(), "sf_case_draft", digestSfValue(caseDraft)), "case admission")
+     if (!await ui.validate(caseContext, "sf_case_draft", digestSfValue(caseDraft))) throw new Error("case validation failed")
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts b/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts
+@@ -14,6 +14,7 @@
+ import type { PreparedQuestion } from "../../../product/collaboration/question-preparations.ts"
+ import { digestSfValue } from "../../../product/contracts/canonical.ts"
+ import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
+ import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+ import type { SfProductStatePort } from "../../../product/contracts/state.ts"
+ import { available, createRelationsFixture } from "./relations-fixture.ts"
+@@ -41,7 +42,10 @@
+       if (!await f.ui.validate(context, operation, digestSfValue(payload))) throw new Error(`read admission failed: ${operation}`)
+       return context
+     }
+-    const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === "ui" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), evidence: f.evidence, createId: randomUUID, now })
++    // This collaboration fixture composes no scenario-operation authority. Its
++    // selected cases must remain empty of alternatives, choices and prepared writes.
++    const verifyScenarioOperations = async (value: DecisionCase, context: TrustedDomainContext) => value.alternatives.length === 0 && value.choices.length === 0 && value.preparedChanges.length === 0 && await f.host.revalidate(context)
++    const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === "ui" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), verifyScenarioOperations, evidence: f.evidence, createId: randomUUID, now })
+     const draft = { objective: "Review delivery in the selected cycle", horizon, currency: "USD", criteria: ["Delivery is understood"], sourceRefs: [source] }
+     const decision = available(await cases.draft(draft, await readContext("sf_case_draft", draft)))
+     const caseRef = encodeCaseRef(decision)

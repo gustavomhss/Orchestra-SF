@@ -1,0 +1,119 @@
+{
+  "schema": "sf68.observed-public-tools.v1",
+  "source": {
+    "sha": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+    "tree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+    "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8"
+  },
+  "snapshot": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+  "run": 43668348441,
+  "job": 132672642109,
+  "scope": "component-public-runtime",
+  "actual": [
+    "SessionV2.skill loading",
+    "Tools.Service registration",
+    "ToolRegistry materialize/settle",
+    "private MCP SDK",
+    "Planner domain",
+    "SQLite persistence",
+    "UI dispatch parity"
+  ],
+  "synthetic": [
+    "Request authority for finance/admin",
+    "case/run labels",
+    "assistantMessageID/tool-call context"
+  ],
+  "isolation": {
+    "scheduling": "Effect.all concurrency 2",
+    "actors": [
+      "finance",
+      "admin"
+    ],
+    "residentProfile": "sf_finance"
+  },
+  "excluded": [
+    "Task admission",
+    "provider model execution",
+    "Relay",
+    "Schedule",
+    "AM01/AM02 completion"
+  ],
+  "evidence": [
+    {
+      "principal": "finance",
+      "skillReceipt": {
+        "runId": "component-public-forecast-0",
+        "nativeSessionId": "ses_e22f1248cffeDTCbBHtn6MYtQM",
+        "profileId": "sf_finance",
+        "profileVersion": "1.0.0",
+        "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+        "skillId": "sf-explicar-forecast",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+        "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+        "loadedMessageId": "msg_1dd0edd44001Vik2G3Cs27jJHg",
+        "loadedAt": "2026-11-15T02:35:01.330Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      "toolReceipt": {
+        "kind": "native",
+        "operation": "sf_forecast_compare",
+        "handlerExport": "compareForecast",
+        "inputDigest": "16c793322963190f63f3830b002a5969e8d2fe36098129c84e97ea29fa16115c",
+        "resultDigest": "1e4d618ff9b21411c86575709e8c06b4c014446b40634a80dcf633081ff71bcc",
+        "principalRef": "finance",
+        "callId": "component-call-0",
+        "accessRevision": "1",
+        "at": "2026-11-15T02:35:01.407Z",
+        "runId": "component-public-forecast-0",
+        "nativeSessionId": "ses_e22f1248cffeDTCbBHtn6MYtQM",
+        "providerGeneration": 1
+      },
+      "inputDigest": "16c793322963190f63f3830b002a5969e8d2fe36098129c84e97ea29fa16115c",
+      "resultDigest": "1e4d618ff9b21411c86575709e8c06b4c014446b40634a80dcf633081ff71bcc",
+      "knownDifference": 12000,
+      "sourceRefs": [
+        "planner-version:v0:5f3587e3-ef1d-4b91-969a-4e2e0bde0c8e:1",
+        "planner-version:v1:d5375e05-d6c5-475c-a22f-4055c8696090:1"
+      ]
+    },
+    {
+      "principal": "admin",
+      "skillReceipt": {
+        "runId": "component-public-forecast-1",
+        "nativeSessionId": "ses_e22f122a9ffda42rJ6sTzi42UG",
+        "profileId": "sf_finance",
+        "profileVersion": "1.0.0",
+        "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+        "skillId": "sf-explicar-forecast",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+        "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+        "loadedMessageId": "msg_1dd0edd5c001Gw38U7vEp6EY6m",
+        "loadedAt": "2026-11-15T02:35:01.349Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      "toolReceipt": {
+        "kind": "native",
+        "operation": "sf_forecast_compare",
+        "handlerExport": "compareForecast",
+        "inputDigest": "e5dbb2d4e5d4fe4eb2c7e1e77b2bae33202fba02e2b622eb9a8bab9c35861748",
+        "resultDigest": "dc70b3db987fa01d699922d56ff7f6133361dd430acb24111cd0775b794d6936",
+        "principalRef": "admin",
+        "callId": "component-call-1",
+        "accessRevision": "1",
+        "at": "2026-11-15T02:35:01.476Z",
+        "runId": "component-public-forecast-1",
+        "nativeSessionId": "ses_e22f122a9ffda42rJ6sTzi42UG",
+        "providerGeneration": 1
+      },
+      "inputDigest": "e5dbb2d4e5d4fe4eb2c7e1e77b2bae33202fba02e2b622eb9a8bab9c35861748",
+      "resultDigest": "dc70b3db987fa01d699922d56ff7f6133361dd430acb24111cd0775b794d6936",
+      "knownDifference": 6000,
+      "sourceRefs": [
+        "planner-version:v0:ec21171e-9d81-4776-a112-607fa6c88f08:1",
+        "planner-version:v2:15e4baa8-e49a-4414-bfc0-f755ac67b903:1"
+      ]
+    }
+  ]
+}

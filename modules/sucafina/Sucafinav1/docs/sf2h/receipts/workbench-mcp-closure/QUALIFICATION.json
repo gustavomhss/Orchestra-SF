@@ -1,0 +1,421 @@
+{
+  "schema": "sf68.qualification-terminal.v1",
+  "mission": 68,
+  "state": "BOUNDED_IMPLEMENTATION_DELIVERED_FULL_QUALIFICATION_BLOCKED",
+  "source": {
+    "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+    "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+  },
+  "branch": "workbench-mcp-proof",
+  "PR": 81,
+  "logicalServer": "sucafina-workbench",
+  "createdAt": "2026-11-15T03:02:10.968887Z",
+  "productionChanges": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "problem": "Caller/producer retained references can mutate payload or result during awaited SDK lifecycle.",
+      "change": "Snapshot payload before the first await; send detached SDK input; detach dispatch result before receipt verification and encoding; preserve final current-authority egress check after both closes.",
+      "evidence": [
+        "runs/R1.json",
+        "runs/R2.json"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "problem": "Source capability may be revoked while awaiting the last file read, after the previous final validation.",
+      "change": "Finish final source read before synchronous source-capability check; no receipt on disposed source.",
+      "evidence": [
+        "runs/R2.json",
+        "proofs/source-revocation.json"
+      ]
+    }
+  ],
+  "newTests": {
+    "distinct": 18,
+    "passed": 18,
+    "failedRemaining": 0,
+    "firstAttemptFixtureFailures": 7,
+    "firstAttemptPreserved": "runs/R1.json",
+    "fix": "W2 adds actual LocationServiceMap.node to the root layer; no mocked substitute or weakened assertion.",
+    "coverage": {
+      "R1": 8,
+      "R2": 7,
+      "R4": 3
+    }
+  },
+  "runSummary": [
+    {
+      "id": "R1",
+      "status": "FAIL",
+      "W": {
+        "sha": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+        "tree": "ace3b1ea4897c6320c24b6ef175d71299dc61272",
+        "parent": "6b2bbb59976378081f7e8032537d9ff71eba30f5"
+      },
+      "S": {
+        "sha": "a372b69017b275e5f4929d92346e02c21f1936d5",
+        "tree": "b5409615f90dadd938d37d393300e7b2872fb895",
+        "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+        "branch": "ci-run-linux-m68r1"
+      },
+      "run": {
+        "id": 43667815725,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725",
+        "headSha": "a372b69017b275e5f4929d92346e02c21f1936d5",
+        "attempt": 1,
+        "event": "push",
+        "workflow": ".github/workflows/test-ci.yml",
+        "startedAt": "2026-11-15T02:26:45Z",
+        "completedAt": "2026-11-15T02:30:58Z",
+        "conclusion": "failure"
+      },
+      "job": {
+        "id": 132671021400,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725/job/132671021400",
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "failure"
+      },
+      "pass": 41,
+      "fail": 8,
+      "expectCalls": 2220,
+      "files": 15
+    },
+    {
+      "id": "R2",
+      "status": "PASS",
+      "W": {
+        "sha": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "tree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+        "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8"
+      },
+      "S": {
+        "sha": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+        "tree": "49baf5c9136fe426593c626a3317a06d33bd62d3",
+        "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "branch": "ci-run-linux-m68r2"
+      },
+      "run": {
+        "id": 43668348441,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441",
+        "headSha": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+        "attempt": 1,
+        "event": "push",
+        "workflow": ".github/workflows/test-ci.yml",
+        "startedAt": "2026-11-15T02:33:29Z",
+        "completedAt": "2026-11-15T02:35:18Z",
+        "conclusion": "success"
+      },
+      "job": {
+        "id": 132672642109,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441/job/132672642109",
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "success"
+      },
+      "pass": 7,
+      "fail": 0,
+      "expectCalls": 925,
+      "files": 4
+    },
+    {
+      "id": "R3",
+      "status": "FAIL",
+      "W": {
+        "sha": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "tree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+        "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8"
+      },
+      "S": {
+        "sha": "3328845bbb6186f82cf29d89185aff3f3a313924",
+        "tree": "6eefd788fca83e9b7ca6389065a98f710d9829ae",
+        "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "branch": "ci-run-linux-m68r3"
+      },
+      "run": {
+        "id": 43668610172,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172",
+        "headSha": "3328845bbb6186f82cf29d89185aff3f3a313924",
+        "attempt": 1,
+        "event": "push",
+        "workflow": ".github/workflows/test-ci.yml",
+        "startedAt": "2026-11-15T02:36:51Z",
+        "completedAt": "2026-11-15T02:38:42Z",
+        "conclusion": "failure"
+      },
+      "job": {
+        "id": 132673437742,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172/job/132673437742",
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "failure"
+      },
+      "pass": 11,
+      "fail": 13,
+      "expectCalls": 155,
+      "files": 8
+    },
+    {
+      "id": "R4",
+      "status": "PASS",
+      "W": {
+        "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+      },
+      "S": {
+        "sha": "4b601473b4b716199a643517645dd4820667180d",
+        "tree": "b666bedfe55500634380e91615f243af94ea0bbd",
+        "parent": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "branch": "ci-run-linux-m68r4"
+      },
+      "run": {
+        "id": 43669037981,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981",
+        "headSha": "4b601473b4b716199a643517645dd4820667180d",
+        "attempt": 1,
+        "event": "push",
+        "workflow": ".github/workflows/test-ci.yml",
+        "startedAt": "2026-11-15T02:42:35Z",
+        "completedAt": "2026-11-15T02:44:22Z",
+        "conclusion": "success"
+      },
+      "job": {
+        "id": 132674744357,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981/job/132674744357",
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "success"
+      },
+      "pass": 3,
+      "fail": 0,
+      "expectCalls": 56,
+      "files": 1
+    }
+  ],
+  "oldSourceFailuresRemaining": {
+    "count": 14,
+    "groups": [
+      {
+        "count": 1,
+        "run": "R1",
+        "proposal": "import-preview-link"
+      },
+      {
+        "count": 6,
+        "run": "R3",
+        "proposal": "sourcing-case-evidence"
+      },
+      {
+        "count": 7,
+        "run": "R3",
+        "proposal": "collaboration-case-verifier"
+      }
+    ],
+    "rule": "These are failures observed at W1/W2 snapshots. One target fixture is already fixed by Reports48, but no target retest is claimed and no original failure is erased."
+  },
+  "runtimeCounts": {
+    "canonical_operations": 39,
+    "packs": 8,
+    "unique_mcp_sdk_positive_real_domain": 9,
+    "mcp_operations": [
+      "sf_dashboard_read",
+      "sf_kpi_explain",
+      "sf_bi_view",
+      "sf_forecast_compare",
+      "sf_scenario_simulate",
+      "sf_scenario_compare",
+      "sf_document_extract",
+      "sf_knowledge_search",
+      "sf_import_preview"
+    ],
+    "public_tool_settlement_positive_real_domain": 4,
+    "public_tool_operations": [
+      "sf_dashboard_read",
+      "sf_kpi_explain",
+      "sf_bi_view",
+      "sf_forecast_compare"
+    ],
+    "mcp_positive_without_public_tool_settlement": 5,
+    "mcp_direct_only_operations": [
+      "sf_scenario_simulate",
+      "sf_scenario_compare",
+      "sf_document_extract",
+      "sf_knowledge_search",
+      "sf_import_preview"
+    ],
+    "mcp_positive_with_actual_SessionV2_skill_receipt": 7,
+    "mcp_positive_with_only_literal_skill_receipt": 2,
+    "literal_skill_only_operations": [
+      "sf_scenario_simulate",
+      "sf_scenario_compare"
+    ],
+    "additional_real_domain_ui_operations_R3": 4,
+    "additional_ui_operations": [
+      "sf_request_read",
+      "sf_supplier_read",
+      "sf_contract_read",
+      "sf_work_list"
+    ],
+    "total_unique_real_domain_component_operations_at_either_entry": 13,
+    "ui_operations_with_synthetic_business_projection": 3,
+    "synthetic_business_operations": [
+      "sf_review_prepare",
+      "sf_report_prepare",
+      "sf_artifact_get"
+    ],
+    "unique_operations_credited_across_different_scopes": 16,
+    "operations_without_credited_positive_selected_call": 23,
+    "all_39_loaded_skill_operation_leases_are_business_execution": false,
+    "integrated_native_or_AM_completions_claimed": 0,
+    "note": "Counts are unique operation identifiers, not test counts or total invocation counts. Public four is a subset of MCP nine. Repeated txt/docx/pdf and R2 forecast calls do not add unique operations. Seeded data and fixture identities remain declared components even when domain handlers are real."
+  },
+  "loading": {
+    "count": 25,
+    "skills": 18,
+    "profiles": 5,
+    "source": "proofs/loaded-skills.json",
+    "real": "Actual public host registration, SkillV2 content, SessionV2.skill and persisted message source/instructions/manifest digests",
+    "notProven": "Provider model turn, Task/Relay/Schedule admission, all18 produced outputs and canonical consumers"
+  },
+  "bindings": {
+    "count": 39,
+    "sessions": 14,
+    "source": "proofs/operation-bindings.json",
+    "real": "Loaded receipts, profile-skill grant intersection, lease binding, revocation",
+    "synthetic": "Admission identity and run/case orchestration",
+    "notProven": "39 handler executions or routine readiness"
+  },
+  "catalog": {
+    "packs": 8,
+    "canonicalOperations": 39,
+    "composedDomainDescriptorsWithoutNativePorts": 33,
+    "unadvertisedUnreadyRoutines": 6,
+    "scope": "Catalogue and conditional composition contract only; not 33 public operation executions."
+  },
+  "negativeEvidence": [
+    "Detached input/result/receipt/outputRef aliases across actual SDK close boundaries",
+    "Missing binding and missing loading receipt",
+    "Profile denial and cross-Location source capability transplant",
+    "Changed/removed skill source and stale bundle digests",
+    "Capability revocation during the final real source read",
+    "Generation/input digest/replay/expired identity fences",
+    "Forbidden raw authority keys and provider homonym collision",
+    "Session isolation and post-close authority revocation",
+    "Routine-result prepare/run denial with no routine handler execution"
+  ],
+  "compilerAndGuards": {
+    "status": "NOT_RUN",
+    "owner": 45,
+    "request": "REQUEST45.json",
+    "waiver": false
+  },
+  "integratedCandidate": {
+    "status": "NOT_RUN",
+    "sourceResultsTransferred": false,
+    "GLOBAL_RELEASE": false,
+    "AM01to06": "NOT_RUN",
+    "C_G7": "NOT_RUN",
+    "D_G8": "NOT_RUN"
+  },
+  "nativeBoundary": {
+    "owner": 64,
+    "sourceSessionId": null,
+    "effectiveProviderModel": null,
+    "claimedNativeAdmissionReceipts": 0,
+    "syntheticSkillReceiptFixturesPresent": true,
+    "syntheticFixtureReceiptsCountAsNativeProof": false,
+    "TaskRelayScheduleEdits": 0,
+    "engineOrSessionV2Edits": 0
+  },
+  "executionPolicy": {
+    "localProductTests": 0,
+    "localTypechecks": 0,
+    "localBuilds": 0,
+    "localGuards": 0,
+    "hostedSurgicalRuns": 4,
+    "hostedInterface": "unchanged .github/workflows/test-ci.yml and .ci-run.json",
+    "workflowEdits": 0,
+    "forcedRefUpdates": 0,
+    "omni": "not applicable (focused: no declaring test ran); no spawn evidence"
+  },
+  "proposals": [
+    {
+      "id": "import-preview-link",
+      "manifest": "owner-proposals/import-preview-link/proposal.json",
+      "status": "NOT_RUN",
+      "release": "NO_RELEASE",
+      "applied": false,
+      "targetFiles": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+          "proposalPreimage": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+          "proposalPostimage": "52cf1ebe88e6d1effe3a1ba65fc37bcbdd5b9bfc",
+          "observedTargetBlob": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "proposalPreimage": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "proposalPostimage": "59fff3898a492fba96b91395c0eaf106604579ca",
+          "observedTargetBlob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "proposalPreimage": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "proposalPostimage": "4c1d22c52b076aa3063827dcbd7a2d80927c9b9d",
+          "observedTargetBlob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        }
+      ],
+      "targetPatch": "owner-proposals/import-preview-link/source.patch"
+    },
+    {
+      "id": "collaboration-case-verifier",
+      "manifest": "owner-proposals/collaboration-case-verifier/proposal.json",
+      "status": "NOT_RUN",
+      "release": "NO_RELEASE",
+      "applied": false,
+      "targetFiles": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "proposalPreimage": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+          "proposalPostimage": "2fe6b10aaaec68c7b1ceb3b50e51b233dd167aff",
+          "observedTargetBlob": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "proposalPreimage": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+          "proposalPostimage": "b54ba8e8d1b32435a057aae610620c0cb2a12973",
+          "observedTargetBlob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+          "proposalPreimage": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+          "proposalPostimage": "aae326accb08bc5645a408271688052a725a30a5",
+          "observedTargetBlob": "aae326accb08bc5645a408271688052a725a30a5",
+          "disposition": "PRESERVE_ALREADY_PRESENT_POSTIMAGE"
+        }
+      ],
+      "targetPatch": "owner-proposals/collaboration-case-verifier/patches/target-d088708.patch"
+    },
+    {
+      "id": "sourcing-case-evidence",
+      "manifest": "owner-proposals/sourcing-case-evidence/proposal.json",
+      "status": "NOT_RUN",
+      "release": "NO_RELEASE",
+      "applied": false,
+      "targetFiles": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+          "proposalPreimage": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "proposalPostimage": "c2396db672aa633fdd376d79334c3f09381935ad",
+          "observedTargetBlob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        }
+      ],
+      "targetPatch": "owner-proposals/sourcing-case-evidence/source.patch"
+    }
+  ],
+  "canonicalScopePreserved": "15 WPs / 74 tasks / 17 contracts / 1610 criteria; 5 profiles / 18 skills / 8 packs / 39 operations; eight final selections, AM01-AM06 and three FINAL reviews remain required."
+}

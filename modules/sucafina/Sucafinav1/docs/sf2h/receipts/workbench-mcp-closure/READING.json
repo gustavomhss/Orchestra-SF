@@ -1,0 +1,93 @@
+{
+  "schema": "sf68.reading.v1",
+  "missionPackage": {
+    "revision": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/workbench-mcp-closure.json",
+    "read": "complete"
+  },
+  "planningRevision": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "commonDocuments": [
+    "START.md",
+    "WORKFLOW.md",
+    "execution/COMMON.md"
+  ],
+  "actorPack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-B.json",
+    "read": "complete distributed reading",
+    "method": "All top-level sections assigned and read without substituting another actor pack or reducing criteria.",
+    "responsibilities": {
+      "root": [
+        "provenance",
+        "job_id",
+        "actor",
+        "session",
+        "assignment",
+        "branch_provenance",
+        "common",
+        "write_authority",
+        "allocation",
+        "physical_slot",
+        "work_packages",
+        "incoming_outgoing_handoffs",
+        "task_output_dependencies",
+        "consumer_edges",
+        "coverage",
+        "evidence",
+        "review_assignment",
+        "review_sources_read_only",
+        "reference_context_rule",
+        "code_sources",
+        "source_receipt_index",
+        "workflow",
+        "coverage_source",
+        "selection_pointers",
+        "criterion_ids",
+        "completion"
+      ],
+      "bridge_audit": [
+        "contracts",
+        "dependency_context",
+        "resident_handoff_interfaces",
+        "execution_proofs"
+      ],
+      "skill_loader": [
+        "resident_ui",
+        "mandatory_appendices",
+        "resident_gate_requirements"
+      ],
+      "coverage_contracts": [
+        "resident",
+        "numeric_oracles",
+        "proof_bindings"
+      ]
+    }
+  },
+  "agents": {
+    "root": "AGENTS.md at base fully read; no nested AGENTS in applicable ancestors or scoped product/test trees found by pinned MCP tree/file reads.",
+    "hostSkill": "linkedin-animated-infographics:host-workspace-operator read; host-native MCP and local artifact processing only."
+  },
+  "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "tooling": {
+    "remoteWrites": "GitHub MCP create_tree/create_commit/update_ref expected_sha, force false",
+    "localProductTests": 0,
+    "localTypechecks": 0,
+    "localBuilds": 0,
+    "localProductRuntime": 0,
+    "gitClonePush": 0
+  },
+  "identity": {
+    "collaborationHandle": "/root",
+    "sessionId": null,
+    "effectiveProviderModel": null,
+    "reason": "Chat host model label does not supply an Orchestra provider/session receipt."
+  },
+  "authorization": {
+    "branch": "workbench-mcp-proof",
+    "epoch": "workbench-mcp-browser68",
+    "ack": "6b2bbb59976378081f7e8032537d9ff71eba30f5",
+    "stackWriter": 60,
+    "compilerOwner": 45,
+    "nativeAdmissionOwner": 64,
+    "memoryOwner": 69
+  }
+}

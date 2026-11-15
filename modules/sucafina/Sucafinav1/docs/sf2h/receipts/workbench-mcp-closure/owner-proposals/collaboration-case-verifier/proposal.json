@@ -1,0 +1,224 @@
+{
+  "schema": "sf68-owner-proposal-v1",
+  "id": "WP08-CASE-VERIFIER-FIXTURE-MISSING",
+  "status": "NOT_RUN",
+  "release": "NO_RELEASE",
+  "applied": false,
+  "recipient": "60",
+  "scope": "Inert fixture-composition proposal only. No target test, shared fixture, product, authority, bridge or loader was edited.",
+  "source_ref": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+  "comparison_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "actual_r3_checkout": "3328845bbb6186f82cf29d89185aff3f3a313924",
+  "target_observed_ref": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "diagnostic": {
+    "observed_failure": {
+      "job_id": 132673437742,
+      "selected_failures": 7,
+      "run_result": {
+        "pass": 11,
+        "fail": 13,
+        "tests": 24,
+        "files": 8,
+        "assertions": 155
+      },
+      "reason": "case-state-unavailable",
+      "stages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "call_line": 96,
+          "stage": "work selection creation, before confirmed-answer workflow",
+          "elapsed_ms": 74.81
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "call_lines": [
+            88,
+            149,
+            174,
+            201,
+            216
+          ],
+          "stage": "first case read / QuestionProposal preparation prerequisite, before the selected later consumer assertions",
+          "failed_cases": 5
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-shared-dispatch.test.ts",
+          "call_line": 22,
+          "stage": "shared UI dispatch returns unavailable on case prerequisite",
+          "elapsed_ms": 113.32,
+          "receipt_kind": "unbound",
+          "receipt_operation": "sf_handoff_prepare"
+        }
+      ]
+    },
+    "code_cause": [
+      "case-port.ts:21 requires verifyScenarioOperations in every constructor.",
+      "Three W2 fixture constructors omit it: host-answer-reuse.test.ts:79, question-consumer.test.ts:44 and thread-actors-fixture.ts:127.",
+      "case-port.ts:27-62 drafts a real persisted case with alternatives, choices and preparedChanges empty; draft does not invoke the missing callback.",
+      "case-port.ts:86 invokes input.verifyScenarioOperations after source/access checks; line87 invokes it again for revalidation.",
+      "Calling the absent callback throws; case-port.ts:104-105 catches and returns unavailable:case-state-unavailable. The raw job exposes the returned reason, not the swallowed exception stack."
+    ],
+    "causal_status": "Missing required callback and caught-exception mapping are source-proven. Identifying the swallowed TypeError as the run cause is a source inference consistent with all seven observed failure stages; no new instrumentation or test run was performed.",
+    "non_regression_reason": "The required case-port code and all three missing-callback constructors are byte-identical at base, W2 and actual R3 checkout. These UI paths do not invoke sf-mcp-bridge or skill loader. Question/handoff shared dispatch does run but stops at case prerequisites; this is not an MCP execution proof.",
+    "other_failures": "The six WP04 finance/sourcing failures are separate and are not explained or changed by this proposal.",
+    "raw_log_sha256": "f8ef9ba376ccb3a3158852d0ca4ca538cc5892d0665fd7298c74255f1148b1be",
+    "raw_log_bytes": 98539,
+    "excerpt": "r3-failure-excerpt.log",
+    "excerpt_sha256": "e9df430baac2cb4b02a19f5d7b7b08530a9c67afca8438ee856d22dee231e52f",
+    "excerpt_source_lines": [
+      935,
+      1095
+    ],
+    "base_rerun": "NOT_RUN; no unchanged/local rerun, source/blob comparison only."
+  },
+  "unchanged_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "git_blob_at": {
+        "base": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+        "W2": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+        "R3-checkout": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+        "target-d088708": "f68bb2735774adf670ab30d38dafbfbfb4d3544a"
+      },
+      "base_W2_R3_byte_identical": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "git_blob_at": {
+        "base": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+        "W2": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+        "R3-checkout": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+        "target-d088708": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+      },
+      "base_W2_R3_byte_identical": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+      "git_blob_at": {
+        "base": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+        "W2": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+        "R3-checkout": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+        "target-d088708": "aae326accb08bc5645a408271688052a725a30a5"
+      },
+      "base_W2_R3_byte_identical": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "git_blob_at": {
+        "base": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "W2": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "R3-checkout": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "target-d088708": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+      },
+      "base_W2_R3_byte_identical": true
+    }
+  ],
+  "contract": {
+    "implementation": "Use the exact restricted callback already present in target d088708 thread-actors fixture for the two other empty-case Collaboration fixtures.",
+    "allowed_case": "A case with zero alternatives, zero choices and zero preparedChanges, with the existing host.revalidate(context) returning true.",
+    "denied_case": "Any nonempty alternatives, choices or preparedChanges; no scenario producer, operation grant or domain evidence is fabricated.",
+    "remaining_checks": "The unchanged case port still validates Request identity, abort status, participant scope, source evidence, case/incarnation/version, complete case digest, and final state snapshot. Callback never replaces those checks.",
+    "canonical_context": {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "git_blob_sha": "5a0592e200e14fa801b1ed24150384070ea5298b",
+      "lines": [
+        25,
+        35
+      ],
+      "meaning": "Production has a current-authority/digest/revalidation branch when no stored scenario operation is selected. The fixture boundary is stricter: it refuses all alternatives, choices and prepared changes, and does not claim to test this production scenario verifier."
+    },
+    "fixture_data": "All affected tests draft real SQLite cases with real issued Dashboard sources. Their case mutations change objective/version/participants; they do not populate scenario arrays. Existing synthetic actor headers, fixed clocks, recipient leases and archives retain their existing declared fixture status.",
+    "proof_class": "UI component/fixture composition only; no Task/Relay/Schedule admission, provider run, native receipt or AM02 completion claim."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "preimage": "preimage/host-answer-reuse.test.ts.txt",
+      "postimage": "postimage/host-answer-reuse.test.ts.txt",
+      "preimage_git_blob_sha": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+      "preimage_sha256": "cf7e2cb0a253f54cfa257fb4e69ea0b17de67a8defbdd14d28449ea5cc998184",
+      "postimage_git_blob_sha": "2fe6b10aaaec68c7b1ceb3b50e51b233dd167aff",
+      "postimage_sha256": "23b08d868ecafbb37ce05fd9a161a3ac9473ac3755270d803c318891566706b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "preimage": "preimage/question-consumer.test.ts.txt",
+      "postimage": "postimage/question-consumer.test.ts.txt",
+      "preimage_git_blob_sha": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "preimage_sha256": "f689b3581cbb2ef74f415bb6a0fec2fbd34845faecbc400014a2018c5d79287d",
+      "postimage_git_blob_sha": "b54ba8e8d1b32435a057aae610620c0cb2a12973",
+      "postimage_sha256": "f1f1acfc1e4337383c46c7b391a4bb320088f76c90faab157db8664fbb920cde"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+      "preimage": "preimage/thread-actors-fixture.ts.txt",
+      "postimage": "postimage/thread-actors-fixture.ts.txt",
+      "preimage_git_blob_sha": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+      "preimage_sha256": "1d9364abd4f9a9bba551af0b7e56cc7f47b6ba06246f84c8030df361b192e311",
+      "postimage_git_blob_sha": "aae326accb08bc5645a408271688052a725a30a5",
+      "postimage_sha256": "e938ec93edfd370b86b29292dccf3d76594ae1bbc1a5b907ed6f8128dc361ba1"
+    }
+  ],
+  "variants": [
+    {
+      "id": "W2-R3-base",
+      "preimage_refs": [
+        "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+        "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "3328845bbb6186f82cf29d89185aff3f3a313924"
+      ],
+      "patch": "patches/w2.patch",
+      "patch_sha256": "338d6d103ee63133dd5c4f1d1f354b23b20ee9b8c716ce94e365e02335705b8a",
+      "changed_paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts"
+      ],
+      "meaning": "Reproducible three-constructor repair for the exact failed R3/source base."
+    },
+    {
+      "id": "target-d088708",
+      "preimage_ref": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "patch": "patches/target-d088708.patch",
+      "patch_sha256": "b741fa6df36d62ef1c46b1b52954efb9504f4c56f4684b3e11e4ab08c7d48313",
+      "changed_paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts"
+      ],
+      "meaning": "Preserve Reports48 fixture change already present on sf2-stack; add only the two missing callbacks."
+    }
+  ],
+  "target_reconciliation": {
+    "target_ref": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "status": "COMPLETE_SOURCE_PROPOSAL_NOT_RUN",
+    "preserve_path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+    "preserve_git_blob_sha": "aae326accb08bc5645a408271688052a725a30a5",
+    "complete_target_file": "postimage/thread-actors-fixture.ts.txt",
+    "preserved_byte_identical": true,
+    "reason": "The full W2 thread-actors postimage equals the already-existing target blob, so target variant contains no diff for that file. Reports48 callback and all other target bytes are retained.",
+    "other_target_preimages": "Answer/question files are byte-identical between W2 and d088708; their pre/postimages are shared by both variants. Do not apply the W2 patch to a target with divergent preimages."
+  },
+  "dependencies": [
+    "Coordinator/owner must re-fetch the current sf2-stack head and each target preimage through GitHub MCP before CAS publication; the observed target can advance.",
+    "Choose exactly one variant after matching preimage blobs. Do not copy an old thread-actors fixture over current Reports48.",
+    "Retain all existing assertions and race/revocation/source-access tests; do not replace evidence with unconditional acceptance, seed scenario grants or broaden production authority.",
+    "If a future test requires a nonempty scenario, compose its actual producer and canonical scenario authority separately; this intentionally narrow fixture callback must keep denying it."
+  ],
+  "validation": {
+    "status": "NOT_RUN",
+    "local_tests_run": false,
+    "local_typecheck_run": false,
+    "hosted_run_requested": false,
+    "required_hosted_commands": [
+      "bun run test:ci sucafina Sucafinav1/test/product/wp08/host-answer-reuse.test.ts Sucafinav1/test/product/wp08/question-consumer.test.ts Sucafinav1/test/product/wp08/handoff-shared-dispatch.test.ts --os linux"
+    ],
+    "owner_additional_cases": [
+      "Confirm each proposed callback refuses a nonempty alternative, choice or prepared change and a revoked context; the callback is an empty-case scope restriction, never evidence of real scenario authority.",
+      "Preserve original question consumer forged-payload/cloned-context/C11/source-period/version/content-race/HTTP assertions; all must execute after the restored prerequisite.",
+      "Preserve handoff unchanged snapshots/no-domain-write and wrong-operation/revocation assertions.",
+      "Retain current Reports48 checks for the existing thread-actors fixture when adopting onto sf2-stack."
+    ],
+    "acceptance": "Keep the seven R3 failures in the evidence ledger. Only a new pinned hosted run after owner adoption can report these cases passing; this artifact is not a proof of completion.",
+    "mechanical_artifact_checks": "Source bytes, Git-blob/SHA256 comparisons, complete postimages and unified-diff construction only; no product/test code executed."
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "schema": "sf68-owner-proposal-v1",
+  "id": "WP04-SOURCING-SOURCE-RESOLVER-CONTRACT",
+  "status": "NOT_RUN",
+  "release": "NO_RELEASE",
+  "applied": false,
+  "recipient": "60",
+  "createdAt": "2026-11-15T02:52:48Z",
+  "scope": "Inert fixture-composition proposal only. No live fixture, producer, source authority, C08/C09 policy, bridge, loader or tests were modified or executed.",
+  "source_ref": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+  "comparison_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "actual_r3_checkout": "3328845bbb6186f82cf29d89185aff3f3a313924",
+  "target_observed_ref": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "W3_final_material": "d5a297ca260b929335da4517f9c4432eaa92f856",
+  "diagnostic": {
+    "observed_failure": {
+      "run_id": 43668610172,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172",
+      "job_id": 132673437742,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172/job/132673437742",
+      "run_result": {
+        "pass": 11,
+        "fail": 13,
+        "tests": 24,
+        "files": 8,
+        "assertions": 155
+      },
+      "selected_failures": 6,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "fixture_line": 398,
+      "reason": "case draft unavailable: case-evidence-unavailable",
+      "stage": "sourcingFixture -> cases.draft, before sf_sourcing_compare, sourcing verifier, UI comparison or HTTP composition are executed positively",
+      "test_call_lines": [
+        44,
+        93,
+        114,
+        148,
+        161,
+        227
+      ]
+    },
+    "primary_cause": [
+      "finance-sourcing-integration.test.ts:388 passes resolve: sources.resolve, an async function, into createSfProcurementSourceAccess.",
+      "source-access.ts:215 requires resolve to be Pick<ReturnType<typeof createProcurementSourceResolver>, 'resolve'>: the resolver object shape, not the resolve function.",
+      "source-access.ts:224 calls input.resolve.resolve(ref.refId, call). The fixture function has no resolve member, so this call throws; lines233-234 return state:unavailable.",
+      "business-context.ts:89-111 carries the unavailable state; case-port.ts:149-156 accessible() accepts only fresh/historical exact evidence; draft line34 therefore returns case-evidence-unavailable.",
+      "The fixture throws at line398, matching all six R3 observed failures. No successful sourcing execution or business-domain result is implied by the presence of that test."
+    ],
+    "causal_status": "The contract mismatch and unavailable/error mappings are source-proven. The swallowed TypeError is a causal inference consistent with the observed failure, not an instrumented runtime exception. No new execution was performed.",
+    "secondary_latent_defect": [
+      "fixture line394 omits required createDecisionCasePort.verifyScenarioOperations (case-port.ts:21).",
+      "Draft does not invoke the callback, so this is not the cause of the observed draft failure.",
+      "After repairing the source resolver, a later case read in sourcing verification would invoke the absent callback at case-port.ts:86/87 and map the exception to case-state-unavailable at104/105. This frontier is static and unexecuted.",
+      "The proposed guard supplies the required dependency only for the empty-case scope of this fixture and refuses every scenario or prepared change; it never returns unconditional true."
+    ],
+    "non_regression_evidence": "Fixture, source-access and case-port are byte-identical at base/W2/S3/observed target. The fixture is also unchanged at W3. The blocked UI/C08/C09 path does not invoke the mission68 bridge/loader. This establishes a pre-existing source mismatch; no baseline rerun was performed.",
+    "canonical_sources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "sha": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+        "lines": [
+          215,
+          236
+        ],
+        "meaning": "Input.resolve is a resolver object. The reader calls input.resolve.resolve twice, reauthenticates, reads a real projection, and returns unavailable on any exception."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "sha": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "lines": [
+          27,
+          62,
+          75,
+          105,
+          149,
+          156
+        ],
+        "meaning": "Draft requires fresh or historical evidence before state mutation; read requires verifyScenarioOperations and maps thrown errors to case-state-unavailable."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "sha": "390bce2594e39a28defce1d47fafa0d7291e940e",
+        "lines": [
+          79,
+          134
+        ],
+        "meaning": "BCS validates ref/context identity, current authority, digest, ancestry and current evidence; context returns cloned resolutions without accepting unavailable sources."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+        "sha": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+        "lines": [
+          17,
+          88
+        ],
+        "meaning": "The real resolver reauthenticates the principal/role, scoped incarnation/version, period/currency, source digest and second current read."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "sha": "5a0592e200e14fa801b1ed24150384070ea5298b",
+        "lines": [
+          25,
+          35
+        ],
+        "meaning": "Production no-operation branch requires unchanged case/binding/request and current authority. The proposed fixture guard is narrower: it rejects any alternative, choice or prepared change. It is not proof of this production scenario verifier."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "lines": [
+          156,
+          172
+        ],
+        "meaning": "Real business composition supplies the required callback through createSfScenarioOperationAccess; it is not optional and has a fail-closed uninitialized branch."
+      }
+    ],
+    "unchanged_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "git_blob_at": {
+          "base": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "W2": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "R3_checkout": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "target_observed": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "W3_final_material": "c9fa74a4e59e9204e6873619b9c580257d7d793d"
+        },
+        "byte_identical_at_all_listed_refs": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "git_blob_at": {
+          "base": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+          "W2": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+          "R3_checkout": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+          "target_observed": "41741c5131ea66242c881126c22c6d03cfd9c3c3"
+        },
+        "byte_identical_at_all_listed_refs": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "git_blob_at": {
+          "base": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+          "W2": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+          "R3_checkout": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+          "target_observed": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+        },
+        "byte_identical_at_all_listed_refs": true
+      }
+    ],
+    "log_source": "../../runs/R3.tests.log",
+    "raw_job_log_sha256": "f8ef9ba376ccb3a3158852d0ca4ca538cc5892d0665fd7298c74255f1148b1be",
+    "raw_job_log_bytes": 98539,
+    "excerpt": "r3-failure-excerpt.log",
+    "test_log_sha256": "ed477ecc5f215c03b32ddbaf88340e853fc07d2fd1cdfe2f93cfcee3fe350b9e",
+    "test_log_bytes": 28708,
+    "excerpt_sha256": "6fcf910a9b5b462e3bb5ea6a47d438f01e7a410924f6e5b7a2deb14185cee25c",
+    "excerpt_bytes": 10169,
+    "excerpt_source_lines": [
+      11,
+      78
+    ]
+  },
+  "contract": {
+    "owner": "60 must route adoption to the WP04 fixture owner; C08/C09/source-access implementations remain unchanged.",
+    "source_resolution": "Pass the existing real resolver object as resolve: sources. The same real sources.issue/resolve, persisted scopes, Procurement port and current authority continue to supply evidence.",
+    "empty_case_boundary": "Accept scenario verification only when alternatives, choices and preparedChanges are all empty and existing host.revalidate(call) is true. The case port retains all its own participant/evidence/snapshot checks before release.",
+    "unsupported_cases": "Every nonempty alternative, choice or prepared change is denied. A future test needing such a case must compose the actual scenario engine/verifier; this guard cannot be broadened into a grant.",
+    "real_components": [
+      "Real local-store SQLite persistence exercised by hosted test",
+      "Real source lifecycle, scoped Procurement resolver and Procurement projection",
+      "Real UI authority, C08 state and C09 case port",
+      "Real dispatchSfCapability and sourcing producer remain the intended target; no success observed in R3"
+    ],
+    "synthetic_components": [
+      "Existing seeded PR-1/offers/settings, fixed environment time and buyer bearer-header identity remain fixture data",
+      "Existing narrow contextFor returns configured procurement context; it does not grant native admission",
+      "Proposed empty-case scenario guard is a deliberately restricted fixture dependency, not production scenario validation",
+      "Existing adversarial envelopes at lines237-245 explicitly have no native session/skill-load execution; they remain predicate-only material"
+    ],
+    "native_boundary": "No Task/Relay/Schedule, Session, provider model, native SkillLoadReceipt, scanner receipt or memory capture is created. A64 and A69 remain external. Neither owner is needed to repair this fixture contract.",
+    "memory_boundary": "The isolated fixture does not require recall/emission; its existing empty recall and unavailable emission behavior is unchanged. The separate sourcingHostFixture initializes the real business evidence composition at lines289-293 without claiming scanner execution."
+  },
+  "preconditions": [
+    "Re-fetch the current integration head through GitHub MCP and match fixture preimage blob c9fa74a4e59e9204e6873619b9c580257d7d793d. Current target may advance.",
+    "Verify source-access still expects an object with resolve and case-port still requires verifyScenarioOperations; pinned source evidence is provided.",
+    "Preserve all six test bodies, assertions, source evidence requirements, authorizations, revocation behavior, fixture data and production implementations.",
+    "Apply only the fixture patch after owner adoption. Do not copy a complete stale preimage over any independently changed target."
+  ],
+  "postconditions_intended_not_observed": [
+    "The source reader invokes the actual sources.resolve method and preserves both current reads, projection checks and fail-closed exceptions.",
+    "The fixture can attempt a real evidence-backed draft rather than fail on the resolver shape mismatch.",
+    "Subsequent case reads have a required fail-closed verifier for the actual no-scenario fixture scope.",
+    "No policy is relaxed to accept stale/unavailable evidence or to allow a scenario without its real producer.",
+    "A future pinned hosted run must establish whether the six original cases now reach their intended assertions. This proposal does not establish that result."
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "preimage": "preimage/finance-sourcing-integration.test.ts.txt",
+      "postimage": "postimage/finance-sourcing-integration.test.ts.txt",
+      "preimage_git_blob_sha": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "preimage_sha256": "796cdf369ba2278228567b86717f28e42a6614d7c1aa540a45d88e2b8e21d1c4",
+      "preimage_bytes": 32809,
+      "postimage_sha256": "2c508349a6d6f6b994fceb14229942812150060da51292bc8f25e2e6ab7b20f0",
+      "postimage_git_blob_sha": "c2396db672aa633fdd376d79334c3f09381935ad",
+      "postimage_bytes": 33103
+    }
+  ],
+  "patch": "source.patch",
+  "target_reconciliation": {
+    "observed_ref": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "fixture_preimage_matches": true,
+    "source_access_matches": true,
+    "case_port_matches": true,
+    "status": "SAME_PREIMAGE_NOT_APPLIED",
+    "required_action": "Re-fetch current head and CAS after owner review; this observed target is not a permission to overwrite subsequent edits."
+  },
+  "validation": {
+    "status": "NOT_RUN",
+    "local_tests_run": false,
+    "local_typecheck_run": false,
+    "hosted_run_requested": false,
+    "mechanical_artifact_checks": "MCP byte/blob comparison, JSON parsing, full pre/postimage comparison, SHA256/Git-blob hashing and unified diff construction only. No source/test module imported or executed.",
+    "required_hosted_command": "bun run test:ci sucafina Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts --os linux",
+    "additional_acceptance_conditions": [
+      "Require every original test to run beyond the draft prerequisite; do not count a fixed constructor or six test names as successful operation execution.",
+      "Require the sourcing comparison, frozen FX/criteria/ranking, conditioned missing inputs, tampered input/output, evidence/source changes, current-authority revocation and HTTP authority checks already in the file to retain their original assertions.",
+      "Verify the proposed narrow callback refuses any nonempty alternatives/choices/preparedChanges and revoked contexts. Those controls must not be reclassified as scenario producer execution.",
+      "Keep R3 FAIL and all six failures in the ledger. Record a new exact hosted SHA/run after material adoption if the owner elects to test; do not relabel the earlier evidence."
+    ],
+    "mechanical_results": {
+      "full_six_test_bodies_unchanged": true,
+      "preimage_git_blob_matches_mcp": true,
+      "changed_fixture_composition_sites": 2,
+      "excerpt_failures": 6,
+      "product_code_executed": false
+    }
+  },
+  "limits": [
+    "The entire six-test behavior after the failing prerequisite remains unverified by this proposal.",
+    "No claim of successful sf_sourcing_compare over the public native MCP wrapper is made even if a future UI test passes.",
+    "No final campaign review, AM acceptance or native authority receipt is supplied.",
+    "Other owner proposals and the main coverage matrix were not edited."
+  ],
+  "patch_sha256": "0b450a7ac96401938a40bbeef23f8cb3471d1cea36bb18cbe74eb587e440c6b9"
+}

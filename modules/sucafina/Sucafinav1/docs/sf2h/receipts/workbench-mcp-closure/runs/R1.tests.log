@@ -1,0 +1,743 @@
+bun test v1.3.14 (0d9b296a)
+2026-11-15T02:28:40.0822631Z 
+2026-11-15T02:28:40.0823540Z Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts:
+2026-11-15T02:28:40.3857737Z (pass) bridge pins its input before the first configuration await [41.84ms]
+2026-11-15T02:28:40.3906545Z (pass) bridge preserves wire result, receipt and capture while producer aliases change during client.close [4.90ms]
+2026-11-15T02:28:40.3941447Z (pass) bridge preserves wire result, receipt and capture while producer aliases change during server.close [3.51ms]
+2026-11-15T02:28:40.3972338Z (pass) observer receives detached input and output without changing the caller's result [3.14ms]
+2026-11-15T02:28:40.3998392Z (pass) raw identity and token arguments are rejected without domain execution or reflected credentials [2.58ms]
+2026-11-15T02:28:40.4003724Z (pass) uncloneable and nonfinite inputs fail closed before any domain call [0.58ms]
+2026-11-15T02:28:40.4004281Z 
+2026-11-15T02:28:40.4004645Z Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts:
+2026-11-15T02:28:40.9321781Z (pass) all 39 canonical routes fit the actual byte-verified profile and skill ceilings [34.79ms]
+2026-11-15T02:28:41.0257921Z (pass) real domain composition exposes canonical descriptors and keeps missing native capabilities unadvertised [94.69ms]
+2026-11-15T02:28:41.0258637Z 
+2026-11-15T02:28:41.0259139Z Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts:
+2026-11-15T02:28:41.6624118Z 439 |         if (!yielding && !this.currentPreventYield && this.currentScheduler.shouldYield(this)) {
+2026-11-15T02:28:41.6624740Z 440 |           yielding = true;
+2026-11-15T02:28:41.6625194Z 441 |           const prev = current;
+2026-11-15T02:28:41.6625880Z 442 |           current = flatMap(yieldNow, () => prev);
+2026-11-15T02:28:41.6626261Z 443 |         }
+2026-11-15T02:28:41.6627092Z 444 |         current = this.currentTracerContext ? this.currentTracerContext(current, this) : current[evaluate](this);
+2026-11-15T02:28:41.6628005Z                                                                                                        ^
+2026-11-15T02:28:41.6629099Z error: Service not found: @orchestra/example/LocationServiceMap (defined at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/location-service-map.ts:7:38)
+2026-11-15T02:28:41.6630104Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)
+2026-11-15T02:28:41.6631342Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-15T02:28:41.6632707Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.6634134Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.6635775Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.6637431Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.6638884Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.6640402Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.6642058Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.6643482Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.6644963Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.6646352Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.6646955Z       at processTicksAndRejections (native:7:39)
+2026-11-15T02:28:41.6647614Z (fail) public SF tool registration executes the real loaded forecast skill route with UI parity and session isolation [342.02ms]
+2026-11-15T02:28:41.6648026Z 
+2026-11-15T02:28:41.6648290Z Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts:
+2026-11-15T02:28:41.7223433Z 439 |         if (!yielding && !this.currentPreventYield && this.currentScheduler.shouldYield(this)) {
+2026-11-15T02:28:41.7223978Z 440 |           yielding = true;
+2026-11-15T02:28:41.7224328Z 441 |           const prev = current;
+2026-11-15T02:28:41.7224838Z 442 |           current = flatMap(yieldNow, () => prev);
+2026-11-15T02:28:41.7225123Z 443 |         }
+2026-11-15T02:28:41.7225928Z 444 |         current = this.currentTracerContext ? this.currentTracerContext(current, this) : current[evaluate](this);
+2026-11-15T02:28:41.7226722Z                                                                                                        ^
+2026-11-15T02:28:41.7228036Z error: Service not found: @orchestra/example/LocationServiceMap (defined at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/location-service-map.ts:7:38)
+2026-11-15T02:28:41.7229612Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)
+2026-11-15T02:28:41.7231061Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-15T02:28:41.7232414Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7233819Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.7235070Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.7237018Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7237866Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.7238742Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.7239587Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7240391Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.7241257Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.7242134Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7242731Z       at processTicksAndRejections (native:7:39)
+2026-11-15T02:28:41.7243490Z (fail) public SF host loads 18 distributed skills for all 25 authorized profile bindings into real SessionV2 messages [54.27ms]
+2026-11-15T02:28:41.7667347Z 439 |         if (!yielding && !this.currentPreventYield && this.currentScheduler.shouldYield(this)) {
+2026-11-15T02:28:41.7667965Z 440 |           yielding = true;
+2026-11-15T02:28:41.7668285Z 441 |           const prev = current;
+2026-11-15T02:28:41.7668706Z 442 |           current = flatMap(yieldNow, () => prev);
+2026-11-15T02:28:41.7669102Z 443 |         }
+2026-11-15T02:28:41.7669826Z 444 |         current = this.currentTracerContext ? this.currentTracerContext(current, this) : current[evaluate](this);
+2026-11-15T02:28:41.7670549Z                                                                                                        ^
+2026-11-15T02:28:41.7671713Z error: Service not found: @orchestra/example/LocationServiceMap (defined at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/location-service-map.ts:7:38)
+2026-11-15T02:28:41.7673356Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)
+2026-11-15T02:28:41.7674781Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-15T02:28:41.7676310Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7677432Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.7678548Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.7679768Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7680817Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.7681921Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.7682766Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7683568Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.7684610Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.7686213Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.7686819Z       at processTicksAndRejections (native:7:39)
+2026-11-15T02:28:41.7687428Z (fail) real loader rejects copied capability, changed manifest and forged grants without inserting context [44.45ms]
+2026-11-15T02:28:41.8135499Z 439 |         if (!yielding && !this.currentPreventYield && this.currentScheduler.shouldYield(this)) {
+2026-11-15T02:28:41.8136171Z 440 |           yielding = true;
+2026-11-15T02:28:41.8136566Z 441 |           const prev = current;
+2026-11-15T02:28:41.8137088Z 442 |           current = flatMap(yieldNow, () => prev);
+2026-11-15T02:28:41.8137512Z 443 |         }
+2026-11-15T02:28:41.8138333Z 444 |         current = this.currentTracerContext ? this.currentTracerContext(current, this) : current[evaluate](this);
+2026-11-15T02:28:41.8139139Z                                                                                                        ^
+2026-11-15T02:28:41.8140233Z error: Service not found: @orchestra/example/LocationServiceMap (defined at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/location-service-map.ts:7:38)
+2026-11-15T02:28:41.8141534Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)
+2026-11-15T02:28:41.8142508Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-15T02:28:41.8143476Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8144482Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.8145620Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.8146584Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8147401Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.8148267Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.8149120Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8149938Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.8150789Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.8151668Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8152232Z       at processTicksAndRejections (native:7:39)
+2026-11-15T02:28:41.8152744Z (fail) source capability cannot be transplanted between actual Location services [46.77ms]
+2026-11-15T02:28:41.8637959Z 439 |         if (!yielding && !this.currentPreventYield && this.currentScheduler.shouldYield(this)) {
+2026-11-15T02:28:41.8638695Z 440 |           yielding = true;
+2026-11-15T02:28:41.8639137Z 441 |           const prev = current;
+2026-11-15T02:28:41.8639681Z 442 |           current = flatMap(yieldNow, () => prev);
+2026-11-15T02:28:41.8640106Z 443 |         }
+2026-11-15T02:28:41.8641102Z 444 |         current = this.currentTracerContext ? this.currentTracerContext(current, this) : current[evaluate](this);
+2026-11-15T02:28:41.8642056Z                                                                                                        ^
+2026-11-15T02:28:41.8643326Z error: Service not found: @orchestra/example/LocationServiceMap (defined at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/location-service-map.ts:7:38)
+2026-11-15T02:28:41.8644937Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)
+2026-11-15T02:28:41.8646718Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-15T02:28:41.8648073Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8648913Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.8649754Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.8650839Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8651664Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.8652519Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.8653371Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8654194Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.8655120Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.8656529Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.8657607Z       at processTicksAndRejections (native:7:39)
+2026-11-15T02:28:41.8658191Z (fail) source bytes changed or removed after public registration never receive a loading receipt [50.24ms]
+2026-11-15T02:28:41.8658554Z 
+2026-11-15T02:28:41.8658869Z Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts:
+2026-11-15T02:28:41.9113139Z 439 |         if (!yielding && !this.currentPreventYield && this.currentScheduler.shouldYield(this)) {
+2026-11-15T02:28:41.9113902Z 440 |           yielding = true;
+2026-11-15T02:28:41.9114333Z 441 |           const prev = current;
+2026-11-15T02:28:41.9114880Z 442 |           current = flatMap(yieldNow, () => prev);
+2026-11-15T02:28:41.9115324Z 443 |         }
+2026-11-15T02:28:41.9116374Z 444 |         current = this.currentTracerContext ? this.currentTracerContext(current, this) : current[evaluate](this);
+2026-11-15T02:28:41.9117350Z                                                                                                        ^
+2026-11-15T02:28:41.9118781Z error: Service not found: @orchestra/example/LocationServiceMap (defined at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/location-service-map.ts:7:38)
+2026-11-15T02:28:41.9120493Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)
+2026-11-15T02:28:41.9122299Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-15T02:28:41.9123740Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9125157Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.9126685Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.9127963Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9128793Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.9129648Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.9130491Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9131452Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.9132300Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.9133151Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9133726Z       at processTicksAndRejections (native:7:39)
+2026-11-15T02:28:41.9189165Z (fail) all 39 canonical operations bind to observed loaded skills and deny both old and new leases after revocation [49.60ms]
+2026-11-15T02:28:41.9189625Z 
+2026-11-15T02:28:41.9189943Z Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts:
+2026-11-15T02:28:41.9682070Z 439 |         if (!yielding && !this.currentPreventYield && this.currentScheduler.shouldYield(this)) {
+2026-11-15T02:28:41.9682640Z 440 |           yielding = true;
+2026-11-15T02:28:41.9682946Z 441 |           const prev = current;
+2026-11-15T02:28:41.9683307Z 442 |           current = flatMap(yieldNow, () => prev);
+2026-11-15T02:28:41.9683596Z 443 |         }
+2026-11-15T02:28:41.9684146Z 444 |         current = this.currentTracerContext ? this.currentTracerContext(current, this) : current[evaluate](this);
+2026-11-15T02:28:41.9684737Z                                                                                                        ^
+2026-11-15T02:28:41.9685916Z error: Service not found: @orchestra/example/LocationServiceMap (defined at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/location-service-map.ts:7:38)
+2026-11-15T02:28:41.9686941Z       at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)
+2026-11-15T02:28:41.9687879Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:380:20)
+2026-11-15T02:28:41.9688747Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9689877Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.9691141Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.9692255Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9693097Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.9693961Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.9694828Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9695805Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:2356:7
+2026-11-15T02:28:41.9696669Z       at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:397:14)
+2026-11-15T02:28:41.9697534Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:734:14
+2026-11-15T02:28:41.9698108Z       at processTicksAndRejections (native:7:39)
+2026-11-15T02:28:41.9698628Z (fail) real source disposal during the last digest read cannot issue a skill receipt [44.67ms]
+2026-11-15T02:28:41.9699328Z 
+2026-11-15T02:28:41.9699735Z Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts:
+2026-11-15T02:28:41.9752891Z (pass) SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation [1.79ms]
+2026-11-15T02:28:41.9764868Z (pass) concurrent sessions with the same profile retain distinct request authorities [1.26ms]
+2026-11-15T02:28:41.9770553Z (pass) the selected manifest limits operations even when the profile and skill allow more [0.56ms]
+2026-11-15T02:28:41.9778197Z (pass) authentication and binding retain the same admission when the caller mutates its inputs [0.74ms]
+2026-11-15T02:28:41.9778967Z 
+2026-11-15T02:28:41.9779600Z Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts:
+2026-11-15T02:28:41.9843046Z (pass) UI dispatch consumes real private authority once and rejects a changed receipt [5.20ms]
+2026-11-15T02:28:41.9843659Z 
+2026-11-15T02:28:41.9844092Z Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts:
+2026-11-15T02:28:41.9979096Z (pass) private MCP traverses native lease and refuses a normalized configured namesake [8.06ms]
+2026-11-15T02:28:42.0023642Z (pass) private MCP list refuses revoke during real client.close without egress or capture [4.49ms]
+2026-11-15T02:28:42.0048855Z (pass) private MCP list refuses generation during real client.close without egress or capture [2.49ms]
+2026-11-15T02:28:42.0066859Z (pass) private MCP list refuses abort during real client.close without egress or capture [1.77ms]
+2026-11-15T02:28:42.0084333Z (pass) private MCP list refuses configuration during real client.close without egress or capture [1.73ms]
+2026-11-15T02:28:42.0101000Z (pass) private MCP list refuses revoke during real server.close without egress or capture [1.70ms]
+2026-11-15T02:28:42.0117596Z (pass) private MCP list refuses generation during real server.close without egress or capture [1.60ms]
+2026-11-15T02:28:42.0138627Z (pass) private MCP list refuses abort during real server.close without egress or capture [2.13ms]
+2026-11-15T02:28:42.0159801Z (pass) private MCP list refuses configuration during real server.close without egress or capture [2.04ms]
+2026-11-15T02:28:42.0180239Z (pass) private MCP call refuses revoke during real client.close without egress or capture [2.12ms]
+2026-11-15T02:28:42.0207503Z (pass) private MCP call refuses generation during real client.close without egress or capture [2.23ms]
+2026-11-15T02:28:42.0224996Z (pass) private MCP call refuses abort during real client.close without egress or capture [2.21ms]
+2026-11-15T02:28:42.0241798Z (pass) private MCP call refuses configuration during real client.close without egress or capture [1.72ms]
+2026-11-15T02:28:42.0259598Z (pass) private MCP call refuses revoke during real server.close without egress or capture [1.65ms]
+2026-11-15T02:28:42.0276036Z (pass) private MCP call refuses generation during real server.close without egress or capture [1.67ms]
+2026-11-15T02:28:42.0293115Z (pass) private MCP call refuses abort during real server.close without egress or capture [1.70ms]
+2026-11-15T02:28:42.0309053Z (pass) private MCP call refuses configuration during real server.close without egress or capture [1.60ms]
+2026-11-15T02:28:42.0329388Z (pass) private MCP list delivers unchanged authority only after both real SDK closes and finishes its lease [2.01ms]
+2026-11-15T02:28:42.0345812Z (pass) private MCP call delivers unchanged authority only after both real SDK closes and finishes its lease [1.62ms]
+2026-11-15T02:28:42.0346370Z 
+2026-11-15T02:28:42.0346667Z Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts:
+2026-11-15T02:28:42.0808410Z (pass) resident registration rejects a missing skill and accepts the same skill from its reserved directory [39.14ms]
+2026-11-15T02:28:42.0887284Z (pass) resident source grants only exact registered skills and operations or a strict subset [5.82ms]
+2026-11-15T02:28:42.0887949Z 
+2026-11-15T02:28:42.0888626Z Sucafinav1/test/product/wp02/native-capabilities.test.ts:
+2026-11-15T02:28:42.1572397Z [02:28:42.156] WARN (#1894): OS keychain unavailable: stored credentials are encrypted with a key file in the data directory, which is weaker {
+2026-11-15T02:28:42.1573470Z   path: "/home/runner/.local/share/orchestra/credential.key",
+2026-11-15T02:28:42.1573950Z }
+2026-11-15T02:28:43.3543747Z [02:28:43.354] INFO (#1894): watcher backend {
+2026-11-15T02:28:43.3544914Z   directory: "/tmp/sf-dashboard-native-SK2Rdf/workspace",
+2026-11-15T02:28:43.3545893Z   platform: "linux",
+2026-11-15T02:28:43.3546700Z   backend: "inotify",
+2026-11-15T02:28:43.3547002Z }
+2026-11-15T02:28:43.3547726Z [02:28:43.354] INFO (#2051): project copy refresh started {
+2026-11-15T02:28:43.3548282Z   projectID: "global",
+2026-11-15T02:28:43.3548522Z }
+2026-11-15T02:28:43.3565196Z [02:28:43.356] INFO (#2051): project copy refresh done {
+2026-11-15T02:28:43.3565867Z   projectID: "global",
+2026-11-15T02:28:43.3566121Z   updated: [],
+2026-11-15T02:28:43.3566416Z   removed: [],
+2026-11-15T02:28:43.3566706Z }
+2026-11-15T02:28:43.4025670Z [02:28:43.402] INFO (#2168): all LSPs are disabled
+2026-11-15T02:28:43.4632898Z [02:28:43.463] INFO (#1894): booting location services {
+2026-11-15T02:28:43.4633586Z   directory: "/tmp/sf-dashboard-native-SK2Rdf/workspace",
+2026-11-15T02:28:43.4634087Z   workspaceID: undefined,
+2026-11-15T02:28:43.4634431Z }
+2026-11-15T02:28:43.9951683Z [02:28:43.994] INFO (#2485): watcher backend {
+2026-11-15T02:28:43.9952183Z   directory: "/tmp/sf-dashboard-native-SK2Rdf/workspace",
+2026-11-15T02:28:43.9952547Z   platform: "linux",
+2026-11-15T02:28:43.9952794Z   backend: "inotify",
+2026-11-15T02:28:43.9953021Z }
+2026-11-15T02:28:43.9953333Z [02:28:43.995] INFO (#2635): project copy refresh started {
+2026-11-15T02:28:43.9953640Z   projectID: "global",
+2026-11-15T02:28:43.9953884Z }
+2026-11-15T02:28:43.9961051Z [02:28:43.995] INFO (#2635): project copy refresh done {
+2026-11-15T02:28:43.9961475Z   projectID: "global",
+2026-11-15T02:28:43.9961827Z   updated: [],
+2026-11-15T02:28:43.9962129Z   removed: [],
+2026-11-15T02:28:43.9962335Z }
+2026-11-15T02:28:44.0111052Z [02:28:44.010] INFO (#2752): all LSPs are disabled
+2026-11-15T02:28:44.0569802Z [02:28:44.056] INFO (#2485): booting location services {
+2026-11-15T02:28:44.0570345Z   directory: "/tmp/sf-dashboard-native-SK2Rdf/workspace",
+2026-11-15T02:28:44.0570775Z   workspaceID: undefined,
+2026-11-15T02:28:44.0571047Z }
+2026-11-15T02:28:45.0352884Z AM02 native capability proof: {"scope":"SessionV2.skill(resume:false), host admission, C16 and consumer; no LLM/GNATIVE assertion","transports":["ui","native-direct","native-wrapper/private-mcp"],"skillReceipt":{"runId":"d9c77eaf-04d9-4f8e-a06f-89aba309e69b","nativeSessionId":"ses_e22f6e6b7ffeJW2CFI5OvyxCHE","profileId":"sf_maestro","profileVersion":"1.0.0","profileDigest":"90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb","skillId":"sf-produzir-bi-contextual","skillVersion":"1.0.0","sourceDigest":"db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7","instructionsDigest":"4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0","loadedMessageId":"msg_1dd091b99001CsHap0YvrC4IFi","loadedAt":"2026-11-15T02:28:44.082Z","manifestDigest":"df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"},"receipt":{"operation":"sf_dashboard_read","handlerExport":"readDashboard","inputDigest":"cfaccbdb7168aa4235f14ce429cf529c33ee596c787cfc2f916ce951bc939dd3","resultDigest":"7b1f9c662475926a6cc40d439377f7fbb86c6fe47f853d5a0cc670f5cece63bd","principalRef":"person","accessRevision":"090e4e63213695b771a5e137f6844e92cdea8bc2f4c6a9c72a8550a96b6227de"}}
+2026-11-15T02:28:45.7507506Z AM02 native capability proof: {"scope":"SessionV2.skill(resume:false), host admission, C16 and consumer; no LLM/GNATIVE assertion","transports":["ui","native-direct","native-wrapper/private-mcp"],"skillReceipt":{"runId":"ac3a5a6d-5beb-44a6-bb4e-6c1e1080e6da","nativeSessionId":"ses_e22f6e433ffepSosbD56nMurL2","profileId":"sf_finance","profileVersion":"1.0.0","profileDigest":"89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793","skillId":"sf-explicar-forecast","skillVersion":"1.0.0","sourceDigest":"7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740","instructionsDigest":"ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227","loadedMessageId":"msg_1dd091bfc001kXOKG10E4VR5JJ","loadedAt":"2026-11-15T02:28:44.160Z","manifestDigest":"df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"},"receipt":{"operation":"sf_kpi_explain","handlerExport":"explainKpi","inputDigest":"30834375b83dc43d03c3ede1c3a783042610f2539603fdeab81b3e8db827ad6d","resultDigest":"bf4454d8e74ddbafdaed7e8837e07dd606ec44d1f97eee0fd99df6ada99f4633","principalRef":"person","accessRevision":"090e4e63213695b771a5e137f6844e92cdea8bc2f4c6a9c72a8550a96b6227de"}}
+2026-11-15T02:28:46.4299336Z AM02 native capability proof: {"scope":"SessionV2.skill(resume:false), host admission, C16 and consumer; no LLM/GNATIVE assertion","transports":["ui","native-direct","native-wrapper/private-mcp"],"skillReceipt":{"runId":"49535715-8c1a-4288-8b33-5f9cd67f8db6","nativeSessionId":"ses_e22f6e3e4ffe2AR7QmZoc69yg7","profileId":"sf_finance","profileVersion":"1.0.0","profileDigest":"89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793","skillId":"sf-produzir-bi-contextual","skillVersion":"1.0.0","sourceDigest":"db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7","instructionsDigest":"4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0","loadedMessageId":"msg_1dd091c4f001VRAPVCvrmEZ9QE","loadedAt":"2026-11-15T02:28:44.244Z","manifestDigest":"df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"},"receipt":{"operation":"sf_bi_view","handlerExport":"readBiView","inputDigest":"24ffe9a88a0002963bef0dadcacc84ee721bb80220daec67924965a33984f3fb","resultDigest":"7b1f9c662475926a6cc40d439377f7fbb86c6fe47f853d5a0cc670f5cece63bd","principalRef":"person","accessRevision":"090e4e63213695b771a5e137f6844e92cdea8bc2f4c6a9c72a8550a96b6227de"}}
+2026-11-15T02:28:50.5311941Z (pass) AM02: real SessionV2 skill admission reaches Dashboard, KPI and WP05 through native C16 with current authority [8431.73ms]
+2026-11-15T02:28:50.5312688Z 
+2026-11-15T02:28:50.5313091Z Sucafinav1/test/product/wp03/capability-parity.test.ts:
+2026-11-15T02:28:50.7617171Z (pass) C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output [225.00ms]
+2026-11-15T02:28:50.7617959Z 
+2026-11-15T02:28:50.7618475Z Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts:
+2026-11-15T02:28:50.7706804Z [wp03-scenario-parity] {"stage":"fixture:start","elapsedMs":0,"evidenceStarted":0,"evidenceCompleted":0}
+2026-11-15T02:28:50.7856707Z [wp03-scenario-parity] {"stage":"fixture:done","elapsedMs":15,"evidenceStarted":0,"evidenceCompleted":0}
+2026-11-15T02:28:50.8018962Z [wp03-scenario-parity] {"stage":"seed-scenarios:start","elapsedMs":31,"evidenceStarted":0,"evidenceCompleted":0}
+2026-11-15T02:28:50.8942065Z [wp03-scenario-parity] {"stage":"seed-scenarios:done","elapsedMs":124,"evidenceStarted":0,"evidenceCompleted":0}
+2026-11-15T02:28:50.8993486Z [wp03-scenario-parity] {"stage":"case-evidence:start","elapsedMs":129,"evidenceStarted":0,"evidenceCompleted":0}
+2026-11-15T02:28:50.9257359Z [wp03-scenario-parity] {"stage":"case-evidence:done","elapsedMs":155,"evidenceStarted":2,"evidenceCompleted":2}
+2026-11-15T02:28:50.9278307Z [wp03-scenario-parity] {"stage":"case-read:start","elapsedMs":155,"evidenceStarted":2,"evidenceCompleted":2}
+2026-11-15T02:28:51.1357079Z [wp03-scenario-parity] {"stage":"case-read:done","elapsedMs":365,"evidenceStarted":6,"evidenceCompleted":6}
+2026-11-15T02:28:51.1358207Z [wp03-scenario-parity] {"stage":"ui-simulate-base:start","elapsedMs":365,"evidenceStarted":6,"evidenceCompleted":6}
+2026-11-15T02:28:51.7132936Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":943,"evidenceStarted":16,"evidenceCompleted":16}
+2026-11-15T02:28:51.8890176Z [wp03-scenario-parity] {"stage":"ui-simulate-base:done","elapsedMs":1118,"evidenceStarted":18,"evidenceCompleted":18}
+2026-11-15T02:28:51.8891888Z [wp03-scenario-parity] {"stage":"ui-simulate-alternative:start","elapsedMs":1118,"evidenceStarted":18,"evidenceCompleted":18}
+2026-11-15T02:28:52.6351194Z [wp03-scenario-parity] {"stage":"ui-simulate-alternative:done","elapsedMs":1865,"evidenceStarted":30,"evidenceCompleted":30}
+2026-11-15T02:28:52.6558544Z [wp03-scenario-parity] {"stage":"mcp-simulate-base:start","elapsedMs":1885,"evidenceStarted":30,"evidenceCompleted":30}
+2026-11-15T02:28:52.7211569Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":1951,"evidenceStarted":32,"evidenceCompleted":32}
+2026-11-15T02:28:53.4230776Z [wp03-scenario-parity] {"stage":"mcp-simulate-base:done","elapsedMs":2653,"evidenceStarted":42,"evidenceCompleted":42}
+2026-11-15T02:28:53.4449074Z [wp03-scenario-parity] {"stage":"ui-compare:start","elapsedMs":2674,"evidenceStarted":42,"evidenceCompleted":42}
+2026-11-15T02:28:53.7892325Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":3019,"evidenceStarted":48,"evidenceCompleted":48}
+2026-11-15T02:28:54.9055869Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":4135,"evidenceStarted":65,"evidenceCompleted":64}
+2026-11-15T02:28:55.8243168Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":5054,"evidenceStarted":80,"evidenceCompleted":80}
+2026-11-15T02:28:56.9014241Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":6131,"evidenceStarted":96,"evidenceCompleted":96}
+2026-11-15T02:28:57.8693541Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":7099,"evidenceStarted":113,"evidenceCompleted":112}
+2026-11-15T02:28:58.9333421Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":8163,"evidenceStarted":128,"evidenceCompleted":128}
+2026-11-15T02:28:59.3741890Z [wp03-scenario-parity] {"stage":"ui-compare:done","elapsedMs":8604,"evidenceStarted":134,"evidenceCompleted":134}
+2026-11-15T02:28:59.3743201Z [wp03-scenario-parity] {"stage":"mcp-compare:start","elapsedMs":8604,"evidenceStarted":134,"evidenceCompleted":134}
+2026-11-15T02:29:00.0033867Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":9233,"evidenceStarted":144,"evidenceCompleted":144}
+2026-11-15T02:29:01.0467489Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":10276,"evidenceStarted":161,"evidenceCompleted":160}
+2026-11-15T02:29:02.0532123Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":11283,"evidenceStarted":176,"evidenceCompleted":176}
+2026-11-15T02:29:03.1732430Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":12403,"evidenceStarted":193,"evidenceCompleted":192}
+2026-11-15T02:29:04.1063749Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":13336,"evidenceStarted":208,"evidenceCompleted":208}
+2026-11-15T02:29:05.2154977Z [wp03-scenario-parity] {"stage":"evidence:progress","elapsedMs":14445,"evidenceStarted":224,"evidenceCompleted":224}
+2026-11-15T02:29:05.4099987Z [wp03-scenario-parity] {"stage":"mcp-compare:done","elapsedMs":14640,"evidenceStarted":226,"evidenceCompleted":226}
+2026-11-15T02:29:05.4485088Z [wp03-scenario-parity] {"stage":"assertions:done","elapsedMs":14678,"evidenceStarted":226,"evidenceCompleted":226}
+2026-11-15T02:29:05.4486299Z [wp03-scenario-parity] {"stage":"close:start","elapsedMs":14678,"evidenceStarted":226,"evidenceCompleted":226}
+2026-11-15T02:29:05.4517331Z (pass) C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08 [14681.95ms]
+2026-11-15T02:29:05.4543002Z 
+2026-11-15T02:29:05.4543973Z [wp03-scenario-parity] {"stage":"close:done","elapsedMs":14680,"evidenceStarted":226,"evidenceCompleted":226}
+2026-11-15T02:29:05.4544974Z Sucafinav1/test/product/wp06/native/documents.test.ts:
+2026-11-15T02:29:05.5283613Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"start","elapsedMs":0,"totalMs":0}
+2026-11-15T02:29:05.5601978Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"end","elapsedMs":32,"totalMs":32}
+2026-11-15T02:29:06.0654780Z [02:29:06.065] INFO (#6850): watcher backend {
+2026-11-15T02:29:06.0656361Z   directory: "/tmp/sf-wp06-runtime-GyJBAs",
+2026-11-15T02:29:06.0657031Z   platform: "linux",
+2026-11-15T02:29:06.0657507Z   backend: "inotify",
+2026-11-15T02:29:06.0657942Z }
+2026-11-15T02:29:06.0658548Z [02:29:06.065] INFO (#6999): project copy refresh started {
+2026-11-15T02:29:06.0659153Z   projectID: "global",
+2026-11-15T02:29:06.0659591Z }
+2026-11-15T02:29:06.0670364Z [02:29:06.066] INFO (#6999): project copy refresh done {
+2026-11-15T02:29:06.0671006Z   projectID: "global",
+2026-11-15T02:29:06.0671358Z   updated: [],
+2026-11-15T02:29:06.0671708Z   removed: [],
+2026-11-15T02:29:06.0672015Z }
+2026-11-15T02:29:06.0921199Z [02:29:06.082] INFO (#7116): all LSPs are disabled
+2026-11-15T02:29:06.1145960Z [02:29:06.114] INFO (#6850): booting location services {
+2026-11-15T02:29:06.1146468Z   directory: "/tmp/sf-wp06-runtime-GyJBAs",
+2026-11-15T02:29:06.1146800Z   workspaceID: undefined,
+2026-11-15T02:29:06.1147059Z }
+2026-11-15T02:29:06.1274690Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"start","elapsedMs":0,"totalMs":599}
+2026-11-15T02:29:11.3088381Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"end","elapsedMs":5181,"totalMs":5781}
+2026-11-15T02:29:11.3550432Z (pass) txt real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces [5827.44ms]
+2026-11-15T02:29:11.3551605Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"start","elapsedMs":0,"totalMs":0}
+2026-11-15T02:29:11.3798605Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"end","elapsedMs":25,"totalMs":25}
+2026-11-15T02:29:11.9375337Z [02:29:11.937] INFO (#10001): watcher backend {
+2026-11-15T02:29:11.9375994Z   directory: "/tmp/sf-wp06-runtime-Erzxh1",
+2026-11-15T02:29:11.9376401Z   platform: "linux",
+2026-11-15T02:29:11.9376653Z   backend: "inotify",
+2026-11-15T02:29:11.9376952Z }
+2026-11-15T02:29:11.9377387Z [02:29:11.937] INFO (#10150): project copy refresh started {
+2026-11-15T02:29:11.9377818Z   projectID: "global",
+2026-11-15T02:29:11.9378063Z }
+2026-11-15T02:29:11.9385617Z [02:29:11.938] INFO (#10150): project copy refresh done {
+2026-11-15T02:29:11.9386067Z   projectID: "global",
+2026-11-15T02:29:11.9386302Z   updated: [],
+2026-11-15T02:29:11.9386568Z   removed: [],
+2026-11-15T02:29:11.9386828Z }
+2026-11-15T02:29:11.9542895Z [02:29:11.954] INFO (#10267): all LSPs are disabled
+2026-11-15T02:29:11.9862046Z [02:29:11.985] INFO (#10001): booting location services {
+2026-11-15T02:29:11.9862735Z   directory: "/tmp/sf-wp06-runtime-Erzxh1",
+2026-11-15T02:29:11.9863198Z   workspaceID: undefined,
+2026-11-15T02:29:11.9863597Z }
+2026-11-15T02:29:11.9956310Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"start","elapsedMs":0,"totalMs":641}
+2026-11-15T02:29:18.4365234Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"end","elapsedMs":6441,"totalMs":7081}
+2026-11-15T02:29:18.4799714Z (pass) docx real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces [7124.85ms]
+2026-11-15T02:29:18.4801022Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"start","elapsedMs":0,"totalMs":0}
+2026-11-15T02:29:18.5057280Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"end","elapsedMs":26,"totalMs":26}
+2026-11-15T02:29:19.0521208Z [02:29:19.051] INFO (#13152): watcher backend {
+2026-11-15T02:29:19.0522053Z   directory: "/tmp/sf-wp06-runtime-KyXrxr",
+2026-11-15T02:29:19.0522656Z   platform: "linux",
+2026-11-15T02:29:19.0523193Z   backend: "inotify",
+2026-11-15T02:29:19.0523591Z }
+2026-11-15T02:29:19.0524455Z [02:29:19.052] INFO (#13301): project copy refresh started {
+2026-11-15T02:29:19.0526920Z   projectID: "global",
+2026-11-15T02:29:19.0527854Z }
+2026-11-15T02:29:19.0535648Z [02:29:19.053] INFO (#13301): project copy refresh done {
+2026-11-15T02:29:19.0536173Z   projectID: "global",
+2026-11-15T02:29:19.0536494Z   updated: [],
+2026-11-15T02:29:19.0536785Z   removed: [],
+2026-11-15T02:29:19.0537004Z }
+2026-11-15T02:29:19.0811096Z [02:29:19.080] INFO (#13418): all LSPs are disabled
+2026-11-15T02:29:19.1130210Z [02:29:19.112] INFO (#13152): booting location services {
+2026-11-15T02:29:19.1130977Z   directory: "/tmp/sf-wp06-runtime-KyXrxr",
+2026-11-15T02:29:19.1131480Z   workspaceID: undefined,
+2026-11-15T02:29:19.1131919Z }
+2026-11-15T02:29:19.1238953Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"start","elapsedMs":0,"totalMs":644}
+2026-11-15T02:29:27.1626139Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"end","elapsedMs":8039,"totalMs":8682}
+2026-11-15T02:29:27.2107460Z (pass) pdf real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces [8730.77ms]
+2026-11-15T02:29:27.2108255Z 
+2026-11-15T02:29:27.2108660Z Sucafinav1/test/product/wp06/native/import-analysis.test.ts:
+2026-11-15T02:29:27.4044760Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"start","elapsedMs":0,"totalMs":0}
+2026-11-15T02:29:27.4438376Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"end","elapsedMs":40,"totalMs":40}
+2026-11-15T02:29:28.0126485Z [02:29:28.012] INFO (#16303): watcher backend {
+2026-11-15T02:29:28.0127109Z   directory: "/tmp/sf-wp06-runtime-G425Ut",
+2026-11-15T02:29:28.0127554Z   platform: "linux",
+2026-11-15T02:29:28.0127899Z   backend: "inotify",
+2026-11-15T02:29:28.0128213Z }
+2026-11-15T02:29:28.0128645Z [02:29:28.012] INFO (#16452): project copy refresh started {
+2026-11-15T02:29:28.0129086Z   projectID: "global",
+2026-11-15T02:29:28.0129371Z }
+2026-11-15T02:29:28.0141936Z [02:29:28.013] INFO (#16452): project copy refresh done {
+2026-11-15T02:29:28.0142467Z   projectID: "global",
+2026-11-15T02:29:28.0142850Z   updated: [],
+2026-11-15T02:29:28.0143149Z   removed: [],
+2026-11-15T02:29:28.0143437Z }
+2026-11-15T02:29:28.0348844Z [02:29:28.034] INFO (#16569): all LSPs are disabled
+2026-11-15T02:29:28.0825013Z [02:29:28.082] INFO (#16303): booting location services {
+2026-11-15T02:29:28.0825944Z   directory: "/tmp/sf-wp06-runtime-G425Ut",
+2026-11-15T02:29:28.0826383Z   workspaceID: undefined,
+2026-11-15T02:29:28.0826711Z }
+2026-11-15T02:29:28.0971395Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"start","elapsedMs":0,"totalMs":693}
+2026-11-15T02:29:28.1035854Z WP06_NATIVE_STAGE {"stage":"http:import:import-targets","phase":"start","elapsedMs":0,"totalMs":700}
+2026-11-15T02:29:28.1110577Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"start","elapsedMs":0,"totalMs":707}
+2026-11-15T02:29:28.1262235Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"end","elapsedMs":15,"totalMs":722}
+2026-11-15T02:29:28.1262953Z WP06_NATIVE_STAGE {"stage":"http:import:import-targets","phase":"end","elapsedMs":23,"totalMs":722}
+2026-11-15T02:29:28.1277722Z WP06_NATIVE_STAGE {"stage":"import:workbook","phase":"start","elapsedMs":0,"totalMs":724}
+2026-11-15T02:29:28.1739350Z WP06_NATIVE_STAGE {"stage":"import:workbook","phase":"end","elapsedMs":46,"totalMs":770}
+2026-11-15T02:29:28.1740827Z WP06_NATIVE_STAGE {"stage":"http:import:import-admit","phase":"start","elapsedMs":0,"totalMs":770}
+2026-11-15T02:29:28.1741722Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"start","elapsedMs":0,"totalMs":770}
+2026-11-15T02:29:28.2420629Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"end","elapsedMs":68,"totalMs":838}
+2026-11-15T02:29:28.2421334Z WP06_NATIVE_STAGE {"stage":"http:import:import-admit","phase":"end","elapsedMs":68,"totalMs":838}
+2026-11-15T02:29:28.2421991Z WP06_NATIVE_STAGE {"stage":"http:import:import-preview","phase":"start","elapsedMs":0,"totalMs":838}
+2026-11-15T02:29:28.2496661Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"start","elapsedMs":0,"totalMs":846}
+2026-11-15T02:29:28.8502722Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"end","elapsedMs":601,"totalMs":1446}
+2026-11-15T02:29:28.8503428Z WP06_NATIVE_STAGE {"stage":"http:import:import-preview","phase":"end","elapsedMs":608,"totalMs":1446}
+2026-11-15T02:29:28.8521452Z WP06_NATIVE_STAGE {"stage":"ui:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":1448}
+2026-11-15T02:29:28.8589174Z WP06_NATIVE_STAGE {"stage":"ui:admit","phase":"start","elapsedMs":0,"totalMs":1455}
+2026-11-15T02:29:28.8771432Z WP06_NATIVE_STAGE {"stage":"ui:admit","phase":"end","elapsedMs":18,"totalMs":1473}
+2026-11-15T02:29:30.4672385Z WP06_NATIVE_STAGE {"stage":"ui:sf_import_preview","phase":"end","elapsedMs":1615,"totalMs":3063}
+2026-11-15T02:29:30.4769877Z WP06_NATIVE_STAGE {"stage":"bind:sf-explicar-forecast","phase":"start","elapsedMs":0,"totalMs":3073}
+2026-11-15T02:29:30.5347679Z WP06_NATIVE_STAGE {"stage":"bind:run-create","phase":"start","elapsedMs":0,"totalMs":3131}
+2026-11-15T02:29:31.3492655Z WP06_NATIVE_STAGE {"stage":"bind:run-create","phase":"end","elapsedMs":814,"totalMs":3945}
+2026-11-15T02:29:31.3493664Z WP06_NATIVE_STAGE {"stage":"bind:session-create","phase":"start","elapsedMs":0,"totalMs":3945}
+2026-11-15T02:29:31.3713927Z WP06_NATIVE_STAGE {"stage":"bind:session-create","phase":"end","elapsedMs":22,"totalMs":3967}
+2026-11-15T02:29:31.3714905Z WP06_NATIVE_STAGE {"stage":"bind:skill-load","phase":"start","elapsedMs":0,"totalMs":3968}
+2026-11-15T02:29:31.3883732Z WP06_NATIVE_STAGE {"stage":"bind:skill-load","phase":"end","elapsedMs":13,"totalMs":3980}
+2026-11-15T02:29:31.3884476Z WP06_NATIVE_STAGE {"stage":"bind:run-attach","phase":"start","elapsedMs":0,"totalMs":3982}
+2026-11-15T02:29:32.3738899Z WP06_NATIVE_STAGE {"stage":"bind:run-attach","phase":"end","elapsedMs":988,"totalMs":4970}
+2026-11-15T02:29:32.3740081Z WP06_NATIVE_STAGE {"stage":"bind:native-admit","phase":"start","elapsedMs":0,"totalMs":4970}
+2026-11-15T02:29:32.5171752Z WP06_NATIVE_STAGE {"stage":"bind:native-admit","phase":"end","elapsedMs":143,"totalMs":5113}
+2026-11-15T02:29:32.5173431Z WP06_NATIVE_STAGE {"stage":"bind:sf-explicar-forecast","phase":"end","elapsedMs":2040,"totalMs":5113}
+2026-11-15T02:29:32.5181819Z WP06_NATIVE_STAGE {"stage":"native:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":5114}
+2026-11-15T02:29:32.5182521Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"start","elapsedMs":0,"totalMs":5114}
+2026-11-15T02:29:32.5282069Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"end","elapsedMs":10,"totalMs":5124}
+2026-11-15T02:29:32.5283160Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"start","elapsedMs":0,"totalMs":5124}
+2026-11-15T02:29:39.6575916Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"end","elapsedMs":7129,"totalMs":12254}
+2026-11-15T02:29:39.6577778Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"start","elapsedMs":0,"totalMs":12254}
+2026-11-15T02:29:39.7185819Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"end","elapsedMs":61,"totalMs":12315}
+2026-11-15T02:29:39.7186995Z WP06_NATIVE_STAGE {"stage":"native:sf_import_preview","phase":"end","elapsedMs":7200,"totalMs":12315}
+2026-11-15T02:29:39.7400968Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":12336}
+2026-11-15T02:29:39.7402507Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"start","elapsedMs":0,"totalMs":12336}
+2026-11-15T02:29:39.8501598Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"end","elapsedMs":110,"totalMs":12446}
+2026-11-15T02:29:39.8502639Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"start","elapsedMs":0,"totalMs":12446}
+2026-11-15T02:29:49.7806290Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"end","elapsedMs":9930,"totalMs":22377}
+2026-11-15T02:29:49.7806981Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"start","elapsedMs":0,"totalMs":22377}
+2026-11-15T02:29:49.8767000Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"end","elapsedMs":96,"totalMs":22473}
+2026-11-15T02:29:49.8767847Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"end","elapsedMs":10137,"totalMs":22473}
+2026-11-15T02:29:49.8969047Z WP06_NATIVE_STAGE {"stage":"http:import:import-preview","phase":"start","elapsedMs":0,"totalMs":22493}
+2026-11-15T02:29:49.9067569Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"start","elapsedMs":0,"totalMs":22503}
+2026-11-15T02:29:50.2378547Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"end","elapsedMs":331,"totalMs":22834}
+2026-11-15T02:29:50.2380229Z WP06_NATIVE_STAGE {"stage":"http:import:import-preview","phase":"end","elapsedMs":341,"totalMs":22834}
+2026-11-15T02:29:50.2381369Z WP06_NATIVE_STAGE {"stage":"native:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":22834}
+2026-11-15T02:29:50.2382253Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"start","elapsedMs":0,"totalMs":22834}
+2026-11-15T02:29:50.4053615Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"end","elapsedMs":167,"totalMs":23001}
+2026-11-15T02:29:50.4054690Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"start","elapsedMs":0,"totalMs":23001}
+2026-11-15T02:29:51.0951891Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"end","elapsedMs":690,"totalMs":23691}
+2026-11-15T02:29:51.0952924Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"start","elapsedMs":0,"totalMs":23691}
+2026-11-15T02:29:51.1333862Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"end","elapsedMs":38,"totalMs":23729}
+2026-11-15T02:29:51.1335066Z WP06_NATIVE_STAGE {"stage":"native:sf_import_preview","phase":"end","elapsedMs":895,"totalMs":23729}
+2026-11-15T02:29:51.1336555Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":23730}
+2026-11-15T02:29:51.1337429Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"start","elapsedMs":0,"totalMs":23730}
+2026-11-15T02:29:51.2777189Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"end","elapsedMs":144,"totalMs":23874}
+2026-11-15T02:29:51.2778365Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"start","elapsedMs":0,"totalMs":23874}
+2026-11-15T02:29:52.3230151Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"end","elapsedMs":1045,"totalMs":24919}
+2026-11-15T02:29:52.3231132Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"start","elapsedMs":0,"totalMs":24919}
+2026-11-15T02:29:52.3854708Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"end","elapsedMs":62,"totalMs":24982}
+2026-11-15T02:29:52.3855690Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"end","elapsedMs":1252,"totalMs":24982}
+2026-11-15T02:29:52.3856344Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"end","elapsedMs":24289,"totalMs":24982}
+2026-11-15T02:29:52.4272655Z (pass) real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files [25023.50ms]
+2026-11-15T02:29:52.4280303Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"start","elapsedMs":0,"totalMs":0}
+2026-11-15T02:29:52.4539031Z WP06_NATIVE_STAGE {"stage":"fixture:create-app","phase":"end","elapsedMs":26,"totalMs":26}
+2026-11-15T02:29:52.9598912Z [02:29:52.959] INFO (#18992): watcher backend {
+2026-11-15T02:29:52.9599741Z   directory: "/tmp/sf-wp06-runtime-kElhB9",
+2026-11-15T02:29:52.9600286Z   platform: "linux",
+2026-11-15T02:29:52.9604937Z   backend: "inotify",
+2026-11-15T02:29:52.9605396Z }
+2026-11-15T02:29:52.9606616Z [02:29:52.959] INFO (#19141): project copy refresh started {
+2026-11-15T02:29:52.9607041Z   projectID: "global",
+2026-11-15T02:29:52.9607326Z }
+2026-11-15T02:29:52.9612884Z [02:29:52.961] INFO (#19141): project copy refresh done {
+2026-11-15T02:29:52.9613581Z   projectID: "global",
+2026-11-15T02:29:52.9614433Z   updated: [],
+2026-11-15T02:29:52.9614758Z   removed: [],
+2026-11-15T02:29:52.9615009Z }
+2026-11-15T02:29:52.9849676Z [02:29:52.984] INFO (#19258): all LSPs are disabled
+2026-11-15T02:29:53.0271761Z [02:29:53.026] INFO (#18992): booting location services {
+2026-11-15T02:29:53.0272527Z   directory: "/tmp/sf-wp06-runtime-kElhB9",
+2026-11-15T02:29:53.0273095Z   workspaceID: undefined,
+2026-11-15T02:29:53.0273561Z }
+2026-11-15T02:29:53.0363337Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"start","elapsedMs":0,"totalMs":608}
+2026-11-15T02:29:53.0437830Z WP06_NATIVE_STAGE {"stage":"http:import:import-targets","phase":"start","elapsedMs":0,"totalMs":616}
+2026-11-15T02:29:53.0447594Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"start","elapsedMs":0,"totalMs":617}
+2026-11-15T02:29:53.0658501Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"end","elapsedMs":21,"totalMs":638}
+2026-11-15T02:29:53.0659482Z WP06_NATIVE_STAGE {"stage":"http:import:import-targets","phase":"end","elapsedMs":22,"totalMs":638}
+2026-11-15T02:29:53.0662774Z WP06_NATIVE_STAGE {"stage":"import:workbook","phase":"start","elapsedMs":0,"totalMs":638}
+2026-11-15T02:29:53.0961327Z WP06_NATIVE_STAGE {"stage":"import:workbook","phase":"end","elapsedMs":29,"totalMs":667}
+2026-11-15T02:29:53.1016958Z WP06_NATIVE_STAGE {"stage":"http:import:import-admit","phase":"start","elapsedMs":0,"totalMs":667}
+2026-11-15T02:29:53.1036869Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"start","elapsedMs":0,"totalMs":667}
+2026-11-15T02:29:53.1917274Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"end","elapsedMs":96,"totalMs":764}
+2026-11-15T02:29:53.1918428Z WP06_NATIVE_STAGE {"stage":"http:import:import-admit","phase":"end","elapsedMs":96,"totalMs":764}
+2026-11-15T02:29:53.1919568Z WP06_NATIVE_STAGE {"stage":"http:import:import-preview","phase":"start","elapsedMs":0,"totalMs":764}
+2026-11-15T02:29:53.1979426Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"start","elapsedMs":0,"totalMs":770}
+2026-11-15T02:29:53.7187063Z WP06_NATIVE_STAGE {"stage":"http:import-route","phase":"end","elapsedMs":521,"totalMs":1291}
+2026-11-15T02:29:53.7187881Z WP06_NATIVE_STAGE {"stage":"http:import:import-preview","phase":"end","elapsedMs":527,"totalMs":1291}
+2026-11-15T02:29:53.7208694Z WP06_NATIVE_STAGE {"stage":"bind:sf-explicar-forecast","phase":"start","elapsedMs":0,"totalMs":1293}
+2026-11-15T02:29:53.7558515Z WP06_NATIVE_STAGE {"stage":"bind:run-create","phase":"start","elapsedMs":0,"totalMs":1328}
+2026-11-15T02:29:54.1434135Z WP06_NATIVE_STAGE {"stage":"bind:run-create","phase":"end","elapsedMs":388,"totalMs":1715}
+2026-11-15T02:29:54.1435207Z WP06_NATIVE_STAGE {"stage":"bind:session-create","phase":"start","elapsedMs":0,"totalMs":1715}
+2026-11-15T02:29:54.1654357Z WP06_NATIVE_STAGE {"stage":"bind:session-create","phase":"end","elapsedMs":22,"totalMs":1737}
+2026-11-15T02:29:54.1655390Z WP06_NATIVE_STAGE {"stage":"bind:skill-load","phase":"start","elapsedMs":0,"totalMs":1737}
+2026-11-15T02:29:54.1829861Z WP06_NATIVE_STAGE {"stage":"bind:skill-load","phase":"end","elapsedMs":17,"totalMs":1755}
+2026-11-15T02:29:54.1843544Z WP06_NATIVE_STAGE {"stage":"bind:run-attach","phase":"start","elapsedMs":0,"totalMs":1756}
+2026-11-15T02:29:54.6847622Z WP06_NATIVE_STAGE {"stage":"bind:run-attach","phase":"end","elapsedMs":500,"totalMs":2257}
+2026-11-15T02:29:54.6848653Z WP06_NATIVE_STAGE {"stage":"bind:native-admit","phase":"start","elapsedMs":0,"totalMs":2257}
+2026-11-15T02:29:54.7905964Z WP06_NATIVE_STAGE {"stage":"bind:native-admit","phase":"end","elapsedMs":106,"totalMs":2363}
+2026-11-15T02:29:54.7907240Z WP06_NATIVE_STAGE {"stage":"bind:sf-explicar-forecast","phase":"end","elapsedMs":1070,"totalMs":2363}
+2026-11-15T02:29:54.7908871Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":2363}
+2026-11-15T02:29:54.7909853Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"start","elapsedMs":0,"totalMs":2363}
+2026-11-15T02:29:54.8003978Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"end","elapsedMs":10,"totalMs":2372}
+2026-11-15T02:29:54.8005093Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"start","elapsedMs":0,"totalMs":2372}
+2026-11-15T02:29:59.8196271Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"end","elapsedMs":5019,"totalMs":7392}
+2026-11-15T02:29:59.8197050Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"start","elapsedMs":0,"totalMs":7392}
+2026-11-15T02:29:59.8696043Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"end","elapsedMs":50,"totalMs":7441}
+2026-11-15T02:29:59.8813789Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"end","elapsedMs":5079,"totalMs":7441}
+2026-11-15T02:29:59.8814562Z WP06_NATIVE_STAGE {"stage":"ui:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":7453}
+2026-11-15T02:29:59.8883222Z WP06_NATIVE_STAGE {"stage":"ui:admit","phase":"start","elapsedMs":0,"totalMs":7460}
+2026-11-15T02:29:59.9233542Z WP06_NATIVE_STAGE {"stage":"ui:admit","phase":"end","elapsedMs":35,"totalMs":7495}
+2026-11-15T02:29:59.9395271Z WP06_NATIVE_STAGE {"stage":"forecast:replay","phase":"start","elapsedMs":0,"totalMs":7512}
+2026-11-15T02:29:59.9644825Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":7536}
+2026-11-15T02:30:00.8061705Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":841,"totalMs":8378}
+2026-11-15T02:30:00.8062727Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":8378}
+2026-11-15T02:30:00.9697127Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":163,"totalMs":8541}
+2026-11-15T02:30:00.9767867Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":8548}
+2026-11-15T02:30:01.8160722Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":840,"totalMs":9388}
+2026-11-15T02:30:01.8161631Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":9388}
+2026-11-15T02:30:01.9564151Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":140,"totalMs":9528}
+2026-11-15T02:30:01.9769640Z WP06_NATIVE_STAGE {"stage":"forecast:replay","phase":"end","elapsedMs":2037,"totalMs":9549}
+2026-11-15T02:30:01.9770402Z WP06_NATIVE_STAGE {"stage":"ui:sf_import_preview","phase":"end","elapsedMs":2096,"totalMs":9549}
+2026-11-15T02:30:02.1601184Z WP06_NATIVE_STAGE {"stage":"native:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":9732}
+2026-11-15T02:30:02.1602169Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"start","elapsedMs":0,"totalMs":9732}
+2026-11-15T02:30:02.2538841Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"end","elapsedMs":94,"totalMs":9826}
+2026-11-15T02:30:02.2540326Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"start","elapsedMs":0,"totalMs":9826}
+2026-11-15T02:30:02.3589119Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"end","elapsedMs":105,"totalMs":9931}
+2026-11-15T02:30:02.3590078Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"start","elapsedMs":0,"totalMs":9931}
+2026-11-15T02:30:02.3778633Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"end","elapsedMs":19,"totalMs":9950}
+2026-11-15T02:30:02.3779897Z WP06_NATIVE_STAGE {"stage":"native:sf_import_preview","phase":"end","elapsedMs":218,"totalMs":9950}
+2026-11-15T02:30:02.3780904Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"start","elapsedMs":0,"totalMs":9950}
+2026-11-15T02:30:02.3781903Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"start","elapsedMs":0,"totalMs":9950}
+2026-11-15T02:30:02.4738087Z WP06_NATIVE_STAGE {"stage":"call:context","phase":"end","elapsedMs":96,"totalMs":10046}
+2026-11-15T02:30:02.4739228Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"start","elapsedMs":0,"totalMs":10046}
+2026-11-15T02:30:02.5479256Z WP06_NATIVE_STAGE {"stage":"call:dispatch","phase":"end","elapsedMs":74,"totalMs":10120}
+2026-11-15T02:30:02.5480250Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"start","elapsedMs":0,"totalMs":10120}
+2026-11-15T02:30:02.5665242Z WP06_NATIVE_STAGE {"stage":"call:publish-result","phase":"end","elapsedMs":19,"totalMs":10138}
+2026-11-15T02:30:02.5666332Z WP06_NATIVE_STAGE {"stage":"mcp:sf_import_preview","phase":"end","elapsedMs":189,"totalMs":10138}
+2026-11-15T02:30:02.5669730Z WP06_NATIVE_STAGE {"stage":"human:analysis.prepare","phase":"start","elapsedMs":0,"totalMs":10139}
+2026-11-15T02:30:02.5670870Z WP06_NATIVE_STAGE {"stage":"human:admit","phase":"start","elapsedMs":0,"totalMs":10139}
+2026-11-15T02:30:02.6277132Z WP06_NATIVE_STAGE {"stage":"human:admit","phase":"end","elapsedMs":61,"totalMs":10200}
+2026-11-15T02:30:02.6278427Z WP06_NATIVE_STAGE {"stage":"forecast:with-case","phase":"start","elapsedMs":0,"totalMs":10200}
+2026-11-15T02:30:03.5191134Z WP06_NATIVE_STAGE {"stage":"forecast:prepare","phase":"start","elapsedMs":0,"totalMs":11091}
+2026-11-15T02:30:03.5609500Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":11133}
+2026-11-15T02:30:04.4049354Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":844,"totalMs":11977}
+2026-11-15T02:30:04.4050107Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":11977}
+2026-11-15T02:30:05.2719330Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":867,"totalMs":12844}
+2026-11-15T02:30:05.2870831Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":12859}
+2026-11-15T02:30:06.1153305Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":828,"totalMs":13687}
+2026-11-15T02:30:06.1154014Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":13687}
+2026-11-15T02:30:06.2585790Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":143,"totalMs":13830}
+2026-11-15T02:30:06.2628533Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":13835}
+2026-11-15T02:30:07.1192932Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":856,"totalMs":14691}
+2026-11-15T02:30:07.1194236Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":14691}
+2026-11-15T02:30:07.2635879Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":144,"totalMs":14835}
+2026-11-15T02:30:07.2834068Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"start","elapsedMs":0,"totalMs":14855}
+2026-11-15T02:30:07.6098465Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"end","elapsedMs":326,"totalMs":15182}
+2026-11-15T02:30:07.6099566Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":15182}
+2026-11-15T02:30:08.4642458Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":854,"totalMs":16036}
+2026-11-15T02:30:08.4643174Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":16036}
+2026-11-15T02:30:09.3328415Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":869,"totalMs":16905}
+2026-11-15T02:30:09.3662401Z WP06_NATIVE_STAGE {"stage":"forecast:prepare","phase":"end","elapsedMs":5847,"totalMs":16938}
+2026-11-15T02:30:09.3820907Z WP06_NATIVE_STAGE {"stage":"forecast:with-case","phase":"end","elapsedMs":6754,"totalMs":16954}
+2026-11-15T02:30:09.3822057Z WP06_NATIVE_STAGE {"stage":"human:analysis.prepare","phase":"end","elapsedMs":6815,"totalMs":16954}
+2026-11-15T02:30:09.3824216Z WP06_NATIVE_STAGE {"stage":"human:analysis.read","phase":"start","elapsedMs":0,"totalMs":16955}
+2026-11-15T02:30:09.3837610Z WP06_NATIVE_STAGE {"stage":"human:admit","phase":"start","elapsedMs":0,"totalMs":16956}
+2026-11-15T02:30:09.4444008Z WP06_NATIVE_STAGE {"stage":"human:admit","phase":"end","elapsedMs":60,"totalMs":17016}
+2026-11-15T02:30:09.4445048Z WP06_NATIVE_STAGE {"stage":"forecast:verify","phase":"start","elapsedMs":0,"totalMs":17016}
+2026-11-15T02:30:09.5057011Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":17078}
+2026-11-15T02:30:10.3724768Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":867,"totalMs":17944}
+2026-11-15T02:30:10.3726183Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":17944}
+2026-11-15T02:30:11.2514418Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":879,"totalMs":18823}
+2026-11-15T02:30:11.2702610Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":18842}
+2026-11-15T02:30:12.2529802Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":982,"totalMs":19825}
+2026-11-15T02:30:12.2531138Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":19825}
+2026-11-15T02:30:12.4142927Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":161,"totalMs":19986}
+2026-11-15T02:30:12.4196332Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":19992}
+2026-11-15T02:30:13.2809296Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":861,"totalMs":20853}
+2026-11-15T02:30:13.2810073Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":20853}
+2026-11-15T02:30:13.4211091Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":140,"totalMs":20993}
+2026-11-15T02:30:13.4407025Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"start","elapsedMs":0,"totalMs":21013}
+2026-11-15T02:30:13.7696763Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"end","elapsedMs":329,"totalMs":21342}
+2026-11-15T02:30:13.7697926Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":21342}
+2026-11-15T02:30:14.6605967Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":891,"totalMs":22232}
+2026-11-15T02:30:14.6607013Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":22233}
+2026-11-15T02:30:15.5030807Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":842,"totalMs":23075}
+2026-11-15T02:30:15.5466505Z WP06_NATIVE_STAGE {"stage":"forecast:verify","phase":"end","elapsedMs":6102,"totalMs":23119}
+2026-11-15T02:30:15.5468216Z WP06_NATIVE_STAGE {"stage":"human:analysis.read","phase":"end","elapsedMs":6164,"totalMs":23119}
+2026-11-15T02:30:15.5496844Z WP06_NATIVE_STAGE {"stage":"bind:sf-explicar-forecast","phase":"start","elapsedMs":0,"totalMs":23122}
+2026-11-15T02:30:15.6413165Z WP06_NATIVE_STAGE {"stage":"bind:run-create","phase":"start","elapsedMs":0,"totalMs":23213}
+2026-11-15T02:30:16.4583055Z WP06_NATIVE_STAGE {"stage":"bind:run-create","phase":"end","elapsedMs":817,"totalMs":24030}
+2026-11-15T02:30:16.4584203Z WP06_NATIVE_STAGE {"stage":"bind:session-create","phase":"start","elapsedMs":0,"totalMs":24030}
+2026-11-15T02:30:16.4713059Z WP06_NATIVE_STAGE {"stage":"bind:session-create","phase":"end","elapsedMs":13,"totalMs":24043}
+2026-11-15T02:30:16.4713950Z WP06_NATIVE_STAGE {"stage":"bind:skill-load","phase":"start","elapsedMs":0,"totalMs":24043}
+2026-11-15T02:30:16.4806257Z WP06_NATIVE_STAGE {"stage":"bind:skill-load","phase":"end","elapsedMs":9,"totalMs":24053}
+2026-11-15T02:30:16.4820983Z WP06_NATIVE_STAGE {"stage":"bind:run-attach","phase":"start","elapsedMs":0,"totalMs":24054}
+2026-11-15T02:30:17.4450518Z WP06_NATIVE_STAGE {"stage":"bind:run-attach","phase":"end","elapsedMs":963,"totalMs":25017}
+2026-11-15T02:30:17.4451291Z WP06_NATIVE_STAGE {"stage":"bind:native-admit","phase":"start","elapsedMs":0,"totalMs":25017}
+2026-11-15T02:30:17.5865693Z WP06_NATIVE_STAGE {"stage":"bind:native-admit","phase":"end","elapsedMs":141,"totalMs":25159}
+2026-11-15T02:30:17.5866757Z WP06_NATIVE_STAGE {"stage":"bind:prompt-admit","phase":"start","elapsedMs":0,"totalMs":25159}
+2026-11-15T02:30:17.6335896Z WP06_NATIVE_STAGE {"stage":"bind:prompt-admit","phase":"end","elapsedMs":47,"totalMs":25205}
+2026-11-15T02:30:17.6336860Z WP06_NATIVE_STAGE {"stage":"bind:sf-explicar-forecast","phase":"end","elapsedMs":2084,"totalMs":25206}
+2026-11-15T02:30:17.6341534Z WP06_NATIVE_STAGE {"stage":"complete:encode","phase":"start","elapsedMs":0,"totalMs":25206}
+2026-11-15T02:30:17.6436755Z WP06_NATIVE_STAGE {"stage":"complete:encode","phase":"end","elapsedMs":9,"totalMs":25216}
+2026-11-15T02:30:17.6437447Z WP06_NATIVE_STAGE {"stage":"complete:textStart","phase":"start","elapsedMs":0,"totalMs":25216}
+2026-11-15T02:30:17.6825188Z WP06_NATIVE_STAGE {"stage":"complete:textStart","phase":"end","elapsedMs":39,"totalMs":25254}
+2026-11-15T02:30:17.6826430Z WP06_NATIVE_STAGE {"stage":"complete:textDelta","phase":"start","elapsedMs":0,"totalMs":25255,"bytes":551655}
+2026-11-15T02:30:17.6895924Z WP06_NATIVE_STAGE {"stage":"complete:textDelta","phase":"end","elapsedMs":7,"totalMs":25262,"bytes":551655}
+2026-11-15T02:30:17.6896929Z WP06_NATIVE_STAGE {"stage":"complete:textEnd","phase":"start","elapsedMs":0,"totalMs":25262}
+2026-11-15T02:30:17.7045274Z WP06_NATIVE_STAGE {"stage":"complete:textEnd","phase":"end","elapsedMs":15,"totalMs":25276}
+2026-11-15T02:30:17.7046444Z WP06_NATIVE_STAGE {"stage":"complete:assistant","phase":"start","elapsedMs":0,"totalMs":25276}
+2026-11-15T02:30:17.7111381Z WP06_NATIVE_STAGE {"stage":"complete:assistant","phase":"end","elapsedMs":7,"totalMs":25283}
+2026-11-15T02:30:17.7112440Z WP06_NATIVE_STAGE {"stage":"complete:stepEnded","phase":"start","elapsedMs":0,"totalMs":25283}
+2026-11-15T02:30:17.7182697Z WP06_NATIVE_STAGE {"stage":"complete:stepEnded","phase":"end","elapsedMs":7,"totalMs":25290}
+2026-11-15T02:30:17.7183406Z WP06_NATIVE_STAGE {"stage":"complete:readMessage","phase":"start","elapsedMs":0,"totalMs":25290}
+2026-11-15T02:30:17.7205962Z WP06_NATIVE_STAGE {"stage":"complete:readMessage","phase":"end","elapsedMs":2,"totalMs":25293}
+2026-11-15T02:30:17.7226334Z WP06_NATIVE_STAGE {"stage":"human:analysis.start","phase":"start","elapsedMs":0,"totalMs":25295}
+2026-11-15T02:30:17.7227957Z WP06_NATIVE_STAGE {"stage":"complete:humanAdmit","phase":"start","elapsedMs":0,"totalMs":25295}
+2026-11-15T02:30:17.7949585Z WP06_NATIVE_STAGE {"stage":"complete:humanAdmit","phase":"end","elapsedMs":72,"totalMs":25367}
+2026-11-15T02:30:17.7951761Z WP06_NATIVE_STAGE {"stage":"complete:runTransition","phase":"start","elapsedMs":0,"totalMs":25367}
+2026-11-15T02:30:18.8019174Z WP06_NATIVE_STAGE {"stage":"complete:runTransition","phase":"end","elapsedMs":1007,"totalMs":26374}
+2026-11-15T02:30:18.8020934Z WP06_NATIVE_STAGE {"stage":"complete:buildContribution","phase":"start","elapsedMs":0,"totalMs":26374}
+2026-11-15T02:30:18.8481240Z WP06_NATIVE_STAGE {"stage":"complete:buildContribution","phase":"end","elapsedMs":46,"totalMs":26420}
+2026-11-15T02:30:18.8482234Z WP06_NATIVE_STAGE {"stage":"complete:runPublish","phase":"start","elapsedMs":0,"totalMs":26420}
+2026-11-15T02:30:19.2415164Z WP06_NATIVE_STAGE {"stage":"complete:verifyOutput","phase":"start","elapsedMs":0,"totalMs":26813}
+2026-11-15T02:30:19.3183289Z WP06_NATIVE_STAGE {"stage":"forecast:verify-output","phase":"start","elapsedMs":0,"totalMs":26890}
+2026-11-15T02:30:19.3715019Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":26943}
+2026-11-15T02:30:20.2363898Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":865,"totalMs":27808}
+2026-11-15T02:30:20.2364702Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":27808}
+2026-11-15T02:30:21.0710370Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":835,"totalMs":28643}
+2026-11-15T02:30:21.0880944Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":28660}
+2026-11-15T02:30:21.9569365Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":869,"totalMs":29529}
+2026-11-15T02:30:21.9571029Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":29529}
+2026-11-15T02:30:22.0994201Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":142,"totalMs":29671}
+2026-11-15T02:30:22.1040975Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":29676}
+2026-11-15T02:30:22.9272381Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":823,"totalMs":30499}
+2026-11-15T02:30:22.9273572Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":30499}
+2026-11-15T02:30:23.0587163Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":131,"totalMs":30631}
+2026-11-15T02:30:23.0785813Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"start","elapsedMs":0,"totalMs":30651}
+2026-11-15T02:30:23.4145157Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"end","elapsedMs":336,"totalMs":30986}
+2026-11-15T02:30:23.4146376Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":30987}
+2026-11-15T02:30:24.2980289Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":883,"totalMs":31870}
+2026-11-15T02:30:24.2981416Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":31870}
+2026-11-15T02:30:25.1214167Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":823,"totalMs":32693}
+2026-11-15T02:30:25.1551689Z WP06_NATIVE_STAGE {"stage":"forecast:verify-output","phase":"end","elapsedMs":5837,"totalMs":32727}
+2026-11-15T02:30:25.1552688Z WP06_NATIVE_STAGE {"stage":"forecast:accept-output","phase":"start","elapsedMs":0,"totalMs":32727}
+2026-11-15T02:30:25.1807833Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":32753}
+2026-11-15T02:30:26.0352518Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":855,"totalMs":33607}
+2026-11-15T02:30:26.0353555Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":33607}
+2026-11-15T02:30:26.9027413Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":867,"totalMs":34475}
+2026-11-15T02:30:26.9194488Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":34491}
+2026-11-15T02:30:27.7493339Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":830,"totalMs":35321}
+2026-11-15T02:30:27.7494085Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":35321}
+2026-11-15T02:30:27.8961714Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":147,"totalMs":35468}
+2026-11-15T02:30:27.9012186Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":35473}
+2026-11-15T02:30:28.7300171Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":829,"totalMs":36302}
+2026-11-15T02:30:28.7300953Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":36302}
+2026-11-15T02:30:28.9262830Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":196,"totalMs":36498}
+2026-11-15T02:30:28.9460312Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"start","elapsedMs":0,"totalMs":36518}
+2026-11-15T02:30:29.2999503Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"end","elapsedMs":354,"totalMs":36872}
+2026-11-15T02:30:29.3000205Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":36872}
+2026-11-15T02:30:30.1598752Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":860,"totalMs":37732}
+2026-11-15T02:30:30.1599637Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":37732}
+2026-11-15T02:30:30.9848764Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":825,"totalMs":38557}
+2026-11-15T02:30:31.0474024Z WP06_NATIVE_STAGE {"stage":"forecast:accept-output","phase":"end","elapsedMs":5892,"totalMs":38619}
+2026-11-15T02:30:31.0475231Z WP06_NATIVE_STAGE {"stage":"complete:verifyOutput","phase":"end","elapsedMs":11806,"totalMs":38619}
+2026-11-15T02:30:31.6303250Z WP06_NATIVE_STAGE {"stage":"complete:verifyOutput","phase":"start","elapsedMs":0,"totalMs":39202}
+2026-11-15T02:30:31.7816727Z WP06_NATIVE_STAGE {"stage":"forecast:verify-output","phase":"start","elapsedMs":0,"totalMs":39354}
+2026-11-15T02:30:31.8486832Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":39421}
+2026-11-15T02:30:33.0856648Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":1237,"totalMs":40658}
+2026-11-15T02:30:33.0857755Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":40658}
+2026-11-15T02:30:34.3259085Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":1240,"totalMs":41898}
+2026-11-15T02:30:34.3488909Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":41921}
+2026-11-15T02:30:35.6026541Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":1254,"totalMs":43175}
+2026-11-15T02:30:35.6029451Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":43175}
+2026-11-15T02:30:35.8011618Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":198,"totalMs":43373}
+2026-11-15T02:30:35.8069041Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":43379}
+2026-11-15T02:30:37.0567504Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":1250,"totalMs":44629}
+2026-11-15T02:30:37.0568329Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":44629}
+2026-11-15T02:30:37.2493811Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":193,"totalMs":44821}
+2026-11-15T02:30:37.2764105Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"start","elapsedMs":0,"totalMs":44848}
+2026-11-15T02:30:37.7431889Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"end","elapsedMs":467,"totalMs":45315}
+2026-11-15T02:30:37.7433197Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":45315}
+2026-11-15T02:30:38.9732409Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":1230,"totalMs":46545}
+2026-11-15T02:30:38.9735086Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":46545}
+2026-11-15T02:30:40.2012763Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":1228,"totalMs":47773}
+2026-11-15T02:30:40.2532952Z WP06_NATIVE_STAGE {"stage":"forecast:verify-output","phase":"end","elapsedMs":8472,"totalMs":47825}
+2026-11-15T02:30:40.2534065Z WP06_NATIVE_STAGE {"stage":"forecast:accept-output","phase":"start","elapsedMs":0,"totalMs":47825}
+2026-11-15T02:30:40.2864417Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":47858}
+2026-11-15T02:30:41.5385689Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":1252,"totalMs":49110}
+2026-11-15T02:30:41.5386927Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":49111}
+2026-11-15T02:30:42.7357761Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":1197,"totalMs":50308}
+2026-11-15T02:30:42.7585772Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":50330}
+2026-11-15T02:30:44.0087643Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":1250,"totalMs":51581}
+2026-11-15T02:30:44.0088603Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":51581}
+2026-11-15T02:30:44.2326024Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":224,"totalMs":51804}
+2026-11-15T02:30:44.2391887Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"start","elapsedMs":0,"totalMs":51811}
+2026-11-15T02:30:45.4707840Z WP06_NATIVE_STAGE {"stage":"import:prepared-preview","phase":"end","elapsedMs":1231,"totalMs":53043}
+2026-11-15T02:30:45.4736768Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"start","elapsedMs":0,"totalMs":53043}
+2026-11-15T02:30:45.6977289Z WP06_NATIVE_STAGE {"stage":"import:issue-source","phase":"end","elapsedMs":227,"totalMs":53270}
+2026-11-15T02:30:45.7242997Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"start","elapsedMs":0,"totalMs":53296}
+2026-11-15T02:30:46.2019018Z WP06_NATIVE_STAGE {"stage":"analysis:source-context","phase":"end","elapsedMs":478,"totalMs":53774}
+2026-11-15T02:30:46.2019892Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"start","elapsedMs":0,"totalMs":53774}
+2026-11-15T02:30:47.4587088Z WP06_NATIVE_STAGE {"stage":"analysis:case-read","phase":"end","elapsedMs":1255,"totalMs":55029}
+2026-11-15T02:30:47.4595861Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"start","elapsedMs":0,"totalMs":55029}
+2026-11-15T02:30:48.6822266Z WP06_NATIVE_STAGE {"stage":"import:preview-view","phase":"end","elapsedMs":1225,"totalMs":56254}
+2026-11-15T02:30:48.7552609Z WP06_NATIVE_STAGE {"stage":"forecast:accept-output","phase":"end","elapsedMs":8502,"totalMs":56327}
+2026-11-15T02:30:48.7554237Z WP06_NATIVE_STAGE {"stage":"complete:verifyOutput","phase":"end","elapsedMs":17125,"totalMs":56327}
+2026-11-15T02:30:48.8438673Z WP06_NATIVE_STAGE {"stage":"complete:runPublish","phase":"end","elapsedMs":29996,"totalMs":56416}
+2026-11-15T02:30:48.8439819Z WP06_NATIVE_STAGE {"stage":"human:analysis.start","phase":"end","elapsedMs":31121,"totalMs":56416}
+2026-11-15T02:30:48.9017221Z WP06_NATIVE_STAGE {"stage":"fixture:work","phase":"failed","elapsedMs":55865,"totalMs":56474}
+2026-11-15T02:30:48.9630912Z 321 | }
+2026-11-15T02:30:48.9631234Z 322 | 
+2026-11-15T02:30:48.9631851Z 323 | function renderedPreviewUrl(output: ContributionEnvelope, origin: string) {
+2026-11-15T02:30:48.9632376Z 324 |   const html = contribution(output, { mount: "/sucafina" })
+2026-11-15T02:30:48.9632908Z 325 |   const href = /<a href="([^"]+)" data-import-preview-link>/.exec(html)?.[1]
+2026-11-15T02:30:48.9633436Z 326 |   if (!href) throw new Error("Persisted contribution has no preview link")
+2026-11-15T02:30:48.9633834Z                              ^
+2026-11-15T02:30:48.9634158Z error: Persisted contribution has no preview link
+2026-11-15T02:30:48.9634886Z       at renderedPreviewUrl (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts:326:24)
+2026-11-15T02:30:48.9636065Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts:156:26)
+2026-11-15T02:30:48.9637015Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts:377:28)
+2026-11-15T02:30:48.9638449Z (fail) recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change [56536.01ms]
+2026-11-15T02:30:48.9639315Z 
+2026-11-15T02:30:48.9639442Z 8 tests failed:
+2026-11-15T02:30:48.9640318Z (fail) public SF tool registration executes the real loaded forecast skill route with UI parity and session isolation [342.02ms]
+2026-11-15T02:30:48.9641735Z (fail) public SF host loads 18 distributed skills for all 25 authorized profile bindings into real SessionV2 messages [54.27ms]
+2026-11-15T02:30:48.9642691Z (fail) real loader rejects copied capability, changed manifest and forged grants without inserting context [44.45ms]
+2026-11-15T02:30:48.9643381Z (fail) source capability cannot be transplanted between actual Location services [46.77ms]
+2026-11-15T02:30:48.9644049Z (fail) source bytes changed or removed after public registration never receive a loading receipt [50.24ms]
+2026-11-15T02:30:48.9644827Z (fail) all 39 canonical operations bind to observed loaded skills and deny both old and new leases after revocation [49.60ms]
+2026-11-15T02:30:48.9645978Z (fail) real source disposal during the last digest read cannot issue a skill receipt [44.67ms]
+2026-11-15T02:30:48.9646921Z (fail) recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change [56536.01ms]
+2026-11-15T02:30:48.9647470Z 
+2026-11-15T02:30:48.9647569Z  41 pass
+2026-11-15T02:30:48.9647780Z  8 fail
+2026-11-15T02:30:48.9648003Z  2220 expect() calls
+2026-11-15T02:30:48.9648276Z Ran 49 tests across 15 files. [128.90s]
+2026-11-15T02:30:48.9649110Z omni positive control [0ea157c3fcad983fa82d2aaad5e788b6]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.

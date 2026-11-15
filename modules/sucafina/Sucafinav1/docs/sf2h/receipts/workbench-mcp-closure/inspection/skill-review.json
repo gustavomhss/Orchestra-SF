@@ -1,0 +1,124 @@
+{
+  "schema": "sf68-skill-inspection-v1",
+  "mission": 68,
+  "actor": "skill-loader",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "workbench-mcp-proof",
+  "inspection_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "ack_commit": "6b2bbb59976378081f7e8032537d9ff71eba30f5",
+  "read_complete": [
+    {
+      "path": "AGENTS.md",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "scope": "complete file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/workbench-mcp-closure.json",
+      "ref": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "scope": "complete mission package"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-B.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "scope": ["resident", "resident_ui", "mandatory_appendices", "resident_gate_requirements"]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "scope": "complete appendix"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "scope": "complete appendix"
+    }
+  ],
+  "implementation_sources_read": [
+    "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+    "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+    "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+    "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json",
+    "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+    "apps/cli/src/sucafina-product/contribution.ts",
+    "apps/cli/src/sucafina-product/native-host.ts",
+    "packages/core/src/session.ts",
+    "packages/core/src/session/runner/llm.ts",
+    "packages/core/src/session/runner/direct-commands.ts",
+    "packages/core/src/session/execution/local.ts",
+    "packages/core/src/tool/skill.ts",
+    "packages/core/src/skill.ts",
+    "packages/core/src/tool/registry.ts",
+    "packages/core/src/effect/app-node-builder.ts",
+    "packages/core/src/location-service-map.ts",
+    "packages/core/src/location-services.ts",
+    "packages/core/src/database/database.ts",
+    "packages/core/src/global.ts"
+  ],
+  "findings": [
+    {
+      "id": "SF68-LOAD-01",
+      "kind": "source-lifetime race",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "evidence": "The original final condition called sfSourceFor before yielding the final BunFile.arrayBuffer read. The actual registration scope could revoke the capability while that read was pending; evaluation would resume after the authority check and could return a receipt.",
+      "change": "Await the final actual file bytes before the synchronous source-capability, physical-path, content and digest guard. No asynchronous operation follows the final capability check before receipt return.",
+      "regression": "skill-source-boundary.test.ts holds completion of the second real arrayBuffer read after real bytes are obtained, closes the actual public host scope, observes sfSourceFor become undefined and requires skill-source-changed instead of a receipt.",
+      "status": "PATCH_PREPARED_HOSTED_VERIFICATION_PENDING"
+    }
+  ],
+  "proof_design": {
+    "real_components": [
+      "Byte-identical copy of the distributed resident bundle and all manifests/profiles/skill files",
+      "createResidentAiBundle policy, source digest, instruction digest and schema checks",
+      "Host.merge and AppNodeBuilder public graph with createSfProductContribution",
+      "Actual LocationServiceMap and SessionExecutionLocal location routing",
+      "Actual scoped SkillV2 and AgentV2 registration",
+      "Actual SessionV2.create and SessionV2.skill with resume false",
+      "Actual SessionDirectCommands.skill and SkillTool.load",
+      "Actual EventV2 publication, Session projection and isolated SQLite database",
+      "Actual SessionV2.messages, message and context reads used to validate each generated message ID",
+      "Actual source-capability finalizer and final receipt validation"
+    ],
+    "explicit_test_components": [
+      "Temporary project/location/home/config/cache/database directories",
+      "Synthetic component-load runId labels; these do not represent Task execution",
+      "Default deny-only business registry and authority when no wrapper test options are supplied",
+      "A narrowly filtered wrapper around real BunFile.arrayBuffer in the revocation regression; it delays completion without replacing bytes, Session services, messages or finalizers"
+    ],
+    "expected_load_matrix": {
+      "profiles": 5,
+      "unique_skills": 18,
+      "authorized_profile_skill_pairs": 25,
+      "actual_session_count": 5,
+      "receipts_and_distinct_message_ids": 25
+    },
+    "negative_cases": [
+      "Copied or fabricated opaque source capability",
+      "Changed manifest digest",
+      "Forged profile grants",
+      "Forged skill instructions digest",
+      "Missing real Session ID",
+      "Source capability transplanted to another actual Location SkillV2 instance",
+      "Source bytes modified after registration",
+      "Source file removed after registration",
+      "Actual source scope revoked during final asynchronous file read",
+      "Every profile denies shell/write/approval and untrusted MCP action names",
+      "Every profile denies all distributed skills outside its selected grant"
+    ],
+    "artifacts": [
+      "test/product/workbench-mcp-closure/skill-host-fixture.ts",
+      "test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "test/product/workbench-mcp-closure/skill-source-boundary.test.ts"
+    ],
+    "hosted_log_markers": ["SF68_SKILL_LOAD_RECEIPTS", "SF68_SKILL_REVOCATION"]
+  },
+  "limits": [
+    "No local test or typecheck was executed; all prepared tests require the parent-owned surgical hosted run.",
+    "A persisted synthetic Session message is the engine's real skill-context message. It is not a model output or a fabricated native receipt.",
+    "No provider turn, Task admission, Relay admission or Schedule admission is attempted. Mission64 owns those paths.",
+    "SkillLoadReceipt runId labels in these component tests are synthetic. Real receipt evidence consists of the observed Session ID/message ID and verified source/instruction/profile/manifest digests.",
+    "The tests qualify skill loading and profile registration. They do not by themselves satisfy AM01's persisted business output and product consumer requirements, AM03's complete user/project authorization requirements or G7's full native execution obligations.",
+    "No Session get validation was added to the loader: the actual native host already checks the created Session identity, agent, location and model before loading and product authority revalidates the Session before binding. No independent caller bug was demonstrated.",
+    "The test host uses the public production composition and actual Location routing; it does not use the core test harness whose withRunner ignores the requested Session ID."
+  ]
+}

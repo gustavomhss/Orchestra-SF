@@ -1,0 +1,169 @@
+{
+  "schema": "sf68.final-evidence-review.v1",
+  "reviewedAt": "2026-11-15T03:03:05.575386Z",
+  "reviewer": "skill_loader collaboration agent",
+  "reviewerIsNativeSessionReceipt": false,
+  "result": "STATIC_NO_BLOCKING_FINDINGS",
+  "wholeMissionQualification": "BLOCKED",
+  "validation": "DOCUMENT_REVIEW_AND_DATA_HASHING_ONLY",
+  "reviewedFiles": {
+    "QUALIFICATION.json": {
+      "sha256": "ecd8471375e579ee04e1587745d41c69959731d72dfa99ba2be8861485cf3647",
+      "gitBlobSha": "36cdbbef55de3574dc15db0f87c1b2441d1ad1cf",
+      "bytes": 15896
+    },
+    "runtime-qualification.json": {
+      "sha256": "b7e0f873956031bf0301627ca6720b4bd548e93302986e15312bd32ef334b8bd",
+      "gitBlobSha": "69442c87db2073f2b0ec87b610c4d0bce7306133",
+      "bytes": 86406
+    },
+    "CONSUMER-RELEASE.json": {
+      "sha256": "d7622aa7ff6b0dfa3d8034cc822c8409ef40989bdf534f1548e214aa4ac107d4",
+      "gitBlobSha": "9e84ac0b844a52f887f2dc76af42b04adf0ca0f2",
+      "bytes": 2224
+    },
+    "AUTHORITY-FINAL.json": {
+      "sha256": "483e91b2142ccd4479c8ab34dbacf7d496664f95b61b8503c0a3f733078c4bb7",
+      "gitBlobSha": "ed9ab3a351c56a93e25c5bb0ef94d167b2e7e2ba",
+      "bytes": 2551
+    },
+    "integration/source-manifest.json": {
+      "sha256": "09c27f7b515e7dc57eeb4218435f6d88b6597d8ab6dfcaf6bc321a4f786e4e8a",
+      "gitBlobSha": "22df222826cbe5278e8c0149925439a7b5eb60f9",
+      "bytes": 11738
+    },
+    "HANDOFF.md": {
+      "sha256": "a21cfb06693dcbb73feaa016c4e68c7563b7d923913ef07761451bb6ae4f2a11",
+      "gitBlobSha": "2b7d6120ad50ffbaa36cd37b31c7aea18517395e",
+      "bytes": 13027
+    }
+  },
+  "material": {
+    "source": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+    "files": 11,
+    "productionFiles": 2,
+    "newTestOrHelperFiles": 9,
+    "allElevenPostimagesMatchLiveBytes": true,
+    "bothProductionPreimagesMatchArchivedBaseBytes": true,
+    "integrationPatch": {
+      "sha256": "f25bf1ff21d16d3402145ce44391a0a1d5d056060bb47c44de3d8f60905ad7fb",
+      "gitBlobSha": "a1d6fc58b4630988d6148e989a0f27b9f12ed328",
+      "bytes": 91133
+    },
+    "patchMatchesManifest": true,
+    "sourceSnapshotIsNotTerminalEvidenceCommitOrIntegratedCandidate": true
+  },
+  "hostedEvidence": {
+    "runs": [
+      {
+        "id": "R1",
+        "pass": 41,
+        "fail": 8,
+        "assertions": 2220,
+        "files": 15,
+        "summaryMatchesRunReceipt": true,
+        "runHeadEqualsSAndParentEqualsW": true,
+        "testLogHashAndLengthMatch": true
+      },
+      {
+        "id": "R2",
+        "pass": 7,
+        "fail": 0,
+        "assertions": 925,
+        "files": 4,
+        "summaryMatchesRunReceipt": true,
+        "runHeadEqualsSAndParentEqualsW": true,
+        "testLogHashAndLengthMatch": true
+      },
+      {
+        "id": "R3",
+        "pass": 11,
+        "fail": 13,
+        "assertions": 155,
+        "files": 8,
+        "summaryMatchesRunReceipt": true,
+        "runHeadEqualsSAndParentEqualsW": true,
+        "testLogHashAndLengthMatch": true
+      },
+      {
+        "id": "R4",
+        "pass": 3,
+        "fail": 0,
+        "assertions": 56,
+        "files": 1,
+        "summaryMatchesRunReceipt": true,
+        "runHeadEqualsSAndParentEqualsW": true,
+        "testLogHashAndLengthMatch": true
+      }
+    ],
+    "newTestsDistinct": 18,
+    "newTestFiles": 7,
+    "newTestsPassInCorrespondingSelections": 18,
+    "newFirstAttemptFixtureFailuresPreserved": 7,
+    "remainingOldSourceFailures": 14,
+    "oldFailureGroups": [
+      1,
+      6,
+      7
+    ],
+    "fullW3RerunClaimed": false,
+    "newTestCountsIndependentlyParsedFromLogs": {
+      "uniqueCases": 18,
+      "uniqueFiles": 7,
+      "latestPass": 18,
+      "latestFail": 0
+    }
+  },
+  "scopeChecks": {
+    "qualificationAndRuntimeCountsEqual": true,
+    "canonicalPacks": 8,
+    "canonicalOperations": 39,
+    "actualSkillLoads": 25,
+    "uniqueSkillsLoaded": 18,
+    "profilesLoaded": 5,
+    "bindingOnlyOperations": 39,
+    "bindingSessionCount": 14,
+    "allBindingRowsDeclareSyntheticAdmission": true,
+    "allBindingRowsDenyHandlerInvocationClaim": true,
+    "realDomainMcpUniqueOperations": 9,
+    "publicToolsSettlementUniqueOperations": 4,
+    "mcpOperationsWithActualSessionSkillReceipt": 7,
+    "scenarioMcpOperationsWithLiteralFixtureSkillReceipt": 2,
+    "additionalActualDomainUiOperations": 4,
+    "syntheticBusinessUiOperations": 3,
+    "all39Functional": false,
+    "all18OutputsAndConsumers": false,
+    "nativeTaskRelaySchedule": false,
+    "amCompletionsClaimed": 0,
+    "integratedCandidateAcceptance": "NOT_RUN",
+    "syntheticFixtureReceiptsAreNotNativeAdmissionProof": true
+  },
+  "resolvedFindings": [
+    {
+      "id": "SF68-DOC-BYTES-01",
+      "status": "RESOLVED_BEFORE_FINAL_REVIEW",
+      "description": "Three targetObserved byte counts used character counts for UTF-8 text. Root corrected metadata only; Git blob identities were already correct.",
+      "correctedBytes": {
+        "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts": 32809,
+        "modules/sucafina/Sucafinav1/product/ui/components.ts": 11175,
+        "modules/sucafina/Sucafinav1/product/interface/http.ts": 25541
+      },
+      "allNineTargetBlobAndBytePairsMatchArchivedCopies": true
+    }
+  ],
+  "openBlockingDocumentFindings": [],
+  "retainedHolds": [
+    "Four hosted selections retain their own W/S identities and original outcomes; R1 and R3 remain FAIL.",
+    "All 14 historic source failures are retained. Three foreign-owner proposals remain inert, NOT_RUN and NO_RELEASE.",
+    "Compiler, guards, integrated C/G7 and D/G8, AM01-AM06, all consumers/outputs and independent final reviews remain unqualified.",
+    "Observed target faa30fddb7e7b61696b66fd069f51cf18c51125f has mission60 lease ended; no consumer ACK, restart, merge, deploy or integration is inferred.",
+    "Terminal authority activation remains conditional on root successful CAS; this review does not create authority."
+  ],
+  "limits": [
+    "This review parsed JSON, inspected documentation/logs and hashed bytes only. It did not run or import product code, tests, compiler or guards.",
+    "GitHub run results and observed target identity are the archived MCP evidence; no fresh remote target/head reconciliation was performed in this final subreview.",
+    "Synthetic admission authorities, fixtures, recorded model events and literal component receipts remain explicitly distinct from actual SessionV2 skill loading and persistence.",
+    "This is a component evidence consistency review, not a campaign FINAL acceptance review. No native Session ID, provider/model or Task/Relay/Schedule receipt is fabricated."
+  ]
+}

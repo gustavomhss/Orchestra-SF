@@ -1,0 +1,188 @@
+{
+  "schema": "sf68-owner-proposal-v1",
+  "id": "IMPORT-PREVIEW-LINK-MISSING",
+  "status": "NOT_RUN",
+  "release": "NO_RELEASE",
+  "applied": false,
+  "recipient": "60",
+  "scope": "Inert UI/interface proposal. No target product, shared test, fixture or authority file was edited.",
+  "source_ref": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+  "comparison_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "actual_r1_checkout": "a372b69017b275e5f4929d92346e02c21f1936d5",
+  "diagnostic": {
+    "observed_failure": {
+      "job_id": 132671021400,
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "test_name": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+      "elapsed_ms": 56536.01,
+      "throw_line": 326,
+      "call_line": 156,
+      "error": "Persisted contribution has no preview link",
+      "last_completed_stage": "complete:runPublish",
+      "last_completed_total_ms": 56416,
+      "conclusion": "R1 failure preserved as FAIL. The forecast contribution reached ready/persisted state; the failing stage is pure HTML navigation rendering, before opening the import consumer."
+    },
+    "code_cause": [
+      "components.ts:61 accepts one argument; the old test at line324 passes an ignored { mount } second argument.",
+      "components.ts:65 renders contributionBody(output), with no import preview navigation.",
+      "contribution-body.ts:11/15 emits only the import-preview not-applied text for IntentFrame/FinancialAnalysis, never an anchor.",
+      "interface/analysis-http.ts:60 calls contribution(output), and interface/http.ts:52 does not forward the configured mount."
+    ],
+    "observed_before_failure": [
+      "MCP selected C04 preview passed canonical decoding and selection checks.",
+      "Actual Session skill load and recorded public assistant ingress completed.",
+      "Forecast output verification/acceptance and run publication completed.",
+      "All preceding ready/provenance/importPreviewRef/persisted-equality/assistant-text assertions passed before renderedPreviewUrl at line156."
+    ],
+    "not_reached": [
+      "Forecast preview-link GET and import-reference content checks.",
+      "Intent preparation, runtime calls, publication and preview-link consumption.",
+      "Later source-change rejection and durable logout rejection checks in this second test."
+    ],
+    "non_regression_reason": "Renderer components, contribution body and failing test are byte-identical at the base, W1 and actual R1 checkout. The renderer has no anchor by construction. Bridge snapshotting cannot create the missing markup; selected importPreviewRef and persisted equality passed.",
+    "base_rerun": "NOT_RUN; no redundant hosted control requested after exact byte comparison and source proof.",
+    "evidence_class": "Hosted component/native recorded-ingress fixture result. No provider model execution or full AM01/AM02 acceptance is claimed.",
+    "raw_r1_log_sha256": "77d6f2348a37a60632ff28c8206c35b50242e4d16f56c54889d6448a46493066",
+    "raw_r1_log_bytes": 158315,
+    "r1_log_excerpt": "r1-failure-excerpt.log",
+    "r1_log_excerpt_sha256": "dce486db3368f2b6ea1ef16b5a88795428d0b34a2786674f4a211028f85cb06f"
+  },
+  "unchanged_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "git_blob_sha": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+      "equal_at": [
+        "base",
+        "W1",
+        "R1-checkout"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "git_blob_sha": "42878a8eb5eb6e33c0140559e6390d537c3000f0",
+      "equal_at": [
+        "base",
+        "W1",
+        "R1-checkout"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "git_blob_sha": "4087659570356188c546b59ba112dfd33a2a189c",
+      "equal_at": [
+        "base",
+        "W1",
+        "R1-checkout"
+      ]
+    }
+  ],
+  "contract": {
+    "route": "GET {mount}/{surface}?sf=imports&importPreviewRef={encoded persisted C04 reference}",
+    "surface": "Unique planner/dashboard record-source surface on the already verified persisted contribution; omit navigation for empty, mixed or non-record sources.",
+    "route_source": {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "git_blob_sha": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+      "lines": [
+        16,
+        51
+      ]
+    },
+    "consumer": {
+      "path": "modules/sucafina/Sucafinav1/product/imports/workbench-script.ts",
+      "git_blob_sha": "4cfc3c61b365a9dd5fa0202a3bfc371acedaf433",
+      "lines": [
+        55,
+        59,
+        128,
+        136
+      ]
+    },
+    "existing_authority": "Imports and import-reference retain their current UI admission, digest validation and readPreviewReference authorization; no permission, apply, native admission, shared schema or domain behavior changes.",
+    "source_guarantees": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/import-analysis.ts",
+        "git_blob_sha": "1a55aaf8fc960535c7d08f83ece5eebe71a6f425",
+        "line": 71,
+        "meaning": "Financial import analysis retains its actual Planner target evidence and selected importPreviewRef."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/import-intent.ts",
+        "git_blob_sha": "dd5a6cdf8027f2524c8aa9599450fccc01fabd53",
+        "lines": [
+          64,
+          75
+        ],
+        "meaning": "Intent input refs are selected only from C04 target sources on its surface."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-intent.ts",
+        "git_blob_sha": "43324e0873dd8db0442d34003ae3d57a6d7cf2b7",
+        "lines": [
+          38,
+          41,
+          54,
+          64
+        ],
+        "meaning": "Accepting IntentFrame requires exact selectedSourceRefs and exact preview-associated replay output."
+      }
+    ],
+    "mount_validation": "Validate the raw mount before trimming a trailing slash; reject network-path prefixes, backslash, query/fragment delimiters, ASCII controls and spaces. Empty or single-root mount remains same-origin."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "preimage": "preimage/components.ts.txt",
+      "postimage": "postimage/components.ts.txt",
+      "preimage_git_blob_sha": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+      "preimage_sha256": "1103fd0b657380c716d61c6bb2a2bc0a767fd3e3bb07ba21fe55612855228e10",
+      "postimage_sha256": "9a40f8fc25a30b750276a2e081929e73b598f373b9da2f0c8089aeba43b04488",
+      "postimage_git_blob_sha": "52cf1ebe88e6d1effe3a1ba65fc37bcbdd5b9bfc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "preimage": "preimage/analysis-http.ts.txt",
+      "postimage": "postimage/analysis-http.ts.txt",
+      "preimage_git_blob_sha": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+      "preimage_sha256": "d865cfc49b1d8cf079bc2dafbfd0815215671b0602d26e43ad26e4fe1cf71513",
+      "postimage_sha256": "e125b64478fecb96c430e0f4e28efc45a4a1a2a0fa4933d47631b68dbc0dbf40",
+      "postimage_git_blob_sha": "59fff3898a492fba96b91395c0eaf106604579ca"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": "preimage/http.ts.txt",
+      "postimage": "postimage/http.ts.txt",
+      "preimage_git_blob_sha": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+      "preimage_sha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+      "postimage_sha256": "f69f60cd233c251f505762e962cdced54e3aa1e8ce4a8c2934adf679e894506d",
+      "postimage_git_blob_sha": "4c1d22c52b076aa3063827dcbd7a2d80927c9b9d"
+    }
+  ],
+  "patch": "source.patch",
+  "dependencies": [
+    "Apply only via the owner/coordinator's GitHub MCP/CAS publication, after rechecking preimage blob hashes at the destination.",
+    "Apply all three target edits together: UI renderer, analysis output caller, and host mount forwarding.",
+    "Keep C04 producer, import reference consumer, all authority checks, bridge/loader, shared schemas and existing WP06 tests unchanged.",
+    "This navigation intentionally does not guess a surface for contributions whose source selection is ambiguous."
+  ],
+  "validation": {
+    "status": "NOT_RUN",
+    "local_tests_run": false,
+    "local_typecheck_run": false,
+    "hosted_run_requested": false,
+    "required_hosted_commands": [
+      "bun run test:ci sucafina Sucafinav1/test/product/wp06/native/import-analysis.test.ts -t 'recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change' --os linux",
+      "bun run test:ci sucafina Sucafinav1/test/product/wp01/components.test.ts Sucafinav1/test/product/wp01/workbench-analysis.test.ts --os linux"
+    ],
+    "owner_additional_cases": [
+      "Finance and IntentFrame ready import-preview links on nondefault mounts and both permitted surfaces.",
+      "Absent/mixed/non-record/unsupported sources and non-ready/domain outputs emit no preview link.",
+      "Exact reference encoding and same-origin route; no automatic apply; source/authority revocation still fails at destination.",
+      "Production analysis HTTP output forwards mount and renders the same link as the direct component consumer.",
+      "Reject raw mounts \"//\", \"/\\t/evil.example\" and other ASCII control or backslash inputs before normalization; accept empty, root and ordinary nested mounts."
+    ],
+    "acceptance": "Owner must preserve the observed R1 failure record, run the full old failing case through its later intent/stale/logout stages, and report hosted results at the applied commit. Proposal itself is not a green proof.",
+    "mechanical_artifact_checks": "Only source-byte SHA-1/SHA-256 comparison and unified-diff construction; no product code, tests or typecheck executed.",
+    "static_peer_review": "Caught and corrected an inert proposal edge: validating only the normalized mount admitted raw // and embedded ASCII tabs. No product file or runtime test was executed."
+  },
+  "patch_sha256": "a8ca2919e556a6be4e2869c1ad8d5b300798b99475827019324eb1e6274dc787"
+}

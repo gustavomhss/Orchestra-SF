@@ -1,0 +1,146 @@
+{
+  "schema": "sf68.hosted-run.v1",
+  "id": "R1",
+  "status": "FAIL",
+  "scope": "source qualification",
+  "W": {
+    "sha": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+    "tree": "ace3b1ea4897c6320c24b6ef175d71299dc61272",
+    "parent": "6b2bbb59976378081f7e8032537d9ff71eba30f5"
+  },
+  "S": {
+    "sha": "a372b69017b275e5f4929d92346e02c21f1936d5",
+    "tree": "b5409615f90dadd938d37d393300e7b2872fb895",
+    "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+    "branch": "ci-run-linux-m68r1"
+  },
+  "request": {
+    "path": "runs/R1.request.json",
+    "selectedFiles": [
+      "./Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts",
+      "./Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+      "./Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts",
+      "./Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "./Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts",
+      "./Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+      "./Sucafinav1/test/product/wp03/capability-parity.test.ts",
+      "./Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+      "./Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "./Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+    ],
+    "selectedFileCount": 15,
+    "timeoutPolicy": "Existing test:ci default 120000; new host tests keep their explicit 30000. No deadlines increased.",
+    "sha256": "b2f735e6ccad9408946db230723ac356f1a162c3bd54b74851c8f54413bc24d3",
+    "gitBlobSha": "c1eb36076a3767ded7039dec85d676a5df826086"
+  },
+  "run": {
+    "id": 43667815725,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725",
+    "headSha": "a372b69017b275e5f4929d92346e02c21f1936d5",
+    "attempt": 1,
+    "event": "push",
+    "workflow": ".github/workflows/test-ci.yml",
+    "startedAt": "2026-11-15T02:26:45Z",
+    "completedAt": "2026-11-15T02:30:58Z",
+    "conclusion": "failure"
+  },
+  "job": {
+    "id": 132671021400,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725/job/132671021400",
+    "name": "test (ubuntu-24.04)",
+    "conclusion": "failure"
+  },
+  "observed": {
+    "pass": 41,
+    "fail": 8,
+    "expectCalls": 2220,
+    "selectedFiles": 15,
+    "tests": 49,
+    "skippedTests": 0,
+    "omni": "not applicable (focused: no declaring test ran); no omni spawn or delegation",
+    "testLog": "runs/R1.tests.log",
+    "selectedHeadersVerified": true,
+    "testLogSha256": "fda5f3252d359859ce49e338944308e858b68587a77629135f77b6e0fcdb0096",
+    "testLogBytes": 89377,
+    "rawJobLogSha256": "77d6f2348a37a60632ff28c8206c35b50242e4d16f56c54889d6448a46493066",
+    "rawJobLogBytes": 158315,
+    "testDurationSeconds": 128.9
+  },
+  "failures": [
+    {
+      "tests": 7,
+      "scope": "new withSkillHost fixture",
+      "reason": "LocationServiceMap was constructed as a dependency but not exported from the root layer; Service not found before loading/dispatch",
+      "remediation": "W2 adds LocationServiceMap.node to public LayerNode.group; no service substitute or timeout change",
+      "retest": "R2"
+    },
+    {
+      "tests": 1,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "name": "recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change",
+      "reason": "Persisted contribution has no preview link",
+      "stage": "renderedPreviewUrl at line 326 called at line 156",
+      "ownership": "shared product/interface and product/ui; outside68 live paths",
+      "remediation": "Complete inert owner proposal for60. No old test weakened or skipped."
+    }
+  ],
+  "limits": [
+    "No count of tests is a count of successful native operations.",
+    "Seven fixture failures produced no claimed 18-skill loading proof.",
+    "Existing WP06 fixtures use recorded model ingress and substitute scanner; those are declared components.",
+    "Failed run retained even when a later narrower retest succeeds.",
+    "No integrated C/AM completion or provider/Task proof is claimed."
+  ],
+  "deduplication": {
+    "branchMatchCount": 0,
+    "directProductShaRunCount": 0,
+    "queuedAtDispatch": 0,
+    "otherRunning": [
+      {
+        "run": 43667752670,
+        "branch": "ci-run-linux-operations63-e1791815-scanner-aux-r3",
+        "sha": "296b69cfe746fbac4639b9451f60563d5524fc29"
+      },
+      {
+        "run": 43667749802,
+        "branch": "ci-run-linux-m64-08467103-8e5e0bf8-1",
+        "sha": "e148ff33a1c3f4864d039f5d443934173b8e9030"
+      },
+      {
+        "run": 43667468344,
+        "branch": "ci-run-linux-astra-m69-b0-9a62c4fe-1",
+        "sha": "fcd6b6bb4a03b1569b51626663e2b96f13df100f"
+      },
+      {
+        "run": 43667462702,
+        "branch": "ci-run-linux-astra-wp11-0917b486-3619f1fd-m52-09",
+        "sha": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1"
+      },
+      {
+        "run": 43667093423,
+        "branch": "ci-run-linux-m62-contracts-r1",
+        "sha": "1579fa24510bb06dc5c39641ce2c523c1a0f4087"
+      },
+      {
+        "run": 43665180272,
+        "branch": "ci-run-linux-m59r1",
+        "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946"
+      }
+    ],
+    "decision": "No equivalent mission68 source/request run present; distinct existing requests were left untouched."
+  },
+  "snapshotVerification": {
+    "status": "VERIFIED",
+    "method": "GitHub compare W1...S1",
+    "aheadBy": 1,
+    "changedPaths": [
+      ".ci-run.json"
+    ],
+    "requestGitBlob": "c1eb36076a3767ded7039dec85d676a5df826086"
+  }
+}

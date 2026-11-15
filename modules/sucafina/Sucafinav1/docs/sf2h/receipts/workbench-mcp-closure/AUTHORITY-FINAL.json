@@ -1,0 +1,65 @@
+{
+  "schema": "sf68.authority-terminal.v1",
+  "mission": 68,
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "lease_epoch": "workbench-mcp-browser68",
+  "branch": "workbench-mcp-proof",
+  "PR": 81,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "control_sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "materialSource": {
+    "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+    "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+  },
+  "terminalIdentity": {
+    "commit": "CONTAINING_COMMIT",
+    "tree": "CONTAINING_COMMIT_TREE",
+    "parent": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "rule": "Exact evidence-container SHA/tree is published after CAS in PR81 and the authorized PR65 handoff; no recursive self-SHA is invented."
+  },
+  "activation": "Effective on publication by successful expected-SHA CAS. No additional material writes, tests or reruns are authorized by this terminal. Subsequent acknowledgement/comment metadata only; future product work requires explicit resumed authority.",
+  "sourceSessionId": null,
+  "effectiveProviderModel": null,
+  "collaborationHandle": "/root",
+  "collaborationHandleIsNativeSessionReceipt": false,
+  "delegatedWork": [
+    {
+      "handle": "/root/bridge_audit",
+      "scope": "Owned bridge/public-tool tests and read-only/inert proposal reviews"
+    },
+    {
+      "handle": "/root/skill_loader",
+      "scope": "Owned loader/new tests and static reviews"
+    },
+    {
+      "handle": "/root/coverage_contracts",
+      "scope": "Catalogue/criterion trace and inert sourcing proposal"
+    }
+  ],
+  "consumer": {
+    "requested": "60 via PR65",
+    "currentTarget": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "authorityObserved": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "ackObserved": false,
+    "next": "Explicitly authorized60 resumption or successor must reconcile current authority/control/head and publish its own ACK before integration."
+  },
+  "retainedOwners": {
+    "checks": 45,
+    "TaskRelaySchedule": 64,
+    "memory": 69,
+    "mixedSources": 61,
+    "epicAndAcceptance": "S0"
+  },
+  "sourceQualification": "BOUNDED_IMPLEMENTATION_DELIVERED_FULL_QUALIFICATION_BLOCKED",
+  "GLOBAL_RELEASE": false,
+  "targetWrites": 0,
+  "devMerge": 0,
+  "deploy": 0,
+  "workflowEdits": 0,
+  "localProductExecution": 0,
+  "claimedNativeAdmissionReceipts": 0,
+  "syntheticSkillReceiptFixturesPresent": true,
+  "syntheticFixtureReceiptsCountAsNativeProof": false
+}
