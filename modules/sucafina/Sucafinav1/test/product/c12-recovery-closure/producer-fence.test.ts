@@ -49,6 +49,11 @@ test("C12 direct producer requires private review admission and replays only its
       .toEqual(applied)
     expect((await fixture.producer.executePrepared(ready.request, await fixture.admitApply(ready.original, "other", "different-actor"))).status)
       .not.toBe("ok")
+    // A raw historical receipt without a retained outer intent cannot authorize
+    // case reconciliation from today's mutable choice or dispatch again.
+    expect(await fixture.apply(ready.original, { mode: "recover" }))
+      .toEqual({ status: "unavailable", reason: "original-intent-unverifiable" })
+    expect(fixture.counters.dispatch).toBe(0)
     expect(await fixture.observe()).toEqual(after)
     expect(fixture.counters.domainExecutions).toBe(1)
     expect(fixture.counters.receiptCommits).toBe(1)

@@ -20,6 +20,8 @@ import { createSfDashboardHttp } from "../../../../../../apps/cli/src/sucafina-p
 
 export const firstSavePeriod = { start: "2026-01-01", end: "2026-12-31" }
 const at = "2026-11-14T00:00:00Z"
+// Hot Topic record evidence is an as-of-day scope, separate from the case horizon.
+export const firstSaveRecordPeriod = { start: at.slice(0, 10), end: at.slice(0, 10) }
 const origin = "https://c12-first-save.example.test"
 type Retained = { directory: string; installationId: string }
 type CaseDraft = Parameters<DecisionCasePort["draft"]>[0]

@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto"
 import { object, rows } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { HotTopicDraftRequest } from "../../../product/decisions/hot-topic-draft.ts"
-import { firstSavePeriod, openFirstSaveFixture } from "./first-save-fixture.ts"
+import { firstSavePeriod, firstSaveRecordPeriod, openFirstSaveFixture } from "./first-save-fixture.ts"
 
 const caseInput = { objective: "Recover a first operational draft", horizon: firstSavePeriod, currency: "USD", criteria: ["Operational action"], sourceRefs: [] }
 
@@ -53,8 +53,8 @@ test("C12 lost first Hot Topic register recovers its exact original result after
     const caseRef = { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }
     expect(created.value.choices).toHaveLength(0)
     expect(created.value.receipts).toHaveLength(0)
-    const issued = await fixture.http("dashboard-hot-topic-source", { recordId: "topic", period: firstSavePeriod })
-    expect(issued.status).toBe(200)
+    const issued = await fixture.http("dashboard-hot-topic-source", { recordId: "topic", period: firstSaveRecordPeriod })
+    expect(issued).toMatchObject({ status: 200, body: { status: "ok" } })
     const source = object(issued.body.value)
     if (!source.target || !source.targetEvidence) throw new Error("Real Dashboard source producer did not issue a target")
     const draft: HotTopicDraftRequest = { caseRef, target: source.target as HotTopicDraftRequest["target"],

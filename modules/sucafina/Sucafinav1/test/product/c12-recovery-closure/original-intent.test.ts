@@ -8,6 +8,7 @@ test("C12 recovery refuses material or choice replacement even when the original
   let fixture = await openPlannerRecoveryFixture()
   try {
     const ready = await fixture.prepare()
+    expect(ready.change.requiredAuthority).toContain("finance")
     fixture.faults.afterReceiptCommit = () => { throw new Error("C12_LOST_RESPONSE_FOR_ADVERSARIAL_RECOVERY") }
     expect((await fixture.apply(ready.original)).status).toBe("unavailable")
     const committed = await fixture.observe()
@@ -36,7 +37,26 @@ test("C12 recovery refuses material or choice replacement even when the original
       expect(attacked.decision!.receipts).toHaveLength(0)
       await fixture.editCase((value) => ({ ...structuredClone(committed.decision!), version: value.version + 1 }))
     }
+    await fixture.editCase((value) => { value.preparedChanges[0]!.idempotencyKey += "-other"; value.preparedChanges[0]!.operation.idempotencyKey = value.preparedChanges[0]!.idempotencyKey })
+    const changedKey = await fixture.observe()
+    expect(await fixture.apply(ready.original, { mode: "recover" })).toEqual({ status: "unavailable", reason: "original-receipt-unavailable" })
+    expect(await fixture.apply(ready.original)).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
+    expect(await fixture.observe()).toEqual(changedKey)
+    await fixture.editCase((value) => ({ ...structuredClone(committed.decision!), version: value.version + 1 }))
+    await fixture.editCase((value) => { value.preparedChanges[0]!.target.incarnation += "-recreated" })
+    const changedTarget = await fixture.observe()
+    expect((await fixture.apply(ready.original, { mode: "recover" })).status).toBe("denied")
+    expect(await fixture.observe()).toEqual(changedTarget)
+    await fixture.editCase((value) => ({ ...structuredClone(committed.decision!), version: value.version + 1 }))
     const restored = await fixture.observe()
+    for (const authority of ["policy", "revision"] as const) {
+      fixture.access[authority] = "2"
+      const refused = await fixture.apply(ready.original, { mode: "recover" })
+      expect(refused.status).toBe("denied")
+      expect("value" in refused).toBe(false)
+      expect(await fixture.observe()).toEqual(restored)
+      fixture.access[authority] = "1"
+    }
     const wrongVersion = { ...ready.original, caseRef: { ...ready.original.caseRef, version: ready.original.caseRef.version + 1 } }
     expect(await fixture.apply(wrongVersion, { mode: "recover" })).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
     expect(await fixture.observe()).toEqual(restored)
@@ -46,7 +66,7 @@ test("C12 recovery refuses material or choice replacement even when the original
     expect(result.state.receipts).toEqual(committed.state.receipts)
     expect(result.decision!.receipts).toEqual([original])
     expect(fixture.counters).toMatchObject({ dispatch: 0, domainExecutions: 0, receiptCommits: 0, reservationCommits: 0, caseReconciliations: 1 })
-    console.info("SF_C12_ORIGINAL_INTENT", JSON.stringify({ cases: mutations.map((value) => value.name), originalRequestVersionBound: true, originalReceiptDigest: digestSfValue(original), redispatches: 0, allRefusalsBeforeReconciliation: true }))
+    console.info("SF_C12_ORIGINAL_INTENT", JSON.stringify({ cases: [...mutations.map((value) => value.name), "domain-key", "target-incarnation", "policy", "access-revision"], originalRequestVersionBound: true, originalReceiptDigest: digestSfValue(original), redispatches: 0, allRefusalsBeforeReconciliation: true }))
   } finally { await fixture.close() }
 }, 180000)
 
