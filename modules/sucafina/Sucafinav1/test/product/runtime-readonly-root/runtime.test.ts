@@ -309,12 +309,12 @@ for (const effect of ["transaction", "transaction-all", "secret-put", "secret-ta
         await attempt.catch(() => { calls.caught++ })
         return "must-not-escape"
       })
-      const rejected = expect(running).rejects.toThrow("Nested local write attempted")
+      void running.catch(() => undefined)
       await started.promise
       const disposing = store.dispose()
       try {
         release.resolve()
-        await rejected
+        await expect(running).rejects.toThrow("Nested local write attempted")
       } finally {
         release.resolve()
         await disposing
