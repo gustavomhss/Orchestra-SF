@@ -122,6 +122,7 @@ async function correlate(input: Input) {
       negatives: tagged("SF_AM01_PORTFOLIO_RECALL_NEGATIVE:"),
       matrix: tagged("SF_AM01_PROFILE_RECALL_CONSUMED:"),
       matrixNegatives: tagged("SF_AM01_PROFILE_RECALL_NEGATIVE:"),
+      nativeCalls: tagged("SF_AM02_NATIVE_C16_TOOL:"),
     }
   })
   assert(new Set(runEvidence.map((run) => run.id)).size === runEvidence.length, "duplicate Actions run ID")
@@ -261,10 +262,27 @@ async function correlate(input: Input) {
       const started = run.runs.find((value) => value.githubSha === run.headSha &&
         value.runRef === consumption.runRef && value.skillId === skill.id &&
         value.nativeSessionId === consumption.nativeSessionId && value.state === "ready")
-      if (!actual || !started || !sha64.test(text(consumption.outputDigest)) ||
+      const actualReceipt = actual?.receipt && typeof actual.receipt === "object" && !Array.isArray(actual.receipt)
+        ? record(actual.receipt) : undefined
+      const requiredNativeCalls = ["sf_decision_recall", "sf_knowledge_search", "sf_context_get", "sf_freshness_check"]
+      const verifiedNativeCalls = requiredNativeCalls.every((operation) =>
+        run.nativeCalls.some((call) => call.githubSha === run.headSha &&
+          call.operation === operation && call.profileId === profileId && call.skillId === skill.id &&
+          call.runRef === consumption.runRef && call.nativeSessionId === consumption.nativeSessionId &&
+          call.principalRef === "wp12-synthetic-am01-five-profile-recall-principal" &&
+          call.accessRevision === consumption.accessRevision &&
+          call.providerTurnObserved === true && call.sameRunAsPersistedContribution === true &&
+          call.actualModel === consumption.actualModel && call.sourceDigest === skill.sourceDigest &&
+          call.instructionsDigest === skill.instructionsDigest &&
+          sha64.test(text(call.inputDigest)) && sha64.test(text(call.resultDigest)) &&
+          Array.isArray(consumption.toolCallIds) &&
+          consumption.toolCallIds.includes(call.toolCallId) &&
+          call.caseRef && sameRef(record(call.caseRef), record(consumption.caseRef))))
+      if (!actual || !actualReceipt || !started || !sha64.test(text(consumption.outputDigest)) ||
         !Array.isArray(consumption.toolCallIds) || consumption.toolCallIds.length < 4 ||
         receipt.nativeSessionId !== consumption.nativeSessionId || receipt.runId !== consumption.runRef ||
-        receipt.loadedMessageId !== actual.receipt?.loadedMessageId ||
+        receipt.loadedMessageId !== actualReceipt.loadedMessageId ||
+        !verifiedNativeCalls ||
         receipt.profileId !== profileId || receipt.profileVersion !== selected.profile.version ||
         receipt.profileDigest !== selected.profile.sourceDigest || receipt.skillId !== skill.id ||
         receipt.skillVersion !== skill.version || receipt.sourceDigest !== skill.sourceDigest ||
