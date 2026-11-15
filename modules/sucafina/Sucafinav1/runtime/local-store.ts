@@ -82,11 +82,17 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   // Every caller still observes SQL under the existing lock. Only immutable
   // strings survive requests; each demanded surface gets a fresh object graph.
   const materializations = new Map<Surface, SnapshotMaterialization>()
-  const observeSnapshot = (surface: Surface, payload?: string): (() => Snapshot) => {
+  const observeSnapshot = (surface: Surface, payload?: string): { materialize: () => Snapshot; copy?: () => Snapshot } => {
     const prior = materializations.get(surface)
-    if (payload !== undefined && prior?.payload === payload) return () => materializeSnapshot(prior)
+    if (payload !== undefined && prior?.payload === payload) {
+      const materialize = () => materializeSnapshot(prior)
+      return { materialize, copy: materialize }
+    }
     materializations.delete(surface)
-    if (payload === undefined) return () => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
+    if (payload === undefined) {
+      const empty = (): Snapshot => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
+      return { materialize: empty, copy: empty }
+    }
     const snapshot = decodeSnapshot(payload)
     const plan = planSnapshotMaterialization(snapshot, payload)
     if (plan) {
@@ -98,12 +104,14 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       }
       materializations.set(surface, plan)
     }
-    return () => snapshot
+    // New plans remain only in the bounded shared memo. A root captures copy
+    // factories only for hits from its initial memo, whose aggregate already fits.
+    return { materialize: () => snapshot }
   }
-  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload)()
+  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
 
   type ReadScope = {
-    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; poisoned: boolean; readers: number }
+    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number }
     parent?: ReadScope
     open: boolean
     signal?: AbortSignal
@@ -179,10 +187,14 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       const scope = context.getStore()
       if (!scope) return undefined
       requireScope(scope)
-      const snapshots = scope.root.snapshots
-      if (!snapshots.dashboard || !snapshots.planner || !snapshots.procurement) throw new Error("Local transaction snapshots unavailable")
-      return { dashboard: cloneSnapshot(snapshots.dashboard), planner: cloneSnapshot(snapshots.planner),
-        procurement: cloneSnapshot(snapshots.procurement) }
+      const copy = (surface: Surface) => {
+        const materialize = scope.root.copies?.[surface]
+        if (materialize) return materialize()
+        const snapshot = scope.root.snapshots[surface]
+        if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+        return cloneSnapshot(snapshot)
+      }
+      return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
     },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
       const parent = context.getStore()
@@ -191,9 +203,10 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         requireScope(parent)
         transactionOptions?.signal?.throwIfAborted()
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
-        const staged = parent.root.snapshots[surface]
-        const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = staged ? cloneSnapshot(staged) :
+        const materialize = parent.root.copies?.[surface]
+        const staged = materialize ? undefined : parent.root.snapshots[surface]
+        const row = materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        const snapshot = materialize ? materialize() : staged ? cloneSnapshot(staged) :
           loadSnapshot(surface, row?.payload)
         const blobs: BlobTransaction = {
           get: async (key) => {
@@ -221,11 +234,14 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         }
       })()
       return operation(true, async (db) => {
+        const copies: Partial<Record<Surface, () => Snapshot>> = {}
         const read = (name: Surface) => {
           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
           // Observe and validate changed bytes now, including unrequested surfaces.
           // The captured materializer never consults SQL or the shared memo again.
-          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: observeSnapshot(name, row?.payload) }
+          const source = observeSnapshot(name, row?.payload)
+          if (name !== surface && source.copy) copies[name] = source.copy
+          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
           return () => {
             if (observed.value) return observed.value
             observed.value = observed.materialize!()
@@ -234,8 +250,9 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           }
         }
         const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
-        // This container is private to one live root scope. The callback receives
-        // only its normal target snapshot; nested/current reads still clone.
+        // Only the target escapes to the callback and stays mutable. Non-target
+        // hits emit independent graphs from their captured immutable plans;
+        // misses retain the validated private snapshot and clone on demand.
         const snapshots = {
           get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
           get procurement() { return observed.procurement() },
@@ -254,7 +271,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
           generations.set(key, generation)
           snapshot.sfBlobGenerations = Object.fromEntries(generations)
         }
-        const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
           requireScope(scope)
           if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
@@ -296,6 +313,11 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             return await context.run(scope, () => work(snapshot, blobs))
           } finally {
             scope.open = false
+            // Descendants may retain the closed ALS scope. Drop the extra copy
+            // references; untouched lazy observations keep their old bound.
+            delete copies.dashboard
+            delete copies.planner
+            delete copies.procurement
           }
         })()
         transactionOptions?.signal?.throwIfAborted()
@@ -495,7 +517,9 @@ function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
   try {
     // Array.from densifies holes; each path is copied separately, including shared aliases.
     if (Array.isArray(value)) return Array.from(value, (item) => copyValue(item, ancestors))
-    return Object.fromEntries(Object.entries(Object.getOwnPropertyDescriptors(value)).map(([key, descriptor]) => {
+    const descriptors = Object.getOwnPropertyDescriptors(value)
+    return Object.fromEntries(Object.keys(descriptors).map((key) => {
+      const descriptor = descriptors[key]!
       if (!Object.hasOwn(descriptor, "value")) throw new Error("Unsupported snapshot accessor")
       return [key, copyValue(descriptor.value, ancestors)]
     }))
@@ -522,8 +546,11 @@ export function encodeSnapshot(snapshot: Snapshot): string {
 }
 
 // The shared memo retains at most three entries and 16 MiB of UTF-16 strings.
-// A live root may temporarily retain observed plans evicted during admission;
-// their combined content is bounded by one additional memo budget until used.
+// A root captures only plans already hit during its admission, a subset of the
+// initial memo: lazy materializers and fresh-copy factories together retain at
+// most one additional memo budget, even after eviction. Newly built plans are
+// never captured for copies. The copy-factory record is cleared when the root closes.
+// The bound counts string content, not decoded graphs, overhead or total heap.
 // These are optimization limits only: larger/deeper valid v1 snapshots keep
 // using the original decoder. No new persisted format or acceptance limit.
 const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
