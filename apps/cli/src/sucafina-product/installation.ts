@@ -57,42 +57,77 @@ export async function composeSfInstallation(value: unknown, origin: string) {
         : maximum
     const response = yield* Effect.tryPromise({
       try: async (signal) => {
-        // Reject the hint before creating a stream/fiber or allocating from caller-controlled sizes.
-        const declared = (() => {
-          try { return requestBodyLength(sanitized.headers["content-length"] ?? null, limit) }
-          catch (error) {
-            if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
-            throw error
+        const node = source ? undefined : NodeHttpServerRequest.toIncomingMessage(sanitized)
+        const nodeAbort = node ? new AbortController() : undefined
+        const nodeState = { released: false, immediate: undefined as ReturnType<typeof setImmediate> | undefined }
+        const absorbNodeError = () => {}
+        const abortNode = () => nodeAbort?.abort()
+        const releaseNode = () => {
+          if (nodeState.released) return
+          nodeState.released = true
+          if (nodeState.immediate) {
+            clearImmediate(nodeState.immediate)
+            nodeState.immediate = undefined
           }
-        })()
-        const boundSignal = source ? AbortSignal.any([signal, source.signal]) : signal
-        if (boundSignal.aborted) {
-          if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
-          return bodyFailure(400)
+          node?.off("aborted", abortNode)
+          node?.off("error", absorbNodeError)
+          node?.off("close", releaseNode)
         }
-        const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : Stream.toReadableStream(
-          NodeStream.fromReadable<Uint8Array, RequestBodyError>({
-            evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
-            // Cancelling the reader must not destroy the socket before the 413 response is flushed.
-            closeOnDone: false,
-            onError: () => new RequestBodyError(400),
-          }), { strategy: { highWaterMark: 0 } },
-        )
-        const bounded = limitRequestBody(raw, { limit, declared, signal: boundSignal })
+        const releaseClosedNode = () => {
+          // closed can become true before Node emits its queued error and close.
+          if (node?.closed && !nodeState.released && !nodeState.immediate) {
+            nodeState.immediate = setImmediate(releaseNode)
+            nodeState.immediate.unref()
+          }
+        }
         try {
-          if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
-          const web = new Request(url, { method: incoming.method, headers: sanitized.headers, body: bounded.body, signal: boundSignal, redirect: source?.redirect ?? "follow", ...(bounded.body ? { duplex: "half" } : {}) })
-          const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
-          const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })) : new Response(null, { status: 403 })
-          // Some domain parsers classify reader errors themselves. Only this private budget can override them.
-          const failure = bounded.failure()
-          if (failure) return bodyFailure(failure.status)
-          const reply = result ?? new Response(null, { status: request ? 404 : 403 })
-          if (bounded.complete()) return reply
-          const closed = new Response(reply.body, reply)
-          closed.headers.set("connection", "close")
-          return closed
-        } finally { bounded.dispose() }
+          // Body cancellation can remove the adapter's error listener before the
+          // transport emits its queued error. Keep this guard until actual close.
+          node?.on("error", absorbNodeError)
+          node?.once("close", releaseNode)
+          node?.once("aborted", abortNode)
+          if (node?.aborted) abortNode()
+          releaseClosedNode()
+          // Reject the hint before creating a stream/fiber or allocating from caller-controlled sizes.
+          const declared = (() => {
+            try { return requestBodyLength(sanitized.headers["content-length"] ?? null, limit) }
+            catch (error) {
+              if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
+              throw error
+            }
+          })()
+          const boundSignal = source ? AbortSignal.any([signal, source.signal]) : nodeAbort ? AbortSignal.any([signal, nodeAbort.signal]) : signal
+          if (boundSignal.aborted) {
+            if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
+            return bodyFailure(400)
+          }
+          const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : Stream.toReadableStream(
+            NodeStream.fromReadable<Uint8Array, RequestBodyError>({
+              evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
+              // Cancelling the reader must not destroy the socket before the 413 response is flushed.
+              closeOnDone: false,
+              onError: () => new RequestBodyError(400),
+            }), { strategy: { highWaterMark: 0 } },
+          )
+          const bounded = limitRequestBody(raw, { limit, declared, signal: boundSignal })
+          try {
+            if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
+            const web = new Request(url, { method: incoming.method, headers: sanitized.headers, body: bounded.body, signal: boundSignal, redirect: source?.redirect ?? "follow", ...(bounded.body ? { duplex: "half" } : {}) })
+            const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+            const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })) : new Response(null, { status: 403 })
+            // Some domain parsers classify reader errors themselves. Only this private budget can override them.
+            const failure = bounded.failure()
+            if (failure) return bodyFailure(failure.status)
+            const reply = result ?? new Response(null, { status: request ? 404 : 403 })
+            if (bounded.complete()) return reply
+            const closed = new Response(reply.body, reply)
+            closed.headers.set("connection", "close")
+            return closed
+          } finally { bounded.dispose() }
+        } finally {
+          node?.off("aborted", abortNode)
+          releaseClosedNode()
+        }
       },
       catch: (error) => error instanceof RequestBodyError ? error : "installation-unavailable" as const,
     }).pipe(Effect.catch((error) => Effect.succeed(error instanceof RequestBodyError ? bodyFailure(error.status) : new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", connection: "close" } }))))
