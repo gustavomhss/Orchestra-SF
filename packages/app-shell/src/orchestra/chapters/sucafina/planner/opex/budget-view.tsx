@@ -123,7 +123,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   const contextDest = () => owner.ready()?.context.destinations.find((item) =>
     item.capabilityId === props.surfaceId && item.surface === "planner" && item.page === pageName())
   const allowed = (action: "save"|"delete"|"spread"|"reset"|"import-workbook") =>
-    !!owner.ready() && !!state.page && !!version() && !version()?.locked &&
+    !!owner.ready() && !!state.page && !!version() &&
     !!contextDest()?.canRead && contextDest()!.allowedActionIds.includes(action) &&
     state.page.allowedActionIds.includes(action) && !state.busy && !state.uncertainty
   const status = () => {
@@ -192,7 +192,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           const handle = editors.get(JSON.stringify([projection.selection.year, projection.data.selectedVersion?.id,rec.id]))
           handle?.receiveRemote({ baseVersion: rec.revision, value: initialEdit(rec) })
         }
-        setState({ page: projection, phase: projection.data.lines.length ? "ready" : "empty",
+        setState({ page: projection, phase: projection.data.lines.length ? "ready" :
+          (props.route.query.filter || props.route.query.element ? "filtered-empty" : "empty"),
           closedChoice: projection.data.selectedVersion?.closed ?? 0, error: "" })
       } catch (error) {
         if (!controller.signal.aborted) {
@@ -464,6 +465,15 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     extras?:Partial<Pick<Review,"target"|"through"|"nextSplit">>) => {
     const action = kind.endsWith("delete") ? "delete" : kind === "spread" ? "spread" : kind === "reset" ? "reset" : "save"
     if (revision === undefined || !Number.isSafeInteger(revision) || !allowed(action)) return
+    if (kind === "line-save" || kind === "project-save") {
+      const rec = record()
+      const snapshot = rec && getEditor(rec)?.snapshot()
+      if (!snapshot || snapshot.availability !== "active" || snapshot.conflict ||
+          snapshot.pendingOperation || snapshot.baseVersion !== revision) {
+        setState({ phase: "conflict", error: t("sf.common.conflict") })
+        return
+      }
+    }
     setState("review",{kind,id,revision,operationRef:crypto.randomUUID() as SfOperationRef,...extras})
   }
   const fields = (values: object) =>
