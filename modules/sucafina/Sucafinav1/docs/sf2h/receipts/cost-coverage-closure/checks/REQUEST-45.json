@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.cost-coverage-closure.check-request.v1",
+  "mission": 80,
+  "owner": 45,
+  "state": "REQUESTED_NOT_RUN_BY80",
+  "PR": 90,
+  "candidate": {
+    "W": "4df32a2de5b1ba27f44c6bf92eaeed9ae412e26a",
+    "tree": "a721dced9fa8566cc13dfb451911fe4f69d47858",
+    "branch": "cost-coverage-fix",
+    "source_base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900"
+  },
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "argv": [
+        "bun",
+        "typecheck"
+      ],
+      "purpose": "Canonical C10 snapshot boundaries and exact new real-producer regression fixtures."
+    },
+    {
+      "cwd": ".",
+      "argv": [
+        "bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev"
+      ],
+      "base_sha_observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "base_requirement": "Record actual fetched origin/dev SHA; no substituted approval."
+    }
+  ],
+  "interface": "Owner45 existing hosted compiler/guards lane. Deduplicate exact W/tree/commands/base/config. Mission80 does not seize45 refs or edit workflows.",
+  "ownedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "bytes": 16753,
+      "sha256": "3f2438bace3bd7839a4f663be4f3a06277b6795ba0384df2766360100154bf9a",
+      "blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts",
+      "bytes": 14131,
+      "sha256": "dfb422098445f09b629e537ca67a2a34e5c85ee02db90f5ddff375cb3b2a72a8",
+      "blob": "bf06e061b29ae22674e9dadb2a410d4ca74c8469"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-fixture.ts",
+      "bytes": 3954,
+      "sha256": "b80de42e3f57aa091d7cb866347d1e4078271ed13fec1c84fa8348726421f7de",
+      "blob": "394bd5434dfc1286b3b0b4312ed8499f79961124"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "bytes": 8139,
+      "sha256": "fa9eb18472b3bb0ed650e0d8b3181d24da9d9b1f62976d3ccf74765ba1f052d8",
+      "blob": "a7d58f6fe27a33e48fa6438f30f8a2c977c72f9e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
+      "bytes": 1507,
+      "sha256": "cd87f824e37095df14a4453e3c0ba76a5f29ef264e6685b5a5f8d13ec5f72745",
+      "blob": "d60df8ce4762745b0b171420811eec860282a0f1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability-fixture.ts",
+      "bytes": 5439,
+      "sha256": "b1f4ef952b0ef41bcd72e95ef270e2b82971fae037bd7f9dd03150f8b7fef737",
+      "blob": "1d01850bf64ded7804e6ce9f3eccf11ce612ff27"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "bytes": 9804,
+      "sha256": "b3ec94367e8bdf0d38d0541ebc0baa0480bb742595500e5acaa948c4b9778768",
+      "blob": "32dd80e500aabb7d7bc746925a7591acad5a1508"
+    }
+  ],
+  "generated_protocol_change": false,
+  "public_contract_or_formula_change": false,
+  "owner76_files_changed": false,
+  "surgical_tests": {
+    "R1": 43673699755,
+    "R1_conclusion": "expected causal failure: 6 fail/2 controls pass",
+    "R2": 43674446763,
+    "R2_state": "IN_PROGRESS_AT_REQUEST",
+    "R2_S": "55c1e430ef06aee1692eba2e49ae1d8299ebe4cf",
+    "rule": "Test evidence is separate from compiler/guards."
+  },
+  "limits": "No local product tests/compiler/guards. No compiler/guard PASS without owner45 exact input evidence.",
+  "GLOBAL_RELEASE": false
+}
