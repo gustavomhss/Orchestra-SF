@@ -1,0 +1,28 @@
+{
+  "schema": "sf2h.correction-wave-fence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "authority": "S0 explicit fresh-session-only succession for confirmed source findings and integration backlog",
+  "mission": 136,
+  "branch": "sf-ux-w02",
+  "previous_epoch": "ux-native-w02-e1",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ACCEPT_OLD_DELIVERED_BLOBS_ONLY_AS_HISTORICAL_INTAKE",
+  "next_epoch": "ux-native-w02-e2",
+  "observed_head": "aebff47a870262cab30558cd16727b075e7fcd42",
+  "runtime_termination_claimed": false,
+  "new_session_state": "PREPARED_NOT_STARTED",
+  "user_reports_old_sessions_stopped": "No new death inference; real control action is S0 revocation and CAS/epoch fencing, not elapsed silence.",
+  "old_writer_rule": "Cease future writes/dispatch upon observing fence. Already delivered artifacts remain available by immutable SHA; late commits quarantined/reconciled, never force-reset.",
+  "new_writer_rule": "Confirm head/fence, publish actual ACK epoch/model/session. Unexpected old actor activity pauses overlap; no blind reset/force.",
+  "integrator": 132,
+  "compiler": 128,
+  "product_ci": 129,
+  "scope": [
+    "packages/protocol/src/groups/sucafina.ts",
+    "packages/schema/src/sucafina/context.ts",
+    "apps/cli/src/sucafina-product/native-ui/context.ts",
+    "packages/server/src/handlers/sucafina.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts"
+  ],
+  "native_goal": "paused",
+  "global_release": false
+}
