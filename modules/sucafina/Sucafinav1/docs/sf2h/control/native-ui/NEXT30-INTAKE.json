@@ -1,0 +1,1216 @@
+{
+  "schema": "sf2h.native-ui.next30-intake.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "state": "SCOPE_ADOPTED_NO_DUPLICATE_ADAPTER_DISPATCH",
+  "user_authorization": "User requests adding completed next30 UX planning to pipeline; all browser continuations must use NEW sessions with fenced handoffs.",
+  "source": {
+    "branch": "sf-ux-next30-dispatch-20261115",
+    "sha": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+    "tree": "abfbbcd35d9718af50608099f66223934372a37a",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "immutable_snapshot": true,
+    "source_branch_not_modified": true
+  },
+  "scope": {
+    "original_wps": 15,
+    "original_tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "ux_orders": 78,
+    "surfaces": 70,
+    "operations": 305,
+    "next30_roles": 30,
+    "next30_adapters": 9,
+    "next30_ui": 21,
+    "next30_complete_orders": 53,
+    "next30_partial_outputs": [
+      "U10.overview",
+      "U11.complete",
+      "U13.complete"
+    ],
+    "existing19_preserved": true,
+    "qualification_orders": [
+      "Q01",
+      "Q02"
+    ],
+    "independent_final_reviews": [
+      "R01",
+      "R02",
+      "R03"
+    ]
+  },
+  "validation": {
+    "packets": 30,
+    "adapters": 9,
+    "ui": 21,
+    "complete_orders": 53,
+    "partial_outputs": [
+      {
+        "slot": "N21",
+        "order": "U10",
+        "output": "U10.overview"
+      },
+      {
+        "slot": "N22",
+        "order": "U11",
+        "output": "U11.complete"
+      },
+      {
+        "slot": "N23",
+        "order": "U13",
+        "output": "U13.complete"
+      }
+    ],
+    "claims": 313,
+    "raw_parent_overlaps": 2,
+    "effective_collisions": 0,
+    "duplicate_complete_orders": 0
+  },
+  "routing": {
+    "logical_integrator": "S0-C/C00/I00",
+    "current_mission": 125,
+    "current_epoch": "S0-C-e18-browser125",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "source_text_114": "Superseded routing only: predecessor114 revoked. Read current125 packet@ebd59b38f32178479f2ee4419a1165e1496c19ab. Do not restore114 or create another C00.",
+    "product_ci": "120/PR106",
+    "compiler": "119/PR107"
+  },
+  "operational_rules": [
+    "N01–N09 map EXACTLY to already-launched A07–A15. Preserve actual branches/epochs/actors and consume their outputs under these aliases. Do not launch nine duplicate sf-ux-n01..n09 writers.",
+    "N10–N30 are21additional author roles, pending concrete launch packets/current source repin and ACK. Prepared documentation is not a started session or product proof.",
+    "No recycled sessions. Continuation after terminal author requires fresh session, explicit authority transfer/epoch/CAS fencing and preserved branch/work.",
+    "S0 per-output exclusive authoring admission replaces administrative waiting on old114. Frozen contracts permit independent authoring; actual producer dependencies gate integration and qualification.",
+    "Effective paths = write_paths minus protected_paths. N22 requests/** excludes W19 title/** and shared index/i18n/test. N23 approvals/** excludes W13 pr/** and shared index. N21 overview never edits W12 queues/**.",
+    "Shared indexes/registries/composition/global i18n/SDK belong125; authors submit complete inert patches/preimages for shared changes. No whole inherited UX branch merges.",
+    "Tests only surgical GitHubActions120 at completed unit;119 compiler/generation/guards; sameCfinalepic8selectionsAM01–06threeFINALG7G8 unchanged.",
+    "No nativeGoal resume/controller, unrelated Azure/deploy/engine/runtime/secret/policy mutations."
+  ],
+  "slots": [
+    {
+      "slot": "N01",
+      "title": "Bindings finos: Reuniões e relatórios",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A07",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N01.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A07",
+        "branch": "sf-ux-a07",
+        "epoch": "ux-native-a07-e1",
+        "observed_head": "f1f3929a77b5fd1f2beeae87b750767a3cdb7d67"
+      },
+      "branch_hint": "sf-ux-a07",
+      "write_paths": [
+        "packages/schema/src/sucafina/reviews.ts",
+        "packages/client/src/sucafina/reviews.ts",
+        "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+        "packages/schema/src/sucafina/reviews/**",
+        "packages/client/src/sucafina/reviews/**",
+        "apps/cli/src/sucafina-product/native-ui/reviews/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N02",
+      "title": "Bindings finos: Visualizações BI",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A08",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N02.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A08",
+        "branch": "sf-ux-a08",
+        "epoch": "ux-native-a08-e1",
+        "observed_head": "b1b6fcb5302bfeede8e73a1dfa7c6e2bab43ca02"
+      },
+      "branch_hint": "sf-ux-a08",
+      "write_paths": [
+        "packages/schema/src/sucafina/bi.ts",
+        "packages/client/src/sucafina/bi.ts",
+        "apps/cli/src/sucafina-product/native-ui/bi.ts",
+        "packages/schema/src/sucafina/bi/**",
+        "packages/client/src/sucafina/bi/**",
+        "apps/cli/src/sucafina-product/native-ui/bi/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N03",
+      "title": "Bindings finos: Rotinas, Schedule e residentes",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A09",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N03.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A09",
+        "branch": "sf-ux-a09",
+        "epoch": "ux-native-a09-e1",
+        "observed_head": "3bb56b136ff3d35e0afb6cdc4fad6df60d3659b6"
+      },
+      "branch_hint": "sf-ux-a09",
+      "write_paths": [
+        "packages/schema/src/sucafina/routines.ts",
+        "packages/client/src/sucafina/routines.ts",
+        "apps/cli/src/sucafina-product/native-ui/routines.ts",
+        "packages/schema/src/sucafina/routines/**",
+        "packages/client/src/sucafina/routines/**",
+        "apps/cli/src/sucafina-product/native-ui/routines/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N04",
+      "title": "Bindings finos: Pessoas e Talent",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A10",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N04.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A10",
+        "branch": "sf-ux-a10",
+        "epoch": "ux-native-a10-e1",
+        "observed_head": "6d6cd09bca28be5071f8aff45f3544aab0881165"
+      },
+      "branch_hint": "sf-ux-a10",
+      "write_paths": [
+        "packages/schema/src/sucafina/people.ts",
+        "packages/client/src/sucafina/people.ts",
+        "apps/cli/src/sucafina-product/native-ui/people.ts",
+        "packages/schema/src/sucafina/people/**",
+        "packages/client/src/sucafina/people/**",
+        "apps/cli/src/sucafina-product/native-ui/people/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N05",
+      "title": "Bindings finos: Operações, segurança, riscos e performance",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A11",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N05.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A11",
+        "branch": "sf-ux-a11",
+        "epoch": "ux-native-a11-e1",
+        "observed_head": "371da8d1af7350a468ef334034ad3589c95a4868"
+      },
+      "branch_hint": "sf-ux-a11",
+      "write_paths": [
+        "packages/schema/src/sucafina/operations.ts",
+        "packages/client/src/sucafina/operations.ts",
+        "apps/cli/src/sucafina-product/native-ui/operations.ts",
+        "packages/schema/src/sucafina/operations/**",
+        "packages/client/src/sucafina/operations/**",
+        "apps/cli/src/sucafina-product/native-ui/operations/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N06",
+      "title": "Bindings finos: Trabalho, busca e visões pessoais",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A12",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N06.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A12",
+        "branch": "sf-ux-a12",
+        "epoch": "ux-native-a12-e1",
+        "observed_head": "f8e442616c96651f3b26013b34b8ce697860e3e2"
+      },
+      "branch_hint": "sf-ux-a12",
+      "write_paths": [
+        "packages/schema/src/sucafina/work.ts",
+        "packages/client/src/sucafina/work.ts",
+        "apps/cli/src/sucafina-product/native-ui/work.ts",
+        "packages/schema/src/sucafina/work/**",
+        "packages/client/src/sucafina/work/**",
+        "apps/cli/src/sucafina-product/native-ui/work/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N07",
+      "title": "Bindings finos: Relações, threads e confirmações",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A13",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N07.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A13",
+        "branch": "sf-ux-a13",
+        "epoch": "ux-native-a13-e1",
+        "observed_head": "f8e442616c96651f3b26013b34b8ce697860e3e2"
+      },
+      "branch_hint": "sf-ux-a13",
+      "write_paths": [
+        "packages/schema/src/sucafina/collaboration.ts",
+        "packages/client/src/sucafina/collaboration.ts",
+        "apps/cli/src/sucafina-product/native-ui/collaboration.ts",
+        "packages/schema/src/sucafina/collaboration/**",
+        "packages/client/src/sucafina/collaboration/**",
+        "apps/cli/src/sucafina-product/native-ui/collaboration/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N08",
+      "title": "Bindings finos: Memória e reavaliação",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A14",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N08.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A14",
+        "branch": "sf-ux-a14",
+        "epoch": "ux-native-a14-e1",
+        "observed_head": "b799592f83f46e133e74a510d23a5a33c4638a36"
+      },
+      "branch_hint": "sf-ux-a14",
+      "write_paths": [
+        "packages/schema/src/sucafina/memory.ts",
+        "packages/client/src/sucafina/memory.ts",
+        "apps/cli/src/sucafina-product/native-ui/memory.ts",
+        "packages/schema/src/sucafina/memory/**",
+        "packages/client/src/sucafina/memory/**",
+        "apps/cli/src/sucafina-product/native-ui/memory/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N09",
+      "title": "Bindings finos: Análise contextual assíncrona",
+      "lane": "adapter",
+      "scope": [
+        {
+          "order": "A15",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N09.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPT_EXISTING_AUTHOR_USER_REPORTS_LAUNCHED",
+      "existing_author": {
+        "order": "A15",
+        "branch": "sf-ux-a15",
+        "epoch": "ux-native-a15-e1",
+        "observed_head": "d3999741160ab63f9625c0709df31ae61fdabad5"
+      },
+      "branch_hint": "sf-ux-a15",
+      "write_paths": [
+        "packages/schema/src/sucafina/analyses.ts",
+        "packages/client/src/sucafina/analyses.ts",
+        "apps/cli/src/sucafina-product/native-ui/analyses.ts",
+        "packages/schema/src/sucafina/analyses/**",
+        "packages/client/src/sucafina/analyses/**",
+        "apps/cli/src/sucafina-product/native-ui/analyses/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts"
+      ],
+      "protected_paths": [
+        "any path owned by active other writer",
+        "shared registries/composition/global i18n/generated/producer code under 114"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": false
+    },
+    {
+      "slot": "N10",
+      "title": "Home, busca e views",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U01",
+          "output": "complete"
+        },
+        {
+          "order": "U42",
+          "output": "complete"
+        },
+        {
+          "order": "U43",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N10.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n10",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/home/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/search/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u42.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u42.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/views/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u43.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u43.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N11",
+      "title": "Meu trabalho e páginas de colaboração",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U41",
+          "output": "complete"
+        },
+        {
+          "order": "U44",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N11.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n11",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/work/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u41.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u41.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u44.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N12",
+      "title": "Dashboard executivo e Hot Topics",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U02",
+          "output": "complete"
+        },
+        {
+          "order": "U38",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N12.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n12",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u02.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u02.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u38.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N13",
+      "title": "Dashboard OPEX e CAPEX",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U39",
+          "output": "complete"
+        },
+        {
+          "order": "U40",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N13.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n13",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u39.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/capex/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u40.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N14",
+      "title": "Pessoas, estrutura e Talent",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U03",
+          "output": "complete"
+        },
+        {
+          "order": "U47",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N14.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n14",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u03.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u47.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u47.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N15",
+      "title": "Serviços e segurança de TI",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U04",
+          "output": "complete"
+        },
+        {
+          "order": "U29",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N15.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n15",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u04.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u04.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u29.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u29.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N16",
+      "title": "Admin local, riscos e performance",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U28",
+          "output": "complete"
+        },
+        {
+          "order": "U30",
+          "output": "complete"
+        },
+        {
+          "order": "U31",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N16.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n16",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u28.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u28.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/operations/stakeholders/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u30.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u30.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u31.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u31.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N17",
+      "title": "Portfólio, projetos e cenários",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U05",
+          "output": "complete"
+        },
+        {
+          "order": "U19",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N17.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n17",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u05.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u05.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u19.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u19.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N18",
+      "title": "Planner overview, versões e comparação",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U06",
+          "output": "complete"
+        },
+        {
+          "order": "U46",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N18.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n18",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u06.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u06.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u46.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u46.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N19",
+      "title": "Planner OPEX, CAPEX e headcount",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U07",
+          "output": "complete"
+        },
+        {
+          "order": "U08",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N19.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n19",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/capex/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u07.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u07.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u08.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N20",
+      "title": "Planner entidades, alocações e câmbio",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U09",
+          "output": "complete"
+        },
+        {
+          "order": "U45",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N20.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n20",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u09.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u09.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u45.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u45.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N21",
+      "title": "Procurement overview e configuração",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U10",
+          "output": "U10.overview"
+        },
+        {
+          "order": "U36",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N21.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n21",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u36.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u36.spec.ts"
+      ],
+      "protected_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u10.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts",
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N22",
+      "title": "Requests PR/PO restantes e contratos de fornecedor",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U11",
+          "output": "U11.complete"
+        },
+        {
+          "order": "U15",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N22.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n22",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u15.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts"
+      ],
+      "protected_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/index.tsx",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts",
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N23",
+      "title": "Procurement sourcing, suppliers e aprovações restantes",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U13",
+          "output": "U13.complete"
+        },
+        {
+          "order": "U12",
+          "output": "complete"
+        },
+        {
+          "order": "U14",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N23.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n23",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u13.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u12.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u12.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u14.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u14.spec.ts"
+      ],
+      "protected_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/index.tsx",
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N24",
+      "title": "Decisões: casos, intenção, alternativas e perguntas",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U16",
+          "output": "complete"
+        },
+        {
+          "order": "U17",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N24.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n24",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u16.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u16.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u17.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u17.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N25",
+      "title": "Decisões: escolha, recibos e BI de decisão",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U18",
+          "output": "complete"
+        },
+        {
+          "order": "U22",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N25.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n25",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u18.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u18.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/decisions/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u22.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u22.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N26",
+      "title": "BI financeiro e operacional",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U20",
+          "output": "complete"
+        },
+        {
+          "order": "U21",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N26.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n26",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u20.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u20.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/operations/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u21.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u21.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N27",
+      "title": "Importações, exports e documentos",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U23",
+          "output": "complete"
+        },
+        {
+          "order": "U24",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N27.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n27",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/documents/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u24.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N28",
+      "title": "Reuniões, revisões preservadas e relatórios",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U25",
+          "output": "complete"
+        },
+        {
+          "order": "U32",
+          "output": "complete"
+        },
+        {
+          "order": "U33",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N28.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n28",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u25.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u33.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N29",
+      "title": "Rotinas, Schedule e residentes",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U27",
+          "output": "complete"
+        },
+        {
+          "order": "U34",
+          "output": "complete"
+        },
+        {
+          "order": "U35",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N29.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n29",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u27.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u27.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u34.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u34.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u35.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u35.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    },
+    {
+      "slot": "N30",
+      "title": "Memória, reavaliação e análise contextual",
+      "lane": "native-ui",
+      "scope": [
+        {
+          "order": "U26",
+          "output": "complete"
+        },
+        {
+          "order": "U37",
+          "output": "complete"
+        }
+      ],
+      "packet_path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/packets/N30.json",
+      "packet_ref": "efd3d5ce5aaf1cd6ea4ec0c7bdf8cdb71bacbc3c",
+      "state": "ADOPTED_PENDING_LAUNCH",
+      "existing_author": null,
+      "branch_hint": "sf-ux-n30",
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/memory/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u26.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u37.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u37.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "source_contract_repin": "Required on launch at actual material; do not automatically restore historical catalog code",
+      "new_session_required": true
+    }
+  ],
+  "procurement_complements": {
+    "N21": {
+      "output": "U10.overview",
+      "preserve": "W12/U10.queue",
+      "exclusive": "procurement/overview/**"
+    },
+    "N22": {
+      "output": "U11.complete",
+      "preserve": "W19/U11.title-save",
+      "excluded": [
+        "procurement/requests/title/**",
+        "procurement/requests/index.tsx",
+        "sf-u11.ts",
+        "u11.spec.ts"
+      ]
+    },
+    "N23": {
+      "output": "U13.complete",
+      "preserve": "W13/U13.pr-approval",
+      "excluded": [
+        "procurement/approvals/pr/**",
+        "procurement/approvals/index.tsx"
+      ]
+    }
+  },
+  "native_goal": "paused; manual browser campaign only",
+  "global_release": false
+}
