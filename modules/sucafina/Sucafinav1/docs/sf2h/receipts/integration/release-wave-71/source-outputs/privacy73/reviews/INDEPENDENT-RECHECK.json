@@ -1,0 +1,229 @@
+{
+  "schema": "mission73.independent-source-recheck.v1",
+  "mission": "73",
+  "reviewer": "/root/privacy_review",
+  "reviewed_at_utc": "2026-11-15T03:26:46Z",
+  "decision": "SOURCE_TESTS_PASS",
+  "decision_qualifier": "BOUNDED_TO_REVIEWED_W_AND_SELECTED_R1_TESTS",
+  "blocking_findings": [],
+  "summary": "A fonte publicada em W coincide com os seis arquivos revistos estaticamente e com o material executado em S. A seleção R1 sustenta a correção de M70-ISO-01 nas ações exercitadas, ausência de efeitos nas recusas, e preservação de CAS, holder e transições cobertas. Não foram identificados defeitos bloqueadores residuais no diff revisto.",
+  "independence": {
+    "product_or_test_authorship": false,
+    "local_product_or_test_execution": false,
+    "remote_mutations_by_reviewer": false,
+    "activities": [
+      "Leitura estática independente dos patches, fixture e testes antes da publicação",
+      "Leitura via GitHub MCP de commits, comparação, blobs, request CI, metadados, jobs e logs reais de R1",
+      "Conferência de hashes locais dos bytes revisados com os blobs remotos",
+      "Criação deste recibo em scratch para publicação pelo coordenador"
+    ],
+    "final_campaign_review_credit": false,
+    "not_one_of_three_final_reviews": true
+  },
+  "pins": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "w": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "w_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+    "w_parent": "6db479f1f72e6ed0419a65e55cc9fd8f7f8078a5",
+    "s": "2c0b92951ea5a4d15cc40a473860465cb84ca61d",
+    "s_tree": "28fd369e0012bd92497dc69e21459ea867266237",
+    "s_parent": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "s_only_delta_from_w": [
+      ".ci-run.json"
+    ],
+    "ci_request_blob": "96eaa802d822d3ba86c4c8e2ad047c096e44edfc",
+    "source_and_tests_patch_sha256": "e634e32c31acfe370ee86bf06738f39abbfb2901b310b6fc28797a6aad44c839",
+    "source_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/faa30fddb7e7b61696b66fd069f51cf18c51125f...4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "snapshot_compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/4bf5d040649d807d5ef6c8cbabf1409d8aee849a...2c0b92951ea5a4d15cc40a473860465cb84ca61d"
+  },
+  "source_identity": {
+    "verified_all_six_remote_blobs_match_reviewed_local_bytes": true,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+        "sha256": "fa5c6cb1e9ff67bc409b6eeb5cf8df7fd2f4fb8e550c5662b7b32d1398126b8c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+        "sha256": "698c57d99e29f38fc2ddf324c3edfd995e49ececb2dfd52aa30b64ab7ec0899a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/fixture.ts",
+        "blob": "e49a76773ff655645b524c5f588b9a1065d5987a",
+        "sha256": "30c9318ee6eaedeeea305a3796de62ec6d12a79773305828b717fbef2346df21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+        "blob": "3c735804c3956fc5df98113f8f76050da35c74b0",
+        "sha256": "48301e64e8a67508066d11ddeaf650c697e133ca9094a793a3460b53ad118507"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+        "blob": "5ce4f670c4558e312ef1ea0eec72dd9f00e3897b",
+        "sha256": "539bec6b5e17af4bcd50f0844bc9cc1981819680897ab3641bf19dfdfb2de86f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+        "blob": "85874c506608803bb9d3fcd8c3acb87d60200b0d",
+        "sha256": "8f176d77ef5d45a4fd1d82f3043c2cad262569357db6f25efb57b478158fe2a5"
+      }
+    ],
+    "source_scope": "A comparação base→W contém apenas os dois arquivos runtime, os quatro novos arquivos de testes e quatro arquivos de recibos. O arquivo legado de testes permanece inalterado."
+  },
+  "actions_evidence": {
+    "run_id": 43671737333,
+    "job_id": 132683058916,
+    "attempt": 1,
+    "head_sha": "2c0b92951ea5a4d15cc40a473860465cb84ca61d",
+    "workflow": ".github/workflows/test-ci.yml",
+    "runner_job": "test (ubuntu-24.04)",
+    "conclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671737333",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671737333/job/132683058916",
+    "logs_observed": true,
+    "log_lines": 882,
+    "bun_version": "1.3.14 (0d9b296a)",
+    "selected_tests": {
+      "pass": 29,
+      "fail": 0,
+      "filtered_out": 15,
+      "expect_calls": 889,
+      "files": 4,
+      "reported_duration_ms": 790,
+      "groups": {
+        "commands": 17,
+        "presentation": 6,
+        "uploads": 4,
+        "selected_legacy": 2
+      },
+      "name_pattern": "(M73|dual-role request transitions|complete procurement field roundtrip)",
+      "legacy_selected_names": [
+        "complete procurement field roundtrip and frozen approvals survive settings edits",
+        "dual-role request transitions retain porta authorization without permitting foreign PR edits"
+      ]
+    },
+    "checkout_matches_s": true,
+    "playwright_setup": "skipped",
+    "chromium_install": "skipped",
+    "playwright_evidence_upload": "skipped",
+    "artifacts_count": 0,
+    "omni": {
+      "nonce": "f93a4df3a0e29efea31c1b5a505feaf1",
+      "status": "NOT_APPLICABLE",
+      "observed_control_message": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "own_spawns": 0,
+      "delegated_spawns": 0,
+      "omni_claim": false
+    }
+  },
+  "conclusions": [
+    {
+      "id": "M70-ISO-01",
+      "evidence": "STATIC_SOURCE_AND_R1",
+      "result": "PASS",
+      "statement": "As dez ações save, submit_pr, submit_sourcing, select_quote, submit_po, approve, reject, issue, cancel e delete verificam a existência própria e a visibilidade canônica antes de produzir conflitos ou recusas dependentes do registro. A matriz compara status, corpo e cabeçalhos para ausente e invisível em versões igual, anterior e posterior, incluindo save/approve/reject."
+    },
+    {
+      "id": "ZERO_EFFECTS",
+      "evidence": "STATIC_SOURCE_AND_R1",
+      "result": "PASS_WITHIN_EXERCISED_CASES",
+      "statement": "A fixture usa aplicação HTTP, resolução de identidade e SQLite reais. As recusas comparam snapshots persistidos integrais; uploads também comparam estado SQLite e blobs e usam scanner tripwire. O controle com instâncias independentes e reabertura verifica CAS e isolamento persistido."
+    },
+    {
+      "id": "VISIBLE_CAS_HOLDER_AND_TRANSITIONS",
+      "evidence": "STATIC_SOURCE_AND_R1",
+      "result": "PASS_WITHIN_EXERCISED_CASES",
+      "statement": "Conflitos de registros visíveis mantêm 409 e conteúdo stored/by/currentVersionCAS. Fluxos reais de save, submissão, reject e approve, autorização do holder, ausência de override administrativo, autoaprovação configurável e transições dual-role permanecem cobertos. Nenhuma alteração em políticas financeiras ou valores canônicos foi encontrada no diff."
+    },
+    {
+      "id": "CREATE_AND_INHERITED_IDENTIFIERS",
+      "evidence": "STATIC_SOURCE_AND_R1",
+      "result": "PASS",
+      "statement": "Create usa o namespace CAS fixo requests: e ignora o ID fornecido para lookup, preservando o conflito de criação sem ler ou copiar metadados estrangeiros. Object.hasOwn trata identificadores herdados como ausentes nas ações de registro."
+    },
+    {
+      "id": "UPLOAD_PREFLIGHT",
+      "evidence": "STATIC_SOURCE_AND_R1",
+      "result": "PASS_WITHIN_NEGATIVE_CASES",
+      "statement": "Quote e signed-po verificam visibilidade antes de capacidade, leitura e scanner. Principals vazios e local:* são recusados com 403 uniforme antes do lookup; o achado P2 pré-publicação foi corrigido, está presente no blob remoto e os dois casos passaram em R1."
+    },
+    {
+      "id": "UPLOAD_FINAL_RECHECK",
+      "evidence": "STATIC_SOURCE_ONLY",
+      "result": "PRESENT_NOT_DYNAMICS_PROVEN",
+      "statement": "Há nova verificação de visibilidade na transação final após resolução fresca do principal. Uma corrida de revogação durante scan não foi executada; os testes negativos fazem o scanner lançar se invocado e não simulam scan limpo."
+    },
+    {
+      "id": "PRESENTATION",
+      "evidence": "STATIC_SOURCE_AND_R1",
+      "result": "PASS_WITHIN_IN_PROCESS_RENDERING",
+      "statement": "A normalização de 15 dígitos significativos incide apenas em strings de apresentação de montantes base e diferença. Os testes cobrem fallback/C02, FX submetido congelado e atual, tolerância existente, ausente/null/zero/fração. Não há evidência de navegador ou validação visual instalada."
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "M73-REVIEW-P2-INVALID-PRINCIPAL",
+      "severity": "P2",
+      "status": "RESOLVED_IN_W_AND_TESTED_R1",
+      "location": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "description": "O preflight de upload consultava visibilidade antes de recusar principal vazio/local:*, permitindo resposta dependente de registro para principals inválidos. A recusa 403 agora precede o lookup e ambos os testes passaram."
+    }
+  ],
+  "residuals": [
+    {
+      "id": "LEGACY_ASSERTION",
+      "kind": "INTEGRATION_DISPOSITION",
+      "blocking_source73": false,
+      "statement": "O teste legado de ownership conserva uma expectativa antiga 403 para save de PR invisível; não foi executado pela seleção R1. A equivalência pública exige 404. O patch de uma asserção foi preparado, mas não aplicado por estar fora da autoria73. Não se declara passe da suíte legada completa.",
+      "owner": "71",
+      "legacy_path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "unchanged_legacy_blob": "d622fa8463ee6d05a5c03de6517381045b6f0241",
+      "inert_patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/external/legacy-hidden-request-status.patch",
+      "inert_patch_sha256": "68828d7623bf9bfb9926276f130db23d1754379754fd2fa158b029ef5a9c6f6b",
+      "proposed_postimage_blob": "5c25f109c4df835761e8aba8351686174ac6d7aa"
+    },
+    {
+      "id": "UPLOAD_FINAL_RACE",
+      "kind": "EVIDENCE_LIMIT",
+      "blocking_source73": false,
+      "statement": "A revalidação pós-scan está revisada estaticamente; R1 não demonstra revogação concorrente durante scan, upload autorizado com ClamD real ou efeito de temporização."
+    },
+    {
+      "id": "INVALID_UPLOAD_ID_RESPONSE",
+      "kind": "INTENTIONAL_PUBLIC_BOUNDARY_CHANGE",
+      "blocking_source73": false,
+      "statement": "IDs inválidos/ausentes de quote e signed-po podem receber 404 no gate precoce em vez do 400 tardio de assets. A safeId de assets permanece intacta; a alteração torna a resposta pública opaca sem permitir anexação ou relaxar papéis, estágio, CAS ou política."
+    },
+    {
+      "id": "NON_CLAIMS",
+      "kind": "EVIDENCE_LIMIT",
+      "blocking_source73": false,
+      "statement": "Este parecer não atesta browser, ClamD, Omni, Entra/proxy real, typecheck/guard45, integração C, suíte global, correção de UX além dos produtores testados, aprovação final de campanha ou três revisões finais. Não houve nova execução B0 do código anterior por este revisor."
+    }
+  ],
+  "moving_target": {
+    "reported_by": "coordinator /root",
+    "independently_requalified_by_this_review": false,
+    "c34_commit": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "c34_tree": "a4881429b5d4e835b81c5619264cb8b0238d19f8",
+    "coordinator_reports_product_preimages73_still_exact": true,
+    "coordinator_reports_changed_dependencies": [
+      {
+        "path": "runtime/contract.ts",
+        "previous_blob_prefix": "9e9bac97",
+        "c34_blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649"
+      },
+      {
+        "path": "runtime/local-store.ts",
+        "previous_blob_prefix": "66625951",
+        "c34_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "change_origin": "release59"
+      }
+    ],
+    "source_result_transfers_to_c34": false,
+    "disposition": "71/45 devem qualificar a composição no target. SOURCE_TESTS_PASS pertence somente a W e à seleção R1 em S; este revisor não evoluiu nem revalidou o produto para C34."
+  }
+}

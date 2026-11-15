@@ -2,6 +2,7 @@ import { configure, controls, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
+import { visibleRequests } from "../src/requests.ts"
 import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
 import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
 import { object, rows, text } from "./contract.ts"
@@ -139,6 +140,11 @@ export function createApplication(mount: string, application: Application) {
           (surface === "dashboard" ? kind !== "contract" : surface !== "procurement" || kind === "contract")
         )
           return { commit: false, value: reply("Invalid attachment", 400) }
+        if (
+          surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
+          !canViewProcurementRequest(snapshot, actor, url.searchParams.get("record") ?? "")
+        )
+          return { commit: false, value: json({ ok: false, status: 404 }, 404) }
         const cap =
           kind === "contract"
             ? 25 * 1024 * 1024
@@ -791,6 +797,13 @@ async function serveDownload(
     },
   })
 }
+function canViewProcurementRequest(snapshot: Snapshot, actor: { id: string; roles: string[] }, id: string) {
+  const records = object(object(snapshot.data.store).requests)
+  if (!Object.hasOwn(records, id)) return false
+  const request = object(object(records[id]).request)
+  return visibleRequests([{ createdBy: text(request.createdBy) }], actor).length > 0
+}
+
 async function prepareUpload(
   request: Request,
   surface: Surface,
@@ -809,10 +822,20 @@ async function prepareUpload(
     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
     if (
       !principal ||
+      !principal.id ||
+      principal.id.startsWith("local:") ||
       !principal.canWrite ||
       !principal.roles.some((row) => row.surface === surface && row.role !== "viewer")
     )
       return { commit: false, value: reply("Access denied", 403) }
+    if (
+      surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
+      !canViewProcurementRequest(snapshot, {
+        id: principal.id,
+        roles: principal.roles.filter((row) => row.surface === surface).map((row) => row.role),
+      }, query.get("record") ?? "")
+    )
+      return { commit: false, value: json({ ok: false, status: 404 }, 404) }
     const cap =
       kind === "contract"
         ? 25 * 1024 * 1024

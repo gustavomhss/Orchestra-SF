@@ -470,14 +470,15 @@ function execute(snapshot: Snapshot, actor: Actor, command: Command, environment
     ].includes(command.action)
   )
     return { ok: false, status: 400 }
-  const id = command.id ?? ""
-  const row = store.requests[id]
-  if (command.action !== "create" && !row) return { ok: false, status: 404 }
+  // Creation has its own CAS slot and must never read a caller-selected request.
+  const id = command.action === "create" ? "" : command.id ?? ""
+  const row = command.action !== "create" && Object.hasOwn(store.requests, id) ? store.requests[id] : undefined
+  const visible = command.action === "create" || !!row && visibleRequests([{ createdBy: text(row.request.createdBy) }], actor).length > 0
+  // Existence, version and transition refusals are observable only after visibility.
+  if (!visible) return { ok: false, status: 404 }
   const key = `requests:${id}`
-  const visible = !row || visibleRequests([{ createdBy: text(row.request.createdBy) }], actor).length > 0
-  if (!visible && ["approve", "reject"].includes(command.action)) return { ok: false, status: 403 }
-  const stale = conflict(snapshot, key, command, visible ? row?.request : undefined)
-  if (stale) return visible ? stale : { ok: false, status: 409 }
+  const stale = conflict(snapshot, key, command, row?.request)
+  if (stale) return stale
   const was = row ? structuredClone(row.request) : null
   const request = row?.request ?? {}
   const status = text(request.status)
@@ -1433,7 +1434,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           esc(projected ? projected.nextStep ?? "Unavailable" : requestStageGuidance(status).next),
           esc(`Requester: ${text(request.requesterName) || text(directory.find((person) => person.id === request.createdBy)?.name) || text(request.createdBy) || "Unavailable"}; buyer: ${text(directory.find((person) => person.id === request.buyerId)?.name) || text(request.buyerId) || "Unassigned"}; current holder: ${status.endsWith("_pending") ? text(directory.find((person) => person.id === holder)?.name) || holder || "Unassigned" : "Not awaiting approval"}`),
           esc((projected ? projected.monetaryState : money.monetaryState)?.replaceAll("-", " ") ?? "Unavailable"),
-          projected ? projected.baseAmount === null ? "Unavailable" : `${projected.baseAmount} ${esc(projected.baseCurrency)}` : money.baseAmount == null ? "Unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`,
+          projected ? projected.baseAmount === null ? "Unavailable" : `${Number(projected.baseAmount.toPrecision(15))} ${esc(projected.baseCurrency)}` : money.baseAmount == null ? "Unavailable" : `${Number(money.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`,
         ]
       }),
     ) +
@@ -1531,9 +1532,9 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             ? '<p role="status">Order and approved sourcing values cannot be compared because the submitted base currency is missing or changed.</p>'
             : typeof approvedSourcing !== "number" || !Number.isFinite(approvedSourcing) || orderValue == null
               ? '<p role="status">Order and approved sourcing values cannot be compared because an amount or applicable FX is unavailable.</p>'
-              : Math.abs(orderValue - approvedSourcing) > 0.005 ? `<p role="status">Order value ${orderValue} ${esc(text(settings.currency))}; approved sourcing value ${approvedSourcing} ${esc(text(settings.currency))}. Review the difference.</p>` : ""
+              : Math.abs(orderValue - approvedSourcing) > 0.005 ? `<p role="status">Order value ${Number(orderValue.toPrecision(15))} ${esc(text(settings.currency))}; approved sourcing value ${Number(approvedSourcing.toPrecision(15))} ${esc(text(settings.currency))}. Review the difference.</p>` : ""
         const poMoneyState = status === "po_approved" ? "Approved" : status === "po_issued" ? "Issued internally" : status === "po_pending" ? "Pending approval" : status === "po_draft" ? "PO draft" : status === "po_rejected" ? "PO rejected" : status === "cancelled" ? "Cancelled" : "Estimate"
-        const poMoneySummary = `<p role="status">${esc(poMoneyState)} value: ${orderMoney?.original == null || !orderMoney.currency ? "Unavailable" : `${orderMoney.original} ${esc(orderMoney.currency)}`}; base value: ${orderMoney?.baseAmount == null ? "Unavailable" : `${orderMoney.baseAmount} ${esc(text(settings.currency))}`}; FX: ${orderMoney?.validRate == null ? "Unavailable" : `${orderMoney.validRate} (${esc(orderMoney.fxSource ?? "unavailable")})`}.</p>`
+        const poMoneySummary = `<p role="status">${esc(poMoneyState)} value: ${orderMoney?.original == null || !orderMoney.currency ? "Unavailable" : `${orderMoney.original} ${esc(orderMoney.currency)}`}; base value: ${orderMoney?.baseAmount == null ? "Unavailable" : `${Number(orderMoney.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`}; FX: ${orderMoney?.validRate == null ? "Unavailable" : `${orderMoney.validRate} (${esc(orderMoney.fxSource ?? "unavailable")})`}.</p>`
         const sourceGuidance = orderSourceGuidance(request)
         const orderSourceComparison = sourceGuidance.state === "unavailable"
           ? `<p role="status">Current PO comparison with the selected proposal is unavailable (${esc(sourceGuidance.reason)}).</p>`
@@ -1600,7 +1601,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         ]
         const pendingBeside = (prefix: string) => pendingErrors.filter((error) => error.field === prefix).map((error) => `<p role="status">${esc(error.message)}</p>`).join("")
         const requestControls = (page: string, action: string, id: string, body: string, label = action) => controls(page, action, id, presentProcurementFieldErrors(body, pendingErrors.map((error) => ({ ...error, field: action === "select_quote" && error.field === "sourcing.selectedId" ? "quoteId" : error.field })), `${id}-${action}`), label)
-        const summary = `<p data-request-summary="${esc(id)}">${esc(requestStageGuidance(status).stage)} · ${esc(requestStageGuidance(status).next)} · Version ${version(`requests:${id}`)} · ${money.baseAmount == null ? "Value unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}</p><p data-request-money="${esc(id)}">Current request value: ${money.original == null || !money.currency ? "Unavailable" : `${money.original} ${esc(money.currency)}`}; base value: ${money.baseAmount == null ? "Unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}; FX: ${money.validRate == null ? "Unavailable" : `${money.validRate} (${esc(money.fxSource ?? "unavailable")})`}.</p>`
+        const summary = `<p data-request-summary="${esc(id)}">${esc(requestStageGuidance(status).stage)} · ${esc(requestStageGuidance(status).next)} · Version ${version(`requests:${id}`)} · ${money.baseAmount == null ? "Value unavailable" : `${Number(money.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`}</p><p data-request-money="${esc(id)}">Current request value: ${money.original == null || !money.currency ? "Unavailable" : `${money.original} ${esc(money.currency)}`}; base value: ${money.baseAmount == null ? "Unavailable" : `${Number(money.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`}; FX: ${money.validRate == null ? "Unavailable" : `${money.validRate} (${esc(money.fxSource ?? "unavailable")})`}.</p>`
         return `<details id="${esc(id)}"${request === requestedRequest ? " open" : ""}><summary>${esc(id)} · ${esc(text(object(request.pr).title))}</summary>${summary}<ol class="stepper">${["Requisition", "PR approval", "Sourcing", "Sourcing approval", "Purchase order", "PO approval", "Approved", "Issued internally"].map((step) => `<li>${esc(step)}</li>`).join("")}</ol><nav><a href="#${esc(id)}-pr">Requisition</a><a href="#${esc(id)}-sourcing"${request.sourcing == null ? ' aria-disabled="true"' : ""}>Sourcing</a><a href="#${esc(id)}-po"${request.po == null ? ' aria-disabled="true"' : ""}>Purchase order</a><a href="#${esc(id)}-history">History</a></nav><section id="${esc(id)}-pr"><h3>Requisition</h3>${pendingBeside("pr")}${prEditable ? "" : "<p>Editing is unavailable for this stage or role.</p>"}<fieldset${prEditable ? "" : " disabled"}>${requestControls(
           page,
           "save",

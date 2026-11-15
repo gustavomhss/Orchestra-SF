@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.procurement73.remaining-gaps.v1",
+  "work_sha": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+  "gaps": [
+    {
+      "id": "CHECKS45",
+      "owner": 45,
+      "state": "REQUESTED_NOT_RUN",
+      "mandatory": true,
+      "reference": "checks/REQUEST-45.json",
+      "closure": "Package bun typecheck and repo guards via authorized existing45 lane on exact source/composed candidate as appropriate; no waiver."
+    },
+    {
+      "id": "INTEGRATION71",
+      "owner": 71,
+      "state": "ACK_REQUESTED_NOT_OBSERVED",
+      "mandatory": true,
+      "closure": "Accept exact source unit, recheck preimages/dependencies, compose minimal patch and archive receipts; do not transfer source PASS."
+    },
+    {
+      "id": "LEGACY_ORACLE",
+      "owner": 71,
+      "state": "PREPARED_NOT_APPLIED",
+      "mandatory": true,
+      "reference": "external/MANIFEST.json",
+      "closure": "Reconcile the one obsolete403 expectation to404, preserving visible dual-role403. Request full legacy rerun on composed candidate through authorized lane."
+    },
+    {
+      "id": "COLD_RECHECK_M70_ISO_01",
+      "owner": "71 routes independent review70/S0",
+      "state": "REQUESTED_ON_COMPOSED_CANDIDATE",
+      "mandatory": true,
+      "closure": "Recheck public existence/version boundary against exact candidate containing73; bounded source review does not close campaign finding globally."
+    },
+    {
+      "id": "OPERATIONS75",
+      "owner": 75,
+      "state": "AWAITING_COMPOSED_CANDIDATE_AND_QUALIFICATION",
+      "mandatory": true,
+      "reference": "PRESENTATION-RELEASE.json",
+      "closure": "Real ClamD controls and original five installed nominals; retain IDs/oracles/budgets and accessible FX correction."
+    },
+    {
+      "id": "UPLOAD_POST_SCAN_RACE",
+      "owner": "75 with71 candidate coordination",
+      "state": "NOT_DYNAMICALLY_EXERCISED_BY_73",
+      "mandatory_for_claim": true,
+      "closure": "Before asserting upload revocation-race coverage, exercise identity/visibility change across accepting scan.73 early refusal tripwire is not that proof."
+    },
+    {
+      "id": "FINAL_CAMPAIGN",
+      "owner": "S0/45/final reviewers",
+      "state": "PRESERVED_MANDATORY_NOT_RUN_BY_73",
+      "mandatory": true,
+      "closure": "Eight final selections, AM01-AM06, installed/native/live identity evidence, three FINAL reviews, C/G7 and D/G8 remain."
+    }
+  ],
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,674 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/procurement.ts b/modules/sucafina/Sucafinav1/runtime/procurement.ts
+index 20a3ec5a30ac0fce6b35f05750d1b3dced11c45b..a4ab021f646c0fc819b3afdde18796630fb9603f 100644
+--- a/modules/sucafina/Sucafinav1/runtime/procurement.ts
++++ b/modules/sucafina/Sucafinav1/runtime/procurement.ts
+@@ -470,14 +470,15 @@
+     ].includes(command.action)
+   )
+     return { ok: false, status: 400 }
+-  const id = command.id ?? ""
+-  const row = store.requests[id]
+-  if (command.action !== "create" && !row) return { ok: false, status: 404 }
++  // Creation has its own CAS slot and must never read a caller-selected request.
++  const id = command.action === "create" ? "" : command.id ?? ""
++  const row = command.action !== "create" && Object.hasOwn(store.requests, id) ? store.requests[id] : undefined
++  const visible = command.action === "create" || !!row && visibleRequests([{ createdBy: text(row.request.createdBy) }], actor).length > 0
++  // Existence, version and transition refusals are observable only after visibility.
++  if (!visible) return { ok: false, status: 404 }
+   const key = `requests:${id}`
+-  const visible = !row || visibleRequests([{ createdBy: text(row.request.createdBy) }], actor).length > 0
+-  if (!visible && ["approve", "reject"].includes(command.action)) return { ok: false, status: 403 }
+-  const stale = conflict(snapshot, key, command, visible ? row?.request : undefined)
+-  if (stale) return visible ? stale : { ok: false, status: 409 }
++  const stale = conflict(snapshot, key, command, row?.request)
++  if (stale) return stale
+   const was = row ? structuredClone(row.request) : null
+   const request = row?.request ?? {}
+   const status = text(request.status)
+@@ -1433,7 +1434,7 @@
+           esc(projected ? projected.nextStep ?? "Unavailable" : requestStageGuidance(status).next),
+           esc(`Requester: ${text(request.requesterName) || text(directory.find((person) => person.id === request.createdBy)?.name) || text(request.createdBy) || "Unavailable"}; buyer: ${text(directory.find((person) => person.id === request.buyerId)?.name) || text(request.buyerId) || "Unassigned"}; current holder: ${status.endsWith("_pending") ? text(directory.find((person) => person.id === holder)?.name) || holder || "Unassigned" : "Not awaiting approval"}`),
+           esc((projected ? projected.monetaryState : money.monetaryState)?.replaceAll("-", " ") ?? "Unavailable"),
+-          projected ? projected.baseAmount === null ? "Unavailable" : `${projected.baseAmount} ${esc(projected.baseCurrency)}` : money.baseAmount == null ? "Unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`,
++          projected ? projected.baseAmount === null ? "Unavailable" : `${Number(projected.baseAmount.toPrecision(15))} ${esc(projected.baseCurrency)}` : money.baseAmount == null ? "Unavailable" : `${Number(money.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`,
+         ]
+       }),
+     ) +
+@@ -1531,9 +1532,9 @@
+             ? '<p role="status">Order and approved sourcing values cannot be compared because the submitted base currency is missing or changed.</p>'
+             : typeof approvedSourcing !== "number" || !Number.isFinite(approvedSourcing) || orderValue == null
+               ? '<p role="status">Order and approved sourcing values cannot be compared because an amount or applicable FX is unavailable.</p>'
+-              : Math.abs(orderValue - approvedSourcing) > 0.005 ? `<p role="status">Order value ${orderValue} ${esc(text(settings.currency))}; approved sourcing value ${approvedSourcing} ${esc(text(settings.currency))}. Review the difference.</p>` : ""
++              : Math.abs(orderValue - approvedSourcing) > 0.005 ? `<p role="status">Order value ${Number(orderValue.toPrecision(15))} ${esc(text(settings.currency))}; approved sourcing value ${Number(approvedSourcing.toPrecision(15))} ${esc(text(settings.currency))}. Review the difference.</p>` : ""
+         const poMoneyState = status === "po_approved" ? "Approved" : status === "po_issued" ? "Issued internally" : status === "po_pending" ? "Pending approval" : status === "po_draft" ? "PO draft" : status === "po_rejected" ? "PO rejected" : status === "cancelled" ? "Cancelled" : "Estimate"
+-        const poMoneySummary = `<p role="status">${esc(poMoneyState)} value: ${orderMoney?.original == null || !orderMoney.currency ? "Unavailable" : `${orderMoney.original} ${esc(orderMoney.currency)}`}; base value: ${orderMoney?.baseAmount == null ? "Unavailable" : `${orderMoney.baseAmount} ${esc(text(settings.currency))}`}; FX: ${orderMoney?.validRate == null ? "Unavailable" : `${orderMoney.validRate} (${esc(orderMoney.fxSource ?? "unavailable")})`}.</p>`
++        const poMoneySummary = `<p role="status">${esc(poMoneyState)} value: ${orderMoney?.original == null || !orderMoney.currency ? "Unavailable" : `${orderMoney.original} ${esc(orderMoney.currency)}`}; base value: ${orderMoney?.baseAmount == null ? "Unavailable" : `${Number(orderMoney.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`}; FX: ${orderMoney?.validRate == null ? "Unavailable" : `${orderMoney.validRate} (${esc(orderMoney.fxSource ?? "unavailable")})`}.</p>`
+         const sourceGuidance = orderSourceGuidance(request)
+         const orderSourceComparison = sourceGuidance.state === "unavailable"
+           ? `<p role="status">Current PO comparison with the selected proposal is unavailable (${esc(sourceGuidance.reason)}).</p>`
+@@ -1600,7 +1601,7 @@
+         ]
+         const pendingBeside = (prefix: string) => pendingErrors.filter((error) => error.field === prefix).map((error) => `<p role="status">${esc(error.message)}</p>`).join("")
+         const requestControls = (page: string, action: string, id: string, body: string, label = action) => controls(page, action, id, presentProcurementFieldErrors(body, pendingErrors.map((error) => ({ ...error, field: action === "select_quote" && error.field === "sourcing.selectedId" ? "quoteId" : error.field })), `${id}-${action}`), label)
+-        const summary = `<p data-request-summary="${esc(id)}">${esc(requestStageGuidance(status).stage)} · ${esc(requestStageGuidance(status).next)} · Version ${version(`requests:${id}`)} · ${money.baseAmount == null ? "Value unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}</p><p data-request-money="${esc(id)}">Current request value: ${money.original == null || !money.currency ? "Unavailable" : `${money.original} ${esc(money.currency)}`}; base value: ${money.baseAmount == null ? "Unavailable" : `${money.baseAmount} ${esc(text(settings.currency))}`}; FX: ${money.validRate == null ? "Unavailable" : `${money.validRate} (${esc(money.fxSource ?? "unavailable")})`}.</p>`
++        const summary = `<p data-request-summary="${esc(id)}">${esc(requestStageGuidance(status).stage)} · ${esc(requestStageGuidance(status).next)} · Version ${version(`requests:${id}`)} · ${money.baseAmount == null ? "Value unavailable" : `${Number(money.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`}</p><p data-request-money="${esc(id)}">Current request value: ${money.original == null || !money.currency ? "Unavailable" : `${money.original} ${esc(money.currency)}`}; base value: ${money.baseAmount == null ? "Unavailable" : `${Number(money.baseAmount.toPrecision(15))} ${esc(text(settings.currency))}`}; FX: ${money.validRate == null ? "Unavailable" : `${money.validRate} (${esc(money.fxSource ?? "unavailable")})`}.</p>`
+         return `<details id="${esc(id)}"${request === requestedRequest ? " open" : ""}><summary>${esc(id)} · ${esc(text(object(request.pr).title))}</summary>${summary}<ol class="stepper">${["Requisition", "PR approval", "Sourcing", "Sourcing approval", "Purchase order", "PO approval", "Approved", "Issued internally"].map((step) => `<li>${esc(step)}</li>`).join("")}</ol><nav><a href="#${esc(id)}-pr">Requisition</a><a href="#${esc(id)}-sourcing"${request.sourcing == null ? ' aria-disabled="true"' : ""}>Sourcing</a><a href="#${esc(id)}-po"${request.po == null ? ' aria-disabled="true"' : ""}>Purchase order</a><a href="#${esc(id)}-history">History</a></nav><section id="${esc(id)}-pr"><h3>Requisition</h3>${pendingBeside("pr")}${prEditable ? "" : "<p>Editing is unavailable for this stage or role.</p>"}<fieldset${prEditable ? "" : " disabled"}>${requestControls(
+           page,
+           "save",
+diff --git a/modules/sucafina/Sucafinav1/runtime/application.ts b/modules/sucafina/Sucafinav1/runtime/application.ts
+index 4edac56f32a082a0944a88fe5f231bc5aa739690..81f469822a2756b3e1ca87effbf5fd865a56010d 100644
+--- a/modules/sucafina/Sucafinav1/runtime/application.ts
++++ b/modules/sucafina/Sucafinav1/runtime/application.ts
+@@ -2,6 +2,7 @@
+ import { createHash } from "node:crypto"
+ import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
+ import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
++import { visibleRequests } from "../src/requests.ts"
+ import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
+ import type { Actor, Command, Domain, Environment, Persistence, Result, Snapshot } from "./contract.ts"
+ import { object, rows, text } from "./contract.ts"
+@@ -139,6 +140,11 @@
+           (surface === "dashboard" ? kind !== "contract" : surface !== "procurement" || kind === "contract")
+         )
+           return { commit: false, value: reply("Invalid attachment", 400) }
++        if (
++          surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
++          !canViewProcurementRequest(snapshot, actor, url.searchParams.get("record") ?? "")
++        )
++          return { commit: false, value: json({ ok: false, status: 404 }, 404) }
+         const cap =
+           kind === "contract"
+             ? 25 * 1024 * 1024
+@@ -791,6 +797,13 @@
+     },
+   })
+ }
++function canViewProcurementRequest(snapshot: Snapshot, actor: { id: string; roles: string[] }, id: string) {
++  const records = object(object(snapshot.data.store).requests)
++  if (!Object.hasOwn(records, id)) return false
++  const request = object(object(records[id]).request)
++  return visibleRequests([{ createdBy: text(request.createdBy) }], actor).length > 0
++}
++
+ async function prepareUpload(
+   request: Request,
+   surface: Surface,
+@@ -809,10 +822,20 @@
+     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+     if (
+       !principal ||
++      !principal.id ||
++      principal.id.startsWith("local:") ||
+       !principal.canWrite ||
+       !principal.roles.some((row) => row.surface === surface && row.role !== "viewer")
+     )
+       return { commit: false, value: reply("Access denied", 403) }
++    if (
++      surface === "procurement" && (kind === "quote" || kind === "signed-po") &&
++      !canViewProcurementRequest(snapshot, {
++        id: principal.id,
++        roles: principal.roles.filter((row) => row.surface === surface).map((row) => row.role),
++      }, query.get("record") ?? "")
++    )
++      return { commit: false, value: json({ ok: false, status: 404 }, 404) }
+     const cap =
+       kind === "contract"
+         ? 25 * 1024 * 1024
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/fixture.ts b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..e49a76773ff655645b524c5f588b9a1065d5987a
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/fixture.ts
+@@ -0,0 +1,95 @@
++import { randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { emptyMap, resolve } from "../../../src/identity.ts"
++import { createApplication } from "../../../runtime/application.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { domain, pages, render } from "../../../runtime/procurement.ts"
++import { object, rows } from "../../../runtime/contract.ts"
++import type { Command, Snapshot } from "../../../runtime/contract.ts"
++import type { AssetServices } from "../../../runtime/assets.ts"
++
++export const validPR = (title = "Synthetic privacy purchase73") => ({
++  title, type: "service", description: "Synthetic procurement privacy fixture", estAmount: 100,
++  costCenter: "IT", needBy: "2026-12-01", justification: "Exercise authorized command boundaries",
++  recurring: false, expenseType: "OPEX",
++})
++export const requestData = (snapshot: Snapshot, id: string) => object(object(object(object(snapshot.data.store).requests)[id]).request)
++export const requestVersion = (snapshot: Snapshot, id: string) => snapshot.versions[`requests:${id}`]?.version ?? 0
++
++/** Synthetic group membership and records; real identity resolver, HTTP commands and SQLite persistence. */
++export async function createPrivacyFixture(input: { directory?: string } = {}) {
++  const directory = input.directory ?? await mkdtemp(join(await realpath(tmpdir()), "sf-procurement-privacy73-"))
++  if (!input.directory) await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  const roles: Record<string, string[]> = {
++    alice: ["requester"], bob: ["requester"], buyer: ["buyer"], holder: ["approver"],
++    other: ["approver"], admin: ["admin"], self: ["requester", "approver"],
++    supplierAdmin: ["supplier admin"], viewer: ["viewer"],
++  }
++  const snapshot = () => store.transaction("procurement", async (current) => ({ commit: false, value: structuredClone(current) }))
++  const handlerFor = (services?: AssetServices) => createApplication("/sf", {
++    persistence: store,
++    ...(services ? { assets: { persistence: store, services } } : {}),
++    authenticate: async (request, context) => {
++      const id = request.headers.get("authorization")?.replace(/^Bearer /, "") ?? ""
++      const membership = Object.hasOwn(roles, id) ? roles[id] : undefined
++      if (!context || !membership) return null
++      return resolve(id, [...context.roleMap], (group) => membership.some((role) => group === `synthetic73:${role}`))
++    },
++    environment: async () => ({
++      at: "2026-11-15T12:00:00Z", id: randomUUID,
++      directory: Object.keys(roles).map((id) => ({ id, name: `Synthetic ${id}73` })),
++    }),
++    maxJsonBytes: 1024 * 1024,
++    domains: { dashboard: [], planner: [], procurement: [{ domain, pages, render }] },
++  })
++  const handler = handlerFor()
++  const post = async (principal: string, command: Command): Promise<Response> => {
++    const response = await handler(new Request("https://privacy.invalid/sf/procurement", {
++      method: "POST", headers: { authorization: `Bearer ${principal}`, origin: "https://privacy.invalid", "content-type": "application/json" },
++      body: JSON.stringify(command),
++    }))
++    if (!response) throw new Error("Canonical Procurement HTTP endpoint unavailable")
++    return response
++  }
++  const requireSuccess = async (response: Response) => {
++    if (response.status !== 200) throw new Error(`Synthetic setup failed: ${response.status} ${await response.text()}`)
++  }
++  const configureHolder = async (holderId: string | null) => {
++    const current = await snapshot()
++    const levels = rows(object(object(current.data.store).settings).levels).map((level) => ({ ...level, holderId }))
++    await requireSuccess(await post("admin", { page: "Settings", action: "save", version: current.versions.settings?.version ?? 0, values: { levels } }))
++  }
++  const create = async (principal: string, title?: string): Promise<string> => {
++    const before = object(object((await snapshot()).data.store).requests)
++    await requireSuccess(await post(principal, { page: "Requests", action: "create", version: 0, values: { pr: validPR(title) } }))
++    const after = object(object((await snapshot()).data.store).requests)
++    const added = Object.keys(after).filter((id) => !Object.hasOwn(before, id))
++    if (added.length !== 1) throw new Error("Canonical create did not allocate exactly one request")
++    return added[0]!
++  }
++  try {
++    if (!input.directory) {
++      // Bootstrap only the synthetic installation's directory group mapping, never business state.
++      await store.transaction("procurement", async (current) => {
++        current.data.roleMap = emptyMap().filter((row) => row.surface === "procurement")
++          .map((row) => ({ ...row, entra: `synthetic73:${row.role}` }))
++        return { commit: true, value: undefined }
++      })
++      await requireSuccess(await post("admin", { page: "Settings", action: "reset", version: 0, values: {} }))
++      // Keep canonical thresholds, stages, mode, currencies and self-approval default intact.
++      await configureHolder("holder")
++    }
++  } catch (error) {
++    await store.dispose()
++    if (!input.directory) await rm(directory, { recursive: true, force: true })
++    throw error
++  }
++  return {
++    directory, store, roles, post, snapshot, create, handlerFor, configureHolder,
++    close: () => store.dispose(),
++    dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3c735804c3956fc5df98113f8f76050da35c74b0
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts
+@@ -0,0 +1,208 @@
++import { expect, test } from "bun:test"
++import { object, rows } from "../../../runtime/contract.ts"
++import type { Command } from "../../../runtime/contract.ts"
++import { initialProcurementSettings } from "../../../src/initial-settings.ts"
++import { createPrivacyFixture, requestData, requestVersion, validPR } from "./fixture.ts"
++
++type Fixture = Awaited<ReturnType<typeof createPrivacyFixture>>
++const actions = ["save", "submit_pr", "submit_sourcing", "select_quote", "submit_po", "approve", "reject", "issue", "cancel", "delete"] as const
++const values = { pr: validPR("Synthetic attempted replacement73"), reason: "Synthetic rejection73", comment: "Synthetic approval73", quoteId: "synthetic-quote73" }
++const command = (id: string, action: string, version: number, input: Record<string, unknown> = {}): Command => ({ page: "Requests", action, id, version, values: input })
++async function current(fixture: Fixture, id: string, action: string, input: Record<string, unknown> = {}) {
++  return command(id, action, requestVersion(await fixture.snapshot(), id), input)
++}
++async function accepted(fixture: Fixture, principal: string, id: string, action: string, input: Record<string, unknown> = {}) {
++  const response = await fixture.post(principal, await current(fixture, id, action, input))
++  expect(response.status).toBe(200)
++  expect(await response.json()).toEqual({ ok: true })
++}
++async function refused(fixture: Fixture, principal: string, input: Command, status: number) {
++  const before = await fixture.snapshot()
++  const response = await fixture.post(principal, input)
++  expect(response.status).toBe(status)
++  // Entire durable state: records, CAS, audit, notices, allocations, actCalls and private metadata.
++  expect(await fixture.snapshot()).toEqual(before)
++  return response.json()
++}
++
++test.each(actions)("M73 %s: requester-only sees identical missing/hidden responses at equal and divergent versions", async (action) => {
++  const fixture = await createPrivacyFixture()
++  try {
++    await fixture.create("alice")
++    const hidden = await fixture.create("bob", "Synthetic private B73")
++    const before = await fixture.snapshot()
++    const version = requestVersion(before, hidden)
++    const responses = []
++    // The hidden draft is a fully valid PR: submit_pr used to mutate it for this requester.
++    expect(requestData(before, hidden)).toMatchObject({ createdBy: "bob", status: "draft", pr: validPR("Synthetic private B73") })
++    for (const id of ["PR-2099-9999", hidden]) for (const submitted of [version, version - 1, version + 1]) {
++      const response = await fixture.post("alice", command(id, action, submitted, values))
++      responses.push({ status: response.status, body: await response.text(), headers: [...response.headers.entries()] })
++      expect(await fixture.snapshot()).toEqual(before)
++    }
++    expect(responses).toHaveLength(6)
++    for (const response of responses) {
++      expect(response).toEqual(responses[0]!)
++      expect(response.status).toBe(404)
++      expect(response.body).toBe('{"ok":false,"status":404}')
++    }
++  } finally { await fixture.dispose() }
++})
++
++test("M73 inherited object identifiers are absent across all request commands and versions", async () => {
++  const fixture = await createPrivacyFixture()
++  try {
++    await fixture.create("bob")
++    for (const id of ["toString", "valueOf", "hasOwnProperty"]) for (const action of actions) for (const version of [0, 1]) {
++      expect(await refused(fixture, "alice", command(id, action, version, values), 404)).toEqual({ ok: false, status: 404 })
++    }
++  } finally { await fixture.dispose() }
++})
++
++test("M73 visible requests retain exact conflict content before action and stage validation", async () => {
++  const fixture = await createPrivacyFixture()
++  try {
++    const id = await fixture.create("alice", "Synthetic visible CAS73")
++    const before = await fixture.snapshot()
++    const version = requestVersion(before, id)
++    for (const action of actions) for (const submitted of [version - 1, version + 1]) {
++      expect(await refused(fixture, "alice", command(id, action, submitted, values), 409)).toEqual({
++        ok: false, status: 409, stored: requestData(before, id), by: "alice", currentVersionCAS: version,
++      })
++    }
++  } finally { await fixture.dispose() }
++})
++
++test("M73 real save, submission, rejection and approval preserve holder authority, CAS and submitted amounts", async () => {
++  const fixture = await createPrivacyFixture()
++  try {
++    const id = await fixture.create("alice")
++    const save = await current(fixture, id, "save", { pr: { estAmount: 140 } })
++    expect((await fixture.post("alice", save)).status).toBe(200)
++    const saved = await fixture.snapshot()
++    expect(requestData(saved, id)).toMatchObject({ status: "draft", pr: { estAmount: 140 } })
++    expect(await refused(fixture, "alice", save, 409)).toMatchObject({ stored: requestData(saved, id), by: "alice", currentVersionCAS: requestVersion(saved, id) })
++    await accepted(fixture, "alice", id, "submit_pr")
++    const pending = await fixture.snapshot()
++    expect(requestData(pending, id)).toMatchObject({ status: "pr_pending", prApproval: { amount: 140 }, prApprovalBaseCurrency: "USD" })
++    expect(rows(object(requestData(pending, id).prApproval).steps)).toMatchObject([{ status: "pending", holderId: "holder" }])
++    for (const principal of ["other", "admin", "alice"]) for (const action of ["approve", "reject"]) {
++      await refused(fixture, principal, await current(fixture, id, action, values), 403)
++    }
++    const oldApproval = await current(fixture, id, "approve", { comment: "Retained approval73" })
++    await accepted(fixture, "holder", id, "reject", { reason: "Revise estimate73" })
++    expect(requestData(await fixture.snapshot(), id).status).toBe("pr_rejected")
++    await accepted(fixture, "alice", id, "save", { pr: { estAmount: 160 } })
++    await accepted(fixture, "alice", id, "submit_pr")
++    const resubmitted = await fixture.snapshot()
++    expect(requestData(resubmitted, id)).toMatchObject({ prApproval: { amount: 160 }, pr: { estAmount: 160 } })
++    expect(await refused(fixture, "holder", oldApproval, 409)).toMatchObject({ stored: requestData(resubmitted, id), by: "alice", currentVersionCAS: requestVersion(resubmitted, id) })
++    await accepted(fixture, "holder", id, "approve", { comment: "Approve current submitted 16073" })
++    const approved = await fixture.snapshot()
++    expect(requestData(approved, id)).toMatchObject({ status: "sourcing", prApproval: { amount: 160 }, pr: { estAmount: 160 } })
++    expect(approved.audit.at(-1)).toMatchObject({ who: "holder", name: "Synthetic holder73", record: `requests:${id}` })
++    expect(approved.notices.at(-1)).toMatchObject({ kind: "approved", record: id, to: ["alice"] })
++    await refused(fixture, "alice", await current(fixture, id, "save", { pr: { estAmount: 1 } }), 403)
++  } finally { await fixture.dispose() }
++})
++
++test("M73 canonical self-approval settings retain both allowed and blocked behavior without changing thresholds", async () => {
++  const fixture = await createPrivacyFixture()
++  try {
++    const configured = object(object((await fixture.snapshot()).data.store).settings)
++    const initial = initialProcurementSettings()
++    expect(configured).toEqual({ ...initial, levels: initial.levels.map((level) => ({ ...level, holderId: "holder" })) })
++    await fixture.configureHolder("self")
++    const allowed = await fixture.create("self")
++    await accepted(fixture, "self", allowed, "submit_pr")
++    await accepted(fixture, "self", allowed, "approve")
++    const beforeSetting = await fixture.snapshot()
++    expect((await fixture.post("admin", { page: "Settings", action: "save", version: beforeSetting.versions.settings!.version, values: { blockSelfApproval: true } })).status).toBe(200)
++    const blocked = await fixture.create("self")
++    await accepted(fixture, "self", blocked, "submit_pr")
++    expect(await refused(fixture, "self", await current(fixture, blocked, "approve"), 403)).toMatchObject({ errors: ["self_approval"] })
++    await refused(fixture, "admin", await current(fixture, blocked, "approve"), 403)
++    const final = object(object((await fixture.snapshot()).data.store).settings)
++    expect(final).toEqual({ ...initial, blockSelfApproval: true, levels: initial.levels.map((level) => ({ ...level, holderId: "self" })) })
++  } finally { await fixture.dispose() }
++})
++
++test("M73 create ignores caller-selected record IDs and preserves creation CAS without foreign metadata", async () => {
++  const fixture = await createPrivacyFixture()
++  try {
++    const hidden = await fixture.create("bob", "Synthetic foreign canary73")
++    await accepted(fixture, "bob", hidden, "submit_pr")
++    await accepted(fixture, "holder", hidden, "approve")
++    await accepted(fixture, "buyer", hidden, "save", { sourcing: {
++      evaluator: "Foreign metadata canary73", quotes: [{ id: "private-quote73", supplier: "Synthetic supplier73", currency: "USD", total: 100, techPass: true,
++        description: "Foreign quote detail73", notes: "Foreign metadata canary73", scores: [5, 5, 5, 5, 5], cscores: [5, 5, 5] }],
++    } })
++    for (const callerId of [hidden, "PR-2099-9999", "toString"]) {
++      const before = await fixture.snapshot()
++      expect(await refused(fixture, "alice", command(callerId, "create", 1, { pr: validPR() }), 409)).toEqual({ ok: false, status: 409, currentVersionCAS: 0 })
++      const oldRequests = object(object(before.data.store).requests)
++      expect((await fixture.post("alice", command(callerId, "create", 0, { pr: validPR("Synthetic new A73") }))).status).toBe(200)
++      const after = await fixture.snapshot()
++      const requests = object(object(after.data.store).requests)
++      expect(requests[hidden]).toEqual(oldRequests[hidden])
++      const added = Object.keys(requests).filter((id) => !Object.hasOwn(oldRequests, id))
++      expect(added).toHaveLength(1)
++      expect(added[0]).not.toBe(callerId)
++      const created = requestData(after, added[0]!)
++      expect(created).toMatchObject({ createdBy: "alice", status: "draft", pr: validPR("Synthetic new A73"), attachments: [], sourcing: null, po: null })
++      expect(JSON.stringify(created)).not.toContain("Foreign")
++      expect(after.audit.at(-1)).toMatchObject({ who: "alice", was: null, record: `requests:${added[0]}` })
++    }
++  } finally { await fixture.dispose() }
++})
++
++test("M73 independent SQLite instances enforce one successful CAS and retain privacy after restart", async () => {
++  const fixture = await createPrivacyFixture()
++  let second: Fixture | undefined
++  let reopened: Fixture | undefined
++  try {
++    const hidden = await fixture.create("bob")
++    const id = await fixture.create("alice")
++    second = await createPrivacyFixture({ directory: fixture.directory })
++    const before = await fixture.snapshot()
++    const version = requestVersion(before, id)
++    const results = await Promise.all([
++      fixture.post("alice", command(id, "save", version, { pr: { title: "Synthetic winner A73" } })),
++      second.post("alice", command(id, "save", version, { pr: { title: "Synthetic winner B73" } })),
++    ])
++    expect(results.map((response) => response.status).sort()).toEqual([200, 409])
++    const committed = await fixture.snapshot()
++    expect(await second.snapshot()).toEqual(committed)
++    expect(requestVersion(committed, id)).toBe(version + 1)
++    expect(committed.audit).toHaveLength(before.audit.length + 1)
++    expect(committed.notices).toEqual(before.notices)
++    expect(committed.sequences).toEqual(before.sequences)
++    expect(object(committed.data.store).actCalls).toBe(object(before.data.store).actCalls)
++    expect(await results.find((response) => response.status === 409)!.json()).toEqual({ ok: false, status: 409, stored: requestData(committed, id), by: "alice", currentVersionCAS: version + 1 })
++    await second.close()
++    second = undefined
++    await fixture.close()
++    reopened = await createPrivacyFixture({ directory: fixture.directory })
++    expect(await reopened.snapshot()).toEqual(committed)
++    expect(await refused(reopened, "alice", command(hidden, "submit_pr", requestVersion(committed, hidden)), 404)).toEqual({ ok: false, status: 404 })
++    await refused(reopened, "alice", command(id, "save", version), 409)
++  } finally {
++    await second?.close()
++    await reopened?.close()
++    await fixture.dispose()
++  }
++})
++
++test("M73 visible cancellation and draft deletion retain their stage restrictions and allocations", async () => {
++  const fixture = await createPrivacyFixture()
++  try {
++    const cancelled = await fixture.create("alice")
++    await accepted(fixture, "alice", cancelled, "cancel", { reason: "Synthetic cancelled demand73" })
++    expect(requestData(await fixture.snapshot(), cancelled).status).toBe("cancelled")
++    for (const action of ["cancel", "delete"]) await refused(fixture, "alice", await current(fixture, cancelled, action, values), 403)
++    const deleted = await fixture.create("alice")
++    await accepted(fixture, "alice", deleted, "delete")
++    expect(await refused(fixture, "alice", command(deleted, "save", 1), 404)).toEqual({ ok: false, status: 404 })
++    expect(await fixture.create("alice")).not.toBe(deleted)
++  } finally { await fixture.dispose() }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..85874c506608803bb9d3fcd8c3acb87d60200b0d
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts
+@@ -0,0 +1,145 @@
++import { expect, test } from "bun:test"
++import { domain, render } from "../../../runtime/procurement.ts"
++import { object, rows } from "../../../runtime/contract.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { initialProcurementSettings } from "../../../src/initial-settings.ts"
++import { procurementMonetaryFacts } from "../../../product/procurement/monetary.ts"
++import { projectProcurementSource } from "../../../product/procurement/port.ts"
++import { createProcurementQueueView } from "../../../product/procurement/queue-view.ts"
++import { digestProcurementSource } from "../../../product/procurement/sources.ts"
++import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { DomainProjection, ProductContext } from "../../../product/contracts/context.ts"
++
++const actor = { id: "presentation73-requester", canWrite: true, roles: ["requester"] }
++const id = "PR-2026-0073"
++const at = "2026-11-15T02:00:00Z"
++const environment = { at, id: () => "presentation73-id", directory: [] }
++
++// Synthetic records isolate presentation; no browser, authentication or financial-transition proof is claimed.
++function snapshot(request: Record<string, unknown>): Snapshot {
++  return {
++    data: { store: {
++      settings: initialProcurementSettings(), suppliers: [],
++      requests: { [id]: { version: 7, by: actor.id, request: { number: id, createdBy: actor.id, history: [], ...request } } },
++    } },
++    versions: { [`requests:${id}`]: { version: 7, by: actor.id } },
++    sequences: {}, audit: [], notices: [],
++  }
++}
++
++function frozenSourcing(approved = 28000 * 1.08) {
++  return snapshot({
++    status: "src_pending",
++    pr: { title: "Synthetic EUR sourcing", estAmount: 28000, recurring: false, expenseType: "OPEX" },
++    sourcing: {
++      selectedId: "quote73", approvalBaseCurrency: "USD", fxSnapshot: { USD: 1, EUR: 1.08 },
++      approval: { amount: approved, steps: [{ holderId: "presentation73-holder", status: "pending", levelName: "Review" }] },
++      quotes: [{ id: "quote73", supplier: "Synthetic supplier", currency: "EUR", total: 28000, qty: 1, unitPrice: 28000, techPass: true }],
++    },
++    po: { currency: "EUR", lines: [{ qty: 1, unitPrice: 28000 }], supplier: "Synthetic supplier" },
++  })
++}
++
++function present(state: Snapshot) {
++  const before = structuredClone(state)
++  const view = domain.view(state, actor, environment)
++  const record = rows(view.data.requests)[0]!
++  const context: ProductContext = {
++    installationId: "presentation73-installation", projectId: "presentation73-project", principalRef: actor.id,
++    accessRevision: "presentation73-access", policyVersion: "presentation73-policy", surface: "procurement",
++    period: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD", sourceRefs: [], capabilities: [],
++  }
++  // Evidence/context identities and unused stock are fixtures, not authority grants. Row values come from the real C02 producer.
++  const reference: Extract<BusinessEvidenceRef, { kind: "record" }> = {
++    schema: "sf-evidence-v1", refId: "presentation73-reference", installationId: context.installationId,
++    projectId: context.projectId, refDigest: "", evidenceLevel: "observed", kind: "record",
++    target: {
++      surface: "procurement", recordType: "procurement-request", recordId: id, incarnation: "presentation73-incarnation", version: 7,
++      fields: ["status", "subject", "holder", "baseAmount", "monetaryState", "nextStep", "submittedAmount", "submittedCurrency", "originalAmount", "originalCurrency", "fxRate", "fxSource"],
++      period: context.period, projectionDigest: digestProcurementSource(record, view.data.formSettings),
++    },
++  }
++  const projection = projectProcurementSource(record, context, { ...reference, refDigest: digestSfEvidenceRef(reference) }, at, view.data.formSettings)
++  const stock: DomainProjection = { context, version: 1, engineVersion: "procurement-v1", components: [], values: [], missing: [] }
++  const queue = createProcurementQueueView({ queue: [projection], stock, aging: [] })
++  if (!queue) throw new Error("Canonical C02 presentation was refused")
++  const projectedBefore = structuredClone(projection)
++  const renderContext = { actor, year: 2026, month: 11, at, versions: view.versions }
++  const html = [
++    render("Requests", view.data, renderContext),
++    render("Requests", { ...view.data, procurementQueueView: queue }, renderContext),
++  ]
++  expect(html.every((page) => typeof page === "string" && page.includes(`data-request-money="${id}"`))).toBe(true)
++  expect(html[1]).toContain('data-source-ref="presentation73-reference"')
++  expect(html[1]).toContain('data-source-version="7"')
++  expect(state).toEqual(before)
++  expect(projection).toEqual(projectedBefore)
++  expect(queue.rows[0]?.baseAmount).toBe(record.value)
++  return { html, record, projection, money: procurementMonetaryFacts(record, "USD", view.data.formSettings) }
++}
++
++test("M73 submitted FX remains canonical while fallback and C02 display clean base amounts after current FX changes", () => {
++  const state = frozenSourcing()
++  const submitted = structuredClone(object(object(object(state.data.store).requests)[id]).request)
++  const first = present(state)
++  expect(first.money.baseAmount).toBe(28000 * 1.08)
++  expect(first.money.baseAmount).not.toBe(30240)
++  for (const html of first.html) {
++    expect(html).toContain("<td>30240 USD</td>")
++    expect(html).toContain("Estimate value: 28000 EUR; base value: 30240 USD; FX: 1.08 (current).")
++  }
++
++  expect(domain.execute(state, { id: "presentation73-admin", canWrite: true, roles: ["admin"] }, {
++    page: "Settings", action: "save", version: 0,
++    values: { fxRates: rows(object(object(state.data.store).settings).fxRates).map((rate) => rate.code === "EUR" ? { ...rate, rate: 2 } : rate) },
++  }, environment)).toEqual({ ok: true })
++  const changed = present(state)
++  expect(object(object(object(state.data.store).requests)[id]).request).toEqual(submitted)
++  expect(state.versions[`requests:${id}`]?.version).toBe(7)
++  expect(changed.money).toMatchObject({ original: 28000, currency: "EUR", validRate: 1.08, baseAmount: 28000 * 1.08, fxSource: "submitted" })
++  expect(changed.projection.values.find((value) => value.id === "baseAmount")?.value).toBe(28000 * 1.08)
++  expect(changed.projection.values.find((value) => value.id === "submittedAmount")?.value).toBe(28000 * 1.08)
++  for (const html of changed.html) {
++    expect(html).toContain("<td>30240 USD</td>")
++    expect(html).toMatch(/data-request-summary="PR-2026-0073">[^<]*Version 7 · 30240 USD<\/p>/)
++    expect(html).toContain("Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).")
++    expect(html).toContain("Estimate value: 28000 EUR; base value: 56000 USD; FX: 2 (current).")
++    expect(html).toContain("Order value 56000 USD; approved sourcing value 30240 USD. Review the difference.")
++    expect(html).not.toContain("30240.000000000004 USD")
++  }
++})
++
++test("M73 the order difference formats both figures without changing its canonical tolerance or amounts", () => {
++  const state = frozenSourcing(27000 * 1.08)
++  const shown = present(state)
++  expect(shown.money.baseAmount).toBe(28000 * 1.08)
++  expect(shown.money.submittedAmount).toBe(27000 * 1.08)
++  for (const html of shown.html) {
++    expect(html).toContain("Order value 30240 USD; approved sourcing value 29160 USD. Review the difference.")
++    expect(html).toContain("Estimate value: 28000 EUR; base value: 30240 USD; FX: 1.08 (current).")
++  }
++  for (const html of present(frozenSourcing(28000 * 1.08 - 0.004)).html)
++    expect(html).not.toContain("Review the difference.</p>")
++})
++
++test.each([
++  { label: "missing", estimate: undefined, amount: null, shown: "Unavailable" },
++  { label: "null", estimate: null, amount: null, shown: "Unavailable" },
++  { label: "zero", estimate: 0, amount: 0, shown: "0 USD" },
++  { label: "fractional precision", estimate: 12.3456789, amount: 12.3456789, shown: "12.3456789 USD" },
++])("M73 display preserves $label in the fallback and C02 paths", ({ estimate, amount, shown }) => {
++  const state = snapshot({
++    status: "draft", pr: { title: "Synthetic amount", ...(estimate === undefined ? {} : { estAmount: estimate }) },
++    sourcing: null, po: null,
++  })
++  const output = present(state)
++  expect(output.money.baseAmount).toBe(amount)
++  expect(output.money.original).toBe(amount)
++  expect(output.projection.values.find((value) => value.id === "baseAmount")).toMatchObject({ value: amount, evidenceState: amount === null ? "absent" : "estimated" })
++  for (const html of output.html) {
++    expect(html).toContain(`<td>${shown}</td>`)
++    expect(html).toContain(`Current request value: ${shown}; base value: ${shown}; FX: 1 (base).`)
++    expect(html).toContain(`Version 7 · ${amount === null ? "Value unavailable" : shown}</p>`)
++  }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5ce4f670c4558e312ef1ea0eec72dd9f00e3897b
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts
+@@ -0,0 +1,86 @@
++import { Database } from "bun:sqlite"
++import { expect, test } from "bun:test"
++import { join } from "node:path"
++import { createPrivacyFixture, requestVersion } from "./fixture.ts"
++
++test.each(["quote", "signed-po"] as const)("M73 %s upload hides missing and foreign requests before consuming scanner capacity", async (kind) => {
++  const app = await createPrivacyFixture()
++  const scan = { calls: 0 }
++  // A tripwire, not a clean-scanner substitute: no invisible upload may invoke it.
++  const handler = app.handlerFor({
++    signingKey: new Uint8Array(32).fill(73),
++    scan: async () => {
++      scan.calls += 1
++      throw new Error("Unadmitted request reached the scanner")
++    },
++  })
++  const database = new Database(join(app.directory, "installation.sqlite"), { readonly: true })
++  try {
++    const hidden = await app.create("bob", "Private upload target73")
++    const before = await app.snapshot()
++    const version = requestVersion(before, hidden)
++    const storedBefore = database.query("SELECT surface, payload FROM snapshots ORDER BY surface").all()
++    const blobsBefore = database.query("SELECT surface, key, type, payload FROM blobs ORDER BY surface, key").all()
++    const responses: { status: number; body: string; headers: [string, string][] }[] = []
++    for (const record of ["PR-2099-9999", hidden, "toString"]) {
++      for (const recordVersion of [0, version, version + 1]) {
++        const query = new URLSearchParams({ page: "Requests", upload: kind, record, recordVersion: String(recordVersion), name: "private73.txt" })
++        const response = await handler(new Request(`https://privacy.invalid/sf/procurement?${query}`, {
++          method: "POST",
++          headers: { authorization: "Bearer alice", origin: "https://privacy.invalid", "content-type": "text/plain" },
++          body: "Synthetic attachment which must not be scanned or stored",
++        }))
++        if (!response) throw new Error("Canonical upload route unavailable")
++        responses.push({ status: response.status, body: await response.text(), headers: [...response.headers.entries()] })
++      }
++    }
++    expect(responses).toHaveLength(9)
++    for (const response of responses) {
++      expect(response).toEqual(responses[0]!)
++      expect(response.status).toBe(404)
++      expect(response.body).toBe('{"ok":false,"status":404}')
++      expect(response.body).not.toContain(hidden)
++    }
++    expect(scan.calls).toBe(0)
++    expect(await app.snapshot()).toEqual(before)
++    expect(database.query("SELECT surface, payload FROM snapshots ORDER BY surface").all()).toEqual(storedBefore)
++    expect(database.query("SELECT surface, key, type, payload FROM blobs ORDER BY surface, key").all()).toEqual(blobsBefore)
++  } finally {
++    database.close()
++    await app.dispose()
++  }
++})
++
++test.each(["", "local:synthetic73"])("M73 invalid principal %s cannot probe request uploads", async (principal) => {
++  const app = await createPrivacyFixture()
++  const scan = { calls: 0 }
++  app.roles[principal] = ["buyer"]
++  const handler = app.handlerFor({
++    signingKey: new Uint8Array(32).fill(73),
++    scan: async () => {
++      scan.calls += 1
++      throw new Error("Invalid principal reached scanner")
++    },
++  })
++  try {
++    const hidden = await app.create("bob")
++    const before = await app.snapshot()
++    const responses: { status: number; body: string }[] = []
++    for (const kind of ["quote", "signed-po"]) {
++      for (const record of ["PR-2099-9999", hidden]) {
++        const query = new URLSearchParams({ page: "Requests", upload: kind, record, recordVersion: "0", name: "probe.txt" })
++        const response = await handler(new Request(`https://privacy.invalid/sf/procurement?${query}`, {
++          method: "POST", body: "Synthetic unadmitted bytes",
++          headers: { ...(principal ? { authorization: `Bearer ${principal}` } : {}), origin: "https://privacy.invalid", "content-type": "text/plain" },
++        }))
++        if (!response) throw new Error("Canonical upload route unavailable")
++        responses.push({ status: response.status, body: await response.text() })
++      }
++    }
++    for (const response of responses) expect(response).toEqual({ status: 403, body: "Access denied" })
++    expect(scan.calls).toBe(0)
++    expect(await app.snapshot()).toEqual(before)
++  } finally {
++    await app.dispose()
++  }
++})

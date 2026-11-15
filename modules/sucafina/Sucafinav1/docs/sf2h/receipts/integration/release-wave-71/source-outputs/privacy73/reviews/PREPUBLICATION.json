@@ -1,0 +1,28 @@
+{
+  "schema": "sf2h.procurement73.prepublication-review.v1",
+  "reviewer": "/root/privacy_review",
+  "independent_of_source_and_test_authorship": true,
+  "artifact_identity": "Exact staged files published in the parent of the future source receipt; SHA will be bound in final review.",
+  "reviewed": [
+    "runtime/procurement.ts",
+    "runtime/application.ts",
+    "test/product/procurement-privacy-fix/fixture.ts",
+    "test/product/procurement-privacy-fix/commands.test.ts",
+    "test/product/procurement-privacy-fix/presentation.test.ts",
+    "test/product/procurement-privacy-fix/uploads.test.ts"
+  ],
+  "finding": {
+    "id": "M73-REVIEW-01",
+    "severity": "P2",
+    "description": "Upload preflight allowed empty/local: principals to observe existence before final identity rejection",
+    "resolution": "Refuse both in initial auth gate before visibility/scan",
+    "recheck": "CONFIRMED_BY_SOURCE",
+    "tests": "Two invalid-principal cases added; pending hosted run"
+  },
+  "disposition": "NO_REMAINING_STATIC_BLOCKER_OBSERVED",
+  "limits": [
+    "Not one of three final campaign reviews",
+    "No test execution by reviewer",
+    "Upload gate after scanner race not exercised by new tripwire tests; real scanner/journeys remain75"
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "schema": "mission71.source73.integration-review.v1",
+  "reviewer": "71 read-only delegated review",
+  "review_status": "READY_FOR_CANDIDATE_COMPOSITION_WITH_CHECKS_PENDING",
+  "review_limits": "No product tests, guards, build, CI, ref moves or remote writes. Only MCP reads and offline JSON/text/hash reconstruction.",
+  "source": {
+    "branch": "procurement-privacy-fix",
+    "pr": 86,
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "ack": "6db479f1f72e6ed0419a65e55cc9fd8f7f8078a5",
+    "W": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "W_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+    "S": "2c0b92951ea5a4d15cc40a473860465cb84ca61d",
+    "S_tree": "28fd369e0012bd92497dc69e21459ea867266237",
+    "terminal": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+    "terminal_tree": "e4565e316afbfec64bd576fb2ca08a5f5cf2fa6c",
+    "terminal_parent": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "terminal_diff": "18 receipt additions only",
+    "branch_readback": "exact terminal HEAD confirmed",
+    "release": "SOURCE_RELEASED_FOR_CANDIDATE_COMPOSITION_WITH_CHECKS_PENDING",
+    "authority": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "lease": "procurement-privacy-browser73",
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/"
+  },
+  "target": {
+    "verified": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "new_head_reported_by_root": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+    "new_tree_reported_by_root": "78d7c23395d92a4a0193fdd545f8aa023af0c55d",
+    "new_head_nonoverlap": "C36 source69 Atlas/business-context has no material/preimage overlap; integrator must final CAS re-read",
+    "source_pass_transfers": false,
+    "composed_status": "NOT_RUN"
+  },
+  "material": {
+    "file": "material.json",
+    "source_released_paths": 6,
+    "production_paths": 2,
+    "new_test_paths": 4,
+    "owner71_oracle_adaptation_paths": 1,
+    "total_paths": 7,
+    "full_patch_blob": "f9b0d13de8a541dd16178b30a7ef78a072900b94",
+    "full_patch_sha256": "e634e32c31acfe370ee86bf06738f39abbfb2901b310b6fc28797a6aad44c839",
+    "all_preimages": "Full MCP content hashes and source-declared blobs equal target C35; four new paths confirmed absent by 404",
+    "all_postimages": "Full byte counts, SHA256, Git blob hashes and mode100644 match source; strict complete-patch reconstruction of six source files + separate oracle succeeds",
+    "receipt_index": "17 hashed indexed receipts match full content; no source snapshot/whole-branch copy"
+  },
+  "semantic_review": [
+    "Procurement request lookup uses Object.hasOwn. Noncreate missing/invisible records return uniform404 before CAS/current state/transition checks; create ignores caller-selected request ID and preserves the fixed requests: CAS slot.",
+    "Canonical visibleRequests/role resolver and src/procurement engine are unchanged. Visible legitimate403/refusal and current409/stored/by/version behavior is preserved. Cloned store construction avoids refusal mutations.",
+    "Application quote/signed-po upload checks canonical roles and request visibility before bytes/scanner, then checks fresh auth/visibility again inside transaction before cap/version/state writes. Accepted real scanner/revocation-during-scan behavior is not dynamically proven by73.",
+    "Presentation changes only render numeric strings. Canonical floating point values, recorded FX, sums, tolerances, rankings and stored/projection payloads are unchanged. Source63 presentation proposal is subsumed by73 owned runtime/procurement.ts, not separately replayed.",
+    "Reviewed complete application.ts, all four new test files, complete source patch, procurement lookup/transition/render contexts, and actual consumers index.ts, runtime/assets.ts, runtime/contract.ts, src/identity.ts, src/requests.ts and canonical src/procurement.ts."
+  ],
+  "dependencies": {
+    "manifest": "DEPENDENCIES.json",
+    "direct_target_paths": 30,
+    "missing_unreleased_dependency": false,
+    "nonunit_changes_from_source": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "source_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+        "target_blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+        "qualification": "Existing source59 composed API compatible; retained."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "source_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "target_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "qualification": "Existing source59 transaction/read-only-root semantics retained; exact composed recheck needed."
+      }
+    ],
+    "other_dependencies": "All other direct repository dependency blobs equal source expected, excluding own files whose target preimages are expected and new fixture absent. No new packages."
+  },
+  "oracle": {
+    "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+    "source_release": false,
+    "owner_consideration_release": true,
+    "authorized_consumer": "71 integrator under current stack authority; explicit source external/MANIFEST and parent task",
+    "pre": "d622fa8463ee6d05a5c03de6517381045b6f0241",
+    "post": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+    "patch_blob": "7695f12cefff7cc27641b2d32ca86e55e391e037",
+    "patch_sha256": "68828d7623bf9bfb9926276f130db23d1754379754fd2fa158b029ef5a9c6f6b",
+    "exact_delta": "One assertion at line479 invisible-other-requester403→404. No fixtures, selection, timeout or skip changes. Entire visible dual-role test block, including403 line798, byte-identical.",
+    "reason": "Updates legacy expectation to the new uniform public privacy contract; visible unauthorized403 is retained.",
+    "verification": "Strict offline text reconstruction full file yields exact declared postblob; whole legacy file not run by source73 or reviewer"
+  },
+  "proof": {
+    "run": 43671737333,
+    "job": 132683058916,
+    "cleanup_job": 132683555064,
+    "live_api": "run and jobs completed SUCCESS at exact S, eventpush, attempt1",
+    "source_counts": {
+      "pass": 29,
+      "fail": 0,
+      "filtered_out": 15,
+      "expect_calls": 889,
+      "files": 4
+    },
+    "selected_new_tests": 27,
+    "unchanged_legacy_tests": 2,
+    "selection": "(M73|dual-role request transitions|complete procurement field roundtrip)",
+    "budget_ms": 120000,
+    "source_scope": "Real canonical HTTP handler and real SQLite with synthetic test identities. Source proof only, no installed Chromium/native/Microsoft acceptance.",
+    "none_credited": [
+      "Full unfiltered legacy suite",
+      "Accepting ClamD",
+      "Post-scan revocation race",
+      "Five installed operations nominal IDs",
+      "Three FINAL verdicts",
+      "Whole WP04 or campaign acceptance"
+    ],
+    "criteria": {
+      "total": 111,
+      "not_run": 89,
+      "partial": 18,
+      "selected_source_regression_pass": 4,
+      "whole_criteria_accepted": 0
+    },
+    "native": {
+      "omni_nonce": "f93a4df3a0e29efea31c1b5a505feaf1",
+      "status": "NOT_APPLICABLE",
+      "spawn_calls": 0,
+      "delegations": 0
+    }
+  },
+  "finding70": {
+    "id": "M70-ISO-01",
+    "source_status": "SOURCE_FIX_AND_SELECTED_REGRESSIONS_PASS",
+    "after_composition_status": "FIX_COMPOSED_RECHECK_PENDING",
+    "closure": false
+  },
+  "interaction66": {
+    "finding": "EA66-LEGACY-EGRESS",
+    "status": "OPEN; source73 does not close or fix it",
+    "observed66": "DOCX200 readable after revocation, next request401; preserve source evidence and composedNOT_RUN",
+    "application_after73": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+    "application_external66_pre": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+    "application_external66_old_proposed_post": "5c81 (full exact post retained in source66 report)",
+    "required": "Future explicitly authorized broad-egress owner must rebase all66external hunks onto81f469822a2756b3e1ca87effbf5fd865a56010d and regenerate full preimage/postimage manifest; do not copy66 old post or assign broad-egress scope automatically to73",
+    "source73_scope": "Procurement command concealment, upload preflight/final visibility and presentational money precision"
+  },
+  "validation_queue": [
+    {
+      "owner": "45",
+      "state": "NOT_RUN",
+      "request": "checks/REQUEST-45.json",
+      "work": "Module typecheck and authorized root guards against exact composed candidate; source request to PR32#6888435744 retained."
+    },
+    {
+      "owner": "S0 / explicitly authorized product validation owner",
+      "state": "NOT_RUN",
+      "work": "Repeat selected73 matrix on exact composed59+61+63+64+65+66+68+69+73 candidate, plus unfiltered complete legacy procurement-runtime file with one-line oracle."
+    },
+    {
+      "owner": "75 or successor authorized by S0",
+      "state": "NOT_RUN",
+      "work": "Actual installed operations/ClamD validation after combined73+75 composition; source73 numbers are not five nominal proof."
+    },
+    {
+      "owner": "S0 / newly authorized broad-egress owner",
+      "state": "HELD",
+      "work": "Reconcile and validate66 external legacy egress proposal on new application preimage; current73 does not confer authority."
+    }
+  ],
+  "holds_preserved": [
+    "C28 all inherited functionality/acceptance HOLDs",
+    "56 pending IDs and historical findings unchanged",
+    "M31/MI07 original held",
+    "CAMP/AM/native requirements and 3FINAL remain open",
+    "No financial policy/role/CAS weakening",
+    "No whole-source branch or CI snapshot copied"
+  ],
+  "documents_read": [
+    "AUTHORITY-FINAL.json",
+    "CONSUMER-RELEASE.json",
+    "SOURCE-MANIFEST.json",
+    "PRESENTATION-RELEASE.json",
+    "HANDOFF.md",
+    "MANDATORY-GAPS.json",
+    "external/MANIFEST.json",
+    "external/legacy-hidden-request-status.patch",
+    "DEPENDENCIES.json",
+    "EVIDENCE-INDEX.json",
+    "CRITERIA.json (all111 status/evidence/limits)",
+    "checks/R1.json",
+    "checks/R1.request.json",
+    "checks/R1.jobs.json",
+    "checks/REQUEST-45.json",
+    "checks/VALIDATION-PLAN.json",
+    "reviews/INDEPENDENT-RECHECK.json",
+    "source-and-tests.patch"
+  ],
+  "applicable_instructions": "Root AGENTS already read; module root/runtime/test subtree no deeper AGENTS found. No UI tests run.",
+  "functional_obligations_closed": 0,
+  "GLOBAL_RELEASE": false,
+  "integration71CurrentPreimageReadback": {
+    "target": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+    "tree": "78d7c23395d92a4a0193fdd545f8aa023af0c55d",
+    "existing": [
+      {
+        "mission": 73,
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "mode": "100644",
+        "pre": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "post": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+        "kind": "modified",
+        "review_unit": "source73-released"
+      },
+      {
+        "mission": 73,
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "mode": "100644",
+        "pre": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+        "post": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+        "kind": "modified",
+        "review_unit": "source73-released"
+      },
+      {
+        "mission": 73,
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "mode": "100644",
+        "pre": "d622fa8463ee6d05a5c03de6517381045b6f0241",
+        "post": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+        "kind": "modified",
+        "review_unit": "owner71-separate-legacy-oracle-adaptation"
+      }
+    ],
+    "absentNewPaths": "Delegated exact C35 parent directory/404 read; C35→C36 complete compare has no73 prefix",
+    "status": "ALL_CURRENT_PREIMAGES_EXACT"
+  }
+}
