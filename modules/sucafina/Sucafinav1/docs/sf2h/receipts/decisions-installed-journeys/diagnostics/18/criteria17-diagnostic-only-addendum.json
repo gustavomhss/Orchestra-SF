@@ -1,0 +1,145 @@
+{
+  "schema": "sf52.criteria17.diagnostic18.addendum.v1",
+  "state": "FINAL_DIAGNOSTIC_ONLY_ADDENDUM_CRITERIA17_UNCHANGED",
+  "published_criteria17": {
+    "source": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "path": "/workspace/scratch/fec39c0682b3/mission52-criteria-v17-final.json",
+    "blob": "3341e9d9b05f3f27e81fbaf2abe5d40e12bf8b17",
+    "bytes": 1325189,
+    "sha256": "8bcdbd967eb2d6eb08a7e1e4c642788a5295405cfd9eb926712200e403c41219"
+  },
+  "immutable_original_projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+  "original_records": 83,
+  "retained_nominal_fragments": 226,
+  "added_nominal_fragments": [],
+  "criterion_record_changes": [],
+  "latest_nominal_unchanged": {
+    "label": "nominal17",
+    "run_id": 43686512586,
+    "passed": 3,
+    "failed": 2
+  },
+  "source52": "ACTIVE",
+  "target105": "ENDED_WITHOUT_SUCCESSOR",
+  "terminal_runtime_binding": null,
+  "GLOBAL_RELEASE": false,
+  "instruction": "Archive this diagnostic history separately. Keep the published criteria17 bytes,83 original records and226 nominal fragments unchanged. A later matrix may refer to this completed diagnostic with zero fragment additions, without retroactive nominal acceptance.",
+  "diagnostic_run": {
+    "label": "diagnostic18",
+    "run_id": 43688075463,
+    "run_kind": "diagnostic",
+    "eligible_as_nominal_fragment_evidence": false,
+    "criterion_fragments_added": 0,
+    "final_qualification": false,
+    "acceptance": "NOT_GRANTED",
+    "observed_runtime_counts": {
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0,
+      "retries": 0
+    },
+    "root_receipt": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/diagnostic-18-receipt.json",
+      "bytes": 344207,
+      "sha256": "498c457265841a43eec197d9314f7f25f7a5cfe9fdd9960448e8e3d10c322643",
+      "git_blob": "43b1057acb037f8a34e9bb4d4fd783288de9de3a"
+    },
+    "independent_review": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/J1-independent-review.json",
+      "bytes": 15462,
+      "sha256": "e6e235fda1d21c4a48b6bcbb2726213c604a37e3eb83f5898c4bcf57156edb67",
+      "git_blob": "8d3649d599fec892154f215f4a9966ac5e4e5367"
+    },
+    "state": "COMPLETED_DIAGNOSTIC_ONLY",
+    "pins": {
+      "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+      "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+      "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+      "parent_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+      "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+      "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+      "published_source_observed": "43a31f4c51c0897287fdc53468bd171adca4795d",
+      "published_source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+      "W": "03e5439ab1c935ece5b58c90101750495416a341",
+      "W_tree": "c36a60094e43742170ee14c2705f3e30a9d2e5e0",
+      "S": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+      "S_tree": "135178fa94d68bb8086db0a310b427478d874bd8",
+      "branch": "ci-run-linux-astra-wp11-03e5439a-3619f1fd-m52-d18",
+      "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+      "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+    },
+    "cases": [
+      {
+        "line": 12,
+        "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+        "status": "passed",
+        "duration_ms": 98450,
+        "budget_ms": 180000,
+        "retry": 0
+      },
+      {
+        "line": 21,
+        "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+        "status": "failed",
+        "duration_ms": 14598,
+        "budget_ms": 180000,
+        "retry": 0
+      },
+      {
+        "line": 35,
+        "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+        "status": "passed",
+        "duration_ms": 10580,
+        "budget_ms": 180000,
+        "retry": 0
+      },
+      {
+        "line": 87,
+        "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+        "status": "passed",
+        "duration_ms": 7020,
+        "budget_ms": 180000,
+        "retry": 0
+      },
+      {
+        "line": 135,
+        "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+        "status": "passed",
+        "duration_ms": 7524,
+        "budget_ms": 180000,
+        "retry": 0
+      }
+    ],
+    "counts": {
+      "passed": 4,
+      "failed": 1,
+      "timedOut": 0,
+      "skipped": 0
+    },
+    "jobs": [
+      {
+        "id": 132732645584,
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 132733863034,
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "artifact": {
+      "artifact_id": 14151645954,
+      "run_id": 43688075463,
+      "local_filename": "artifact.zip",
+      "bytes": 385258,
+      "sha256": "165737802c6c0300577d3892a4c2efc1e366ad2d135180093b73f28279d81811",
+      "files": 11,
+      "download_method": "Exact ephemeral artifact reference returned by GitHub MCP; signed URL intentionally omitted."
+    },
+    "J1_observation_scope": "All nine original steps passed in instrumented diagnostic18, including original-response loss, identical replay and preserved whole historical choice after Planner2400→3600. No nominal fragments or native/global acceptance.",
+    "J2_observation_scope": "Requests503/form0 before any financial mutation; formal approval/MI07/M31/Apply not reached."
+  }
+}

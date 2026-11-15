@@ -1,0 +1,42 @@
+[
+  {
+    "label": "canonical-base",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "content": "/** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */\nimport type { BusinessEvidenceRef } from \"./business-context.ts\"\nimport type { ContributionEnvelope } from \"./resident-ai.ts\"\n\nexport function canonicalSfValue(value: unknown): string {\n  return JSON.stringify(canonical(value))\n}\n\nexport function digestSfValue(value: unknown): string {\n  return new Bun.CryptoHasher(\"sha256\").update(canonicalSfValue(value)).digest(\"hex\")\n}\n\n/** Integrity of the whole reference; authentication remains in the source resolver. */\nexport function digestSfEvidenceRef(reference: BusinessEvidenceRef): string {\n  return digestSfValue(Object.fromEntries(Object.entries(reference).filter(([key]) => key !== \"refDigest\")))\n}\n\n/** The digest field itself is excluded; all other envelope fields are bound to this revision. */\nexport function digestSfContribution(envelope: ContributionEnvelope): string {\n  return digestSfValue(Object.fromEntries(Object.entries(envelope).filter(([key]) => key !== \"outputDigest\")))\n}\n\nfunction canonical(value: unknown): unknown {\n  if (value === undefined) return [\"absent\"]\n  if (value === null) return [\"null\"]\n  if (typeof value === \"string\" || typeof value === \"boolean\") return [typeof value, value]\n  if (typeof value === \"number\") {\n    if (!Number.isFinite(value)) throw new Error(\"SF_CANONICAL_NONFINITE\")\n    return [\"number\", Object.is(value, -0) ? \"-0\" : value]\n  }\n  if (Array.isArray(value)) return [\"array\", value.map(canonical)]\n  if (typeof value !== \"object\" || ![Object.prototype, null].includes(Object.getPrototypeOf(value)))\n    throw new Error(\"SF_CANONICAL_UNSUPPORTED\")\n  const record = value as Record<string, unknown>\n  return [\"object\", Object.keys(record).sort().map((key) => [key, canonical(record[key])])]\n}\n\n/** Join memory source identities to the original evidence digest, including authorized historical refs. */\nexport function sfEvidenceSourceMaps(refs: readonly BusinessEvidenceRef[]) {\n  const sourceVersions: Record<string, number> = {}\n  const sourceIncarnations: Record<string, string> = {}\n  const active = new WeakSet<object>()\n  const visit = (ref: BusinessEvidenceRef, depth: number) => {\n    if (!ref || typeof ref !== \"object\" || depth > 16 || active.has(ref) ||\n      ![\"record\", \"document\", \"receipt\", \"case-event\", \"calculation\", \"policy\"].includes(ref.kind)) throw new Error(\"SF_EVIDENCE_GRAPH_INVALID\")\n    active.add(ref)\n    if (ref.kind === \"calculation\") ref.target.sourceRefs.forEach((child) => visit(child, depth + 1))\n    if (ref.kind === \"case-event\") ref.target.evidenceRefs.forEach((child) => visit(child, depth + 1))\n    if (ref.refDigest !== digestSfEvidenceRef(ref)) throw new Error(\"SF_EVIDENCE_DIGEST_INVALID\")\n    const identity = ref.kind === \"record\" ? { version: ref.target.version, incarnation: ref.target.incarnation }\n      : ref.kind === \"document\" ? { version: ref.target.revision, incarnation: ref.target.incarnation }\n      : ref.kind === \"receipt\" ? { version: ref.target.version, incarnation: ref.target.targetIncarnation }\n      : ref.kind === \"case-event\" ? { version: ref.target.caseVersion, incarnation: ref.target.caseIncarnation }\n      : undefined\n    if (identity) {\n      if (!Number.isSafeInteger(identity.version) || identity.version < 0 || !identity.incarnation.trim()) throw new Error(\"SF_EVIDENCE_SOURCE_IDENTITY_INVALID\")\n      sourceVersions[ref.refDigest] = identity.version\n      sourceIncarnations[ref.refDigest] = identity.incarnation\n    }\n    active.delete(ref)\n  }\n  refs.forEach((ref) => visit(ref, 0))\n  return { sourceVersions, sourceIncarnations }\n}\n",
+        "encoding": "utf-8",
+        "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/eeff9b78219b5efe1ad78e68d4490af0d7c5ed07/modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "display_title": "canonical.ts"
+      },
+      "isError": false
+    }
+  },
+  {
+    "label": "p15-new-test-absence",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "GitHub API error 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/contents#get-repository-content\",\"status\":\"404\"}"
+        }
+      ],
+      "structuredContent": {
+        "error": "GitHub API error 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/contents#get-repository-content\",\"status\":\"404\"}",
+        "error_code": "NOT_FOUND",
+        "error_data": {
+          "message": "Not Found",
+          "documentation_url": "https://docs.github.com/rest/repos/contents#get-repository-content",
+          "status": "404"
+        }
+      },
+      "isError": true
+    }
+  }
+]

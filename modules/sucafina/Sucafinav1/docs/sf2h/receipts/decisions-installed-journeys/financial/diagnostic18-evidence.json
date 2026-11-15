@@ -1,0 +1,303 @@
+{
+  "schema": "sf52.financial.diagnostic18.addendum.v1",
+  "state": "DIAGNOSTIC_ONLY_ZERO_ACCEPTANCE_NOMINAL17_UNCHANGED",
+  "diagnostic": 18,
+  "mission52": "ACTIVE",
+  "pins": {
+    "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+    "parent_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+    "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+    "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+    "published_source_observed": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "published_source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+    "W": "03e5439ab1c935ece5b58c90101750495416a341",
+    "W_tree": "c36a60094e43742170ee14c2705f3e30a9d2e5e0",
+    "S": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+    "S_tree": "135178fa94d68bb8086db0a310b427478d874bd8",
+    "branch": "ci-run-linux-astra-wp11-03e5439a-3619f1fd-m52-d18",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+    "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+    "instrumentation_sha256": "2466808ffb7bdd1f7daf6718f263a816380c65a8e4da2282c0719be523317e81",
+    "patch_sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+    "reconstruction_sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93"
+  },
+  "run": {
+    "id": 43688075463,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43688075463",
+    "head_sha": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+    "status": "completed",
+    "conclusion": "failure",
+    "run_attempt": 1,
+    "created_at": "2026-11-15T07:01:45Z",
+    "updated_at": "2026-11-15T07:07:08Z"
+  },
+  "jobs": [
+    {
+      "id": 132732645584,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "started_at": "2026-11-15T07:01:47Z",
+      "completed_at": "2026-11-15T07:06:58Z"
+    },
+    {
+      "id": 132733863034,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "started_at": "2026-11-15T07:07:01Z",
+      "completed_at": "2026-11-15T07:07:08Z"
+    }
+  ],
+  "artifact": {
+    "id": 14151645954,
+    "name": "playwright-ubuntu-24.04-1",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14151645954",
+    "digest": "sha256:165737802c6c0300577d3892a4c2efc1e366ad2d135180093b73f28279d81811",
+    "local": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/artifact.zip",
+      "bytes": 385258,
+      "sha256": "165737802c6c0300577d3892a4c2efc1e366ad2d135180093b73f28279d81811"
+    }
+  },
+  "runtime_stats": {
+    "startTime": "2026-11-15T07:04:03.413Z",
+    "duration": 172690.621,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "case": {
+    "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+    "file": "e2e/sucafina/decisions.spec.ts",
+    "line": 21,
+    "configured_budget_ms": 180000,
+    "runtime_status": "failed",
+    "test_status": "unexpected",
+    "expected_status": "passed",
+    "duration_ms": 14598,
+    "retry": 0,
+    "steps": [
+      {
+        "title": "create the real requisition through its human form",
+        "duration": 10041,
+        "error": {
+          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+          "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:76:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+            "column": 22,
+            "line": 7
+          },
+          "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n\u001b[0m \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`${origin}/sucafina/procurement?page=Requests`\u001b[39m)\n \u001b[90m  6 |\u001b[39m   \u001b[36mconst\u001b[39m form \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form[data-command=\"create\"][data-page=\"Requests\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m \u001b[32m\"CI Decisions — explicit requisition proposal\"\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Title\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(title)\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Type\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[32m\"service\"\u001b[39m)\u001b[0m"
+        }
+      }
+    ],
+    "failure": {
+      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+      "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:76:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+      "location": {
+        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+        "column": 22,
+        "line": 7
+      },
+      "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n\u001b[0m \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`${origin}/sucafina/procurement?page=Requests`\u001b[39m)\n \u001b[90m  6 |\u001b[39m   \u001b[36mconst\u001b[39m form \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form[data-command=\"create\"][data-page=\"Requests\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m \u001b[32m\"CI Decisions — explicit requisition proposal\"\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Title\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(title)\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Type\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[32m\"service\"\u001b[39m)\u001b[0m"
+    },
+    "attachments": [
+      {
+        "name": "decisions-observations.json",
+        "contentType": "application/json"
+      },
+      {
+        "name": "wp03-real-cli.log",
+        "contentType": "text/plain"
+      },
+      {
+        "name": "screenshot",
+        "contentType": "image/png",
+        "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png"
+      },
+      {
+        "name": "video",
+        "contentType": "video/webm",
+        "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm"
+      },
+      {
+        "name": "error-context",
+        "contentType": "text/markdown",
+        "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md"
+      }
+    ],
+    "observations": [],
+    "requests": [],
+    "network": [
+      {
+        "event": "response",
+        "method": "GET",
+        "path": "/sucafina/procurement",
+        "mode": null,
+        "httpStatus": 503,
+        "contentType": "application/json;charset=utf-8"
+      }
+    ],
+    "body_completed": false,
+    "observed_snapshot": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15"
+  },
+  "plain_error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: 1\nReceived: 0\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 10000ms\n  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n",
+  "observations": {
+    "selection": "CI-UI-DECISIONS",
+    "snapshot": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+    "test": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+    "bodyCompleted": false,
+    "observations": [],
+    "requests": [],
+    "network": [
+      {
+        "event": "response",
+        "method": "GET",
+        "path": "/sucafina/procurement",
+        "mode": null,
+        "httpStatus": 503,
+        "contentType": "application/json;charset=utf-8"
+      }
+    ],
+    "verdict": "The Playwright runtime report owns the terminal test result.",
+    "limit": "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt."
+  },
+  "boundary": {
+    "navigation": "/sucafina/procurement?page=Requests",
+    "method": "GET",
+    "httpStatus": 503,
+    "contentType": "application/json;charset=utf-8",
+    "DOM": {
+      "status": "unavailable",
+      "reason": "procurement-queue-unavailable"
+    },
+    "form_expected": 1,
+    "form_actual": 0,
+    "assertion_ms": 10000,
+    "case_budget_ms": 180000,
+    "case_duration_ms": 14598,
+    "step_duration_ms": 10041,
+    "financial_mutations_observed": 0,
+    "financial_proposal_approval_Apply_receipt_recovery": "NOT_REACHED",
+    "M31_MI07": "STATIC_CONTRACT_OPEN_NOT_RUNTIME_REACHED"
+  },
+  "evidence": {
+    "runtime": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/runtime-extracted.json",
+      "bytes": 199088,
+      "sha256": "47f165c588d18fd02192cc6dbf81e3c84d5b37ee0813a0be78d5824c345ad2ad"
+    },
+    "observations": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/observations-line-21.json",
+      "bytes": 714,
+      "sha256": "49a3afd2bec3a16f150aca31eb953c3ebdd7a561be2d9155bfad92e2d14c6edc"
+    },
+    "CLI": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cli-line-21.log",
+      "bytes": 272,
+      "sha256": "f37e01a56bad234bb2e44c42191d29f5189596529c42f20907ea8b60c22402a2"
+    },
+    "DOM": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/extracted/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+      "bytes": 8745,
+      "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c"
+    },
+    "dispatch": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-dispatched-envelope.json",
+      "bytes": 3658,
+      "sha256": "bf9ba69ed02398f3e28fc8f49ad446c4ee89786411a72ebb65c4eff3c0d46016"
+    },
+    "final_jobs": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-final-jobs.json",
+      "bytes": 10741,
+      "sha256": "9f90299df99a6882b1501e7d27eff1477ed2fd6682fbdf7646cbdd8dc22dadea"
+    },
+    "cost_summary": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cost18-summary.json",
+      "bytes": 101584,
+      "sha256": "37c039259b6d87be6aa9266017a5c5776bde540843af10b27fd1a74741be9305"
+    }
+  },
+  "frozen_nominal_financial": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-financial-terminal-draft-v9.md",
+    "bytes": 14822,
+    "sha256": "39823ae5adf66321be6a6451f4e816b0af6a3a0e96da0556e4ce30c0e530b23c"
+  },
+  "all_five_results": [
+    {
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 12,
+      "runtime_status": "passed",
+      "duration_ms": 98450,
+      "retry": 0,
+      "configured_budget_ms": 180000
+    },
+    {
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 21,
+      "runtime_status": "failed",
+      "duration_ms": 14598,
+      "retry": 0,
+      "configured_budget_ms": 180000
+    },
+    {
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 35,
+      "runtime_status": "passed",
+      "duration_ms": 10580,
+      "retry": 0,
+      "configured_budget_ms": 180000
+    },
+    {
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 87,
+      "runtime_status": "passed",
+      "duration_ms": 7020,
+      "retry": 0,
+      "configured_budget_ms": 180000
+    },
+    {
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 135,
+      "runtime_status": "passed",
+      "duration_ms": 7524,
+      "retry": 0,
+      "configured_budget_ms": 180000
+    }
+  ],
+  "limits": [
+    "The4PASS1FAIL are instrumented runtime results, not nominal acceptance.",
+    "Do not overwrite N17/v9, derive history acceptance or transfer any diagnostic fragment to criteria.",
+    "Generic Requests503 does not identify which context/collection prerequisite failed.",
+    "No financial approval/policy/C12 change or P14 implementation is made."
+  ],
+  "acceptance_fragments_added": 0,
+  "GLOBAL_RELEASE": false,
+  "WP11_DONE": false,
+  "execution": {
+    "local_product_tests": 0,
+    "CI_dispatches": 0,
+    "remote_calls": 0,
+    "code_changes": 0
+  },
+  "normalized_root_receipt": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/diagnostic-18-receipt.json",
+    "bytes": 344207,
+    "sha256": "498c457265841a43eec197d9314f7f25f7a5cfe9fdd9960448e8e3d10c322643",
+    "financial_case_duration_and_status_matched": true
+  }
+}

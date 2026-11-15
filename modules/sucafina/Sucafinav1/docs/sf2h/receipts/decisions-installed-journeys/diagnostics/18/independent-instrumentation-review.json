@@ -1,0 +1,106 @@
+{
+  "schema": "sf52.diagnostic18.instrumentation-independent-review.v1",
+  "status": "STATIC_NO_BLOCKERS_DIAGNOSTIC_ONLY",
+  "basis": "Full22133-byte unified diff read; full7 pre/post files hash-verified and every hunk independently applied forward/reverse as text. Cached rootW verification used, no new remote reads.",
+  "pins": {
+    "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+    "parent_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+    "W": "03e5439ab1c935ece5b58c90101750495416a341",
+    "W_tree": "c36a60094e43742170ee14c2705f3e30a9d2e5e0",
+    "S": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+    "S_tree": "135178fa94d68bb8086db0a310b427478d874bd8"
+  },
+  "material": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18/material.json",
+    "bytes": 270990,
+    "sha256": "2466808ffb7bdd1f7daf6718f263a816380c65a8e4da2282c0719be523317e81",
+    "git_blob": "8b578a8de238832f8b1a42cc6444cd87fcf24752"
+  },
+  "patch": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18/complete.patch",
+    "bytes": 22133,
+    "sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+    "git_blob": "890d342a87e7fd315f3eb4c854550e3615518a93"
+  },
+  "root_reconstruction": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18/reconstruction.json",
+    "bytes": 3859,
+    "sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93",
+    "git_blob": "a760b8b87c14bbd12f3041459138fd66797155ea"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/sf52-profile.ts",
+      "preimage": null,
+      "postimage": "d88e0e6c559926a96899932eda1f02cac76a799a",
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "preimage": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+      "postimage": "765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff",
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "preimage": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+      "postimage": "c854b37f016fda0748e7d7eba0b35fd66a4848e0",
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimage": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+      "postimage": "a71b48057ebb32afa4efbcaabf448da516094a3c",
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "postimage": "fa6e20d34ffdd34835a97dd8250f6bb878fd780c",
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "preimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "postimage": "38b3d71506cfc82e1da2f2dc208bf07a55b41a68",
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "preimage": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+      "postimage": "91b2e01bf97684b473a574dc726d429cdeadb52c",
+      "forward_exact": true,
+      "reverse_exact": true
+    }
+  ],
+  "checks": [
+    "The two HTTP handlers retain their full original bodies; profile wraps outer invocation including admission and finally.",
+    "Choice authorize/replay/confirm/loadCase/compare/two historical reads/values/save/capture remain in original order with original arguments, guards and catches.",
+    "The two stored-result reads remain independent calls; sharing only a diagnostic bucket is not a data cache.",
+    "State-provider still clones actual selected case/full namespace; access/authority rechecks remain unchanged.",
+    "LocalStore auth/read/currentSnapshots/currentAccessSnapshots wrappers are synchronous and preserve underlying work, file/lifecycle/scope guards and clone operations.",
+    "canonicalSfValue and the original new CryptoHasher/update/digest expression remain unchanged inside one synchronous measurement wrapper.",
+    "Profile helper uses separate AsyncLocalStorage containing only fixed mode/stage names, ordinal and aggregate counters/timings; no Request,principal,token,payload or business result is retained/logged.",
+    "Abort observation is passive; listener removed in finally; no AbortController,timer,retry or timeout change added.",
+    "Only diagnostic sink errors are caught; product work results/errors propagate through try/finally. Async wrappers can affect scheduling and overhead, so no timing equivalence is asserted.",
+    "No spec/helper/UI/workflow/budget/assertion path is changed; seven historical instrumentation files must be removed/restored before a clean nominal."
+  ],
+  "interpretation_limits": [
+    "The counts include returned and thrown work. Handler returned is not itself business success.",
+    "Durations are inclusive and overlap; do not sum stages as exclusiveCPU or equate handler time with browserHTTP latency.",
+    "Diagnostic J1PASS does not prove stable latency margin, a causal performance improvement or nominal acceptance."
+  ],
+  "criterion_fragments": 0,
+  "activity": {
+    "product_execution": 0,
+    "tests": 0,
+    "remote_reads": 0,
+    "remote_writes": 0
+  }
+}

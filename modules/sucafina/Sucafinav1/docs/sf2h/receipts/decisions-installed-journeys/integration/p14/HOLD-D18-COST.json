@@ -1,0 +1,130 @@
+{
+  "schema": "sf52.P14.diagnostic18.cost-critique.v1",
+  "status": "HOLD_SECONDARY_HYPOTHESIS_NO_IMPLEMENTATION_OR_NEW_GATE_RECOMMENDED_FROM_THIS_MEASUREMENT_ALONE",
+  "prior_static_review": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/P14-read-scenario-root-static-review.json",
+    "bytes": 11530,
+    "sha256": "4cbb1e51a0d3c0018dba0f7d823102f25b83a02a7fa09781c46aa2620ed6929b"
+  },
+  "diagnostic18_cost_source": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cost18-summary.json",
+    "bytes": 101584,
+    "sha256": "37c039259b6d87be6aa9266017a5c5776bde540843af10b27fd1a74741be9305"
+  },
+  "diagnostic18_pins": {
+    "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+    "parent_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+    "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+    "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+    "published_source_observed": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "published_source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+    "W": "03e5439ab1c935ece5b58c90101750495416a341",
+    "W_tree": "c36a60094e43742170ee14c2705f3e30a9d2e5e0",
+    "S": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+    "S_tree": "135178fa94d68bb8086db0a310b427478d874bd8",
+    "branch": "ci-run-linux-astra-wp11-03e5439a-3619f1fd-m52-d18",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+    "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+    "instrumentation_sha256": "2466808ffb7bdd1f7daf6718f263a816380c65a8e4da2282c0719be523317e81",
+    "patch_sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+    "reconstruction_sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93"
+  },
+  "first_choice_profile": {
+    "mode": "choose",
+    "ordinal": 4,
+    "elapsed_ms": 8129.195336000004,
+    "outcome": "returned",
+    "selected_stages": {
+      "choice.compare": {
+        "started": 1,
+        "completed": 1,
+        "active": 0,
+        "count": 1,
+        "total_ms": 5020.346163000002,
+        "max_ms": 5020.346163000002
+      },
+      "choice.values": {
+        "started": 1,
+        "completed": 1,
+        "active": 0,
+        "count": 1,
+        "total_ms": 2231.2632379999995,
+        "max_ms": 2231.2632379999995
+      },
+      "choice.stored-result": {
+        "started": 2,
+        "completed": 2,
+        "active": 0,
+        "count": 2,
+        "total_ms": 402.05783400000655,
+        "max_ms": 207.56566300000122
+      },
+      "choice.save": {
+        "started": 1,
+        "completed": 1,
+        "active": 0,
+        "count": 1,
+        "total_ms": 208.74499600000127,
+        "max_ms": 208.74499600000127
+      },
+      "choice.capture": {
+        "started": 1,
+        "completed": 1,
+        "active": 0,
+        "count": 1,
+        "total_ms": 65.2421469999972,
+        "max_ms": 65.2421469999972
+      },
+      "canonical.digest": {
+        "started": 195778,
+        "completed": 195778,
+        "active": 0,
+        "count": 195778,
+        "total_ms": 3491.585429999199,
+        "max_ms": 21.207211000000825
+      },
+      "runtime.currentAccessSnapshots": {
+        "started": 7749,
+        "completed": 7749,
+        "active": 0,
+        "count": 7749,
+        "total_ms": 1273.0099209999535,
+        "max_ms": 11.967445000002044
+      },
+      "runtime.auth.sql": {
+        "started": 83772,
+        "completed": 83772,
+        "active": 0,
+        "count": 83772,
+        "total_ms": 123.39138499978435,
+        "max_ms": 0.040377999997872394
+      }
+    }
+  },
+  "ideal_bound_for_only_targeted_phase": {
+    "two_calls_total_ms": 402.05783400000655,
+    "fraction_of_first_choice_percent": 4.945850325671229,
+    "meaning": "Upper bound only if the whole measured stored-result phase vanished at zero cost. Canonical work is mandatory, so this is not attainable saving nor a prediction.",
+    "required_work_retained": "Three C08 observations, source checks, authorizeCase, schema/digest/Request checks; the root adds dashboard admission/finalization. Net gain remains unknown and can be smaller or negative."
+  },
+  "judgment": {
+    "semantic_compatibility": "Previous narrow default-callback design remains statically compatible, with legacy custom preparation preserved and commit outside root.",
+    "functional_need": "D18 completed the original J1 body with current P13 plus instrumentation, without P14. This is diagnostic evidence of one successful execution, not nominal acceptance or a causal explanation of N17 timeout.",
+    "primary_cost": "Measured choice.compare5020ms and values2231ms exceed stored-result402ms. canonical.digest3492ms/195778calls and accessSnapshots1273ms/7749calls show internal pressure but overlap enclosing phase buckets; do not sum them or suppress current-authority calls.",
+    "gate_recommendation": "Do not spend a new P14 unit/CI gate or insert the wrapper solely to label the deadline problem fixed. Keep the small optimization on HOLD unless an owner explicitly chooses it and a bounded before/after shows useful net benefit.",
+    "if_authorized_later": "Retain the surgical controls in the static report; do not expand suites, cache authorization, alter budgets, pool roots across choice commit, or change Procurement/C12/CurrentChoice.",
+    "nominal_next_evidence": "Only a separately authorized/deduplicated original nominal run without diagnostic instrumentation can qualify the installed four journeys. No run is dispatched by this review."
+  },
+  "measurement_limits": [
+    "Root timer includes server admission/finalization, not browser receipt.10000-total is not a measured browser deadline margin.",
+    "choice.capture is nested in choice.save; digest/access/SQL timings overlap their parents and each other.",
+    "Counts and returned profile outcome do not alone prove business status; full runtime and observations govern behavioral conclusions.",
+    "Different runs do not establish an A/B causal effect; instrumentation/runner variation are not quantified."
+  ],
+  "no_implementation": true,
+  "acceptance_fragments_added": 0
+}

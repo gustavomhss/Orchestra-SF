@@ -1,0 +1,129 @@
+{
+  "schema": "sf52-p15-independent-static-review-v1",
+  "reviewer": "/root/financial_contract",
+  "state": "STATIC_REVIEW_NO_MATERIAL_BLOCKER_GATE_NOT_RUN",
+  "created_at_utc": "2026-11-15T07:27:54.295468+00:00",
+  "scope": "Read-only independent review of two frozen candidate files, the proposed hosted unit gate, official cached Bun type/native evidence, and textual patch integrity. No product, test, compiler or benchmark execution; no remote mutation.",
+  "material": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/material.json",
+    "bytes": 43132,
+    "sha256": "576c17706fe0676670bf59d0752a66fbd525acdad5c2bb6e39cbe53dd91bbc3a"
+  },
+  "patch": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/complete.patch",
+    "bytes": 13628,
+    "sha256": "3dd2e29be5365a72fe6bc1d94d51cf87a424142ba963d95efea0d9731f278ed2",
+    "independent_forward_reconstruction": "EXACT_BOTH_FILES"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "preimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "postimage": "576199437a21a5d094da7db7601e78dcf01bce82",
+      "content_bytes": 3599,
+      "content_sha256": "0baf635e9462ff0249d9e29fbfc79c357554fe7a5f341cffb6e75514db10177c",
+      "forward_reconstructed_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "preimage": null,
+      "postimage": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "content_bytes": 12242,
+      "content_sha256": "aeaf01be1de1692a0b8b34715b2bcf4fb5da5c05ca2a391b1604537c5d2cc69b",
+      "forward_reconstructed_exactly": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "P15-S1",
+      "status": "CONFIRMED_STATIC",
+      "finding": "The entire product delta is one expression in digestSfValue. Replacing only the old expression reproduces the full postimage exactly. canonicalSfValue, canonical traversal, evidence/contribution digest helpers, imports and every other byte in the file are unchanged."
+    },
+    {
+      "id": "P15-S2",
+      "status": "CONFIRMED_STATIC",
+      "finding": "The supported APIs accept the same SHA256 algorithm, current canonical string and hex output. Bun 1.3.13 and 1.3.14 type excerpts declare the static encoding overload as returning string. The native one-shot path selects the same EVP algorithm and encodes the digest with the same encoding helper; no previous hash state is shared."
+    },
+    {
+      "id": "P15-S3",
+      "status": "CONFIRMED_STATIC",
+      "finding": "The full cached CryptoHasher source differs between 1.3.13 and 1.3.14 only in the auxiliary SHA import path. The one-shot, update and output-encoding implementations are otherwise byte-identical across these versions. The official EVP source confirms both paths compute SHA256 over the supplied byte slice."
+    },
+    {
+      "id": "P15-S4",
+      "status": "CONFIRMED_STATIC",
+      "finding": "Every digest call still runs the same serializer once against the current input. There is no object, digest, source, role, ACL, principal, snapshot or result cache; no shared or hoisted hasher; and no changes to authority, freshness, physical lineage, transaction, Request, abort or human-choice callsites. Actual authority acceptance is not simulated by the unit corpus."
+    },
+    {
+      "id": "P15-S5",
+      "status": "CONFIRMED_STATIC",
+      "finding": "The gate has 36 statically enumerated cases and 154 expected assertions: 17 exact canonical-byte vectors; 11 existing rejection vectors; independent node:crypto SHA256 comparisons of real contract-shaped corpus; getter/proxy order, reentrancy, same-object freshness, propagated errors and cyclic rejection; and one bounded interleaved measurement. The final revision restores captured source, role and access versions rather than assuming zero."
+    },
+    {
+      "id": "P15-S6",
+      "status": "CONFIRMED_STATIC",
+      "finding": "The hosted measurement runs 128 warmup calls and 6144 measured calls per implementation, with six alternating-order samples and identical fixed loop counts. Count/checksum equality is asserted; elapsed time and ratios are only reported. There is no speed assertion, test timeout override, skip, retry, timer-dependent work count, UI mutation or replacement of the five installed journeys."
+    },
+    {
+      "id": "P15-S7",
+      "status": "CONFIRMED_STATIC",
+      "finding": "The test is an additional owned surgical unit file. The canonical product file remains a complete shared owner proposal; this review does not authorize integration or change financial approval policy, Procurement, C12, CurrentChoice, Reports or workflows."
+    }
+  ],
+  "tests": {
+    "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+    "expected_cases": 36,
+    "expected_assertions": 154,
+    "assertion_count_arithmetic": "17*4 + 11*2 + 17 + 4 + 4 + 2 + 13 + 4 + 2 + 6*3 = 154",
+    "local_execution": false,
+    "hosted_result": "NOT_RUN_AT_REVIEW",
+    "speed_assertion": false,
+    "timeout_override": null
+  },
+  "primary_evidence": [
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/bun-1.3.13-types-excerpt.txt",
+      "role": "Official Bun 1.3.13 supported static encoding overload; provenance stored beside excerpt."
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/bun-1.3.14-types-excerpt.txt",
+      "role": "Official Bun 1.3.14 supported static encoding overload; provenance stored beside excerpt."
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/bun-1.3.13-CryptoHasher.zig",
+      "git_blob": "53c93f885c4b1d9280aae957b76afb85b1a6df22"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/bun-1.3.14-CryptoHasher.zig",
+      "git_blob": "88acb4cca3cb765be2a9868fb459f6b7274ad852",
+      "lines": "161-175,211-239,294-331,431-438"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/bun-EVP.zig",
+      "git_blob": "9e3de48a4544dc7bfc1222f7a638b5777bad5317",
+      "lines": "123-170"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/bun-1.3.14-crypto.classes.ts",
+      "git_blob": "9f64ec1f0e3e1d888715481991543c2714eb0e88"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/provenance.json",
+      "role": "Exact upstream refs, paths and retrieval provenance."
+    }
+  ],
+  "limits": [
+    "Static review supports standard SHA256/hex equivalence and preservation of traversal/callsite semantics; the proposed hosted gate remains responsible for checking the actual runtime and Unicode/edge vectors.",
+    "One-shot native lifecycle avoids the prior per-call exposed hasher object and reset path, but performance has not been measured here. No claim of a specific speedup, deadline margin or installed-journey acceptance follows from this review.",
+    "Canonical serialization cost remains unchanged. The fixed corpus is not a measured distribution of installed calls, and its timings cannot be transferred to whole requests.",
+    "Resource allocation lifetime intentionally differs. This is not a claim of identical native resource-failure stack/order or behavior under replacement of Bun globals.",
+    "The financial Requests503 precondition and later static formal-approval contract remain separate. No financial operation or approval scenario was exercised by this review."
+  ],
+  "decision": "No material blocker found for the parent to run the proposed deduplicated exact-file GitHub Actions gate. This is a static review, not a test PASS, source release, integration authorization or global acceptance.",
+  "mutations": {
+    "scratch_review_only": true,
+    "product_files_changed_by_reviewer": false,
+    "remote_writes": false,
+    "tests_or_product_executed": false
+  }
+}

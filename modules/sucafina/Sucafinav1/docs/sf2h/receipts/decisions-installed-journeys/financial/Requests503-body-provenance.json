@@ -1,0 +1,141 @@
+{
+  "schema": "sf52.financial.requests503.body-provenance.v1",
+  "state": "RENDERED_PAGE_TEXT_VERIFIED_RAW_HTTP_TRACE_UNAVAILABLE",
+  "decoded_rendered_page_text": "{\"status\":\"unavailable\",\"reason\":\"procurement-queue-unavailable\"}",
+  "parsed_json": {
+    "status": "unavailable",
+    "reason": "procurement-queue-unavailable"
+  },
+  "decoded_text_artifact": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-Requests503-rendered-page-text.txt",
+    "bytes": 65,
+    "sha256": "93bb314cc7d721be6ef1088d1463ba7de6d16556c04034346ee803872383c366"
+  },
+  "cuts": [
+    {
+      "cut": "nominal17",
+      "zip": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal17-43686512586/artifact.zip",
+        "bytes": 4697348,
+        "sha256": "61e8bceea2db583e6b11354bcb1361edb9fcca8bbf76db46a38e28db6d5ba68b"
+      },
+      "zip_entry_count": 17,
+      "entries": [
+        "test-ci-evidence/benchmark-runtime.json",
+        "test-ci-evidence/playwright-runtime.json",
+        "test-ci-evidence/playwright-selection.json",
+        "test-ci-evidence/request.json",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/video.webm",
+        "packages/app-shell/e2e/playwright-report/data/0a9e066565cae0e8c7ebec759f33af1755674e7e.png",
+        "packages/app-shell/e2e/playwright-report/data/21eb73e412c69ee611a5712d5d163dc1810c62dc.webm",
+        "packages/app-shell/e2e/playwright-report/data/8c9e043ccc904093ad92535599912627f94b9319.md",
+        "packages/app-shell/e2e/playwright-report/data/9544b9e1d05cd19a2293c9b8e8246e9138509a32.png",
+        "packages/app-shell/e2e/playwright-report/data/af4897291059c0806766ff4261d7c561056996e7.webm",
+        "packages/app-shell/e2e/playwright-report/data/b5b150eaf14defa7fab2fda745c7289257c7e81d.md",
+        "packages/app-shell/e2e/playwright-report/index.html"
+      ],
+      "trace_har_network_entries": [],
+      "J2_attachment_names": [
+        "decisions-observations.json",
+        "wp03-real-cli.log",
+        "screenshot",
+        "video",
+        "error-context"
+      ],
+      "rendered_page_source": {
+        "zip_entry": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+        "bytes": 8745,
+        "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c",
+        "literal_snapshot_line": "- generic [ref=e2]: \"{\\\"status\\\":\\\"unavailable\\\",\\\"reason\\\":\\\"procurement-queue-unavailable\\\"}\""
+      },
+      "network_observations": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/procurement",
+          "mode": null,
+          "httpStatus": 503,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "observation_file": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal17-43686512586/observations-line-21.json",
+        "bytes": 714,
+        "sha256": "fa7ac920d86bda7bbc48b8ee1986a3750faee40ae7afd1a2b47103ddad94fd1a"
+      },
+      "J2_case_status": "failed",
+      "J2_case_duration_ms": 15917
+    },
+    {
+      "cut": "diagnostic18",
+      "zip": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/artifact.zip",
+        "bytes": 385258,
+        "sha256": "165737802c6c0300577d3892a4c2efc1e366ad2d135180093b73f28279d81811"
+      },
+      "zip_entry_count": 11,
+      "entries": [
+        "test-ci-evidence/benchmark-runtime.json",
+        "test-ci-evidence/request.json",
+        "test-ci-evidence/playwright-selection.json",
+        "test-ci-evidence/playwright-runtime.json",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png",
+        "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm",
+        "packages/app-shell/e2e/playwright-report/data/572720526078dd4a31b99ea01ea20f72c90a984b.webm",
+        "packages/app-shell/e2e/playwright-report/data/9544b9e1d05cd19a2293c9b8e8246e9138509a32.png",
+        "packages/app-shell/e2e/playwright-report/data/b5b150eaf14defa7fab2fda745c7289257c7e81d.md",
+        "packages/app-shell/e2e/playwright-report/index.html"
+      ],
+      "trace_har_network_entries": [],
+      "J2_attachment_names": [
+        "decisions-observations.json",
+        "wp03-real-cli.log",
+        "screenshot",
+        "video",
+        "error-context"
+      ],
+      "rendered_page_source": {
+        "zip_entry": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+        "bytes": 8745,
+        "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c",
+        "literal_snapshot_line": "- generic [ref=e2]: \"{\\\"status\\\":\\\"unavailable\\\",\\\"reason\\\":\\\"procurement-queue-unavailable\\\"}\""
+      },
+      "network_observations": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/procurement",
+          "mode": null,
+          "httpStatus": 503,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "observation_file": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/observations-line-21.json",
+        "bytes": 714,
+        "sha256": "49a3afd2bec3a16f150aca31eb953c3ebdd7a561be2d9155bfad92e2d14c6edc"
+      },
+      "J2_case_status": "failed",
+      "J2_case_duration_ms": 14598
+    }
+  ],
+  "interpretation": [
+    "GET503 and application/json;charset=utf-8 are actual separate network observations.",
+    "The exact two-field JSON string is actual rendered page text from Playwright error-context, decoded from its YAML quoted string.",
+    "Neither supplied artifact includes trace/HAR/network-resource body or a J2 trace attachment. This is not a raw HTTP byte-body capture.",
+    "No internal exception stack or queue/context failure branch is exposed. The generic503 cannot identify the currency/selection/authority subcheck.",
+    "M31/MI07, formal approval and Apply remain later static barriers not reached by either financial case."
+  ],
+  "execution": {
+    "new_runs": 0,
+    "local_product_execution": 0,
+    "remote_calls": 0,
+    "code_changes": 0
+  }
+}

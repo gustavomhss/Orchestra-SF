@@ -1,0 +1,3518 @@
+{
+  "schema": "sf52-diagnostic18-cli-profile-normalization-v1",
+  "state": "PARSED_VALID_PROFILES",
+  "diagnostic": 18,
+  "purpose": "DIAGNOSTIC_ONLY_NOT_ACCEPTANCE",
+  "envelope_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-dispatched-envelope.json",
+  "envelope_sha256": "bf9ba69ed02398f3e28fc8f49ad446c4ee89786411a72ebb65c4eff3c0d46016",
+  "pins": {
+    "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+    "parent_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+    "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+    "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+    "published_source_observed": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "published_source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+    "W": "03e5439ab1c935ece5b58c90101750495416a341",
+    "W_tree": "c36a60094e43742170ee14c2705f3e30a9d2e5e0",
+    "S": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+    "S_tree": "135178fa94d68bb8086db0a310b427478d874bd8",
+    "branch": "ci-run-linux-astra-wp11-03e5439a-3619f1fd-m52-d18",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+    "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+    "instrumentation_sha256": "2466808ffb7bdd1f7daf6718f263a816380c65a8e4da2282c0719be523317e81",
+    "patch_sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+    "reconstruction_sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93"
+  },
+  "budgets": {
+    "case_budget_ms": 180000,
+    "UI_abort_ms": 10000,
+    "workers": 1,
+    "retries": 0,
+    "repeat": 1,
+    "test_count": 5
+  },
+  "inputs": [
+    {
+      "input_index": 1,
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cli-line-12.log",
+      "bytes": 12833,
+      "sha256": "61695833f346bb649127ec9c0c948216064d481aba51667d0c8dcab22fe5db78",
+      "marker_lines": 10,
+      "valid_records": 10
+    },
+    {
+      "input_index": 2,
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cli-line-21.log",
+      "bytes": 272,
+      "sha256": "f37e01a56bad234bb2e44c42191d29f5189596529c42f20907ea8b60c22402a2",
+      "marker_lines": 0,
+      "valid_records": 0
+    },
+    {
+      "input_index": 3,
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cli-line-35.log",
+      "bytes": 781,
+      "sha256": "2020cf89821b17c369171f36d780e006078876f8b2f4294c367f847483df1f70",
+      "marker_lines": 0,
+      "valid_records": 0
+    },
+    {
+      "input_index": 4,
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cli-line-87.log",
+      "bytes": 781,
+      "sha256": "cd0180dd3152a9fa5509c25275efa4c61c74cd9372365955fed6daa3627ccf9f",
+      "marker_lines": 0,
+      "valid_records": 0
+    },
+    {
+      "input_index": 5,
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cli-line-135.log",
+      "bytes": 781,
+      "sha256": "a0e4313b43ac9a99748c006fd1ef7a1753cc4cb4c70de5b4593d122a386400f7",
+      "marker_lines": 0,
+      "valid_records": 0
+    }
+  ],
+  "valid_event_count": 10,
+  "event_counts": {
+    "start": 5,
+    "end": 5
+  },
+  "stage_whitelist": [
+    "c08.clone.full-state.atlas",
+    "c08.clone.full-state.bi-artifacts",
+    "c08.clone.full-state.cases",
+    "c08.clone.full-state.confirmations",
+    "c08.clone.full-state.contributions",
+    "c08.clone.full-state.documents",
+    "c08.clone.full-state.outbox",
+    "c08.clone.full-state.preferences",
+    "c08.clone.full-state.receipts",
+    "c08.clone.full-state.relations",
+    "c08.clone.full-state.reviews",
+    "c08.clone.full-state.threads",
+    "c08.clone.selected-case",
+    "canonical.digest",
+    "choice.authorize",
+    "choice.capture",
+    "choice.case",
+    "choice.compare",
+    "choice.confirm",
+    "choice.replay",
+    "choice.save",
+    "choice.stored-result",
+    "choice.values",
+    "runtime.auth.read",
+    "runtime.auth.sql",
+    "runtime.currentAccessSnapshots",
+    "runtime.currentAccessSnapshots.dashboard",
+    "runtime.currentAccessSnapshots.planner",
+    "runtime.currentAccessSnapshots.procurement",
+    "runtime.currentSnapshots",
+    "runtime.currentSnapshots.dashboard",
+    "runtime.currentSnapshots.planner",
+    "runtime.currentSnapshots.procurement"
+  ],
+  "records": [
+    {
+      "input_index": 1,
+      "line": 20,
+      "diagnostic": 18,
+      "mode": "compare",
+      "ordinal": 1,
+      "event": "start",
+      "elapsed_ms": 0.04327299999931711,
+      "stages": {}
+    },
+    {
+      "input_index": 1,
+      "line": 21,
+      "diagnostic": 18,
+      "mode": "compare",
+      "ordinal": 1,
+      "event": "end",
+      "elapsed_ms": 4668.120486,
+      "outcome": "returned",
+      "stages": {
+        "canonical.digest": {
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2005.3330439996753,
+          "max_ms": 17.35759600000165
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 802.0821159998341,
+          "max_ms": 12.29978200000187
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 217.31549200007794,
+          "max_ms": 10.965982999994594
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 530.8404450000126,
+          "max_ms": 12.233052999999927
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 45.35406999992847,
+          "max_ms": 9.577353999997285
+        },
+        "runtime.auth.read": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 375.87924699986615,
+          "max_ms": 0.0778439999994589
+        },
+        "runtime.auth.sql": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 73.44683500041356,
+          "max_ms": 0.05096099999718717
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.754272000005585,
+          "max_ms": 0.37825899999734247
+        },
+        "runtime.currentSnapshots": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.1572930000002088,
+          "max_ms": 0.6017110000029788
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9604120000039984,
+          "max_ms": 0.5313720000049216
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.11101000000053318,
+          "max_ms": 0.06395299999712734
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.013766000000032363,
+          "max_ms": 0.007299999997485429
+        },
+        "c08.clone.full-state.cases": {
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 81.53536800001166,
+          "max_ms": 11.29052099999899
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 2.0626369999990857,
+          "max_ms": 1.0376440000000002
+        }
+      }
+    },
+    {
+      "input_index": 1,
+      "line": 22,
+      "diagnostic": 18,
+      "mode": "compare",
+      "ordinal": 2,
+      "event": "start",
+      "elapsed_ms": 0.009009000001242384,
+      "stages": {}
+    },
+    {
+      "input_index": 1,
+      "line": 23,
+      "diagnostic": 18,
+      "mode": "compare",
+      "ordinal": 2,
+      "event": "end",
+      "elapsed_ms": 4537.302415999999,
+      "outcome": "returned",
+      "stages": {
+        "canonical.digest": {
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2004.2145359991555,
+          "max_ms": 27.26404000000184
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 724.3181230000919,
+          "max_ms": 12.644555999999284
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 172.96500900029787,
+          "max_ms": 0.4482369999968796
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 500.06601599977876,
+          "max_ms": 12.585101999997278
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 43.48789399983798,
+          "max_ms": 10.864747999999963
+        },
+        "runtime.auth.read": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 369.43691299986676,
+          "max_ms": 0.11957399999664631
+        },
+        "runtime.auth.sql": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 70.7660560005097,
+          "max_ms": 0.03643500000180211
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.051973000016005,
+          "max_ms": 0.347447000000102
+        },
+        "runtime.currentSnapshots": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.0467959999950835,
+          "max_ms": 0.5630600000004051
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9228409999923315,
+          "max_ms": 0.5019049999973504
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0903279999984079,
+          "max_ms": 0.045937000002595596
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.010523999997531064,
+          "max_ms": 0.005611000000499189
+        },
+        "c08.clone.full-state.cases": {
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 67.06460400004289,
+          "max_ms": 3.5085480000052485
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 1.9052690000025905,
+          "max_ms": 0.9551530000026105
+        }
+      }
+    },
+    {
+      "input_index": 1,
+      "line": 24,
+      "diagnostic": 18,
+      "mode": "compare",
+      "ordinal": 3,
+      "event": "start",
+      "elapsed_ms": 0.028022999998938758,
+      "stages": {}
+    },
+    {
+      "input_index": 1,
+      "line": 25,
+      "diagnostic": 18,
+      "mode": "compare",
+      "ordinal": 3,
+      "event": "end",
+      "elapsed_ms": 6774.434304999995,
+      "outcome": "returned",
+      "stages": {
+        "canonical.digest": {
+          "started": 173195,
+          "completed": 173195,
+          "active": 0,
+          "count": 173195,
+          "total_ms": 3038.3194700014137,
+          "max_ms": 24.22970300000452
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 6769,
+          "completed": 6769,
+          "active": 0,
+          "count": 6769,
+          "total_ms": 1107.0003990004043,
+          "max_ms": 12.847535999993852
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 294.2459760001875,
+          "max_ms": 11.08546799999749
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 743.9866410000614,
+          "max_ms": 11.484380000001693
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 60.82531599977665,
+          "max_ms": 11.828353000004427
+        },
+        "runtime.auth.read": {
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 554.1057550001497,
+          "max_ms": 0.4520330000013928
+        },
+        "runtime.auth.sql": {
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 107.09452300044359,
+          "max_ms": 0.1090330000006361
+        },
+        "c08.clone.selected-case": {
+          "started": 58,
+          "completed": 58,
+          "active": 0,
+          "count": 58,
+          "total_ms": 14.558778000020538,
+          "max_ms": 0.51325199999701
+        },
+        "runtime.currentSnapshots": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "count": 5,
+          "total_ms": 2.310137999993458,
+          "max_ms": 0.6113419999965117
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 2.0311840000067605,
+          "max_ms": 0.5312830000038957
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.21355300000141142,
+          "max_ms": 0.06615400000009686
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.02233400000113761,
+          "max_ms": 0.006077000005461741
+        },
+        "c08.clone.full-state.cases": {
+          "started": 97,
+          "completed": 97,
+          "active": 0,
+          "count": 97,
+          "total_ms": 105.90840400001616,
+          "max_ms": 2.9098139999987325
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "count": 8,
+          "total_ms": 8.052239000004192,
+          "max_ms": 1.042617999999493
+        }
+      }
+    },
+    {
+      "input_index": 1,
+      "line": 26,
+      "diagnostic": 18,
+      "mode": "choose",
+      "ordinal": 4,
+      "event": "start",
+      "elapsed_ms": 0.12773800000286428,
+      "stages": {}
+    },
+    {
+      "input_index": 1,
+      "line": 27,
+      "diagnostic": 18,
+      "mode": "choose",
+      "ordinal": 4,
+      "event": "end",
+      "elapsed_ms": 8129.195336000004,
+      "outcome": "returned",
+      "stages": {
+        "canonical.digest": {
+          "started": 195778,
+          "completed": 195778,
+          "active": 0,
+          "count": 195778,
+          "total_ms": 3491.585429999199,
+          "max_ms": 21.207211000000825
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 7749,
+          "completed": 7749,
+          "active": 0,
+          "count": 7749,
+          "total_ms": 1273.0099209999535,
+          "max_ms": 11.967445000002044
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 307.33488500009844,
+          "max_ms": 8.572590000003402
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 900.6253479994703,
+          "max_ms": 11.891929999997956
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 56.64583799960383,
+          "max_ms": 1.0354550000047311
+        },
+        "runtime.auth.read": {
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 629.5345829996004,
+          "max_ms": 0.7182429999957094
+        },
+        "runtime.auth.sql": {
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 123.39138499978435,
+          "max_ms": 0.040377999997872394
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.850761000001512,
+          "max_ms": 0.35674999999901047
+        },
+        "choice.authorize": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 9.878052000000025,
+          "max_ms": 9.878052000000025
+        },
+        "runtime.currentSnapshots": {
+          "started": 21,
+          "completed": 21,
+          "active": 0,
+          "count": 21,
+          "total_ms": 15.96787200000108,
+          "max_ms": 1.3345550000012736
+        },
+        "choice.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.415156999995816,
+          "max_ms": 20.415156999995816
+        },
+        "c08.clone.full-state.cases": {
+          "started": 106,
+          "completed": 106,
+          "active": 0,
+          "count": 106,
+          "total_ms": 120.59087299996463,
+          "max_ms": 2.983749999999418
+        },
+        "choice.confirm": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.8464660000026925,
+          "max_ms": 1.8464660000026925
+        },
+        "choice.case": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 6.009665999998106,
+          "max_ms": 6.009665999998106
+        },
+        "choice.compare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 5020.346163000002,
+          "max_ms": 5020.346163000002
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 14.043135999992955,
+          "max_ms": 1.1759170000004815
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 1.6041499999773805,
+          "max_ms": 0.1656680000014603
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 0.13936199998715892,
+          "max_ms": 0.01952500000334112
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 12,
+          "completed": 12,
+          "active": 0,
+          "count": 12,
+          "total_ms": 12.041990000005171,
+          "max_ms": 1.020700000000943
+        },
+        "choice.stored-result": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 402.05783400000655,
+          "max_ms": 207.56566300000122
+        },
+        "choice.values": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 2231.2632379999995,
+          "max_ms": 2231.2632379999995
+        },
+        "choice.save": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 208.74499600000127,
+          "max_ms": 208.74499600000127
+        },
+        "c08.clone.full-state.outbox": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.1750839999949676,
+          "max_ms": 1.1750839999949676
+        },
+        "choice.capture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 65.2421469999972,
+          "max_ms": 65.2421469999972
+        }
+      }
+    },
+    {
+      "input_index": 1,
+      "line": 28,
+      "diagnostic": 18,
+      "mode": "choose",
+      "ordinal": 5,
+      "event": "start",
+      "elapsed_ms": 0.024791000003460795,
+      "stages": {}
+    },
+    {
+      "input_index": 1,
+      "line": 29,
+      "diagnostic": 18,
+      "mode": "choose",
+      "ordinal": 5,
+      "event": "end",
+      "elapsed_ms": 517.1807150000022,
+      "outcome": "returned",
+      "stages": {
+        "canonical.digest": {
+          "started": 2615,
+          "completed": 2615,
+          "active": 0,
+          "count": 2615,
+          "total_ms": 66.32107900030678,
+          "max_ms": 13.734346999997797
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 196,
+          "completed": 196,
+          "active": 0,
+          "count": 196,
+          "total_ms": 25.112645999950473,
+          "max_ms": 0.33084799999778625
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 5.260833000036655,
+          "max_ms": 0.08822800000052666
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 18.21102500006964,
+          "max_ms": 0.23459700000239536
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 1.434642999949574,
+          "max_ms": 0.021589999996649567
+        },
+        "runtime.auth.read": {
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 10.85633400009101,
+          "max_ms": 0.05723099999886472
+        },
+        "runtime.auth.sql": {
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 2.510740000056103,
+          "max_ms": 0.029162999999243766
+        },
+        "c08.clone.selected-case": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.8183649999991758,
+          "max_ms": 0.436240999995789
+        },
+        "choice.authorize": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 32.953418999997666,
+          "max_ms": 32.953418999997666
+        },
+        "runtime.currentSnapshots": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0035849999912898056,
+          "max_ms": 0.0018709999931161292
+        },
+        "choice.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.18556499999977,
+          "max_ms": 20.18556499999977
+        },
+        "c08.clone.full-state.cases": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 4.967635000000882,
+          "max_ms": 4.967635000000882
+        }
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "input_index": 1,
+      "ordinal": 1,
+      "mode": "compare",
+      "event_sequence": [
+        "start",
+        "end"
+      ],
+      "event_lines": [
+        {
+          "event": "start",
+          "line": 20
+        },
+        {
+          "event": "end",
+          "line": 21
+        }
+      ],
+      "ended": true,
+      "abort_observed": false,
+      "abort_elapsed_ms": null,
+      "end_elapsed_ms": 4668.120486,
+      "handler_outcome": "returned",
+      "post_abort_until_end_ms": null,
+      "active_stages_at_abort": {},
+      "stages_at_abort": null,
+      "last_observed_event": "end",
+      "last_observed_elapsed_ms": 4668.120486,
+      "last_observed_stages": {
+        "canonical.digest": {
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2005.3330439996753,
+          "max_ms": 17.35759600000165
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 802.0821159998341,
+          "max_ms": 12.29978200000187
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 217.31549200007794,
+          "max_ms": 10.965982999994594
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 530.8404450000126,
+          "max_ms": 12.233052999999927
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 45.35406999992847,
+          "max_ms": 9.577353999997285
+        },
+        "runtime.auth.read": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 375.87924699986615,
+          "max_ms": 0.0778439999994589
+        },
+        "runtime.auth.sql": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 73.44683500041356,
+          "max_ms": 0.05096099999718717
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.754272000005585,
+          "max_ms": 0.37825899999734247
+        },
+        "runtime.currentSnapshots": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.1572930000002088,
+          "max_ms": 0.6017110000029788
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9604120000039984,
+          "max_ms": 0.5313720000049216
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.11101000000053318,
+          "max_ms": 0.06395299999712734
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.013766000000032363,
+          "max_ms": 0.007299999997485429
+        },
+        "c08.clone.full-state.cases": {
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 81.53536800001166,
+          "max_ms": 11.29052099999899
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 2.0626369999990857,
+          "max_ms": 1.0376440000000002
+        }
+      },
+      "final_stages": {
+        "canonical.digest": {
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2005.3330439996753,
+          "max_ms": 17.35759600000165
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 802.0821159998341,
+          "max_ms": 12.29978200000187
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 217.31549200007794,
+          "max_ms": 10.965982999994594
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 530.8404450000126,
+          "max_ms": 12.233052999999927
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 45.35406999992847,
+          "max_ms": 9.577353999997285
+        },
+        "runtime.auth.read": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 375.87924699986615,
+          "max_ms": 0.0778439999994589
+        },
+        "runtime.auth.sql": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 73.44683500041356,
+          "max_ms": 0.05096099999718717
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.754272000005585,
+          "max_ms": 0.37825899999734247
+        },
+        "runtime.currentSnapshots": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.1572930000002088,
+          "max_ms": 0.6017110000029788
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9604120000039984,
+          "max_ms": 0.5313720000049216
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.11101000000053318,
+          "max_ms": 0.06395299999712734
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.013766000000032363,
+          "max_ms": 0.007299999997485429
+        },
+        "c08.clone.full-state.cases": {
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 81.53536800001166,
+          "max_ms": 11.29052099999899
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 2.0626369999990857,
+          "max_ms": 1.0376440000000002
+        }
+      },
+      "ranked_inclusive_completed_durations": [
+        {
+          "stage": "canonical.digest",
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2005.3330439996753,
+          "max_ms": 17.35759600000165
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots",
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 802.0821159998341,
+          "max_ms": 12.29978200000187
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.planner",
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 530.8404450000126,
+          "max_ms": 12.233052999999927
+        },
+        {
+          "stage": "runtime.auth.read",
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 375.87924699986615,
+          "max_ms": 0.0778439999994589
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.dashboard",
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 217.31549200007794,
+          "max_ms": 10.965982999994594
+        },
+        {
+          "stage": "c08.clone.full-state.cases",
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 81.53536800001166,
+          "max_ms": 11.29052099999899
+        },
+        {
+          "stage": "runtime.auth.sql",
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 73.44683500041356,
+          "max_ms": 0.05096099999718717
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.procurement",
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 45.35406999992847,
+          "max_ms": 9.577353999997285
+        },
+        {
+          "stage": "c08.clone.selected-case",
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.754272000005585,
+          "max_ms": 0.37825899999734247
+        },
+        {
+          "stage": "c08.clone.full-state.preferences",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 2.0626369999990857,
+          "max_ms": 1.0376440000000002
+        },
+        {
+          "stage": "runtime.currentSnapshots",
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.1572930000002088,
+          "max_ms": 0.6017110000029788
+        },
+        {
+          "stage": "runtime.currentSnapshots.dashboard",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9604120000039984,
+          "max_ms": 0.5313720000049216
+        },
+        {
+          "stage": "runtime.currentSnapshots.planner",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.11101000000053318,
+          "max_ms": 0.06395299999712734
+        },
+        {
+          "stage": "runtime.currentSnapshots.procurement",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.013766000000032363,
+          "max_ms": 0.007299999997485429
+        }
+      ],
+      "choice_pipeline_observations": null,
+      "not_inferred": [
+        "HTTP_response_or_status",
+        "business_success",
+        "durable_commit",
+        "active_call_duration",
+        "test_acceptance"
+      ]
+    },
+    {
+      "input_index": 1,
+      "ordinal": 2,
+      "mode": "compare",
+      "event_sequence": [
+        "start",
+        "end"
+      ],
+      "event_lines": [
+        {
+          "event": "start",
+          "line": 22
+        },
+        {
+          "event": "end",
+          "line": 23
+        }
+      ],
+      "ended": true,
+      "abort_observed": false,
+      "abort_elapsed_ms": null,
+      "end_elapsed_ms": 4537.302415999999,
+      "handler_outcome": "returned",
+      "post_abort_until_end_ms": null,
+      "active_stages_at_abort": {},
+      "stages_at_abort": null,
+      "last_observed_event": "end",
+      "last_observed_elapsed_ms": 4537.302415999999,
+      "last_observed_stages": {
+        "canonical.digest": {
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2004.2145359991555,
+          "max_ms": 27.26404000000184
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 724.3181230000919,
+          "max_ms": 12.644555999999284
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 172.96500900029787,
+          "max_ms": 0.4482369999968796
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 500.06601599977876,
+          "max_ms": 12.585101999997278
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 43.48789399983798,
+          "max_ms": 10.864747999999963
+        },
+        "runtime.auth.read": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 369.43691299986676,
+          "max_ms": 0.11957399999664631
+        },
+        "runtime.auth.sql": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 70.7660560005097,
+          "max_ms": 0.03643500000180211
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.051973000016005,
+          "max_ms": 0.347447000000102
+        },
+        "runtime.currentSnapshots": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.0467959999950835,
+          "max_ms": 0.5630600000004051
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9228409999923315,
+          "max_ms": 0.5019049999973504
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0903279999984079,
+          "max_ms": 0.045937000002595596
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.010523999997531064,
+          "max_ms": 0.005611000000499189
+        },
+        "c08.clone.full-state.cases": {
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 67.06460400004289,
+          "max_ms": 3.5085480000052485
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 1.9052690000025905,
+          "max_ms": 0.9551530000026105
+        }
+      },
+      "final_stages": {
+        "canonical.digest": {
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2004.2145359991555,
+          "max_ms": 27.26404000000184
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 724.3181230000919,
+          "max_ms": 12.644555999999284
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 172.96500900029787,
+          "max_ms": 0.4482369999968796
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 500.06601599977876,
+          "max_ms": 12.585101999997278
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 43.48789399983798,
+          "max_ms": 10.864747999999963
+        },
+        "runtime.auth.read": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 369.43691299986676,
+          "max_ms": 0.11957399999664631
+        },
+        "runtime.auth.sql": {
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 70.7660560005097,
+          "max_ms": 0.03643500000180211
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.051973000016005,
+          "max_ms": 0.347447000000102
+        },
+        "runtime.currentSnapshots": {
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.0467959999950835,
+          "max_ms": 0.5630600000004051
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9228409999923315,
+          "max_ms": 0.5019049999973504
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0903279999984079,
+          "max_ms": 0.045937000002595596
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.010523999997531064,
+          "max_ms": 0.005611000000499189
+        },
+        "c08.clone.full-state.cases": {
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 67.06460400004289,
+          "max_ms": 3.5085480000052485
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 1.9052690000025905,
+          "max_ms": 0.9551530000026105
+        }
+      },
+      "ranked_inclusive_completed_durations": [
+        {
+          "stage": "canonical.digest",
+          "started": 116889,
+          "completed": 116889,
+          "active": 0,
+          "count": 116889,
+          "total_ms": 2004.2145359991555,
+          "max_ms": 27.26404000000184
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots",
+          "started": 4605,
+          "completed": 4605,
+          "active": 0,
+          "count": 4605,
+          "total_ms": 724.3181230000919,
+          "max_ms": 12.644555999999284
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.planner",
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 500.06601599977876,
+          "max_ms": 12.585101999997278
+        },
+        {
+          "stage": "runtime.auth.read",
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 369.43691299986676,
+          "max_ms": 0.11957399999664631
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.dashboard",
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 172.96500900029787,
+          "max_ms": 0.4482369999968796
+        },
+        {
+          "stage": "runtime.auth.sql",
+          "started": 50220,
+          "completed": 50220,
+          "active": 0,
+          "count": 50220,
+          "total_ms": 70.7660560005097,
+          "max_ms": 0.03643500000180211
+        },
+        {
+          "stage": "c08.clone.full-state.cases",
+          "started": 63,
+          "completed": 63,
+          "active": 0,
+          "count": 63,
+          "total_ms": 67.06460400004289,
+          "max_ms": 3.5085480000052485
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.procurement",
+          "started": 4518,
+          "completed": 4518,
+          "active": 0,
+          "count": 4518,
+          "total_ms": 43.48789399983798,
+          "max_ms": 10.864747999999963
+        },
+        {
+          "stage": "c08.clone.selected-case",
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.051973000016005,
+          "max_ms": 0.347447000000102
+        },
+        {
+          "stage": "c08.clone.full-state.preferences",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 1.9052690000025905,
+          "max_ms": 0.9551530000026105
+        },
+        {
+          "stage": "runtime.currentSnapshots",
+          "started": 3,
+          "completed": 3,
+          "active": 0,
+          "count": 3,
+          "total_ms": 1.0467959999950835,
+          "max_ms": 0.5630600000004051
+        },
+        {
+          "stage": "runtime.currentSnapshots.dashboard",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.9228409999923315,
+          "max_ms": 0.5019049999973504
+        },
+        {
+          "stage": "runtime.currentSnapshots.planner",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0903279999984079,
+          "max_ms": 0.045937000002595596
+        },
+        {
+          "stage": "runtime.currentSnapshots.procurement",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.010523999997531064,
+          "max_ms": 0.005611000000499189
+        }
+      ],
+      "choice_pipeline_observations": null,
+      "not_inferred": [
+        "HTTP_response_or_status",
+        "business_success",
+        "durable_commit",
+        "active_call_duration",
+        "test_acceptance"
+      ]
+    },
+    {
+      "input_index": 1,
+      "ordinal": 3,
+      "mode": "compare",
+      "event_sequence": [
+        "start",
+        "end"
+      ],
+      "event_lines": [
+        {
+          "event": "start",
+          "line": 24
+        },
+        {
+          "event": "end",
+          "line": 25
+        }
+      ],
+      "ended": true,
+      "abort_observed": false,
+      "abort_elapsed_ms": null,
+      "end_elapsed_ms": 6774.434304999995,
+      "handler_outcome": "returned",
+      "post_abort_until_end_ms": null,
+      "active_stages_at_abort": {},
+      "stages_at_abort": null,
+      "last_observed_event": "end",
+      "last_observed_elapsed_ms": 6774.434304999995,
+      "last_observed_stages": {
+        "canonical.digest": {
+          "started": 173195,
+          "completed": 173195,
+          "active": 0,
+          "count": 173195,
+          "total_ms": 3038.3194700014137,
+          "max_ms": 24.22970300000452
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 6769,
+          "completed": 6769,
+          "active": 0,
+          "count": 6769,
+          "total_ms": 1107.0003990004043,
+          "max_ms": 12.847535999993852
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 294.2459760001875,
+          "max_ms": 11.08546799999749
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 743.9866410000614,
+          "max_ms": 11.484380000001693
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 60.82531599977665,
+          "max_ms": 11.828353000004427
+        },
+        "runtime.auth.read": {
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 554.1057550001497,
+          "max_ms": 0.4520330000013928
+        },
+        "runtime.auth.sql": {
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 107.09452300044359,
+          "max_ms": 0.1090330000006361
+        },
+        "c08.clone.selected-case": {
+          "started": 58,
+          "completed": 58,
+          "active": 0,
+          "count": 58,
+          "total_ms": 14.558778000020538,
+          "max_ms": 0.51325199999701
+        },
+        "runtime.currentSnapshots": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "count": 5,
+          "total_ms": 2.310137999993458,
+          "max_ms": 0.6113419999965117
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 2.0311840000067605,
+          "max_ms": 0.5312830000038957
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.21355300000141142,
+          "max_ms": 0.06615400000009686
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.02233400000113761,
+          "max_ms": 0.006077000005461741
+        },
+        "c08.clone.full-state.cases": {
+          "started": 97,
+          "completed": 97,
+          "active": 0,
+          "count": 97,
+          "total_ms": 105.90840400001616,
+          "max_ms": 2.9098139999987325
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "count": 8,
+          "total_ms": 8.052239000004192,
+          "max_ms": 1.042617999999493
+        }
+      },
+      "final_stages": {
+        "canonical.digest": {
+          "started": 173195,
+          "completed": 173195,
+          "active": 0,
+          "count": 173195,
+          "total_ms": 3038.3194700014137,
+          "max_ms": 24.22970300000452
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 6769,
+          "completed": 6769,
+          "active": 0,
+          "count": 6769,
+          "total_ms": 1107.0003990004043,
+          "max_ms": 12.847535999993852
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 294.2459760001875,
+          "max_ms": 11.08546799999749
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 743.9866410000614,
+          "max_ms": 11.484380000001693
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 60.82531599977665,
+          "max_ms": 11.828353000004427
+        },
+        "runtime.auth.read": {
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 554.1057550001497,
+          "max_ms": 0.4520330000013928
+        },
+        "runtime.auth.sql": {
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 107.09452300044359,
+          "max_ms": 0.1090330000006361
+        },
+        "c08.clone.selected-case": {
+          "started": 58,
+          "completed": 58,
+          "active": 0,
+          "count": 58,
+          "total_ms": 14.558778000020538,
+          "max_ms": 0.51325199999701
+        },
+        "runtime.currentSnapshots": {
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "count": 5,
+          "total_ms": 2.310137999993458,
+          "max_ms": 0.6113419999965117
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 2.0311840000067605,
+          "max_ms": 0.5312830000038957
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.21355300000141142,
+          "max_ms": 0.06615400000009686
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.02233400000113761,
+          "max_ms": 0.006077000005461741
+        },
+        "c08.clone.full-state.cases": {
+          "started": 97,
+          "completed": 97,
+          "active": 0,
+          "count": 97,
+          "total_ms": 105.90840400001616,
+          "max_ms": 2.9098139999987325
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "count": 8,
+          "total_ms": 8.052239000004192,
+          "max_ms": 1.042617999999493
+        }
+      },
+      "ranked_inclusive_completed_durations": [
+        {
+          "stage": "canonical.digest",
+          "started": 173195,
+          "completed": 173195,
+          "active": 0,
+          "count": 173195,
+          "total_ms": 3038.3194700014137,
+          "max_ms": 24.22970300000452
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots",
+          "started": 6769,
+          "completed": 6769,
+          "active": 0,
+          "count": 6769,
+          "total_ms": 1107.0003990004043,
+          "max_ms": 12.847535999993852
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.planner",
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 743.9866410000614,
+          "max_ms": 11.484380000001693
+        },
+        {
+          "stage": "runtime.auth.read",
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 554.1057550001497,
+          "max_ms": 0.4520330000013928
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.dashboard",
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 294.2459760001875,
+          "max_ms": 11.08546799999749
+        },
+        {
+          "stage": "runtime.auth.sql",
+          "started": 74520,
+          "completed": 74520,
+          "active": 0,
+          "count": 74520,
+          "total_ms": 107.09452300044359,
+          "max_ms": 0.1090330000006361
+        },
+        {
+          "stage": "c08.clone.full-state.cases",
+          "started": 97,
+          "completed": 97,
+          "active": 0,
+          "count": 97,
+          "total_ms": 105.90840400001616,
+          "max_ms": 2.9098139999987325
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.procurement",
+          "started": 6682,
+          "completed": 6682,
+          "active": 0,
+          "count": 6682,
+          "total_ms": 60.82531599977665,
+          "max_ms": 11.828353000004427
+        },
+        {
+          "stage": "c08.clone.selected-case",
+          "started": 58,
+          "completed": 58,
+          "active": 0,
+          "count": 58,
+          "total_ms": 14.558778000020538,
+          "max_ms": 0.51325199999701
+        },
+        {
+          "stage": "c08.clone.full-state.preferences",
+          "started": 8,
+          "completed": 8,
+          "active": 0,
+          "count": 8,
+          "total_ms": 8.052239000004192,
+          "max_ms": 1.042617999999493
+        },
+        {
+          "stage": "runtime.currentSnapshots",
+          "started": 5,
+          "completed": 5,
+          "active": 0,
+          "count": 5,
+          "total_ms": 2.310137999993458,
+          "max_ms": 0.6113419999965117
+        },
+        {
+          "stage": "runtime.currentSnapshots.dashboard",
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 2.0311840000067605,
+          "max_ms": 0.5312830000038957
+        },
+        {
+          "stage": "runtime.currentSnapshots.planner",
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.21355300000141142,
+          "max_ms": 0.06615400000009686
+        },
+        {
+          "stage": "runtime.currentSnapshots.procurement",
+          "started": 4,
+          "completed": 4,
+          "active": 0,
+          "count": 4,
+          "total_ms": 0.02233400000113761,
+          "max_ms": 0.006077000005461741
+        }
+      ],
+      "choice_pipeline_observations": null,
+      "not_inferred": [
+        "HTTP_response_or_status",
+        "business_success",
+        "durable_commit",
+        "active_call_duration",
+        "test_acceptance"
+      ]
+    },
+    {
+      "input_index": 1,
+      "ordinal": 4,
+      "mode": "choose",
+      "event_sequence": [
+        "start",
+        "end"
+      ],
+      "event_lines": [
+        {
+          "event": "start",
+          "line": 26
+        },
+        {
+          "event": "end",
+          "line": 27
+        }
+      ],
+      "ended": true,
+      "abort_observed": false,
+      "abort_elapsed_ms": null,
+      "end_elapsed_ms": 8129.195336000004,
+      "handler_outcome": "returned",
+      "post_abort_until_end_ms": null,
+      "active_stages_at_abort": {},
+      "stages_at_abort": null,
+      "last_observed_event": "end",
+      "last_observed_elapsed_ms": 8129.195336000004,
+      "last_observed_stages": {
+        "canonical.digest": {
+          "started": 195778,
+          "completed": 195778,
+          "active": 0,
+          "count": 195778,
+          "total_ms": 3491.585429999199,
+          "max_ms": 21.207211000000825
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 7749,
+          "completed": 7749,
+          "active": 0,
+          "count": 7749,
+          "total_ms": 1273.0099209999535,
+          "max_ms": 11.967445000002044
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 307.33488500009844,
+          "max_ms": 8.572590000003402
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 900.6253479994703,
+          "max_ms": 11.891929999997956
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 56.64583799960383,
+          "max_ms": 1.0354550000047311
+        },
+        "runtime.auth.read": {
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 629.5345829996004,
+          "max_ms": 0.7182429999957094
+        },
+        "runtime.auth.sql": {
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 123.39138499978435,
+          "max_ms": 0.040377999997872394
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.850761000001512,
+          "max_ms": 0.35674999999901047
+        },
+        "choice.authorize": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 9.878052000000025,
+          "max_ms": 9.878052000000025
+        },
+        "runtime.currentSnapshots": {
+          "started": 21,
+          "completed": 21,
+          "active": 0,
+          "count": 21,
+          "total_ms": 15.96787200000108,
+          "max_ms": 1.3345550000012736
+        },
+        "choice.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.415156999995816,
+          "max_ms": 20.415156999995816
+        },
+        "c08.clone.full-state.cases": {
+          "started": 106,
+          "completed": 106,
+          "active": 0,
+          "count": 106,
+          "total_ms": 120.59087299996463,
+          "max_ms": 2.983749999999418
+        },
+        "choice.confirm": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.8464660000026925,
+          "max_ms": 1.8464660000026925
+        },
+        "choice.case": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 6.009665999998106,
+          "max_ms": 6.009665999998106
+        },
+        "choice.compare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 5020.346163000002,
+          "max_ms": 5020.346163000002
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 14.043135999992955,
+          "max_ms": 1.1759170000004815
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 1.6041499999773805,
+          "max_ms": 0.1656680000014603
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 0.13936199998715892,
+          "max_ms": 0.01952500000334112
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 12,
+          "completed": 12,
+          "active": 0,
+          "count": 12,
+          "total_ms": 12.041990000005171,
+          "max_ms": 1.020700000000943
+        },
+        "choice.stored-result": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 402.05783400000655,
+          "max_ms": 207.56566300000122
+        },
+        "choice.values": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 2231.2632379999995,
+          "max_ms": 2231.2632379999995
+        },
+        "choice.save": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 208.74499600000127,
+          "max_ms": 208.74499600000127
+        },
+        "c08.clone.full-state.outbox": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.1750839999949676,
+          "max_ms": 1.1750839999949676
+        },
+        "choice.capture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 65.2421469999972,
+          "max_ms": 65.2421469999972
+        }
+      },
+      "final_stages": {
+        "canonical.digest": {
+          "started": 195778,
+          "completed": 195778,
+          "active": 0,
+          "count": 195778,
+          "total_ms": 3491.585429999199,
+          "max_ms": 21.207211000000825
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 7749,
+          "completed": 7749,
+          "active": 0,
+          "count": 7749,
+          "total_ms": 1273.0099209999535,
+          "max_ms": 11.967445000002044
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 307.33488500009844,
+          "max_ms": 8.572590000003402
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 900.6253479994703,
+          "max_ms": 11.891929999997956
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 56.64583799960383,
+          "max_ms": 1.0354550000047311
+        },
+        "runtime.auth.read": {
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 629.5345829996004,
+          "max_ms": 0.7182429999957094
+        },
+        "runtime.auth.sql": {
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 123.39138499978435,
+          "max_ms": 0.040377999997872394
+        },
+        "c08.clone.selected-case": {
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.850761000001512,
+          "max_ms": 0.35674999999901047
+        },
+        "choice.authorize": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 9.878052000000025,
+          "max_ms": 9.878052000000025
+        },
+        "runtime.currentSnapshots": {
+          "started": 21,
+          "completed": 21,
+          "active": 0,
+          "count": 21,
+          "total_ms": 15.96787200000108,
+          "max_ms": 1.3345550000012736
+        },
+        "choice.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.415156999995816,
+          "max_ms": 20.415156999995816
+        },
+        "c08.clone.full-state.cases": {
+          "started": 106,
+          "completed": 106,
+          "active": 0,
+          "count": 106,
+          "total_ms": 120.59087299996463,
+          "max_ms": 2.983749999999418
+        },
+        "choice.confirm": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.8464660000026925,
+          "max_ms": 1.8464660000026925
+        },
+        "choice.case": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 6.009665999998106,
+          "max_ms": 6.009665999998106
+        },
+        "choice.compare": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 5020.346163000002,
+          "max_ms": 5020.346163000002
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 14.043135999992955,
+          "max_ms": 1.1759170000004815
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 1.6041499999773805,
+          "max_ms": 0.1656680000014603
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 0.13936199998715892,
+          "max_ms": 0.01952500000334112
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 12,
+          "completed": 12,
+          "active": 0,
+          "count": 12,
+          "total_ms": 12.041990000005171,
+          "max_ms": 1.020700000000943
+        },
+        "choice.stored-result": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 402.05783400000655,
+          "max_ms": 207.56566300000122
+        },
+        "choice.values": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 2231.2632379999995,
+          "max_ms": 2231.2632379999995
+        },
+        "choice.save": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 208.74499600000127,
+          "max_ms": 208.74499600000127
+        },
+        "c08.clone.full-state.outbox": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.1750839999949676,
+          "max_ms": 1.1750839999949676
+        },
+        "choice.capture": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 65.2421469999972,
+          "max_ms": 65.2421469999972
+        }
+      },
+      "ranked_inclusive_completed_durations": [
+        {
+          "stage": "choice.compare",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 5020.346163000002,
+          "max_ms": 5020.346163000002
+        },
+        {
+          "stage": "canonical.digest",
+          "started": 195778,
+          "completed": 195778,
+          "active": 0,
+          "count": 195778,
+          "total_ms": 3491.585429999199,
+          "max_ms": 21.207211000000825
+        },
+        {
+          "stage": "choice.values",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 2231.2632379999995,
+          "max_ms": 2231.2632379999995
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots",
+          "started": 7749,
+          "completed": 7749,
+          "active": 0,
+          "count": 7749,
+          "total_ms": 1273.0099209999535,
+          "max_ms": 11.967445000002044
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.planner",
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 900.6253479994703,
+          "max_ms": 11.891929999997956
+        },
+        {
+          "stage": "runtime.auth.read",
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 629.5345829996004,
+          "max_ms": 0.7182429999957094
+        },
+        {
+          "stage": "choice.stored-result",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 402.05783400000655,
+          "max_ms": 207.56566300000122
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.dashboard",
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 307.33488500009844,
+          "max_ms": 8.572590000003402
+        },
+        {
+          "stage": "choice.save",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 208.74499600000127,
+          "max_ms": 208.74499600000127
+        },
+        {
+          "stage": "runtime.auth.sql",
+          "started": 83772,
+          "completed": 83772,
+          "active": 0,
+          "count": 83772,
+          "total_ms": 123.39138499978435,
+          "max_ms": 0.040377999997872394
+        },
+        {
+          "stage": "c08.clone.full-state.cases",
+          "started": 106,
+          "completed": 106,
+          "active": 0,
+          "count": 106,
+          "total_ms": 120.59087299996463,
+          "max_ms": 2.983749999999418
+        },
+        {
+          "stage": "choice.capture",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 65.2421469999972,
+          "max_ms": 65.2421469999972
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.procurement",
+          "started": 7484,
+          "completed": 7484,
+          "active": 0,
+          "count": 7484,
+          "total_ms": 56.64583799960383,
+          "max_ms": 1.0354550000047311
+        },
+        {
+          "stage": "choice.replay",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.415156999995816,
+          "max_ms": 20.415156999995816
+        },
+        {
+          "stage": "runtime.currentSnapshots",
+          "started": 21,
+          "completed": 21,
+          "active": 0,
+          "count": 21,
+          "total_ms": 15.96787200000108,
+          "max_ms": 1.3345550000012736
+        },
+        {
+          "stage": "runtime.currentSnapshots.dashboard",
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 14.043135999992955,
+          "max_ms": 1.1759170000004815
+        },
+        {
+          "stage": "c08.clone.selected-case",
+          "started": 50,
+          "completed": 50,
+          "active": 0,
+          "count": 50,
+          "total_ms": 12.850761000001512,
+          "max_ms": 0.35674999999901047
+        },
+        {
+          "stage": "c08.clone.full-state.preferences",
+          "started": 12,
+          "completed": 12,
+          "active": 0,
+          "count": 12,
+          "total_ms": 12.041990000005171,
+          "max_ms": 1.020700000000943
+        },
+        {
+          "stage": "choice.authorize",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 9.878052000000025,
+          "max_ms": 9.878052000000025
+        },
+        {
+          "stage": "choice.case",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 6.009665999998106,
+          "max_ms": 6.009665999998106
+        },
+        {
+          "stage": "choice.confirm",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.8464660000026925,
+          "max_ms": 1.8464660000026925
+        },
+        {
+          "stage": "runtime.currentSnapshots.planner",
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 1.6041499999773805,
+          "max_ms": 0.1656680000014603
+        },
+        {
+          "stage": "c08.clone.full-state.outbox",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 1.1750839999949676,
+          "max_ms": 1.1750839999949676
+        },
+        {
+          "stage": "runtime.currentSnapshots.procurement",
+          "started": 17,
+          "completed": 17,
+          "active": 0,
+          "count": 17,
+          "total_ms": 0.13936199998715892,
+          "max_ms": 0.01952500000334112
+        }
+      ],
+      "choice_pipeline_observations": {
+        "choice.authorize": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 9.878052000000025,
+            "max_ms": 9.878052000000025
+          }
+        },
+        "choice.replay": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 20.415156999995816,
+            "max_ms": 20.415156999995816
+          }
+        },
+        "choice.confirm": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 1.8464660000026925,
+            "max_ms": 1.8464660000026925
+          }
+        },
+        "choice.case": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 6.009665999998106,
+            "max_ms": 6.009665999998106
+          }
+        },
+        "choice.compare": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 5020.346163000002,
+            "max_ms": 5020.346163000002
+          }
+        },
+        "choice.stored-result": {
+          "observed": true,
+          "counters": {
+            "started": 2,
+            "completed": 2,
+            "active": 0,
+            "count": 2,
+            "total_ms": 402.05783400000655,
+            "max_ms": 207.56566300000122
+          }
+        },
+        "choice.values": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 2231.2632379999995,
+            "max_ms": 2231.2632379999995
+          }
+        },
+        "choice.save": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 208.74499600000127,
+            "max_ms": 208.74499600000127
+          }
+        },
+        "choice.capture": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 65.2421469999972,
+            "max_ms": 65.2421469999972
+          }
+        }
+      },
+      "not_inferred": [
+        "HTTP_response_or_status",
+        "business_success",
+        "durable_commit",
+        "active_call_duration",
+        "test_acceptance"
+      ]
+    },
+    {
+      "input_index": 1,
+      "ordinal": 5,
+      "mode": "choose",
+      "event_sequence": [
+        "start",
+        "end"
+      ],
+      "event_lines": [
+        {
+          "event": "start",
+          "line": 28
+        },
+        {
+          "event": "end",
+          "line": 29
+        }
+      ],
+      "ended": true,
+      "abort_observed": false,
+      "abort_elapsed_ms": null,
+      "end_elapsed_ms": 517.1807150000022,
+      "handler_outcome": "returned",
+      "post_abort_until_end_ms": null,
+      "active_stages_at_abort": {},
+      "stages_at_abort": null,
+      "last_observed_event": "end",
+      "last_observed_elapsed_ms": 517.1807150000022,
+      "last_observed_stages": {
+        "canonical.digest": {
+          "started": 2615,
+          "completed": 2615,
+          "active": 0,
+          "count": 2615,
+          "total_ms": 66.32107900030678,
+          "max_ms": 13.734346999997797
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 196,
+          "completed": 196,
+          "active": 0,
+          "count": 196,
+          "total_ms": 25.112645999950473,
+          "max_ms": 0.33084799999778625
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 5.260833000036655,
+          "max_ms": 0.08822800000052666
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 18.21102500006964,
+          "max_ms": 0.23459700000239536
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 1.434642999949574,
+          "max_ms": 0.021589999996649567
+        },
+        "runtime.auth.read": {
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 10.85633400009101,
+          "max_ms": 0.05723099999886472
+        },
+        "runtime.auth.sql": {
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 2.510740000056103,
+          "max_ms": 0.029162999999243766
+        },
+        "c08.clone.selected-case": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.8183649999991758,
+          "max_ms": 0.436240999995789
+        },
+        "choice.authorize": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 32.953418999997666,
+          "max_ms": 32.953418999997666
+        },
+        "runtime.currentSnapshots": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0035849999912898056,
+          "max_ms": 0.0018709999931161292
+        },
+        "choice.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.18556499999977,
+          "max_ms": 20.18556499999977
+        },
+        "c08.clone.full-state.cases": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 4.967635000000882,
+          "max_ms": 4.967635000000882
+        }
+      },
+      "final_stages": {
+        "canonical.digest": {
+          "started": 2615,
+          "completed": 2615,
+          "active": 0,
+          "count": 2615,
+          "total_ms": 66.32107900030678,
+          "max_ms": 13.734346999997797
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 196,
+          "completed": 196,
+          "active": 0,
+          "count": 196,
+          "total_ms": 25.112645999950473,
+          "max_ms": 0.33084799999778625
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 5.260833000036655,
+          "max_ms": 0.08822800000052666
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 18.21102500006964,
+          "max_ms": 0.23459700000239536
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 1.434642999949574,
+          "max_ms": 0.021589999996649567
+        },
+        "runtime.auth.read": {
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 10.85633400009101,
+          "max_ms": 0.05723099999886472
+        },
+        "runtime.auth.sql": {
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 2.510740000056103,
+          "max_ms": 0.029162999999243766
+        },
+        "c08.clone.selected-case": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.8183649999991758,
+          "max_ms": 0.436240999995789
+        },
+        "choice.authorize": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 32.953418999997666,
+          "max_ms": 32.953418999997666
+        },
+        "runtime.currentSnapshots": {
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0035849999912898056,
+          "max_ms": 0.0018709999931161292
+        },
+        "choice.replay": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.18556499999977,
+          "max_ms": 20.18556499999977
+        },
+        "c08.clone.full-state.cases": {
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 4.967635000000882,
+          "max_ms": 4.967635000000882
+        }
+      },
+      "ranked_inclusive_completed_durations": [
+        {
+          "stage": "canonical.digest",
+          "started": 2615,
+          "completed": 2615,
+          "active": 0,
+          "count": 2615,
+          "total_ms": 66.32107900030678,
+          "max_ms": 13.734346999997797
+        },
+        {
+          "stage": "choice.authorize",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 32.953418999997666,
+          "max_ms": 32.953418999997666
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots",
+          "started": 196,
+          "completed": 196,
+          "active": 0,
+          "count": 196,
+          "total_ms": 25.112645999950473,
+          "max_ms": 0.33084799999778625
+        },
+        {
+          "stage": "choice.replay",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 20.18556499999977,
+          "max_ms": 20.18556499999977
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.planner",
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 18.21102500006964,
+          "max_ms": 0.23459700000239536
+        },
+        {
+          "stage": "runtime.auth.read",
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 10.85633400009101,
+          "max_ms": 0.05723099999886472
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.dashboard",
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 5.260833000036655,
+          "max_ms": 0.08822800000052666
+        },
+        {
+          "stage": "c08.clone.full-state.cases",
+          "started": 1,
+          "completed": 1,
+          "active": 0,
+          "count": 1,
+          "total_ms": 4.967635000000882,
+          "max_ms": 4.967635000000882
+        },
+        {
+          "stage": "runtime.auth.sql",
+          "started": 1089,
+          "completed": 1089,
+          "active": 0,
+          "count": 1089,
+          "total_ms": 2.510740000056103,
+          "max_ms": 0.029162999999243766
+        },
+        {
+          "stage": "runtime.currentAccessSnapshots.procurement",
+          "started": 101,
+          "completed": 101,
+          "active": 0,
+          "count": 101,
+          "total_ms": 1.434642999949574,
+          "max_ms": 0.021589999996649567
+        },
+        {
+          "stage": "c08.clone.selected-case",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.8183649999991758,
+          "max_ms": 0.436240999995789
+        },
+        {
+          "stage": "runtime.currentSnapshots",
+          "started": 2,
+          "completed": 2,
+          "active": 0,
+          "count": 2,
+          "total_ms": 0.0035849999912898056,
+          "max_ms": 0.0018709999931161292
+        }
+      ],
+      "choice_pipeline_observations": {
+        "choice.authorize": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 32.953418999997666,
+            "max_ms": 32.953418999997666
+          }
+        },
+        "choice.replay": {
+          "observed": true,
+          "counters": {
+            "started": 1,
+            "completed": 1,
+            "active": 0,
+            "count": 1,
+            "total_ms": 20.18556499999977,
+            "max_ms": 20.18556499999977
+          }
+        },
+        "choice.confirm": {
+          "observed": false,
+          "counters": null
+        },
+        "choice.case": {
+          "observed": false,
+          "counters": null
+        },
+        "choice.compare": {
+          "observed": false,
+          "counters": null
+        },
+        "choice.stored-result": {
+          "observed": false,
+          "counters": null
+        },
+        "choice.values": {
+          "observed": false,
+          "counters": null
+        },
+        "choice.save": {
+          "observed": false,
+          "counters": null
+        },
+        "choice.capture": {
+          "observed": false,
+          "counters": null
+        }
+      },
+      "not_inferred": [
+        "HTTP_response_or_status",
+        "business_success",
+        "durable_commit",
+        "active_call_duration",
+        "test_acceptance"
+      ]
+    }
+  ],
+  "mode_totals": {
+    "compare": {
+      "profiles_observed": 3,
+      "profiles_ended": 3,
+      "profiles_incomplete": 0,
+      "profiles_with_abort_event": 0,
+      "handler_returned_count": 3,
+      "handler_threw_count": 0,
+      "end_snapshot_totals_only": {
+        "canonical.digest": {
+          "started": 406973,
+          "completed": 406973,
+          "active_at_handler_end_sum": 0,
+          "count": 406973,
+          "total_ms": 7047.8670500002445,
+          "max_ms": 27.26404000000184
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 15979,
+          "completed": 15979,
+          "active_at_handler_end_sum": 0,
+          "count": 15979,
+          "total_ms": 2633.40063800033,
+          "max_ms": 12.847535999993852
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 15718,
+          "completed": 15718,
+          "active_at_handler_end_sum": 0,
+          "count": 15718,
+          "total_ms": 684.5264770005633,
+          "max_ms": 11.08546799999749
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 15718,
+          "completed": 15718,
+          "active_at_handler_end_sum": 0,
+          "count": 15718,
+          "total_ms": 1774.8931019998527,
+          "max_ms": 12.585101999997278
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 15718,
+          "completed": 15718,
+          "active_at_handler_end_sum": 0,
+          "count": 15718,
+          "total_ms": 149.6672799995431,
+          "max_ms": 11.828353000004427
+        },
+        "runtime.auth.read": {
+          "started": 174960,
+          "completed": 174960,
+          "active_at_handler_end_sum": 0,
+          "count": 174960,
+          "total_ms": 1299.4219149998826,
+          "max_ms": 0.4520330000013928
+        },
+        "runtime.auth.sql": {
+          "started": 174960,
+          "completed": 174960,
+          "active_at_handler_end_sum": 0,
+          "count": 174960,
+          "total_ms": 251.30741400136685,
+          "max_ms": 0.1090330000006361
+        },
+        "c08.clone.selected-case": {
+          "started": 158,
+          "completed": 158,
+          "active_at_handler_end_sum": 0,
+          "count": 158,
+          "total_ms": 39.36502300004213,
+          "max_ms": 0.51325199999701
+        },
+        "runtime.currentSnapshots": {
+          "started": 11,
+          "completed": 11,
+          "active_at_handler_end_sum": 0,
+          "count": 11,
+          "total_ms": 4.51422699998875,
+          "max_ms": 0.6113419999965117
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 8,
+          "completed": 8,
+          "active_at_handler_end_sum": 0,
+          "count": 8,
+          "total_ms": 3.9144370000030904,
+          "max_ms": 0.5313720000049216
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 8,
+          "completed": 8,
+          "active_at_handler_end_sum": 0,
+          "count": 8,
+          "total_ms": 0.4148910000003525,
+          "max_ms": 0.06615400000009686
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 8,
+          "completed": 8,
+          "active_at_handler_end_sum": 0,
+          "count": 8,
+          "total_ms": 0.04662399999870104,
+          "max_ms": 0.007299999997485429
+        },
+        "c08.clone.full-state.cases": {
+          "started": 223,
+          "completed": 223,
+          "active_at_handler_end_sum": 0,
+          "count": 223,
+          "total_ms": 254.5083760000707,
+          "max_ms": 11.29052099999899
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 12,
+          "completed": 12,
+          "active_at_handler_end_sum": 0,
+          "count": 12,
+          "total_ms": 12.020145000005868,
+          "max_ms": 1.042617999999493
+        }
+      },
+      "aggregate_durations_are_inclusive_and_not_additive_across_stages": true
+    },
+    "choose": {
+      "profiles_observed": 2,
+      "profiles_ended": 2,
+      "profiles_incomplete": 0,
+      "profiles_with_abort_event": 0,
+      "handler_returned_count": 2,
+      "handler_threw_count": 0,
+      "end_snapshot_totals_only": {
+        "canonical.digest": {
+          "started": 198393,
+          "completed": 198393,
+          "active_at_handler_end_sum": 0,
+          "count": 198393,
+          "total_ms": 3557.9065089995056,
+          "max_ms": 21.207211000000825
+        },
+        "runtime.currentAccessSnapshots": {
+          "started": 7945,
+          "completed": 7945,
+          "active_at_handler_end_sum": 0,
+          "count": 7945,
+          "total_ms": 1298.122566999904,
+          "max_ms": 11.967445000002044
+        },
+        "runtime.currentAccessSnapshots.dashboard": {
+          "started": 7585,
+          "completed": 7585,
+          "active_at_handler_end_sum": 0,
+          "count": 7585,
+          "total_ms": 312.5957180001351,
+          "max_ms": 8.572590000003402
+        },
+        "runtime.currentAccessSnapshots.planner": {
+          "started": 7585,
+          "completed": 7585,
+          "active_at_handler_end_sum": 0,
+          "count": 7585,
+          "total_ms": 918.8363729995399,
+          "max_ms": 11.891929999997956
+        },
+        "runtime.currentAccessSnapshots.procurement": {
+          "started": 7585,
+          "completed": 7585,
+          "active_at_handler_end_sum": 0,
+          "count": 7585,
+          "total_ms": 58.0804809995534,
+          "max_ms": 1.0354550000047311
+        },
+        "runtime.auth.read": {
+          "started": 84861,
+          "completed": 84861,
+          "active_at_handler_end_sum": 0,
+          "count": 84861,
+          "total_ms": 640.3909169996914,
+          "max_ms": 0.7182429999957094
+        },
+        "runtime.auth.sql": {
+          "started": 84861,
+          "completed": 84861,
+          "active_at_handler_end_sum": 0,
+          "count": 84861,
+          "total_ms": 125.90212499984045,
+          "max_ms": 0.040377999997872394
+        },
+        "c08.clone.selected-case": {
+          "started": 52,
+          "completed": 52,
+          "active_at_handler_end_sum": 0,
+          "count": 52,
+          "total_ms": 13.669126000000688,
+          "max_ms": 0.436240999995789
+        },
+        "choice.authorize": {
+          "started": 2,
+          "completed": 2,
+          "active_at_handler_end_sum": 0,
+          "count": 2,
+          "total_ms": 42.83147099999769,
+          "max_ms": 32.953418999997666
+        },
+        "runtime.currentSnapshots": {
+          "started": 23,
+          "completed": 23,
+          "active_at_handler_end_sum": 0,
+          "count": 23,
+          "total_ms": 15.97145699999237,
+          "max_ms": 1.3345550000012736
+        },
+        "choice.replay": {
+          "started": 2,
+          "completed": 2,
+          "active_at_handler_end_sum": 0,
+          "count": 2,
+          "total_ms": 40.600721999995585,
+          "max_ms": 20.415156999995816
+        },
+        "c08.clone.full-state.cases": {
+          "started": 107,
+          "completed": 107,
+          "active_at_handler_end_sum": 0,
+          "count": 107,
+          "total_ms": 125.55850799996551,
+          "max_ms": 4.967635000000882
+        },
+        "choice.confirm": {
+          "started": 1,
+          "completed": 1,
+          "active_at_handler_end_sum": 0,
+          "count": 1,
+          "total_ms": 1.8464660000026925,
+          "max_ms": 1.8464660000026925
+        },
+        "choice.case": {
+          "started": 1,
+          "completed": 1,
+          "active_at_handler_end_sum": 0,
+          "count": 1,
+          "total_ms": 6.009665999998106,
+          "max_ms": 6.009665999998106
+        },
+        "choice.compare": {
+          "started": 1,
+          "completed": 1,
+          "active_at_handler_end_sum": 0,
+          "count": 1,
+          "total_ms": 5020.346163000002,
+          "max_ms": 5020.346163000002
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "started": 17,
+          "completed": 17,
+          "active_at_handler_end_sum": 0,
+          "count": 17,
+          "total_ms": 14.043135999992955,
+          "max_ms": 1.1759170000004815
+        },
+        "runtime.currentSnapshots.planner": {
+          "started": 17,
+          "completed": 17,
+          "active_at_handler_end_sum": 0,
+          "count": 17,
+          "total_ms": 1.6041499999773805,
+          "max_ms": 0.1656680000014603
+        },
+        "runtime.currentSnapshots.procurement": {
+          "started": 17,
+          "completed": 17,
+          "active_at_handler_end_sum": 0,
+          "count": 17,
+          "total_ms": 0.13936199998715892,
+          "max_ms": 0.01952500000334112
+        },
+        "c08.clone.full-state.preferences": {
+          "started": 12,
+          "completed": 12,
+          "active_at_handler_end_sum": 0,
+          "count": 12,
+          "total_ms": 12.041990000005171,
+          "max_ms": 1.020700000000943
+        },
+        "choice.stored-result": {
+          "started": 2,
+          "completed": 2,
+          "active_at_handler_end_sum": 0,
+          "count": 2,
+          "total_ms": 402.05783400000655,
+          "max_ms": 207.56566300000122
+        },
+        "choice.values": {
+          "started": 1,
+          "completed": 1,
+          "active_at_handler_end_sum": 0,
+          "count": 1,
+          "total_ms": 2231.2632379999995,
+          "max_ms": 2231.2632379999995
+        },
+        "choice.save": {
+          "started": 1,
+          "completed": 1,
+          "active_at_handler_end_sum": 0,
+          "count": 1,
+          "total_ms": 208.74499600000127,
+          "max_ms": 208.74499600000127
+        },
+        "c08.clone.full-state.outbox": {
+          "started": 1,
+          "completed": 1,
+          "active_at_handler_end_sum": 0,
+          "count": 1,
+          "total_ms": 1.1750839999949676,
+          "max_ms": 1.1750839999949676
+        },
+        "choice.capture": {
+          "started": 1,
+          "completed": 1,
+          "active_at_handler_end_sum": 0,
+          "count": 1,
+          "total_ms": 65.2421469999972,
+          "max_ms": 65.2421469999972
+        }
+      },
+      "aggregate_durations_are_inclusive_and_not_additive_across_stages": true
+    }
+  },
+  "issues": [],
+  "interpretation_limits": [
+    "Each input is a separate CLI process stream; ordinals are process-local and do not identify a test, user, case or request payload.",
+    "Stage durations are inclusive and may overlap. Do not add parent and child buckets or compare their sum with wall time.",
+    "completed and count mean a measured call settled, whether it returned or threw; they do not mean a successful business operation.",
+    "active = started - completed describes calls still in flight at that event; their unfinished durations are absent from total_ms and max_ms.",
+    "Mode aggregates use only the end snapshot once per profile. An abort snapshot is cumulative evidence at that instant, not another completed profile.",
+    "choice.capture is inside choice.save; runtime surface buckets are inside their root bucket; auth.sql is inside auth.read; canonical digests may be nested in any of these.",
+    "The HTTP root timer includes handler admission and finalization. It does not measure browser receipt or prove an HTTP response, persisted choice or test success.",
+    "The abort event is the server Request.signal observation; absence does not prove that the browser did not abort. post_abort_until_end_ms is server continuation only.",
+    "An absent stage is merely not observed in the supplied log; a missing end or active work at end remains explicit.",
+    "This is diagnostic-only evidence and supplies no nominal acceptance fragments."
+  ],
+  "acceptance_fragments": 0,
+  "product_execution": false,
+  "remote_calls": false
+}

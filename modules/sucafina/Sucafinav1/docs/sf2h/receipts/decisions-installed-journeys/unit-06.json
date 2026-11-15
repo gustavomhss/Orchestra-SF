@@ -1,0 +1,923 @@
+{
+  "schema": "sf52-p15-supplemental-unit-receipt-v6",
+  "state": "COMPLETED_TEST_AND_CLEANUP_JOBS",
+  "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "source": "43a31f4c51c0897287fdc53468bd171adca4795d",
+  "source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+  "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+  "W_tree": "f5cc7dfadf85792821561d558bddd186a2a4904b",
+  "prior_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+  "prior_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+  "material_sha256": "8834f50367da2e9752074ea368624a426dd404f3939649b97c2ab7b6c38d4cea",
+  "patch_sha256": "3d01d861498e6eb2adc883cfb0b7185f71b543061b2b702a68d13bdecceb7292",
+  "scope_counts": {
+    "owned": 10,
+    "shared": 21,
+    "unit_proposal": 5
+  },
+  "diagnostic_instrumentation": false,
+  "target_writes52": 0,
+  "GLOBAL_RELEASE": false,
+  "unit": 6,
+  "S": "79913f877c0ee58922a2f9635a48a350269dd356",
+  "S_tree": "29c8ba854fb61f0e6f1633609bc58ff71bd791a8",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts"
+    ],
+    "env": {}
+  },
+  "request_bytes": 209,
+  "request_blob": "68c0266b3bb6761ad07f736b09e6d90b855634ce",
+  "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+  "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+  "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+  "branch": "ci-run-linux-astra-wp11-12521803-68c0266b-m52-u06",
+  "selection": [
+    "Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts"
+  ],
+  "expected_cases_static": 36,
+  "expected_expects_static": 154,
+  "expected_count_is_not_execution_evidence": true,
+  "unit_timeout_changed": false,
+  "installed_ui_case_budget_ms": 180000,
+  "UI_abort_ms": 10000,
+  "workers": 1,
+  "retries": 0,
+  "repeat": 1,
+  "source52": "ACTIVE",
+  "target105": "ENDED_NO_SUCCESSOR",
+  "acceptance_fragments": 0,
+  "run_id": 43690045333,
+  "job_id": 132738595779,
+  "cleanup_job_id": 132739009529,
+  "conclusion": "success",
+  "cleanup_conclusion": "success",
+  "scoped_unit_result": "PASS",
+  "passed": 36,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "expects": 154,
+  "files": 1,
+  "duration_ms": 257.0,
+  "observed_case_count": 36,
+  "expected_case_count": 36,
+  "runtime_counts": {
+    "PASS": 36
+  },
+  "integrity": {
+    "real_complete_log_sha_and_bytes_match_collector": true,
+    "single_bun_invocation": true,
+    "one_selected_file_header": true,
+    "all_36_original_file_name_keys_exactly_once": true,
+    "one_complete_summary_set": true,
+    "summary_matches_actual_observations": true,
+    "actual_case_count_36": true,
+    "actual_file_count_1": true,
+    "actual_expect_count_154": true,
+    "zero_skips_and_todos": true,
+    "actions_attempt_one": true,
+    "single_accepted_positive_control": true,
+    "metric_fixed_schema_and_counts_valid": true,
+    "request_is_only_original_selected_file": true,
+    "test_and_cleanup_successful": true
+  },
+  "assertions": {
+    "expect_calls": 154,
+    "basis": "Actual single hosted Bun expect() calls summary",
+    "expected_static_count": 154,
+    "prior_unit_counts_transferred": false
+  },
+  "results": [
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: absent",
+      "status": "PASS",
+      "duration_ms": 4.57,
+      "log_line_number": 820,
+      "log_line": "2026-11-15T07:29:42.9544406Z (pass) one-shot digest preserves canonical bytes: absent [4.57ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: null",
+      "status": "PASS",
+      "duration_ms": 0.07,
+      "log_line_number": 821,
+      "log_line": "2026-11-15T07:29:42.9544839Z (pass) one-shot digest preserves canonical bytes: null [0.07ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: false",
+      "status": "PASS",
+      "duration_ms": 0.03,
+      "log_line_number": 822,
+      "log_line": "2026-11-15T07:29:42.9545210Z (pass) one-shot digest preserves canonical bytes: false [0.03ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: true",
+      "status": "PASS",
+      "duration_ms": 0.03,
+      "log_line_number": 823,
+      "log_line": "2026-11-15T07:29:42.9545571Z (pass) one-shot digest preserves canonical bytes: true [0.03ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: Unicode and lone surrogate",
+      "status": "PASS",
+      "duration_ms": 0.04,
+      "log_line_number": 824,
+      "log_line": "2026-11-15T07:29:42.9546055Z (pass) one-shot digest preserves canonical bytes: Unicode and lone surrogate [0.04ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: escaped string",
+      "status": "PASS",
+      "duration_ms": 0.03,
+      "log_line_number": 825,
+      "log_line": "2026-11-15T07:29:42.9546478Z (pass) one-shot digest preserves canonical bytes: escaped string [0.03ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: positive zero",
+      "status": "PASS",
+      "duration_ms": 0.15,
+      "log_line_number": 826,
+      "log_line": "2026-11-15T07:29:42.9547635Z (pass) one-shot digest preserves canonical bytes: positive zero [0.15ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: negative zero",
+      "status": "PASS",
+      "duration_ms": 0.04,
+      "log_line_number": 827,
+      "log_line": "2026-11-15T07:29:42.9548190Z (pass) one-shot digest preserves canonical bytes: negative zero [0.04ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: finite fraction",
+      "status": "PASS",
+      "duration_ms": 0.08,
+      "log_line_number": 828,
+      "log_line": "2026-11-15T07:29:42.9548762Z (pass) one-shot digest preserves canonical bytes: finite fraction [0.08ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: smallest positive finite number",
+      "status": "PASS",
+      "duration_ms": 0.04,
+      "log_line_number": 829,
+      "log_line": "2026-11-15T07:29:42.9549316Z (pass) one-shot digest preserves canonical bytes: smallest positive finite number [0.04ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: large finite exponent",
+      "status": "PASS",
+      "duration_ms": 0.02,
+      "log_line_number": 830,
+      "log_line": "2026-11-15T07:29:42.9549859Z (pass) one-shot digest preserves canonical bytes: large finite exponent [0.02ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: empty object",
+      "status": "PASS",
+      "duration_ms": 0.11,
+      "log_line_number": 831,
+      "log_line": "2026-11-15T07:29:42.9550337Z (pass) one-shot digest preserves canonical bytes: empty object [0.11ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: lexicographic own keys",
+      "status": "PASS",
+      "duration_ms": 0.06,
+      "log_line_number": 832,
+      "log_line": "2026-11-15T07:29:42.9550937Z (pass) one-shot digest preserves canonical bytes: lexicographic own keys [0.06ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: dense array",
+      "status": "PASS",
+      "duration_ms": 0.02,
+      "log_line_number": 833,
+      "log_line": "2026-11-15T07:29:42.9551471Z (pass) one-shot digest preserves canonical bytes: dense array [0.02ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: array holes stay distinct from undefined",
+      "status": "PASS",
+      "duration_ms": 0.04,
+      "log_line_number": 834,
+      "log_line": "2026-11-15T07:29:42.9552029Z (pass) one-shot digest preserves canonical bytes: array holes stay distinct from undefined [0.04ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: null prototype",
+      "status": "PASS",
+      "duration_ms": 0.04,
+      "log_line_number": 835,
+      "log_line": "2026-11-15T07:29:42.9552585Z (pass) one-shot digest preserves canonical bytes: null prototype [0.04ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves canonical bytes: non-enumerable and symbol keys remain unselected",
+      "status": "PASS",
+      "duration_ms": 0.16,
+      "log_line_number": 836,
+      "log_line": "2026-11-15T07:29:42.9553980Z (pass) one-shot digest preserves canonical bytes: non-enumerable and symbol keys remain unselected [0.16ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: NaN",
+      "status": "PASS",
+      "duration_ms": 0.12,
+      "log_line_number": 837,
+      "log_line": "2026-11-15T07:29:42.9554792Z (pass) one-shot digest preserves rejection: NaN [0.12ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: positive infinity",
+      "status": "PASS",
+      "duration_ms": 0.02,
+      "log_line_number": 838,
+      "log_line": "2026-11-15T07:29:42.9555210Z (pass) one-shot digest preserves rejection: positive infinity [0.02ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: negative infinity",
+      "status": "PASS",
+      "duration_ms": 0.01,
+      "log_line_number": 839,
+      "log_line": "2026-11-15T07:29:42.9555676Z (pass) one-shot digest preserves rejection: negative infinity [0.01ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: bigint",
+      "status": "PASS",
+      "duration_ms": 0.01,
+      "log_line_number": 840,
+      "log_line": "2026-11-15T07:29:42.9556102Z (pass) one-shot digest preserves rejection: bigint [0.01ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: symbol",
+      "status": "PASS",
+      "duration_ms": 0.02,
+      "log_line_number": 841,
+      "log_line": "2026-11-15T07:29:42.9556492Z (pass) one-shot digest preserves rejection: symbol [0.02ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: function",
+      "status": "PASS",
+      "duration_ms": 0.02,
+      "log_line_number": 842,
+      "log_line": "2026-11-15T07:29:42.9556890Z (pass) one-shot digest preserves rejection: function [0.02ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: Date",
+      "status": "PASS",
+      "duration_ms": 0.03,
+      "log_line_number": 843,
+      "log_line": "2026-11-15T07:29:42.9557528Z (pass) one-shot digest preserves rejection: Date [0.03ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: Map",
+      "status": "PASS",
+      "duration_ms": 0.03,
+      "log_line_number": 844,
+      "log_line": "2026-11-15T07:29:42.9557851Z (pass) one-shot digest preserves rejection: Map [0.03ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: Set",
+      "status": "PASS",
+      "duration_ms": 0.02,
+      "log_line_number": 845,
+      "log_line": "2026-11-15T07:29:42.9558329Z (pass) one-shot digest preserves rejection: Set [0.02ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: boxed number",
+      "status": "PASS",
+      "duration_ms": 0.02,
+      "log_line_number": 846,
+      "log_line": "2026-11-15T07:29:42.9558670Z (pass) one-shot digest preserves rejection: boxed number [0.02ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves rejection: custom prototype",
+      "status": "PASS",
+      "duration_ms": 0.04,
+      "log_line_number": 847,
+      "log_line": "2026-11-15T07:29:42.9559025Z (pass) one-shot digest preserves rejection: custom prototype [0.04ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest agrees with independent SHA256 for evidence, role maps and values",
+      "status": "PASS",
+      "duration_ms": 1.18,
+      "log_line_number": 848,
+      "log_line": "2026-11-15T07:29:42.9570050Z (pass) one-shot digest agrees with independent SHA256 for evidence, role maps and values [1.18ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest observes sorted getters exactly once and their current values",
+      "status": "PASS",
+      "duration_ms": 0.13,
+      "log_line_number": 849,
+      "log_line": "2026-11-15T07:29:42.9570740Z (pass) one-shot digest observes sorted getters exactly once and their current values [0.13ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest preserves proxy observation order without a preliminary traversal",
+      "status": "PASS",
+      "duration_ms": 0.15,
+      "log_line_number": 850,
+      "log_line": "2026-11-15T07:29:42.9572456Z (pass) one-shot digest preserves proxy observation order without a preliminary traversal [0.15ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest keeps reentrant calculations isolated",
+      "status": "PASS",
+      "duration_ms": 0.05,
+      "log_line_number": 851,
+      "log_line": "2026-11-15T07:29:42.9572905Z (pass) one-shot digest keeps reentrant calculations isolated [0.05ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest reobserves same-object evidence, role and identity revisions",
+      "status": "PASS",
+      "duration_ms": 0.76,
+      "log_line_number": 852,
+      "log_line": "2026-11-15T07:29:42.9580498Z (pass) one-shot digest reobserves same-object evidence, role and identity revisions [0.76ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest propagates canonical getter errors",
+      "status": "PASS",
+      "duration_ms": 0.11,
+      "log_line_number": 853,
+      "log_line": "2026-11-15T07:29:42.9581662Z (pass) one-shot digest propagates canonical getter errors [0.11ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest retains canonical rejection of cyclic objects",
+      "status": "PASS",
+      "duration_ms": 8.22,
+      "log_line_number": 854,
+      "log_line": "2026-11-15T07:29:42.9665822Z (pass) one-shot digest retains canonical rejection of cyclic objects [8.22ms]"
+    },
+    {
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "source_test_blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "name": "one-shot digest reports a bounded interleaved hosted comparison without a speed assertion",
+      "status": "PASS",
+      "duration_ms": 81.45,
+      "log_line_number": 856,
+      "log_line": "2026-11-15T07:29:43.0486511Z (pass) one-shot digest reports a bounded interleaved hosted comparison without a speed assertion [81.45ms]"
+    }
+  ],
+  "all_observations": [
+    {
+      "name": "one-shot digest preserves canonical bytes: absent",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 4.57,
+      "log_line_number": 820,
+      "log_line": "2026-11-15T07:29:42.9544406Z (pass) one-shot digest preserves canonical bytes: absent [4.57ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: null",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.07,
+      "log_line_number": 821,
+      "log_line": "2026-11-15T07:29:42.9544839Z (pass) one-shot digest preserves canonical bytes: null [0.07ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: false",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.03,
+      "log_line_number": 822,
+      "log_line": "2026-11-15T07:29:42.9545210Z (pass) one-shot digest preserves canonical bytes: false [0.03ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: true",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.03,
+      "log_line_number": 823,
+      "log_line": "2026-11-15T07:29:42.9545571Z (pass) one-shot digest preserves canonical bytes: true [0.03ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: Unicode and lone surrogate",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.04,
+      "log_line_number": 824,
+      "log_line": "2026-11-15T07:29:42.9546055Z (pass) one-shot digest preserves canonical bytes: Unicode and lone surrogate [0.04ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: escaped string",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.03,
+      "log_line_number": 825,
+      "log_line": "2026-11-15T07:29:42.9546478Z (pass) one-shot digest preserves canonical bytes: escaped string [0.03ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: positive zero",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.15,
+      "log_line_number": 826,
+      "log_line": "2026-11-15T07:29:42.9547635Z (pass) one-shot digest preserves canonical bytes: positive zero [0.15ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: negative zero",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.04,
+      "log_line_number": 827,
+      "log_line": "2026-11-15T07:29:42.9548190Z (pass) one-shot digest preserves canonical bytes: negative zero [0.04ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: finite fraction",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.08,
+      "log_line_number": 828,
+      "log_line": "2026-11-15T07:29:42.9548762Z (pass) one-shot digest preserves canonical bytes: finite fraction [0.08ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: smallest positive finite number",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.04,
+      "log_line_number": 829,
+      "log_line": "2026-11-15T07:29:42.9549316Z (pass) one-shot digest preserves canonical bytes: smallest positive finite number [0.04ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: large finite exponent",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.02,
+      "log_line_number": 830,
+      "log_line": "2026-11-15T07:29:42.9549859Z (pass) one-shot digest preserves canonical bytes: large finite exponent [0.02ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: empty object",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.11,
+      "log_line_number": 831,
+      "log_line": "2026-11-15T07:29:42.9550337Z (pass) one-shot digest preserves canonical bytes: empty object [0.11ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: lexicographic own keys",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.06,
+      "log_line_number": 832,
+      "log_line": "2026-11-15T07:29:42.9550937Z (pass) one-shot digest preserves canonical bytes: lexicographic own keys [0.06ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: dense array",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.02,
+      "log_line_number": 833,
+      "log_line": "2026-11-15T07:29:42.9551471Z (pass) one-shot digest preserves canonical bytes: dense array [0.02ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: array holes stay distinct from undefined",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.04,
+      "log_line_number": 834,
+      "log_line": "2026-11-15T07:29:42.9552029Z (pass) one-shot digest preserves canonical bytes: array holes stay distinct from undefined [0.04ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: null prototype",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.04,
+      "log_line_number": 835,
+      "log_line": "2026-11-15T07:29:42.9552585Z (pass) one-shot digest preserves canonical bytes: null prototype [0.04ms]"
+    },
+    {
+      "name": "one-shot digest preserves canonical bytes: non-enumerable and symbol keys remain unselected",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.16,
+      "log_line_number": 836,
+      "log_line": "2026-11-15T07:29:42.9553980Z (pass) one-shot digest preserves canonical bytes: non-enumerable and symbol keys remain unselected [0.16ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: NaN",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.12,
+      "log_line_number": 837,
+      "log_line": "2026-11-15T07:29:42.9554792Z (pass) one-shot digest preserves rejection: NaN [0.12ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: positive infinity",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.02,
+      "log_line_number": 838,
+      "log_line": "2026-11-15T07:29:42.9555210Z (pass) one-shot digest preserves rejection: positive infinity [0.02ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: negative infinity",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.01,
+      "log_line_number": 839,
+      "log_line": "2026-11-15T07:29:42.9555676Z (pass) one-shot digest preserves rejection: negative infinity [0.01ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: bigint",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.01,
+      "log_line_number": 840,
+      "log_line": "2026-11-15T07:29:42.9556102Z (pass) one-shot digest preserves rejection: bigint [0.01ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: symbol",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.02,
+      "log_line_number": 841,
+      "log_line": "2026-11-15T07:29:42.9556492Z (pass) one-shot digest preserves rejection: symbol [0.02ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: function",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.02,
+      "log_line_number": 842,
+      "log_line": "2026-11-15T07:29:42.9556890Z (pass) one-shot digest preserves rejection: function [0.02ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: Date",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.03,
+      "log_line_number": 843,
+      "log_line": "2026-11-15T07:29:42.9557528Z (pass) one-shot digest preserves rejection: Date [0.03ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: Map",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.03,
+      "log_line_number": 844,
+      "log_line": "2026-11-15T07:29:42.9557851Z (pass) one-shot digest preserves rejection: Map [0.03ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: Set",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.02,
+      "log_line_number": 845,
+      "log_line": "2026-11-15T07:29:42.9558329Z (pass) one-shot digest preserves rejection: Set [0.02ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: boxed number",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.02,
+      "log_line_number": 846,
+      "log_line": "2026-11-15T07:29:42.9558670Z (pass) one-shot digest preserves rejection: boxed number [0.02ms]"
+    },
+    {
+      "name": "one-shot digest preserves rejection: custom prototype",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.04,
+      "log_line_number": 847,
+      "log_line": "2026-11-15T07:29:42.9559025Z (pass) one-shot digest preserves rejection: custom prototype [0.04ms]"
+    },
+    {
+      "name": "one-shot digest agrees with independent SHA256 for evidence, role maps and values",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 1.18,
+      "log_line_number": 848,
+      "log_line": "2026-11-15T07:29:42.9570050Z (pass) one-shot digest agrees with independent SHA256 for evidence, role maps and values [1.18ms]"
+    },
+    {
+      "name": "one-shot digest observes sorted getters exactly once and their current values",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.13,
+      "log_line_number": 849,
+      "log_line": "2026-11-15T07:29:42.9570740Z (pass) one-shot digest observes sorted getters exactly once and their current values [0.13ms]"
+    },
+    {
+      "name": "one-shot digest preserves proxy observation order without a preliminary traversal",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.15,
+      "log_line_number": 850,
+      "log_line": "2026-11-15T07:29:42.9572456Z (pass) one-shot digest preserves proxy observation order without a preliminary traversal [0.15ms]"
+    },
+    {
+      "name": "one-shot digest keeps reentrant calculations isolated",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.05,
+      "log_line_number": 851,
+      "log_line": "2026-11-15T07:29:42.9572905Z (pass) one-shot digest keeps reentrant calculations isolated [0.05ms]"
+    },
+    {
+      "name": "one-shot digest reobserves same-object evidence, role and identity revisions",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.76,
+      "log_line_number": 852,
+      "log_line": "2026-11-15T07:29:42.9580498Z (pass) one-shot digest reobserves same-object evidence, role and identity revisions [0.76ms]"
+    },
+    {
+      "name": "one-shot digest propagates canonical getter errors",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 0.11,
+      "log_line_number": 853,
+      "log_line": "2026-11-15T07:29:42.9581662Z (pass) one-shot digest propagates canonical getter errors [0.11ms]"
+    },
+    {
+      "name": "one-shot digest retains canonical rejection of cyclic objects",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 8.22,
+      "log_line_number": 854,
+      "log_line": "2026-11-15T07:29:42.9665822Z (pass) one-shot digest retains canonical rejection of cyclic objects [8.22ms]"
+    },
+    {
+      "name": "one-shot digest reports a bounded interleaved hosted comparison without a speed assertion",
+      "status": "PASS",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "duration_ms": 81.45,
+      "log_line_number": 856,
+      "log_line": "2026-11-15T07:29:43.0486511Z (pass) one-shot digest reports a bounded interleaved hosted comparison without a speed assertion [81.45ms]"
+    }
+  ],
+  "unknown_cases": [],
+  "duplicate_case_keys": [],
+  "missing_cases": [],
+  "authored_name_order_matches_log": true,
+  "summary_evidence": {
+    "pass": [
+      {
+        "line": 859,
+        "text": "36 pass"
+      }
+    ],
+    "fail": [
+      {
+        "line": 860,
+        "text": "0 fail"
+      }
+    ],
+    "skip": [],
+    "todo": [],
+    "expects": [
+      {
+        "line": 861,
+        "text": "154 expect() calls"
+      }
+    ],
+    "ran": [
+      {
+        "line": 862,
+        "text": "Ran 36 tests across 1 file. [257.00ms]"
+      }
+    ]
+  },
+  "bun_headers": [
+    {
+      "line": 817,
+      "text": "bun test v1.3.14 (0d9b296a)",
+      "version": "1.3.14"
+    }
+  ],
+  "file_headers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "line": 819
+    }
+  ],
+  "positive_control": [
+    {
+      "line": 858,
+      "verdict": "not applicable",
+      "text": "omni positive control [6156511f57639645deea264f00e64d8a]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    }
+  ],
+  "digest_cost": {
+    "observed": true,
+    "record_count": 1,
+    "log_lines": [
+      855
+    ],
+    "validation_errors": [],
+    "speed_is_gate_criterion": false,
+    "log_line": 855,
+    "actual": {
+      "bun_version": "1.3.14",
+      "corpus_count": 8,
+      "sample_count": 6,
+      "rounds_per_sample": 128,
+      "warmup_rounds": 16,
+      "warmup_count_each": 128,
+      "measured_count_each": 6144,
+      "previous_ms": 40.01430799999997,
+      "current_ms": 37.38214399999997,
+      "ratio_current_over_previous": 0.9342194297099926,
+      "samples": [
+        {
+          "sample": 1,
+          "previous_first": true,
+          "count_each": 1024,
+          "previous_ms": 9.493867999999992,
+          "current_ms": 8.86625699999999,
+          "ratio_current_over_previous": 0.93389301389065
+        },
+        {
+          "sample": 2,
+          "previous_first": false,
+          "count_each": 1024,
+          "previous_ms": 7.144876000000011,
+          "current_ms": 7.0488750000000095,
+          "ratio_current_over_previous": 0.9865636576478023
+        },
+        {
+          "sample": 3,
+          "previous_first": true,
+          "count_each": 1024,
+          "previous_ms": 7.546241999999992,
+          "current_ms": 5.214946999999995,
+          "ratio_current_over_previous": 0.6910654336290832
+        },
+        {
+          "sample": 4,
+          "previous_first": false,
+          "count_each": 1024,
+          "previous_ms": 5.249745000000004,
+          "current_ms": 5.114266000000001,
+          "ratio_current_over_previous": 0.9741932227184361
+        },
+        {
+          "sample": 5,
+          "previous_first": true,
+          "count_each": 1024,
+          "previous_ms": 5.23214999999999,
+          "current_ms": 5.1293859999999825,
+          "ratio_current_over_previous": 0.9803591257895878
+        },
+        {
+          "sample": 6,
+          "previous_first": false,
+          "count_each": 1024,
+          "previous_ms": 5.347426999999982,
+          "current_ms": 6.00841299999999,
+          "ratio_current_over_previous": 1.1236082325200532
+        }
+      ]
+    },
+    "derived_from_all_actual_samples": {
+      "previous_total_ms": 40.01430799999997,
+      "current_total_ms": 37.38214399999997,
+      "previous_median_sample_ms": 6.246151499999996,
+      "current_median_sample_ms": 5.611679999999993,
+      "median_paired_current_over_previous": 0.9772761742540119,
+      "ratio_of_totals_current_over_previous": 0.9342194297099926,
+      "previous_min_sample_ms": 5.23214999999999,
+      "previous_max_sample_ms": 9.493867999999992,
+      "current_min_sample_ms": 5.114266000000001,
+      "current_max_sample_ms": 8.86625699999999,
+      "measured_pair_total_ms": 77.39645199999994,
+      "samples_discarded": 0
+    },
+    "scope_limits": [
+      "Uniform eight-value unit corpus, not installed workload frequency.",
+      "Durations are observed in this job only; no prediction of UI margin or installed acceptance.",
+      "All six alternating samples are retained; no fastest-run selection or outlier deletion.",
+      "Performance ratio is not a test-pass criterion.",
+      "Measured totals exclude the separate warm-up and unrelated test work.",
+      "No local product execution or benchmark is permitted by this normalizer."
+    ]
+  },
+  "retry_evidence": {
+    "actions_run_attempt_observations": [
+      1,
+      1,
+      1
+    ],
+    "bun_invocations": 1,
+    "repeated_case_observations": 0,
+    "no_retry_flags_in_exact_request": true,
+    "zero_retries_verified_in_supplied_run": true,
+    "retries": 0
+  },
+  "raw_log": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/job-132738595779.log",
+    "sha256": "5092403d90ec05670c890756a88be004f49edb8929ae80ac2c6b20978b19cc43",
+    "bytes": 74768,
+    "job": 132738595779
+  },
+  "source_test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+    "blob": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+    "text_sha256": "aeaf01be1de1692a0b8b34715b2bcf4fb5da5c05ca2a391b1604537c5d2cc69b",
+    "local_source": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/post/canonical-digest-once.test.ts.txt"
+  },
+  "evidence": {
+    "jobs": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/final-jobs.json",
+      "sha256": "1d395da91606ab3b199acee055ee9a14f5a863cedfb71b2b86ecde4297ec8ad1"
+    },
+    "run_metadata": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/run-metadata.json",
+      "sha256": "7eed88504c75d7401d31344d6c14e2313c2b57ff5c7caeafb04cbaa37ad467db",
+      "status_in_supplied_snapshot": "completed",
+      "conclusion_in_supplied_snapshot": "success"
+    },
+    "collector_annotations": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/collector-annotations.json",
+      "sha256": "efb7159f0ddce97b247c92dfa819ba609ed1afd328b217f4de30f8ff58de3456",
+      "complete_log_attested": true
+    },
+    "envelope": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-unit06-envelope.json",
+      "sha256": "d359171fc516e98c3cc7b4bba0ef47c0901ca7242e80228396a2180402e816dd",
+      "prepared_sha256": "d359171fc516e98c3cc7b4bba0ef47c0901ca7242e80228396a2180402e816dd",
+      "immutable_identity_verified": true
+    },
+    "plan": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p15-unit06-normalizer-plan.json",
+      "sha256": "df4e942cc6ce82315ea986ed27c57ce3a8233e05cda732dc78e6011c56cf8fb8"
+    },
+    "normalizer": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/normalize-p15-unit06.py",
+      "sha256": "4cb55aa0746337999e87667e1e275bb110e37097b586ea62667228e25ffb2be6"
+    }
+  },
+  "limits": [
+    "One selected supplemental unit file on exact W/S; no installed UI result is inferred or transferred.",
+    "All runtime counts, status, assertion totals and durations come from the supplied complete job log. Static expectations are only validation criteria.",
+    "The digest measurement uses all six actual interleaved samples, with no speed assertion or sample deletion. The corpus is not the installed call distribution.",
+    "No UI response-time margin, financial approval, global release, owner integration or source52 terminal state is established by this gate.",
+    "A positive-control verdict of not applicable proves no omni spawning; it only satisfies the focused non-spawning unit lane's declared control.",
+    "Run metadata may be an earlier snapshot; final test and cleanup conclusions are taken from the supplied completed job records.",
+    "Normalization only reads supplied files. It executes no product code, tests, benchmark, network request or CI dispatch."
+  ]
+}

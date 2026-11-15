@@ -1,0 +1,40 @@
+{
+  "schema": "sf52-p15-textual-reconstruction-v1",
+  "state": "PASS_TEXTUAL_ONLY_NOT_RUN",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "preimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "postimage": "576199437a21a5d094da7db7601e78dcf01bce82",
+      "hunks": 1,
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+      "preimage": null,
+      "postimage": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "hunks": 1,
+      "forward_exact": true,
+      "reverse_exact": true
+    }
+  ],
+  "material_sha256": "576c17706fe0676670bf59d0752a66fbd525acdad5c2bb6e39cbe53dd91bbc3a",
+  "patch_sha256": "3dd2e29be5365a72fe6bc1d94d51cf87a424142ba963d95efea0d9731f278ed2",
+  "Bun_13_to_14_CryptoHasher_diff": [
+    "--- \n",
+    "+++ \n",
+    "@@ -872,7 +872,7 @@\n",
+    " ",
+    " const string = []const u8;",
+    " ",
+    "-const Hashers = @import(\"../../../sha.zig\");",
+    "+const Hashers = @import(\"../../sha_hmac/sha.zig\");",
+    " const std = @import(\"std\");",
+    " ",
+    " const bun = @import(\"bun\");"
+  ],
+  "native_hash_block_161_240_identical": true,
+  "product_executed": false,
+  "tests_executed": false
+}

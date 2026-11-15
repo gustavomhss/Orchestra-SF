@@ -1239,3 +1239,14 @@
      if (snapshots) return principal(request, snapshots.dashboard, snapshots)
      return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
    }
+--- a/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
+@@ -7,7 +7,7 @@
+ }
+ 
+ export function digestSfValue(value: unknown): string {
+-  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
++  return Bun.CryptoHasher.hash("sha256", canonicalSfValue(value), "hex")
+ }
+ 
+ /** Integrity of the whole reference; authentication remains in the source resolver. */

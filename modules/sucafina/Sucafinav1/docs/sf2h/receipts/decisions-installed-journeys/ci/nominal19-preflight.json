@@ -1,0 +1,767 @@
+{
+  "schema": "sf52-nominal19-preflight-v1",
+  "at": "2026-11-15 07:32:38 UTC",
+  "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "source": "43a31f4c51c0897287fdc53468bd171adca4795d",
+  "source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+  "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+  "W_tree": "f5cc7dfadf85792821561d558bddd186a2a4904b",
+  "S": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+  "S_tree": "8bf6010987716a5073a04f10fce41ed38a3fd956",
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+  "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+  "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+  "checks": {
+    "all36_W_blobs_match": true,
+    "retained34_W17_posts": true,
+    "only2_new_paths": true,
+    "W_to_S_only_sentinel": true,
+    "original_spec_and_config_MCP_read": true,
+    "diagnostic_instrumentation_absent": true,
+    "workflow45_unchanged": true,
+    "Reports48_unchanged": true,
+    "shared_changes_inert_isolated_only": true
+  },
+  "budgets": {
+    "case_ms": 180000,
+    "UI_abort_ms": 10000,
+    "workers": 1,
+    "retries": 0,
+    "repeat": 1
+  },
+  "cases": 5,
+  "unit06": {
+    "unit": 6,
+    "state": "COMPLETED_PASS",
+    "run_id": 43690045333,
+    "job_id": 132738595779,
+    "cleanup_job_id": 132739009529,
+    "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+    "W_tree": "f5cc7dfadf85792821561d558bddd186a2a4904b",
+    "S": "79913f877c0ee58922a2f9635a48a350269dd356",
+    "S_tree": "29c8ba854fb61f0e6f1633609bc58ff71bd791a8",
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "expects": 154,
+    "files": 1,
+    "duration_ms": 257,
+    "receipt_sha256": "40f34acf952758f81975a2ed2bd2359d0eb557cd4ed4f84ecbfc0b793066f648",
+    "raw_log_sha256": "5092403d90ec05670c890756a88be004f49edb8929ae80ac2c6b20978b19cc43",
+    "supplemental_only": true
+  },
+  "unit_performance_limit": "Observed6.6percent lower total in this small corpus; no UI margin or acceptance inferred. Median paired ratio0.9773; all6samples retained including one slower.",
+  "source52_state": "ACTIVE",
+  "target105_state": "ENDED_WITHOUT_SUCCESSOR",
+  "CI101": "4c46f8561a8a4ed7d1c98432dd0e2f395935b963",
+  "CI101_existing_source52_preserved": true,
+  "requested_handoff47": true,
+  "active_runs": [],
+  "existing_same_material_runs": [],
+  "reviewed_runs": [
+    {
+      "id": 43690045333,
+      "branch": "ci-run-linux-astra-wp11-12521803-68c0266b-m52-u06",
+      "sha": "79913f877c0ee58922a2f9635a48a350269dd356",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43688075463,
+      "branch": "ci-run-linux-astra-wp11-03e5439a-3619f1fd-m52-d18",
+      "sha": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43686512586,
+      "branch": "ci-run-linux-astra-wp11-2624fe74-3619f1fd-m52-17",
+      "sha": "5ae402f2c3347619d882af10cc043952048a74c8",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43686211157,
+      "branch": "ci-run-linux-astra-wp11-2624fe74-e1f7dece-m52-u05",
+      "sha": "c07766ac05fab41c6433746a9bd78001d4f599a3",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43682706028,
+      "branch": "ci-run-linux-astra-wp11-c7591b8a-3619f1fd-m52-d16",
+      "sha": "bba4a4f0487df3194ed2acb8e353c719325311fc",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43682515795,
+      "branch": "ci-run-linux-m99-a3cca4-p03-original2",
+      "sha": "78b361a2c101c11937a341f30c493cfbc1ef1bc5",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43682455278,
+      "branch": "ci-run-linux-sf101-c51-reader-1",
+      "sha": "243bb2bcb8145f18e47a5dcd5ef638e2bfc5cef0",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43682453714,
+      "branch": "ci-run-linux-sf101-c51-docx-1",
+      "sha": "20946d5ea64d1da1512fad06ce606dadf658f2b3",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43682451927,
+      "branch": "ci-run-linux-sf101-c51-97-1",
+      "sha": "35f020ff7f0e2d717746a41f44b13fda6900363b",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43682450677,
+      "branch": "ci-run-linux-sf101-c51-90-1",
+      "sha": "a856513eb61ca0d7c1cb7ddaf03a2b911e737d05",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43682448571,
+      "branch": "ci-run-linux-sf101-c51-87-1",
+      "sha": "32c186de11afc265a47aa06355ba560b5e89650b",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43682386656,
+      "branch": "ci-run-linux-sf101-c51-http94-1",
+      "sha": "2821a0deb51fd9b73eed031acee0dc2158b48333",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43682264507,
+      "branch": "ci-run-linux-m99-a3cca4-causal3",
+      "sha": "73fd532c6213c7b5a8afc2de2511e463bc2bff13",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43681797855,
+      "branch": "ci-run-linux-m99-3d03ef-causal2",
+      "sha": "7dd9e17fb801d259b1c4ad1c73ea42435004f8dc",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43681302722,
+      "branch": "ci-run-linux-m99-41744d-p03-original1",
+      "sha": "c9c38cbf92844dcbdfbdc543fb6b378b241817f4",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43680997173,
+      "branch": "ci-run-linux-m99-41744d-causal1",
+      "sha": "8a87cd72b03549e9bbddf3b694712fb39347ca85",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43680980170,
+      "branch": "ci-run-linux-astra-wp11-c725f9b8-3619f1fd-m52-15",
+      "sha": "5e84420631d4b162f38956aef6e0828e23a39e82",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43680704374,
+      "branch": "ci-run-linux-astra-wp11-c725f9b8-034aa010-m52-u4",
+      "sha": "e4202b6c83d9b243400b18594e672ea60987fab4",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43679231538,
+      "branch": "ci-run-linux-astra-wp11-70f356f2-3619f1fd-m52-d14",
+      "sha": "047ca9e132329c5e41a1c95df3855f60adf3b295",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43678234266,
+      "branch": "ci-run-linux-astra-wp11-7409883a-3619f1fd-m52-13",
+      "sha": "86fcc851514f16a617792783881dde264915e6fa",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43678123870,
+      "branch": "ci-run-linux-sf88-a1be5a-own5-r3",
+      "sha": "a952f1b3ce48b15473f4b07810e79efd05d759fd",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43677729466,
+      "branch": "ci-run-linux-sf88-dc2e7c-own5-r2",
+      "sha": "4cf4a5526ce5d61aa3dbdd6ee83da9a25c7aa426",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43677629469,
+      "branch": "ci-run-linux-m87-regression-31dea43e",
+      "sha": "31dea43e98e15be73c9b2487c4ea5c278a36f795",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43677538070,
+      "branch": "ci-run-linux-m89-aa6e8299-diag2",
+      "sha": "af1d8d09855d2644622a4db062f624ab72a8a41a",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43677408316,
+      "branch": "ci-run-linux-m87-3407ce622dbe",
+      "sha": "3407ce622dbec4f4a241ecbce8a3688cc4b1ca3c",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43677229458,
+      "branch": "ci-run-linux-m87-f2757ad6b55d",
+      "sha": "f2757ad6b55d8d19245b1d9d347233f30230d604",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43677135575,
+      "branch": "ci-run-linux-m89-900ba649-negative1",
+      "sha": "f5bc9f431349664d2409e8f04d677d8d7910ead5",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43677064008,
+      "branch": "ci-run-linux-sf88-240bc92-own5",
+      "sha": "d4242ca2061b3a8f2c9c488fbae825af6abaa8e0",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43676977918,
+      "branch": "ci-run-linux-astra-wp11-c4883ae5-3619f1fd-m52-12",
+      "sha": "de56ec928b22ffbaf3b4110262bce3dec0f1441c",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43676716309,
+      "branch": "ci-run-linux-astra-wp11-c4883ae5-ac4ba49c-m52-u3",
+      "sha": "61ef9950c8355db002d99c18d91e1265ccfe4d55",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43676572309,
+      "branch": "astra-check-wp11",
+      "sha": "ea8003b703bae61f9a4452261a7780cc38f0c754",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43676126745,
+      "branch": "ci-run-linux-astra-wp80-a67dbbb5-a14c5072-r4",
+      "sha": "1b0359f078951b819622d0438394ac63ef43e010",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43675862594,
+      "branch": "ci-run-linux-m79-ee724898-v2",
+      "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43675784039,
+      "branch": "sf-ops75-eb58cd9e9f81je4201f174def1",
+      "sha": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43675427012,
+      "branch": "ci-run-linux-astra-m85-c38-auth-r3",
+      "sha": "54281c363ea6c0ba4a15a7b3335a08a52f77d79e",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43675212157,
+      "branch": "ci-run-linux-astra-m85-5db743-auth-r2",
+      "sha": "cf434debc03c34d1c801797fa70e14548011512e",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43675205091,
+      "branch": "ci-run-linux-astra-m85-bc5eb1-routes-b0",
+      "sha": "a99041eeb498c585862439b59362dd7f9e48a428",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43675129605,
+      "branch": "ci-run-linux-astra-wp80-11859ee1-093217e6-r3",
+      "sha": "da3097fc435b232ab3dcf77c036f3d3dfb5e0142",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43675046935,
+      "branch": "ci-run-linux-m86-e890d8cd-r1",
+      "sha": "a99e224afdd5f830268a81d1087b6a1f43e83bec",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43674892252,
+      "branch": "ci-run-linux-astra-m85-5db743c8-readonly-r1",
+      "sha": "910abc98e40313b342bf90a7ea7f245de4663e22",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43674790650,
+      "branch": "ci-run-linux-m79-60613a13-v1",
+      "sha": "03edea269fed4483a24555da28670df1b978b355",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43674446763,
+      "branch": "ci-run-linux-astra-wp80-4df32a2d-e3643c4f-r2",
+      "sha": "55c1e430ef06aee1692eba2e49ae1d8299ebe4cf",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43673909326,
+      "branch": "ci-run-linux-m79-0cd83576-b0",
+      "sha": "4514279d92263a5b3615ca351c93aa83c154f231",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43673699755,
+      "branch": "ci-run-linux-astra-wp80-e1cd18e9-02ff2b5a-r1",
+      "sha": "3fcc6ea47da87c27531302cfd9b3bd86d8b7e224",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43673697145,
+      "branch": "ci-run-linux-astra-wp74-d2a1227a-a19093cc-01",
+      "sha": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43673511994,
+      "branch": "ci-run-linux-m76-6854c0f9-b419f164-p03",
+      "sha": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43673455601,
+      "branch": "ci-run-linux-astra-wp74-d2a1227a-2ed756e2-01",
+      "sha": "4185f64af08e01c885c471db0988a2da3c951841",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43673023213,
+      "branch": "ci-run-linux-m76-6854c0f9-9c46187e-r1",
+      "sha": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43672975800,
+      "branch": "ci-run-linux-astra-wp74-298c7a72-2ed756e2-01",
+      "sha": "dc3cac158c4f2d63ef47e7f061ec4865f8381a09",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43672712025,
+      "branch": "ci-run-linux-astra-wp74-8bb8322e-a19093cc-01",
+      "sha": "410e8d5258c7e3946061977bf4d83536e5b23f36",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43672619431,
+      "branch": "ci-run-linux-m76-c9285ddf-9c46187e-b2",
+      "sha": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43672573836,
+      "branch": "ci-run-linux-astra-wp67-454100dd-7e6f223a-06",
+      "sha": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43672508561,
+      "branch": "ci-run-linux-astra-wp11-fb9ed546-3619f1fd-m52-11",
+      "sha": "f0b9c4c92c74072b86484fcbdd0f8aff1d990f05",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43672349552,
+      "branch": "sf-ops75-d50287e998b2ce339ac1cb8e41",
+      "sha": "209c613895a2555ba7de8befc33f1bd41b263f62",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43672317792,
+      "branch": "ci-run-linux-astra-wp74-6b09183d-2ed756e2-01",
+      "sha": "5375e7802c765059927e45e086cd5f34e6c8016d",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43672107164,
+      "branch": "ci-run-linux-astra-wp74-6b09183d-a19093cc-01",
+      "sha": "49fd588c41d5e58e7253ef7b1599a5d9d85e3b05",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43672005574,
+      "branch": "sf-ops75-3e3a23ad86e7ce339ac1cb8e41",
+      "sha": "1f06698c42a932a612b90fd9c93301214b0ddf11",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43671961465,
+      "branch": "ci-run-linux-m76-01bc5935-2e16e768-b1",
+      "sha": "842b77450aa299a421d179ead9ff9abf734419cd",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43671737333,
+      "branch": "ci-run-linux-m73-2c0b929-r1",
+      "sha": "2c0b92951ea5a4d15cc40a473860465cb84ca61d",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43671673378,
+      "branch": "ci-run-linux-astra-wp67-49a8f0d5-a64b0f69-05",
+      "sha": "5814c5f3a026d95e651244329cf461bf265fa587",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43671662128,
+      "branch": "sf-ops75-7be41d01c1d6ce339ac1cb8e41",
+      "sha": "51bf918908992b71b59f98489edb571da6026584",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43671466268,
+      "branch": "ci-run-linux-astra-m72-22b4e97c-retention-r1",
+      "sha": "dda8ba9d0624b921d7b206f96c55ea9aa25d4955",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43671421907,
+      "branch": "ci-run-linux-m76-8b538ad5-9c46187e-b0",
+      "sha": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43671182262,
+      "branch": "ci-run-linux-astra-m72-0f938973-unknown-b0",
+      "sha": "e0a94d9c1b2abc6e957aa0886587fba8bca7a091",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43670807969,
+      "branch": "ci-run-linux-astra-wp11-812d6bd9-3619f1fd-m52-10",
+      "sha": "e5e0d9ea5d1cf017c02fcce38b40e1812dfe1f55",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43670694769,
+      "branch": "ci-run-linux-astra-wp67-1a3a3c20-f12b9ae6-04",
+      "sha": "72032511a410840d86c6b7b76be73275a22828ca",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43670652989,
+      "branch": "ci-run-linux-m62-diagnostic-r6",
+      "sha": "d87d0883bcc087b13cffc6a45649745616b46f34",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43670461431,
+      "branch": "ci-run-linux-astra-wp11-812d6bd9-5cd26d75-m52-u2",
+      "sha": "d042864cd26e70fc551eb17f1bbdcf064897c21c",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43670302513,
+      "branch": "ci-run-linux-astra-wp67-1a3a3c20-7e6f223a-03",
+      "sha": "461f1794edb80d9b29017ed18adb4019675a61a9",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43670181263,
+      "branch": "ci-run-linux-astra-m69-f2-c3c99ae2-1",
+      "sha": "86c84a1b86de7af819f278edbd7fce5a8f4cffe7",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43670124299,
+      "branch": "ci-run-linux-astra-wp11-493fe3ca-5cd26d75-m52-u1",
+      "sha": "227d9903de0b8a21df17abbb4073360b039e4785",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43669861192,
+      "branch": "ci-run-linux-m62-renderer-r5",
+      "sha": "a69deefc1664c509f5f9d6cc8249800c1fe18ec8",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43669699195,
+      "branch": "ci-run-linux-m62-ingress-r4",
+      "sha": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43669059549,
+      "branch": "ci-run-linux-astra-wp67-0b00fa5b-f12b9ae6-02",
+      "sha": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43669037981,
+      "branch": "ci-run-linux-m68r4",
+      "sha": "4b601473b4b716199a643517645dd4820667180d",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43668842101,
+      "branch": "ci-run-linux-astra-m61-cb0343be-7e5c32fe-3",
+      "sha": "7dc844027be65913de226178f2b11a9f682d5396",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668733882,
+      "branch": "ci-run-linux-astra-wp67-0b00fa5b-7e47a7c4-01",
+      "sha": "56736466e7deb2973ac4f37540503da51057a8de",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668690783,
+      "branch": "ci-run-linux-m65-99919e94-recovery-r2",
+      "sha": "041e9d7dd055043a1a3de5c8261e399f8da2de73",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43668610172,
+      "branch": "ci-run-linux-m68r3",
+      "sha": "3328845bbb6186f82cf29d89185aff3f3a313924",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668513417,
+      "branch": "ci-run-linux-m62-numerical-r3",
+      "sha": "ee74a29004e0fd49ebac324f528d9d1949be46ac",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668427847,
+      "branch": "ci-run-linux-m65-original-intent-baseline-b0",
+      "sha": "c9f3011d501993c524de31de7cb227e94975ad04",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668401496,
+      "branch": "ci-run-linux-m62-installed-r2",
+      "sha": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668383518,
+      "branch": "ci-run-linux-export66-r3-b371c1f9",
+      "sha": "46fb76e4cf9bfb63799537a46c9b2dcc342f6459",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43668348441,
+      "branch": "ci-run-linux-m68r2",
+      "sha": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43668245381,
+      "branch": "ci-run-linux-astra-m69-f1-d962e08b-1",
+      "sha": "7823c05e28fbda36c7c0b1bd62eb5c5e64a4f537",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668156670,
+      "branch": "ci-run-linux-operations63-83aabd95-nominal-r4",
+      "sha": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668120365,
+      "branch": "ci-run-linux-m65-5da7aa96-recovery-r1",
+      "sha": "31c2339dd0015a9876ee27d904173cc5c901dd18",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668099377,
+      "branch": "ci-run-linux-astra-m61-652f4d3a-eeb02ee6-2",
+      "sha": "03dc648952c9c56bc00058ce187fe7e27fe0db15",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667860058,
+      "branch": "ci-run-linux-astra-m61-base7e1-a53cb1dd-1",
+      "sha": "449f8c51d2ee641e8d41cfa965de7c72b8443276",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667815725,
+      "branch": "ci-run-linux-m68r1",
+      "sha": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667789028,
+      "branch": "ci-run-linux-export66-r2-419a00b8",
+      "sha": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43667752670,
+      "branch": "ci-run-linux-operations63-e1791815-scanner-aux-r3",
+      "sha": "296b69cfe746fbac4639b9451f60563d5524fc29",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43667749802,
+      "branch": "ci-run-linux-m64-08467103-8e5e0bf8-1",
+      "sha": "e148ff33a1c3f4864d039f5d443934173b8e9030",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43667468344,
+      "branch": "ci-run-linux-astra-m69-b0-9a62c4fe-1",
+      "sha": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667462702,
+      "branch": "ci-run-linux-astra-wp11-0917b486-3619f1fd-m52-09",
+      "sha": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667294352,
+      "branch": "ci-run-linux-export66-r1-75e46959",
+      "sha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667290771,
+      "branch": "ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1",
+      "sha": "92ac331081a61b4724193488777599d4d8eec257",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667093423,
+      "branch": "ci-run-linux-m62-contracts-r1",
+      "sha": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43666919712,
+      "branch": "ci-run-linux-operations63-4a8906bd-nominal-r2",
+      "sha": "98522c038cba67a2552890e9daf8898caf146c41",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43666746009,
+      "branch": "ci-run-linux-m59p03",
+      "sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "target_writes52": 0
+}

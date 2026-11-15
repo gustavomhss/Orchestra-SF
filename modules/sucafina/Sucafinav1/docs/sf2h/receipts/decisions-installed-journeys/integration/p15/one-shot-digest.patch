@@ -1,0 +1,243 @@
+diff --git a/modules/sucafina/Sucafinav1/product/contracts/canonical.ts b/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
+index 1769271386cdda1017c38023b0988ce2d64423d2..576199437a21a5d094da7db7601e78dcf01bce82 100644
+--- a/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
+@@ -7,7 +7,7 @@
+ }
+ 
+ export function digestSfValue(value: unknown): string {
+-  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
++  return Bun.CryptoHasher.hash("sha256", canonicalSfValue(value), "hex")
+ }
+ 
+ /** Integrity of the whole reference; authentication remains in the source resolver. */
+diff --git a/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts b/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..910771c6d563e6cc4a66a5ff170abcd6f68d8c05 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts
+@@ -0,0 +1,224 @@
++import { expect, test } from "bun:test"
++import { createHash } from "node:crypto"
++import { canonicalSfValue, digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { DomainProjection } from "../../../product/contracts/context.ts"
++import { emptyMap, plugGroup } from "../../../src/identity.ts"
++
++// The production canonical serializer is imported, never copied. This historical
++// hashing expression is used only as the previous implementation's comparison.
++function previousDigest(value: unknown) {
++  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
++}
++
++function nodeDigest(bytes: string) {
++  return createHash("sha256").update(bytes, "utf8").digest("hex")
++}
++
++const vectors = [
++  { name: "absent", value: () => undefined, bytes: '["absent"]' },
++  { name: "null", value: () => null, bytes: '["null"]' },
++  { name: "false", value: () => false, bytes: '["boolean",false]' },
++  { name: "true", value: () => true, bytes: '["boolean",true]' },
++  { name: "Unicode and lone surrogate", value: () => "é🙂\ud800", bytes: '["string","é🙂\\ud800"]' },
++  { name: "escaped string", value: () => "a\n\u0000\"\\", bytes: '["string","a\\n\\u0000\\\"\\\\"]' },
++  { name: "positive zero", value: () => 0, bytes: '["number",0]' },
++  { name: "negative zero", value: () => -0, bytes: '["number","-0"]' },
++  { name: "finite fraction", value: () => 0.1, bytes: '["number",0.1]' },
++  { name: "smallest positive finite number", value: () => Number.MIN_VALUE, bytes: '["number",5e-324]' },
++  { name: "large finite exponent", value: () => 1e21, bytes: '["number",1e+21]' },
++  { name: "empty object", value: () => ({}), bytes: '["object",[]]' },
++  { name: "lexicographic own keys", value: () => ({ z: undefined, a: null, "10": -0, "2": false }),
++    bytes: '["object",[["10",["number","-0"]],["2",["boolean",false]],["a",["null"]],["z",["absent"]]]]' },
++  { name: "dense array", value: () => [undefined, null, 0, -0, true, ""],
++    bytes: '["array",[["absent"],["null"],["number",0],["number","-0"],["boolean",true],["string",""]]]' },
++  { name: "array holes stay distinct from undefined", value: () => {
++    const value = Array<unknown>(3)
++    value[1] = undefined
++    return value
++  }, bytes: '["array",[null,["absent"],null]]' },
++  { name: "null prototype", value: () => Object.assign(Object.create(null), { z: 1, a: 2 }),
++    bytes: '["object",[["a",["number",2]],["z",["number",1]]]]' },
++  { name: "non-enumerable and symbol keys remain unselected", value: () => {
++    const value = { a: 1, [Symbol("unselected")]: 2 }
++    Object.defineProperty(value, "hidden", { value: 3 })
++    return value
++  }, bytes: '["object",[["a",["number",1]]]]' },
++]
++
++test.each(vectors)("one-shot digest preserves canonical bytes: $name", ({ value, bytes }) => {
++  expect(canonicalSfValue(value())).toBe(bytes)
++  expect(digestSfValue(value())).toBe(nodeDigest(bytes))
++  expect(digestSfValue(value())).toBe(previousDigest(value()))
++  expect(digestSfValue(value())).toMatch(/^[a-f0-9]{64}$/)
++})
++
++const rejected = [
++  { name: "NaN", value: () => NaN, reason: "SF_CANONICAL_NONFINITE" },
++  { name: "positive infinity", value: () => Infinity, reason: "SF_CANONICAL_NONFINITE" },
++  { name: "negative infinity", value: () => -Infinity, reason: "SF_CANONICAL_NONFINITE" },
++  { name: "bigint", value: () => 1n, reason: "SF_CANONICAL_UNSUPPORTED" },
++  { name: "symbol", value: () => Symbol("unsupported"), reason: "SF_CANONICAL_UNSUPPORTED" },
++  { name: "function", value: () => () => 1, reason: "SF_CANONICAL_UNSUPPORTED" },
++  { name: "Date", value: () => new Date("2026-11-15T00:00:00.000Z"), reason: "SF_CANONICAL_UNSUPPORTED" },
++  { name: "Map", value: () => new Map([["a", 1]]), reason: "SF_CANONICAL_UNSUPPORTED" },
++  { name: "Set", value: () => new Set([1]), reason: "SF_CANONICAL_UNSUPPORTED" },
++  { name: "boxed number", value: () => Object(1), reason: "SF_CANONICAL_UNSUPPORTED" },
++  { name: "custom prototype", value: () => Object.create({ inherited: 1 }), reason: "SF_CANONICAL_UNSUPPORTED" },
++]
++
++test.each(rejected)("one-shot digest preserves rejection: $name", ({ value, reason }) => {
++  expect(() => digestSfValue(value())).toThrow(reason)
++  expect(() => previousDigest(value())).toThrow(reason)
++})
++
++// Production contract shapes, the real evidence-digest producer and actual role
++// map factory. These unit values neither grant authority nor seed any UI journey.
++function corpus() {
++  const period = { start: "2027-01-01", end: "2027-12-31" }
++  const refs = [1200, 2400].map((annual, index) => {
++    const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = {
++      schema: "sf-evidence-v1", kind: "record", refId: `planner-source:digest-${index}:digest-inc-${index}:1`,
++      installationId: "digest-unit-install", projectId: "digest-unit-project", refDigest: "", evidenceLevel: "observed",
++      target: { surface: "planner", recordType: "planner-version", recordId: `digest-${index}`,
++        incarnation: `digest-inc-${index}`, version: 1, fields: ["lines"], period: { ...period },
++        projectionDigest: digestSfValue({ annual }) },
++    }
++    ref.refDigest = digestSfEvidenceRef(ref)
++    return ref
++  })
++  const map = plugGroup(emptyMap(), "planner", "finance", "digest-unit-finance")
++  const values: DomainProjection["values"][] = refs.map((ref, index) => [{
++    id: "annual", value: index === 0 ? 1200 : 2400, unit: "USD", currency: "USD", period: { ...period },
++    granularity: "year", sourceRefs: [ref], drilldown: ref, evidenceState: "confirmed",
++  }])
++  const binding = { installationId: "digest-unit-install", projectId: "digest-unit-project",
++    principalRef: "digest-unit-reader", policyVersion: "policy-1", accessRevision: "access-1" }
++  return { refs, map, values, binding, entries: [...refs,
++    ...(["dashboard", "planner", "procurement"] as const).map((surface) => map.filter((row) => row.surface === surface)),
++    ...values, binding] }
++}
++
++test("one-shot digest agrees with independent SHA256 for evidence, role maps and values", () => {
++  const value = corpus()
++  expect(value.entries).toHaveLength(8)
++  for (const entry of value.entries) {
++    const bytes = canonicalSfValue(entry)
++    expect(digestSfValue(entry)).toBe(nodeDigest(bytes))
++    expect(digestSfValue(entry)).toBe(previousDigest(entry))
++  }
++})
++
++test("one-shot digest observes sorted getters exactly once and their current values", () => {
++  const seen: string[] = []
++  const value = {
++    z: 1,
++    get a() { seen.push("a"); value.z = 2; return 3 },
++    get b() { seen.push("b"); return value.z },
++  }
++  const expected = nodeDigest('["object",[["a",["number",3]],["b",["number",2]],["z",["number",2]]]]')
++  expect(digestSfValue(value)).toBe(expected)
++  expect(seen).toEqual(["a", "b"])
++  seen.length = 0
++  value.z = 1
++  expect(previousDigest(value)).toBe(expected)
++  expect(seen).toEqual(["a", "b"])
++})
++
++test("one-shot digest preserves proxy observation order without a preliminary traversal", () => {
++  const seen: string[] = []
++  const value = new Proxy({ b: 2, a: 1 }, {
++    getPrototypeOf(target) { seen.push("prototype"); return Reflect.getPrototypeOf(target) },
++    ownKeys(target) { seen.push("keys"); return Reflect.ownKeys(target) },
++    getOwnPropertyDescriptor(target, key) { seen.push(`descriptor:${String(key)}`); return Reflect.getOwnPropertyDescriptor(target, key) },
++    get(target, key, receiver) { seen.push(`get:${String(key)}`); return Reflect.get(target, key, receiver) },
++  })
++  const expected = nodeDigest('["object",[["a",["number",1]],["b",["number",2]]]]')
++  expect(digestSfValue(value)).toBe(expected)
++  expect(seen).toEqual(["prototype", "keys", "descriptor:b", "descriptor:a", "get:a", "get:b"])
++  seen.length = 0
++  expect(previousDigest(value)).toBe(expected)
++  expect(seen).toEqual(["prototype", "keys", "descriptor:b", "descriptor:a", "get:a", "get:b"])
++})
++
++test("one-shot digest keeps reentrant calculations isolated", () => {
++  const nested: string[] = []
++  const value = { get amount() { nested.push(digestSfValue("inner")); return 1200 } }
++  expect(digestSfValue(value)).toBe(nodeDigest('["object",[["amount",["number",1200]]]]'))
++  expect(nested).toEqual([nodeDigest('["string","inner"]')])
++})
++
++test("one-shot digest reobserves same-object evidence, role and identity revisions", () => {
++  const value = corpus()
++  const finance = value.map.find((row) => row.surface === "planner" && row.role === "finance")!
++  const original = { sourceVersion: value.refs[0]!.target.version, roleVersion: finance.version, accessRevision: value.binding.accessRevision }
++  const before = value.entries.map((entry) => digestSfValue(entry))
++  value.refs[0]!.target.version = original.sourceVersion + 1
++  finance.version = original.roleVersion + 1
++  value.binding.accessRevision = "access-2"
++  const after = value.entries.map((entry) => digestSfValue(entry))
++  expect(after[0]).not.toBe(before[0])
++  expect(after[3]).not.toBe(before[3])
++  expect(after[5]).not.toBe(before[5])
++  expect(after[7]).not.toBe(before[7])
++  for (const entry of value.entries) expect(digestSfValue(entry)).toBe(nodeDigest(canonicalSfValue(entry)))
++  value.refs[0]!.target.version = original.sourceVersion
++  finance.version = original.roleVersion
++  value.binding.accessRevision = original.accessRevision
++  expect(value.entries.map((entry) => digestSfValue(entry))).toEqual(before)
++})
++
++test("one-shot digest propagates canonical getter errors", () => {
++  const seen = { calls: 0 }
++  const value = { get denied() { seen.calls += 1; throw new Error("digest-unit-getter-denied") } }
++  expect(() => digestSfValue(value)).toThrow("digest-unit-getter-denied")
++  expect(seen.calls).toBe(1)
++  expect(() => previousDigest(value)).toThrow("digest-unit-getter-denied")
++  expect(seen.calls).toBe(2)
++})
++
++test("one-shot digest retains canonical rejection of cyclic objects", () => {
++  const value: { self?: unknown } = {}
++  value.self = value
++  expect(() => digestSfValue(value)).toThrow(RangeError)
++  expect(() => previousDigest(value)).toThrow(RangeError)
++})
++
++test("one-shot digest reports a bounded interleaved hosted comparison without a speed assertion", () => {
++  const entries = corpus().entries
++  const warmupRounds = 16
++  const rounds = 128
++  const sampleCount = 6
++  for (const entry of entries) for (const _round of Array.from({ length: warmupRounds })) {
++    previousDigest(entry)
++    digestSfValue(entry)
++  }
++  const measure = (hash: (value: unknown) => string) => {
++    const result = { count: 0, checksum: 0 }
++    const at = performance.now()
++    // Both measured paths use the same loop, current objects and serializer on
++    // every call. No digest/ACL/snapshot cache or timer-dependent work count.
++    for (const _round of Array.from({ length: rounds })) for (const entry of entries) {
++      result.checksum += hash(entry).charCodeAt(0)
++      result.count += 1
++    }
++    return { ...result, elapsed_ms: performance.now() - at }
++  }
++  const samples = Array.from({ length: sampleCount }, (_, index) => {
++    const pair = index % 2 === 0
++      ? { previous: measure(previousDigest), current: measure(digestSfValue) }
++      : { current: measure(digestSfValue), previous: measure(previousDigest) }
++    expect(pair.previous.count).toBe(entries.length * rounds)
++    expect(pair.current.count).toBe(pair.previous.count)
++    expect(pair.current.checksum).toBe(pair.previous.checksum)
++    return { sample: index + 1, previous_first: index % 2 === 0, count_each: pair.current.count,
++      previous_ms: pair.previous.elapsed_ms, current_ms: pair.current.elapsed_ms,
++      ratio_current_over_previous: pair.current.elapsed_ms / pair.previous.elapsed_ms }
++  })
++  const previous_ms = samples.reduce((total, sample) => total + sample.previous_ms, 0)
++  const current_ms = samples.reduce((total, sample) => total + sample.current_ms, 0)
++  console.info("SF52_DIGEST_COST", JSON.stringify({ bun_version: Bun.version, corpus_count: entries.length,
++    sample_count: sampleCount, rounds_per_sample: rounds, warmup_rounds: warmupRounds,
++    warmup_count_each: entries.length * warmupRounds, measured_count_each: entries.length * rounds * sampleCount,
++    previous_ms, current_ms, ratio_current_over_previous: current_ms / previous_ms, samples }))
++})

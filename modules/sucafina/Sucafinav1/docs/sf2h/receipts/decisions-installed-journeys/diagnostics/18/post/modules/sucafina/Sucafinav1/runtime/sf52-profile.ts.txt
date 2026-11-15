@@ -1,0 +1,67 @@
+import { AsyncLocalStorage } from "node:async_hooks"
+
+// SF52 diagnostic18 only. Fixed mode/stage names, process-local diagnostic ordinal,
+// aggregate counts and inclusive durations. No request or authority data retained.
+// completed/count include both returned and thrown work; active is still in flight.
+type Stage = { started: number; completed: number; active: number; count: number; total_ms: number; max_ms: number }
+type Profile = { mode: "compare" | "choose"; ordinal: number; at: number; stages: Record<string, Stage> }
+const profiles = new AsyncLocalStorage<Profile>()
+const sequence = { value: 0 }
+
+function begin(profile: Profile, stage: string) {
+  const row = profile.stages[stage] ??= { started: 0, completed: 0, active: 0, count: 0, total_ms: 0, max_ms: 0 }
+  row.started += 1
+  row.active += 1
+  return row
+}
+
+function finish(row: Stage, at: number) {
+  const elapsed = performance.now() - at
+  row.completed += 1
+  row.active -= 1
+  row.count += 1
+  row.total_ms += elapsed
+  row.max_ms = Math.max(row.max_ms, elapsed)
+}
+
+export function sf52Measure<T>(stage: string, work: () => T): T {
+  const profile = profiles.getStore()
+  if (!profile) return work()
+  const row = begin(profile, stage), at = performance.now()
+  try { return work() } finally { finish(row, at) }
+}
+
+export async function sf52MeasureAsync<T>(stage: string, work: () => Promise<T>): Promise<T> {
+  const profile = profiles.getStore()
+  if (!profile) return work()
+  const row = begin(profile, stage), at = performance.now()
+  try { return await work() } finally { finish(row, at) }
+}
+
+export async function sf52Profile<T>(mode: "compare" | "choose", signal: AbortSignal, work: () => Promise<T>): Promise<T> {
+  const profile: Profile = { mode, ordinal: ++sequence.value, at: performance.now(), stages: Object.create(null) }
+  const outcome = { returned: false, aborted: false }
+  const emit = (event: "start" | "abort" | "end") => {
+    // Only the diagnostic sink is caught. Product return values/errors are untouched.
+    try { console.info("SF52_COST", JSON.stringify({ diagnostic: 18, mode: profile.mode, ordinal: profile.ordinal,
+      event, elapsed_ms: performance.now() - profile.at,
+      ...(event === "end" ? { outcome: outcome.returned ? "returned" : "threw" } : {}), stages: profile.stages })) }
+    catch { /* Timing sink only. */ }
+  }
+  const aborted = () => {
+    if (outcome.aborted) return
+    outcome.aborted = true
+    emit("abort")
+  }
+  signal.addEventListener("abort", aborted, { once: true })
+  emit("start")
+  if (signal.aborted) aborted()
+  try {
+    const value = await profiles.run(profile, work)
+    outcome.returned = true
+    return value
+  } finally {
+    signal.removeEventListener("abort", aborted)
+    emit("end")
+  }
+}

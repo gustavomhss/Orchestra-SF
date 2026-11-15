@@ -1,0 +1,212 @@
+{
+  "schema": "sf52.diagnostic18.addendum-evidence-manifest.v1",
+  "state": "HISTORICAL_DIAGNOSTIC_ONLY_READY_LOCAL_ARCHIVE",
+  "source52": "ACTIVE",
+  "observed_published_source": "43a31f4c51c0897287fdc53468bd171adca4795d",
+  "root_receipt": {
+    "path": "diagnostic-18.json",
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/diagnostic-18-receipt.json",
+    "bytes": 344207,
+    "sha256": "498c457265841a43eec197d9314f7f25f7a5cfe9fdd9960448e8e3d10c322643",
+    "git_blob": "43b1057acb037f8a34e9bb4d4fd783288de9de3a"
+  },
+  "full_image_count": 13,
+  "instrumented_paths": 7,
+  "absent_preimages": [
+    "modules/sucafina/Sucafinav1/runtime/sf52-profile.ts"
+  ],
+  "files_excluding_this_manifest": [
+    {
+      "relative_path": "diagnostic-18.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostic-18.json",
+      "bytes": 344207,
+      "sha256": "498c457265841a43eec197d9314f7f25f7a5cfe9fdd9960448e8e3d10c322643",
+      "git_blob": "43b1057acb037f8a34e9bb4d4fd783288de9de3a"
+    },
+    {
+      "relative_path": "diagnostics/18/README.md",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/README.md",
+      "bytes": 5335,
+      "sha256": "b04aac44e70b9277a0831cdb8cb548733a02aca0071616940759f133ff9b50a4",
+      "git_blob": "05162c5010ee80bf04cd9ba66fa40f5cd8ae4eab"
+    },
+    {
+      "relative_path": "diagnostics/18/W-verification.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/W-verification.json",
+      "bytes": 1568,
+      "sha256": "3d7675956534152b1b7f3e9b7c9ad302cdc86287f6be2d024eac381c3b3e0853",
+      "git_blob": "531dcc4d32ccbfe352d6d35de3ed95244ce71aef"
+    },
+    {
+      "relative_path": "diagnostics/18/cost18-summary.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/cost18-summary.json",
+      "bytes": 101584,
+      "sha256": "37c039259b6d87be6aa9266017a5c5776bde540843af10b27fd1a74741be9305",
+      "git_blob": "c2c57daab1eabdb26266b8d5d27adc19bb096f9d"
+    },
+    {
+      "relative_path": "diagnostics/18/cost18-summary.md",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/cost18-summary.md",
+      "bytes": 1980,
+      "sha256": "e7670a992a88ec993ccf2b51a84059f87556b42c8b56f12f17414a784af17a80",
+      "git_blob": "778b9a7110c91423df1773ac93b68cf9d881adfa"
+    },
+    {
+      "relative_path": "diagnostics/18/criteria17-diagnostic-only-addendum.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/criteria17-diagnostic-only-addendum.json",
+      "bytes": 5823,
+      "sha256": "22669ef33f978fb90ced7ca1695d5c7f07a4f278ebf6fc932e5fbbc20dbb64e7",
+      "git_blob": "25744bd2fdcc6dddc5d51061a5ac464fa6c47a83"
+    },
+    {
+      "relative_path": "diagnostics/18/dispatch/final-dispatched-envelope.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/dispatch/final-dispatched-envelope.json",
+      "bytes": 3658,
+      "sha256": "bf9ba69ed02398f3e28fc8f49ad446c4ee89786411a72ebb65c4eff3c0d46016",
+      "git_blob": "cd1b8953cd74ae1f57419837211326018b6f60dd"
+    },
+    {
+      "relative_path": "diagnostics/18/dispatch/preflight.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/dispatch/preflight.json",
+      "bytes": 22811,
+      "sha256": "600d9d4b1106d0c33ed800fe16573f3716350f51f8ab3562c589aff008aed170",
+      "git_blob": "8bd1b572b351edfedfa388767aacd1bc333940dd"
+    },
+    {
+      "relative_path": "diagnostics/18/independent-J1-review.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/independent-J1-review.json",
+      "bytes": 15462,
+      "sha256": "e6e235fda1d21c4a48b6bcbb2726213c604a37e3eb83f5898c4bcf57156edb67",
+      "git_blob": "8d3649d599fec892154f215f4a9966ac5e4e5367"
+    },
+    {
+      "relative_path": "diagnostics/18/independent-instrumentation-review.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/independent-instrumentation-review.json",
+      "bytes": 5425,
+      "sha256": "2b29f161cde7ca0a5281b2632bf35a4cbcedcc9b7f0c539ab86c5d64cd1b2a8b",
+      "git_blob": "b24c7c9e3594851fba3f1089c0066825c8a61e50"
+    },
+    {
+      "relative_path": "diagnostics/18/instrumentation.patch",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/instrumentation.patch",
+      "bytes": 22133,
+      "sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+      "git_blob": "890d342a87e7fd315f3eb4c854550e3615518a93"
+    },
+    {
+      "relative_path": "diagnostics/18/material-manifest.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/material-manifest.json",
+      "bytes": 12340,
+      "sha256": "ba7426867e838be853104045f17ad93f037c9e6031fc33ca46787da5be884844",
+      "git_blob": "2e314d1d8934f7eea73d6baed7d72a27f605ed23"
+    },
+    {
+      "relative_path": "diagnostics/18/post/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+      "bytes": 6306,
+      "sha256": "eed5dad895b449f107b959c8e7347f13668ebbd3ef2eebf105ba4a53f42491bb",
+      "git_blob": "765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff"
+    },
+    {
+      "relative_path": "diagnostics/18/post/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+      "bytes": 13659,
+      "sha256": "8dc1decb9fb7818780069ffc81a300deeb0f3f24b1999e40150e856b9c774c69",
+      "git_blob": "c854b37f016fda0748e7d7eba0b35fd66a4848e0"
+    },
+    {
+      "relative_path": "diagnostics/18/post/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "bytes": 3711,
+      "sha256": "48663634da73c0225ce4149613777bfb0124d6792db1f80a5351bdb3b23bb2c3",
+      "git_blob": "38b3d71506cfc82e1da2f2dc208bf07a55b41a68"
+    },
+    {
+      "relative_path": "diagnostics/18/post/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+      "bytes": 42794,
+      "sha256": "35f1257dcf3ef8341ae88bf23900d84148250ff485ad4935b522c111b528a0fb",
+      "git_blob": "91b2e01bf97684b473a574dc726d429cdeadb52c"
+    },
+    {
+      "relative_path": "diagnostics/18/post/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+      "bytes": 22388,
+      "sha256": "414bf7f486307964db5626fd4831d68e79c3cc12594af2c8a470371c59f8dc10",
+      "git_blob": "fa6e20d34ffdd34835a97dd8250f6bb878fd780c"
+    },
+    {
+      "relative_path": "diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+      "bytes": 38516,
+      "sha256": "5936858e882ecf9c6abd5dc3ddffe28fb1eb61dc92ec73581ac8f017a40663b6",
+      "git_blob": "a71b48057ebb32afa4efbcaabf448da516094a3c"
+    },
+    {
+      "relative_path": "diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts.txt",
+      "bytes": 2746,
+      "sha256": "0c18861c613984d0154d5c41e21388e6d7d8756db8837d0c455515b9e420a2a8",
+      "git_blob": "d88e0e6c559926a96899932eda1f02cac76a799a"
+    },
+    {
+      "relative_path": "diagnostics/18/pre/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+      "bytes": 5939,
+      "sha256": "d372e00eee1052518821370b808bea30c13999bf86143def56cdeab987a619d9",
+      "git_blob": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c"
+    },
+    {
+      "relative_path": "diagnostics/18/pre/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+      "bytes": 13294,
+      "sha256": "0287ea4491f3a15bd98780100a05a804c3012bfe8ccc2df1ab28f1987e85dce5",
+      "git_blob": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90"
+    },
+    {
+      "relative_path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "bytes": 3612,
+      "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+      "git_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "relative_path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+      "bytes": 42303,
+      "sha256": "220d8b0af77a33060b229604024663df1ed8ff33b34978727fbee3a19e134861",
+      "git_blob": "ca21c3690f71d28c04c4bbd5045aa8389c42d384"
+    },
+    {
+      "relative_path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+      "bytes": 22226,
+      "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "git_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "relative_path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+      "bytes": 38167,
+      "sha256": "8952f2065f841aa9c5682cd3306bf0c681e45141246ff34dfd2b41d05c83b41b",
+      "git_blob": "d9cbd51b85514fca0c7e36f190746d2282bde2c5"
+    },
+    {
+      "relative_path": "diagnostics/18/reconstruction.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/reconstruction.json",
+      "bytes": 3859,
+      "sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93",
+      "git_blob": "a760b8b87c14bbd12f3041459138fd66797155ea"
+    }
+  ],
+  "criteria17_unchanged": {
+    "sha256": "8bcdbd967eb2d6eb08a7e1e4c642788a5295405cfd9eb926712200e403c41219",
+    "git_blob": "3341e9d9b05f3f27e81fbaf2abe5d40e12bf8b17",
+    "original_records": 83,
+    "fragments": 226,
+    "diagnostic_fragments_added": 0
+  },
+  "remote_mutations": 0,
+  "product_execution": 0,
+  "GLOBAL_RELEASE": false
+}

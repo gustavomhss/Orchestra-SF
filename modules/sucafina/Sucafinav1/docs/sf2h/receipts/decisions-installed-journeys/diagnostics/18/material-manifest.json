@@ -1,0 +1,249 @@
+{
+  "schema": "sf52.diagnostic18.archived-material-manifest.v1",
+  "state": "HISTORICAL_DIAGNOSTIC_NOT_FOR_PRODUCT_INTEGRATION",
+  "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+  "parent_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+  "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+  "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+  "path_count": 7,
+  "new_helper_count": 1,
+  "clean_inherited_preimage_proof": [
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/current-C51-delta.json",
+      "sha256": "457939e451a935f6e3faf3685d9f684fd2aa6e75504aca5862e8e0f2ce79fc67",
+      "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "head": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "changed_paths": 31,
+      "selected_path_intersections": []
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/post-C51-delta.json",
+      "sha256": "3a27d2d6992e76c499bc5fb71b18444b657128f571f051e6fd19534ca6b1daec",
+      "base": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "changed_paths": 9,
+      "selected_path_intersections": []
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/post-C53-delta.json",
+      "sha256": "733d3f9f9f11e9cdb8a41d315888cbd64b2e483d6446ed97d2d9b202054f7f19",
+      "base": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "head": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+      "changed_paths": 4,
+      "selected_path_intersections": []
+    }
+  ],
+  "P13_cumulative_sha256": "69537e7eae28cffecad1ab87c31469d5d612e6122e15afdc2fbef68c4db6677e",
+  "D16_builder_sha256": "caf0c11bff13a3e87786b5c663d18da6eb0695ac7e441092484999c7b34f6b3e",
+  "patch": {
+    "path": "complete.patch",
+    "sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+    "bytes": 22133
+  },
+  "profile_roots": {
+    "compare": "Entire installed createSfDecisionCaseHttp handler, including admission and response construction",
+    "choose": "Entire installed createSfPortfolioHttp handler, including admission, withCase, final revalidation and human.finish"
+  },
+  "choice_stages": [
+    "choice.authorize",
+    "choice.replay",
+    "choice.confirm",
+    "choice.case",
+    "choice.compare",
+    "choice.stored-result",
+    "choice.values",
+    "choice.save",
+    "choice.capture"
+  ],
+  "lifecycle": "Passive once-only AbortSignal listener removed in finally; start/abort/end emit fixed mode and process-local ordinal. End preserves returned versus thrown, never logs error text.",
+  "limits": [
+    "Diagnostic-only isolated W proposal. No live source/target edits, tests, dispatch, policy/grants or credentials.",
+    "Same five installed UI tests, assertions, identities, request, workers, retries, repeat and budgets.",
+    "No authority facade/selector/WeakMap replacement, source-result reuse, snapshot/ACL cache or removed fresh observation.",
+    "P13 LocalStore implementation is retained; both full and access projection paths receive timing only.",
+    "All work callbacks execute exactly once at their original call sites; property-call receivers and existing catch mappings remain.",
+    "Stage count/completed include return and throw; active denotes in-flight work. Durations are inclusive and overlap.",
+    "HTTP root end means handler settlement, not delivery to browser or durable commit. An abort event is passive telemetry, not an induced abort.",
+    "No payload, IDs, headers, credential, source bytes, digests or error message is logged; ordinal is diagnostic-only.",
+    "Root must confirm helper absence and every seven preimage blob remotely before sealing the isolated W."
+  ],
+  "GLOBAL_RELEASE": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/sf52-profile.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": "d88e0e6c559926a96899932eda1f02cac76a799a",
+      "preimage_sha256": null,
+      "postimage_sha256": "0c18861c613984d0154d5c41e21388e6d7d8756db8837d0c455515b9e420a2a8",
+      "preimage_bytes": null,
+      "bytes": 2746,
+      "preimage_basis": "New diagnostic-only helper, not present in W17 overlay; parent must confirm target absence before sealing.",
+      "images": {
+        "pre": {
+          "absent": true,
+          "git_blob": null,
+          "reason": "New diagnostic helper absent from clean parentW17"
+        },
+        "post": {
+          "path": "diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts.txt",
+          "git_blob": "d88e0e6c559926a96899932eda1f02cac76a799a",
+          "sha256": "0c18861c613984d0154d5c41e21388e6d7d8756db8837d0c455515b9e420a2a8"
+        }
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+      "postimage": "765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff",
+      "preimage_sha256": "d372e00eee1052518821370b808bea30c13999bf86143def56cdeab987a619d9",
+      "postimage_sha256": "eed5dad895b449f107b959c8e7347f13668ebbd3ef2eebf105ba4a53f42491bb",
+      "preimage_bytes": 5939,
+      "bytes": 6306,
+      "preimage_basis": "Exact P13 cumulative postimage and W17 dispatched overlay.",
+      "images": {
+        "pre": {
+          "path": "diagnostics/18/pre/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+          "git_blob": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+          "sha256": "d372e00eee1052518821370b808bea30c13999bf86143def56cdeab987a619d9"
+        },
+        "post": {
+          "path": "diagnostics/18/post/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+          "git_blob": "765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff",
+          "sha256": "eed5dad895b449f107b959c8e7347f13668ebbd3ef2eebf105ba4a53f42491bb"
+        }
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+      "postimage": "c854b37f016fda0748e7d7eba0b35fd66a4848e0",
+      "preimage_sha256": "0287ea4491f3a15bd98780100a05a804c3012bfe8ccc2df1ab28f1987e85dce5",
+      "postimage_sha256": "8dc1decb9fb7818780069ffc81a300deeb0f3f24b1999e40150e856b9c774c69",
+      "preimage_bytes": 13294,
+      "bytes": 13659,
+      "preimage_basis": "Exact P13 cumulative postimage and W17 dispatched overlay.",
+      "images": {
+        "pre": {
+          "path": "diagnostics/18/pre/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+          "git_blob": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+          "sha256": "0287ea4491f3a15bd98780100a05a804c3012bfe8ccc2df1ab28f1987e85dce5"
+        },
+        "post": {
+          "path": "diagnostics/18/post/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+          "git_blob": "c854b37f016fda0748e7d7eba0b35fd66a4848e0",
+          "sha256": "8dc1decb9fb7818780069ffc81a300deeb0f3f24b1999e40150e856b9c774c69"
+        }
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+      "postimage": "a71b48057ebb32afa4efbcaabf448da516094a3c",
+      "preimage_sha256": "8952f2065f841aa9c5682cd3306bf0c681e45141246ff34dfd2b41d05c83b41b",
+      "postimage_sha256": "5936858e882ecf9c6abd5dc3ddffe28fb1eb61dc92ec73581ac8f017a40663b6",
+      "preimage_bytes": 38167,
+      "bytes": 38516,
+      "preimage_basis": "Exact P13 cumulative postimage and W17 dispatched overlay.",
+      "images": {
+        "pre": {
+          "path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+          "git_blob": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+          "sha256": "8952f2065f841aa9c5682cd3306bf0c681e45141246ff34dfd2b41d05c83b41b"
+        },
+        "post": {
+          "path": "diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+          "git_blob": "a71b48057ebb32afa4efbcaabf448da516094a3c",
+          "sha256": "5936858e882ecf9c6abd5dc3ddffe28fb1eb61dc92ec73581ac8f017a40663b6"
+        }
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "postimage": "fa6e20d34ffdd34835a97dd8250f6bb878fd780c",
+      "preimage_sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "postimage_sha256": "414bf7f486307964db5626fd4831d68e79c3cc12594af2c8a470371c59f8dc10",
+      "preimage_bytes": 22226,
+      "bytes": 22388,
+      "preimage_basis": "Exact clean D16 preimage plus contiguous local GitHub compare evidence C45 -> C51 -> C53 -> terminal105; no matching delta and no W17 overlay.",
+      "images": {
+        "pre": {
+          "path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+          "git_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+          "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab"
+        },
+        "post": {
+          "path": "diagnostics/18/post/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+          "git_blob": "fa6e20d34ffdd34835a97dd8250f6bb878fd780c",
+          "sha256": "414bf7f486307964db5626fd4831d68e79c3cc12594af2c8a470371c59f8dc10"
+        }
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "postimage": "38b3d71506cfc82e1da2f2dc208bf07a55b41a68",
+      "preimage_sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+      "postimage_sha256": "48663634da73c0225ce4149613777bfb0124d6792db1f80a5351bdb3b23bb2c3",
+      "preimage_bytes": 3612,
+      "bytes": 3711,
+      "preimage_basis": "Exact clean D16 preimage plus contiguous local GitHub compare evidence C45 -> C51 -> C53 -> terminal105; no matching delta and no W17 overlay.",
+      "images": {
+        "pre": {
+          "path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+          "git_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291"
+        },
+        "post": {
+          "path": "diagnostics/18/post/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+          "git_blob": "38b3d71506cfc82e1da2f2dc208bf07a55b41a68",
+          "sha256": "48663634da73c0225ce4149613777bfb0124d6792db1f80a5351bdb3b23bb2c3"
+        }
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+      "postimage": "91b2e01bf97684b473a574dc726d429cdeadb52c",
+      "preimage_sha256": "220d8b0af77a33060b229604024663df1ed8ff33b34978727fbee3a19e134861",
+      "postimage_sha256": "35f1257dcf3ef8341ae88bf23900d84148250ff485ad4935b522c111b528a0fb",
+      "preimage_bytes": 42303,
+      "bytes": 42794,
+      "preimage_basis": "Exact P13 cumulative postimage and W17 dispatched overlay.",
+      "images": {
+        "pre": {
+          "path": "diagnostics/18/pre/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+          "git_blob": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+          "sha256": "220d8b0af77a33060b229604024663df1ed8ff33b34978727fbee3a19e134861"
+        },
+        "post": {
+          "path": "diagnostics/18/post/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+          "git_blob": "91b2e01bf97684b473a574dc726d429cdeadb52c",
+          "sha256": "35f1257dcf3ef8341ae88bf23900d84148250ff485ad4935b522c111b528a0fb"
+        }
+      }
+    }
+  ],
+  "raw_material_source": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18/material.json",
+    "bytes": 270990,
+    "sha256": "2466808ffb7bdd1f7daf6718f263a816380c65a8e4da2282c0719be523317e81",
+    "git_blob": "8b578a8de238832f8b1a42cc6444cd87fcf24752"
+  }
+}

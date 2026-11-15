@@ -1,0 +1,1224 @@
+{
+  "schema": "sf52.p15.final-publication-evidence.v1",
+  "state": "ROOT_DOCUMENTS_AND_REAL_RECEIPTS_BOUND_NO_AUTHORITY_INFERENCE",
+  "expected_parent": "43a31f4c51c0897287fdc53468bd171adca4795d",
+  "expected_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+  "bindings": {
+    "unit06": {
+      "receipt": "unit-06.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/unit-06-receipt.json",
+      "sha256": "40f34acf952758f81975a2ed2bd2359d0eb557cd4ed4f84ecbfc0b793066f648",
+      "git_blob": "9ef4e9cad455f9ace87a7c9f3f71730c64010e5e",
+      "bytes": 43953,
+      "run_id": 43690045333,
+      "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+      "S": "79913f877c0ee58922a2f9635a48a350269dd356",
+      "passed": 36,
+      "failed": 0,
+      "scope": "SUPPLEMENTAL_ONLY"
+    },
+    "nominal19": {
+      "receipt": "nominal-19.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/nominal-19-receipt.json",
+      "sha256": "b32930aab10658a118bab832ecc5d3bf60e173ce2417568a72023236d195480d",
+      "git_blob": "7e15237e51f03556cc4e1a56f6c8d1df3baa65ed",
+      "bytes": 228557,
+      "run_id": 43690414521,
+      "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+      "S": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+      "statuses": [
+        "passed",
+        "failed",
+        "passed",
+        "passed",
+        "passed"
+      ],
+      "summary": {
+        "result": "FOUR_INDEPENDENT_PASS_FINANCIAL_REQUESTS503",
+        "J1": "PASS_FULL_ORIGINAL_BODY",
+        "J2": "FAIL_REQUESTS503_BEFORE_FINANCIAL_MUTATION",
+        "J3": "PASS",
+        "J4": "PASS",
+        "J5": "PASS",
+        "original_five_cases_executed": true,
+        "financial_scenario_removed": false,
+        "pass": 4,
+        "fail": 1,
+        "skipped": 0,
+        "timed_out": 0,
+        "flaky": 0,
+        "setup_failed": 0,
+        "independent_cases_passed": 4,
+        "four_independent_cases_passed": true,
+        "financial_case_runtime_status": "failed"
+      }
+    },
+    "criteria19": {
+      "receipt": "criteria.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/mission52-criteria-v19-final.json",
+      "sha256": "7b46f42bc974398b202ff57f5b9b861efccbba2ddfd2f6f24142a9aad1710af2",
+      "git_blob": "305d0b92a7a55af7dc424072a650cd41f00234b7",
+      "bytes": 1527615,
+      "original_records": 83,
+      "projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+      "prior_fragments_preserved": 226,
+      "new_nominal19_fragments": 35,
+      "integrated_proofs_empty_arrays": 83
+    },
+    "financial": {
+      "receipt": "FINANCIAL-CONTRACT.md",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-financial-terminal-v10.md",
+      "sha256": "75cb1ba36e09fcb3ab607655934b2dcb631fe4b923b66c5be4250a67fbaed116",
+      "git_blob": "519cecda6c94c9ad3d832c20b45a65fe6d309f7e",
+      "bytes": 17510
+    }
+  },
+  "root_documents": [
+    {
+      "role": "authority_final",
+      "path": "AUTHORITY-TERMINAL52.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/terminal52-documents/AUTHORITY-TERMINAL52.json",
+      "sha256": "13d2507b0674c92477e2b10fabdc2c98532e37d42bbbc88eb622480750deb70c",
+      "git_blob": "becc63339ec4af18352026a7fc8bb3b3f783cf94",
+      "bytes": 5140
+    },
+    {
+      "role": "handoff",
+      "path": "HANDOFF52-TO47.md",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/terminal52-documents/HANDOFF52-TO47.md",
+      "sha256": "6bfd877990e2a597a52931a1e31cacb27ff88bc786df13036b4892e993fedabd",
+      "git_blob": "188633989c0f484c3a3d7804e05a2290e80d214e",
+      "bytes": 6807
+    },
+    {
+      "role": "release",
+      "path": "RELEASE52.json",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/terminal52-documents/RELEASE52.json",
+      "sha256": "67098cc441d9be6d14f36ff3dbd22d6d76b74889080f206dfa1606879dfb3c59",
+      "git_blob": "672908fa30531fdfb5b71346c76b03b5c6edb4b3",
+      "bytes": 10557
+    }
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/AUTHORITY-TERMINAL52.json",
+      "preimage": null,
+      "postimage": "becc63339ec4af18352026a7fc8bb3b3f783cf94",
+      "sha256": "13d2507b0674c92477e2b10fabdc2c98532e37d42bbbc88eb622480750deb70c",
+      "bytes": 5140,
+      "origin": {
+        "root_authored_role": "authority_final",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/terminal52-documents/AUTHORITY-TERMINAL52.json",
+        "sha256": "13d2507b0674c92477e2b10fabdc2c98532e37d42bbbc88eb622480750deb70c",
+        "git_blob": "becc63339ec4af18352026a7fc8bb3b3f783cf94",
+        "bytes": 5140
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/FINANCIAL-CONTRACT.md",
+      "preimage": "a32497db8b7665c51f8ab2f2ff6143ebf4612931",
+      "postimage": "519cecda6c94c9ad3d832c20b45a65fe6d309f7e",
+      "sha256": "75cb1ba36e09fcb3ab607655934b2dcb631fe4b923b66c5be4250a67fbaed116",
+      "bytes": 17510,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-financial-terminal-v10.md",
+        "sha256": "75cb1ba36e09fcb3ab607655934b2dcb631fe4b923b66c5be4250a67fbaed116",
+        "git_blob": "519cecda6c94c9ad3d832c20b45a65fe6d309f7e",
+        "bytes": 17510
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/HANDOFF52-TO47.md",
+      "preimage": null,
+      "postimage": "188633989c0f484c3a3d7804e05a2290e80d214e",
+      "sha256": "6bfd877990e2a597a52931a1e31cacb27ff88bc786df13036b4892e993fedabd",
+      "bytes": 6807,
+      "origin": {
+        "root_authored_role": "handoff",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/terminal52-documents/HANDOFF52-TO47.md",
+        "sha256": "6bfd877990e2a597a52931a1e31cacb27ff88bc786df13036b4892e993fedabd",
+        "git_blob": "188633989c0f484c3a3d7804e05a2290e80d214e",
+        "bytes": 6807
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/INPUTS.json",
+      "preimage": "6137c13a2535e899bcb5662e0c664e6080d69ad6",
+      "postimage": "cbf19f4a868f23afff63b0c2d3ea57064f42c340",
+      "sha256": "60f2ff79898b2916cba484b4392ca0a79e91e5a6bd6976da018c4a47fafd69de",
+      "bytes": 11395,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/terminal52-documents/INPUTS.json",
+        "sha256": "60f2ff79898b2916cba484b4392ca0a79e91e5a6bd6976da018c4a47fafd69de",
+        "git_blob": "cbf19f4a868f23afff63b0c2d3ea57064f42c340",
+        "bytes": 11395
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/PRODUCT-MANIFEST.json",
+      "preimage": "04d9a0b14548e944b6a6fa3f3904f50e942ef60e",
+      "postimage": "f3ebbd724212de59c66a897ffb202afaa50da90c",
+      "sha256": "e74b40b1e5faafd94623c9255fb9f79c34df1b312a02ce158554cd2295c28f0d",
+      "bytes": 24683,
+      "origin": "DERIVED_DOCUMENTARY_CLOSURE_NO_AUTHORITY_INFERENCE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/RELEASE52.json",
+      "preimage": null,
+      "postimage": "672908fa30531fdfb5b71346c76b03b5c6edb4b3",
+      "sha256": "67098cc441d9be6d14f36ff3dbd22d6d76b74889080f206dfa1606879dfb3c59",
+      "bytes": 10557,
+      "origin": {
+        "root_authored_role": "release",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/terminal52-documents/RELEASE52.json",
+        "sha256": "67098cc441d9be6d14f36ff3dbd22d6d76b74889080f206dfa1606879dfb3c59",
+        "git_blob": "672908fa30531fdfb5b71346c76b03b5c6edb4b3",
+        "bytes": 10557
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/criteria-integrity.json",
+      "preimage": "34087f4ca4fa59d0b466e50569e5d3a7d00f3199",
+      "postimage": "9dba3319dd08d47d89f5a518ec570a2358751abe",
+      "sha256": "f4b6c6c8a6591d0aed8feef74c9f8f89f968286317e825775bd33555495fc949",
+      "bytes": 4173,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/criteria-v19-final-integrity.json",
+        "sha256": "f4b6c6c8a6591d0aed8feef74c9f8f89f968286317e825775bd33555495fc949",
+        "git_blob": "9dba3319dd08d47d89f5a518ec570a2358751abe",
+        "bytes": 4173
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/nominal19-J1-independent-review.json",
+      "preimage": null,
+      "postimage": "d49b8237f5cc8dadf5cc7c08ed8c36e8e975adc1",
+      "sha256": "dc0e9cc31a2089c1fd666a13171fffd946b1aa3e47030764359db0b02684f216",
+      "bytes": 19119,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/J1-independent-audit.json",
+        "sha256": "dc0e9cc31a2089c1fd666a13171fffd946b1aa3e47030764359db0b02684f216",
+        "git_blob": "d49b8237f5cc8dadf5cc7c08ed8c36e8e975adc1",
+        "bytes": 19119
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/nominal19-case-review.json",
+      "preimage": null,
+      "postimage": "8e120b7902c696269ecf50d9fbc183f6ea5cd5d5",
+      "sha256": "ffa45d226f6fb172fa2a6c8d70e5ae30702c57d11e02c34e50466d4ba60941ad",
+      "bytes": 9894,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/reviewed-case-annotations.json",
+        "sha256": "ffa45d226f6fb172fa2a6c8d70e5ae30702c57d11e02c34e50466d4ba60941ad",
+        "git_blob": "8e120b7902c696269ecf50d9fbc183f6ea5cd5d5",
+        "bytes": 9894
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/nominal19-source-invariants.json",
+      "preimage": null,
+      "postimage": "0a18cb1744ce9370d15b04be85e7e8b8d9336bbe",
+      "sha256": "57be5520db5dd9d76c90329d8540bd4f7fa5f4e0e09b88996bae2f8a0e234de8",
+      "bytes": 636,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-source-invariants.json",
+        "sha256": "57be5520db5dd9d76c90329d8540bd4f7fa5f4e0e09b88996bae2f8a0e234de8",
+        "git_blob": "0a18cb1744ce9370d15b04be85e7e8b8d9336bbe",
+        "bytes": 636
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/p15-W-verification.json",
+      "preimage": null,
+      "postimage": "84928b375a642c974bd204e44da02646e82163a8",
+      "sha256": "b6d80d662b000309267d5cc9d1b9ee7e0ae6a6eb5c239392ad446e13b3958f58",
+      "bytes": 6770,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-W-verification.json",
+        "sha256": "b6d80d662b000309267d5cc9d1b9ee7e0ae6a6eb5c239392ad446e13b3958f58",
+        "git_blob": "84928b375a642c974bd204e44da02646e82163a8",
+        "bytes": 6770
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/p15-base-preimages-read.json",
+      "preimage": null,
+      "postimage": "f6d458d9cba6fa1a202413c7f27715047c31677c",
+      "sha256": "3e766635c93d758a609072d4f3cbb0b35938f60d2e33e150038af6f65a259355",
+      "bytes": 5104,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/P15-base-preimages-read.json",
+        "sha256": "3e766635c93d758a609072d4f3cbb0b35938f60d2e33e150038af6f65a259355",
+        "git_blob": "f6d458d9cba6fa1a202413c7f27715047c31677c",
+        "bytes": 5104
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/p15-cumulative-reconstruction.json",
+      "preimage": null,
+      "postimage": "b7a6480b6cb02017acb9116566d8547e291b9982",
+      "sha256": "ad2851b678ac626903fa7ea8e800dbb8d237f6b32071cdeb4e0d0e0180fa14d4",
+      "bytes": 9386,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-delivery/patch-reconstruction.json",
+        "sha256": "ad2851b678ac626903fa7ea8e800dbb8d237f6b32071cdeb4e0d0e0180fa14d4",
+        "git_blob": "b7a6480b6cb02017acb9116566d8547e291b9982",
+        "bytes": 9386
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/p15-incremental-reconstruction.json",
+      "preimage": null,
+      "postimage": "14ad7ccc172fa25880e444a57209b8fd9785dd59",
+      "sha256": "4cef9d37df412871d56bbaf1d6ee2404f8430bab678d043386f4c8d58d0ce45a",
+      "bytes": 1322,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/reconstruction.json",
+        "sha256": "4cef9d37df412871d56bbaf1d6ee2404f8430bab678d043386f4c8d58d0ce45a",
+        "git_blob": "14ad7ccc172fa25880e444a57209b8fd9785dd59",
+        "bytes": 1322
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/p15-independent-static-review.json",
+      "preimage": null,
+      "postimage": "3000bb3064a5cf497f22ff86c1283d76e4d62d1c",
+      "sha256": "6294e73953d4e860f8b337097e6bed069c46a046aaa1d326c65c1ce2e53fb2da",
+      "bytes": 8068,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/P15-independent-static-review.json",
+        "sha256": "6294e73953d4e860f8b337097e6bed069c46a046aaa1d326c65c1ce2e53fb2da",
+        "git_blob": "3000bb3064a5cf497f22ff86c1283d76e4d62d1c",
+        "bytes": 8068
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/p15-static-preservation.json",
+      "preimage": null,
+      "postimage": "2b381ea2e3ef2138332db8a7f472ce5f00462ffe",
+      "sha256": "325c418f823501d379528d2136b11628760caea396fa1017ed98ade52760d0f0",
+      "bytes": 1081,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/static-preservation.json",
+        "sha256": "325c418f823501d379528d2136b11628760caea396fa1017ed98ade52760d0f0",
+        "git_blob": "2b381ea2e3ef2138332db8a7f472ce5f00462ffe",
+        "bytes": 1081
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/source43a-prior-publication-verification.json",
+      "preimage": null,
+      "postimage": "e6432926a6b54de232d9c001a8e8e7f57b032d86",
+      "sha256": "26e4fc03fac4adf61971c5588f291816d0f4a5bba3f7485b34a43562707cd81a",
+      "bytes": 64573,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/source43a-publication-static-verification.json",
+        "sha256": "26e4fc03fac4adf61971c5588f291816d0f4a5bba3f7485b34a43562707cd81a",
+        "git_blob": "e6432926a6b54de232d9c001a8e8e7f57b032d86",
+        "bytes": 64573
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/terminal52-reconciliation.json",
+      "preimage": null,
+      "postimage": "4fab47477516259dacebeddefefc06edf9592563",
+      "sha256": "a2e03a4d1dd0aca77404319b3ba1b96268215cd7b26b861e7b1c5d1ec30bea72",
+      "bytes": 3082,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/terminal52-reconciliation.json",
+        "sha256": "a2e03a4d1dd0aca77404319b3ba1b96268215cd7b26b861e7b1c5d1ec30bea72",
+        "git_blob": "4fab47477516259dacebeddefefc06edf9592563",
+        "bytes": 3082
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/candidate-complete.patch",
+      "preimage": "3746b541333fb44eb89e45fc1db5c80b79533805",
+      "postimage": "a18bf2c3696155a01f85a87cfdd97abb7956521d",
+      "sha256": "3d01d861498e6eb2adc883cfb0b7185f71b543061b2b702a68d13bdecceb7292",
+      "bytes": 256355,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-delivery/candidate-complete.patch",
+        "sha256": "3d01d861498e6eb2adc883cfb0b7185f71b543061b2b702a68d13bdecceb7292",
+        "git_blob": "a18bf2c3696155a01f85a87cfdd97abb7956521d",
+        "bytes": 256355
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/nominal19-final-jobs.json",
+      "preimage": null,
+      "postimage": "5b180396348409c9b4294cd8d1aec74b47cfcee5",
+      "sha256": "d2bc727f8a96b29ef1bc822e9b6f1e29a89b936de925f45125d7880d3d91e7be",
+      "bytes": 10739,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/final-jobs.json",
+        "sha256": "d2bc727f8a96b29ef1bc822e9b6f1e29a89b936de925f45125d7880d3d91e7be",
+        "git_blob": "5b180396348409c9b4294cd8d1aec74b47cfcee5",
+        "bytes": 10739
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/nominal19-preflight.json",
+      "preimage": null,
+      "postimage": "a1c9ddf891e1c89a7b85bb384c664cea34daf336",
+      "sha256": "2b3ebb6e34eefad1c402f2422ef071e69f9e98f44de4193c3ad8f83642d174c4",
+      "bytes": 23605,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/nominal19-preflight.json",
+        "sha256": "2b3ebb6e34eefad1c402f2422ef071e69f9e98f44de4193c3ad8f83642d174c4",
+        "git_blob": "a1c9ddf891e1c89a7b85bb384c664cea34daf336",
+        "bytes": 23605
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/nominal19-request.json",
+      "preimage": null,
+      "postimage": "2512080970ec321080b00d1e5b4f758893562fc4",
+      "sha256": "b8d8cc1a1a17a66282f3abf64886e182e708ab34276061f210b3437fa3e5e740",
+      "bytes": 9877,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/nominal19-dispatched-envelope.json",
+        "sha256": "b8d8cc1a1a17a66282f3abf64886e182e708ab34276061f210b3437fa3e5e740",
+        "git_blob": "2512080970ec321080b00d1e5b4f758893562fc4",
+        "bytes": 9877
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/nominal19-run.json",
+      "preimage": null,
+      "postimage": "7c780de65625184705119ed4e6ef2a24abcabf53",
+      "sha256": "f75f6e8108b36068beca761dd74fa390560b030484343367f1b484ab003c8964",
+      "bytes": 14150,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/run-metadata.json",
+        "sha256": "f75f6e8108b36068beca761dd74fa390560b030484343367f1b484ab003c8964",
+        "git_blob": "7c780de65625184705119ed4e6ef2a24abcabf53",
+        "bytes": 14150
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/unit06-final-jobs.json",
+      "preimage": null,
+      "postimage": "bb5d4688a40928b512d758a7c47265f11695c303",
+      "sha256": "1d395da91606ab3b199acee055ee9a14f5a863cedfb71b2b86ecde4297ec8ad1",
+      "bytes": 10483,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/final-jobs.json",
+        "sha256": "1d395da91606ab3b199acee055ee9a14f5a863cedfb71b2b86ecde4297ec8ad1",
+        "git_blob": "bb5d4688a40928b512d758a7c47265f11695c303",
+        "bytes": 10483
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/unit06-preflight.json",
+      "preimage": null,
+      "postimage": "7d111cd02b2920bbe94b6345ba160bd7cc815de6",
+      "sha256": "c88c1cea0d1025966c0287fbc2a386498f811a24239a312f53a03c8619300adc",
+      "bytes": 22972,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-unit06-preflight.json",
+        "sha256": "c88c1cea0d1025966c0287fbc2a386498f811a24239a312f53a03c8619300adc",
+        "git_blob": "7d111cd02b2920bbe94b6345ba160bd7cc815de6",
+        "bytes": 22972
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/unit06-request.json",
+      "preimage": null,
+      "postimage": "3ce32a3f2833a29fa06129556a97a8f07d4a3c96",
+      "sha256": "68439fdb8c12c5fb71cab1b3a7ffbbde40ecf9b915711d33d2f4c4f4f0cebea8",
+      "bytes": 2223,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-unit06-dispatched-envelope.json",
+        "sha256": "68439fdb8c12c5fb71cab1b3a7ffbbde40ecf9b915711d33d2f4c4f4f0cebea8",
+        "git_blob": "3ce32a3f2833a29fa06129556a97a8f07d4a3c96",
+        "bytes": 2223
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/unit06-run.json",
+      "preimage": null,
+      "postimage": "012447ac72b22fe2652aec110f58ee87baf0a302",
+      "sha256": "7eed88504c75d7401d31344d6c14e2313c2b57ff5c7caeafb04cbaa37ad467db",
+      "bytes": 14175,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/run-metadata.json",
+        "sha256": "7eed88504c75d7401d31344d6c14e2313c2b57ff5c7caeafb04cbaa37ad467db",
+        "git_blob": "012447ac72b22fe2652aec110f58ee87baf0a302",
+        "bytes": 14175
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/criteria.json",
+      "preimage": "3341e9d9b05f3f27e81fbaf2abe5d40e12bf8b17",
+      "postimage": "305d0b92a7a55af7dc424072a650cd41f00234b7",
+      "sha256": "7b46f42bc974398b202ff57f5b9b861efccbba2ddfd2f6f24142a9aad1710af2",
+      "bytes": 1527615,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/mission52-criteria-v19-final.json",
+        "sha256": "7b46f42bc974398b202ff57f5b9b861efccbba2ddfd2f6f24142a9aad1710af2",
+        "git_blob": "305d0b92a7a55af7dc424072a650cd41f00234b7",
+        "bytes": 1527615
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/delivery/current-image-index.json",
+      "preimage": "2324939c23338227b569eadc8a8e026da069a7ef",
+      "postimage": "a2c82e5c516b3beb0c278060e54e27186cdceafb",
+      "sha256": "b8db6d7f800361f507b6f80c33f6427e0c0c7d20f7bdbd1691e5bebb80ade37d",
+      "bytes": 43264,
+      "origin": "DERIVED_DOCUMENTARY_CLOSURE_NO_AUTHORITY_INFERENCE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/delivery/p15-W.json",
+      "preimage": null,
+      "postimage": "b870cbbcfcc38997d61e3d68b895bb703948bc2b",
+      "sha256": "3b26e9a8c2c59e9a94bc2134fe3e70cbe0688600d48dacb2e4c4c0ffa21a4115",
+      "bytes": 883,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-W.json",
+        "sha256": "3b26e9a8c2c59e9a94bc2134fe3e70cbe0688600d48dacb2e4c4c0ffa21a4115",
+        "git_blob": "b870cbbcfcc38997d61e3d68b895bb703948bc2b",
+        "bytes": 883
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/delivery/p15-prepared-material-manifest.json",
+      "preimage": null,
+      "postimage": "ab10a9d61482191c73258d5c99fb03a2457b391b",
+      "sha256": "96696af48ca83e6a3b3afb0044c905575a10194e6300fe8f87775dc47072a092",
+      "bytes": 36499,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-delivery/manifest.json",
+        "sha256": "96696af48ca83e6a3b3afb0044c905575a10194e6300fe8f87775dc47072a092",
+        "git_blob": "ab10a9d61482191c73258d5c99fb03a2457b391b",
+        "bytes": 36499
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostic-18.json",
+      "preimage": null,
+      "postimage": "43b1057acb037f8a34e9bb4d4fd783288de9de3a",
+      "sha256": "498c457265841a43eec197d9314f7f25f7a5cfe9fdd9960448e8e3d10c322643",
+      "bytes": 344207,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostic-18.json",
+        "sha256": "498c457265841a43eec197d9314f7f25f7a5cfe9fdd9960448e8e3d10c322643",
+        "git_blob": "43b1057acb037f8a34e9bb4d4fd783288de9de3a",
+        "bytes": 344207
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/README.md",
+      "preimage": null,
+      "postimage": "05162c5010ee80bf04cd9ba66fa40f5cd8ae4eab",
+      "sha256": "b04aac44e70b9277a0831cdb8cb548733a02aca0071616940759f133ff9b50a4",
+      "bytes": 5335,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/README.md",
+        "sha256": "b04aac44e70b9277a0831cdb8cb548733a02aca0071616940759f133ff9b50a4",
+        "git_blob": "05162c5010ee80bf04cd9ba66fa40f5cd8ae4eab",
+        "bytes": 5335
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/W-verification.json",
+      "preimage": null,
+      "postimage": "531dcc4d32ccbfe352d6d35de3ed95244ce71aef",
+      "sha256": "3d7675956534152b1b7f3e9b7c9ad302cdc86287f6be2d024eac381c3b3e0853",
+      "bytes": 1568,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/W-verification.json",
+        "sha256": "3d7675956534152b1b7f3e9b7c9ad302cdc86287f6be2d024eac381c3b3e0853",
+        "git_blob": "531dcc4d32ccbfe352d6d35de3ed95244ce71aef",
+        "bytes": 1568
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/cost18-summary.json",
+      "preimage": null,
+      "postimage": "c2c57daab1eabdb26266b8d5d27adc19bb096f9d",
+      "sha256": "37c039259b6d87be6aa9266017a5c5776bde540843af10b27fd1a74741be9305",
+      "bytes": 101584,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/cost18-summary.json",
+        "sha256": "37c039259b6d87be6aa9266017a5c5776bde540843af10b27fd1a74741be9305",
+        "git_blob": "c2c57daab1eabdb26266b8d5d27adc19bb096f9d",
+        "bytes": 101584
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/cost18-summary.md",
+      "preimage": null,
+      "postimage": "778b9a7110c91423df1773ac93b68cf9d881adfa",
+      "sha256": "e7670a992a88ec993ccf2b51a84059f87556b42c8b56f12f17414a784af17a80",
+      "bytes": 1980,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/cost18-summary.md",
+        "sha256": "e7670a992a88ec993ccf2b51a84059f87556b42c8b56f12f17414a784af17a80",
+        "git_blob": "778b9a7110c91423df1773ac93b68cf9d881adfa",
+        "bytes": 1980
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/criteria17-diagnostic-only-addendum.json",
+      "preimage": null,
+      "postimage": "25744bd2fdcc6dddc5d51061a5ac464fa6c47a83",
+      "sha256": "22669ef33f978fb90ced7ca1695d5c7f07a4f278ebf6fc932e5fbbc20dbb64e7",
+      "bytes": 5823,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/criteria17-diagnostic-only-addendum.json",
+        "sha256": "22669ef33f978fb90ced7ca1695d5c7f07a4f278ebf6fc932e5fbbc20dbb64e7",
+        "git_blob": "25744bd2fdcc6dddc5d51061a5ac464fa6c47a83",
+        "bytes": 5823
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/dispatch/final-dispatched-envelope.json",
+      "preimage": null,
+      "postimage": "cd1b8953cd74ae1f57419837211326018b6f60dd",
+      "sha256": "bf9ba69ed02398f3e28fc8f49ad446c4ee89786411a72ebb65c4eff3c0d46016",
+      "bytes": 3658,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/dispatch/final-dispatched-envelope.json",
+        "sha256": "bf9ba69ed02398f3e28fc8f49ad446c4ee89786411a72ebb65c4eff3c0d46016",
+        "git_blob": "cd1b8953cd74ae1f57419837211326018b6f60dd",
+        "bytes": 3658
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/dispatch/preflight.json",
+      "preimage": null,
+      "postimage": "8bd1b572b351edfedfa388767aacd1bc333940dd",
+      "sha256": "600d9d4b1106d0c33ed800fe16573f3716350f51f8ab3562c589aff008aed170",
+      "bytes": 22811,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/dispatch/preflight.json",
+        "sha256": "600d9d4b1106d0c33ed800fe16573f3716350f51f8ab3562c589aff008aed170",
+        "git_blob": "8bd1b572b351edfedfa388767aacd1bc333940dd",
+        "bytes": 22811
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/evidence-manifest.json",
+      "preimage": null,
+      "postimage": "a55bd04a97dadbf85688beb6970e8c28bb1742aa",
+      "sha256": "714f321d9f4e7c8c0b4e7860322a54ad77cc868d9100c0f6da91873b38d598b4",
+      "bytes": 11732,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/evidence-manifest.json",
+        "sha256": "714f321d9f4e7c8c0b4e7860322a54ad77cc868d9100c0f6da91873b38d598b4",
+        "git_blob": "a55bd04a97dadbf85688beb6970e8c28bb1742aa",
+        "bytes": 11732
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/independent-J1-review.json",
+      "preimage": null,
+      "postimage": "8d3649d599fec892154f215f4a9966ac5e4e5367",
+      "sha256": "e6e235fda1d21c4a48b6bcbb2726213c604a37e3eb83f5898c4bcf57156edb67",
+      "bytes": 15462,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/independent-J1-review.json",
+        "sha256": "e6e235fda1d21c4a48b6bcbb2726213c604a37e3eb83f5898c4bcf57156edb67",
+        "git_blob": "8d3649d599fec892154f215f4a9966ac5e4e5367",
+        "bytes": 15462
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/independent-instrumentation-review.json",
+      "preimage": null,
+      "postimage": "b24c7c9e3594851fba3f1089c0066825c8a61e50",
+      "sha256": "2b29f161cde7ca0a5281b2632bf35a4cbcedcc9b7f0c539ab86c5d64cd1b2a8b",
+      "bytes": 5425,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/independent-instrumentation-review.json",
+        "sha256": "2b29f161cde7ca0a5281b2632bf35a4cbcedcc9b7f0c539ab86c5d64cd1b2a8b",
+        "git_blob": "b24c7c9e3594851fba3f1089c0066825c8a61e50",
+        "bytes": 5425
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/instrumentation.patch",
+      "preimage": null,
+      "postimage": "890d342a87e7fd315f3eb4c854550e3615518a93",
+      "sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+      "bytes": 22133,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/instrumentation.patch",
+        "sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+        "git_blob": "890d342a87e7fd315f3eb4c854550e3615518a93",
+        "bytes": 22133
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/material-manifest.json",
+      "preimage": null,
+      "postimage": "2e314d1d8934f7eea73d6baed7d72a27f605ed23",
+      "sha256": "ba7426867e838be853104045f17ad93f037c9e6031fc33ca46787da5be884844",
+      "bytes": 12340,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/material-manifest.json",
+        "sha256": "ba7426867e838be853104045f17ad93f037c9e6031fc33ca46787da5be884844",
+        "git_blob": "2e314d1d8934f7eea73d6baed7d72a27f605ed23",
+        "bytes": 12340
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/post/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+      "preimage": null,
+      "postimage": "765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff",
+      "sha256": "eed5dad895b449f107b959c8e7347f13668ebbd3ef2eebf105ba4a53f42491bb",
+      "bytes": 6306,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+        "sha256": "eed5dad895b449f107b959c8e7347f13668ebbd3ef2eebf105ba4a53f42491bb",
+        "git_blob": "765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff",
+        "bytes": 6306
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/post/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+      "preimage": null,
+      "postimage": "c854b37f016fda0748e7d7eba0b35fd66a4848e0",
+      "sha256": "8dc1decb9fb7818780069ffc81a300deeb0f3f24b1999e40150e856b9c774c69",
+      "bytes": 13659,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+        "sha256": "8dc1decb9fb7818780069ffc81a300deeb0f3f24b1999e40150e856b9c774c69",
+        "git_blob": "c854b37f016fda0748e7d7eba0b35fd66a4848e0",
+        "bytes": 13659
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/post/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "preimage": null,
+      "postimage": "38b3d71506cfc82e1da2f2dc208bf07a55b41a68",
+      "sha256": "48663634da73c0225ce4149613777bfb0124d6792db1f80a5351bdb3b23bb2c3",
+      "bytes": 3711,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+        "sha256": "48663634da73c0225ce4149613777bfb0124d6792db1f80a5351bdb3b23bb2c3",
+        "git_blob": "38b3d71506cfc82e1da2f2dc208bf07a55b41a68",
+        "bytes": 3711
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/post/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+      "preimage": null,
+      "postimage": "91b2e01bf97684b473a574dc726d429cdeadb52c",
+      "sha256": "35f1257dcf3ef8341ae88bf23900d84148250ff485ad4935b522c111b528a0fb",
+      "bytes": 42794,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+        "sha256": "35f1257dcf3ef8341ae88bf23900d84148250ff485ad4935b522c111b528a0fb",
+        "git_blob": "91b2e01bf97684b473a574dc726d429cdeadb52c",
+        "bytes": 42794
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/post/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+      "preimage": null,
+      "postimage": "fa6e20d34ffdd34835a97dd8250f6bb878fd780c",
+      "sha256": "414bf7f486307964db5626fd4831d68e79c3cc12594af2c8a470371c59f8dc10",
+      "bytes": 22388,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+        "sha256": "414bf7f486307964db5626fd4831d68e79c3cc12594af2c8a470371c59f8dc10",
+        "git_blob": "fa6e20d34ffdd34835a97dd8250f6bb878fd780c",
+        "bytes": 22388
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+      "preimage": null,
+      "postimage": "a71b48057ebb32afa4efbcaabf448da516094a3c",
+      "sha256": "5936858e882ecf9c6abd5dc3ddffe28fb1eb61dc92ec73581ac8f017a40663b6",
+      "bytes": 38516,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+        "sha256": "5936858e882ecf9c6abd5dc3ddffe28fb1eb61dc92ec73581ac8f017a40663b6",
+        "git_blob": "a71b48057ebb32afa4efbcaabf448da516094a3c",
+        "bytes": 38516
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts.txt",
+      "preimage": null,
+      "postimage": "d88e0e6c559926a96899932eda1f02cac76a799a",
+      "sha256": "0c18861c613984d0154d5c41e21388e6d7d8756db8837d0c455515b9e420a2a8",
+      "bytes": 2746,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/post/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts.txt",
+        "sha256": "0c18861c613984d0154d5c41e21388e6d7d8756db8837d0c455515b9e420a2a8",
+        "git_blob": "d88e0e6c559926a96899932eda1f02cac76a799a",
+        "bytes": 2746
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/pre/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+      "preimage": null,
+      "postimage": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+      "sha256": "d372e00eee1052518821370b808bea30c13999bf86143def56cdeab987a619d9",
+      "bytes": 5939,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/apps/cli/src/sucafina-product/decision-case-http.ts.txt",
+        "sha256": "d372e00eee1052518821370b808bea30c13999bf86143def56cdeab987a619d9",
+        "git_blob": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+        "bytes": 5939
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/pre/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+      "preimage": null,
+      "postimage": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+      "sha256": "0287ea4491f3a15bd98780100a05a804c3012bfe8ccc2df1ab28f1987e85dce5",
+      "bytes": 13294,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/apps/cli/src/sucafina-product/portfolio-http.ts.txt",
+        "sha256": "0287ea4491f3a15bd98780100a05a804c3012bfe8ccc2df1ab28f1987e85dce5",
+        "git_blob": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+        "bytes": 13294
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "preimage": null,
+      "postimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+      "bytes": 3612,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+        "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+        "git_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "bytes": 3612
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+      "preimage": null,
+      "postimage": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+      "sha256": "220d8b0af77a33060b229604024663df1ed8ff33b34978727fbee3a19e134861",
+      "bytes": 42303,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/decisions/mutations.ts.txt",
+        "sha256": "220d8b0af77a33060b229604024663df1ed8ff33b34978727fbee3a19e134861",
+        "git_blob": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+        "bytes": 42303
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+      "preimage": null,
+      "postimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "bytes": 22226,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts.txt",
+        "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+        "git_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+        "bytes": 22226
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/pre/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+      "preimage": null,
+      "postimage": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+      "sha256": "8952f2065f841aa9c5682cd3306bf0c681e45141246ff34dfd2b41d05c83b41b",
+      "bytes": 38167,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/pre/modules/sucafina/Sucafinav1/runtime/local-store.ts.txt",
+        "sha256": "8952f2065f841aa9c5682cd3306bf0c681e45141246ff34dfd2b41d05c83b41b",
+        "git_blob": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+        "bytes": 38167
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/18/reconstruction.json",
+      "preimage": null,
+      "postimage": "a760b8b87c14bbd12f3041459138fd66797155ea",
+      "sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93",
+      "bytes": 3859,
+      "origin": {
+        "archive": "FROZEN_D18_ZERO_ACCEPTANCE",
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-addendum/diagnostics/18/reconstruction.json",
+        "sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93",
+        "git_blob": "a760b8b87c14bbd12f3041459138fd66797155ea",
+        "bytes": 3859
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/financial/Requests503-body-provenance.json",
+      "preimage": null,
+      "postimage": "e9eeee06e0173b498d372962d1448ed1803fc0e4",
+      "sha256": "e53af4f2bebffcce1d25b2579c61a563e267b15988b2c4748ea00ebb270bb4ea",
+      "bytes": 7162,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-Requests503-body-provenance.json",
+        "sha256": "e53af4f2bebffcce1d25b2579c61a563e267b15988b2c4748ea00ebb270bb4ea",
+        "git_blob": "e9eeee06e0173b498d372962d1448ed1803fc0e4",
+        "bytes": 7162
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/financial/Requests503-rendered-page-text.txt",
+      "preimage": null,
+      "postimage": "c8d85a75538ce17d6be8454a577a5f9c8901e096",
+      "sha256": "93bb314cc7d721be6ef1088d1463ba7de6d16556c04034346ee803872383c366",
+      "bytes": 65,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-Requests503-rendered-page-text.txt",
+        "sha256": "93bb314cc7d721be6ef1088d1463ba7de6d16556c04034346ee803872383c366",
+        "git_blob": "c8d85a75538ce17d6be8454a577a5f9c8901e096",
+        "bytes": 65
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/financial/diagnostic18-addendum.md",
+      "preimage": null,
+      "postimage": "d8c40ebd8429ed637413d62a334196dfcaefba71",
+      "sha256": "f3664208d5705f248208a8405ff3dfd0d93efb3facbcb9976400a34447f39b23",
+      "bytes": 7160,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-financial-diagnostic18-addendum.md",
+        "sha256": "f3664208d5705f248208a8405ff3dfd0d93efb3facbcb9976400a34447f39b23",
+        "git_blob": "d8c40ebd8429ed637413d62a334196dfcaefba71",
+        "bytes": 7160
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/financial/diagnostic18-evidence.json",
+      "preimage": null,
+      "postimage": "c7c2cdf2a84b6420bee9fe0859c5abd66c142448",
+      "sha256": "a3cce49be83bf7d311642b5338618ccc6195172e384b0d9d1e475a21d85c46ec",
+      "bytes": 18304,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-diagnostic18-evidence.json",
+        "sha256": "a3cce49be83bf7d311642b5338618ccc6195172e384b0d9d1e475a21d85c46ec",
+        "git_blob": "c7c2cdf2a84b6420bee9fe0859c5abd66c142448",
+        "bytes": 18304
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/financial/nominal19-evidence.json",
+      "preimage": null,
+      "postimage": "3cc5da5855632fca0aa66a0478641e04618b7976",
+      "sha256": "d74e6b0af12dfd36e6af526cab9b3d659484f198362aa75a6e64a7783fd69d8a",
+      "bytes": 32827,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-nominal19-final-evidence.json",
+        "sha256": "d74e6b0af12dfd36e6af526cab9b3d659484f198362aa75a6e64a7783fd69d8a",
+        "git_blob": "3cc5da5855632fca0aa66a0478641e04618b7976",
+        "bytes": 32827
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/complete-shared.patch",
+      "preimage": "29615ffc006a87751d18eb186ce5a47e906c135a",
+      "postimage": "c0607df61792087cac2eb5310f1d8b9804774db9",
+      "sha256": "827a12eb31143a8e87e877fa9294e0189b88553955504fdebc973a7c3ac8ede6",
+      "bytes": 98987,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-delivery/shared-proposals.patch",
+        "sha256": "827a12eb31143a8e87e877fa9294e0189b88553955504fdebc973a7c3ac8ede6",
+        "git_blob": "c0607df61792087cac2eb5310f1d8b9804774db9",
+        "bytes": 98987
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/p14/HOLD-D18-COST.json",
+      "preimage": null,
+      "postimage": "af345df1ff0ef83288d4e581c5c27c8516804260",
+      "sha256": "94ea2f068b82607b3366f37a7de8c9108808f35cd98ed1c488ff0b337d086d37",
+      "bytes": 6351,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/P14-diagnostic18-cost-critique.json",
+        "sha256": "94ea2f068b82607b3366f37a7de8c9108808f35cd98ed1c488ff0b337d086d37",
+        "git_blob": "af345df1ff0ef83288d4e581c5c27c8516804260",
+        "bytes": 6351
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/p15/PROPOSAL-AS-AUTHORED.md",
+      "preimage": null,
+      "postimage": "b8e4fbb3af39c48ad736047d9f03da6f9c4463f5",
+      "sha256": "084b4268067e40ea6bf268658a40cf2b2cc6f64f52b5ed6c542d383b2acabd60",
+      "bytes": 6648,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/README.md",
+        "sha256": "084b4268067e40ea6bf268658a40cf2b2cc6f64f52b5ed6c542d383b2acabd60",
+        "git_blob": "b8e4fbb3af39c48ad736047d9f03da6f9c4463f5",
+        "bytes": 6648
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/p15/native-source-provenance.json",
+      "preimage": null,
+      "postimage": "716ee131a8c561c84daa0d9e03de7f5cd1d0a493",
+      "sha256": "f6faa8dfa49dd33db8644caf0bfcd953d604291f682b91053f329a19fa04c271",
+      "bytes": 16306,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/evidence/provenance.json",
+        "sha256": "f6faa8dfa49dd33db8644caf0bfcd953d604291f682b91053f329a19fa04c271",
+        "git_blob": "716ee131a8c561c84daa0d9e03de7f5cd1d0a493",
+        "bytes": 16306
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/p15/one-shot-digest.patch",
+      "preimage": null,
+      "postimage": "2e374f267c94db1f8ec0fbe8e7983558c0292678",
+      "sha256": "3dd2e29be5365a72fe6bc1d94d51cf87a424142ba963d95efea0d9731f278ed2",
+      "bytes": 13628,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-digest-proposal/complete.patch",
+        "sha256": "3dd2e29be5365a72fe6bc1d94d51cf87a424142ba963d95efea0d9731f278ed2",
+        "git_blob": "2e374f267c94db1f8ec0fbe8e7983558c0292678",
+        "bytes": 13628
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/p15/post/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "preimage": null,
+      "postimage": "576199437a21a5d094da7db7601e78dcf01bce82",
+      "sha256": "0baf635e9462ff0249d9e29fbfc79c357554fe7a5f341cffb6e75514db10177c",
+      "bytes": 3599,
+      "origin": {
+        "product_path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "phase": "post",
+        "scope": "shared"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/p15/post/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts.txt",
+      "preimage": null,
+      "postimage": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+      "sha256": "aeaf01be1de1692a0b8b34715b2bcf4fb5da5c05ca2a391b1604537c5d2cc69b",
+      "bytes": 12242,
+      "origin": {
+        "product_path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts",
+        "phase": "post",
+        "scope": "unit_proposal"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/p15/pre/modules/sucafina/Sucafinav1/product/contracts/canonical.ts.txt",
+      "preimage": null,
+      "postimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+      "bytes": 3612,
+      "origin": {
+        "product_path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "phase": "pre",
+        "scope": "shared"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/unit-proposal/complete.patch",
+      "preimage": "e54abd2f72beca08078c7f3dc56fbc811a81e8d7",
+      "postimage": "fba7fc3ac1422ab7058dfcef4b487f3fc9adef20",
+      "sha256": "a30535aeb085ad3cbd5111ac6a6bfeb25c82af91b38b17600411fe769624343c",
+      "bytes": 126973,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-delivery/unit-proposals.patch",
+        "sha256": "a30535aeb085ad3cbd5111ac6a6bfeb25c82af91b38b17600411fe769624343c",
+        "git_blob": "fba7fc3ac1422ab7058dfcef4b487f3fc9adef20",
+        "bytes": 126973
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/nominal-19.json",
+      "preimage": null,
+      "postimage": "7e15237e51f03556cc4e1a56f6c8d1df3baa65ed",
+      "sha256": "b32930aab10658a118bab832ecc5d3bf60e173ce2417568a72023236d195480d",
+      "bytes": 228557,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/nominal-19-receipt.json",
+        "sha256": "b32930aab10658a118bab832ecc5d3bf60e173ce2417568a72023236d195480d",
+        "git_blob": "7e15237e51f03556cc4e1a56f6c8d1df3baa65ed",
+        "bytes": 228557
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/nominal/19/artifact-download.json",
+      "preimage": null,
+      "postimage": "71a13b967883f7eadb80d61bc17a321e5c4ec62f",
+      "sha256": "e7594a16b92020159a4c62dfd67ec1f3800e21674b7d3f78317a86ea21f844a9",
+      "bytes": 325,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/artifact-download.json",
+        "sha256": "e7594a16b92020159a4c62dfd67ec1f3800e21674b7d3f78317a86ea21f844a9",
+        "git_blob": "71a13b967883f7eadb80d61bc17a321e5c4ec62f",
+        "bytes": 325
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/nominal/19/artifact-report-digests.json",
+      "preimage": null,
+      "postimage": "73278f271fc5d03c618e77d51267a06e2dabc132",
+      "sha256": "9ad87c4b9d08ea9d2e9811bcce6b4bc005b61a2dcb10cc1b6a2d999f5bee6761",
+      "bytes": 562,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/artifact-report-digests.json",
+        "sha256": "9ad87c4b9d08ea9d2e9811bcce6b4bc005b61a2dcb10cc1b6a2d999f5bee6761",
+        "git_blob": "73278f271fc5d03c618e77d51267a06e2dabc132",
+        "bytes": 562
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/nominal/19/job-132739685136.log",
+      "preimage": null,
+      "postimage": "e471aff33de553d6e784587a4f1d21e68e54d824",
+      "sha256": "5050e9beea382288b78060b1fdbc98c089607ff58ff6629a622dc2b621f2c9a0",
+      "bytes": 108644,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/job-132739685136.log",
+        "sha256": "5050e9beea382288b78060b1fdbc98c089607ff58ff6629a622dc2b621f2c9a0",
+        "git_blob": "e471aff33de553d6e784587a4f1d21e68e54d824",
+        "bytes": 108644
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/unit-06.json",
+      "preimage": null,
+      "postimage": "9ef4e9cad455f9ace87a7c9f3f71730c64010e5e",
+      "sha256": "40f34acf952758f81975a2ed2bd2359d0eb557cd4ed4f84ecbfc0b793066f648",
+      "bytes": 43953,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/unit-06-receipt.json",
+        "sha256": "40f34acf952758f81975a2ed2bd2359d0eb557cd4ed4f84ecbfc0b793066f648",
+        "git_blob": "9ef4e9cad455f9ace87a7c9f3f71730c64010e5e",
+        "bytes": 43953
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/unit/p15-unit06/job-132738595779.log",
+      "preimage": null,
+      "postimage": "bba2921469bec6f2f17b6a25fb1f1fbca60cf93f",
+      "sha256": "5092403d90ec05670c890756a88be004f49edb8929ae80ac2c6b20978b19cc43",
+      "bytes": 74768,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/job-132738595779.log",
+        "sha256": "5092403d90ec05670c890756a88be004f49edb8929ae80ac2c6b20978b19cc43",
+        "git_blob": "bba2921469bec6f2f17b6a25fb1f1fbca60cf93f",
+        "bytes": 74768
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/unit/p15-unit06/normalizer-plan.json",
+      "preimage": null,
+      "postimage": "a4e951842f181f9e5126f513064d3e887a1cf743",
+      "sha256": "df4e942cc6ce82315ea986ed27c57ce3a8233e05cda732dc78e6011c56cf8fb8",
+      "bytes": 7531,
+      "origin": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-unit06-normalizer-plan.json",
+        "sha256": "df4e942cc6ce82315ea986ed27c57ce3a8233e05cda732dc78e6011c56cf8fb8",
+        "git_blob": "a4e951842f181f9e5126f513064d3e887a1cf743",
+        "bytes": 7531
+      }
+    }
+  ],
+  "historical_aliases": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/FINANCIAL-CONTRACT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a32497db8b7665c51f8ab2f2ff6143ebf4612931",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/FINANCIAL-CONTRACT.md",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/INPUTS.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6137c13a2535e899bcb5662e0c664e6080d69ad6",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/INPUTS.json",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/PRODUCT-MANIFEST.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "04d9a0b14548e944b6a6fa3f3904f50e942ef60e",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/PRODUCT-MANIFEST.json",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/audits/criteria-integrity.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "34087f4ca4fa59d0b466e50569e5d3a7d00f3199",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/audits/criteria-integrity.json",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/candidate-complete.patch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3746b541333fb44eb89e45fc1db5c80b79533805",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/candidate-complete.patch",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/criteria.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3341e9d9b05f3f27e81fbaf2abe5d40e12bf8b17",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/criteria.json",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/delivery/current-image-index.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2324939c23338227b569eadc8a8e026da069a7ef",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/delivery/current-image-index.json",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/integration/complete-shared.patch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29615ffc006a87751d18eb186ce5a47e906c135a",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/complete-shared.patch",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/history/checkpoint17-at-43a/integration/unit-proposal/complete.patch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e54abd2f72beca08078c7f3dc56fbc811a81e8d7",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/integration/unit-proposal/complete.patch",
+      "source_commit": "43a31f4c51c0897287fdc53468bd171adca4795d"
+    }
+  ],
+  "unchanged_history_rule": "Use source43a as Git tree base; add/update only listed paths. Never replace the full tree or delete unlisted paths.",
+  "GLOBAL_RELEASE": false
+}

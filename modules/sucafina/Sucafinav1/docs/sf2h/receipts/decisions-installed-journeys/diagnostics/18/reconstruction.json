@@ -1,0 +1,104 @@
+{
+  "schema": "sf52-diagnostic18-static-reconstruction-v1",
+  "state": "PASS_TEXTUAL_STATIC_ONLY_NOT_RUN",
+  "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+  "parent_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+  "path_count": 7,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/sf52-profile.ts",
+      "preimage": null,
+      "postimage": "d88e0e6c559926a96899932eda1f02cac76a799a",
+      "hunks": 1,
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "preimage": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+      "postimage": "765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff",
+      "hunks": 3,
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "preimage": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+      "postimage": "c854b37f016fda0748e7d7eba0b35fd66a4848e0",
+      "hunks": 3,
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimage": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+      "postimage": "a71b48057ebb32afa4efbcaabf448da516094a3c",
+      "hunks": 6,
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "postimage": "fa6e20d34ffdd34835a97dd8250f6bb878fd780c",
+      "hunks": 2,
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "preimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "postimage": "38b3d71506cfc82e1da2f2dc208bf07a55b41a68",
+      "hunks": 2,
+      "forward_exact": true,
+      "reverse_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "preimage": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+      "postimage": "91b2e01bf97684b473a574dc726d429cdeadb52c",
+      "hunks": 3,
+      "forward_exact": true,
+      "reverse_exact": true
+    }
+  ],
+  "handlers": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "original_handler_body_byte_identical": true,
+      "entire_handler_including_admission_and_finally_is_profiled": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "original_handler_body_byte_identical": true,
+      "entire_handler_including_admission_and_finally_is_profiled": true
+    }
+  ],
+  "mutation_checks": {
+    "remove_only_explicit_measure_wrappers_recovers_preimage": true,
+    "all_selected_product_call_tokens_count_and_order_identical": true,
+    "original_authorize_and_confirm_catches_inside_work": true,
+    "two_scalar_stored_results_share_only_diagnostic_bucket": true,
+    "no_new_read_scope_or_facade": true
+  },
+  "helper_checks": {
+    "only_diagnostic_sink_caught": true,
+    "passive_abort_listener_removed_in_finally": true,
+    "no_timer_or_controller_added": true,
+    "mode_and_ordinal_no_user_identifier": true,
+    "no_payload_or_authority_data_logged": true,
+    "active_count_is_started_minus_finally_completed": true
+  },
+  "scope_checks": {
+    "e2e_spec_helpers_changed": false,
+    "workflows_changed": false,
+    "budgets_assertions_changed": false,
+    "seven_preimages_require_root_remote_preflight": true
+  },
+  "material_sha256": "2466808ffb7bdd1f7daf6718f263a816380c65a8e4da2282c0719be523317e81",
+  "patch_sha256": "02e074a874db23e8c02edf2d22f7e0773c809e748dbc0e2867b26c9db5b8a6cf",
+  "builder_sha256": "2ae516a16cbbc7024a37ff13222387da5a24bfa877928d02d1e5c42245e26d93",
+  "product_execution": false,
+  "test_execution": false,
+  "remote_mutation": false
+}

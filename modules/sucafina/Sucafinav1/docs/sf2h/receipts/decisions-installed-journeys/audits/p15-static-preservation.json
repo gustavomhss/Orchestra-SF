@@ -1,0 +1,26 @@
+{
+  "schema": "sf52-p15-static-preservation-v1",
+  "state": "PASS_TEXTUAL_ONLY_NOT_RUN",
+  "product_preimage": "1769271386cdda1017c38023b0988ce2d64423d2",
+  "product_postimage": "576199437a21a5d094da7db7601e78dcf01bce82",
+  "test_postimage": "910771c6d563e6cc4a66a5ff170abcd6f68d8c05",
+  "product_changed_lines": {
+    "removed": [
+      "  return new Bun.CryptoHasher(\"sha256\").update(canonicalSfValue(value)).digest(\"hex\")"
+    ],
+    "added": [
+      "  return Bun.CryptoHasher.hash(\"sha256\", canonicalSfValue(value), \"hex\")"
+    ]
+  },
+  "reversing_only_product_line_recovers_exact_preimage": true,
+  "canonical_serializer_bytes_preserved": true,
+  "all_other_product_text_preserved": true,
+  "test_cases_static": 36,
+  "test_expected_expects_static": 154,
+  "timeout_or_speed_assertion_added": false,
+  "no_product_execution": true,
+  "no_test_execution": true,
+  "no_remote_mutation": true,
+  "material_sha256": "576c17706fe0676670bf59d0752a66fbd525acdad5c2bb6e39cbe53dd91bbc3a",
+  "patch_sha256": "3dd2e29be5365a72fe6bc1d94d51cf87a424142ba963d95efea0d9731f278ed2"
+}

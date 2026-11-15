@@ -1,0 +1,60 @@
+{
+  "schema": "sf52-p15-unit06-envelope-v1",
+  "state": "DISPATCHED_ONCE_AWAITING_RUN",
+  "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "source": "43a31f4c51c0897287fdc53468bd171adca4795d",
+  "source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+  "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+  "W_tree": "f5cc7dfadf85792821561d558bddd186a2a4904b",
+  "prior_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+  "prior_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+  "material_sha256": "8834f50367da2e9752074ea368624a426dd404f3939649b97c2ab7b6c38d4cea",
+  "patch_sha256": "3d01d861498e6eb2adc883cfb0b7185f71b543061b2b702a68d13bdecceb7292",
+  "scope_counts": {
+    "owned": 10,
+    "shared": 21,
+    "unit_proposal": 5
+  },
+  "diagnostic_instrumentation": false,
+  "target_writes52": 0,
+  "GLOBAL_RELEASE": false,
+  "unit": 6,
+  "S": "79913f877c0ee58922a2f9635a48a350269dd356",
+  "S_tree": "29c8ba854fb61f0e6f1633609bc58ff71bd791a8",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts"
+    ],
+    "env": {}
+  },
+  "request_bytes": 209,
+  "request_blob": "68c0266b3bb6761ad07f736b09e6d90b855634ce",
+  "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+  "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+  "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+  "branch": "ci-run-linux-astra-wp11-12521803-68c0266b-m52-u06",
+  "selection": [
+    "Sucafinav1/test/product/decisions-installed-journeys/canonical-digest-once.test.ts"
+  ],
+  "expected_cases_static": 36,
+  "expected_expects_static": 154,
+  "expected_count_is_not_execution_evidence": true,
+  "unit_timeout_changed": false,
+  "installed_ui_case_budget_ms": 180000,
+  "UI_abort_ms": 10000,
+  "workers": 1,
+  "retries": 0,
+  "repeat": 1,
+  "source52": "ACTIVE",
+  "target105": "ENDED_NO_SUCCESSOR",
+  "acceptance_fragments": 0,
+  "dispatched_at": "2026-11-15 07:27:43 UTC",
+  "branch_result": {
+    "branch": "ci-run-linux-astra-wp11-12521803-68c0266b-m52-u06"
+  }
+}

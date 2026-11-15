@@ -1,0 +1,85 @@
+{
+  "schema": "sf52-terminal-reconciliation-v1",
+  "observed_at_utc": "2026-11-15 07:43:41 UTC",
+  "source": {
+    "branch": "astra-wp11",
+    "sha": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+    "lease_before_terminal": "ACTIVE"
+  },
+  "target": {
+    "branch": "sf2-stack",
+    "sha": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "composition": "C53_PLUS_TERMINAL105"
+  },
+  "target_authority": {
+    "schema": "sf2h.integration105.terminal-authority.v1",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "repo": "gustavomhss/Orchestra-SF",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "actor": "S0-C-e15-browser105",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "scope": {
+      "WPs": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "last_material": {
+      "name": "C53",
+      "commit": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "state": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED"
+    },
+    "lease_epoch": "S0-C-e15-browser105",
+    "lease_state": "ENDED_BY_INTEGRATOR105",
+    "effective_on": "terminal documentary commit on sf2-stack",
+    "pre_terminal_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "pre_terminal_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "material_candidate": "C53",
+    "new_integrator_appointee": null,
+    "assumption_prohibited": "No other session may infer active integrator105 or auto-adopt patches. Explicit S0/user appointment and new CAS acknowledgment required.",
+    "predecessor_100": "ENDED_BY_INTEGRATOR100",
+    "wrote_source_branches": false,
+    "dispatched_product_CI": false,
+    "ran_local_tests": false,
+    "dev_merge": false,
+    "control_merge": false,
+    "deploy": false,
+    "engine_changes": false,
+    "GLOBAL_RELEASE": false,
+    "next_lease_requires": [
+      "explicit user/S0 appointment",
+      "verify head/tree against terminal commit",
+      "read handoff/checkpoint/queue and live owner releases",
+      "new ACK prior writing"
+    ]
+  },
+  "target_authority_blob": "b59f98f415dd114a9b797fa3d1ef667c6293c05c",
+  "target_authority_source": "https://github.com/gustavomhss/Orchestra-SF/blob/eeff9b78219b5efe1ad78e68d4490af0d7c5ed07/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/AUTHORITY-TERMINAL-105.json",
+  "CI101": "4c46f8561a8a4ed7d1c98432dd0e2f395935b963",
+  "active_runs": [],
+  "latest_run": {
+    "id": 43690414521,
+    "S": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+    "conclusion": "failure",
+    "four_independent": "PASS",
+    "financial": "FAIL_REQUESTS503",
+    "cleanup": "success"
+  },
+  "reviewed_run_count": 100,
+  "PR40": {
+    "state": "open",
+    "draft": true,
+    "head": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "base": "sf2-stack"
+  },
+  "requested_recipient": 47,
+  "target_writes52": 0,
+  "GLOBAL_RELEASE": false
+}

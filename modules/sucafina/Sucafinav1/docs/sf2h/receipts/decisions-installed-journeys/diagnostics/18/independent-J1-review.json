@@ -1,0 +1,401 @@
+{
+  "schema": "sf52.diagnostic18.J1.independent-artifact-review.v1",
+  "state": "REVIEW_COMPLETE_DIAGNOSTIC_ONLY_ZERO_ACCEPTANCE",
+  "purpose": "DIAGNOSTIC_ONLY_ZERO_ACCEPTANCE",
+  "run_id": 43688075463,
+  "run_attempt": 1,
+  "job_id": 132732645584,
+  "pins": {
+    "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "parent_W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+    "parent_W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+    "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+    "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+    "published_source_observed": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "published_source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+    "W": "03e5439ab1c935ece5b58c90101750495416a341",
+    "W_tree": "c36a60094e43742170ee14c2705f3e30a9d2e5e0",
+    "S": "17cd5a0747a32d0ce5ce7efe3edbd565f1c55b15",
+    "S_tree": "135178fa94d68bb8086db0a310b427478d874bd8",
+    "branch": "ci-run-linux-astra-wp11-03e5439a-3619f1fd-m52-d18",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+    "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+  },
+  "artifact": {
+    "artifact_id": 14151645954,
+    "run_id": 43688075463,
+    "local_filename": "artifact.zip",
+    "bytes": 385258,
+    "sha256": "165737802c6c0300577d3892a4c2efc1e366ad2d135180093b73f28279d81811",
+    "files": 11,
+    "download_method": "Exact ephemeral artifact reference returned by GitHub MCP; signed URL intentionally omitted."
+  },
+  "evidence": [
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/extracted/test-ci-evidence/playwright-runtime.json",
+      "bytes": 271225,
+      "sha256": "78dff8f2689d1d50029126e2e503f7a923258bcdba3e95c08303ac3bfed626fc"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/extracted/test-ci-evidence/playwright-selection.json",
+      "bytes": 5017,
+      "sha256": "127c5ac61aac5b65b698fe276d4909c8ebc3738dcc3682bd64a777fb47a6324d"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/runtime-extracted.json",
+      "bytes": 199088,
+      "sha256": "47f165c588d18fd02192cc6dbf81e3c84d5b37ee0813a0be78d5824c345ad2ad"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/observations-line-12.json",
+      "bytes": 144436,
+      "sha256": "63aab330f63fab6120a1266df573c897d5178eb1532b374badd21941aa9ea186"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/cli-line-12.log",
+      "bytes": 12833,
+      "sha256": "61695833f346bb649127ec9c0c948216064d481aba51667d0c8dcab22fe5db78"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-dispatched-envelope.json",
+      "bytes": 3658,
+      "sha256": "bf9ba69ed02398f3e28fc8f49ad446c4ee89786411a72ebb65c4eff3c0d46016"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18-preflight.json",
+      "bytes": 22811,
+      "sha256": "600d9d4b1106d0c33ed800fe16573f3716350f51f8ab3562c589aff008aed170"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic18/reconstruction.json",
+      "bytes": 3859,
+      "sha256": "14848df871f5b127cb061ef8b3f3c9e31188073279e545f3bc64e9787fe52f93"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p13-delivery/postimage/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "bytes": 12222,
+      "sha256": "0f2bd070ee2889719b6998d58e33f55b62f6c15b6040042f4dbd587424411563"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p13-delivery/postimage/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "bytes": 2920,
+      "sha256": "1627265da0aac3f849d24b72be81567f4282e0247b12efe1fea1399a173cb842"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p13-delivery/postimage/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "bytes": 7059,
+      "sha256": "7ff275012e5b43e951790037d56a411ba8438475ce2006a69038b8469e445e2b"
+    }
+  ],
+  "five_case_results": [
+    {
+      "line": 12,
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "status": "passed",
+      "duration_ms": 98450,
+      "budget_ms": 180000,
+      "retry": 0
+    },
+    {
+      "line": 21,
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "status": "failed",
+      "duration_ms": 14598,
+      "budget_ms": 180000,
+      "retry": 0
+    },
+    {
+      "line": 35,
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "status": "passed",
+      "duration_ms": 10580,
+      "budget_ms": 180000,
+      "retry": 0
+    },
+    {
+      "line": 87,
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "status": "passed",
+      "duration_ms": 7020,
+      "budget_ms": 180000,
+      "retry": 0
+    },
+    {
+      "line": 135,
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "status": "passed",
+      "duration_ms": 7524,
+      "budget_ms": 180000,
+      "retry": 0
+    }
+  ],
+  "J1": {
+    "runtime_status": "passed",
+    "duration_ms": 98450,
+    "bodyCompleted": true,
+    "steps": [
+      {
+        "title": "create two actual Planner versions through human controls",
+        "duration": 1104
+      },
+      {
+        "title": "discover and inspect authorized sources before attaching them to the saved case",
+        "duration": 2718
+      },
+      {
+        "title": "save the first alternative with an explicit pending cost inventory",
+        "duration": 6566
+      },
+      {
+        "title": "lose the second creation response and explicitly recover the identical request",
+        "duration": 7900
+      },
+      {
+        "title": "reopen the exact alternatives and consume them in the current comparison",
+        "duration": 10465
+      },
+      {
+        "title": "register the explicit limit for the known subtotal increase using current comparison evidence",
+        "duration": 2310
+      },
+      {
+        "title": "record a human choice, lose its response, then explicitly retry the exact retained intent after reload",
+        "duration": 12778
+      },
+      {
+        "title": "read the durable choice without treating it as financial approval",
+        "duration": 157
+      },
+      {
+        "title": "reopen the same choice and retain its historical values after the real Planner source changes",
+        "duration": 19418
+      }
+    ],
+    "case_identity": {
+      "id": "7c673886-67ea-40f2-96ed-417a1985078e",
+      "incarnation": "892ba6cf-ddce-48f5-86e9-dbf499cc72de",
+      "version": 5
+    },
+    "assertion_proofs": [
+      {
+        "claim": "Original choice response200JSONok/version5 was captured then deliberately lost.",
+        "basis": "Passed unchanged step plus choice-history.ts53–60 and closure-response.ts20–31. The original response is intercepted before browser delivery; safe network log records its deliberate ConnectionReset, not a separate response200 event.",
+        "source_ranges": {
+          "choice-history.ts": [
+            43,
+            60
+          ],
+          "closure-response.ts": [
+            20,
+            31
+          ]
+        }
+      },
+      {
+        "claim": "One retained intention, exactly two actual choice POSTs, identical key and full body across explicit reload/retry; one saved choice.",
+        "basis": "Safe request log proves same key; unchanged passed assertions check complete body and lost/reconciled reply equality, reload state and one choice.",
+        "source_ranges": {
+          "choice-history.ts": [
+            58,
+            81
+          ]
+        },
+        "requests": [
+          {
+            "method": "POST",
+            "mode": "decision-choose",
+            "idempotencyKey": "55a66b07-96de-481b-a60c-7ada03b1dae9"
+          },
+          {
+            "method": "POST",
+            "mode": "decision-choose",
+            "idempotencyKey": "55a66b07-96de-481b-a60c-7ada03b1dae9"
+          }
+        ]
+      },
+      {
+        "claim": "Human choice remains financially inert, conditioned by9 pending categories.",
+        "basis": "Saved scenario has no operations/assumptions; prepare disabled and Apply control absent were asserted. Known subtotal2400/difference1200; total and completeDifference null.",
+        "source_ranges": {
+          "choice-history.ts": [
+            83,
+            110
+          ]
+        }
+      },
+      {
+        "claim": "Real Planner candidate source changed2400→3600USD through UI; same case/whole historical ChoiceRecord preserved afterward.",
+        "basis": "Passed UI save/reopen assertions, Workbench link identity assertion, whole-record equality and final count2 choice POSTs. Full stored observation and historical originalChoice are structurally identical.",
+        "source_ranges": {
+          "choice-history.ts": [
+            112,
+            131
+          ],
+          "planner-sources.ts": [
+            60,
+            78
+          ]
+        },
+        "complete_record_canonical_sha256": "2a4e2ba2360ca1c124a14af2b87eb994bcc6d9126b3b7ae96f59dc0f517bf398"
+      }
+    ],
+    "choice": {
+      "id": "bb14f5c1-9a65-4d29-8624-8a70a276f98e",
+      "alternativeId": "ec66a0f3-7610-4ae4-8517-4c6ea998acc9",
+      "alternativeVersion": 1,
+      "basisVersion": 1,
+      "principalRef": "macos:ea830ed6-18a9-439a-aef9-e3416978151e:1001",
+      "reason": "I choose the candidate under the recorded pending cost conditions. This choice does not approve any financial change.",
+      "at": "2026-11-15T07:05:35.990Z",
+      "knownSubtotal": 2400,
+      "knownDifference": 1200,
+      "total": null,
+      "completeDifference": null,
+      "comparisonStatus": "conditioned",
+      "criterionResults": [
+        {
+          "criterionId": "fc868ed2-ad94-4d3e-9a1c-e9a8bf242b1d",
+          "state": "unknown",
+          "reason": "criterion-metric-conditioned"
+        }
+      ],
+      "pending_categories": [
+        "service",
+        "service_overlap",
+        "implementation",
+        "contract_exit",
+        "migration",
+        "taxes",
+        "training",
+        "internal_costs",
+        "other_relevant_costs"
+      ],
+      "operations": [],
+      "assumptions": []
+    },
+    "current_source": {
+      "stage": "planner-source-revised-through-ui",
+      "versionId": "894df3f6-b8ac-4d36-b4c4-ad563f552d40",
+      "previousAnnualInput": 2400,
+      "annualInput": 3600,
+      "currency": "USD"
+    },
+    "network": {
+      "choice": [
+        {
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-choose",
+          "error": "net::ERR_CONNECTION_RESET"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-choose",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "comparisons": [
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ]
+    },
+    "no_financial_mutation": true,
+    "native_restart_proved": false
+  },
+  "invariants": {
+    "same_original_five_titles": true,
+    "same_original_request": true,
+    "case_budget_ms": 180000,
+    "UI_deadline_config_ms": 10000,
+    "retries": 0,
+    "workers": 1,
+    "repeat": 1,
+    "runtime_skips": 0,
+    "selection_report_skipped5_is_list_only": true,
+    "assertions_and_UI_helpers_unchanged": true,
+    "diagnostic_overlay_paths": 7
+  },
+  "limits": [
+    "This is an instrumented diagnostic candidate. Its J1PASS does not promote nominal17, whole criteria, native acceptance or mission completion.",
+    "The run demonstrates one observed successful execution; it proves neither stable latency margin nor that instrumentation caused improvement.",
+    "Step durations include UI, reload, explicit retry and waits; do not equate them with one request latency or add nested profile durations.",
+    "The UI observed immutable historical choice behavior. Internal outbox capture contents/atomicity are not independently dumped by this E2E; selected Unit05 is separate evidence.",
+    "Planner scenario has zero executable operations/assumptions. Financial approval,MI07/M31,C12Apply,formal financial receipt recovery are not proved.",
+    "Browser reload/reopening is not process/provider/native restart; one test principal is not multi-collaborator/revocation qualification.",
+    "83 originals and226 historical nominal fragments remain unchanged; source52 staysACTIVE; no terminal publication."
+  ],
+  "criteria_preservation": {
+    "base": {
+      "path": "/workspace/scratch/fec39c0682b3/mission52-criteria-v17-final.json",
+      "bytes": 1325189,
+      "sha256": "8bcdbd967eb2d6eb08a7e1e4c642788a5295405cfd9eb926712200e403c41219"
+    },
+    "original_records": 83,
+    "projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+    "historical_fragments": 226,
+    "new_fragments": 0,
+    "integrated_proofs_empty": 83,
+    "whole_criterion_promotions": 0
+  },
+  "root_receipt": {
+    "state": "BOUND_FINAL_ROOT_RECEIPT_AND_RAW_ARTIFACTS_MATCH",
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/diagnostic-18-receipt.json",
+    "bytes": 344207,
+    "sha256": "498c457265841a43eec197d9314f7f25f7a5cfe9fdd9960448e8e3d10c322643",
+    "git_blob": "43b1057acb037f8a34e9bb4d4fd783288de9de3a"
+  },
+  "activity": {
+    "local_product_execution": 0,
+    "local_tests": 0,
+    "remote_reads": 0,
+    "remote_writes": 0,
+    "CI_dispatches": 0,
+    "frozen_criteria_mutated": false
+  },
+  "cleanup": {
+    "job_id": 132733863034,
+    "conclusion": "success"
+  },
+  "receipt_reconciliation": {
+    "all_five_case_fields_equal_raw_normalization": true,
+    "stats_equal_runtime": true,
+    "cost_summary_equal_full_root_receipt": true,
+    "pins_equal_dispatched_envelope": true,
+    "root_zero_acceptance_flags_preserved": true
+  },
+  "prior_pending_review": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic18-43688075463/J1-independent-review.pending.json",
+    "bytes": 14553,
+    "sha256": "eabb71a356d9bc413eb896dd88b68a3a2a2e561fa1914fe2ef1b79f0c78c43f8",
+    "git_blob": "c8e0a678f925287fdfd92f701cfa4a736e78aa64"
+  }
+}

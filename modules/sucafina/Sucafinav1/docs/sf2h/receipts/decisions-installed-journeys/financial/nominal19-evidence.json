@@ -1,0 +1,562 @@
+{
+  "schema": "sf52-financial-nominal19-final-evidence-v1",
+  "kind": "ACTUAL_NOMINAL_UI_RESULT_WITH_SEPARATE_STATIC_CONTRACT",
+  "mission": 52,
+  "nominal": 19,
+  "created_at_utc": "2026-11-15T07:41:16.753521+00:00",
+  "source_state_at_dispatch": "ACTIVE",
+  "source_state_at_document": "ACTIVE_PENDING_FINAL_CAS_PUBLICATION",
+  "source_state_basis": "The dispatch envelope pins source43a31f4c; the parent states mission52 remains ACTIVE while preparing terminal publication. This artifact is not evidence that terminal CAS has happened.",
+  "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "source": "43a31f4c51c0897287fdc53468bd171adca4795d",
+  "source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+  "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+  "W_tree": "f5cc7dfadf85792821561d558bddd186a2a4904b",
+  "S": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+  "S_tree": "8bf6010987716a5073a04f10fce41ed38a3fd956",
+  "branch": "ci-run-linux-astra-wp11-12521803-3619f1fd-m52-19",
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+  "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+  "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+  "base_material": {
+    "commit": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "label": "C53 plus terminal105 documentary commit"
+  },
+  "overlay_count": 36,
+  "overlay_scope_counts": {
+    "owned": 10,
+    "shared": 21,
+    "unit_proposal": 5
+  },
+  "diagnostic_instrumentation": false,
+  "profile_records": 0,
+  "test_selection": {
+    "args": [
+      "e2e/sucafina/decisions.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "runner": "playwright",
+    "case_count": 5,
+    "workers": 1,
+    "retry": 0,
+    "repeat": 1,
+    "test_budget_ms": 180000,
+    "assertion_budget_ms": 10000,
+    "five_titles_and_actual_runtime_budgets_verified_against_raw_playwright_report": true
+  },
+  "run": {
+    "id": 43690414521,
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43690414521",
+    "created_at": "2026-11-15T07:32:42Z",
+    "updated_at": "2026-11-15T07:37:44Z"
+  },
+  "jobs": [
+    {
+      "id": 132739685136,
+      "name": "test (ubuntu-24.04)",
+      "head_sha": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43690414521/job/132739685136",
+      "run_attempt": 1,
+      "started_at": "2026-11-15T07:32:44Z",
+      "completed_at": "2026-11-15T07:37:39Z"
+    },
+    {
+      "id": 132740799684,
+      "name": "cleanup",
+      "head_sha": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43690414521/job/132740799684",
+      "run_attempt": 1,
+      "started_at": "2026-11-15T07:37:41Z",
+      "completed_at": "2026-11-15T07:37:43Z"
+    }
+  ],
+  "artifact": {
+    "id": 14152367017,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 377745,
+    "sha256": "3b97c5b5c86904624a0465b19870962e00778192d2a64f384358b5653ddcd638",
+    "central_directory_entries": [
+      "test-ci-evidence/benchmark-runtime.json",
+      "test-ci-evidence/playwright-runtime.json",
+      "test-ci-evidence/playwright-selection.json",
+      "test-ci-evidence/request.json",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm",
+      "packages/app-shell/e2e/playwright-report/data/2764159869e25b86717e939d1fe6c9496afe6e5b.webm",
+      "packages/app-shell/e2e/playwright-report/data/9544b9e1d05cd19a2293c9b8e8246e9138509a32.png",
+      "packages/app-shell/e2e/playwright-report/data/b5b150eaf14defa7fab2fda745c7289257c7e81d.md",
+      "packages/app-shell/e2e/playwright-report/index.html"
+    ],
+    "entry_count": 11,
+    "trace_or_raw_http_body_available": false
+  },
+  "actual_case": {
+    "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+    "file": "e2e/sucafina/decisions.spec.ts",
+    "line": 21,
+    "configured_budget_ms": 180000,
+    "runtime_status": "failed",
+    "test_status": "unexpected",
+    "expected_status": "passed",
+    "duration_ms": 14656,
+    "retry": 0,
+    "steps": [
+      {
+        "title": "create the real requisition through its human form",
+        "duration": 10044,
+        "error": {
+          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+          "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:76:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+            "column": 22,
+            "line": 7
+          },
+          "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n\u001b[0m \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`${origin}/sucafina/procurement?page=Requests`\u001b[39m)\n \u001b[90m  6 |\u001b[39m   \u001b[36mconst\u001b[39m form \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form[data-command=\"create\"][data-page=\"Requests\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m \u001b[32m\"CI Decisions — explicit requisition proposal\"\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Title\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(title)\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Type\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[32m\"service\"\u001b[39m)\u001b[0m"
+        }
+      }
+    ],
+    "failure": {
+      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+      "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:76:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+      "location": {
+        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+        "column": 22,
+        "line": 7
+      },
+      "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n\u001b[0m \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`${origin}/sucafina/procurement?page=Requests`\u001b[39m)\n \u001b[90m  6 |\u001b[39m   \u001b[36mconst\u001b[39m form \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form[data-command=\"create\"][data-page=\"Requests\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m \u001b[32m\"CI Decisions — explicit requisition proposal\"\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Title\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(title)\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Type\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[32m\"service\"\u001b[39m)\u001b[0m"
+    },
+    "attachments": [
+      {
+        "name": "decisions-observations.json",
+        "contentType": "application/json"
+      },
+      {
+        "name": "wp03-real-cli.log",
+        "contentType": "text/plain"
+      },
+      {
+        "name": "screenshot",
+        "contentType": "image/png",
+        "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png"
+      },
+      {
+        "name": "video",
+        "contentType": "video/webm",
+        "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm"
+      },
+      {
+        "name": "error-context",
+        "contentType": "text/markdown",
+        "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md"
+      }
+    ],
+    "observations": [],
+    "requests": [],
+    "network": [
+      {
+        "event": "response",
+        "method": "GET",
+        "path": "/sucafina/procurement",
+        "mode": null,
+        "httpStatus": 503,
+        "contentType": "application/json;charset=utf-8"
+      }
+    ],
+    "body_completed": false,
+    "observed_snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a"
+  },
+  "actual_case_plain_error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: 1\nReceived: 0\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 10000ms\n  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n",
+  "actual_observations": {
+    "selection": "CI-UI-DECISIONS",
+    "snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+    "test": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+    "bodyCompleted": false,
+    "observations": [],
+    "requests": [],
+    "network": [
+      {
+        "event": "response",
+        "method": "GET",
+        "path": "/sucafina/procurement",
+        "mode": null,
+        "httpStatus": 503,
+        "contentType": "application/json;charset=utf-8"
+      }
+    ],
+    "verdict": "The Playwright runtime report owns the terminal test result.",
+    "limit": "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt."
+  },
+  "failure_boundary": {
+    "stage": "real requisition human form discovery",
+    "navigation": "/sucafina/procurement?page=Requests",
+    "method": "GET",
+    "observed_network_path": "/sucafina/procurement",
+    "http_status": 503,
+    "content_type": "application/json;charset=utf-8",
+    "page_status": "unavailable",
+    "page_reason": "procurement-queue-unavailable",
+    "expected_form_count": 1,
+    "observed_form_count": 0,
+    "assertion_budget_ms": 10000,
+    "test_budget_ms": 180000,
+    "test_duration_ms": 14656,
+    "first_step_duration_ms": 10044,
+    "financial_mutations_observed": 0,
+    "financial_command_requests_observed": 0,
+    "body_completed": false,
+    "financial_proposal": "NOT_REACHED",
+    "formal_approval": "NOT_REACHED",
+    "C12_apply": "NOT_REACHED",
+    "financial_receipt_recovery": "NOT_REACHED",
+    "M31_MI07": "STATIC_OPEN_CONTRACT_NOT_REACHED_IN_THIS_RUNTIME",
+    "financial_requisition_creation": "NOT_REACHED"
+  },
+  "rendered_response": {
+    "text": "{\"status\":\"unavailable\",\"reason\":\"procurement-queue-unavailable\"}",
+    "parsed": {
+      "status": "unavailable",
+      "reason": "procurement-queue-unavailable"
+    },
+    "origin": "Playwright error-context.md Page snapshot; decoded JSON-quoted YAML scalar",
+    "source": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/extracted/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+      "bytes": 8745,
+      "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c"
+    },
+    "raw_http_body_claim": false,
+    "rendered_text_bytes": 65,
+    "rendered_text_sha256": "93bb314cc7d721be6ef1088d1463ba7de6d16556c04034346ee803872383c366",
+    "limit": "Observed generic 503 does not isolate an internal currency, identity, period, collection or revalidation failure."
+  },
+  "all_five_runtime_results": [
+    {
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 12,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 106523,
+      "configured_budget_ms": 180000,
+      "retry": 0,
+      "body_completed": true,
+      "observed_snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a"
+    },
+    {
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 21,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 14656,
+      "configured_budget_ms": 180000,
+      "retry": 0,
+      "body_completed": false,
+      "observed_snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a"
+    },
+    {
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 35,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 11571,
+      "configured_budget_ms": 180000,
+      "retry": 0,
+      "body_completed": true,
+      "observed_snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a"
+    },
+    {
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 87,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 7488,
+      "configured_budget_ms": 180000,
+      "retry": 0,
+      "body_completed": true,
+      "observed_snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a"
+    },
+    {
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 135,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 7028,
+      "configured_budget_ms": 180000,
+      "retry": 0,
+      "body_completed": true,
+      "observed_snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-11-15T07:34:31.654Z",
+    "duration": 183622.29499999998,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "nominal_result": {
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "flaky": 0,
+    "retry": 0
+  },
+  "financial_mutations_observed": 0,
+  "new_financial_criteria_accepted": 0,
+  "evidence_files": [
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/artifact.zip",
+      "bytes": 377745,
+      "sha256": "3b97c5b5c86904624a0465b19870962e00778192d2a64f384358b5653ddcd638"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/runtime-extracted.json",
+      "bytes": 198841,
+      "sha256": "25f3c2b8c75e2282d7ddbb149c34ca6ab9c60ee97f3e26759b375ae4f8c24411"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/observations-line-21.json",
+      "bytes": 714,
+      "sha256": "9efb3b61e037a3073a1b80f852c230ea970ea76cc0ac416a340e6290d1527a64"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/cli-line-21.log",
+      "bytes": 272,
+      "sha256": "5d9700fc671b5b6c8c0d5f9f47ddd022898d3d4afda79e0f31e008e4a139393a"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/extracted/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+      "bytes": 8745,
+      "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/extracted/test-ci-evidence/playwright-runtime.json",
+      "bytes": 254560,
+      "sha256": "9bf726730c7dc196d2f723680869b7b89767c3131a4e6e981ac3363578b62366"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/extracted/test-ci-evidence/request.json",
+      "bytes": 322,
+      "sha256": "f9baa713a0b5b389e8907b48c961cd77bc8d20f5367951e47ae1d1f2c0573bb9"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/run-metadata.json",
+      "bytes": 14150,
+      "sha256": "f75f6e8108b36068beca761dd74fa390560b030484343367f1b484ab003c8964"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/final-jobs.json",
+      "bytes": 10739,
+      "sha256": "d2bc727f8a96b29ef1bc822e9b6f1e29a89b936de925f45125d7880d3d91e7be"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/artifact-metadata.json",
+      "bytes": 880,
+      "sha256": "f902c3c6818ea88ce4ba0776cf61abd4dbab4742bee1429ce6aaf20a78da6c9e"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/nominal19-dispatched-envelope.json",
+      "bytes": 9877,
+      "sha256": "b8d8cc1a1a17a66282f3abf64886e182e708ab34276061f210b3437fa3e5e740"
+    }
+  ],
+  "normalized_receipt_binding": {
+    "state": "PARENT_FROZEN_RECEIPT_VERIFIED",
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/nominal-19-receipt.json",
+    "bytes": 228557,
+    "sha256": "b32930aab10658a118bab832ecc5d3bf60e173ce2417568a72023236d195480d",
+    "annotations": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/reviewed-case-annotations.json",
+      "bytes": 9894,
+      "sha256": "ffa45d226f6fb172fa2a6c8d70e5ae30702c57d11e02c34e50466d4ba60941ad"
+    },
+    "summary": {
+      "result": "FOUR_INDEPENDENT_PASS_FINANCIAL_REQUESTS503",
+      "J1": "PASS_FULL_ORIGINAL_BODY",
+      "J2": "FAIL_REQUESTS503_BEFORE_FINANCIAL_MUTATION",
+      "J3": "PASS",
+      "J4": "PASS",
+      "J5": "PASS",
+      "original_five_cases_executed": true,
+      "financial_scenario_removed": false,
+      "pass": 4,
+      "fail": 1,
+      "skipped": 0,
+      "timed_out": 0,
+      "flaky": 0,
+      "setup_failed": 0,
+      "independent_cases_passed": 4,
+      "four_independent_cases_passed": true,
+      "financial_case_runtime_status": "failed"
+    },
+    "same_base_source_W_S_and_original_selection": true,
+    "bound_at_utc": "2026-11-15T07:43:37.286065+00:00"
+  },
+  "static_composition": {
+    "basis": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-C53-terminal105-supplement-evidence.json",
+      "bytes": 45288,
+      "sha256": "c71333c898fe7b7bb4e39ac69ed23457d2c256243146da4e2443f2d9cf4ef74f"
+    },
+    "inherited_financial_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "git_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "git_blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+        "git_blob": "91784d3ea3358565e19b62922c8867f134af9ac4",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "git_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "git_blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+        "git_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/consumer-ack53.json",
+        "git_blob": "81a26f9dd69634057ea1406626e096205ac78184",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/mixed61/checks/M31-S0.json",
+        "git_blob": "a6f59190656be518311cb203d2ad1dd30e255a1f",
+        "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+      }
+    ],
+    "business_services": {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "base_blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+      "W_blob": "c7f8b5e31b835632fdbe6b6c195ead5f304838f1",
+      "contextFor_identical": true,
+      "contextFor_bytes": 1774,
+      "contextFor_sha256": "440656636d782b2452309b5bb026c2106eb5712547199747c4ae5f8ca0f3b8d6",
+      "contextFor_content": "  const contextFor = async (call: TrustedDomainContext) => {\n    const request = host.requestFor(call)\n    const selected = selectedPeriod(call)\n    if (!request || !selected || selected.expiresAt <= Date.now() || !await host.revalidate(call)) return { status: \"unavailable\" as const, reason: \"procurement-context-unavailable\" }\n    const environment = await host.environment(request)\n    const currency = await host.persistence.transaction(\"procurement\", async (snapshot) => {\n      const principal = await host.authenticate(request, { surface: \"procurement\", roleMap: roleMap(snapshot, \"procurement\") })\n      if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith(\"local:\")) return { commit: false, value: undefined }\n      const roles = principal.roles.filter((role) => role.surface === \"procurement\").map((role) => role.role)\n      const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite, assigned: [], domains: [] }\n      const value = object(domain.view(snapshot, actor, environment).data.formSettings).currency\n      return { commit: false, value: typeof value === \"string\" && value.trim() ? value : undefined }\n    }, { signal: request.signal })\n    if (!currency || !await host.revalidate(call) || selectedPeriod(call) !== selected) return { status: \"unavailable\" as const, reason: \"procurement-context-unavailable\" }\n    return { status: \"ok\" as const, value: { installationId: call.binding.installationId, projectId: call.binding.projectId,\n      principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision,\n      surface: \"procurement\" as const, period: structuredClone(selected.period), currency, sourceRefs: [], capabilities: [] } }\n  }\n"
+    },
+    "contract_findings": {
+      "precondition": "Current request/period/authority and persisted formSettings.currency are required. Generic503 does not prove exactly which check failed.",
+      "formal_approval": "Canonical pending approval covers persisted submitted amount, not an unwritten replacement. M31/MI07 remain inherited OPEN; no code or contract delta in C52/C53 closes them.",
+      "old_P37_composite": "Superseded by C24/C25/Mixed61 fixes; do not label it a current unresolved structural mismatch.",
+      "owners": "S0/WP00 financial/C12 contract plus authorized Procurement successor; 52 does not change policy or synthesize approval."
+    },
+    "inheritance_at_nominal19": {
+      "base_identical_to_nominal17": true,
+      "base_tree_identical_to_nominal17": true,
+      "all_six_financial_product_paths_and_two_contract_receipts_absent_from_overlay": true,
+      "business_services_W_blob_identical": true,
+      "new_P15_product_delta": "canonical.ts one-shot SHA256 expression; no financial policy or routing delta",
+      "prior_static_evidence": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-nominal17-final-evidence.json",
+        "bytes": 25133,
+        "sha256": "bd2d52e73e8799e11aed5287f4df74f33ee71078e04d23351e1c9a42844a4118"
+      }
+    }
+  },
+  "authority_at_dispatch": {
+    "source52": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+    "target105": "ENDED_BY_INTEGRATOR105",
+    "terminal_blob": "b59f98f415dd114a9b797fa3d1ef667c6293c05c",
+    "appointed_successor": null,
+    "requested_handoff47": true
+  },
+  "unit06": {
+    "receipt": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/unit-06-receipt.json",
+      "bytes": 43953,
+      "sha256": "40f34acf952758f81975a2ed2bd2359d0eb557cd4ed4f84ecbfc0b793066f648"
+    },
+    "run_id": 43690045333,
+    "job_id": 132738595779,
+    "cleanup_job_id": 132739009529,
+    "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+    "S": "79913f877c0ee58922a2f9635a48a350269dd356",
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "expects": 154,
+    "files": 1,
+    "duration_ms": 257.0,
+    "supplemental_only": true,
+    "financial_acceptance": false
+  },
+  "preserved_prior_artifacts": [
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-financial-terminal-draft-v9.md",
+      "bytes": 14822,
+      "sha256": "39823ae5adf66321be6a6451f4e816b0af6a3a0e96da0556e4ce30c0e530b23c"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-nominal17-final-evidence.json",
+      "bytes": 25133,
+      "sha256": "bd2d52e73e8799e11aed5287f4df74f33ee71078e04d23351e1c9a42844a4118"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-financial-C53-static-supplement.md",
+      "bytes": 13241,
+      "sha256": "6fbfbd5ec78ba303621c2b7dd87b02c769ebd2ad79039fe31e2c3c4de796d877"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-financial-terminal-draft-v8.md",
+      "bytes": 23972,
+      "sha256": "7467fa9a2897262bee3d6330d036967f1b1edcab2001cff8c7ddb4925bd82f01"
+    }
+  ],
+  "limits": [
+    "The result is actual N19 on exact isolated W12521803/Sb737befd/C53+terminal105, not a result for the unmodified stack.",
+    "The four independent PASS results belong to their unchanged original identities; none grants financial proposal, formal approval, Apply or receipt recovery acceptance.",
+    "M31/MI07 are inherited static OPEN contract findings; their runtime boundary was not reached.",
+    "Generic Requests503 does not prove a missing identity or unique currency cause. There is no trace/raw response-body artifact; exact page text is independently paired with HTTP503 network observation.",
+    "N17 and all diagnostics remain historical evidence; no diagnostic PASS is promoted.",
+    "Source52 is ACTIVE at this document cut. Only the parent final CAS publication can establish terminal source state; A105 is ENDED with no successor in the pinned base.",
+    "No local product/test execution, CI dispatch, remote read or remote write was performed in this audit."
+  ],
+  "target_writes52": 0,
+  "GLOBAL_RELEASE": false,
+  "WP11_DONE": false
+}

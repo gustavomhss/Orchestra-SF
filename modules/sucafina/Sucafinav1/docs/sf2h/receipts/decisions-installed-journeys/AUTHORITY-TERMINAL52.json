@@ -1,0 +1,129 @@
+{
+  "schema": "sf2h.mission52.authority-terminal.v1",
+  "mission": 52,
+  "actor": "S4-A",
+  "campaign": "sf2h-integral-20261112",
+  "lease_epoch": "decisions-installed-browser52",
+  "lease_state": "ENDED_BY_MISSION52_BOUNDED_HANDOFF",
+  "state": "FOUR_INDEPENDENT_UI_PASS_FINANCIAL_REQUESTS503_OWNER_HANDOFF",
+  "recorded_at_utc": "2026-11-15 07:48:35 UTC",
+  "authority_reconciled_at_utc": "2026-11-15 07:43:41 UTC",
+  "branch": "astra-wp11",
+  "pr": 40,
+  "source_pre_terminal_head": "43a31f4c51c0897287fdc53468bd171adca4795d",
+  "source_pre_terminal_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+  "effectivity": "This declaration takes effect when this file is committed to astra-wp11 by compare-and-swap from source_pre_terminal_head. The containing commit is the terminal commit; its identity is reported in PR40.",
+  "original_ACK52": {
+    "commit": "19a69145e2b4e938c1abf50985488fdb714a4e56",
+    "blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+    "historical_state": "ACK52_ACTIVE_BOUNDED_SUCCESSION"
+  },
+  "source_owned_work_remaining": false,
+  "source_inflight_runs": [],
+  "requested_handoff_recipient": 47,
+  "target_observation": {
+    "branch": "sf2-stack",
+    "sha": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "composition": "C53_PLUS_TERMINAL105"
+  },
+  "last_observed_target_authority": {
+    "schema": "sf2h.integration105.terminal-authority.v1",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "repo": "gustavomhss/Orchestra-SF",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "actor": "S0-C-e15-browser105",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "scope": {
+      "WPs": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "last_material": {
+      "name": "C53",
+      "commit": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "state": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED"
+    },
+    "lease_epoch": "S0-C-e15-browser105",
+    "lease_state": "ENDED_BY_INTEGRATOR105",
+    "effective_on": "terminal documentary commit on sf2-stack",
+    "pre_terminal_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "pre_terminal_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "material_candidate": "C53",
+    "new_integrator_appointee": null,
+    "assumption_prohibited": "No other session may infer active integrator105 or auto-adopt patches. Explicit S0/user appointment and new CAS acknowledgment required.",
+    "predecessor_100": "ENDED_BY_INTEGRATOR100",
+    "wrote_source_branches": false,
+    "dispatched_product_CI": false,
+    "ran_local_tests": false,
+    "dev_merge": false,
+    "control_merge": false,
+    "deploy": false,
+    "engine_changes": false,
+    "GLOBAL_RELEASE": false,
+    "next_lease_requires": [
+      "explicit user/S0 appointment",
+      "verify head/tree against terminal commit",
+      "read handoff/checkpoint/queue and live owner releases",
+      "new ACK prior writing"
+    ]
+  },
+  "target_authority_inferred_for52": false,
+  "target_writes52": 0,
+  "qualified_unit": {
+    "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+    "W_tree": "f5cc7dfadf85792821561d558bddd186a2a4904b",
+    "S": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+    "S_tree": "8bf6010987716a5073a04f10fce41ed38a3fd956",
+    "run": 43690414521,
+    "four_independent_cases": [
+      1,
+      3,
+      4,
+      5
+    ],
+    "financial_case": 2
+  },
+  "owner_work_remaining": [
+    "Procurement Requests admission503",
+    "Formal approval of the edited financial version and amount before Apply",
+    "Owner review/integration of the 21 inert shared patches",
+    "Same-composition integration proof and unresolved 83 normative criteria"
+  ],
+  "release": "BOUNDED_SOURCE_HANDOFF_WITH_COMPLETE_INERT_PATCHES_ONLY",
+  "whole_branch_merge_authorized": false,
+  "WP11_DONE": false,
+  "GLOBAL_RELEASE": false,
+  "proof": {
+    "nominal": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/nominal-19-receipt.json",
+      "bytes": 228557,
+      "sha256": "b32930aab10658a118bab832ecc5d3bf60e173ce2417568a72023236d195480d",
+      "published_path": "nominal-19.json"
+    },
+    "unit": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p15-unit06-43690045333/unit-06-receipt.json",
+      "bytes": 43953,
+      "sha256": "40f34acf952758f81975a2ed2bd2359d0eb557cd4ed4f84ecbfc0b793066f648",
+      "published_path": "unit-06.json"
+    },
+    "criteria": {
+      "local_path": "/workspace/scratch/fec39c0682b3/mission52-criteria-v19-final.json",
+      "bytes": 1527615,
+      "sha256": "7b46f42bc974398b202ff57f5b9b861efccbba2ddfd2f6f24142a9aad1710af2",
+      "published_path": "criteria.json"
+    },
+    "reconciliation": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/terminal52-reconciliation.json",
+      "bytes": 3082,
+      "sha256": "a2e03a4d1dd0aca77404319b3ba1b96268215cd7b26b861e7b1c5d1ec30bea72",
+      "published_path": "audits/terminal52-reconciliation.json"
+    }
+  }
+}

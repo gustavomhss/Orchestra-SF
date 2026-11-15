@@ -1,0 +1,311 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts b/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts
+new file mode 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts
+@@ -0,0 +1,67 @@
++import { AsyncLocalStorage } from "node:async_hooks"
++
++// SF52 diagnostic18 only. Fixed mode/stage names, process-local diagnostic ordinal,
++// aggregate counts and inclusive durations. No request or authority data retained.
++// completed/count include both returned and thrown work; active is still in flight.
++type Stage = { started: number; completed: number; active: number; count: number; total_ms: number; max_ms: number }
++type Profile = { mode: "compare" | "choose"; ordinal: number; at: number; stages: Record<string, Stage> }
++const profiles = new AsyncLocalStorage<Profile>()
++const sequence = { value: 0 }
++
++function begin(profile: Profile, stage: string) {
++  const row = profile.stages[stage] ??= { started: 0, completed: 0, active: 0, count: 0, total_ms: 0, max_ms: 0 }
++  row.started += 1
++  row.active += 1
++  return row
++}
++
++function finish(row: Stage, at: number) {
++  const elapsed = performance.now() - at
++  row.completed += 1
++  row.active -= 1
++  row.count += 1
++  row.total_ms += elapsed
++  row.max_ms = Math.max(row.max_ms, elapsed)
++}
++
++export function sf52Measure<T>(stage: string, work: () => T): T {
++  const profile = profiles.getStore()
++  if (!profile) return work()
++  const row = begin(profile, stage), at = performance.now()
++  try { return work() } finally { finish(row, at) }
++}
++
++export async function sf52MeasureAsync<T>(stage: string, work: () => Promise<T>): Promise<T> {
++  const profile = profiles.getStore()
++  if (!profile) return work()
++  const row = begin(profile, stage), at = performance.now()
++  try { return await work() } finally { finish(row, at) }
++}
++
++export async function sf52Profile<T>(mode: "compare" | "choose", signal: AbortSignal, work: () => Promise<T>): Promise<T> {
++  const profile: Profile = { mode, ordinal: ++sequence.value, at: performance.now(), stages: Object.create(null) }
++  const outcome = { returned: false, aborted: false }
++  const emit = (event: "start" | "abort" | "end") => {
++    // Only the diagnostic sink is caught. Product return values/errors are untouched.
++    try { console.info("SF52_COST", JSON.stringify({ diagnostic: 18, mode: profile.mode, ordinal: profile.ordinal,
++      event, elapsed_ms: performance.now() - profile.at,
++      ...(event === "end" ? { outcome: outcome.returned ? "returned" : "threw" } : {}), stages: profile.stages })) }
++    catch { /* Timing sink only. */ }
++  }
++  const aborted = () => {
++    if (outcome.aborted) return
++    outcome.aborted = true
++    emit("abort")
++  }
++  signal.addEventListener("abort", aborted, { once: true })
++  emit("start")
++  if (signal.aborted) aborted()
++  try {
++    const value = await profiles.run(profile, work)
++    outcome.returned = true
++    return value
++  } finally {
++    signal.removeEventListener("abort", aborted)
++    emit("end")
++  }
++}
+diff --git a/apps/cli/src/sucafina-product/decision-case-http.ts b/apps/cli/src/sucafina-product/decision-case-http.ts
+index 1c0fabda68c92b3d7a14b569c2c3e960ff39476c..765cf2b13b5b9fd0e234e22c694d5bd52b3a0dff 100644
+--- a/apps/cli/src/sucafina-product/decision-case-http.ts
++++ b/apps/cli/src/sucafina-product/decision-case-http.ts
+@@ -1,3 +1,4 @@
++import { sf52Profile } from "../../../../modules/sucafina/Sucafinav1/runtime/sf52-profile.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { createDecisionCaseManagement } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
+ import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
+@@ -70,7 +71,7 @@
+       ? portfolio.product.http.catalog(caseRefs, call)
+       : Promise.resolve({ status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }),
+   })]))
+-  return async (request: Request, surface: string): Promise<Response | undefined> => {
++  const handler = async (request: Request, surface: string): Promise<Response | undefined> => {
+     const url = new URL(request.url)
+     const action = url.searchParams.get("sf")
+     if (!action || !["decision-list", "decision-edit", "decision-compare", "decision-portfolio-catalog"].includes(action)) return undefined
+@@ -81,4 +82,8 @@
+       return Response.json({ status: "unavailable", reason: "native-host-unavailable" }, { status: 503, headers: { "cache-control": "no-store" } })
+     return handler(request)
+   }
++  return (request: Request, surface: string): Promise<Response | undefined> =>
++    new URL(request.url).searchParams.get("sf") === "decision-compare"
++      ? sf52Profile("compare", request.signal, () => handler(request, surface))
++      : handler(request, surface)
+ }
+diff --git a/apps/cli/src/sucafina-product/portfolio-http.ts b/apps/cli/src/sucafina-product/portfolio-http.ts
+index 8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90..c854b37f016fda0748e7d7eba0b35fd66a4848e0 100644
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -1,3 +1,4 @@
++import { sf52Profile } from "../../../../modules/sucafina/Sucafinav1/runtime/sf52-profile.ts"
+ import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+@@ -32,7 +33,7 @@
+   reconciliation?: ReturnType<typeof createSfPortfolioReconciliationServices>
+ }) {
+   const reconciliation = createSfPortfolioReconciliationHttp(input)
+-  return async (request: Request, surface: string): Promise<Response | undefined> => {
++  const handler = async (request: Request, surface: string): Promise<Response | undefined> => {
+     const page = await reconciliation(request, surface)
+     if (page) return page
+     const url = new URL(request.url)
+@@ -79,6 +80,10 @@
+     } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
+     finally { input.authority.human.finish(admitted.value) }
+   }
++  return (request: Request, surface: string): Promise<Response | undefined> =>
++    new URL(request.url).searchParams.get("sf") === "decision-choose"
++      ? sf52Profile("choose", request.signal, () => handler(request, surface))
++      : handler(request, surface)
+ }
+ 
+ function valid(mode: Mode, value: unknown): value is Record<string, unknown> & { caseRef: CaseRef } {
+diff --git a/modules/sucafina/Sucafinav1/runtime/local-store.ts b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+index d9cbd51b85514fca0c7e36f190746d2282bde2c5..a71b48057ebb32afa4efbcaabf448da516094a3c 100644
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -1,3 +1,4 @@
++import { sf52Measure } from "./sf52-profile.ts"
+ import { Database } from "bun:sqlite"
+ import { AsyncLocalStorage } from "node:async_hooks"
+ import { constants, lstatSync, realpathSync } from "node:fs"
+@@ -214,7 +215,7 @@
+     limits: authentication,
+     // Each SELECT observes current committed auth in autocommit, independently
+     // of an older business snapshot. Reusing a connection never reuses a value.
+-    read: <T>(work: (db: Database) => T): T => {
++    read: <T>(work: (db: Database) => T): T => sf52Measure("runtime.auth.read", () => {
+       if (lifecycle.closed) throw new Error("Local store is disposed")
+       const scope = context.getStore()
+       try {
+@@ -222,7 +223,7 @@
+         requireAuthenticationFile()
+         const db = authenticationRead.db ??= connect()
+         if (db.inTransaction) throw new Error("Authentication reads require autocommit")
+-        const value = work(db)
++        const value = sf52Measure("runtime.auth.sql", () => work(db))
+         if (db.inTransaction) throw new Error("Authentication reads require autocommit")
+         requireAuthenticationFile()
+         if (lifecycle.closed) throw new Error("Local store is disposed")
+@@ -234,7 +235,7 @@
+         try { closeAuthenticationRead() } catch { /* The read still fails closed. */ }
+         throw error
+       }
+-    },
++    }),
+     write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
+       const value = work(db)
+       db.exec("COMMIT")
+@@ -282,24 +283,24 @@
+           delete copies.procurement
+         }
+       }, transactionOptions?.signal),
+-    currentSnapshots: () => {
++    currentSnapshots: () => sf52Measure("runtime.currentSnapshots", () => {
+       const scope = context.getStore()
+       if (!scope) return undefined
+       requireScope(scope)
+-      const copy = (surface: Surface) => {
++      const copy = (surface: Surface) => sf52Measure("runtime.currentSnapshots." + surface, () => {
+         const materialize = scope.root.copies?.[surface]
+         if (materialize) return materialize()
+         const snapshot = scope.root.snapshots[surface]
+         if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+         return cloneSnapshot(snapshot)
+-      }
++      })
+       return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
+-    },
+-    currentAccessSnapshots: () => {
++    }),
++    currentAccessSnapshots: () => sf52Measure("runtime.currentAccessSnapshots", () => {
+       const scope = context.getStore()
+       if (!scope) return undefined
+       requireScope(scope)
+-      const copy = (surface: Surface) => {
++      const copy = (surface: Surface) => sf52Measure("runtime.currentAccessSnapshots." + surface, () => {
+         const snapshot = scope.root.snapshots[surface]
+         if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+         const descriptors = Object.getOwnPropertyDescriptors(snapshot)
+@@ -316,9 +317,9 @@
+         }))
+         descriptors.data = { ...data, value: Object.create(Object.getPrototypeOf(data.value), fields) }
+         return cloneSnapshot(Object.create(Object.getPrototypeOf(snapshot), descriptors))
+-      }
++      })
+       return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
+-    },
++    }),
+     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+       const parent = context.getStore()
+       if (parent) return (async () => {
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+index 71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c..fa6e20d34ffdd34835a97dd8250f6bb878fd780c 100644
+--- a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+@@ -1,3 +1,4 @@
++import { sf52Measure } from "../../runtime/sf52-profile.ts"
+ import type { Persistence, Snapshot } from "../../runtime/contract.ts"
+ import { object } from "../../runtime/contract.ts"
+ import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
+@@ -61,8 +62,8 @@
+         // path. Durable SQLite snapshots contain plain cloneable data.
+         const value = selection && selected?.enumerable && "value" in selected && selected.value &&
+           typeof selected.value === "object" && !Array.isArray(selected.value)
+-          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
+-          : await read(structuredClone(state), authority)
++          ? await selection.project({ [selection.id]: sf52Measure("c08.clone.selected-case", () => structuredClone(selected.value)) }, authority) as T
++          : await read(sf52Measure("c08.clone.full-state." + namespace, () => structuredClone(state)), authority)
+         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
+         const current = await input.authorize(request, snapshot, namespace, "read")
+         if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+diff --git a/modules/sucafina/Sucafinav1/product/contracts/canonical.ts b/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
+index 1769271386cdda1017c38023b0988ce2d64423d2..38b3d71506cfc82e1da2f2dc208bf07a55b41a68 100644
+--- a/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
+@@ -1,3 +1,4 @@
++import { sf52Measure } from "../../runtime/sf52-profile.ts"
+ /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
+ import type { BusinessEvidenceRef } from "./business-context.ts"
+ import type { ContributionEnvelope } from "./resident-ai.ts"
+@@ -7,7 +8,7 @@
+ }
+ 
+ export function digestSfValue(value: unknown): string {
+-  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
++  return sf52Measure("canonical.digest", () => new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex"))
+ }
+ 
+ /** Integrity of the whole reference; authentication remains in the source resolver. */
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/mutations.ts b/modules/sucafina/Sucafinav1/product/decisions/mutations.ts
+index ca21c3690f71d28c04c4bbd5045aa8389c42d384..91b2e01bf97684b473a574dc726d429cdeadb52c 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/mutations.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/mutations.ts
+@@ -1,3 +1,4 @@
++import { sf52MeasureAsync } from "../../runtime/sf52-profile.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import { reassessScenarioCoverage, validateScenarioCoverage } from "./cost-coverage.ts"
+ import { enqueueSfLedgerEvent } from "../integration/ledger-outbox.ts"
+@@ -181,36 +182,36 @@
+     },
+     recordChoice: async (incoming: { caseRef: CaseRef; alternativeId: string; alternativeVersion: number; comparison: ScenarioCompareRequest; criteria: readonly string[]; reason: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
+       const request = structuredClone(incoming)
+-      if (context.kind !== "ui" || !await input.authorizeMutation("record-choice", request, context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
+-      const replay = await replayMutation(input, request.caseRef, context, "record-choice", request)
+-      if (replay) return replay
+-      if (context.kind !== "ui" || !await input.confirmChoice(request.caseRef, request.alternativeId, context).catch(() => false)) return { status: "denied", reason: "human-choice-required" }
+-      const loaded = await loadCase(input, request.caseRef, context)
++      if (context.kind !== "ui" || !await sf52MeasureAsync("choice.authorize", () => input.authorizeMutation("record-choice", request, context).catch(() => false))) return { status: "denied", reason: "human-authority-required" }
++      const replay = await sf52MeasureAsync("choice.replay", () => replayMutation(input, request.caseRef, context, "record-choice", request))
++      if (replay) return replay
++      if (context.kind !== "ui" || !await sf52MeasureAsync("choice.confirm", () => input.confirmChoice(request.caseRef, request.alternativeId, context).catch(() => false))) return { status: "denied", reason: "human-choice-required" }
++      const loaded = await sf52MeasureAsync("choice.case", () => loadCase(input, request.caseRef, context))
+       if (loaded.status !== "ok") return loaded
+       if (new Set(request.comparison.criteria).size !== request.criteria.length || request.criteria.some((criterion) => !request.comparison.criteria.includes(criterion))) return { status: "conflict", reason: "comparison-criteria-mismatch" }
+-      const comparison = await callMutationPort(() => input.planner.compareScenarios(request.comparison, context))
++      const comparison = await sf52MeasureAsync("choice.compare", () => callMutationPort(() => input.planner.compareScenarios(request.comparison, context)))
+       if (comparison.status !== "ok") return comparison
+       if (request.comparison.scenarioRefs.length !== 2 || comparison.value.baselineResultRef !== request.comparison.scenarioRefs[0] || comparison.value.alternativeResultRef !== request.comparison.scenarioRefs[1]) return { status: "conflict", reason: "comparison-reference-mismatch" }
+       const alternative = loaded.value.case.alternatives.find((item) => item.id === request.alternativeId && item.version === request.alternativeVersion)
+       if (!alternative) return { status: "conflict", reason: "alternative-unavailable" }
+       if (comparison.value.alternativeResultRef !== alternative.result.id) {
+         if (!input.readScenarioResult) return { status: "unavailable", reason: "scenario-result-unavailable" }
+-        const stored = await callMutationPort(() => input.readScenarioResult!(comparison.value.alternativeResultRef, context))
++        const stored = await sf52MeasureAsync("choice.stored-result", () => callMutationPort(() => input.readScenarioResult!(comparison.value.alternativeResultRef, context)))
+         if (stored.status !== "ok") return stored
+         if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== loaded.value.case.id || stored.value.caseRef.incarnation !== loaded.value.case.incarnation || stored.value.caseRef.version > loaded.value.case.version || stored.value.requestDigest !== digestSfValue(alternative.scenario) || stored.value.resultDigest !== digestSfValue(alternative.result)) return { status: "conflict", reason: "comparison-alternative-mismatch" }
+-        const baseline = await callMutationPort(() => input.readScenarioResult!(comparison.value.baselineResultRef, context))
++        const baseline = await sf52MeasureAsync("choice.stored-result", () => callMutationPort(() => input.readScenarioResult!(comparison.value.baselineResultRef, context)))
+         if (baseline.status !== "ok") return baseline
+         const baselineValue = baseline.value
+         if (baselineValue.kind !== "scenario" || baselineValue.caseRef.id !== loaded.value.case.id || baselineValue.caseRef.incarnation !== loaded.value.case.incarnation || baselineValue.caseRef.version > loaded.value.case.version || baselineValue.result.costCoverage.basisId !== alternative.result.costCoverage.basisId || baselineValue.result.costCoverage.basisVersion !== alternative.result.costCoverage.basisVersion || loaded.value.case.alternatives.filter((item) => item.id !== alternative.id && digestSfValue(item.scenario) === baselineValue.requestDigest && digestSfValue(item.result) === baselineValue.resultDigest).length !== 1) return { status: "conflict", reason: "comparison-baseline-mismatch" }
+       }
+-      const values = await callMutationPort(() => input.resolveChoiceValues(request.caseRef, request.comparison, context))
++      const values = await sf52MeasureAsync("choice.values", () => callMutationPort(() => input.resolveChoiceValues(request.caseRef, request.comparison, context)))
+       if (values.status !== "ok") return values
+       const choice = createChoiceSnapshot({ case: loaded.value.case, alternativeId: request.alternativeId, alternativeVersion: request.alternativeVersion, comparison: comparison.value, alternativeResultRef: comparison.value.alternativeResultRef, criteria: request.criteria, values: values.value, evidenceRefs: [...loaded.value.case.sourceRefs, ...loaded.value.case.costCoverageBases.flatMap((basis) => basis.sourceRefs), ...loaded.value.case.alternatives.flatMap((item) => [...item.scenario.assumptions.flatMap((assumption) => assumption.evidenceRefs), ...item.result.sourceRefs, ...item.result.costCoverage.evaluatedSourceRefs, ...item.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)])], id: input.createId(), principalRef: context.binding.principalRef, reason: request.reason, at: input.now() })
+       if (choice.status !== "ok") return choice
+-      return saveCase(input, loaded.value, context, "record-choice", request, (value) => {
++      return sf52MeasureAsync("choice.save", () => saveCase(input, loaded.value, context, "record-choice", request, (value) => {
+         const version = value.version + 1
+         return { ...value, state: "chosen", choices: [...value.choices, choice.choice], ledger: [...value.ledger, { id: input.createId(), caseRef: { id: value.id, incarnation: value.incarnation, version }, kind: "choice-recorded", principalRef: context.binding.principalRef, at: choice.choice.at, consideredActions: value.alternatives.map((alternative) => alternative.id), factualGaps: choice.choice.result.unresolvedConditions, lifecycleState: "chosen", rationale: choice.choice.reason, evidenceRefs: choice.choice.evidenceRefs, outputDigest: digestSfValue(choice.choice) }] }
+-      })
++      }))
+     },
+   }
+ }
+@@ -286,7 +287,7 @@
+       if (!stable()) return { commit: false, value: null }
+       const selection = structuredClone({ case: nextValue, choice: choices[0]!, event, snapshot })
+       const selectionDigest = digestSfValue(selection)
+-      const captured = await callMutationPort(() => input.captureChoiceSources!(selection, context))
++      const captured = await sf52MeasureAsync("choice.capture", () => callMutationPort(() => input.captureChoiceSources!(selection, context)))
+       if (captured.status !== "ok" || !Array.isArray(captured.value) || !stable() || digestSfValue(selection) !== selectionDigest) return { commit: false, value: null }
+       recordCaptures = structuredClone(captured.value)
+       if (!await input.authorizeCase(actual, context) || !await input.authorizeCase(nextValue, context) || !await input.host.revalidate(context) || !stable() ||

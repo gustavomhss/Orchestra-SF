@@ -1,0 +1,550 @@
+{
+  "schema": "sf52-nominal19-j1-independent-artifact-audit-v1",
+  "state": "PASS_WITH_EXPLICIT_PROOF_LIMITS",
+  "execution": "Pure supplied-artifact/source-text inspection; no product execution, test execution, remote mutation or CI dispatch.",
+  "run_id": 43690414521,
+  "job_id": 132739685136,
+  "cleanup_job_id": 132740799684,
+  "pins": {
+    "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "source": "43a31f4c51c0897287fdc53468bd171adca4795d",
+    "source_tree": "042f7cf6d9038cbc26b17c643e15a849d62800ee",
+    "W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+    "W_tree": "f5cc7dfadf85792821561d558bddd186a2a4904b",
+    "S": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+    "S_tree": "8bf6010987716a5073a04f10fce41ed38a3fd956",
+    "scope_counts": {
+      "owned": 10,
+      "shared": 21,
+      "unit_proposal": 5
+    },
+    "timeout_ms": 180000,
+    "UI_abort_ms": 10000,
+    "workers": 1,
+    "retries": 0,
+    "repeat": 1
+  },
+  "frozen_inputs": {
+    "nominal-19-receipt.json": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/nominal-19-receipt.json",
+      "bytes": 228557,
+      "sha256": "b32930aab10658a118bab832ecc5d3bf60e173ce2417568a72023236d195480d"
+    },
+    "reviewed-case-annotations.json": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/reviewed-case-annotations.json",
+      "bytes": 9894,
+      "sha256": "ffa45d226f6fb172fa2a6c8d70e5ae30702c57d11e02c34e50466d4ba60941ad"
+    },
+    "artifact.zip": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/artifact.zip",
+      "bytes": 377745,
+      "sha256": "3b97c5b5c86904624a0465b19870962e00778192d2a64f384358b5653ddcd638"
+    },
+    "runtime-extracted.json": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/runtime-extracted.json",
+      "bytes": 198841,
+      "sha256": "25f3c2b8c75e2282d7ddbb149c34ca6ab9c60ee97f3e26759b375ae4f8c24411"
+    },
+    "observations-line-12.json": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/observations-line-12.json",
+      "bytes": 144436,
+      "sha256": "55edadd41faf9ea2f39e75e1365cebac69670173dad55dd83871eab28a76e728"
+    },
+    "cli-line-12.log": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/cli-line-12.log",
+      "bytes": 545,
+      "sha256": "830a9fec580c578be2ba75ed7910810d1c4dbe0ded450ada49c1c736ce76d625"
+    },
+    "run-metadata.json": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/run-metadata.json",
+      "bytes": 14150,
+      "sha256": "f75f6e8108b36068beca761dd74fa390560b030484343367f1b484ab003c8964"
+    },
+    "final-jobs.json": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal19-43690414521/final-jobs.json",
+      "bytes": 10739,
+      "sha256": "d2bc727f8a96b29ef1bc822e9b6f1e29a89b936de925f45125d7880d3d91e7be"
+    }
+  },
+  "raw_report": {
+    "path": "test-ci-evidence/playwright-runtime.json",
+    "bytes": 254560,
+    "sha256": "9bf726730c7dc196d2f723680869b7b89767c3131a4e6e981ac3363578b62366",
+    "metadata_commit": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+    "build_href": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43690414521",
+    "inline_attachments_equal_extracted": true
+  },
+  "source_proofs": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-delivery/postimage/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "git_blob": "e1c78c9311d9af5df81191acc490b9574421ad3d",
+      "bytes": 2920,
+      "sha256": "1627265da0aac3f849d24b72be81567f4282e0247b12efe1fea1399a173cb842"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p15-delivery/postimage/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "git_blob": "de8671b4482339791b8f03bd5616c13d50dc4a87",
+      "bytes": 12222,
+      "sha256": "0f2bd070ee2889719b6998d58e33f55b62f6c15b6040042f4dbd587424411563"
+    }
+  ],
+  "actual_case": {
+    "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+    "file": "e2e/sucafina/decisions.spec.ts",
+    "line": 12,
+    "configured_budget_ms": 180000,
+    "runtime_status": "passed",
+    "test_status": "expected",
+    "expected_status": "passed",
+    "duration_ms": 106523,
+    "retry": 0,
+    "body_completed": true,
+    "observed_snapshot": "b737befd41f0e0a28467e18fa15ed2eebfb64f5a",
+    "steps": [
+      {
+        "title": "create two actual Planner versions through human controls",
+        "duration": 1481
+      },
+      {
+        "title": "discover and inspect authorized sources before attaching them to the saved case",
+        "duration": 2923
+      },
+      {
+        "title": "save the first alternative with an explicit pending cost inventory",
+        "duration": 7023
+      },
+      {
+        "title": "lose the second creation response and explicitly recover the identical request",
+        "duration": 8256
+      },
+      {
+        "title": "reopen the exact alternatives and consume them in the current comparison",
+        "duration": 11510
+      },
+      {
+        "title": "register the explicit limit for the known subtotal increase using current comparison evidence",
+        "duration": 2515
+      },
+      {
+        "title": "record a human choice, lose its response, then explicitly retry the exact retained intent after reload",
+        "duration": 14276
+      },
+      {
+        "title": "read the durable choice without treating it as financial approval",
+        "duration": 209
+      },
+      {
+        "title": "reopen the same choice and retain its historical values after the real Planner source changes",
+        "duration": 20461
+      }
+    ]
+  },
+  "checks": [
+    {
+      "check": "Frozen receipt hash",
+      "result": "PASS"
+    },
+    {
+      "check": "Frozen annotations hash",
+      "result": "PASS"
+    },
+    {
+      "check": "Five original line identities, one result each, unchanged 180000ms/retry0",
+      "result": "PASS"
+    },
+    {
+      "check": "J1 actual passed106523ms with expected status and retry0",
+      "result": "PASS"
+    },
+    {
+      "check": "Report metadata binds exact S/run",
+      "result": "PASS"
+    },
+    {
+      "check": "Raw inline observations equal extracted JSON",
+      "result": "PASS"
+    },
+    {
+      "check": "Raw inline CLI log equals extracted bytes",
+      "result": "PASS"
+    },
+    {
+      "check": "Artifact bytes/SHA match frozen receipt",
+      "result": "PASS"
+    },
+    {
+      "check": "ZIP report digest: playwright-runtime.json",
+      "result": "PASS"
+    },
+    {
+      "check": "ZIP report digest: playwright-selection.json",
+      "result": "PASS"
+    },
+    {
+      "check": "ZIP report digest: request.json",
+      "result": "PASS"
+    },
+    {
+      "check": "Nine original steps completed and bodyCompleted true",
+      "result": "PASS"
+    },
+    {
+      "check": "Observed snapshot agrees with raw S",
+      "result": "PASS"
+    },
+    {
+      "check": "Actual metadata binds run/S/attempt1",
+      "result": "PASS"
+    },
+    {
+      "check": "Final cleanup job success",
+      "result": "PASS"
+    },
+    {
+      "check": "Three actual comparison responses HTTP200 JSON",
+      "result": "PASS"
+    },
+    {
+      "check": "Exactly two choice POSTs retain one key",
+      "result": "PASS"
+    },
+    {
+      "check": "Choice response-loss reset followed by retry200",
+      "result": "PASS"
+    },
+    {
+      "check": "Rulev1 lte2000USD for known subtotal difference",
+      "result": "PASS"
+    },
+    {
+      "check": "Choice comparison conditioned, known1200 and complete null",
+      "result": "PASS"
+    },
+    {
+      "check": "Criterion unknown due to conditioned metric",
+      "result": "PASS"
+    },
+    {
+      "check": "Known value1200 stored without financial approval",
+      "result": "PASS"
+    },
+    {
+      "check": "Exactly nine pending cost categories",
+      "result": "PASS"
+    },
+    {
+      "check": "Historical knownSubtotal2400 and total null",
+      "result": "PASS"
+    },
+    {
+      "check": "Recovered one intention, two requests and casev5 without financial application",
+      "result": "PASS"
+    },
+    {
+      "check": "Planner actually edited through UI2400to3600",
+      "result": "PASS"
+    },
+    {
+      "check": "Final casev5 and same choice, two requests remain",
+      "result": "PASS"
+    },
+    {
+      "check": "Final originalChoice is the old snapshot",
+      "result": "PASS"
+    },
+    {
+      "check": "Scenario contains no executable operations or assumptions",
+      "result": "PASS"
+    },
+    {
+      "check": "Catalog consumption did not claim portfolio evaluation",
+      "result": "PASS"
+    },
+    {
+      "check": "No diagnostic profiling markers in J1 CLI",
+      "result": "PASS"
+    },
+    {
+      "check": "No EADDRINUSE in the five CLI attachments",
+      "result": "PASS"
+    },
+    {
+      "check": "Pinned helper equals W overlay: closure-response.ts",
+      "result": "PASS"
+    },
+    {
+      "check": "Pinned helper equals W overlay: choice-history.ts",
+      "result": "PASS"
+    },
+    {
+      "check": "Executed pinned assertion exists: expect(lost.httpStatus).toBe(200)",
+      "result": "PASS"
+    },
+    {
+      "check": "Executed pinned assertion exists: expect(lost.body).toEqual({ status: \"ok\", value: { caseRef: { ...identity, version: 5 } } })",
+      "result": "PASS"
+    },
+    {
+      "check": "Executed pinned assertion exists: expect(commands[1]).toEqual(commands[0])",
+      "result": "PASS"
+    },
+    {
+      "check": "Executed pinned assertion exists: expect(historical.choices).toEqual([snapshot])",
+      "result": "PASS"
+    },
+    {
+      "check": "Executed pinned assertion exists: expect(commands).toHaveLength(2)",
+      "result": "PASS"
+    }
+  ],
+  "evidence": {
+    "observation_count": 47,
+    "request_count": 89,
+    "network_event_count": 108,
+    "index_convention": "All observation/request/network indices in this audit are zero-based.",
+    "comparison_http": [
+      {
+        "index": 68,
+        "event": "response",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-compare",
+        "httpStatus": 200,
+        "contentType": "application/json;charset=utf-8"
+      },
+      {
+        "index": 78,
+        "event": "response",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-compare",
+        "httpStatus": 200,
+        "contentType": "application/json;charset=utf-8"
+      },
+      {
+        "index": 81,
+        "event": "response",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-compare",
+        "httpStatus": 200,
+        "contentType": "application/json;charset=utf-8"
+      }
+    ],
+    "human_numeric_rule": {
+      "observation_index": 37,
+      "ruleVersion": 1,
+      "operator": "lte",
+      "limit": 2000,
+      "unit": "USD",
+      "metricRef": "planner:known-subtotal-difference",
+      "financialApproval": false,
+      "unknownCostsRemainPending": true
+    },
+    "lost_choice_response": {
+      "original_http_status": 200,
+      "original_status_proof": "Executed choice-history.ts lines53–60; closure-response.ts lines20–31 captures the real response at Fetch Response stage before intentional ConnectionReset. The page network does not contain an original200 response event.",
+      "original_body_asserted": {
+        "status": "ok",
+        "value": {
+          "caseRef": {
+            "id": "b1d84106-2c9d-4856-9589-42f786d3bb4d",
+            "incarnation": "59b772ef-715c-405e-90de-baafb43a15e2",
+            "version": 5
+          }
+        }
+      },
+      "original_payload_proof": "Executed choice-history.ts lines56–60 assert casev4, alternative/version, current comparison request/criteria and human reason. No unrecorded raw request body is fabricated here.",
+      "request_indices": [
+        65,
+        69
+      ],
+      "request_count": 2,
+      "distinct_intentions": 1,
+      "same_key": true,
+      "same_body_and_key_proof": "Executed choice-history.ts lines77–79 compare the full second captured command to the first, including raw body and key. Generic observation.requests contains keys, not bodies.",
+      "network": [
+        {
+          "index": 82,
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-choose",
+          "error": "net::ERR_CONNECTION_RESET"
+        },
+        {
+          "index": 86,
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-choose",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "post_reload_choices_asserted": 1,
+      "recovered_case_version": 5,
+      "recovery_observation_index": 42
+    },
+    "persisted_choice": {
+      "observation_index": 43,
+      "choice_id": "aba9eaa6-8bf4-4c13-94cf-a49259291ac4",
+      "alternative_id": "4dc8d99f-8a98-4ae9-80d8-7ef849028786",
+      "alternative_version": 1,
+      "basis_version": 1,
+      "case_version": 5,
+      "choice_count_asserted": 1,
+      "knownSubtotal": 2400,
+      "total": null,
+      "comparisonStatus": "conditioned",
+      "knownDifference": 1200,
+      "completeDifference": null,
+      "criterionResults": [
+        {
+          "criterionId": "243f1052-4121-46f2-91ac-c34476314a24",
+          "state": "unknown",
+          "reason": "criterion-metric-conditioned"
+        }
+      ],
+      "values": [
+        {
+          "criterionRef": "243f1052-4121-46f2-91ac-c34476314a24",
+          "value": 1200,
+          "unit": "USD",
+          "currency": "USD",
+          "horizon": {
+            "start": "2027-01-01",
+            "end": "2027-12-31"
+          }
+        }
+      ],
+      "coverage_state": "pending",
+      "coverage_entries": [
+        {
+          "categoryId": "service",
+          "status": "pending"
+        },
+        {
+          "categoryId": "service_overlap",
+          "status": "pending"
+        },
+        {
+          "categoryId": "implementation",
+          "status": "pending"
+        },
+        {
+          "categoryId": "contract_exit",
+          "status": "pending"
+        },
+        {
+          "categoryId": "migration",
+          "status": "pending"
+        },
+        {
+          "categoryId": "taxes",
+          "status": "pending"
+        },
+        {
+          "categoryId": "training",
+          "status": "pending"
+        },
+        {
+          "categoryId": "internal_costs",
+          "status": "pending"
+        },
+        {
+          "categoryId": "other_relevant_costs",
+          "status": "pending"
+        }
+      ],
+      "financialApproval": false,
+      "financialApplication": false,
+      "executable_operations": 0,
+      "prepare_disabled_asserted": true,
+      "apply_button_count_asserted": 0
+    },
+    "history_after_real_source_edit": {
+      "source_edit_observation_index": 45,
+      "history_observation_index": 46,
+      "planner_previous_annual": 2400,
+      "planner_current_annual": 3600,
+      "currency": "USD",
+      "same_case_ref": true,
+      "same_choice_id": true,
+      "case_version": 5,
+      "choiceUnchanged": true,
+      "mutationRequests": 2,
+      "nativeRestartProved": false,
+      "full_record_equality_proof": "Executed choice-history.ts lines112–131: reload/reopen, actual changePlannerSource(...3600), Workbench samecase link, currentChoice from DOM, expect(historical.choices).toEqual([snapshot]), rendered history assertions and commands.length===2.",
+      "snapshot_limit": "The final observation.originalChoice is the old snapshot reused by the helper. Its equality with observation43 is not a second independent read. Post-change equality follows from the executed UI assertion preceding observation46.",
+      "historical_render": {
+        "knownSubtotal": 2400,
+        "knownDifference": 1200,
+        "pending_categories": 9,
+        "total_label_count": 0,
+        "complete_difference_label_count": 0,
+        "new3600subtotal_absent": true
+      }
+    },
+    "other_network_failure": {
+      "index": 26,
+      "mode": "workbench-views",
+      "error": "net::ERR_ABORTED",
+      "interpretation": "One read-navigation request aborted during UI navigation; later original assertions completed. The event is retained and not attributed to choice."
+    },
+    "teardown": {
+      "J1_attached_cli_has_shutdown_disposed_record": false,
+      "J1_overall_runtime_result": "passed",
+      "next_original_case_executed": true,
+      "EADDRINUSE_in_five_cli_logs": false,
+      "cleanup_job_success": true,
+      "limit": "No per-process graceful disposal or native restart is inferred for J1. Whole-test completion and later fixture/cleanup execution are separate observations."
+    }
+  },
+  "overall_original_cases": [
+    {
+      "line": 12,
+      "runtime_status": "passed",
+      "duration_ms": 106523,
+      "body_completed": true
+    },
+    {
+      "line": 21,
+      "runtime_status": "failed",
+      "duration_ms": 14656,
+      "body_completed": false
+    },
+    {
+      "line": 35,
+      "runtime_status": "passed",
+      "duration_ms": 11571,
+      "body_completed": true
+    },
+    {
+      "line": 87,
+      "runtime_status": "passed",
+      "duration_ms": 7488,
+      "body_completed": true
+    },
+    {
+      "line": 135,
+      "runtime_status": "passed",
+      "duration_ms": 7028,
+      "body_completed": true
+    }
+  ],
+  "receipt_annotation_consistency": "No contradiction found with frozen receipt b32930… or annotations ffa45d…. Four independent cases pass; the financial case retains its actual failed status.",
+  "limitations": [
+    "Durations are whole-test or composite test.step durations, not single HTTP/server durations. The14276ms choice step includes loss, reload and retry.",
+    "No stable performance margin, isolated attribution to P15 or transfer from the microcost corpus is asserted.",
+    "This J1 proves a human conditioned choice and retained history on this installed W/S; it does not prove financial approval, Procurement application, C12 Apply/receipt or policy changes.",
+    "Nine explicit pending categories and the unknown criterion remain pending/unknown; known subtotal/difference do not establish complete cost coverage.",
+    "No native/provider restart, collaborator semantics, target integration acceptance or global release follows from this result.",
+    "Portfolio consumed identical alternatives through its catalog; portfolioEvaluated remains false.",
+    "The mandatory financial scenario was executed and failed at Requests503; this audit neither converts it to PASS nor omits it.",
+    "This artifact audit does not terminalize source52 authority or authorize target integration."
+  ]
+}

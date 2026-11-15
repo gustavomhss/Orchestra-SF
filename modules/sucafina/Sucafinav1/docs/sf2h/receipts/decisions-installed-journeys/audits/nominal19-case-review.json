@@ -1,0 +1,225 @@
+{
+  "schema": "sf52-nominal19-reviewed-case-annotations-v1",
+  "run_id": 43690414521,
+  "job_id": 132739685136,
+  "cleanup_job_id": 132740799684,
+  "run_attempt": 1,
+  "run_conclusion": "failure",
+  "job_conclusion": "failure",
+  "cleanup_conclusion": "success",
+  "artifact": {
+    "id": 14152367017,
+    "name": "playwright-ubuntu-24.04-1",
+    "local_filename": "artifact.zip",
+    "bytes": 377745,
+    "sha256": "3b97c5b5c86904624a0465b19870962e00778192d2a64f384358b5653ddcd638",
+    "identity_source": "GitHub MCP run artifacts metadata, exact signed artifact download and independently recomputed ZIP SHA256."
+  },
+  "job_log": {
+    "local_filename": "job-132739685136.log",
+    "bytes": 108644,
+    "sha256": "5050e9beea382288b78060b1fdbc98c089607ff58ff6629a622dc2b621f2c9a0",
+    "complete": true
+  },
+  "setup_failed": 0,
+  "counts": {
+    "pass": 4,
+    "fail": 1,
+    "skipped": 0,
+    "timed_out": 0,
+    "flaky": 0,
+    "setup_failed": 0
+  },
+  "summary": {
+    "result": "FOUR_INDEPENDENT_PASS_FINANCIAL_REQUESTS503",
+    "J1": "PASS_FULL_ORIGINAL_BODY",
+    "J2": "FAIL_REQUESTS503_BEFORE_FINANCIAL_MUTATION",
+    "J3": "PASS",
+    "J4": "PASS",
+    "J5": "PASS",
+    "original_five_cases_executed": true,
+    "financial_scenario_removed": false
+  },
+  "diagnostic_code_present": false,
+  "profile_records": 0,
+  "HTTP_duration_measured": false,
+  "teardown": {
+    "cleanup_job_success": true,
+    "five_original_observation_attachments_present": true,
+    "five_original_CLI_attachments_present": true,
+    "no_EADDRINUSE_in_all5_CLI_logs": true,
+    "per_case_graceful_shutdown_observation": [
+      {
+        "line": 12,
+        "disposed_record_observed": false,
+        "events": []
+      },
+      {
+        "line": 21,
+        "disposed_record_observed": true,
+        "events": [
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 4919,
+            "signal": "SIGTERM",
+            "status": "started",
+            "elapsedMs": 0
+          },
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 4919,
+            "signal": "SIGTERM",
+            "status": "disposed",
+            "elapsedMs": 17
+          }
+        ]
+      },
+      {
+        "line": 35,
+        "disposed_record_observed": true,
+        "events": [
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 5053,
+            "signal": "SIGTERM",
+            "status": "started",
+            "elapsedMs": 0
+          },
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 5053,
+            "signal": "SIGTERM",
+            "status": "disposed",
+            "elapsedMs": 214
+          }
+        ]
+      },
+      {
+        "line": 87,
+        "disposed_record_observed": true,
+        "events": [
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 5133,
+            "signal": "SIGTERM",
+            "status": "started",
+            "elapsedMs": 0
+          },
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 5133,
+            "signal": "SIGTERM",
+            "status": "disposed",
+            "elapsedMs": 65
+          }
+        ]
+      },
+      {
+        "line": 135,
+        "disposed_record_observed": true,
+        "events": [
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 5216,
+            "signal": "SIGTERM",
+            "status": "started",
+            "elapsedMs": 1
+          },
+          {
+            "event": "cli.shutdown",
+            "level": "DEBUG",
+            "pid": 5216,
+            "signal": "SIGTERM",
+            "status": "disposed",
+            "elapsedMs": 86
+          }
+        ]
+      }
+    ],
+    "limit": "J1 has no CLI_SHUTDOWN record in its attached log. Its full test including teardown passed and the next fixture started without a port conflict, but a graceful disposal record is not fabricated for J1. Final cleanup job succeeded."
+  },
+  "causal_limit": "This exact clean P15 candidate passed the four independent UI cases once. Unit06 shows semantic equivalence and a small variable cost difference in its corpus. Neither that micro-measurement nor diagnostic18 proves a stable UI latency margin or attributes the nominal17-to19 outcome solely to one line. No integrated-target/global acceptance is inferred.",
+  "cases": [
+    {
+      "journey_id": "M52-J1",
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "runtime_status": "passed",
+      "reached": [
+        "All nine original UI steps completed. Actual Planner1200/2400USD sources, authorized evidence, two persisted alternatives and two explicit inventories with nine pending categories.",
+        "The second alternative lost an original real200 response and recovered the same intent. Comparison consumed the same stored alternative identities.",
+        "Rule v1 lte2000USD for planner:known-subtotal-difference persisted with current evidence; comparison remained conditioned, knownDifference1200,completeDifference null,criterion unknown/criterion-metric-conditioned.",
+        "Human choice original200/bodyok/v5 was asserted before deliberate response loss. Reload and explicit retry used an identical payload/key; exactly two choice POSTs represent one intention and one ChoiceRecord.",
+        "A real Planner UI edit changed2400→3600; the final executed helper asserted equality of the entire reopened historical ChoiceRecord and the single choice while requests remained two."
+      ],
+      "failure_boundary": null,
+      "not_reached_or_not_proved": [
+        "Formal financial approval, executable Procurement operations, Apply and financial receipt recovery.",
+        "Complete cost coverage or a numeric oracle PASS despite conditioned inputs.",
+        "Native/provider process restart, collaborator semantics, integrated target acceptance or stable performance margin."
+      ],
+      "proof_limit": "Original response200 and retained payload equality are established by the preserved helper assertions that ran before their observation, not by inventing a first200 network event. The final originalChoice field is the old snapshot; post-change equality comes from the executed UI assertion and choiceUnchanged observation. The14276ms choice step includes loss/reload/retry and is not a single HTTP duration.",
+      "additional_network_observation": "One workbench-views read-navigation request aborted during UI navigation; later assertions completed. The promote and choose resets were the deliberate lost-response boundaries."
+    },
+    {
+      "journey_id": "M52-J2",
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "runtime_status": "failed",
+      "reached": [
+        "CLI started and the original financial journey opened Procurement Requests. GET returned503 JSON and the create form had0elements rather than1. The original10000ms assertion failed after the first10044ms step."
+      ],
+      "failure_boundary": "Requests GET503: rendered JSON {\"status\":\"unavailable\",\"reason\":\"procurement-queue-unavailable\"}; before any requisition or financial mutation.",
+      "not_reached_or_not_proved": [
+        "Proposal creation/editing, formal approval, M31/MI07, Apply, unique financial receipt recovery.",
+        "The internal failed admission precondition; generic503 does not identify it.",
+        "The separate edit/formal-approval incompatibility was not exercised by this run."
+      ],
+      "proof_limit": "No observations or mutation requests were recorded for J2. The mandatory identity/scenario and assertion were retained. DOM text is not misrepresented as a captured raw HTTP body."
+    },
+    {
+      "journey_id": "M52-J3",
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "runtime_status": "passed",
+      "reached": [
+        "Create one explicit case through Workbench, reopen that exact identity after reload atv1, save a human revision and reopen the same identity atv2."
+      ],
+      "failure_boundary": null,
+      "not_reached_or_not_proved": [
+        "Process/provider restart, collaboration and financial application."
+      ],
+      "proof_limit": "Durable same-process browser reload behavior only; no restart inference."
+    },
+    {
+      "journey_id": "M52-J4",
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "runtime_status": "passed",
+      "reached": [
+        "Fetch and validate real Decisions list and portfolio JSON for the exact empty case; preserve its identity and the empty alternatives collection."
+      ],
+      "failure_boundary": null,
+      "not_reached_or_not_proved": [
+        "Populated portfolio optimization, rankings, declared domain bounds or financial application."
+      ],
+      "proof_limit": "Real catalog contract and empty-state identity, not an assertion of generated alternatives or portfolio optimality."
+    },
+    {
+      "journey_id": "M52-J5",
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "runtime_status": "passed",
+      "reached": [
+        "Submit one UI creation intent, observe original HTTP200 before deliberately losing the response, retain the draft and recover by reading the exact saved case."
+      ],
+      "failure_boundary": null,
+      "not_reached_or_not_proved": [
+        "Process restart or financial application."
+      ],
+      "proof_limit": "Exactly one creation POST is retained; explicit recovery is read-only and does not resubmit the command."
+    }
+  ]
+}
