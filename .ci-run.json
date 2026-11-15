@@ -1,0 +1,24 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+    "./Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+    "./Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod"
+  },
+  "operationsScanner": {
+    "campaign": "sf2h-integral-20261112",
+    "mission": 75,
+    "sourceBranch": "operations-scanner-proof",
+    "productSha": "7be41d01c1d64fc3a067ba9a465a3522d9d040a8",
+    "requestSha256": "e339ac1cb8e4741ccf7fe623015ec3bfa5a2050c431c7aa7423b0104ce08edcb",
+    "selection": "controls"
+  }
+}
