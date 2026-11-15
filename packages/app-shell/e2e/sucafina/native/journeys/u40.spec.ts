@@ -732,10 +732,14 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     requireRegisteredLiveCase(nativeHarness, "source")
     const surface = await requireAdmittedSurface(page, nativeHarness, "read")
     const original = await originalPage(page, nativeHarness)
-    const selected = original.owners.filter((owner) =>
-      typeof owner.name === "string" && String(owner.name).trim() && owner.id !== undefined)
-    if (!selected.length) throw new Error("F04_REQUIRED_" + surfaceId + "_SOURCE_LINK_ORIGINAL_RECORD")
-    const source = selected[0]!
+    const admitted = nativeHarness.selected?.selections.find((entry) => entry.caseId === "source")?.source
+    if (!admitted || admitted.collection !== sourceCollection) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_SOURCE_LINK_SELECTED_ORIGINAL_REF")
+    }
+    const source = exactOwner(original, admitted.recordId)
+    if (typeof source.name !== "string" || !source.name.trim()) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_SOURCE_LINK_NAME_FROM_PRODUCER")
+    }
     const detail = await openOwner(surface, String(source.name), String(source.id))
     const originalRef = sourceCollection + ":" + String(source.id)
     await expect(detail.locator(".sf-budget-source")).toContainText(originalRef)
@@ -819,8 +823,14 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     requireRegisteredLiveCase(nativeHarness, "revoked")
     const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
     const source = await originalPage(page, nativeHarness)
-    const owner = source.owners.find((row) => typeof row.name === "string" && !!String(row.name).trim())
-    if (!owner) throw new Error("F04_REQUIRED_" + surfaceId + "_REAL_REVOCABLE_SOURCE_RECORD")
+    const admitted = nativeHarness.selected?.selections.find((entry) => entry.caseId === "revoked")?.source
+    if (!admitted || admitted.collection !== sourceCollection) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_REVOCABLE_ISOLATED_SOURCE_REF")
+    }
+    const owner = exactOwner(source, admitted.recordId)
+    if (typeof owner.name !== "string" || !String(owner.name).trim()) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_REAL_REVOCABLE_SOURCE_RECORD")
+    }
     const name = String(owner.name)
     const detail = await openOwner(surface, name, String(owner.id))
     await detail.getByRole("button", { name: "Edit", exact: true }).click()
@@ -856,8 +866,14 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     requireRegisteredLiveCase(nativeHarness, "stale")
     const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
     const current = await originalPage(page, nativeHarness)
-    const owner = current.owners.find((row) => typeof row.name === "string" && !!String(row.name).trim())
-    if (!owner) throw new Error("F04_REQUIRED_" + surfaceId + "_CONCURRENT_SOURCE_RECORD")
+    const admitted = nativeHarness.selected?.selections.find((entry) => entry.caseId === "stale")?.source
+    if (!admitted || admitted.collection !== sourceCollection) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_ISOLATED_CONCURRENT_SOURCE_REF")
+    }
+    const owner = exactOwner(current, admitted.recordId)
+    if (typeof owner.name !== "string" || !String(owner.name).trim()) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_CONCURRENT_SOURCE_RECORD")
+    }
     const ownerId = String(owner.id)
     const initialVersion = ownerVersion(current, ownerId)
     const detail = await openOwner(surface, String(owner.name), ownerId)
@@ -1020,8 +1036,14 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identitie
     requireRegisteredLiveCase(nativeHarness, "late")
     const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
     const original = await originalPage(page, nativeHarness)
-    const owner = original.owners.find((row) => typeof row.name === "string" && !!String(row.name).trim())
-    if (!owner) throw new Error("F04_REQUIRED_" + surfaceId + "_ORIGINAL_OWNER_FOR_LATE_READ")
+    const admitted = nativeHarness.selected?.selections.find((entry) => entry.caseId === "late")?.source
+    if (!admitted || admitted.collection !== sourceCollection) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_LATE_READ_SELECTED_ORIGINAL_REF")
+    }
+    const owner = exactOwner(original, admitted.recordId)
+    if (typeof owner.name !== "string" || !String(owner.name).trim()) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_ORIGINAL_OWNER_FOR_LATE_READ")
+    }
     const privateName = String(owner.name)
     await openOwner(surface, privateName, String(owner.id))
     const wrong = nativeHarness.manifest.wrongProject
