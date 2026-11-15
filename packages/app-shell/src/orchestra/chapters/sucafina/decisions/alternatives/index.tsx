@@ -38,8 +38,9 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
   const caseRecord = () => caseData.read.projection?.case
   const displayed = () => {
     const alternatives = caseRecord()?.alternatives ?? []
-    if (route()?.kind === "detail") {
-      const focus = String(route()!.params.alternativeRef)
+    const currentRoute = route()
+    if (currentRoute?.kind === "detail") {
+      const focus = String(currentRoute.params.alternativeRef)
       return alternatives.filter((item) => item.id === focus)
     }
     if (!ui.compare || ui.selection.length === 0) return alternatives
@@ -198,7 +199,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                       <details>
                         <summary>{t("sf.ui35.assumptions")}</summary>
                         <ul class="sf-n24-list"><For each={alternative.scenario.assumptions}>{(assumption) =>
-                          <li><bdi>{assumption}</bdi></li>}</For></ul>
+                          <li><bdi>{assumption.id}</bdi>: <bdi>{assumption.value === null ? t("sf.ui35.missing") : String(assumption.value)}</bdi> · <bdi>{assumption.state}</bdi></li>}</For></ul>
                       </details>
                     </article>
                   }}
