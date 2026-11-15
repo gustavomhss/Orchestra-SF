@@ -333,12 +333,6 @@ const CombinationBase = Schema.Struct({
   conflicts: Schema.Array(Schema.String),
   restrictions: Schema.Array(Schema.String),
 })
-const CombinationStatus = Schema.Union([
-  Schema.Struct({ eligibility: Schema.Literal("eligible-complete"), comparisonStatus: Schema.Literal("complete") }),
-  Schema.Struct({ eligibility: Schema.Literal("conditioned"), comparisonStatus: Schema.Literals(["complete", "conditioned", "incompatible", "unavailable"]) }),
-  Schema.Struct({ eligibility: Schema.Literal("unavailable"), comparisonStatus: Schema.Literals(["conditioned", "incompatible", "unavailable"]) }),
-  Schema.Struct({ eligibility: Schema.Literal("ineligible"), comparisonStatus: Schema.Literals(["complete", "conditioned", "incompatible", "unavailable"]) }),
-])
 const Combination = Schema.Union([
   Schema.Struct({ ...CombinationBase.fields, eligibility: Schema.Literal("eligible-complete"), comparisonStatus: Schema.Literal("complete") }),
   Schema.Struct({ ...CombinationBase.fields, eligibility: Schema.Literal("conditioned"), comparisonStatus: Schema.Literals(["complete", "conditioned", "incompatible", "unavailable"]) }),
