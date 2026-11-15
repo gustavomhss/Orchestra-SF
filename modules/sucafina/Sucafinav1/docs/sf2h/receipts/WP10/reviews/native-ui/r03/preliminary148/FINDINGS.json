@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h.pre-r03.findings.v1",
+  "mission": 148,
+  "epoch": "pre-r03-e1-browser148",
+  "review_kind": "PRELIMINARY",
+  "base_code_commit": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "base_code_tree": "c792f5d0d3be378ca86aea09bcabdd8781734d8f",
+  "observed_moving_integrator_commit": "8094e599e3d18609e269548d24619a3246fbc735",
+  "result": "OPEN_CONCRETE_FINDING_AND_PROOF_PENDING",
+  "finding_count_new": 1,
+  "new_findings": [
+    {
+      "id": "R148-NATIVE-01",
+      "kind": "SOURCE_CODE_DEFECT",
+      "severity": "HIGH_RECOVERABILITY_STATIC",
+      "state": "OPEN_NOT_EXECUTED",
+      "status": "PENDING_OWNER_FIX_AND_150_PROOF",
+      "owner": "Mission95 PR104 — original native-host producer; integration/reconciliation only 132 PR65",
+      "observed_commit": "d8f14f81855858120f914af4f3934406bfdb74f1",
+      "loci": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+          "lines": "143-170, 208-216"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+          "blob": "0502f30e054e40049df1283c00d4f5af1545f7c2",
+          "lines": "53-75"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/token-gate.ts",
+          "blob": "4d7b395aa29a03a8311d8dec87cb1e69e0a4ab30",
+          "lines": "214,249-254"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+          "lines": "226-236,240-241"
+        }
+      ],
+      "causal_chain": [
+        "native-host.ts:145–147 reserves sf:native-session persistently via C08 and native-evidence.ts:53–75",
+        "native-host.ts:148 separately records ownership in the C15 gate",
+        "native-host.ts:149–165 may return on SessionV2.create failure, session identity mismatch, loadSfSkill failure or store.narrow failure before entering acquireUseRelease at :170",
+        "No scoped cleanup of newly created SessionV2 or explicit durable resolution of reservation is visible on these early returns",
+        "host-context.ts:226–236 will reject re-admitting this runId if reservation remains, so recovery must be explicitly managed without undermining fail-closed ownership"
+      ],
+      "impact_certain": "Failure paths occur outside the resource finalizer after durable side effects have begun.",
+      "impact_requires_execution": "Persistence/orphan lifetime and retry UX; no proof of unauthorized execution, privilege escalation or leak.",
+      "proposed_action": "Extend ownership/lifecycle bracketing from first durable reservation. Keep durable ownership negative classification; add scoped session cleanup and terminal reservation state/recovery semantics without silent replays.",
+      "required_oracles": [
+        "Session.create denied after reserve",
+        "session identity mismatch",
+        "loadSfSkill rejected/source digest changed",
+        "store.narrow failed",
+        "abort during the window",
+        "same runRef retry must be explicitly denied or human-recovered without bypassing C08/C15",
+        "reload/revocation keeps rejected session fail-closed"
+      ],
+      "routed_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/104#issuecomment-6900997417",
+      "validation": "NOT_RUN"
+    }
+  ],
+  "inherited_deduplicated": [
+    {
+      "source": "PR98/R03-old",
+      "ids": [
+        "R3-NATIVE-01",
+        "R3-MCP-02",
+        "R3-TASK-03",
+        "R3-ATLAS-04",
+        "R3-SCANNER-05",
+        "R3-EXPORT-06",
+        "R3-CI-07",
+        "R3-CANDIDATE-08"
+      ],
+      "state": "HISTORICAL_UNRESOLVED_DO_NOT_COPY_AS_NEW",
+      "source_candidate": "eecbdacb..."
+    },
+    {
+      "source": "PR97/integrity",
+      "ids": [
+        "egress",
+        "first-save",
+        "C08/AM05"
+      ],
+      "state": "CROSS_DOMAIN_PENDING_OTHER_REVIEW"
+    },
+    {
+      "source": "PR100/functional",
+      "ids": [
+        "first-save",
+        "export-egress"
+      ],
+      "state": "CROSS_DOMAIN_PENDING_OTHER_REVIEW"
+    },
+    {
+      "source": "PR159/Office131",
+      "ids": [
+        "VIS131-001",
+        "VIS131-002",
+        "VIS131-003",
+        "VIS112-001",
+        "VIS88-005"
+      ],
+      "state": "PENDING_REAL_POSTFIX_COMPOSED_RENDER",
+      "proof_receipt_blob": "3bf897625cc3a3e79acdf75efc9ee76882fc9485"
+    }
+  ],
+  "note": "Missing proof never PASS. Finding is from static remote code inspection and may be superseded only by specific correction W/blob and hosted recheck."
+}

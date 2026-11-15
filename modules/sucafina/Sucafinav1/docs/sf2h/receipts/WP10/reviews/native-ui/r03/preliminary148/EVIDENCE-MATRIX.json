@@ -1,0 +1,134 @@
+{
+  "schema": "sf2h.pre-r03.evidence-matrix.v1",
+  "mission": 148,
+  "epoch": "pre-r03-e1-browser148",
+  "candidate_type": "MOVING_PRELIMINARY",
+  "observed_source": {
+    "sha": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "tree": "c792f5d0d3be378ca86aea09bcabdd8781734d8f",
+    "since_integrated_ahead": 9,
+    "integrator_current_observed_sha": "8094e599e3d18609e269548d24619a3246fbc735",
+    "changed_paths_since_source": 55
+  },
+  "work_order": "WP10.T03 / R03@cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "final_order_status": "PLANNED_NOT_AUTHORIZED",
+  "proof_legend": {
+    "PENDING": "No same-C installed proof meeting the canonical oracle",
+    "STATIC_OBSERVED": "Remote source code inspected only; not a runtime PASS",
+    "HISTORICAL_ONLY": "Non-transferable proof attached to older source candidate"
+  },
+  "areas": [
+    {
+      "id": "AM01",
+      "title": "Resident profiles, skills and model turn",
+      "state": "PENDING",
+      "static_observation": "Native SessionV2 + skill loader checks source/instruction SHA256 and session synthetic message",
+      "paths": [
+        "apps/cli/src/sucafina-product/native-host.ts#L143-L168",
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts#L8-L89"
+      ],
+      "missing": "Re-run actual five profiles / 18 source-backed resident skills across correct installed Location, negative stale/revocation and model receipts on same C."
+    },
+    {
+      "id": "AM02",
+      "title": "Private MCP capability/transport lineage",
+      "state": "PENDING",
+      "static_observation": "InMemoryTransport real MCP client/server, lease/call/revalidation/receipt egress implementation exists",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts#L15-L138",
+        "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts#L5-L45"
+      ],
+      "missing": "All eight MCP packs /39 operations with matching real registry, positive and negative provider cases, no mock substitution; historical PR98 counted incomplete 23 ops, not transferred."
+    },
+    {
+      "id": "AM03",
+      "title": "Native Task / Relay / Schedule / recurrence",
+      "state": "PENDING",
+      "static_observation": "Core Relay.Service and TaskTool branch are wired with governance witness and real SessionEvent settlements",
+      "paths": [
+        "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+        "apps/cli/src/sucafina-product/routine-native-owner.ts",
+        "apps/cli/src/sucafina-product/routine-native-dispatch.ts"
+      ],
+      "missing": "Real authorized planning, approval, Task child, Relay and Schedule/recurrent resume/abort/revoke/reload chain in installed C with native artifacts."
+    },
+    {
+      "id": "AM04",
+      "title": "Atlas scanner/revision and outbox",
+      "state": "PENDING",
+      "static_observation": "Gitleaks executable is pinned using BackendToolkit.ensure; business-context receives probed spec/version and Atlas writes source receipts",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts#L11-L38",
+        "apps/cli/src/sucafina-product/host-context.ts#L840-L842",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts#L484",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts#L272-L445"
+      ],
+      "missing": "Scanner real installed oracle, hit/clean/unavailable, immutable scanner identity, ACL and transactional outbox under restart and conflict; no local executions."
+    },
+    {
+      "id": "AM05",
+      "title": "Atlas durable memory / isolation / recall",
+      "state": "PENDING",
+      "static_observation": "Atlas memory writer/recall source fencing, per-case ownership and historical publication receipt matching are present",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
+      ],
+      "missing": "Original AM05 across process restart/reload with owner/revocation, mixed case, stale source, CAS and historical continuity; PR98 historical gap retained."
+    },
+    {
+      "id": "AM06",
+      "title": "AI provenance into Office/decision artifacts",
+      "state": "PENDING",
+      "static_observation": "Contribution envelope validates actualModel/session/skill receipt and source/target association",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/ai/run-provenance.ts",
+        "apps/cli/src/sucafina-product/native-execution.ts"
+      ],
+      "missing": "Native model actual output through Case/C08 to final documents, visual Office and source bytes, project/owner boundary, reload/read-back and citation lineage in same C."
+    }
+  ],
+  "office": {
+    "state": "PENDING",
+    "source_receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after125-132/CONSUME-132-OFFICE.json",
+    "source_receipt_blob": "dd444db3ba5a00c898102b230a717c0583dd2b0d",
+    "claimed": "SOURCE_ONLY_NOT_QUALIFIED; CI NOT_RUN_129; visual NOT_PROVEN_131",
+    "dedup_pr159": [
+      "VIS131-001",
+      "VIS131-002",
+      "VIS131-003",
+      "VIS112-001",
+      "VIS88-005"
+    ],
+    "needed": "New genuine composed post-fix Office DOCX/PDF/XLSX per-page render and hashes W/S/C/run/artifact; 150 executes, independent reviewer rechecks."
+  },
+  "integration_and_qualification": {
+    "132": {
+      "branch": "sf2-stack",
+      "head_observed": "8094e599e3d18609e269548d24619a3246fbc735",
+      "source_material": "9 commits ahead of d8; 55 paths changed, cannot transfer d8 review to 8094 as a final same-C approval",
+      "native_desktop": "CONSUME-132-D01.json says PENDING_MOUNT",
+      "routes": "COMPOSE-132-ROUTES.json says NOT_QUALIFIED; 70 surfaces/15 chapters/165 patterns",
+      "q01q02": "CONSUME-132-Q01-Q02.json states AUTHORING_INTEGRATED_ONLY; tests NOT_RUN_129"
+    },
+    "149": {
+      "pr": 107,
+      "role": "ONLY compiler/generator/guards",
+      "state": "No current same-C full qualification supplied to 148"
+    },
+    "150": {
+      "pr": 106,
+      "role": "ONLY authorized product CI/test dispatcher",
+      "state": "No current same-C full qualification supplied to 148"
+    }
+  },
+  "mode": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "renderer": "NOT_RUN",
+    "hosted_jobs": "NOT_RUN_BY_148",
+    "release": "NOT_APPROVED"
+  }
+}
