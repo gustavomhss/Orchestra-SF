@@ -29,22 +29,27 @@ export type SfSelectionResolution =
   | Readonly<{ status: "selected"; selection: SfOwnerSelection; explicit: boolean }>
   | Readonly<{ status: "invalid-link" }>
 export function resolveSfUrlSelection(href: string, currentHref: string, selected: SfOwnerSelection): SfSelectionResolution {
-  const base = new URL(currentHref, "http://orchestra.invalid")
-  const destination = new URL(href, base)
-  if (!["http:", "https:"].includes(destination.protocol) || destination.origin !== base.origin || !destination.pathname.startsWith("/orchestra/"))
+  try {
+    const base = new URL(currentHref, "http://orchestra.invalid")
+    const destination = new URL(href, base)
+    if (!["http:", "https:"].includes(destination.protocol) || destination.origin !== base.origin || !destination.pathname.startsWith("/orchestra/"))
+      return { status: "invalid-link" }
+    if (/%(?![\\da-fA-F]{2})/.test(destination.search)) return { status: "invalid-link" }
+    const values = ["server", "project", "installation"].map((key) => destination.searchParams.getAll(key))
+    if (values.some((items) => items.length > 1)) return { status: "invalid-link" }
+    if (values.every((items) => items.length === 0)) return { status: "selected", selection: selected, explicit: false }
+    if (!values.every((items) => items.length === 1 && items[0])) return { status: "invalid-link" }
+    return {
+      status: "selected",
+      explicit: true,
+      selection: {
+        serverKey: values[0]![0] as SfServerKey,
+        projectId: values[1]![0] as SfRef,
+        installationId: values[2]![0] as SfRef,
+      },
+    }
+  } catch {
     return { status: "invalid-link" }
-  const values = ["server", "project", "installation"].map((key) => destination.searchParams.getAll(key))
-  if (values.some((items) => items.length > 1)) return { status: "invalid-link" }
-  if (values.every((items) => items.length === 0)) return { status: "selected", selection: selected, explicit: false }
-  if (!values.every((items) => items.length === 1 && items[0])) return { status: "invalid-link" }
-  return {
-    status: "selected",
-    explicit: true,
-    selection: {
-      serverKey: values[0]![0] as SfServerKey,
-      projectId: values[1]![0] as SfRef,
-      installationId: values[2]![0] as SfRef,
-    },
   }
 }
 export type SfNativeTransitionCause =
@@ -103,6 +108,12 @@ export function createSfNavigationState(deps: SfNavigationDependencies) {
     })
     if (abort.signal.aborted || epoch !== generation) return { status: "aborted" }
     if (resolved.status !== "authorized") return { status: resolved.status }
+    // Even an incorrectly wired router cannot turn a deep link for A into B.
+    if (resolved.route.ownerSelection.serverKey !== selected.selection.serverKey ||
+        resolved.route.ownerSelection.projectId !== selected.selection.projectId ||
+        resolved.route.ownerSelection.installationId !== selected.selection.installationId) {
+      return { status: "invalid-link" }
+    }
     const outgoing = deps.currentOwnerKey()
     const changingOwner = outgoing !== undefined && outgoing !== resolved.ownerKey
     if (changingOwner && deps.hasDirtyDrafts()) {
