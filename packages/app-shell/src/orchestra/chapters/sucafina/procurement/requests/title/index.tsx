@@ -1,7 +1,7 @@
 import { createEffect, createMemo, createUniqueId, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
-import { createSfProcurementClient } from "@orchestra/sdk-next/sucafina/procurement"
+import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../../context/contracts"
 import { useSfContext } from "../../../context"
@@ -192,6 +192,11 @@ export function SfRequestTitleEdit(props: SfSurfaceProps) {
     const current = draftState()
     return current?.availability === "active" ? current.value.title : view.record?.title ?? ""
   }
+  const reviewable = () => {
+    const snapshot = draftState()
+    return snapshot?.availability === "active" && snapshot.dirty &&
+      snapshot.baseVersion === view.record?.version && !!view.record?.canSave
+  }
   const outcomeUnknown = () => {
     const current = draftState()
     return current?.availability === "active" && current.phase === "outcome-unknown"
@@ -292,8 +297,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps) {
         return
       }
       if (result.status < 200 || result.status >= 300 || !isSfRequestTitleSaveAccepted(result.body)) {
-        currentDraft.setPhase(result.status === 409 ? "conflict" :
-          result.status === 422 ? "validation-error" : "failed")
+        currentDraft.setPhase(result.status === 422 ? "validation-error" : "failed")
         // A 409 is not by itself proof of an editable CAS conflict: the native
         // fence may reject an owner/host mismatch with the same HTTP code.
         setView({ sending: false, reviewing: false, status: "unavailable" })
@@ -360,7 +364,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps) {
     <section data-component="sf-request-title-save" class="flex min-w-0 flex-col gap-3" aria-busy={view.sending}>
       <Show when={view.status === "ready" && view.record !== undefined} fallback={
         <SfStatePanel
-          state={view.status}
+          state={view.status === "ready" ? "unavailable" : view.status}
           messageKey={copyKey(view.acceptedWithoutProjection
             ? "sf.u11.title.saveAcceptedNoProjection" : statusCopy())}
           onRetryRead={view.status === "denied" ? undefined : refreshSource}
@@ -401,8 +405,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps) {
             <button
               type="button"
               class="rounded-lg bg-v2-primary-base px-3 py-2 text-sm text-v2-text-text-strong disabled:opacity-50"
-              disabled={view.sending || draftState()?.availability !== "active" ||
-                (draftState()?.availability === "active" && !draftState()?.dirty)}
+              disabled={view.sending || !reviewable()}
               onClick={beginReview}
             >
               {language.t("sf.u11.title.reviewAction")}
