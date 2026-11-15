@@ -283,13 +283,13 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       }
       if (intent.kind === "delete") {
         const input = {
-          page: "Entities & allocations", action: "delete", id: intent.id ?? undefined,
+          page: "Entities & allocations", action: "delete", ...(intent.id ? { id: intent.id } : {}),
           version: intent.version, values: { collection: intent.collection },
         } as const
         return { input, call: () => client["domain.command.CAP21.delete"](input, options) }
       }
       const input = {
-        page: "Entities & allocations", action: "save", id: intent.id ?? undefined,
+        page: "Entities & allocations", action: "save", ...(intent.id ? { id: intent.id } : {}),
         version: intent.version,
         values: {
           collection: intent.collection, name: value?.name,
