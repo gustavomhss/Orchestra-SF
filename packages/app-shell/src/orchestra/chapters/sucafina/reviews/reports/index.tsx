@@ -97,14 +97,15 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     setStore("operationState", "preparing")
     try {
       const client = createSfReviewsClient(access.transport)
-      const result = store.format === "docx"
-        ? await client["reviews.export.docx"](input, { signal: controller.signal })
-        : await client["reviews.export.pptx"](input, { signal: controller.signal })
+      if (store.format === "docx") {
+        await client["reviews.export.docx"](input, { signal: controller.signal })
+      } else {
+        await client["reviews.export.pptx"](input, { signal: controller.signal })
+      }
       if (!sameOwner(generation, ownerKey)) return
-      // Even a JSON success is not Office bytes; output schemas currently forbid
-      // reporting success. Only an integrated F01/download-handler can do so.
-      setStore("operationState", result.kind === "transport-error" && result.reason === "outcome-unknown"
-        ? "outcome-unknown" : "unavailable")
+      // Both frozen A07 methods return contract-unavailable. A navigation or
+      // future JSON response still cannot be interpreted as Office bytes.
+      setStore("operationState", "unavailable")
     } catch (error) {
       if (!sameOwner(generation, ownerKey)) return
       console.error("Sucafina Office report preparation failed", error instanceof Error ? error.name : "unknown")
