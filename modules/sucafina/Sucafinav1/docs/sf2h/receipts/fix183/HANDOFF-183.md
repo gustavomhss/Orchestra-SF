@@ -1,0 +1,15 @@
+# Fix183 — S01 real PlatformProvider handoff
+
+- **State:** ARTIFACT_READY on sf-ux-w06 / PR125, NOT integrated/qualified; goal paused; GLOBAL_RELEASE=false.
+- **Actor:** actual GPT-6 via GitHub MCP (Astra requested; not available as effective model); session ID not exposed. Epoch native-fix-e1-browser183.
+- **ACK:** 584e7d9b4033a4288aed29a5bfd2ccff2635f6d3, tree f9b79dd97204d294d26943f66cc44a852e3de426.
+- **Patch commit:** 8f48fb1fbb58de4b69da58f7c7d5326abd7ab8ee, tree 86187b2fed679e7cd8c1f85ceb6d01ea9a328698. Old S01 blob 65c74a68a7658706b18e70c5f98e52a419910fb3; new f07bb3371702d5b00c481bcfed89d682eecd1699; only `packages/app-shell/test-browser/sucafina-native/s01.test.ts` changed. Full inert patch: PATCH-S01-183.patch.
+- **Original fence:** b81044b9c573f0a887788cd21d4eb3a255582d0a, tree 6de0ccbf79237289dbf8c92f2e63b64b75b27ad5; previous authority revoked only for future writes on source path.
+- **Consumer observed:** sf2-stack@913b6b8f143e6c3e869eee293d02f04259c7cdd1, tree 99d4788774ce548d4cd64a96c0f2481db1fb15eb; S01 preimage 65c74a68a7658706b18e70c5f98e52a419910fb3, proposed postimage f07bb3371702d5b00c481bcfed89d682eecd1699. **No consumer postcommit/tree exists yet from this mission.** Integrator162 must reconcile its current HEAD and write by own lease/CAS.
+- **Fixture provenance:** `platform-fixture.ts` blob 72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15 in sf2-stack from fixture140; absent in sf-ux-w06. This source intentionally imports it for new integrated consumer; no fixture copy/foreign write.
+- **Observed failure:** hosted browser164 [run43766970018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766970018), job132974180913; S01 nested 0 PASS/4 FAIL, error `Platform context must be used within a context provider`, caused by LanguageProvider → persisted → usePlatform at fixture():120. No S01 assertions ran. Source now nests LanguageProvider inside real withBrowserPlatform, exactly as existing page-frame test.
+- **Scope preserved:** four original test cases and assertions unchanged; row ref/selection/sort/page/actions, filter/scroll/focus, denied/session-expired and zero semantics stay under test. SfDataTable/SfListDetail/SfRecordDetail and shared fixture READONLY. No new mirrored test.
+- **163:** After 162 same-C intake, request targeted packages/app-shell `bun typecheck` and invalidated guards only; reconcile/dedup against W690a34, run43766055614/job132971280139 (10/16 checks exit 0; 6 nonzero). No local execution.
+- **164:** After 162 same-C intake, request only `./test-browser/sucafina-native/s01.test.ts` in package app (cwd packages/app-shell, Bun on Ubuntu); preserve four nested cases. Exact browser test filter includes `./` to avoid previous zero-selection. No CI dispatched by this seat.
+- **Qualification:** NOT_RUN on changed code; acceptance S01-AC01/02 pending hosted qualification. Other owners F03/S05/A12/F01/AM untouched. No full PR merge (inherited cohort paths), reset, force, build, deploy or release.
+- **Lease:** offer terminal output to only integrator162; acceptance/consumer ACK not inferred.

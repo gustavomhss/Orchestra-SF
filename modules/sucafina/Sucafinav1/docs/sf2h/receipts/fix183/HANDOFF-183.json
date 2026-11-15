@@ -1,0 +1,198 @@
+{
+  "schema": "sf2h.causal-fix183.artifact-ready.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 183,
+  "order": "S01",
+  "goal": "Real Platform context in S01 browser fixture",
+  "status": "ARTIFACT_READY_BLOCKED_INTEGRATION",
+  "epoch": "native-fix-e1-browser183",
+  "actor": "ChatGPT via authorized GitHub MCP",
+  "requested_model": "Astra",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "NOT_EXPOSED",
+  "source": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "branch": "sf-ux-w06",
+    "pr": 125,
+    "expected_launch_head": "b81044b9c573f0a887788cd21d4eb3a255582d0a",
+    "launch_tree": "6de0ccbf79237289dbf8c92f2e63b64b75b27ad5",
+    "ack_commit": "584e7d9b4033a4288aed29a5bfd2ccff2635f6d3",
+    "ack_tree": "f9b79dd97204d294d26943f66cc44a852e3de426",
+    "code_commit": "8f48fb1fbb58de4b69da58f7c7d5326abd7ab8ee",
+    "code_tree": "86187b2fed679e7cd8c1f85ceb6d01ea9a328698",
+    "code_prehead": "584e7d9b4033a4288aed29a5bfd2ccff2635f6d3",
+    "code_pretree": "f9b79dd97204d294d26943f66cc44a852e3de426",
+    "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+    "blob_pre": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+    "blob_post": "f07bb3371702d5b00c481bcfed89d682eecd1699",
+    "remote_write": "GitHub MCP CAS expected_sha + force:false",
+    "allowed_writes": [
+      "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/**"
+    ],
+    "changed_paths": [
+      "packages/app-shell/test-browser/sucafina-native/s01.test.ts"
+    ],
+    "preserves_four_original_tests": true,
+    "tests_weakened": false,
+    "assertions_changed": false,
+    "timeout_changed": false,
+    "component_changed": false,
+    "shared_fixture_copied": false
+  },
+  "consumer": {
+    "integrator_mission": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_prehead": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "observed_pretree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "test_path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+    "test_blob_pre": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+    "test_blob_post_proposed": "f07bb3371702d5b00c481bcfed89d682eecd1699",
+    "post_head": null,
+    "post_tree": null,
+    "post_status": "PENDING_OWNER162_CAS_NO_BRANCH_MUTATION_BY183",
+    "same_C_requirement": true,
+    "apply_instruction": "162 must independently re-read current consumer head and test preimage, reconcile drift, apply exact PATCH-S01-183.patch or import source postimage blob (not branch wholesale), then record actual new C/tree and ACK. Do not copy shared fixture or reapply it.",
+    "shared_fixture": {
+      "path": "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+      "source": "sf2-stack consumed from mission140",
+      "blob": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+      "source_branch_presence": false,
+      "consumer_presence": true,
+      "readonly": true
+    },
+    "actual_platform_api": {
+      "path": "packages/app-shell/src/context/platform.tsx",
+      "blob": "6dd22aad08f5f82bf6dcf5ce5d32d2c7c2db8c47"
+    },
+    "matched_existing_usage": {
+      "path": "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+      "blob": "aa17ece934eb35f54602b6de99bcc39da39d1fed"
+    }
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/PATCH-S01-183.patch",
+    "kind": "complete_inert_unified_diff",
+    "edits": [
+      "inside SF_S01_DOM import withBrowserPlatform from existing ./platform-fixture",
+      "render withBrowserPlatform outside actual LanguageProvider"
+    ],
+    "no_new_tests": true
+  },
+  "provenance": {
+    "packet_blob": "735896a99aab7f2e839e47513d8c8c301c32a1fa",
+    "fence_blob": "89c27344e9152f767dd6d1e1464b09dc848e8ac7",
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "shell_agents_blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+    "predecessor_handoff_blob": "b1d903ed5916da6604dfe51b820e8660cc9222b1",
+    "workorder_blob": "a08ff64f973b5fcb3660d2de7ffe64efcea62992",
+    "component_contract_blob": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "component_locks_blob": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "component_signatures_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface_specs_blob": "d62847af81dffdc129312e71e69692081fd74b75",
+    "original_protocol_observed_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "execution_manifest_blob": "3d444da59c661faa17d23798f8a212a71d3d8f6d",
+    "compiler_results_blob": "157ffdabe6002e7013782465868a1f0663090243",
+    "compiler_guards_blob": "458d7963505c3a12e94fd84e7b66ea4865364f91",
+    "compiler_handoff_blob": "1bc9d0f1029e47b662d513c66f6f4a4b18b6e632",
+    "ci164_runs_blob": "bbdc31af0e4f3eac1a4c8b590c3df28b4698c377",
+    "ci164_handoff_blob": "b98b82e296bd8ecb66d681016f1749548fb5bc11"
+  },
+  "finding": {
+    "browser": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "attempt": 1,
+      "source_W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "W_tree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "s01_inner_pass": 0,
+      "s01_inner_fail": 4,
+      "outer_pass": 0,
+      "outer_fail": 1,
+      "observed": "Platform context must be used within a context provider",
+      "stack": "LanguageProvider -> persisted -> usePlatform during fixture render at s01.test.ts:120",
+      "causal_fix": "Wrap LanguageProvider under real PlatformProvider via already-integrated withBrowserPlatform from platform-fixture.ts"
+    },
+    "compiler": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "attempt": 1,
+      "source_W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+      "checks": 16,
+      "exit_zero": 10,
+      "nonzero": 6,
+      "status": "FAIL_OLDER_INPUT_UNRELATED_TYPECHECK_AND_GUARDS"
+    },
+    "current_patch": {
+      "validation": "NOT_RUN",
+      "reason": "Only 163/164 may execute after 162 integrates new C/tree. Source branch lacks shared fixture by design, source-only patch must be composed."
+    }
+  },
+  "acceptance": [
+    {
+      "id": "S01-AC01",
+      "coverage": "Preserved existing four cases: opaque identity, semantics, selection, sort/pagination, action gates, same-owner focus/scroll, privacy and empty states",
+      "status": "PENDING_HOSTED_TEST"
+    },
+    {
+      "id": "S01-AC02",
+      "coverage": "No component/private source copy; actual PlatformProvider/LanguageProvider; only test file changed",
+      "status": "SOURCE_REVIEWED_PENDING_QUALIFICATION"
+    }
+  ],
+  "requests": {
+    "to162": {
+      "pr": 65,
+      "action": "Consume only packages/app-shell/test-browser/sucafina-native/s01.test.ts exact postimage f07bb3371702d5b00c481bcfed89d682eecd1699 into current same-C sf2-stack after verifying preimage and existing shared fixture 72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15. Reconcile any advanced HEAD by CAS, publish consumer postcommit/tree/blob and release ACK. Do not merge PR125 ancestry, alter fixture, or modify F03/S05."
+    },
+    "to163": {
+      "pr": 107,
+      "after": "162 materializes new coherent product W/tree and publishes intake ACK",
+      "package": "app-shell",
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck",
+      "guards": "bun run check:guards --base origin/dev through 163 only, if causally invalidated",
+      "selection_policy": "reconcile W/tree and ordered dependency closure; dedup existing input/runtime/config; no unchanged re-run",
+      "status": "REQUEST_ONLY_NOT_DISPATCHED"
+    },
+    "to164": {
+      "pr": 106,
+      "after": "162 materializes new coherent product W/tree and publishes intake ACK",
+      "workflow": ".github/workflows/test-ci.yml",
+      "package": "app",
+      "cwd": "packages/app-shell",
+      "runner": "Bun1.3.14, ubuntu-24.04",
+      "selector": "./test-browser/sucafina-native/s01.test.ts",
+      "args": [
+        "--timeout",
+        "120000",
+        "./test-browser/sucafina-native/s01.test.ts"
+      ],
+      "expected": "actual nested S01 four cases execute; preserve four original assertions",
+      "dedup": "new changed W/tree and fixture blob, otherwise do not rerun old failure; use sole existing CI dispatcher",
+      "status": "REQUEST_ONLY_NOT_DISPATCHED"
+    }
+  },
+  "limits": {
+    "tests_local": "NOT_RUN",
+    "compiler_local": "NOT_RUN",
+    "hosted_new_input": "NOT_RUN",
+    "no_extra_dispatcher": true,
+    "global_release": false,
+    "native_goal": "paused",
+    "no_reset_force_merge_deploy_Azure_engine_or_secrets": true,
+    "other_owners": "F03 182, S05 its owner, A12 171, F01 172, AM 165-170 remain untouched"
+  },
+  "handoff": {
+    "to": 162,
+    "source_state": "ARTIFACT_READY",
+    "consumer_state": "PENDING_162",
+    "compiler_state": "PENDING_163_AFTER_162",
+    "product_ci_state": "PENDING_164_AFTER_162",
+    "lease": "TERMINAL_HANDOFF_OFFERED_NOT_INTEGRATOR_ACCEPTED"
+  }
+}
