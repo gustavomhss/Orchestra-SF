@@ -1,0 +1,655 @@
+{
+  "schema": "sf2h.atlas-memory-composed.result.v1",
+  "mission": 69,
+  "phase": "F1",
+  "state": "COMPLETED_FAILURE_WITH_BOUNDED_COMPONENT_PASSES",
+  "W": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "WTree": "f7ddae5cfd84866517ce88cacf09b5b245854954",
+  "S": "7823c05e28fbda36c7c0b1bd62eb5c5e64a4f537",
+  "STree": "d04a2ba562b80c5ff04a5097fc1dd2e4289229a5",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "./Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestBlob": "22e4155b37a634c0fed60d1ccb9cc98218500615",
+  "lineage": "S is a direct child of W; GitHub compare confirmed only .ci-run.json was added.",
+  "runId": 43668245381,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668245381",
+  "jobId": 132672330771,
+  "cleanupJobId": 132676379834,
+  "attempt": 1,
+  "conclusion": "failure",
+  "createdAt": "2026-11-15T02:32:10Z",
+  "completedAt": "2026-11-15T02:49:47Z",
+  "summary": {
+    "pass": 12,
+    "fail": 14,
+    "tests": 26,
+    "files": 9,
+    "expectCalls": 740,
+    "seconds": 951.8
+  },
+  "groups": {
+    "M69": {
+      "pass": 5,
+      "fail": 1,
+      "reason": "One original grouped test exceeded its unchanged 180000ms budget. A final marker after 265303.43ms is not a test PASS."
+    },
+    "M40": {
+      "pass": 5,
+      "fail": 13,
+      "reason": "document-replay 2PASS and replay-fences 3PASS. installed-original 10FAIL and revocation-tail 3FAIL all stopped at fixture.ts:142 before real C12 original capture and before the assertions under test."
+    },
+    "M35": {
+      "pass": 2,
+      "fail": 0,
+      "scope": "Real SQLite/Atlas process restart and product case-recall consumer; C17 publication/revocation; no native Session or rendered UI."
+    }
+  },
+  "omni": {
+    "status": "PASS",
+    "nonce": "c4b67859f0de72ad8fee65ec0a45ce7e",
+    "declared": 26,
+    "spawns": 53,
+    "delegated": 0,
+    "rootGuardEquivalence": false
+  },
+  "artifacts": [],
+  "artifactLimit": "Bun request does not require a generic artifact upload. Primary evidence is the Actions job log and bounded exact marker extracts.",
+  "tests": [
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "status": "PASS",
+      "name": "M69 raw recall fences capture corruption during its last real authority revalidation",
+      "durationMs": 33695.46
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "status": "PASS",
+      "name": "M69 raw recall fences a real case change after its last authorized document resolution",
+      "durationMs": 33610.24
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "status": "PASS",
+      "name": "M69 public recall rejects capture corruption after its real context returned authorized sources",
+      "durationMs": 43819.08
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "status": "PASS",
+      "name": "M69 public recall binds its selection across real source context and preserves an intact retry",
+      "durationMs": 36596.71
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "status": "PASS",
+      "name": "M69 raw public and private-consumer recall reject scanner and ledger projection tampering",
+      "durationMs": 100316.37
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "status": "FAIL",
+      "name": "M69 complete recall preserves two real cases and consumes only original same-call reader observations",
+      "durationMs": 265303.43
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "status": "PASS",
+      "name": "C17 original and settled replay with light case ACL revalidate bytes and immutable captures without effects",
+      "durationMs": 51025.86
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "status": "PASS",
+      "name": "C17 original A and light replay require every current dependency after B deletion and same-ID reincarnation",
+      "durationMs": 83248.59
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original accepts intact sources and the real initializeAtlas continuity callback without recursion",
+      "durationMs": 2164.51
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original keeps legitimate C12 history and refuses a corrupted immutable capture",
+      "durationMs": 2093.65
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original and exact replay retain committed event A while later event B remains pending",
+      "durationMs": 2144.13
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original reauthorizes the same admitted call after principal revocation",
+      "durationMs": 2084.32
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original rejects substituted binding, principal, lease, case and incarnation while retaining the authentic positive",
+      "durationMs": 2163.78
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original fences headers after the final real revalidation",
+      "durationMs": 2086.38
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original fences request after the final real revalidation",
+      "durationMs": 2149.96
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original fences abort after the final real revalidation",
+      "durationMs": 2107.92
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original fences finished-lease after the final real revalidation",
+      "durationMs": 2145.6
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "status": "FAIL",
+      "name": "Installed original refuses revocation after the last real source resolution before egress",
+      "durationMs": 2091.22
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "status": "PASS",
+      "name": "Settled replay fences late headers, Request identity, abort and finished lease after real revalidation",
+      "durationMs": 146334.26
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "status": "PASS",
+      "name": "Settled replay refuses actual credential revocation after the last real document resolution",
+      "durationMs": 30486.62
+    },
+    {
+      "file": "Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "status": "PASS",
+      "name": "Settled replay refuses capture corruption after the last real source resolution without repairing it",
+      "durationMs": 39549.57
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "status": "FAIL",
+      "name": "Memory integrity revocation tail refuses producer preparation after an authorized historical positive",
+      "durationMs": 2163.03
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "status": "FAIL",
+      "name": "Memory integrity revocation tail refuses verification after an authorized historical positive",
+      "durationMs": 2087.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "status": "FAIL",
+      "name": "Memory integrity revocation tail refuses the same output proof after authorized historical acceptance",
+      "durationMs": 2105.7
+    },
+    {
+      "file": "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "status": "PASS",
+      "name": "protected Atlas original binds cross-principal continuity after store reopen",
+      "durationMs": 31869.22
+    },
+    {
+      "file": "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "status": "PASS",
+      "name": "confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation",
+      "durationMs": 27608.95
+    }
+  ],
+  "proofs": [
+    {
+      "marker": "SF_MEMORY_M69_RAW_LAST_AUTHORITY_CAPTURE",
+      "data": {
+        "result": "unavailable",
+        "returnedRecords": 0,
+        "lastRealRevalidation": 2426,
+        "sameCallAndRequest": true,
+        "fault": "nested-write-blocked",
+        "originalRestored": true,
+        "auditDigest": "444f88cfe4334b19083ac55963d1ae8be4652b329847ee1db18eb5ede10c66b3",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:34:23.3128148Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RAW_LAST_DOCUMENT_CASE",
+      "data": {
+        "result": "unavailable",
+        "returnedRecords": 0,
+        "lastRealDocumentResolution": 2,
+        "sourceWasFresh": true,
+        "fault": "committed-case-revision",
+        "ledgerDigest": "4303e452aa992817a863b49a383ee7ab2e643349942fec34e9f2dd13d6a7a147",
+        "originalRestored": true,
+        "auditDigest": "6fd61d30ab31110dbbc695df74a3df428b3c738c43ad3273bcf1f60fda7e3fe2",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:34:56.9217532Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_PUBLIC_POST_CONTEXT_CAPTURE",
+      "data": {
+        "result": "rejected",
+        "returnedRecords": 0,
+        "realContextReads": 21,
+        "sourceWasFresh": true,
+        "fault": "committed-capture-corruption",
+        "originalRestored": true,
+        "eventId": "22c05387493a067994b29d2f759bfe56aa4ad09b41e9226a2a32c849c402b820",
+        "recordDigest": "99bfc6f383e65e0ca1826cd661ed225ecdd63e6d19535da7385cc628078caac4",
+        "auditDigest": "ec25679adee0cbab76bb615d761727c0d33fe86b95b9e03ba45f69f491e8e1b9",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:35:40.7442084Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_PUBLIC_SELECTION_FENCE",
+      "data": {
+        "result": "rejected",
+        "returnedRecords": 0,
+        "realContextReads": 21,
+        "selectionChangedAfterLastRealContext": true,
+        "originalRestored": true,
+        "eventId": "6363220345637df51fb28a88ad19a1c9d311d31d44138005dc3a9da3511bd3fe",
+        "recordDigest": "3c384ba02d564854c99bb495fd55ec3367f7ec4f9755691833d0a2607bc70046",
+        "auditDigest": "4c070f128d4d2998145c0785be6abfc944dff8f5f750ab3637407918c493299f",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:36:17.3409459Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RECORD_INTEGRITY",
+      "data": {
+        "fault": "scanner-receipt-digest",
+        "raw": "unavailable",
+        "public": "rejected",
+        "privateConsumer": false,
+        "returnedRawRecords": 0,
+        "returnedPublicRecords": 0,
+        "atlasWireRemainsValid": true,
+        "ledgerDigest": "13f2c90cbfc78a4445d1034ee3efb0e7f9fa2bb747763534e664bd798fd33ccc",
+        "originalsPreserved": true,
+        "durableReceiptAndOutboxPreserved": true,
+        "restoredEventId": "e93b531dfacaa8e96436d45554606bae1126fc7962e7ae865307ece7adc1a161",
+        "restoredRecordDigest": "cbe8b238cefc517ec93414511e7c285076d725d884b7124742c7ab8079c54ac7",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:36:59.0210157Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RECORD_INTEGRITY",
+      "data": {
+        "fault": "scanner-name",
+        "raw": "unavailable",
+        "public": "rejected",
+        "privateConsumer": false,
+        "returnedRawRecords": 0,
+        "returnedPublicRecords": 0,
+        "atlasWireRemainsValid": true,
+        "ledgerDigest": "13f2c90cbfc78a4445d1034ee3efb0e7f9fa2bb747763534e664bd798fd33ccc",
+        "originalsPreserved": true,
+        "durableReceiptAndOutboxPreserved": true,
+        "restoredEventId": "e93b531dfacaa8e96436d45554606bae1126fc7962e7ae865307ece7adc1a161",
+        "restoredRecordDigest": "cbe8b238cefc517ec93414511e7c285076d725d884b7124742c7ab8079c54ac7",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:37:18.5238582Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RECORD_INTEGRITY",
+      "data": {
+        "fault": "scanner-version",
+        "raw": "unavailable",
+        "public": "rejected",
+        "privateConsumer": false,
+        "returnedRawRecords": 0,
+        "returnedPublicRecords": 0,
+        "atlasWireRemainsValid": true,
+        "ledgerDigest": "13f2c90cbfc78a4445d1034ee3efb0e7f9fa2bb747763534e664bd798fd33ccc",
+        "originalsPreserved": true,
+        "durableReceiptAndOutboxPreserved": true,
+        "restoredEventId": "e93b531dfacaa8e96436d45554606bae1126fc7962e7ae865307ece7adc1a161",
+        "restoredRecordDigest": "cbe8b238cefc517ec93414511e7c285076d725d884b7124742c7ab8079c54ac7",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:37:38.0899571Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RECORD_INTEGRITY",
+      "data": {
+        "fault": "content-addressed-entry-without-ledger-change",
+        "raw": "unavailable",
+        "public": "rejected",
+        "privateConsumer": false,
+        "returnedRawRecords": 0,
+        "returnedPublicRecords": 0,
+        "atlasWireRemainsValid": true,
+        "ledgerDigest": "13f2c90cbfc78a4445d1034ee3efb0e7f9fa2bb747763534e664bd798fd33ccc",
+        "originalsPreserved": true,
+        "durableReceiptAndOutboxPreserved": true,
+        "restoredEventId": "e93b531dfacaa8e96436d45554606bae1126fc7962e7ae865307ece7adc1a161",
+        "restoredRecordDigest": "cbe8b238cefc517ec93414511e7c285076d725d884b7124742c7ab8079c54ac7",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:37:57.6603787Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_MULTI_CASE_COMPLETION",
+      "data": {
+        "publicRecords": 2,
+        "authenticatedEmptySelection": true,
+        "originalGroupsAccepted": true,
+        "replayedObservationDenied": true,
+        "copiedArrayDenied": true,
+        "otherActualCallDenied": true,
+        "mixedReadersDenied": true,
+        "groupOrderChangedDuringRealRevalidationDenied": true,
+        "groupMembershipChangedDuringRealRevalidationDenied": true,
+        "sameDurableReceipts": true,
+        "counts": {
+          "events": 2,
+          "envelopes": 2,
+          "outbox": 2,
+          "receipts": 0,
+          "settled": 2,
+          "scans": 2
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:42:22.9740503Z"
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_C17_DISCRIMINATOR",
+      "data": {
+        "originalReturned": false,
+        "replayStatus": "unavailable",
+        "corruptedCaptureOriginalReturned": false,
+        "corruptedCaptureReplayStatus": "unavailable",
+        "sameOutboxKeyAndPayload": true,
+        "sameRequestKey": true,
+        "lightCaseAcl": true,
+        "scans": 1,
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:43:14.0004711Z"
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_C17_PROOF",
+      "data": {
+        "scenario": "bytes-capture-principal",
+        "auditDigest": "4e2f87559c0bb6fb6187d9ebfbee4e4c742b518ce3577f8ece54fc4d4e656ed6",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "intactCaptureRestored": true,
+        "lightCaseAcl": true,
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:43:14.0017746Z"
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_ALL_DEPENDENCIES_PROOF",
+      "data": {
+        "requestedSource": "A",
+        "removedAndRecreatedSource": "B",
+        "sameAssetId": true,
+        "incarnationChanged": true,
+        "independentARead": "fresh",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "auditDigest": "fa0321fef3c75efc62fcb4f539a91b707b4ddb3c577edbcabe8c85908fecdd26",
+        "lightCaseAcl": true,
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:44:37.2498142Z"
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "data": {
+        "mutation": "headers",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:45:28.9988199Z"
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "data": {
+        "mutation": "request",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:46:04.7735028Z"
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "data": {
+        "mutation": "abort",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:46:40.4125921Z"
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "data": {
+        "mutation": "finished-lease",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:47:15.8728365Z"
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_CREDENTIAL_REVOCATION",
+      "data": {
+        "result": "unavailable",
+        "realDocumentResolutions": 3,
+        "sourceWasFreshBeforeRevocation": true,
+        "credentialRevokedAfterLastResolution": true,
+        "sameReferenceAndKey": true,
+        "auditDigest": "e0c52325ad95cd4f0e0bb295852821b154774e519f392f91c021b0e092590dc2",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:47:55.3147307Z"
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_CAPTURE_CORRUPTION",
+      "data": {
+        "result": "unavailable",
+        "realDocumentResolutions": 3,
+        "corruptionAfterLastResolution": true,
+        "captureDigestsPreserved": true,
+        "noAutomaticRepair": true,
+        "restoredReplay": "already-committed",
+        "corruptedAuditDigest": "26dae6addb630c4791fc3f16b724be109a1dbd07b5a0786da643a68cbcd2da85",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T02:48:34.8627590Z"
+    }
+  ],
+  "processRestart": "evidence/F1-process-restart.json",
+  "failureDisposition": {
+    "timeout": "Own test will be split into independent tests with all assertions and per-test 180000ms ceilings preserved. No timeout increase and no post-deadline marker promoted.",
+    "C12": "Inherited pre-capture prerequisite was traced statically in exact source/base blobs; see C12-preparation-blocker.json. The 13 original test bodies did not execute and are not qualified.",
+    "MI07": "Not selected, modified or rerun."
+  },
+  "productChangedAfterThisRun": false,
+  "limits": [
+    "Five new tests passed on W1; this does not make the F1 job green.",
+    "record-integrity denial does not isolate mapSfAtlasEntry semantic branch because publication receipt binding can deny first.",
+    "Mixed-source61 discriminators not duplicated.",
+    "Source evidence is not C28 integrated qualification.",
+    "Compiler/guards45, native64, full AM05 and final gates remain separate."
+  ],
+  "GLOBAL_RELEASE": false
+}

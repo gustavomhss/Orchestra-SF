@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.atlas-memory-composed.target-reconciliation.v1",
+  "mission": 69,
+  "observedAt": "2026-11-15 02:48:06 UTC",
+  "sourceBase": {
+    "sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "tree": "12594fd5a48f934847db717dd872d51776484296"
+  },
+  "control": {
+    "sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "missionBlob": "f4111edcf289c78aad5564002a32401fea4915c0"
+  },
+  "targetRef": {
+    "branch": "sf2-stack",
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d"
+  },
+  "materialCandidate": {
+    "name": "C28",
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "qualification": "HOLD_NOT_RUN"
+  },
+  "terminalDelta": {
+    "from": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "to": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "files": 30,
+    "allAdded": true,
+    "prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/",
+    "materialChanges": 0
+  },
+  "sourceRelevantDependencyDelta": {
+    "target_commit": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "target_tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+    "base_file": 226,
+    "base_blob_sha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+    "target_blob_sha": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+    "imports_equal_base": true,
+    "changed_region": {
+      "base_start_line": 182,
+      "base_removed": [
+        "      const actor = await resolve(request).catch(() => undefined)"
+      ],
+      "target_added": [
+        "      // Read uncertainty must reach its HTTP/producer boundary. Undefined is",
+        "      // still an explicit negative; write and native admission keep their gates.",
+        "      const readAction = operation.startsWith(\"sf-read:\") ? operation.slice(\"sf-read:\".length) :",
+        "        operation.startsWith(\"sf-human:\") ? operation.slice(\"sf-human:\".length) : undefined",
+        "      const readOperation = operation === \"sf_review_prepare\" ||",
+        "        readAction !== undefined && Object.hasOwn(collaborationReads, readAction)",
+        "      const actor = readOperation ? await resolve(request) : await resolve(request).catch(() => undefined)"
+      ]
+    },
+    "behavior_scope": "C28 propagates resolve(request) uncertainty for selected read operations; the previous catch-to-undefined remains for other admissions.",
+    "qualification": "Separate target-side delta. The base closure still uses the C27 authority blob; this inventory does not claim that W1 was executed against C28."
+  },
+  "authority60": {
+    "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "lease": "S0-C-e12-browser60",
+    "authorityPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+    "authorityBlob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "handoffBlob": "85b12d52c641a113c4e9b653fdb6b9f1dea8b9b7",
+    "terminalComment": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6887932307"
+  },
+  "consumer69": {
+    "state": "ACK_REQUESTED_NOT_RECEIVED",
+    "route": "69→60 / PR65 is the documented delivery route; not a claim of active integration authority.",
+    "intakeRule": "An explicit S0-authorized resumption or successor must reconcile current ref, control, terminal authorities, release/preimages and dependencies, publish consumer ACK and qualify the composed candidate. This receipt does not reactivate60 or appoint a successor."
+  },
+  "sourceGreenTransfer": false,
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h.atlas-memory-composed.restart-extract.v1",
+  "phase": "F1",
+  "W": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "S": "7823c05e28fbda36c7c0b1bd62eb5c5e64a4f537",
+  "runId": 43668245381,
+  "jobId": 132672330771,
+  "sourceMarker": "SF_WP14_ATLAS_RESTART_RECEIPT",
+  "extraction": "Selected fields copied from the actual JSON marker. Complete projection/capture bytes remain in the linked job log; this bounded extract does not reconstruct or seed history.",
+  "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668245381/job/132672330771",
+  "parentPid": 4243,
+  "spawnedPid": 5800,
+  "childPid": 5800,
+  "challenge": "6109a66a-714a-44cc-949f-6e2a84aedc78",
+  "exitCode": 0,
+  "scanner": {
+    "name": "gitleaks",
+    "version": "gitleaks version 8.30.1",
+    "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+  },
+  "committed": {
+    "status": "committed",
+    "sourceEventId": "event",
+    "eventId": "15880f6ee262844eb294978d1d6d10e4b553d3a4a436913306337fe70b1a616a",
+    "recordDigest": "7f80f57559856532bdbe0c09cb5211d09104dcbf6cdae303df9be12e2c3132f4",
+    "committedRevision": 2,
+    "scanner": {
+      "name": "gitleaks",
+      "version": "gitleaks version 8.30.1",
+      "status": "clean"
+    }
+  },
+  "replayed": {
+    "status": "already-committed",
+    "sourceEventId": "event",
+    "eventId": "15880f6ee262844eb294978d1d6d10e4b553d3a4a436913306337fe70b1a616a",
+    "recordDigest": "7f80f57559856532bdbe0c09cb5211d09104dcbf6cdae303df9be12e2c3132f4",
+    "committedRevision": 2,
+    "scanner": {
+      "name": "gitleaks",
+      "version": "gitleaks version 8.30.1",
+      "status": "clean"
+    }
+  },
+  "persisted": {
+    "eventId": "15880f6ee262844eb294978d1d6d10e4b553d3a4a436913306337fe70b1a616a",
+    "recordDigest": "7f80f57559856532bdbe0c09cb5211d09104dcbf6cdae303df9be12e2c3132f4",
+    "envelopeIdentity": {
+      "eventId": "15880f6ee262844eb294978d1d6d10e4b553d3a4a436913306337fe70b1a616a",
+      "sourceEventId": "event",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-inc",
+        "version": 1
+      },
+      "projectionDigest": "14252aa7d3b755617c010d4cd4c870c2156382a79571e0eb6ee5ba1769f80f09",
+      "scannerReceipt": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "status": "clean",
+        "digest": "7f80f57559856532bdbe0c09cb5211d09104dcbf6cdae303df9be12e2c3132f4"
+      }
+    },
+    "originalRef": {
+      "schema": "sf-evidence-v1",
+      "kind": "record",
+      "refId": "sf-source:21c98aba-3bce-44f1-9343-afce2afd5176:1",
+      "installationId": "i",
+      "projectId": "p",
+      "refDigest": "104cf5c36023d88ff71dd576998d5c71a778ed552b38ee241204373fbeaf9a7d",
+      "evidenceLevel": "observed",
+      "target": {
+        "surface": "dashboard",
+        "recordType": "dashboard-page",
+        "recordId": "Budget Overview",
+        "incarnation": "21c98aba-3bce-44f1-9343-afce2afd5176",
+        "version": 1,
+        "fields": [
+          "budgetMetrics"
+        ],
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+      }
+    },
+    "captureDigest": "556f582ec69a881c960482135fb833787d7f5576dbcaab0c566e3dac604319a1"
+  },
+  "consumer": {
+    "status": "ok",
+    "matches": 1,
+    "caseRefs": [
+      {
+        "id": "case",
+        "incarnation": "case-inc",
+        "version": 1
+      }
+    ],
+    "memoryRecordRefs": [
+      "15880f6ee262844eb294978d1d6d10e4b553d3a4a436913306337fe70b1a616a"
+    ]
+  },
+  "authorized": "ok",
+  "outsider": "unavailable",
+  "revoked": "unavailable",
+  "replaced": "unavailable",
+  "durableAtlasUnchangedAfterChild": true,
+  "durableAtlasUnchangedAfterDenials": true,
+  "nativeSessionWitness": false,
+  "renderedBrowserProof": false
+}
