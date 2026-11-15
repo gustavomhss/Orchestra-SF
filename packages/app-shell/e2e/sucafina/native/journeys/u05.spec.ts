@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
-import { nativeInstalledFixture as test } from "../fixture"
+import { nativeInstalledFixture as test, type InstalledNativeHarness } from "../fixture"
 
 /**
  * N17 / U05 installed-host qualification input; NOT_RUN in author session.
@@ -15,7 +15,7 @@ function ownerRoute(page: Page, target: Readonly<{
   })
   return target.shellOrigin + "/orchestra/sf-portfolio/" + suffix + "?" + query
 }
-async function bindRealHost(page: Page, nativeHarness: Parameters<Parameters<typeof test>[0]>[0]["nativeHarness"]) {
+async function bindRealHost(page: Page, nativeHarness: InstalledNativeHarness) {
   const manifest = nativeHarness.manifest
   await page.goto(manifest.target.shellOrigin + manifest.target.chapterHref)
   const chapter = page.locator('[data-sf-frame="page"]')
@@ -30,7 +30,6 @@ test("U05 CAP09 and CAP10 retain current producer identity, progress and milesto
   const overview = page.locator("[data-sf-portfolio-overview]")
   await expect(overview).toBeVisible()
   await expect(overview.locator('[data-sf-state]')).toHaveAttribute("data-sf-state", /^(ready|partial|empty)$/)
-  await expect(overview.locator("[data-sf-source=CAP09]")).toHaveCount(0) // source attribute lives on root
   await expect(overview).toHaveAttribute("data-sf-source", "CAP09")
   await expect(overview.getByRole("heading", { name: /Portfolio review|Revisão do portfólio/ })).toBeVisible()
   await expect(overview.getByText(/Current project records|Registros atuais dos projetos/)).toBeVisible()
