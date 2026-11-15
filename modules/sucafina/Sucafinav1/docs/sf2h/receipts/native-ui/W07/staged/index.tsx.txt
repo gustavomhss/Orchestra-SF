@@ -80,6 +80,7 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
     const b = rowIndex(range.extent.rowRef)
     const left = monthIndex(range.anchor.month)
     const right = monthIndex(range.extent.month)
+    if (Math.min(a, b, left, right) < 0) return false
     return row >= Math.min(a, b) && row <= Math.max(a, b)
       && month >= Math.min(left, right) && month <= Math.max(left, right)
   }
