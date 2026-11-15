@@ -192,7 +192,13 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           const handle = editors.get(JSON.stringify([projection.selection.year, projection.data.selectedVersion?.id,rec.id]))
           handle?.receiveRemote({ baseVersion: rec.revision, value: initialEdit(rec) })
         }
-        setState({ page: projection, phase: projection.data.lines.length ? "ready" :
+        const lineRef = "lineRef" in props.route.params ? props.route.params.lineRef : undefined
+        const projectRef = "projectRef" in props.route.params ? props.route.params.projectRef : undefined
+        const projectRows = "projects" in projection.data ? projection.data.projects : []
+        const refMissing = lineRef && !projection.data.lines.some(row => row.id === lineRef) ||
+          projectRef && !projectRows.some(row => row.id === projectRef)
+        setState({ page: projection, phase: refMissing ? "not-found" :
+          projection.data.lines.length ? "ready" :
           (props.route.query.filter || props.route.query.element ? "filtered-empty" : "empty"),
           closedChoice: projection.data.selectedVersion?.closed ?? 0, error: "" })
       } catch (error) {
@@ -604,7 +610,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     state.phase === "loading" ? "sf.common.loading" :
     state.phase === "empty" ? "sf.common.empty" :
     state.phase === "conflict" ? "sf.common.conflict" :
-    state.phase === "invalid" ? "sf.common.fieldErrorSummary" : "sf.common.unavailable"
+    state.phase === "invalid" ? "sf.common.fieldErrorSummary" :
+    state.phase === "not-found" ? "sf.u07.notFound" : "sf.common.unavailable"
   return (
     <SfPageFrame
       titleKey={key(documentTitle())}
