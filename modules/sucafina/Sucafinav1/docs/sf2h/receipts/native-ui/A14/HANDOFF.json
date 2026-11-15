@@ -185,7 +185,13 @@
     "owner": "114",
     "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A14/SHARED-114.md",
     "consumer_ack": "PENDING",
-    "instructions": "Import only exact code files/blobs. Register seven closed bindings when F02 real; preserve original Request/origin/admission and status union."
+    "instructions": "Import only exact code files/blobs. Register seven closed bindings when F02 real; preserve original Request/origin/admission and status union.",
+    "import_scope": [
+      "packages/schema/src/sucafina/memory.ts@ae874477e8c1ae476dd4fdc2e75604b9e6a3bce5",
+      "packages/client/src/sucafina/memory.ts@cddd7ceccc66bc5faf38d169bede03efa31440db",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts@b658352fdbdb336ef1eb57815ce2b457e6654dcb",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A14/**"
+    ]
   },
   "blockers": [
     {
@@ -202,6 +208,11 @@
       "kind": "BLOCKED_CONTRACT_ADJACENT",
       "owner": "114/producer",
       "detail": "Similar-case recall UI62 is absent from assigned seven memory-http operations; no fabrication"
+    },
+    {
+      "kind": "BLOCKED_BASE_DIVERGENCE",
+      "owner": "114",
+      "detail": "PR136 branch compare has 162 files, of which 156 are inherited UX planning additions not authored by A14. Draft safety gate; import only pinned A14 allowlisted paths."
     }
   ],
   "forbidden": {
@@ -211,5 +222,20 @@
     "deploy": true,
     "goal_resume": true,
     "producer_edits": true
+  },
+  "pr": {
+    "number": 136,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/136",
+    "state": "open",
+    "draft": true,
+    "mergeable": true,
+    "comparison": {
+      "changed_files": 162,
+      "original_native_ux_baseline_files": 156,
+      "a14_exclusive_files": 6,
+      "additions_at_review": 70183
+    },
+    "status": "BLOCKED_BASE_DIVERGENCE",
+    "safety": "The PR as a whole MUST NOT be merged; 114 must import the three exact implementation blobs + ACK/handoff from A14 against its current target without importing historical planning files."
   }
 }
