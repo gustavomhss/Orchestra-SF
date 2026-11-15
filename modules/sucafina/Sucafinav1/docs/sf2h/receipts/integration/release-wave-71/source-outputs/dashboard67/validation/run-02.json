@@ -1,0 +1,69 @@
+{
+  "schema": "sf2h.mission67.hosted-run.v1",
+  "attempt": 2,
+  "status": "FAIL",
+  "scope": "installed production Playwright",
+  "W": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+  "WTree": "b11fee7674c0c69cc58ebf58cde69a94bd048670",
+  "S": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+  "STree": "4632d0c068a4e99ad6006a5c47e3a44333d30327",
+  "sourceCommit": "eb9cafd10b6aacca4ab9a1de8615dbecebb06f1a",
+  "runId": 43669059549,
+  "jobId": 132674810209,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669059549",
+  "branch": "ci-run-linux-astra-wp67-0b00fa5b-f12b9ae6-02",
+  "requestSha256": "f12b9ae62a264afbaa06acca24b7d562b7aaf6b6675deb9fd47d057a59511e08",
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "e2e/sucafina/dashboard-installed/confirmation-access.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "counts": {
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "effective": {
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "perTestTimeoutMs": 180000,
+    "playwright": "1.59.1",
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "artifact": {
+    "id": 14143228627,
+    "name": "playwright-ubuntu-24.04-1",
+    "sha256": "c8a327f01407b6331fb2ab1aa9f1a89b78d5630d386dc63c54efbe7656cd4533"
+  },
+  "failures": [
+    {
+      "title": "installed Dashboard confirms exact monthly changes and purges late results after real logout",
+      "step": "create real fiscal lines and cancel a preview without changing saved months",
+      "failure": "page.waitForResponse timed out in support.ts:11 command(), called by addOwner():95; DOM shows outcome uncertainty. Endpoint/origin diagnosis pending.",
+      "claimsExecuted": false
+    },
+    {
+      "title": "installed Dashboard preserves records, conflicts, signals and authorized history",
+      "step": "create durable Hot Topics through the mounted Dashboard",
+      "failure": "locator.selectOption timed out in support.ts:54; DOM contains combobox Status, but getByLabel exact did not resolve it. Use observed accessible role/name, preserving intended choice.",
+      "claimsExecuted": false
+    }
+  ],
+  "omni": {
+    "status": "NO_COMPLETED_POSITIVE_CONTROL_EVIDENCE_IN_RUN_LOG",
+    "note": "Fixture startup reached both real Dashboard forms, but test timeout prevented completed lifecycle attachments. Do not infer positive control PASS."
+  },
+  "cleanup": "success; temporary CI branch removed",
+  "interpretation": "Run failed before behavioral claims. Artifact retained; test repairs require a new W/S execution. No timeout inflation, retries, skip or product bypass."
+}

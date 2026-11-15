@@ -226,7 +226,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     },
   }
   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
-    proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
+    preparePrivateDraftRead: dashboardServices.observer.preparePrivateDraftRead, proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
   type CaseRef = { id: string; incarnation: string; version: number }
   type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()

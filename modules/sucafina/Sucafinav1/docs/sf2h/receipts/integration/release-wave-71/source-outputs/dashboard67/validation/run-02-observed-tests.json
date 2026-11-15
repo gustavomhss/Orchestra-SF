@@ -1,0 +1,43 @@
+{
+  "source": "GitHub artifact 14143228627 test-ci-evidence/playwright-runtime.json",
+  "stats": {
+    "startTime": "2026-11-15T02:44:49.407Z",
+    "duration": 412324.327,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "file": "sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "title": "installed Dashboard confirms exact monthly changes and purges late results after real logout",
+      "status": "timedOut",
+      "durationMs": 185509,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create real fiscal lines and cancel a preview without changing saved months",
+          "durationMs": 181440,
+          "error": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.",
+          "stack": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.\n    at command (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts:11:24)\n    at addOwner (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts:95:3)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts:28:15\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts:25:5"
+        }
+      ]
+    },
+    {
+      "file": "sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "title": "installed Dashboard preserves records, conflicts, signals and authorized history",
+      "status": "timedOut",
+      "durationMs": 191038,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create durable Hot Topics through the mounted Dashboard",
+          "durationMs": 186978,
+          "error": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form[data-page=\"Hot Topics & Actions\"][data-command=\"save\"][data-record=\"\"]').getByLabel('Status', { exact: true })\u001b[22m\n",
+          "stack": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form[data-page=\"Hot Topics & Actions\"][data-command=\"save\"][data-record=\"\"]').getByLabel('Status', { exact: true })\u001b[22m\n\n    at addTopic (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts:54:52)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts:27:15\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts:23:5"
+        }
+      ]
+    }
+  ]
+}

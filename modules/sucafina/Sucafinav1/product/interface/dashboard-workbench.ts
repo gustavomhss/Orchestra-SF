@@ -33,7 +33,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   const evidenceLabels = { confirmed: 'Confirmado', estimated: 'Estimado', absent: 'Ausente', unavailable: 'Indisponível', hypothetical: 'Hipótese' };
   const origins = { hotTopics: 'Hot Topics', opsTickets: 'Chamados', projects: 'Projetos', risks: 'Riscos', contracts: 'Contratos', members: 'Pessoas', leaders: 'Estrutura da equipe', opexOwners: 'OPEX', opexEntries: 'OPEX', capexProjects: 'CAPEX', capexEntries: 'CAPEX', 'itperf-item': 'Contrato de performance', stakeholders: 'Stakeholders', secKpi: 'Segurança de TI' };
   const states = { planned: 'Aguardando revisão', applied: 'Aplicada', conflict: 'Em conflito', failed: 'Não aplicada' };
-  let data, agenda, review, draftBinding, draftIdentity, pendingDraft, mutation, draftConflict = false, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false, revoked = false;
+  let data, agenda, review, draftBinding, draftIdentity, draftRead, pendingDraft, mutation, draftConflict = false, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false, revoked = false, generation = 0;
   const controllers = new Set();
   const storedView = () => {
     const value = history.state && history.state.sfDashboardWorkbench;
@@ -127,18 +127,21 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   };
   const request = async (mode, payload, id, attempt) => {
     if (revoked) throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
+    const started = generation;
     const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('sf', mode);
     if (id) url.searchParams.set('id', id);
     const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 10000);
     controllers.add(controller);
     try {
       const response = await fetch(url, id ? { credentials: 'same-origin', signal: controller.signal } : { method: 'POST', credentials: 'same-origin', signal: controller.signal, headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt ? attempt.key : crypto.randomUUID() }, body: attempt ? attempt.body : JSON.stringify(payload) });
+      if (started !== generation) throw new Error('A seleção mudou. Atualize as opções com o acesso atual.');
       if (response.status === 401 || response.status === 403 && !attempt) {
         window.dispatchEvent(new Event('sf-access-revoked'));
         throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
       }
       const result = await response.json();
       if (revoked) throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
+      if (started !== generation) throw new Error('A seleção mudou. Atualize as opções com o acesso atual.');
       if (!response.ok || !result || result.status !== 'ok') {
         const error = new Error(failure(result || {})); error.status = result && result.status;
         error.rejected = [400, 401, 403, 409, 422].includes(response.status) && ['denied', 'conflict', 'stale', 'needs-input', 'invalid'].includes(error.status);
@@ -183,7 +186,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   const draftRequest = (value) => ({ caseRef: value.caseRef, draftRef: value.draftRef, target: value.target, targetEvidence: value.targetEvidence, fields: value.fields, sourceRefs: value.sourceRefs, expectedVersion: value.version });
   const clearDraftReview = () => { pendingDraft = undefined; draftConflict = false; find('draft-diff').replaceChildren(); find('confirm-draft').checked = false; find('draft-confirmation').hidden = true; };
   const selectDraft = () => {
-    draftBinding = undefined; draftIdentity = undefined; clearDraftReview(); delete form.dataset.dirty;
+    draftBinding = undefined; draftIdentity = undefined; draftRead = undefined; clearDraftReview(); delete form.dataset.dirty;
     const selected = choice('case', caseCatalog);
     if (selected && find('draft-choice').value === 'new') {
       const source = choice('draft-source', sourceCatalog);
@@ -204,21 +207,35 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   const refresh = async (recheckingDenied = false) => {
     const from = find('from').value, to = find('to').value;
     if ((from && !to) || (!from && to) || (from && to && from > to)) throw new Error('Informe o início e o fim do período em ordem cronológica.');
+    // An unavailable read keeps the local values, but cannot leave old action
+    // permissions enabled. Only a fresh read may restore those controls.
+    data = undefined; draftRead = undefined;
     const next = await request('dashboard-workbench', { page: root.dataset.page, ...(from && to ? { period: { start: from, end: to } } : {}) });
     const caseAvailable = (ref) => next.decisions.cases.some((value) => value.caseRef.id === ref.id && value.caseRef.incarnation === ref.incarnation);
     const mutationCase = mutation && ['dashboard-hot-topic-draft', 'dashboard-hot-topic-prepare', 'dashboard-hot-topic-apply'].includes(mutation.mode) ? JSON.parse(mutation.body).caseRef : undefined;
     const retainingDraft = draftBinding && (form.dataset.dirty || mutation && mutation.mode === 'dashboard-hot-topic-draft');
-    // A readable case does not authorize a removed source or a draft owned by a different
-    // current principal. Never retain a saved draft merely because its case is still listed.
-    const listedDraft = retainingDraft && draftIdentity && next.decisions.drafts.some((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation && value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation);
-    const listedTarget = retainingDraft && next.records.some((value) => value.draft && value.draft.target.surface === draftBinding.target.surface && value.draft.target.type === draftBinding.target.type && value.draft.target.id === draftBinding.target.id && value.draft.target.incarnation === draftBinding.target.incarnation && value.draft.targetEvidence.refId === draftBinding.targetEvidence.refId && value.draft.targetEvidence.refDigest === draftBinding.targetEvidence.refDigest);
-    const missingDraftSource = retainingDraft && (draftIdentity ? !listedDraft : !listedTarget);
+    // A scoped incarnation can change when only writing is withdrawn. Reauthorize
+    // the original private owner and physical source in the host; a bounded list
+    // cannot prove either revocation or continuity. This does not rebind a write.
+    if (retainingDraft) {
+      const checked = await request('dashboard-draft-read', { caseRef: draftBinding.caseRef, targetEvidence: draftBinding.targetEvidence, ...(draftBinding.draftRef ? { draftRef: draftBinding.draftRef } : {}) });
+      if (!checked || !checked.caseRef || checked.caseRef.id !== draftBinding.caseRef.id || checked.caseRef.incarnation !== draftBinding.caseRef.incarnation ||
+        !checked.originalSource || checked.originalSource.refId !== draftBinding.targetEvidence.refId || checked.originalSource.refDigest !== draftBinding.targetEvidence.refDigest ||
+        !checked.currentSource || checked.currentSource.kind !== 'record' || checked.currentSource.target.surface !== draftBinding.target.surface || checked.currentSource.target.recordType !== draftBinding.target.type || checked.currentSource.target.recordId !== draftBinding.target.id ||
+        !checked.source || !checked.source.draft || checked.source.draft.targetEvidence.refId !== checked.currentSource.refId || checked.source.draft.targetEvidence.refDigest !== checked.currentSource.refDigest)
+        throw new Error('Não foi possível conferir a origem agora. Seus valores foram mantidos; atualize as opções para continuar.');
+      draftRead = checked;
+      ['draft', 'prepare', 'apply'].forEach((name) => { next.decisions.permissions[name] = next.decisions.permissions[name] && !!checked.permissions && checked.permissions[name] === true; });
+      ['capture', 'preserve'].forEach((name) => { next.permissions[name] = next.permissions[name] && !!checked.permissions && checked.permissions[name] === true; });
+      if (!caseAvailable(checked.caseRef)) next.decisions.cases.push({ caseRef: checked.caseRef, label: checked.label });
+      if (!next.records.some((value) => value.draft && value.draft.targetEvidence.refId === checked.currentSource.refId && value.draft.targetEvidence.refDigest === checked.currentSource.refDigest)) next.records.push(checked.source);
+    }
     // Discovery is bounded and may omit a committed case whose sources advanced.
     // A restored apply contains no private fields. Its exact POST reauthorizes the
     // case and receipt at the host; an actual denial still takes the purge path.
     const requireListedCase = mutation && (!mutation.restored || recheckingDenied);
-    if (mutationCase && requireListedCase && !caseAvailable(mutationCase) || retainingDraft && !caseAvailable(draftBinding.caseRef) || missingDraftSource) {
-      window.dispatchEvent(new CustomEvent('sf-access-revoked', { detail: { reason: missingDraftSource ? 'draft-source-unconfirmed' : 'case-unavailable' } }));
+    if (mutationCase && requireListedCase && !caseAvailable(mutationCase)) {
+      window.dispatchEvent(new CustomEvent('sf-access-revoked', { detail: { reason: 'case-unavailable' } }));
       throw new Error('O caso, rascunho ou origem não está disponível com seu acesso atual.');
     }
     data = next; agenda = undefined; if (!mutation) resetReview();
@@ -251,7 +268,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       find('draft-choice').add(new Option('Novo rascunho', 'new'), 1);
       const draftIndex = draftIdentity ? draftCatalog.findIndex((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation) : -1;
       find('draft-choice').value = draftIndex >= 0 ? String(draftIndex) : 'new';
-      const sourceIndex = sourceCatalog.findIndex((value) => value.draft.target.id === draftBinding.target.id && value.draft.target.incarnation === draftBinding.target.incarnation);
+      const sourceIndex = sourceCatalog.findIndex((value) => draftRead && value.draft.targetEvidence.refId === draftRead.currentSource.refId && value.draft.targetEvidence.refDigest === draftRead.currentSource.refDigest);
       if (sourceIndex >= 0) find('draft-source').value = String(sourceIndex);
     }
     restoreApplication();
@@ -381,16 +398,29 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     clearDraftReview(); draftConflict = true;
     await refresh();
     const sameCase = (value) => value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation;
-    const sameTarget = (value) => value.target.id === draftBinding.target.id && value.target.incarnation === draftBinding.target.incarnation;
+    const sameTarget = (value) => draftRead && value.targetEvidence.refId === draftRead.currentSource.refId && value.targetEvidence.refDigest === draftRead.currentSource.refDigest;
     if (draftIdentity) {
       const matches = data.decisions.drafts.filter((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation && sameCase(value) && sameTarget(value));
       if (matches.length === 1) pendingDraft = draftRequest(matches[0]);
+      else if (!matches.length && draftRead && draftRead.draft && draftRead.draft.id === draftIdentity.id && draftRead.draft.incarnation === draftIdentity.incarnation) {
+        const sources = data.records.filter((value) => value.draft && sameTarget(value.draft));
+        if (sources.length === 1) {
+          const active = draftRead.draft, source = sources[0].draft;
+          pendingDraft = { ...draftRequest(active), caseRef: draftRead.caseRef, target: source.target, targetEvidence: source.targetEvidence,
+            sourceRefs: active.sourceRefs.map((ref) => ref.refId === active.targetEvidence.refId && ref.refDigest === active.targetEvidence.refDigest ? source.targetEvidence : ref) };
+        }
+      }
     } else {
       const cases = data.decisions.cases.filter(sameCase), sources = data.records.filter((value) => value.draft && sameTarget(value.draft));
       if (cases.length === 1 && sources.length === 1) pendingDraft = { caseRef: cases[0].caseRef, target: sources[0].draft.target, targetEvidence: sources[0].draft.targetEvidence, fields: sources[0].draft.fields, sourceRefs: [sources[0].draft.targetEvidence], expectedVersion: 0 };
     }
     if (!pendingDraft) throw new Error('Este rascunho ou sua origem não está disponível com o acesso atual. Seus valores continuam no formulário.');
     table(find('draft-diff'), ['Campo', 'Versão anterior', 'Versão atual', 'Meus valores'], fields.map((name) => [labels[name], draftBinding.fields[name], pendingDraft.fields[name], form.elements.namedItem(name).value]));
+    const currentSource = data.records.find((value) => value.draft && sameTarget(value.draft));
+    if (currentSource) {
+      const heading = document.createElement('h3'); heading.textContent = 'Valores atuais da origem'; find('draft-diff').append(heading);
+      table(find('draft-diff'), ['Campo', 'Origem atual autorizada'], fields.map((name) => [labels[name], currentSource.draft.fields[name]]));
+    }
     find('draft-confirmation').hidden = false;
     announce('Versão atual carregada. Compare as diferenças e confirme a base antes de salvar seus valores.');
   }));
@@ -423,12 +453,12 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     await mutate('dashboard-hot-topic-apply', review);
   }));
   ['record', 'history'].forEach((name) => find(name).addEventListener('change', enable));
-  ['from', 'to'].forEach((name) => find(name).addEventListener('change', () => { data = undefined; agenda = undefined; resetReview(); enable(); announce('Atualize as opções para usar o novo período.'); }));
+  ['from', 'to'].forEach((name) => find(name).addEventListener('change', () => { generation++; data = undefined; agenda = undefined; draftRead = undefined; resetReview(); enable(); announce('Atualize as opções para usar o novo período.'); }));
   panel.addEventListener('toggle', retainView);
   window.addEventListener('sf-access-revoked', (event) => {
     if (revoked) return;
-    revoked = true; controllers.forEach((controller) => controller.abort()); controllers.clear();
-    data = agenda = review = draftBinding = draftIdentity = pendingDraft = mutation = applicationToRestore = draftOutcome = undefined;
+    revoked = true; generation++; controllers.forEach((controller) => controller.abort()); controllers.clear();
+    data = agenda = review = draftBinding = draftIdentity = draftRead = pendingDraft = mutation = applicationToRestore = draftOutcome = undefined;
     draftCatalog = []; caseCatalog = []; sourceCatalog = []; delete form.dataset.dirty; delete guard.dataset.dirty;
     remember({ draft: undefined, application: undefined, draftAttempt: undefined });
     const note = document.createElement('p'); note.textContent = 'Seu acesso mudou. Reabra a página com o acesso atual.'; root.replaceChildren(note);

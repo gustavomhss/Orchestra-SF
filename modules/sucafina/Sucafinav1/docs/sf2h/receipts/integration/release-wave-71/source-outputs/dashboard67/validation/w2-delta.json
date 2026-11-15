@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.mission67.validation-delta.v1",
+  "reason": "Correct an assertion invalidated by real lease revocation; exercise actual consumer draft reload and access-loss paths.",
+  "producerDeltaFromW1": "none",
+  "consumerDeltaFromW1": "none",
+  "testChanges": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "reason": "A restored policy does not revive the revoked TrustedDomainContext. Assert old lease stays invalid; reacquire a new UI admission for restore/delete/recreate/logout checks. Replacement invalidates the old selector as access-unavailable, not necessarily replaced. Existing fences, identity checks and exact assertions remain."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "reason": "Add real saved/private dirty conflict with changed origin and explicit review; abort delivery only after real authorized read, then real canWrite withdrawal and real read revocation between admissions."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "reason": "Isolated real SQLite, C08, operator, BusinessServices and mounted HTTP fixture; policy only restricts authenticated operator."
+    }
+  ],
+  "selection": "Original nine named Bun files plus consumer-read.test.ts; canonical ./ prefixes; no skipped assertions or timeout increases.",
+  "w1ResultRetained": "run-01.json: 23 PASS, 1 FAIL",
+  "installedResultRetained": "run-02.json: 2 FAIL before behavioral assertions; repair remains separate.",
+  "installedTestRepairs": {
+    "behavioralClaimsUnchanged": true,
+    "generalTimeoutMs": 180000,
+    "responseTimeoutMs": 15000,
+    "changes": [
+      "Use observed combobox accessible names for seven select controls",
+      "Bound response waits and capture real request failures before whole-test timeout",
+      "Always attach sanitized method/path/action/mode/status/content-type/network-error categories before cleanup"
+    ],
+    "remaining": "OPEX first command transport root cause not yet observed; next installed run must resolve it."
+  }
+}

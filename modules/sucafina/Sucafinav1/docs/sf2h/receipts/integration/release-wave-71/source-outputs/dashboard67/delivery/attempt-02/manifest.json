@@ -1,0 +1,257 @@
+{
+  "schema": "sf2h.mission67.complete-delivery.v1",
+  "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "ack": "bce4d89e252159d8574301834a72ec91f2acd791",
+  "consumerBase": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "consumerAuthorityCheckpoint": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "actualSourcePathsOnly": [
+    "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+    "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+    "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+    "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+    "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts"
+  ],
+  "externalAppliedOnlyToIsolatedValidationW": [
+    "apps/cli/src/sucafina-product/business-services.ts",
+    "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+    "apps/cli/src/sucafina-product/dashboard-http.ts",
+    "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+    "packages/app-shell/e2e/tsconfig.json"
+  ],
+  "authority": "60 lease ended in faa30fdd; integration requires a newly authorized writer; 67 does not apply external paths on its source branch",
+  "noBi62Edits": true,
+  "noShellRedesign": true,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "area": "source",
+      "preimage": {
+        "bytes": 28021,
+        "sha256": "8c80486f9c928b850e7e26a9a9b74c038def3446f559ee073cb6e5cb68f6ea1b",
+        "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa"
+      },
+      "postimage": {
+        "bytes": 37351,
+        "sha256": "c9a3c3ce60ae56279d0fc31e73aaecc50b9789fae103adee16c1d589c71974ca",
+        "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0"
+      },
+      "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+      "area": "source",
+      "preimage": {
+        "bytes": 3375,
+        "sha256": "377f0a553d9c6784c1b064ea3f0a5405e0cb8e54ceb8b4c8a6a5a76b0e19fb55",
+        "blob": "c729de5019c0756b4191a6674a38a523f1768683"
+      },
+      "postimage": {
+        "bytes": 3762,
+        "sha256": "6010fb35c7f043f378ccf531eef3c9260a342fab9456657482b8259ce4e491be",
+        "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f"
+      },
+      "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 14782,
+        "sha256": "690d1b7454e7abf26423dd6aa18a3da1aceaac59910d19c40f418aca8f01b3c7",
+        "blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 19897,
+        "sha256": "61ddfa7455cee7941543bf8b19136e22fb8b1ee92c9846f177db41faa081e7af",
+        "blob": "cd63e19210c01d7251e562ef135b554982a24be2"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 9537,
+        "sha256": "523474a93de75d20612c55f1df33993f6ba4cfbeb04605ae1d46f6fce56696b1",
+        "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 9508,
+        "sha256": "8d35dc4d0cb311da9e0a20931ab9cfff92389938ad45ef95bff104cf8c665280",
+        "blob": "d5ffdc24f23b20557613383d38cc03155e5e68c4"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 8996,
+        "sha256": "efb435a0db2eafc85e40b1aaf08b496d6e2bd0c9f6f004bd4fd9ff543ef7dc95",
+        "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 11309,
+        "sha256": "c5cd06d5960ab47a26e43686b45891267aaefc6b62cb6f4f4547d0045cdbf150",
+        "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 10417,
+        "sha256": "07198a115369d507afbf0be18b4933eb93a9e2ad25bd8ff88d9378372f292695",
+        "blob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 12862,
+        "sha256": "96fc8c19728c931340b1fa6389cfa980aba45147343f8b9191da0535a1bc5195",
+        "blob": "5b2371c4048b38cefdaa252b17cd60191b00fddd"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+      "area": "source",
+      "preimage": null,
+      "postimage": {
+        "bytes": 9646,
+        "sha256": "9cc11ee16ff5f3e0884c7294b4ace3154e40395c568490da33cacfa3ce3eb29b",
+        "blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f"
+      },
+      "archivedPreimage": null,
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "area": "external-for60",
+      "preimage": {
+        "bytes": 71753,
+        "sha256": "4f153bc1b88584e77e434ab5ca35f10b7bee2b188e9b3fd047fa0cdd9bd7fce6",
+        "blob": "9aa0b7eb894a0d709b4873cebd1b120ff6a209aa"
+      },
+      "postimage": {
+        "bytes": 71830,
+        "sha256": "23b7782e8f52109dac84b0c0936613d281c262cfe9081c93ccf2041bf962b114",
+        "blob": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b"
+      },
+      "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "area": "external-for60",
+      "preimage": {
+        "bytes": 38306,
+        "sha256": "35fbc2febe3d6d695ba60f2c8839a7edd5036da2f8429c6959c9e2df5ec8479c",
+        "blob": "311814305139a0be1d3f52f59835b8810e51de8e"
+      },
+      "postimage": {
+        "bytes": 48185,
+        "sha256": "5b53e463d81af387a1e4380b126e794f6d43fc66c164746035970d92c2b015a9",
+        "blob": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8"
+      },
+      "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "area": "external-for60",
+      "preimage": {
+        "bytes": 13996,
+        "sha256": "2eb1ced661a9e02268ff6b30200c6eea20ec5cf86ec1b78e5dffffb00b72e6bd",
+        "blob": "840e5607bda4251e6e62d5ada8573b1bac584859"
+      },
+      "postimage": {
+        "bytes": 16195,
+        "sha256": "e59960793e19f64ce03bbab8d827ee0f6671b6ccf3e6b1bf63e2e3d197a958e3",
+        "blob": "13f808e8b5041e062451e15bd3f77432630c5a06"
+      },
+      "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "area": "external-for60",
+      "preimage": {
+        "bytes": 45621,
+        "sha256": "1053f79eb226cee627591418294e2c12e60de5ff3fc4ec0f91ecde3546534bd6",
+        "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41"
+      },
+      "postimage": {
+        "bytes": 48419,
+        "sha256": "104d9619daad6f54a3413420ba973458abbd80c56b30cf2d2e91ffd954e3f751",
+        "blob": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778"
+      },
+      "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "area": "external-for60",
+      "preimage": {
+        "bytes": 2547,
+        "sha256": "ffc94903b67390b43bd79b8b43f0f682e9274b122f79cfd4178e8572a26c1024",
+        "blob": "2bb15622053039562aab716f9afce410071afaf3"
+      },
+      "postimage": {
+        "bytes": 2593,
+        "sha256": "3a20f94de208caeadfeff36fb31e5b399aefbb16febea812c6f9081ef4316bff",
+        "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b"
+      },
+      "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+      "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt"
+    }
+  ],
+  "patch": {
+    "bytes": 160238,
+    "sha256": "0eade83f589eb4af067fbd16bb58e4021d575f3ecaf9073cc5e70ad55ce4ed31",
+    "blob": "e47c72a094decbf07a6442cb3d6df772d22654f6"
+  }
+}

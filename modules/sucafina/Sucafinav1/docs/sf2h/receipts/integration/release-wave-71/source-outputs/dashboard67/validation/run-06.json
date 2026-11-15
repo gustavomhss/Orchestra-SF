@@ -1,0 +1,360 @@
+{
+  "schema": "sf2h.mission67.hosted-run.v1",
+  "attempt": 6,
+  "status": "PASS",
+  "scope": "exact normalized final Dashboard domain and real consumer payload",
+  "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+  "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+  "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+  "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+  "sourceCommit": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+  "sourceTree": "78c26fb63de7d5210786dd01a66ca2916057e7ac",
+  "runId": 43672573836,
+  "jobId": 132685657101,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672573836",
+  "branch": "ci-run-linux-astra-wp67-454100dd-7e6f223a-06",
+  "requestSha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "./Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "./Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "./Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "./Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "./Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "./Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+      "./Sucafinav1/test/product/wp02/confirmation.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "counts": {
+    "passed": 26,
+    "failed": 0,
+    "assertions": 593,
+    "files": 10,
+    "durationSeconds": 55.31
+  },
+  "omni": {
+    "uniqueEnvironmentNonceCount": 1,
+    "matchingVerdictCount": 1,
+    "declaredTests": 6,
+    "spawns": 6,
+    "delegated": 0,
+    "status": "PASS"
+  },
+  "runtime": {
+    "bun": "1.3.14",
+    "node": "24.22.2",
+    "playwright": "1.59.1",
+    "chromium": "157.0.8103.50",
+    "transport": "playwright-unix-pipe-node-websocket",
+    "spawnBoundary": "AppProcess"
+  },
+  "browserLifecycles": [
+    {
+      "consumer": "host-draft-conflict",
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    },
+    {
+      "consumer": "host-write-authority",
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    },
+    {
+      "consumer": "host-contextual-controls",
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    },
+    {
+      "consumer": "host-draft-conflict",
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    },
+    {
+      "consumer": "host-write-authority",
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    },
+    {
+      "consumer": "dashboard-monthly",
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      }
+    }
+  ],
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 F04 retains read continuity when writing is withdrawn, with no domain effect or substituted grant",
+      "status": "PASS",
+      "durationMs": 144.77
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 private source proof follows current material through SQLite reopen while the original write version stays unchanged",
+      "status": "PASS",
+      "durationMs": 105.64
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 rejects a different authenticated principal, tampered scope and delete/recreate without deleting unrelated records",
+      "status": "PASS",
+      "durationMs": 166.96
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 private read fence rejects late source mutation and logout without reusing an earlier observation",
+      "status": "PASS",
+      "durationMs": 112.86
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 interrupted requests and unavailable SQLite are recoverable reads, while actual read revocation is denied",
+      "status": "PASS",
+      "durationMs": 135.78
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "title": "WP02 Attention retains numeric risk and contract identities through canonical reads, deletion and SQLite reopen",
+      "status": "PASS",
+      "durationMs": 422.32
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "title": "WP02 signal UTC boundaries match canonical evidence for offset clocks and preserve the ninety-day rule",
+      "status": "PASS",
+      "durationMs": 171.37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "title": "WP02 ambiguous normalized signal identities are suppressed and cannot commit as durable C17 identities",
+      "status": "PASS",
+      "durationMs": 153.27
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "title": "C06 real admissions retain the original observation while monthly material and dependencies advance independently",
+      "status": "PASS",
+      "durationMs": 431.05
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "title": "C06 actual absence and recorded zero remain distinct under the real source projection and a durable domain command",
+      "status": "PASS",
+      "durationMs": 184.56
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "title": "C06 real authority and source replacement cannot revive a previous observation or its locked fence",
+      "status": "PASS",
+      "durationMs": 171.16
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "title": "Dashboard reads the current source and active private proposal while preserving dirty values until explicit review",
+      "status": "PASS",
+      "durationMs": 13117.69
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "title": "Dashboard keeps dirty values through interrupted reads and fences write withdrawal between admissions before purging actual read loss",
+      "status": "PASS",
+      "durationMs": 2627.85
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "status": "PASS",
+      "durationMs": 17992.89
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "status": "PASS",
+      "durationMs": 11989.91
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard discovery fences participant removal after options were assembled",
+      "status": "PASS",
+      "durationMs": 66.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard discovery resolves real ticket months and Executive signal records",
+      "status": "PASS",
+      "durationMs": 541.4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "status": "PASS",
+      "durationMs": 1896.04
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "title": "Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation",
+      "status": "PASS",
+      "durationMs": 2643.66
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "title": "historical record reissue permits material changes and a new day but rejects replacement",
+      "status": "PASS",
+      "durationMs": 51.48
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "title": "historical dated entries keep the original competence after the observation year changes",
+      "status": "PASS",
+      "durationMs": 218.61
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "title": "historical security captures revalidate current observation fields after the year changes",
+      "status": "PASS",
+      "durationMs": 325.78
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "title": "signals omit ambiguous IDs within each authorized collection only",
+      "status": "PASS",
+      "durationMs": 0.54
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "title": "unavailable pages emit no signals",
+      "status": "PASS",
+      "durationMs": 0.17
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+      "title": "executive signals open authorized canonical records and fail closed without evidence",
+      "status": "PASS",
+      "durationMs": 184.7
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "title": "C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority",
+      "status": "PASS",
+      "durationMs": 847.88
+    }
+  ],
+  "cleanup": {
+    "jobId": 132686291657,
+    "status": "success",
+    "temporaryBranchRemoved": true
+  },
+  "completeDelivery": "../delivery/attempt-03/manifest.json",
+  "qualification": "Named domain/consumer tests at exact W4/S6 only. Installed production remains HOLD from W2/W3; compiler45 NOT_RUN; all78criteria, C06 registry, AM, G7/G8 and global acceptance not granted."
+}

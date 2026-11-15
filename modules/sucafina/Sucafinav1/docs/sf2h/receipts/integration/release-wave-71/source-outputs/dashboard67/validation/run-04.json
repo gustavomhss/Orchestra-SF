@@ -1,0 +1,249 @@
+{
+  "schema": "sf2h.mission67.hosted-run.v1",
+  "attempt": 4,
+  "status": "FAIL",
+  "scope": "installed production Playwright with corrected accessible selects",
+  "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+  "WTree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+  "S": "72032511a410840d86c6b7b76be73275a22828ca",
+  "STree": "f483fe0924426faa6356097ff241e76a1f8b529e",
+  "sourceCommit": "8ed803706d5585dba1724f3df7b3f920a45e78ec",
+  "sourceTree": "b21a153c00c20ef27280ef0c8fa50faa0743dc6e",
+  "runId": 43670694769,
+  "jobId": 132679854352,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670694769",
+  "branch": "ci-run-linux-astra-wp67-1a3a3c20-f12b9ae6-04",
+  "requestSha256": "f12b9ae62a264afbaa06acca24b7d562b7aaf6b6675deb9fd47d057a59511e08",
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "e2e/sucafina/dashboard-installed/confirmation-access.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "counts": {
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "effective": {
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "timeoutMs": 180000,
+    "playwright": "1.59.1"
+  },
+  "artifact": {
+    "id": 14144117732,
+    "name": "playwright-ubuntu-24.04-1",
+    "sha256": "3d368a13efffd32f8370fee486de937263a56f2979abba4a009068b7ba779be2"
+  },
+  "tests": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "title": "installed Dashboard confirms exact monthly changes and purges late results after real logout",
+      "status": "failed",
+      "durationMs": 16765,
+      "timeoutMs": 180000,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create real fiscal lines and cancel a preview without changing saved months",
+          "error": "Error: Dashboard request failed: net::ERR_ABORTED"
+        }
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "title": "installed Dashboard preserves records, conflicts, signals and authorized history",
+      "status": "failed",
+      "durationMs": 16736,
+      "timeoutMs": 180000,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create durable Hot Topics through the mounted Dashboard",
+          "error": "Error: Dashboard request failed: net::ERR_ABORTED"
+        }
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "label": "confirmation",
+      "transport": {
+        "events": [
+          {
+            "tab": "primary",
+            "id": 1,
+            "method": "GET",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 1,
+            "method": "GET",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "event": "response",
+            "status": 200,
+            "contentType": "html"
+          },
+          {
+            "tab": "primary",
+            "id": 2,
+            "method": "GET",
+            "path": "/sucafina/notifications",
+            "mode": "domain",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 3,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "other-product",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 2,
+            "method": "GET",
+            "path": "/sucafina/notifications",
+            "mode": "domain",
+            "event": "response",
+            "status": 200,
+            "contentType": "json"
+          },
+          {
+            "tab": "primary",
+            "id": 4,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "action": "save",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 3,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "other-product",
+            "event": "failed",
+            "code": "net::ERR_ABORTED"
+          },
+          {
+            "tab": "primary",
+            "id": 4,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "action": "save",
+            "event": "failed",
+            "code": "net::ERR_ABORTED"
+          }
+        ],
+        "omitted": 0
+      },
+      "cli": "server listening on http://::1:4110\nCLI_SHUTDOWN {\"event\":\"cli.shutdown\",\"level\":\"DEBUG\",\"pid\":5059,\"signal\":\"SIGTERM\",\"status\":\"started\",\"elapsedMs\":0}\nCLI_SHUTDOWN {\"event\":\"cli.shutdown\",\"level\":\"DEBUG\",\"pid\":5059,\"signal\":\"SIGTERM\",\"status\":\"disposed\",\"elapsedMs\":23}\n"
+    },
+    {
+      "label": "records",
+      "transport": {
+        "events": [
+          {
+            "tab": "primary",
+            "id": 1,
+            "method": "GET",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 1,
+            "method": "GET",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "event": "response",
+            "status": 200,
+            "contentType": "html"
+          },
+          {
+            "tab": "primary",
+            "id": 2,
+            "method": "GET",
+            "path": "/sucafina/notifications",
+            "mode": "domain",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 3,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "other-product",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 2,
+            "method": "GET",
+            "path": "/sucafina/notifications",
+            "mode": "domain",
+            "event": "response",
+            "status": 200,
+            "contentType": "json"
+          },
+          {
+            "tab": "primary",
+            "id": 4,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "action": "save",
+            "event": "sent"
+          },
+          {
+            "tab": "primary",
+            "id": 3,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "other-product",
+            "event": "failed",
+            "code": "net::ERR_ABORTED"
+          },
+          {
+            "tab": "primary",
+            "id": 4,
+            "method": "POST",
+            "path": "/sucafina/dashboard",
+            "mode": "domain",
+            "action": "save",
+            "event": "failed",
+            "code": "net::ERR_ABORTED"
+          }
+        ],
+        "omitted": 0
+      },
+      "cli": "server listening on http://::1:4110\nCLI_SHUTDOWN {\"event\":\"cli.shutdown\",\"level\":\"DEBUG\",\"pid\":5205,\"signal\":\"SIGTERM\",\"status\":\"started\",\"elapsedMs\":0}\nCLI_SHUTDOWN {\"event\":\"cli.shutdown\",\"level\":\"DEBUG\",\"pid\":5205,\"signal\":\"SIGTERM\",\"status\":\"disposed\",\"elapsedMs\":23}\n"
+    }
+  ],
+  "cleanup": {
+    "jobId": 132680682100,
+    "status": "success",
+    "temporaryBranchRemoved": true
+  },
+  "interpretation": "Both installed GET controls returned200. Product and domain POSTs received no HTTP response and were aborted by the existing10s client deadline; no CSP/CORS event. The corrected Hot Topics selector reached Save. Actual internal body/adapter failure location is not yet proven. No installed behavioral PASS; no timeout increase or fake response."
+}

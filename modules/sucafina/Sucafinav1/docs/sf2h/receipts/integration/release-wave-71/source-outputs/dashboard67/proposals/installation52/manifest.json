@@ -1,0 +1,39 @@
+{
+  "schema": "sf2h.mission67.inert-protected-adapter-manifest.v1",
+  "status": "UNVALIDATED_CANDIDATE_NOT_APPLIED",
+  "targetPath": "apps/cli/src/sucafina-product/installation.ts",
+  "owner": "52",
+  "consumer": "60 or explicitly authorized successor",
+  "preimage": {
+    "bytes": 5315,
+    "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+    "blob": "21236af83e4de879242fd298d9e15a9923f3bf41"
+  },
+  "postimage": {
+    "bytes": 6127,
+    "sha256": "68699b559bd5fcd226c9db1a9dbfe237f79b985b59c509b59a6417ebcb501519",
+    "blob": "dea81619aa870b238a6ad004397cf47b1c92457d"
+  },
+  "patch": {
+    "file": "installation-node-stream.patch",
+    "bytes": 3371,
+    "sha256": "ebc2141537142ce3dfcb8f3b88c9601c9e35aef9e4d0846ced39c7b066607b43",
+    "blob": "f0a26a051b29a482e46d763f841b098d080c4211"
+  },
+  "files": {
+    "preimage": "installation.ts.preimage.txt",
+    "postimage": "installation.ts.postimage.txt",
+    "rationale": "rationale.json",
+    "separateHypothesis": "bun-eof-hypothesis.json"
+  },
+  "requiredAuthorization": "Explicit protected-owner52 release and intake60 authorization, including for isolated W; exact-preimage CAS applies.",
+  "applicationState": {
+    "activeSourceChanged": false,
+    "activeProtectedMaterialChanged": false,
+    "isolatedWApplied": false,
+    "executed": false,
+    "compiled": false,
+    "tested": false
+  },
+  "inspectionOnly": "JSON parse, cryptographic hashes and deterministic unified diff; no Node/Bun or project invocation."
+}

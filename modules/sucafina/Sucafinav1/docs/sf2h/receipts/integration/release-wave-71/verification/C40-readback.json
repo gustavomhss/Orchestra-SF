@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.integration71.readback.v1",
+  "candidate": "C40",
+  "sha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+  "tree": "b325894e636ae31db80886bb9ca2add1ce4ec126",
+  "parent": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+  "status": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+  "material": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sha": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "exact": true
+    },
+    {
+      "path": ".github/workflows/sf-operations-scanner.yml",
+      "sha": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/README.md",
+      "sha": "83f0cb7243387ca045e5a7db6367f5a579f01d2f",
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/request.mjs",
+      "sha": "f9c4284774bec233a4ea92e70f1646709a234e16",
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "sha": "ab355db12fb384949f433f6d2d15445f3dcd2dfa",
+      "exact": true
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "sha": "f7618e0097b78679f8c34749e93474c8dc93641b",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+      "sha": "d44a80b24c4c098c0dbbc2c466e7d3e091961980",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+      "sha": "b241896293521d42c1b86d82d193328d48f0bcd7",
+      "exact": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "sha": "5cac657f5f9de9b6de9a9c63dc45c67886724b84",
+      "exact": true
+    }
+  ],
+  "compare": {
+    "files": 104,
+    "unexpected": [],
+    "complete": true
+  },
+  "validation": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

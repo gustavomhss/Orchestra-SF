@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.mission67.bun-eof-hypothesis.v1",
+  "status": "PRIMARY_SOURCE_DEFECT_OBSERVED_RUNTIME_CAUSALITY_UNPROVEN",
+  "repository": "oven-sh/bun",
+  "ref": "bun-v1.3.14",
+  "source": {
+    "path": "src/js/node/_http_server.ts",
+    "blob": "462b6019f341827b0a05dd5b24062152e79982ea"
+  },
+  "finding": "emitServerSocketEOFNT(self, req) sets req[eofInProgress] but schedules process.nextTick(emitServerSocketEOF, self) without forwarding req. The callback only pushes EOF to the IncomingMessage and sets complete when it receives req.",
+  "lines": {
+    "callerResumeSocket": "1004-1022",
+    "helper": "1689-1693",
+    "callback": "1681-1686"
+  },
+  "dependentSource": {
+    "path": "src/js/node/_http_incoming.ts",
+    "blob": "83de7a47c71e9bdfdc7cb2cdd3af7f947e88db22",
+    "lines": "234-236",
+    "condition": "IncomingMessage._read returns early when eofInProgress is true."
+  },
+  "conditionalConsequence": "If the socket-resume completed-buffer branch invokes this helper with an actual req, the request may receive its buffered data while the queued callback only ends the socket-readable side; its own EOF/complete may remain absent and later _read calls can return early.",
+  "unproven": [
+    "Whether the real installed requests execute this branch.",
+    "Whether another platform callback emits the missing request EOF.",
+    "Whether this is the actual cause of run04 or run05 behavior.",
+    "Whether native Readable.toWeb changes ordering sufficiently to avoid that branch."
+  ],
+  "lostWakeup": {
+    "status": "NOT_DEMONSTRATED_FOR_ACTUAL_BUN_INCOMINGMESSAGE",
+    "effectSource": {
+      "path": "packages/platform-node-shared/src/NodeStream.ts",
+      "blob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+      "lines": "340-376"
+    },
+    "analysis": [
+      "The abstract read\u2192latch.close pattern can lose a synchronously emitted readable event if read returns null and no further terminal/data event follows.",
+      "Bun's normal Readable.read marks kSync around _read, defers corresponding readable notification to nextTick, recalculates the returned amount when _read pushes synchronously and schedules terminal end on nextTick.",
+      "Effect onEnd/onError also store exit.current before opening; loop checks it before waiting. Latch.await checks isOpen when registering.",
+      "No I/O event interleaves between synchronous read returning and latch.close in the same JavaScript stack. A custom read override or nonstandard synchronous event could differ, but none is established here."
+    ]
+  },
+  "nativeAdapterDifference": {
+    "source": {
+      "path": "src/js/internal/webstreams_adapters.ts",
+      "blob": "86bc91551f7b5e9c6eea379f05a61874f42cfec8",
+      "lines": "432-510"
+    },
+    "behavior": "Native Readable.toWeb uses flowing data/pause/resume and finished, whereas the Effect NodeStream adapter pulls with readable.read/latch. Different event ordering is a testable hypothesis, not a verified correction."
+  },
+  "nextProof": "Use run05 and, only after protected-owner authorization, a tightly bounded phase trace or candidate comparison that records first byte/EOF/handler completion without bodies or identity data.",
+  "noRuntimeExecution": true,
+  "rootCauseClaim": false,
+  "run05Observation": {
+    "source": "Root observed exact run43671673378/job132682862827",
+    "allNodeAndBrowserPosts": "empty, malformed and valid read-only list all aborted after15000ms with no response",
+    "getControls": "200 in32ms Node and10ms browser",
+    "limit": "Supports a server-side POST-path blockage; cannot distinguish body EOF from lazy service initialization and does not establish that the conditional Bun helper path ran."
+  }
+}

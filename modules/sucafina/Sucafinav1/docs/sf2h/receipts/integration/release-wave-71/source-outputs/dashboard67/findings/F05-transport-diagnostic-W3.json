@@ -1,0 +1,18 @@
+{
+  "schema": "sf2h.mission67.finding-update.v1",
+  "id": "M67-F05-INSTALLED-POST-NO-RESPONSE",
+  "status": "REPRODUCED_EXTERNAL_OWNER_HOLD",
+  "previous": "F05-installed-post-no-response-W2.json",
+  "observedReceipt": "../validation/run-05.json",
+  "expected": "GET200; empty/malformed400invalid; list200ok+array",
+  "observed": "GET200 Node32ms/browser10ms; sixPOSTsabortat15swithoutHTTPresponse",
+  "protectedPath": "apps/cli/src/sucafina-product/installation.ts",
+  "preservedBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+  "owner": "52 or explicitly authorized successor",
+  "intake": "60 or explicitly authorized successor;60leaseended",
+  "proposal": "../proposals/installation52/manifest.json",
+  "proposalStatus": "UNVALIDATED_CANDIDATE_NOT_APPLIED",
+  "internalCause": "NOT_PROVEN; request-body conversion/EOF/lazy service initialization remain distinct hypotheses",
+  "next": "Ownerrelease+CASpreimagecheck; independently validate proposedbody/lifecycle/securitysemantics then rerunoriginalinstalledjourneys; sourcePASSdoesnotclose thisblocker",
+  "globalRelease": false
+}

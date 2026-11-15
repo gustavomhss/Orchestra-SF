@@ -1,0 +1,187 @@
+{
+  "schema": "sf-dashboard-installed-observer-consumer-cold-review-v1",
+  "mission": 67,
+  "reviewer": "criteria_review",
+  "createdAt": "2026-11-15 02:36:49 UTC",
+  "reviewStatus": "STATIC_REVIEW_COMPLETE",
+  "evidenceStatus": "NOT_RUN",
+  "outcome": "No remaining concrete blocker found in the reviewed delta after the recorded corrections. This statement is not hosted execution evidence or a criterion PASS.",
+  "scope": {
+    "ownProducer": "preparePrivateDraftRead in confirmation.ts",
+    "externalConsumerDelta": [
+      "revalidateDraftRead and returned source/draft DTO",
+      "dashboard-draft-read closed route, admission and response classification",
+      "business-services observer injection",
+      "workbench refresh, generation, retention, current permissions and explicit rebase"
+    ],
+    "testSourceReading": [
+      "source-continuity.test.ts",
+      "fixture.ts"
+    ],
+    "excluded": "Unchanged whole-file behavior outside the reviewed delta; no global authority contract changes reviewed or proposed."
+  },
+  "postimages": [
+    {
+      "localPath": "/workspace/scratch/d76689cc7e80/external/apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "repositoryPath": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "bytes": 48185,
+      "sha256": "5b53e463d81af387a1e4380b126e794f6d43fc66c164746035970d92c2b015a9",
+      "gitBlobSha1": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8"
+    },
+    {
+      "localPath": "/workspace/scratch/d76689cc7e80/external/apps/cli/src/sucafina-product/dashboard-http.ts",
+      "repositoryPath": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "bytes": 16195,
+      "sha256": "e59960793e19f64ce03bbab8d827ee0f6671b6ccf3e6b1bf63e2e3d197a958e3",
+      "gitBlobSha1": "13f808e8b5041e062451e15bd3f77432630c5a06"
+    },
+    {
+      "localPath": "/workspace/scratch/d76689cc7e80/external/apps/cli/src/sucafina-product/business-services.ts",
+      "repositoryPath": "apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 71830,
+      "sha256": "23b7782e8f52109dac84b0c0936613d281c262cfe9081c93ccf2041bf962b114",
+      "gitBlobSha1": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b"
+    },
+    {
+      "localPath": "/workspace/scratch/d76689cc7e80/external/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "repositoryPath": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "bytes": 48419,
+      "sha256": "104d9619daad6f54a3413420ba973458abbd80c56b30cf2d2e91ffd954e3f751",
+      "gitBlobSha1": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778"
+    },
+    {
+      "localPath": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "repositoryPath": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "bytes": 37351,
+      "sha256": "c9a3c3ce60ae56279d0fc31e73aaecc50b9789fae103adee16c1d589c71974ca",
+      "gitBlobSha1": "f90bf0c0d177a04d3fec2a6840b11de079b9def0"
+    },
+    {
+      "localPath": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "bytes": 11309,
+      "sha256": "c5cd06d5960ab47a26e43686b45891267aaefc6b62cb6f4f4547d0045cdbf150",
+      "gitBlobSha1": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e"
+    },
+    {
+      "localPath": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+      "bytes": 9537,
+      "sha256": "523474a93de75d20612c55f1df33993f6ba4cfbeb04605ae1d46f6fce56696b1",
+      "gitBlobSha1": "d37f9ff2166bc339aa62c4e4da53755edc0db11a"
+    }
+  ],
+  "sourceAuthority": {
+    "remoteBaseline": "GitHub MCP at bce4d89e252159d8574301834a72ec91f2acd791 for referenced canonical dependencies. Proposed postimages are local in-session changes owned by root/domain_review; root owns CAS and remote publication.",
+    "dependencyBlobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "blob": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a"
+      }
+    ]
+  },
+  "controlsObserved": [
+    "Original evidence digest and selector are validated; exact original principal, persisted C17 scope fields/page/period and physical incarnation establish private continuity.",
+    "The five editable Hot Topic fields are required; no generic field expansion, ID/title equality or discovery-list membership substitutes for authority.",
+    "Current evidence is reissued for the current UTC day, through the real authenticated record producer; current read capabilities are empty and no write binding is replaced.",
+    "Missing live request, aborted request, storage outage and admission drift return unavailable; actual authenticated principal/source/field denial returns denied.",
+    "Saved drafts require protected cases/preferences reads, matching historical/active private identity and record digests; both original and active target scopes receive independent current proof.",
+    "Additional saved-draft source refs must be exact refs reauthorized by canonical cases.read; an uncovered additional ref leaves the read unavailable.",
+    "Complete C08 snapshots are captured after scope issuance, canonical cases.read is repeated outside the lock, and the final C08 lock compares snapshots, raw case/private records and both live target fences.",
+    "The new read mode has no additional asynchronous authority check after its final C08 fence; its HTTP path does not reopen that gap.",
+    "Read admission failure is probed with an authorized, data-free cases namespace read. product-authority-changed, errors, abort and unavailable are not interpreted as proven read revocation.",
+    "The response returns only the current authorized source DTO, current permission availability and private saved-draft metadata/fields whose scopes were proven.",
+    "The workbench intersects earlier discovery permissions with the current read response. It preserves dirty fields and the exact original binding during ordinary refresh.",
+    "Bounded discovery omission cannot destroy the draft or invent continuity; the exact server-issued current DTO may supplement the catalog.",
+    "Rebase requires an explicit click, review of saved draft and current source values, then a checkbox before replacing the pending binding. The canonical write CAS and original retry body/key remain intact.",
+    "Generation checks and abort controllers prevent a late response from restoring a view already purged by the revocation event."
+  ],
+  "findings": [
+    {
+      "id": "CR67-01",
+      "status": "RESOLVED_STATIC",
+      "area": "Transient failure classification",
+      "problem": "UI/admission and wrapper revalidation conflated interrupted or changed authority checks with proven read denial.",
+      "correction": "Data-free cases probe; explicit unavailable classification for abort, missing lease, driver failures and authority drift; namespace callback mismatch separated from missing case/draft."
+    },
+    {
+      "id": "CR67-02",
+      "status": "RESOLVED_STATIC",
+      "area": "Additional saved draft references",
+      "problem": "The target source alone could not reauthorize additional refs stored only in a draft.",
+      "correction": "Exact coverage by the currently authorized case evidence is required for every extra ref; uncovered refs remain unavailable."
+    },
+    {
+      "id": "CR67-03",
+      "status": "RESOLVED_STATIC",
+      "area": "Final case evidence fence",
+      "problem": "Raw case/private record digests alone did not fence independently protected case sources.",
+      "correction": "Repeat canonical case authorization between complete C08 snapshots and require equality under the final lock."
+    },
+    {
+      "id": "CR67-04",
+      "status": "RESOLVED_STATIC",
+      "area": "Saved draft source drift",
+      "problem": "Canonical draft discovery may exclude a saved draft whose source version advanced, preventing explicit rebase.",
+      "correction": "Return independently proven historical/active draft information and a current producer-issued source DTO; construct a pending binding only in the explicit review action."
+    },
+    {
+      "id": "CR67-05",
+      "status": "RESOLVED_STATIC",
+      "area": "Operator review meaning",
+      "problem": "The saved-draft comparison alone did not show the changed current domain source values.",
+      "correction": "A separate current authorized source values table is shown before the rebase confirmation."
+    },
+    {
+      "id": "CR67-06",
+      "status": "RESOLVED_STATIC",
+      "area": "Bounded catalog omission",
+      "problem": "A readable source omitted from discovery still prevented rebase despite the new private proof.",
+      "correction": "Exact current source DTO returned by the trusted read may supplement the catalog; no matching by label or unproven physical identity."
+    },
+    {
+      "id": "CR67-07",
+      "status": "RESOLVED_STATIC",
+      "area": "Post-fence asynchronous gap",
+      "problem": "Awaiting generic authority after the final source fence could release a projection after a source visibility change not represented by principal accessRevision.",
+      "correction": "Final C08 source fences are the last asynchronous check in this read mode; synchronous abort/request checks follow, and HTTP skips its generic post-dispatch revalidate for this mode."
+    },
+    {
+      "id": "CR67-08",
+      "status": "RESOLVED_STATIC",
+      "area": "Write withdrawal between requests",
+      "problem": "Discovery permissions from the first request could still enable controls after the separate private read observed canWrite=false.",
+      "correction": "Human action availability is read before the final C08 fence and intersected with discovery permissions in the UI."
+    }
+  ],
+  "remainingLimits": [
+    "All test and installed behavior evidence remains NOT_RUN in this review. Source text is not a successful run.",
+    "A saved draft with additional refs not covered by its currently authorized case remains unavailable. Do not mark arbitrary extra-ref continuity PASS.",
+    "Comparing full C08 snapshots may return a conservative stale result when unrelated data changes concurrently; hosted behavior must confirm acceptable retry and UI retention.",
+    "This review does not close historical F01 first-save outcome lookup or F03 receipt recovery by inference; their exact failed scenarios still require current hosted reconciliation.",
+    "Any later change to the listed bytes requires review/hash refresh before using this report as a postimage manifest."
+  ],
+  "execution": {
+    "productTestsExecuted": 0,
+    "hostedRunsDispatched": 0,
+    "remoteWrites": 0,
+    "productFilesEditedByReviewer": 0,
+    "localOperations": "read/search, MCP retrieval, deterministic hashing, internal JSON reports"
+  }
+}

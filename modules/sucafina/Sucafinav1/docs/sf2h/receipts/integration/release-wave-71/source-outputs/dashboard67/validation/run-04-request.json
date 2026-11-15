@@ -1,0 +1,14 @@
+{
+  "package": "app",
+  "directory": "packages/app-shell",
+  "runner": "playwright",
+  "args": [
+    "e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+    "e2e/sucafina/dashboard-installed/confirmation-access.spec.ts"
+  ],
+  "config": "e2e/playwright.production.config.ts",
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+    "ORCHESTRA_CHANNEL": "prod"
+  }
+}

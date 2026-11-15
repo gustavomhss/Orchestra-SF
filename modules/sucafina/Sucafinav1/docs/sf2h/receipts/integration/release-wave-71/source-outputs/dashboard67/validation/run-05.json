@@ -1,0 +1,225 @@
+{
+  "schema": "sf2h.mission67.hosted-run.v1",
+  "attempt": 5,
+  "status": "FAIL",
+  "diagnosticOnly": true,
+  "W": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+  "WTree": "99610113060b1ba7c56e719a68cdad451c4c9a34",
+  "S": "5814c5f3a026d95e651244329cf461bf265fa587",
+  "STree": "4d7e39b2741d32a7a2e5416f3ff0128c097f106f",
+  "sourceCommit": "14bf8d828c492e8783f9a7936a52c911a2abdaec",
+  "sourceTree": "57908b466fcf6e3d22c2575c60b498c721d607f6",
+  "runId": 43671673378,
+  "jobId": 132682862827,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671673378",
+  "branch": "ci-run-linux-astra-wp67-49a8f0d5-a64b0f69-05",
+  "requestSha256": "a64b0f696f3e9d6bf3a73c504e3b0025d26db2d1d7be568ce2a72ab72869085d",
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/dashboard-installed/transport-probe.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "counts": {
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "flaky": 0,
+    "diagnosticObservations": 8
+  },
+  "effective": {
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "totalTimeoutMs": 180000,
+    "requestDeadlineMs": 15000
+  },
+  "artifact": {
+    "id": 14144671601,
+    "name": "playwright-ubuntu-24.04-1",
+    "sha256": "2de4cfb7a7d84dbdb911efa964000dd3da08a70d1290c840b6056b0bfd474f79"
+  },
+  "tests": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+      "title": "diagnostic installed CLI compares Node and browser body delivery without changing records",
+      "status": "failed",
+      "timeoutMs": 180000,
+      "durationMs": 94279,
+      "retry": 0,
+      "attachments": {
+        "dashboard-installed-transport-probe.json": {
+          "diagnosticOnly": true,
+          "clientRuntime": "node",
+          "deadlineMs": 15000,
+          "documentControl": {
+            "outcome": "response",
+            "status": 200
+          },
+          "observations": [
+            {
+              "client": "node",
+              "probe": "get-dashboard",
+              "outcome": "response",
+              "elapsedMs": 32,
+              "status": 200,
+              "contentType": "html",
+              "bodyBytes": 181585
+            },
+            {
+              "client": "browser",
+              "probe": "get-dashboard",
+              "outcome": "response",
+              "elapsedMs": 10,
+              "status": 200,
+              "contentType": "html",
+              "bodyBytes": 181585
+            },
+            {
+              "client": "node",
+              "probe": "post-empty-json",
+              "outcome": "error",
+              "elapsedMs": 15001,
+              "errorKind": "aborted"
+            },
+            {
+              "client": "browser",
+              "probe": "post-empty-json",
+              "outcome": "error",
+              "elapsedMs": 15001,
+              "errorKind": "aborted"
+            },
+            {
+              "client": "node",
+              "probe": "post-malformed-json",
+              "outcome": "error",
+              "elapsedMs": 15001,
+              "errorKind": "aborted"
+            },
+            {
+              "client": "browser",
+              "probe": "post-malformed-json",
+              "outcome": "error",
+              "elapsedMs": 15000,
+              "errorKind": "aborted"
+            },
+            {
+              "client": "node",
+              "probe": "post-views-list",
+              "outcome": "error",
+              "elapsedMs": 15001,
+              "errorKind": "aborted"
+            },
+            {
+              "client": "browser",
+              "probe": "post-views-list",
+              "outcome": "error",
+              "elapsedMs": 15000,
+              "errorKind": "aborted"
+            }
+          ]
+        },
+        "dashboard-installed-transport.json": {
+          "events": [
+            {
+              "tab": "probe",
+              "id": 1,
+              "method": "GET",
+              "path": "/sucafina/notifications",
+              "mode": "domain",
+              "event": "sent"
+            },
+            {
+              "tab": "probe",
+              "id": 1,
+              "method": "GET",
+              "path": "/sucafina/notifications",
+              "mode": "domain",
+              "event": "response",
+              "status": 200,
+              "contentType": "json"
+            },
+            {
+              "tab": "probe",
+              "id": 2,
+              "method": "GET",
+              "path": "/sucafina/dashboard",
+              "mode": "domain",
+              "event": "sent"
+            },
+            {
+              "tab": "probe",
+              "id": 2,
+              "method": "GET",
+              "path": "/sucafina/dashboard",
+              "mode": "domain",
+              "event": "response",
+              "status": 200,
+              "contentType": "html"
+            },
+            {
+              "tab": "probe",
+              "id": 3,
+              "method": "POST",
+              "path": "/sucafina/dashboard",
+              "mode": "other-product",
+              "event": "sent"
+            },
+            {
+              "tab": "probe",
+              "id": 3,
+              "method": "POST",
+              "path": "/sucafina/dashboard",
+              "mode": "other-product",
+              "event": "failed",
+              "code": "net::ERR_ABORTED"
+            },
+            {
+              "tab": "probe",
+              "id": 4,
+              "method": "POST",
+              "path": "/sucafina/dashboard",
+              "mode": "other-product",
+              "event": "sent"
+            },
+            {
+              "tab": "probe",
+              "id": 4,
+              "method": "POST",
+              "path": "/sucafina/dashboard",
+              "mode": "other-product",
+              "event": "failed",
+              "code": "net::ERR_ABORTED"
+            },
+            {
+              "tab": "probe",
+              "id": 5,
+              "method": "POST",
+              "path": "/sucafina/dashboard",
+              "mode": "other-product",
+              "event": "sent"
+            }
+          ],
+          "omitted": 0
+        },
+        "wp03-real-cli.log": "server listening on http://::1:4110\nCLI_SHUTDOWN {\"event\":\"cli.shutdown\",\"level\":\"DEBUG\",\"pid\":4897,\"signal\":\"SIGTERM\",\"status\":\"started\",\"elapsedMs\":0}\nCLI_SHUTDOWN {\"event\":\"cli.shutdown\",\"level\":\"DEBUG\",\"pid\":4897,\"signal\":\"SIGTERM\",\"status\":\"disposed\",\"elapsedMs\":18}\n"
+      }
+    }
+  ],
+  "cleanup": {
+    "jobId": 132683922122,
+    "status": "success",
+    "temporaryBranchRemoved": true
+  },
+  "protectedInstallationBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+  "interpretation": "Node and browser GET200; all six POSTs empty/malformed/valid receive noresponse before the15s diagnostic abort. Not browser/CSP-specific; doesnotlocate internalstage or prove Effect/Bun rootcause. No business writes or installed acceptance.",
+  "ownerProposal": "../proposals/installation52/manifest.json",
+  "authorityHold": "Protected52 adapter cannotbeapplied eveninisolatedW without explicitrelease/intakeauthorization."
+}

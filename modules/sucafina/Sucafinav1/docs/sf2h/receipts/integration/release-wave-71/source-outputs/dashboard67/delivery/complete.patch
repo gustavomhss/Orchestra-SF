@@ -1,0 +1,1616 @@
+--- a/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts
++++ b/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts
+@@ -24,6 +24,7 @@
+ export type DashboardConfirmationObservation =
+   | { state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: RecordEvidence; projection: DomainProjection }
+   | { state: "access-unavailable" | "dependency-unavailable" | "replaced"; sourceVersion: number }
++export type DashboardPrivateDraftRead = { evidence: RecordEvidence; projection: DomainProjection; fence: () => Promise<boolean> }
+ 
+ /** Host-private scope material and read-only transactional fence for C06. */
+ export function createDashboardConfirmationObserver(input: {
+@@ -199,7 +200,99 @@
+     if (!stable || !await input.host.revalidate(context)) return { status: "unavailable", reason: "historical-source-unavailable" }
+     return { status: "ok", value: { fence: async () => { const snapshot = input.host.persistence.currentSnapshots?.()?.dashboard; return !!snapshot && !request.signal.aborted && await validate(snapshot) } } }
+   }
+-  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareHistoricalReissue }
++  /** Retain a private draft only after its original scoped source is readable by the same principal.
++   * The result is a current read, never a replacement write binding or proof of historical values. */
++  const preparePrivateDraftRead = async (original: RecordEvidence, context: TrustedDomainContext): Promise<PortResult<DashboardPrivateDraftRead>> => {
++    const denied = { status: "denied" as const, reason: "private-draft-source-access-unavailable" }
++    const unavailable = { status: "unavailable" as const, reason: "private-draft-source-check-unavailable" }
++    const ref = (() => { try { return structuredClone(original) } catch { return undefined } })()
++    const target = ref?.target
++    if (!ref || ref.schema !== "sf-evidence-v1" || ref.kind !== "record" || ref.evidenceLevel !== "observed" ||
++      !target || target.surface !== "dashboard" || target.recordType !== "hotTopics" || typeof target.recordId !== "string" || !target.recordId.trim() ||
++      typeof target.incarnation !== "string" || !target.incarnation.trim() || !Number.isSafeInteger(target.version) || target.version < 1 ||
++      !Array.isArray(target.fields) || !target.fields.length || target.fields.some((field) => !["id", "action", "owner", "due", "status", "priority", "notes"].includes(field)) ||
++      new Set(target.fields).size !== target.fields.length || !["action", "owner", "due", "priority", "notes"].every((field) => target.fields.includes(field)) ||
++      !isSfPeriod(target.period) || target.period.start !== target.period.end || !/^[a-f0-9]{64}$/.test(target.projectionDigest) ||
++      ref.refId !== dashboardSourceSelector(target.incarnation, target.version) || ref.refDigest !== digestSfEvidenceRef(ref))
++      return { status: "needs-input", reason: "invalid-private-draft-source" }
++    if (ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) return denied
++    const request = input.host.requestFor(context)
++    if (!request) return unavailable
++    if (request.signal.aborted) return unavailable
++    const admitted = await input.host.revalidate(context).catch(() => false)
++    const environment = await input.host.environment(request).catch(() => undefined)
++    if (!environment || !Number.isFinite(Date.parse(environment.at)) || !input.scopedSources.checkScopedSource || !input.host.persistence.transactionAll) return unavailable
++    const day = new Date(environment.at).toISOString().slice(0, 10)
++    const period = { start: day, end: day }, originalPeriod = structuredClone(target.period), fields = [...target.fields].sort()
++    const reference: Identity = { surface: "dashboard", type: "hotTopics", id: target.recordId, incarnation: target.incarnation }
++    const inspect = async (snapshot: Snapshot): Promise<PortResult<{ scope: SfSourceScope; physicalIncarnation: string }>> => {
++      if (!snapshot.sfSources?.scopes) return unavailable
++      const entries = Object.values(snapshot.sfSources.scopes).filter((entry) => entry.incarnation === target.incarnation)
++      const old = entries.length === 1 ? entries[0] : undefined
++      const selector = object(old?.scope.selector)
++      const physical = snapshot.sfSources.records[JSON.stringify(["hotTopics", target.recordId])]
++      if (!old || old.scope.principalRef !== context.binding.principalRef || old.scope.recordType !== "hotTopics" || old.scope.recordId !== target.recordId ||
++        selector.page !== "Hot Topics & Actions" || digestSfValue(selector.fields) !== digestSfValue(fields) || digestSfValue(selector.period) !== digestSfValue(originalPeriod) ||
++        old.version < target.version || old.version === target.version && old.inputDigest !== target.projectionDigest ||
++        !physical?.alive || old.sourceIncarnation !== physical.incarnation) return denied
++      // Scoped versions advance in place. An older version identifies the persisted scope,
++      // but does not authorize its old values; only the newly projected fields can leave here.
++      const principal = await input.host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
++      if (request.signal.aborted) return unavailable
++      if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return denied
++      const access = object(object(snapshot.data.access)[principal.id])
++      const roles = principal.roles.filter((entry) => entry.surface === "dashboard").map((entry) => entry.role)
++      const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((value): value is string => typeof value === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((value): value is string => typeof value === "string") : [] }
++      const scope: SfSourceScope = { ...old.scope, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion,
++        selector: { ...selector, actor, period, roleMapDigest: digestSfValue(roleMap(snapshot, "dashboard")) } }
++      if (projectSfSourceScope("dashboard", snapshot, scope, environment.at) === undefined) return denied
++      return { status: "ok", value: { scope, physicalIncarnation: physical.incarnation } }
++    }
++    const inspectCurrent = () => input.host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await inspect(snapshot) }), { signal: request.signal }).catch(() => unavailable)
++    const first = await inspectCurrent()
++    if (first.status !== "ok") return first
++    // Admission drift or a failed authority read cannot prove that read access was revoked.
++    if (!admitted) return unavailable
++    const issued = await recordIssuer.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: target.recordId, fields, period }, context).catch(() => undefined)
++    if (!issued || issued.status !== "ok") {
++      const current = await inspectCurrent()
++      return current.status === "ok" ? unavailable : current
++    }
++    const source = await input.scopedSources.resolveScopedSource("dashboard", issued.value.target.incarnation, authorize(request, context, reference, fields, period)).catch(() => undefined)
++    const read = await recordIssuer.read(issued.value.refId, context).catch(() => undefined)
++    if (!source || !read || read.status !== "ok" || source.version !== issued.value.target.version || source.inputDigest !== issued.value.target.projectionDigest ||
++      digestSfValue(source.scope) !== digestSfValue(first.value.scope) || read.value.version !== source.version || read.value.context.sourceRefs.length !== 1 ||
++      read.value.context.sourceRefs[0]!.incarnation !== source.incarnation || read.value.values.some((value) => value.sourceRefs.some((evidence) => digestSfValue(evidence) !== digestSfValue(issued.value)))) {
++      const current = await inspectCurrent()
++      return current.status === "ok" ? { status: "stale", reason: "private-draft-source-changed-during-read" } : current
++    }
++    const expected: ScopedExpected = { scope: source.scope, incarnation: source.incarnation, version: source.version, inputDigest: source.inputDigest,
++      original: reference, fields, period, physicalFingerprint: digestSfValue({ ...reference, incarnation: first.value.physicalIncarnation }), observedAt: new Date(environment.at).toISOString() }
++    const validate = async (snapshot: Snapshot) => {
++      if (request.signal.aborted || input.host.requestFor(context) !== request) return false
++      const current = await inspect(snapshot)
++      if (current.status !== "ok" || current.value.physicalIncarnation !== first.value.physicalIncarnation || digestSfValue(current.value.scope) !== digestSfValue(expected.scope)) return false
++      const same = continuity(snapshot, reference, fields, originalPeriod, expected, context, period)
++      if (same.state !== "same" || same.physicalIncarnation !== first.value.physicalIncarnation) return false
++      const allowed = authorize(request, context, reference, fields, period)
++      return await input.scopedSources.checkScopedSource!("dashboard", expected.scope, (current) => allowed(current, expected.scope), expected)
++    }
++    const stable = await input.host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: await validate(snapshots.dashboard) }), { signal: request.signal }).catch(() => undefined)
++    if (stable === undefined) return unavailable
++    if (!await input.host.revalidate(context).catch(() => false)) {
++      const current = await inspectCurrent()
++      return current.status === "ok" ? unavailable : current
++    }
++    if (!stable) {
++      const current = await inspectCurrent()
++      return current.status === "ok" ? { status: "stale", reason: "private-draft-source-changed-during-read" } : current
++    }
++    return { status: "ok", value: { evidence: structuredClone(issued.value), projection: structuredClone(read.value), fence: async () => {
++      const snapshot = input.host.persistence.currentSnapshots?.()?.dashboard
++      return !!snapshot && await validate(snapshot) && await input.host.revalidate(context).catch(() => false)
++    } } }
++  }
++  return { issueForActor, manifestFor, verifyManifest, fenceManifest, observe, fence, prepareReissueScope, prepareHistoricalReissue, preparePrivateDraftRead }
+ }
+ 
+ /** Baselines come from a protected displayed-observation receipt, never from a model. */
+--- a/modules/sucafina/Sucafinav1/product/dashboard/signals.ts
++++ b/modules/sucafina/Sucafinav1/product/dashboard/signals.ts
+@@ -6,13 +6,16 @@
+ import { riskScore } from "../../src/dashboard-accounts.ts"
+ 
+ export function dashboardSignals(snapshot: Snapshot, actor: Actor, environment: Environment) {
++  if (!Number.isFinite(Date.parse(environment.at))) return []
+   const summaries = Array.isArray(snapshot.data.summaries) ? snapshot.data.summaries.filter((x): x is string => typeof x === "string") : []
+   const allowed = dashboardPages(actor, summaries)
+   const topics = allowed.includes("Hot Topics & Actions") ? hotTopicView(snapshot, actor) : []
+   const portfolio = DashboardPortfolio.domain.view(snapshot, actor, environment).data
++  // Persisted numeric IDs use the same identity as their source inventory and canonical routes.
++  const recordId = (value: unknown) => typeof value === "string" && value.trim() ? value : typeof value === "number" && Number.isFinite(value) ? String(value) : ""
+   const uniqueIds = (value: unknown) => {
+     const counts = rows(value).reduce((result, row) => {
+-      const id = text(row.id)
++      const id = recordId(row.id)
+       if (id) result.set(id, (result.get(id) ?? 0) + 1)
+       return result
+     }, new Map<string, number>())
+@@ -21,24 +24,24 @@
+   const topicIds = uniqueIds(topics)
+   const riskIds = allowed.includes("IT Risks") ? uniqueIds(portfolio.risks) : new Set<string>()
+   const contractIds = allowed.includes("Vendor Contracts") ? uniqueIds(portfolio.contracts) : new Set<string>()
+-  const today = environment.at.slice(0, 10)
++  const today = new Date(environment.at).toISOString().slice(0, 10)
+   const validDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value
+   const actionSignals = topics.flatMap((row) => {
+     const due = text(row.due)
+-    if (!topicIds.has(text(row.id)) || !["open", "progress", "blocked"].includes(text(row.status)) || !validDate(due) || due >= today) return []
+-    return [{ id: `hotTopics:${text(row.id)}`, page: "Hot Topics & Actions", recordId: text(row.id), fact: text(row.action), rule: "Open action past due date", date: due }]
++    if (!topicIds.has(recordId(row.id)) || !["open", "progress", "blocked"].includes(text(row.status)) || !validDate(due) || due >= today) return []
++    return [{ id: `hotTopics:${recordId(row.id)}`, page: "Hot Topics & Actions", recordId: recordId(row.id), fact: text(row.action), rule: "Open action past due date", date: due }]
+   })
+   const riskSignals = allowed.includes("IT Risks") ? rows(portfolio.risks).flatMap((row) => {
+-    if (!riskIds.has(text(row.id)) || !["open", "mitigating", "monitoring"].includes(text(row.status)) || riskScore(finite(row.impact), finite(row.probability)) < 16) return []
+-    return [{ id: `risks:${text(row.id)}`, page: "IT Risks", recordId: text(row.id), fact: text(row.title) || text(row.name), rule: "Open risk with impact × probability at least 16", date: text(row.due) }]
++    if (!riskIds.has(recordId(row.id)) || !["open", "mitigating", "monitoring"].includes(text(row.status)) || riskScore(finite(row.impact), finite(row.probability)) < 16) return []
++    return [{ id: `risks:${recordId(row.id)}`, page: "IT Risks", recordId: recordId(row.id), fact: text(row.title) || text(row.name), rule: "Open risk with impact × probability at least 16", date: text(row.due) }]
+   }) : []
+   const renewalLimit = new Date(`${today}T00:00:00Z`)
+   renewalLimit.setUTCDate(renewalLimit.getUTCDate() + 90)
+   const limit = Number.isFinite(renewalLimit.getTime()) ? renewalLimit.toISOString().slice(0, 10) : ""
+   const contractSignals = allowed.includes("Vendor Contracts") && limit ? rows(portfolio.contracts).flatMap((row) => {
+     const renewal = text(row.renewal)
+-    if (!contractIds.has(text(row.id)) || !validDate(renewal) || renewal < today || renewal > limit) return []
+-    return [{ id: `contracts:${text(row.id)}`, page: "Vendor Contracts", recordId: text(row.id), fact: text(row.vendor) || text(row.name), rule: "Renewal within 90 days", date: renewal }]
++    if (!contractIds.has(recordId(row.id)) || !validDate(renewal) || renewal < today || renewal > limit) return []
++    return [{ id: `contracts:${recordId(row.id)}`, page: "Vendor Contracts", recordId: recordId(row.id), fact: text(row.vendor) || text(row.name), rule: "Renewal within 90 days", date: renewal }]
+   }) : []
+   return [...actionSignals, ...riskSignals, ...contractSignals].sort((a, b) => (a.date || "9999").localeCompare(b.date || "9999") || a.id.localeCompare(b.id))
+ }
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts
+@@ -0,0 +1,201 @@
++import { expect, test } from "bun:test"
++import { createDashboardProofFixture } from "./fixture.ts"
++import { classifyDashboardConfirmationChange, type DashboardConfirmationObservation } from "../../../product/dashboard/confirmation.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { ConfirmationScope } from "../../../product/contracts/context.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { rows } from "../../../runtime/contract.ts"
++
++const january = { start: "2026-01-01", end: "2026-01-31" }
++const annual = { start: "2026-01-01", end: "2026-12-31" }
++type Fixture = Awaited<ReturnType<typeof createDashboardProofFixture>>
++
++function available(value: DashboardConfirmationObservation) {
++  expect(value.state).toBe("available")
++  if (value.state !== "available") throw new Error("The real C06 observation is unavailable")
++  return value
++}
++
++async function seedBudget(f: Fixture, actual?: number) {
++  // Only starting business data is fixed. Admission, source identities, projections,
++  // versioning and fences are the production producers over the actual SQLite store.
++  await f.persistence.transaction("dashboard", async (snapshot) => {
++    snapshot.data.opexOwners = [{ id: "operating-line", name: "Private fiscal line", budget: 1200 }]
++    snapshot.data.opexEntries = [
++      { id: "january", ownerId: "operating-line", year: 2026, month: 1, budget: 200, forecast: 0, ...(actual === undefined ? {} : { actual }) },
++      { id: "february", ownerId: "operating-line", year: 2026, month: 2, budget: 100, actual: 10, forecast: 95 },
++    ]
++    return { commit: true, value: undefined }
++  })
++}
++
++async function budgetScope(f: Fixture, context: TrustedDomainContext): Promise<ConfirmationScope> {
++  const page = await f.observer.issueForActor({ recordType: "dashboard-page", recordId: "Budget Overview", fields: ["budgetSeries"], period: january }, context)
++  expect(page.status).toBe("ok")
++  if (page.status !== "ok") throw new Error("The authorized January page source was not issued")
++  const dependency = await f.records.issue({ page: "OPEX Detail", recordType: "opexOwners", recordId: "operating-line", fields: ["budget"], period: annual }, context)
++  expect(dependency.status).toBe("ok")
++  if (dependency.status !== "ok") throw new Error("The authorized annual dependency was not issued")
++  const read = await f.records.read(dependency.value.refId, context)
++  expect(read.status).toBe("ok")
++  if (read.status !== "ok" || read.value.context.sourceRefs.length !== 1) throw new Error("The dependency has no exact producer source reference")
++  const target = page.value.target
++  return { sourceRef: { surface: "dashboard", type: target.recordType, id: target.recordId, incarnation: target.incarnation },
++    fields: ["budgetSeries"], period: january, materialDependencies: read.value.context.sourceRefs, scopeDefinitionVersion: "dashboard-c06-v1" }
++}
++
++async function lockedFence(f: Fixture, scope: ConfirmationScope, observation: Extract<DashboardConfirmationObservation, { state: "available" }>, context: TrustedDomainContext) {
++  if (!f.persistence.transactionAll) throw new Error("The real C06 fence requires the production transactionAll driver")
++  return f.persistence.transactionAll(async () => ({ commit: false, value: await f.observer.fence(scope, observation, context) }))
++}
++
++test("C06 real admissions retain the original observation while monthly material and dependencies advance independently", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    await seedBudget(f, 0)
++    const proof = await f.read(async (context) => {
++      const scope = await budgetScope(f, context)
++      const scopeBefore = structuredClone(scope)
++      const original = available(await f.observer.observe(scope, context))
++      const originalBefore = structuredClone(original)
++      expect(original.evidence.target.version).toBe(original.sourceVersion)
++      expect(original.projection.context.principalRef).toBe(f.principal())
++      expect(original.projection.context.sourceRefs[0]?.version).toBe(original.sourceVersion)
++      expect(original.projection.values.find((value) => value.id === "budget:2026-01:actual")).toMatchObject({ value: 0, evidenceState: "confirmed", period: january })
++      expect(JSON.stringify(original.projection)).not.toContain("Private fiscal line")
++      expect(JSON.stringify(original.projection)).not.toContain("privateDependencyDigest")
++      expect(await f.observer.fence(scope, original, context)).toBe(false)
++      expect(await lockedFence(f, scope, original, context)).toBe(true)
++
++      const february = await f.command({ page: "OPEX Detail", action: "save-entry", id: "february", version: 0,
++        values: { ownerId: "operating-line", year: 2026, month: 2, budget: 100, actual: 99, forecast: 95 } })
++      expect(february.status).toBe(200)
++      const outside = available(await f.observer.observe(scope, context))
++      expect(outside.scopeFingerprint).toBe(original.scopeFingerprint)
++      expect(outside.sourceVersion).toBe(original.sourceVersion)
++      expect(classifyDashboardConfirmationChange(outside, original)).toBe("unchanged-scope")
++      expect(await lockedFence(f, scope, original, context)).toBe(true)
++
++      // January has an explicit positive override. Changing the annual owner budget
++      // affects the selected external dependency, not January's displayed values.
++      const annualChange = await f.command({ page: "OPEX Detail", action: "save", id: "operating-line", version: 0,
++        values: { name: "Private fiscal line", budget: 2400 } })
++      expect(annualChange.status).toBe(200)
++      const dependency = available(await f.observer.observe(scope, context))
++      expect(dependency.sourceFingerprint).toBe(original.sourceFingerprint)
++      expect(dependency.dependencyFingerprint).not.toBe(original.dependencyFingerprint)
++      expect(classifyDashboardConfirmationChange(dependency, original)).toBe("dependency-change")
++      expect(await lockedFence(f, scope, original, context)).toBe(false)
++      expect(await lockedFence(f, scope, dependency, context)).toBe(true)
++
++      const januaryChange = await f.command({ page: "OPEX Detail", action: "save-entry", id: "january", version: 0,
++        values: { ownerId: "operating-line", year: 2026, month: 1, budget: 200, actual: 1, forecast: 0 } })
++      expect(januaryChange.status).toBe(200)
++      const material = available(await f.observer.observe(scope, context))
++      expect(material.sourceVersion).toBeGreaterThan(original.sourceVersion)
++      expect(material.sourceFingerprint).not.toBe(dependency.sourceFingerprint)
++      expect(classifyDashboardConfirmationChange(material, dependency)).toBe("material-change")
++      expect(material.projection.values.find((value) => value.id === "budget:2026-01:actual")?.value).toBe(1)
++      expect(await lockedFence(f, scope, dependency, context)).toBe(false)
++      expect(await lockedFence(f, scope, material, context)).toBe(true)
++      expect(original).toEqual(originalBefore)
++      expect(scope).toEqual(scopeBefore)
++      return { scope, original, originalBefore, material }
++    })
++    await f.reopen()
++    await f.read(async (context) => {
++      const reopened = available(await f.observer.observe(proof.scope, context))
++      expect(reopened.scopeFingerprint).toBe(proof.material.scopeFingerprint)
++      expect(reopened.sourceVersion).toBe(proof.material.sourceVersion)
++      expect(await lockedFence(f, proof.scope, reopened, context)).toBe(true)
++    })
++    expect(proof.original).toEqual(proof.originalBefore)
++    expect(proof.original.sourceVersion).toBeLessThan(proof.material.sourceVersion)
++  } finally { await f.close() }
++})
++
++test("C06 actual absence and recorded zero remain distinct under the real source projection and a durable domain command", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    await seedBudget(f)
++    await f.read(async (context) => {
++      const scope = await budgetScope(f, context)
++      const absent = available(await f.observer.observe(scope, context))
++      const preserved = digestSfValue(absent)
++      expect(absent.projection.values.find((value) => value.id === "budget:2026-01:actual")).toMatchObject({ value: null, evidenceState: "absent" })
++      expect(absent.projection.missing).toContainEqual({ field: "budget:2026-01:actual", reason: "missing" })
++      const written = await f.command({ page: "OPEX Detail", action: "save-entry", id: "january", version: 0,
++        values: { ownerId: "operating-line", year: 2026, month: 1, budget: 200, actual: 0, forecast: 0 } })
++      expect(written.status).toBe(200)
++      const zero = available(await f.observer.observe(scope, context))
++      expect(zero.projection.values.find((value) => value.id === "budget:2026-01:actual")).toMatchObject({ value: 0, evidenceState: "confirmed" })
++      expect(zero.projection.missing).not.toContainEqual({ field: "budget:2026-01:actual", reason: "missing" })
++      expect(zero.scopeFingerprint).not.toBe(absent.scopeFingerprint)
++      expect(zero.sourceVersion).toBeGreaterThan(absent.sourceVersion)
++      expect(classifyDashboardConfirmationChange(zero, absent)).toBe("material-change")
++      expect(await lockedFence(f, scope, absent, context)).toBe(false)
++      expect(await lockedFence(f, scope, zero, context)).toBe(true)
++      expect(digestSfValue(absent)).toBe(preserved)
++    })
++    await f.reopen()
++    const persisted = await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
++      value: rows(snapshot.data.opexEntries).find((entry) => entry.id === "january") }))
++    expect(persisted?.actual).toBe(0)
++  } finally { await f.close() }
++})
++
++test("C06 real authority and source replacement cannot revive a previous observation or its locked fence", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    await f.read(async (context) => {
++      const day = new Date(f.clock.at).toISOString().slice(0, 10)
++      const fields = ["action", "owner", "due", "priority", "notes"]
++      const issued = await f.records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "topic", fields, period: { start: day, end: day } }, context)
++      expect(issued.status).toBe("ok")
++      if (issued.status !== "ok") throw new Error("The real Hot Topic source is unavailable")
++      const target = issued.value.target
++      const scope: ConfirmationScope = { sourceRef: { surface: "dashboard", type: "hotTopics", id: target.recordId, incarnation: target.incarnation },
++        fields, period: target.period!, materialDependencies: [], scopeDefinitionVersion: "dashboard-c06-v1" }
++      const original = available(await f.observer.observe(scope, context))
++      const originalBefore = structuredClone(original)
++      expect(await lockedFence(f, scope, original, context)).toBe(true)
++      f.policies.owner.readable = false
++      const denied = await f.observer.observe(scope, context)
++      expect(denied).toEqual({ state: "access-unavailable", sourceVersion: 0 })
++      expect(JSON.stringify(denied)).not.toContain("Private operator context")
++      expect(await lockedFence(f, scope, original, context)).toBe(false)
++      f.policies.owner.readable = true
++      expect((await f.observer.observe(scope, context)).state).toBe("available")
++
++      const removed = await f.command({ page: "Hot Topics & Actions", action: "delete", id: "topic", version: 0, values: {}, confirmed: true })
++      expect(removed.status).toBe(200)
++      expect((await f.observer.observe(scope, context)).state).not.toBe("available")
++      expect(await lockedFence(f, scope, original, context)).toBe(false)
++      // A genuinely later row with the same text ID is a different physical source.
++      // The production source driver, not this fixture, assigns its incarnation.
++      await f.persistence.transaction("dashboard", async (snapshot) => {
++        snapshot.data.hotTopics = [...rows(snapshot.data.hotTopics), { id: "topic", action: "Replacement action", owner: "Operations", due: "2026-12-01", status: "open", priority: "normal", notes: "Replacement private context" }]
++        return { commit: true, value: undefined }
++      })
++      const replaced = await f.observer.observe(scope, context)
++      expect(replaced.state).toBe("replaced")
++      expect(JSON.stringify(replaced)).not.toContain("Replacement private context")
++      expect(await lockedFence(f, scope, original, context)).toBe(false)
++      const newSource = await f.records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "topic", fields, period: { start: day, end: day } }, context)
++      expect(newSource.status).toBe("ok")
++      if (newSource.status !== "ok") throw new Error("Replacement source was not issued independently")
++      expect(newSource.value.target.incarnation).not.toBe(target.incarnation)
++      const currentScope = { ...scope, sourceRef: { ...scope.sourceRef, incarnation: newSource.value.target.incarnation } }
++      const current = available(await f.observer.observe(currentScope, context))
++      expect(current.physicalIncarnation).not.toBe(original.physicalIncarnation)
++      expect(await lockedFence(f, currentScope, current, context)).toBe(true)
++      expect((await f.logout())?.status).toBe(204)
++      expect(await f.observer.observe(currentScope, context)).toEqual({ state: "access-unavailable", sourceVersion: 0 })
++      expect(await lockedFence(f, currentScope, current, context)).toBe(false)
++      expect(original).toEqual(originalBefore)
++    })
++    const other = await f.page("Hot Topics & Actions", "other")
++    expect(other.status).toBe(200)
++    expect(await other.text()).toContain("Unrelated action")
++  } finally { await f.close() }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts
+@@ -0,0 +1,108 @@
++import { randomBytes, randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import path from "node:path"
++import { AbsolutePath } from "@orchestra/core/schema"
++import { createModule } from "../../../index.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import type { Command } from "../../../runtime/contract.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
++import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
++import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
++import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
++import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../product/dashboard/sources.ts"
++import { createDashboardConfirmationObserver } from "../../../product/dashboard/confirmation.ts"
++import { createDashboardConfirmationProjectionReader } from "../../../product/dashboard/confirmation-issuer.ts"
++import { createDashboardPort } from "../../../product/dashboard/port.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++
++type Person = "owner" | "other"
++
++// Two encrypted local sessions, real request admission/C08 and the production SQLite/source driver.
++// Only initial business records and explicit permission changes are fixture inputs.
++export async function createDashboardProofFixture() {
++  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-dashboard-installed67-"))
++  await chmod(directory, 0o700)
++  const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
++  const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
++  const origin = server.url.origin, installationId = randomUUID()
++  const clock = { at: "2026-11-13T08:00:00Z" }
++  const policies = { owner: { readable: true, writable: true }, other: { readable: true, writable: true } }
++  const people = [
++    { name: "owner" as const, uid: 1000, label: "Dashboard owner", key: randomBytes(32) },
++    { name: "other" as const, uid: 1001, label: "Other dashboard reader", key: randomBytes(32) },
++  ]
++  const build = async (driver: LocalStore) => {
++    const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID, projectScope: createSfSourceScopeProjector(() => clock.at) })
++    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
++    const identities = people.map((person) => ({ name: person.name, identity: createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId, uid: person.uid, name: person.label }, secrets: driver.secrets, key: person.key }) }))
++    const authenticate: Parameters<typeof createModule>[1]["authenticate"] = async (request, context) => {
++      const values = await Promise.all(identities.map(async (entry) => {
++        const principal = await entry.identity.authenticate(request, context)
++        const policy = policies[entry.name]
++        return principal && policy.readable ? { ...principal, canWrite: policy.writable && principal.canWrite } : null
++      }))
++      const current = values.filter((value) => value !== null)
++      return current.length === 1 ? current[0]! : null
++    }
++    const environment = async (request: Request) => ({ at: clock.at, id: randomUUID, directory: (await Promise.all(identities.map((entry) => entry.identity.directory(request)))).flat() })
++    const authority = createSfProductAuthority({ identity: () => ({ installationId, hostId: "dashboard67", projectId: "dashboard67-project", location: { directory: AbsolutePath.make(directory) } }),
++      installationId, origin, policyVersion: "dashboard67-policy", persistence, authenticate, environment, now: Date.now, createId: randomUUID,
++      commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() :
++        request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
++      inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
++      authorizeDocument: async () => undefined,
++      grants: people.map((person) => ({ principalRef: `macos:${installationId}:${person.uid}`, namespaces: ["cases", "reviews", "preferences", "receipts"] as const, operations: ["sf_dashboard_read", "sf_case_read"], humanActions: ["reviews.preserve", "decisions.edit"] as const })) })
++    const records = createDashboardRecordEvidenceHost({ host: authority.host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host: authority.host, scopedSources: persistence }) })
++    const dashboard = createDashboardPort({ host: authority.host, sources: createDashboardSourceHost({ host: authority.host, scopedSources: persistence }), recordEvidence: records })
++    const observer = createDashboardConfirmationObserver({ host: authority.host, scopedSources: persistence, readProjection: createDashboardConfirmationProjectionReader({ dashboard, records }) })
++    const module = createModule("/sucafina", { persistence, authenticate, environment, maxJsonBytes: 100000 })
++    return { driver, persistence, identities, authenticate, environment, authority, records, dashboard, observer, module }
++  }
++  let current = await build(await openLocalStore(directory))
++  routing.handle = (request) => current.module(request)
++  await current.persistence.transaction("dashboard", async (snapshot) => {
++    snapshot.data.hotTopics = [
++      { id: "topic", action: "Original action", owner: "Operations", due: "2026-12-01", status: "open", priority: "normal", notes: "Private operator context" },
++      { id: "unrelated", action: "Unrelated action", owner: "Infrastructure", due: "2027-01-01", status: "open", priority: "normal", notes: "Unrelated retained context" },
++    ]
++    return { commit: true, value: undefined }
++  })
++  const cookies = new Map<Person, string>()
++  for (const entry of current.identities) {
++    const response = await entry.identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await entry.identity.enroll()}`))
++    const cookie = response?.headers.get("set-cookie")?.split(";")[0]
++    if (!cookie || response?.status !== 303) throw new Error("Dashboard proof operator enrollment failed")
++    cookies.set(entry.name, cookie)
++  }
++  const request = (person: Person = "owner", signal?: AbortSignal) => new Request(`${origin}/sucafina/dashboard?sf=dashboard-workbench`, {
++    method: "POST", signal, headers: { cookie: cookies.get(person)!, origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify({ page: "Hot Topics & Actions" }),
++  })
++  const read = async <T>(work: (context: TrustedDomainContext) => Promise<T>, person: Person = "owner", signal?: AbortSignal) => {
++    const authority = current.authority
++    const digest = digestSfValue({ page: "Hot Topics & Actions" })
++    const admitted = await authority.ui.admit(request(person, signal), "sf_dashboard_read", digest)
++    if (admitted.status !== "ok") throw new Error("Dashboard proof read admission failed")
++    try {
++      if (!await authority.ui.validate(admitted.value, "sf_dashboard_read", digest)) throw new Error("Dashboard proof read validation failed")
++      return await work(admitted.value)
++    } finally { authority.ui.finish(admitted.value) }
++  }
++  return {
++    directory, origin, installationId, clock, policies, request, read,
++    principal: (person: Person = "owner") => `macos:${installationId}:${people.find((entry) => entry.name === person)!.uid}`,
++    get persistence() { return current.persistence }, get authority() { return current.authority }, get records() { return current.records },
++    get observer() { return current.observer }, get dashboard() { return current.dashboard },
++    get environment() { return current.environment }, get authenticate() { return current.authenticate },
++    page: (page: string, person: Person = "owner") => fetch(`${origin}/sucafina/dashboard?page=${encodeURIComponent(page)}`, { headers: { cookie: cookies.get(person)! } }),
++    command: (command: Command, person: Person = "owner") => fetch(`${origin}/sucafina/dashboard`, { method: "POST", headers: { cookie: cookies.get(person)!, origin, "content-type": "application/json" }, body: JSON.stringify(command) }),
++    logout: async (person: Person = "owner") => current.identities.find((entry) => entry.name === person)!.identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { origin, cookie: cookies.get(person)! } })),
++    disconnect: () => current.driver.dispose(),
++    reopen: async () => { await current.driver.dispose(); current = await build(await openLocalStore(directory)) },
++    close: async () => { await server.stop(true); await current.driver.dispose(); await rm(directory, { recursive: true, force: true }) },
++  }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts
+@@ -0,0 +1,142 @@
++import { expect, test } from "bun:test"
++import { createDashboardProofFixture } from "./fixture.ts"
++import { createDashboardSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
++import { dashboardSignals } from "../../../product/dashboard/signals.ts"
++import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
++import { rows } from "../../../runtime/contract.ts"
++
++type Fixture = Awaited<ReturnType<typeof createDashboardProofFixture>>
++const period = { start: "2026-01-01", end: "2026-12-31" }
++
++async function signals(f: Fixture) {
++  return f.read(async (context) => {
++    const selection = await createDashboardSourceIssuer({ host: f.authority.host, scopedSources: f.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)
++    expect(selection.status).toBe("ok")
++    if (selection.status !== "ok") throw new Error("Real Executive Dashboard source issuance failed")
++    const read = await f.dashboard.read({ selectionRef: selection.value.selectionRef, fields: ["signals"], period }, context)
++    expect(read.status).toBe("ok")
++    if (read.status !== "ok") throw new Error("Real Executive Dashboard signals could not be read")
++    const facts = read.value.values.filter((value) => value.id.endsWith(".fact"))
++    for (const value of facts) {
++      const evidence = value.drilldown
++      expect(evidence?.kind).toBe("record")
++      if (evidence?.kind !== "record") throw new Error("Signal has no canonical record evidence")
++      expect(evidence.refDigest).toBe(digestSfEvidenceRef(evidence))
++      expect(value.sourceRefs).toEqual([evidence])
++      const canonical = await f.records.read(evidence.refId, context)
++      expect(canonical.status).toBe("ok")
++      if (canonical.status !== "ok") throw new Error("Signal's authenticated canonical record could not be read")
++      expect(canonical.value.context.principalRef).toBe(f.principal())
++      expect(canonical.value.values.every((entry) => entry.sourceRefs.every((source) => source.refDigest === evidence.refDigest))).toBe(true)
++    }
++    return facts
++  })
++}
++
++async function business(f: Fixture) {
++  return f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone({ data: snapshot.data, versions: snapshot.versions, audit: snapshot.audit }) }))
++}
++
++test("WP02 Attention retains numeric risk and contract identities through canonical reads, deletion and SQLite reopen", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    await f.persistence.transaction("dashboard", async (snapshot) => {
++      snapshot.data.risks = [
++        { id: 0, name: "Zero identity risk", title: "Zero identity risk", status: "open", impact: 4, probability: 4 },
++        { id: 7, name: "Numeric identity risk", title: "Numeric identity risk", status: "mitigating", impact: 5, probability: 4 },
++        { id: "closed", name: "Closed risk", status: "closed", impact: 5, probability: 5 },
++      ]
++      snapshot.data.contracts = [{ id: 8, vendor: "Numeric identity contract", renewal: "2026-12-01" }]
++      return { commit: true, value: undefined }
++    })
++    const before = await business(f)
++    const facts = await signals(f)
++    expect(facts.map((value) => value.value).sort()).toEqual(["Numeric identity contract", "Numeric identity risk", "Zero identity risk"])
++    expect(facts.map((value) => value.drilldown?.kind === "record" ? value.drilldown.target.recordId : "missing").sort()).toEqual(["0", "7", "8"])
++    const executive = await f.page("Executive Dashboard")
++    expect(executive.status).toBe(200)
++    const html = await executive.text()
++    for (const id of ["risks:0", "risks:7", "contracts:8"]) expect(html).toContain(`data-signal-priority="${id}"`)
++    expect(html).toContain("#record-7")
++    const risks = await f.page("IT Risks")
++    expect(risks.status).toBe(200)
++    expect(await risks.text()).toContain('id="record-7"')
++    expect(await business(f)).toEqual(before)
++    await f.reopen()
++    expect(await business(f)).toEqual(before)
++    expect((await signals(f)).map((value) => value.value).sort()).toEqual(facts.map((value) => value.value).sort())
++    const removed = await f.command({ page: "IT Risks", action: "delete", id: "7", version: 0, values: {} })
++    expect(removed.status).toBe(200)
++    const after = await business(f)
++    expect(rows(after.data.risks).map((row) => row.id)).toEqual([0, "closed"])
++    expect(after.data.contracts).toEqual(before.data.contracts)
++    expect(after.data.hotTopics).toEqual(before.data.hotTopics)
++    expect((await signals(f)).map((value) => value.value).sort()).toEqual(["Numeric identity contract", "Zero identity risk"])
++    await f.reopen()
++    expect(await business(f)).toEqual(after)
++    const reopened = await f.page("Executive Dashboard")
++    const reopenedHtml = await reopened.text()
++    expect(reopenedHtml).not.toContain('data-signal-priority="risks:7"')
++    expect(reopenedHtml).toContain('data-signal-priority="risks:0"')
++    expect(reopenedHtml).toContain('data-signal-priority="contracts:8"')
++  } finally { await f.close() }
++})
++
++test("WP02 signal UTC boundaries match canonical evidence for offset clocks and preserve the ninety-day rule", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    f.clock.at = "2026-11-13T23:30:00-03:00"
++    await f.persistence.transaction("dashboard", async (snapshot) => {
++      snapshot.data.hotTopics = rows(snapshot.data.hotTopics).map((row) => row.id === "topic" ? { ...row, action: "Due before today's UTC day", due: "2026-11-13" } : row)
++      snapshot.data.contracts = [
++        { id: "expired", vendor: "Expired in UTC", renewal: "2026-11-13" },
++        { id: "today", vendor: "Renews on UTC day", renewal: "2026-11-14" },
++        { id: "boundary", vendor: "Renews on day ninety", renewal: "2027-02-12" },
++        { id: "outside", vendor: "Renews after day ninety", renewal: "2027-02-13" },
++      ]
++      return { commit: true, value: undefined }
++    })
++    const before = await business(f)
++    const facts = await signals(f)
++    expect(facts.map((value) => value.value).sort()).toEqual(["Due before today's UTC day", "Renews on UTC day", "Renews on day ninety"])
++    const topic = facts.find((value) => value.drilldown?.kind === "record" && value.drilldown.target.recordType === "hotTopics")
++    expect(topic?.drilldown?.kind === "record" && topic.drilldown.target.period).toEqual({ start: "2026-11-14", end: "2026-11-14" })
++    const executive = await f.page("Executive Dashboard")
++    const html = await executive.text()
++    expect(html).toContain('data-signal-priority="hotTopics:topic"')
++    expect(html).toContain('data-signal-priority="contracts:boundary"')
++    expect(html).not.toContain('data-signal-priority="contracts:expired"')
++    expect(html).not.toContain('data-signal-priority="contracts:outside"')
++    expect(await business(f)).toEqual(before)
++    f.policies.owner.readable = false
++    const denied = await f.page("Executive Dashboard")
++    expect(denied.status).toBe(401)
++    expect(await denied.text()).not.toContain("Renews on day ninety")
++  } finally { await f.close() }
++})
++
++test("WP02 ambiguous normalized signal identities are suppressed and cannot commit as durable C17 identities", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    await f.persistence.transaction("dashboard", async (snapshot) => {
++      snapshot.data.risks = [{ id: 7, name: "Numeric risk", status: "open", impact: 4, probability: 4 }, { id: "unrelated-risk", name: "Unrelated risk", status: "open", impact: 4, probability: 4 }]
++      snapshot.data.contracts = [{ id: 8, vendor: "Numeric contract", renewal: "2026-12-01" }]
++      return { commit: true, value: undefined }
++    })
++    const before = await business(f)
++    await f.persistence.transaction("dashboard", async (snapshot) => {
++      // A rejected incoming representation is inspected in an isolated transaction, never installed.
++      snapshot.data.risks = [...rows(snapshot.data.risks), { id: "7", name: "Ambiguous textual risk", status: "open", impact: 4, probability: 4 }]
++      snapshot.data.contracts = [...rows(snapshot.data.contracts), { id: "8", vendor: "Ambiguous textual contract", renewal: "2026-12-01" }]
++      const current = dashboardSignals(snapshot, { id: f.principal(), roles: ["admin"], canWrite: true }, { at: f.clock.at, id: () => "unused", directory: [] })
++      expect(current.map((signal) => signal.id)).toEqual(["risks:unrelated-risk"])
++      return { commit: false, value: undefined }
++    })
++    await expect(f.persistence.transaction("dashboard", async (snapshot) => {
++      snapshot.data.risks = [...rows(snapshot.data.risks), { id: "7", name: "Ambiguous textual risk", status: "open", impact: 4, probability: 4 }]
++      return { commit: true, value: undefined }
++    })).rejects.toThrow()
++    expect(await business(f)).toEqual(before)
++    expect((await signals(f)).map((value) => value.value).sort()).toEqual(["Numeric contract", "Numeric risk", "Unrelated risk"])
++  } finally { await f.close() }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts
+@@ -0,0 +1,181 @@
++import { expect, test } from "bun:test"
++import { createDashboardProofFixture } from "./fixture.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import { dashboardSourceSelector } from "../../../product/dashboard/sources.ts"
++import { rows } from "../../../runtime/contract.ts"
++
++const fields = ["action", "owner", "due", "priority", "notes"]
++
++async function issue(fixture: Awaited<ReturnType<typeof createDashboardProofFixture>>, person: "owner" | "other" = "owner") {
++  return fixture.read(async (context) => {
++    const day = new Date(fixture.clock.at).toISOString().slice(0, 10)
++    const result = await fixture.records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "topic", fields, period: { start: day, end: day } }, context)
++    expect(result.status).toBe("ok")
++    if (result.status !== "ok") throw new Error("Real Dashboard source issuance failed")
++    return result.value
++  }, person)
++}
++
++async function business(fixture: Awaited<ReturnType<typeof createDashboardProofFixture>>) {
++  return fixture.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone({ data: snapshot.data, versions: snapshot.versions, audit: snapshot.audit }) }))
++}
++
++test("WP02 F04 retains read continuity when writing is withdrawn, with no domain effect or substituted grant", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    const original = await issue(f)
++    const originalDigest = digestSfValue(original)
++    const before = await business(f)
++    const physical = await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.sfSources!.records[JSON.stringify(["hotTopics", "topic"])]!.incarnation }))
++    f.policies.owner.writable = false
++    await f.read(async (context) => {
++      const retained = await f.observer.preparePrivateDraftRead(original, context)
++      expect(retained.status).toBe("ok")
++      if (retained.status !== "ok") throw new Error("Authorized private draft continuity was unavailable")
++      expect(retained.value.evidence.target.incarnation).not.toBe(original.target.incarnation)
++      expect(retained.value.evidence.target.projectionDigest).toBe(original.target.projectionDigest)
++      expect(retained.value.projection.context.principalRef).toBe(f.principal())
++      expect(retained.value.projection.values.find((value) => value.id.endsWith(":action"))?.value).toBe("Original action")
++      expect(retained.value.projection.context.capabilities).toEqual([])
++      expect(JSON.stringify({ evidence: retained.value.evidence, projection: retained.value.projection })).not.toContain(physical)
++      expect(await retained.value.fence()).toBe(false)
++      expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await retained.value.fence() }))).toBe(true)
++    })
++    expect(digestSfValue(original)).toBe(originalDigest)
++    expect(await business(f)).toEqual(before)
++    const rejected = await f.command({ page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { action: "Forbidden write" } })
++    expect(rejected.status).toBe(403)
++    expect(await business(f)).toEqual(before)
++    const page = await f.page("Hot Topics & Actions")
++    expect(page.status).toBe(200)
++    expect(await page.text()).toContain("Original action")
++  } finally { await f.close() }
++})
++
++test("WP02 private source proof follows current material through SQLite reopen while the original write version stays unchanged", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    const original = await issue(f)
++    const changed = await f.command({ page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { action: "Changed current action" } })
++    expect(changed.status).toBe(200)
++    const persisted = await business(f)
++    expect(persisted.versions["hotTopics:topic"]?.version).toBe(1)
++    expect(rows(persisted.data.hotTopics).find((row) => row.id === "unrelated")?.notes).toBe("Unrelated retained context")
++    await f.reopen()
++    expect(await business(f)).toEqual(persisted)
++    f.clock.at = "2026-11-14T08:00:00Z"
++    f.policies.owner.writable = false
++    await f.read(async (context) => {
++      const retained = await f.observer.preparePrivateDraftRead(original, context)
++      expect(retained.status).toBe("ok")
++      if (retained.status !== "ok") throw new Error("Persisted source continuity was unavailable after reopen")
++      expect(retained.value.evidence.refId).not.toBe(original.refId)
++      expect(retained.value.evidence.target.projectionDigest).not.toBe(original.target.projectionDigest)
++      expect(retained.value.evidence.target.period).toEqual({ start: "2026-11-14", end: "2026-11-14" })
++      expect(retained.value.projection.values.find((value) => value.id.endsWith(":action"))?.value).toBe("Changed current action")
++      expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await retained.value.fence() }))).toBe(true)
++    })
++    expect(original.target.period).toEqual({ start: "2026-11-13", end: "2026-11-13" })
++    expect(await business(f)).toEqual(persisted)
++    f.policies.owner.writable = true
++    const conflict = await f.command({ page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { action: "Unsaved operator wording" } })
++    expect(conflict.status).toBe(409)
++    expect(await business(f)).toEqual(persisted)
++  } finally { await f.close() }
++})
++
++test("WP02 rejects a different authenticated principal, tampered scope and delete/recreate without deleting unrelated records", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    const original = await issue(f)
++    const other = await issue(f, "other")
++    expect(other.target.incarnation).not.toBe(original.target.incarnation)
++    await f.read(async (context) => {
++      expect((await f.observer.preparePrivateDraftRead(original, context)).status).toBe("denied")
++      expect((await f.observer.preparePrivateDraftRead(other, context)).status).toBe("ok")
++    }, "other")
++    await f.read(async (context) => {
++      const forged = { ...original, target: { ...original.target, version: original.target.version + 100 } }
++      forged.refId = dashboardSourceSelector(forged.target.incarnation, forged.target.version)
++      forged.refDigest = digestSfEvidenceRef(forged)
++      expect((await f.observer.preparePrivateDraftRead(forged, context)).status).toBe("denied")
++      expect((await f.observer.preparePrivateDraftRead({ ...original, refDigest: "0".repeat(64) }, context)).status).toBe("needs-input")
++      const narrowed = { ...original, target: { ...original.target, fields: fields.filter((field) => field !== "notes") } }
++      narrowed.refDigest = digestSfEvidenceRef(narrowed)
++      expect((await f.observer.preparePrivateDraftRead(narrowed, context)).status).toBe("needs-input")
++    })
++    const before = await business(f)
++    const removed = await f.command({ page: "Hot Topics & Actions", action: "delete", id: "topic", version: 0, values: {} })
++    expect(removed.status).toBe(200)
++    await f.read(async (context) => { expect((await f.observer.preparePrivateDraftRead(original, context)).status).toBe("denied") })
++    const deleted = await business(f)
++    expect(rows(deleted.data.hotTopics)).toEqual(rows(before.data.hotTopics).filter((row) => row.id !== "topic"))
++    // An independently persisted later row with the same textual ID receives a new physical incarnation.
++    await f.persistence.transaction("dashboard", async (snapshot) => {
++      snapshot.data.hotTopics = [...rows(snapshot.data.hotTopics), { ...rows(before.data.hotTopics).find((row) => row.id === "topic")!, action: "Replacement identity" }]
++      return { commit: true, value: undefined }
++    })
++    const replacement = await issue(f)
++    expect(replacement.target.incarnation).not.toBe(original.target.incarnation)
++    await f.read(async (context) => {
++      expect((await f.observer.preparePrivateDraftRead(original, context)).status).toBe("denied")
++      expect((await f.observer.preparePrivateDraftRead(replacement, context)).status).toBe("ok")
++    })
++    expect(rows((await business(f)).data.hotTopics).find((row) => row.id === "unrelated")).toEqual(rows(before.data.hotTopics).find((row) => row.id === "unrelated"))
++  } finally { await f.close() }
++})
++
++test("WP02 private read fence rejects late source mutation and logout without reusing an earlier observation", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    const original = await issue(f)
++    await f.read(async (context) => {
++      const prepared = await f.observer.preparePrivateDraftRead(original, context)
++      expect(prepared.status).toBe("ok")
++      if (prepared.status !== "ok") throw new Error("Source fence preparation failed")
++      const changed = await f.command({ page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { notes: "Changed after the observation" } })
++      expect(changed.status).toBe(200)
++      expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await prepared.value.fence() }))).toBe(false)
++    })
++    await f.read(async (context) => {
++      const prepared = await f.observer.preparePrivateDraftRead(original, context)
++      expect(prepared.status).toBe("ok")
++      if (prepared.status !== "ok") throw new Error("Current source fence preparation failed")
++      expect((await f.logout())?.status).toBe(204)
++      expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await prepared.value.fence() }))).toBe(false)
++      const denied = await f.observer.preparePrivateDraftRead(original, context)
++      expect(denied.status).toBe("denied")
++      expect(JSON.stringify(denied)).not.toContain("Changed after the observation")
++    })
++    const other = await f.page("Hot Topics & Actions", "other")
++    expect(other.status).toBe(200)
++    expect(await other.text()).toContain("Unrelated action")
++  } finally { await f.close() }
++})
++
++test("WP02 interrupted requests and unavailable SQLite are recoverable reads, while actual read revocation is denied", async () => {
++  const f = await createDashboardProofFixture()
++  try {
++    const original = await issue(f)
++    const cancellation = new AbortController()
++    await f.read(async (context) => {
++      cancellation.abort()
++      expect((await f.observer.preparePrivateDraftRead(original, context)).status).toBe("unavailable")
++    }, "owner", cancellation.signal)
++    await f.read(async (context) => {
++      await f.disconnect()
++      expect(await f.observer.preparePrivateDraftRead(original, context)).toEqual({ status: "unavailable", reason: "private-draft-source-check-unavailable" })
++    })
++    await f.reopen()
++    await f.read(async (context) => {
++      expect((await f.observer.preparePrivateDraftRead(original, context)).status).toBe("ok")
++      f.policies.owner.readable = false
++      const denied = await f.observer.preparePrivateDraftRead(original, context)
++      expect(denied.status).toBe("denied")
++      expect(JSON.stringify(denied)).not.toContain("Private operator context")
++    })
++    const revoked = await f.page("Hot Topics & Actions")
++    expect(revoked.status).toBe(401)
++    expect(await revoked.text()).not.toContain("Private operator context")
++  } finally { await f.close() }
++})
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts
+@@ -0,0 +1,160 @@
++import { expect, test, type Request } from "@playwright/test"
++import { startPlannerInstallation } from "../wp03/installation-fixture"
++import { addOwner, command, confirmDialog, dashboardUrl, monthlyForm, openForm, openMonth } from "./support"
++
++test.use({ trace: "off" })
++
++// All requests reach the installed CLI, its operator identity and durable store.
++// The two intercepted replies below first execute against that real server; only
++// delivery is interrupted or delayed. They never fabricate an authorized result.
++test("installed Dashboard confirms exact monthly changes and purges late results after real logout", async ({ page }, info) => {
++  test.setTimeout(180_000)
++  const installation = await startPlannerInstallation(info)
++  const errors: string[] = []
++  page.on("pageerror", (error) => errors.push(error.message))
++  const reader = await page.context().newPage()
++  reader.on("pageerror", (error) => errors.push(error.message))
++  const url = dashboardUrl(installation.origin, "OPEX Detail")
++  let owner = "", unrelated = "", applications = 0
++  const lateDelivery: { release?: () => void } = {}
++  const countApplications = (request: Request) => {
++    if (request.method() === "POST" && request.url() === url && request.postDataJSON()?.action === "apply-preview") applications++
++  }
++  page.on("request", countApplications)
++  try {
++    await test.step("create real fiscal lines and cancel a preview without changing saved months", async () => {
++      await page.context().addCookies([installation.cookie])
++      await page.goto(url)
++      owner = await addOwner(page, "M67 Installed operating line", "1200")
++      unrelated = await addOwner(page, "M67 Installed unrelated line", "2400")
++      const month = await openMonth(page, owner, 1)
++      await month.getByLabel("Budget", { exact: true }).fill("123")
++      await month.getByLabel("Actual", { exact: true }).fill("34")
++      await month.getByLabel("Forecast", { exact: true }).fill("140")
++      await command(page, month.getByRole("button", { name: "Save month", exact: true }), "preview-change")
++      await expect(month.getByRole("heading", { name: "Review changes before applying", exact: true })).toBeVisible()
++      await expect(month.locator("[data-preview]")).toContainText("123")
++      await expect(month.locator("[data-preview]")).toContainText("34")
++      await expect(month.locator("[data-preview]")).toContainText("140")
++      await reader.goto(url)
++      await expect(monthlyForm(reader, owner, 1)).toHaveAttribute("data-record", "")
++      await expect(monthlyForm(reader, owner, 1).getByLabel("Actual", { exact: true })).toHaveValue("")
++      expect(applications).toBe(0)
++      await confirmDialog(page, page.getByRole("dialog", { name: "Edit record", exact: true }).getByRole("button", { name: "Close editor", exact: true }), "Discard unsaved changes?", true)
++      await expect(page.getByRole("dialog", { name: "Edit record", exact: true })).toBeHidden()
++      await page.reload()
++      await expect(monthlyForm(page, owner, 1)).toHaveAttribute("data-record", "")
++      await expect(monthlyForm(page, owner, 1).getByLabel("Budget", { exact: true })).toHaveValue("")
++      expect(applications).toBe(0)
++    })
++
++    await test.step("recover an applied preview after its real successful response is lost", async () => {
++      const month = await openMonth(page, owner, 1)
++      await month.getByLabel("Budget", { exact: true }).fill("123")
++      await month.getByLabel("Actual", { exact: true }).fill("34")
++      await month.getByLabel("Forecast", { exact: true }).fill("140")
++      await command(page, month.getByRole("button", { name: "Save month", exact: true }), "preview-change")
++      const preview = month.locator("[data-preview]")
++      await expect(preview).toBeVisible()
++      const ref = await preview.getAttribute("data-preview-ref")
++      expect(ref).toBeTruthy()
++      type Receipt = { status: number; applied: boolean; previewRef?: string }
++      let delivered: ((receipt: Receipt) => void) | undefined
++      const lost = new Promise<Receipt>((resolve) => { delivered = resolve })
++      const dropApply = async (route: import("@playwright/test").Route) => {
++        if (route.request().method() !== "POST" || route.request().postDataJSON()?.action !== "apply-preview") {
++          await route.continue()
++          return
++        }
++        const actual = await route.fetch()
++        const body = await actual.json() as { value?: { applied?: boolean; previewRef?: string } }
++        await route.abort("failed")
++        delivered?.({ status: actual.status(), applied: body.value?.applied === true, previewRef: body.value?.previewRef })
++      }
++      await page.route(url, dropApply)
++      await month.getByRole("button", { name: "Confirm and apply", exact: true }).click()
++      const receipt = await lost
++      expect(receipt).toMatchObject({ status: 200, applied: true, previewRef: ref })
++      await expect(month.getByRole("button", { name: "Check saved outcome", exact: true })).toBeEnabled()
++      await page.unroute(url, dropApply)
++      const outcome = await command(page, month.getByRole("button", { name: "Check saved outcome", exact: true }), "read-preview")
++      expect(outcome.value).toMatchObject({ applied: true, previewRef: ref })
++      await expect(page.getByRole("dialog", { name: "Edit record", exact: true })).toBeHidden()
++      expect(applications).toBe(1)
++      await page.reload()
++      await reader.reload()
++      for (const surface of [page, reader]) {
++        await expect(monthlyForm(surface, owner, 1).getByLabel("Budget", { exact: true })).toHaveValue("123")
++        await expect(monthlyForm(surface, owner, 1).getByLabel("Actual", { exact: true })).toHaveValue("34")
++        await expect(monthlyForm(surface, owner, 1).getByLabel("Forecast", { exact: true })).toHaveValue("140")
++        await expect(monthlyForm(surface, owner, 2)).toHaveAttribute("data-record", "")
++        await expect(monthlyForm(surface, unrelated, 1)).toHaveAttribute("data-record", "")
++      }
++      const reopened = await openMonth(page, owner, 1)
++      await expect(reopened.getByLabel("Budget", { exact: true })).toHaveValue("123")
++      await info.attach("dashboard-installed-confirmed-month.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
++      await page.getByRole("dialog", { name: "Edit record", exact: true }).getByRole("button", { name: "Close editor", exact: true }).click()
++    })
++
++    await test.step("revoke the real session while a server-authorized preview is in flight", async () => {
++      await page.reload()
++      const year = page.locator(`form[data-page="OPEX Detail"][data-command="year-amount"][data-record="${owner}"]`)
++      await openForm(year)
++      await year.getByLabel("Year amount", { exact: true }).fill("777")
++      type LatePreview = { status: number; previewRef?: string }
++      let captured: ((preview: LatePreview) => void) | undefined, completed: (() => void) | undefined
++      const observed = new Promise<LatePreview>((resolve) => { captured = resolve })
++      const released = new Promise<void>((resolve) => { completed = resolve })
++      const hold = new Promise<void>((resolve) => { lateDelivery.release = resolve })
++      const delayPreview = async (route: import("@playwright/test").Route) => {
++        const request = route.request()
++        if (request.method() !== "POST" || request.postDataJSON()?.action !== "preview-change") {
++          await route.continue()
++          return
++        }
++        const actual = await route.fetch()
++        const body = await actual.json() as { value?: { previewRef?: string } }
++        captured?.({ status: actual.status(), previewRef: body.value?.previewRef })
++        await hold
++        try { await route.fulfill({ response: actual }) } finally { completed?.() }
++      }
++      await page.route(url, delayPreview)
++      await year.getByRole("button", { name: "Apply year amount", exact: true }).click()
++      const late = await observed
++      expect(late.status).toBe(200)
++      expect(late.previewRef).toBeTruthy()
++      await expect(year.getByLabel("Year amount", { exact: true })).toHaveValue("777")
++      const signedOut = reader.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/auth/logout")
++      await reader.getByRole("button", { name: "Sign out", exact: true }).click()
++      expect((await signedOut).status()).toBe(204)
++      await expect(reader).toHaveURL(`${installation.origin}/sucafina/auth/login`)
++      await page.getByRole("button", { name: "Refresh data", exact: true }).click()
++      await expect(page.locator("[data-access-unavailable]")).toBeVisible()
++      await expect(page.getByRole("status")).toHaveText("The previous view was removed. Reload to continue with your current permissions.")
++      await expect(page.locator("form[data-command]")).toHaveCount(0)
++      await expect(page.locator("[data-preview]")).toHaveCount(0)
++      expect(await page.evaluate(() => history.state)).toBeNull()
++      lateDelivery.release?.()
++      await released
++      await page.unroute(url, delayPreview)
++      await expect(page.locator("[data-access-unavailable]")).toBeVisible()
++      await expect(page.locator("[data-preview]")).toHaveCount(0)
++      await expect(page.locator("body")).not.toContainText("M67 Installed operating line")
++      expect(await page.evaluate(() => history.state)).toBeNull()
++      const denied = await page.context().request.post(url, {
++        headers: { origin: installation.origin },
++        data: { page: "OPEX Detail", action: "apply-preview", version: 0, values: { previewRef: late.previewRef } },
++      })
++      expect(denied.status()).toBe(403)
++      expect(applications).toBe(1)
++      await info.attach("dashboard-installed-access-purged.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
++      await page.getByRole("button", { name: "Reload access", exact: true }).click()
++      await expect(page).toHaveURL(new RegExp("/sucafina/auth/login(?:\\?|$)"))
++    })
++    expect(errors).toEqual([])
++  } finally {
++    lateDelivery.release?.()
++    page.off("request", countApplications)
++    try { await reader.close() } finally { await installation.stop() }
++  }
++})
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts
+@@ -0,0 +1,176 @@
++import { expect, test } from "@playwright/test"
++import { startPlannerInstallation } from "../wp03/installation-fixture"
++import { addTopic, command, confirmDialog, dashboardUrl, hostCommand, openTopic, topicRow, topicsPage } from "./support"
++
++// The existing production fixture enrolls an operator, runs the installed CLI and
++// owns an isolated durable store. Never retain the session cookie in a trace.
++test.use({ trace: "off" })
++
++test("installed Dashboard preserves records, conflicts, signals and authorized history", async ({ page }, info) => {
++  test.setTimeout(180_000)
++  const installation = await startPlannerInstallation(info)
++  const errors: string[] = []
++  page.on("pageerror", (error) => errors.push(error.message))
++  const other = await page.context().newPage()
++  other.on("pageerror", (error) => errors.push(error.message))
++  const topics = dashboardUrl(installation.origin, topicsPage)
++  const original = "M67 Installed original action"
++  const edited = "M67 Installed reviewed action"
++  const competing = "M67 Installed competing action"
++  const survivor = "M67 Installed unrelated action"
++  let topic = "", unrelated = ""
++  try {
++    await test.step("create durable Hot Topics through the mounted Dashboard", async () => {
++      await page.context().addCookies([installation.cookie])
++      await page.goto(topics)
++      await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
++      topic = await addTopic(page, original, "2000-01-01")
++      unrelated = await addTopic(page, survivor, "2099-12-31")
++      await page.reload()
++      await expect(topicRow(page, topic).getByRole("cell", { name: original, exact: true })).toBeVisible()
++      await expect(topicRow(page, unrelated).getByRole("cell", { name: survivor, exact: true })).toBeVisible()
++    })
++
++    await test.step("preserve a real record and preview a real agenda", async () => {
++      await page.locator("[data-dashboard-workbench-panel] > summary").click()
++      const workbench = page.getByRole("region", { name: "Revisão e ações do Dashboard", exact: true })
++      await hostCommand(page, workbench.getByRole("button", { name: "Carregar opções", exact: true }), "dashboard-workbench")
++      await expect(workbench.locator("[data-dashboard-status]")).toContainText("Opções carregadas.")
++      await hostCommand(page, workbench.getByRole("button", { name: "Pré-visualizar pauta", exact: true }), "dashboard-agenda")
++      await expect(workbench.locator("[data-dashboard-agenda-view]")).toContainText(original)
++      await workbench.getByLabel("Registro para preservar", { exact: true }).selectOption({ label: original })
++      await hostCommand(page, workbench.getByRole("button", { name: "Preservar retrato", exact: true }), "dashboard-capture")
++      await expect(workbench.locator("[data-dashboard-status]")).toHaveText("Retrato do registro preservado.")
++      await page.goto(topics)
++    })
++
++    await test.step("retain a dirty editor through a real competing write and explicit conflict review", async () => {
++      const editor = await openTopic(page, topic)
++      await editor.getByLabel("Action", { exact: true }).fill(edited)
++      await editor.getByLabel("Notes", { exact: true }).fill("Local edits survive the conflict")
++      await other.goto(topics)
++      const competingEditor = await openTopic(other, topic)
++      await competingEditor.getByLabel("Action", { exact: true }).fill(competing)
++      await competingEditor.getByLabel("Notes", { exact: true }).fill("Committed in the other page")
++      await command(other, competingEditor.getByRole("button", { name: "Save", exact: true }), "save")
++      await expect(topicRow(other, topic).getByRole("cell", { name: competing, exact: true })).toBeVisible()
++      await command(page, editor.getByRole("button", { name: "Save", exact: true }), "save", 409)
++      await expect(editor.getByRole("status")).toContainText("This record changed since you opened it.")
++      await expect(editor.getByLabel("Action", { exact: true })).toHaveValue(edited)
++      await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue("Local edits survive the conflict")
++      await editor.getByRole("button", { name: "Load current version and keep my edits", exact: true }).click()
++      await expect(editor.locator("[data-current-revision]")).toContainText(competing)
++      await expect(editor.locator("[data-current-revision]")).toContainText("Committed in the other page")
++      await expect(editor.getByLabel("Action", { exact: true })).toHaveValue(edited)
++      await command(page, editor.getByRole("button", { name: "Save", exact: true }), "save")
++      await expect(editor).toBeHidden()
++      await page.reload()
++      await expect(topicRow(page, topic).getByRole("cell", { name: edited, exact: true })).toBeVisible()
++      await other.reload()
++      await expect(topicRow(other, topic).getByRole("cell", { name: edited, exact: true })).toBeVisible()
++    })
++
++    await test.step("cancel withdrawal and discard only the unsaved editor", async () => {
++      let deletes = 0
++      const countDelete = (request: import("@playwright/test").Request) => {
++        if (request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/dashboard" && request.postDataJSON()?.action === "delete") deletes++
++      }
++      page.on("request", countDelete)
++      await confirmDialog(page, topicRow(page, topic).getByRole("button", { name: "Delete", exact: true }), "Confirm this change?", false)
++      await other.reload()
++      await expect(topicRow(other, topic).getByRole("cell", { name: edited, exact: true })).toBeVisible()
++      expect(deletes).toBe(0)
++      page.off("request", countDelete)
++      const editor = await openTopic(page, topic)
++      await editor.getByLabel("Notes", { exact: true }).fill("This unsaved note must be discarded")
++      await confirmDialog(page, editor.getByRole("button", { name: "Close editor", exact: true }), "Discard unsaved changes?", false)
++      await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue("This unsaved note must be discarded")
++      await confirmDialog(page, editor.getByRole("button", { name: "Close editor", exact: true }), "Discard unsaved changes?", true)
++      await expect(editor).toBeHidden()
++      await page.reload()
++      const reopened = await openTopic(page, topic)
++      await expect(reopened.getByLabel("Notes", { exact: true })).toHaveValue("Local edits survive the conflict")
++      await reopened.getByRole("button", { name: "Close editor", exact: true }).click()
++    })
++
++    await test.step("reopen the preserved values after the source changes and a full reload", async () => {
++      await page.reload()
++      await page.locator("[data-dashboard-workbench-panel] > summary").click()
++      const workbench = page.getByRole("region", { name: "Revisão e ações do Dashboard", exact: true })
++      await hostCommand(page, workbench.getByRole("button", { name: "Carregar opções", exact: true }), "dashboard-workbench")
++      await expect(workbench.locator("[data-dashboard-status]")).toContainText("Opções carregadas.")
++      const history = workbench.getByLabel("Reunião ou retrato preservado", { exact: true })
++      const option = history.locator("option").filter({ hasText: original })
++      await expect(option).toHaveCount(1)
++      const value = await option.getAttribute("value")
++      if (!value) throw new Error("The preserved record is absent from authorized history")
++      await history.selectOption(value)
++      await hostCommand(page, workbench.getByRole("button", { name: "Abrir histórico", exact: true }), "dashboard-history")
++      await expect(workbench.locator("[data-dashboard-history-view]")).toContainText(original)
++      await expect(workbench.locator("[data-dashboard-history-view]")).not.toContainText(edited)
++      await expect(workbench.locator("[data-dashboard-status]")).toHaveText("Histórico aberto com seu acesso atual.")
++      await info.attach("dashboard-installed-history.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
++    })
++
++    await test.step("prioritize real signals and follow record and application links", async () => {
++      await page.goto(dashboardUrl(installation.origin, "IT Risks"))
++      await page.getByText("Add risk", { exact: true }).click()
++      const risk = page.locator('form[data-page="IT Risks"][data-command="save"][data-record=""]')
++      await risk.getByLabel("Risk title", { exact: true }).fill("M67 Installed high risk")
++      await risk.getByLabel("Risk description", { exact: true }).fill("Installed operational risk")
++      await risk.getByLabel("Impact", { exact: true }).selectOption("4")
++      await risk.getByLabel("Probability", { exact: true }).selectOption("4")
++      await risk.getByLabel("Status", { exact: true }).selectOption("open")
++      await command(page, risk.getByRole("button", { name: "Add record", exact: true }), "save")
++      await expect(page.getByRole("cell", { name: "M67 Installed high risk", exact: true })).toBeVisible()
++      const executive = dashboardUrl(installation.origin, "Executive Dashboard", { execYear: "2026", executiveMonth: "11" })
++      await page.goto(executive)
++      const signals = page.locator("[data-dashboard-signals]")
++      const signalRow = signals.getByRole("row").filter({ has: signals.getByRole("cell", { name: edited, exact: true }) })
++      await expect(signalRow).toBeVisible()
++      await expect(signals.getByRole("cell", { name: "M67 Installed high risk", exact: true })).toBeVisible()
++      await signalRow.getByRole("button", { name: `Prioritize ${edited}`, exact: true }).click()
++      expect(new URL(page.url()).searchParams.getAll("signalPriority")).toEqual([`hotTopics:${topic}`])
++      await page.reload()
++      await expect(signalRow.getByRole("button", { name: `Remove priority for ${edited}`, exact: true })).toHaveAttribute("aria-pressed", "true")
++      await signalRow.getByRole("link", { name: "Open record", exact: true }).click()
++      await expect(topicRow(page, topic)).toBeVisible()
++      const linked = new URL(page.url())
++      expect(linked.searchParams.get("page")).toBe(topicsPage)
++      expect(linked.searchParams.get("year")).toBe("2026")
++      expect(linked.searchParams.get("execYear")).toBe("2026")
++      expect(linked.searchParams.get("executiveMonth")).toBe("11")
++      expect(linked.hash).toBe(`#record-${topic}`)
++      const applications = page.getByRole("navigation", { name: "Applications", exact: true })
++      await applications.getByRole("link", { name: "Budget Planner", exact: true }).click()
++      await expect(page.locator("body")).toHaveAttribute("data-surface", "planner")
++      expect(new URL(page.url()).pathname).toBe("/sucafina/planner")
++      await applications.getByRole("link", { name: "Procurement", exact: true }).click()
++      await expect(page.locator("body")).toHaveAttribute("data-surface", "procurement")
++      expect(new URL(page.url()).pathname).toBe("/sucafina/procurement")
++      await applications.getByRole("link", { name: "Dashboard", exact: true }).click()
++      await expect(page.locator("body")).toHaveAttribute("data-surface", "dashboard")
++    })
++
++    await test.step("withdraw the confirmed record and preserve unrelated records after reload", async () => {
++      await page.goto(topics)
++      const pending = page.waitForResponse((response) => response.request().method() === "POST" &&
++        new URL(response.url()).pathname === "/sucafina/dashboard" && response.request().postDataJSON()?.action === "delete")
++      await confirmDialog(page, topicRow(page, topic).getByRole("button", { name: "Delete", exact: true }), "Confirm this change?", true)
++      const response = await pending
++      expect(response.status()).toBe(200)
++      expect(await response.json()).toMatchObject({ ok: true })
++      await expect(topicRow(page, topic)).toHaveCount(0)
++      await page.reload()
++      await expect(topicRow(page, topic)).toHaveCount(0)
++      await expect(topicRow(page, unrelated).getByRole("cell", { name: survivor, exact: true })).toBeVisible()
++      await page.goto(dashboardUrl(installation.origin, "Executive Dashboard"))
++      await expect(page.locator("[data-dashboard-signals]")).not.toContainText(edited)
++      await expect(page.locator("[data-dashboard-signals]")).toContainText("M67 Installed high risk")
++      await info.attach("dashboard-installed-withdrawal.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
++    })
++    expect(errors).toEqual([])
++  } finally {
++    try { await other.close() } finally { await installation.stop() }
++  }
++})
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts
+@@ -0,0 +1,101 @@
++import { expect, type Locator, type Page } from "@playwright/test"
++
++export const topicsPage = "Hot Topics & Actions"
++
++export function dashboardUrl(origin: string, page: string, extra: Record<string, string> = {}) {
++  return `${origin}/sucafina/dashboard?${new URLSearchParams({ page, year: "2026", ...extra })}`
++}
++
++export async function command(page: Page, button: Locator, action: string, expectedStatus = 200) {
++  await expect(button).toBeEnabled()
++  const pending = page.waitForResponse((response) => response.request().method() === "POST" &&
++    new URL(response.url()).pathname === "/sucafina/dashboard" && !new URL(response.url()).searchParams.has("sf") &&
++    response.request().postDataJSON()?.action === action)
++  await button.click()
++  const response = await pending
++  expect(response.status()).toBe(expectedStatus)
++  const result = await response.json() as { ok: boolean; value?: { applied?: boolean; previewRef?: string }; stored?: unknown }
++  expect(result.ok).toBe(expectedStatus === 200)
++  return result
++}
++
++export async function hostCommand(page: Page, button: Locator, mode: string) {
++  await expect(button).toBeEnabled()
++  const pending = page.waitForResponse((response) => new URL(response.url()).pathname === "/sucafina/dashboard" &&
++    new URL(response.url()).searchParams.get("sf") === mode)
++  await button.click()
++  const response = await pending
++  expect(response.status()).toBe(200)
++  const result = await response.json() as { status: string }
++  expect(result.status).toBe("ok")
++}
++
++export async function confirmDialog(page: Page, button: Locator, message: string, accept: boolean) {
++  const pending = page.waitForEvent("dialog")
++  const clicking = button.click()
++  const dialog = await pending
++  expect(dialog.type()).toBe("confirm")
++  expect(dialog.message()).toBe(message)
++  if (accept) await dialog.accept()
++  else await dialog.dismiss()
++  await clicking
++}
++
++export function topicRow(page: Page, id: string) {
++  return page.getByRole("row").filter({ has: page.locator(`form[data-page="${topicsPage}"][data-command="save"][data-record="${id}"]`) })
++}
++
++export async function addTopic(page: Page, action: string, due: string) {
++  await page.getByText("Add action", { exact: true }).click()
++  const form = page.locator(`form[data-page="${topicsPage}"][data-command="save"][data-record=""]`)
++  await form.getByLabel("Action", { exact: true }).fill(action)
++  await form.getByLabel("Owner", { exact: true }).fill("Installed operator")
++  await form.getByLabel("Due", { exact: true }).fill(due)
++  await form.getByLabel("Status", { exact: true }).selectOption("open")
++  await form.getByLabel("Priority", { exact: true }).selectOption("high")
++  await command(page, form.getByRole("button", { name: "Save", exact: true }), "save")
++  const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: action, exact: true }) })
++  await expect(row).toBeVisible()
++  const id = await row.locator('form[data-command="save"]').getAttribute("data-record")
++  if (!id) throw new Error("Created Hot Topic has no durable record identity")
++  return id
++}
++
++export async function openTopic(page: Page, id: string) {
++  await topicRow(page, id).getByRole("button", { name: "Edit", exact: true }).click()
++  const dialog = page.getByRole("dialog", { name: "Edit record", exact: true })
++  await expect(dialog).toBeVisible()
++  return dialog
++}
++
++export async function openForm(form: Locator) {
++  const details = form.locator("..")
++  if (await details.getAttribute("open") === null) await details.locator(":scope > summary").click()
++  await expect(form).toBeVisible()
++}
++
++export function monthlyForm(page: Page, owner: string, month: number) {
++  return page.locator('form[data-page="OPEX Detail"][data-command="save-entry"]')
++    .filter({ has: page.locator(`input[name="ownerId"][value="${owner}"]`) })
++    .filter({ has: page.locator(`input[name="month"][value="${month}"]`) })
++}
++
++export async function openMonth(page: Page, owner: string, month: number) {
++  const form = monthlyForm(page, owner, month)
++  await page.getByRole("row").filter({ has: form }).getByRole("button", { name: "Edit", exact: true }).click()
++  await openForm(form)
++  return form
++}
++
++export async function addOwner(page: Page, name: string, annual: string) {
++  const form = page.locator('form[data-page="OPEX Detail"][data-command="save"][data-record=""]')
++  await openForm(form)
++  await form.getByLabel("Owner name", { exact: true }).fill(name)
++  await form.getByLabel("Annual budget", { exact: true }).fill(annual)
++  await command(page, form.getByRole("button", { name: "Add", exact: true }), "save")
++  const section = page.locator("section").filter({ has: page.getByRole("heading", { name, exact: true }) })
++  await expect(section.getByRole("heading", { name, exact: true })).toBeVisible()
++  const id = await section.locator('form[data-command="save"]').getAttribute("data-record")
++  if (!id) throw new Error("Created OPEX line has no durable record identity")
++  return id
++}
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -226,7 +226,7 @@
+     },
+   }
+   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
+-    proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
++    preparePrivateDraftRead: dashboardServices.observer.preparePrivateDraftRead, proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
+   type CaseRef = { id: string; incarnation: string; version: number }
+   type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number }
+   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
+--- a/apps/cli/src/sucafina-product/dashboard-decisions.ts
++++ b/apps/cli/src/sucafina-product/dashboard-decisions.ts
+@@ -24,6 +24,7 @@
+ import { createDashboardPreparedReview } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/prepared-review.ts"
+ import type { DashboardMutationScope } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts"
+ import type { createDashboardConfirmationIssuer } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts"
++import type { createDashboardConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts"
+ import type { createDashboardRecordEvidenceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import { projectSfSourceScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+@@ -34,6 +35,7 @@
+ 
+ type CaseRef = { id: string; incarnation: string; version: number }
+ export type DashboardPrepareRequest = { caseRef: CaseRef; choiceId: string; draftRef: string }
++export type DashboardDraftReadRequest = { caseRef: CaseRef; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }>; draftRef?: string }
+ export type DashboardPreparedBinding = {
+   schema: "sf-dashboard-prepared-binding-v1"
+   caseRef: CaseRef
+@@ -60,6 +62,7 @@
+   cases: DecisionCasePort
+   records: ReturnType<typeof createDashboardRecordEvidenceHost>
+   issue: ReturnType<typeof createDashboardConfirmationIssuer>
++  preparePrivateDraftRead?: ReturnType<typeof createDashboardConfirmationObserver>["preparePrivateDraftRead"]
+   proposalCoverageWrites: WeakSet<object>
+   dashboardHostWrites: WeakSet<object>
+ }) {
+@@ -102,6 +105,100 @@
+     },
+     operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined,
+     proposalCoverageWrites: input.proposalCoverageWrites, createId: randomUUID, now: () => new Date().toISOString() })
++  // A changed write scope must not erase an authorized private form. This read
++  // proves its original owner and physical source, without replacing its write
++  // binding or treating a bounded discovery list as an authorization decision.
++  const revalidateDraftRead = async (selection: DashboardDraftReadRequest, context: TrustedDomainContext) => {
++    const denied = { status: "denied" as const, reason: "private-draft-access-unavailable" }
++    const unavailable = { status: "unavailable" as const, reason: "private-draft-check-unavailable" }
++    const stale = { status: "stale" as const, reason: "private-draft-changed-during-read" }
++    const source = host.requestFor(context)
++    if (!source || source.signal.aborted || !await host.revalidate(context)) return unavailable
++    if (!host.persistence.transactionAll || !input.preparePrivateDraftRead) return unavailable
++    const request = structuredClone(selection)
++    const selected = await input.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, context)
++    if (selected.status !== "ok") return selected.status === "denied" && (["invalid-authority", "product-authority-changed"].includes(selected.reason) || !await host.revalidate(context)) ? unavailable : selected
++    const current = await state.read(source, "cases", (stored, authority) => sameAuthority(authority, context) ? { case: stored.cases[request.caseRef.id] } : undefined)
++    if (current.status !== "ok") return current.status === "denied" && current.reason === "product-access-unavailable" ? denied : unavailable
++    if (!current.value) return unavailable
++    const decision = current.value.case
++    if (!decision || decision.incarnation !== request.caseRef.incarnation || !decision.participants.includes(context.binding.principalRef)) return denied
++    if (decision.version !== selected.value.case.version) return stale
++    const caseDigest = digestSfValue(decision)
++    const privateRecords = new Map<string, string>()
++    let activeDraft: HotTopicDraft | undefined
++    if (request.draftRef) {
++      const historicalKey = `sf:proposal-coverage:hot-topic:history:${digestSfValue(request.draftRef)}`
++      const stored = await state.read(source, "preferences", (value, authority) => {
++        if (!sameAuthority(authority, context)) return undefined
++        const historical = object(value.preferences[historicalKey])
++        const activeKey = typeof historical.id === "string" ? `sf:proposal-coverage:hot-topic:active:${digestSfValue(historical.id)}` : ""
++        return { historical, activeKey, active: object(value.preferences[activeKey]) }
++      })
++      if (stored.status !== "ok") return stored.status === "denied" && stored.reason === "product-access-unavailable" ? denied : unavailable
++      if (!stored.value) return unavailable
++      const { historical, active, activeKey } = stored.value
++      const owned = (value: Record<string, unknown>): value is HotTopicDraft => value.schema === "sf-hot-topic-draft-v1" && value.principalRef === context.binding.principalRef &&
++        typeof value.id === "string" && !!value.id && typeof value.incarnation === "string" && !!value.incarnation && typeof value.draftRef === "string" &&
++        typeof value.version === "number" && Number.isSafeInteger(value.version) && value.version >= 1 && Array.isArray(value.sourceRefs) &&
++        ["action", "owner", "due", "notes"].every((field) => typeof object(value.fields)[field] === "string") && ["critical", "high", "normal"].includes(String(object(value.fields).priority)) &&
++        object(value.caseRef).id === request.caseRef.id && object(value.caseRef).incarnation === request.caseRef.incarnation &&
++        value.recordDigest === digestSfValue(Object.fromEntries(Object.entries(value).filter(([name]) => name !== "recordDigest")))
++      if (!owned(historical) || !owned(active) || historical.draftRef !== request.draftRef || historical.id !== active.id || historical.incarnation !== active.incarnation ||
++        digestSfValue(historical.targetEvidence) !== digestSfValue(request.targetEvidence)) return denied
++      // Draft-only extra sources are not implicitly covered by the target. Only
++      // exact refs reauthorized by the canonical case read may accompany it.
++      const covered = (value: Record<string, unknown>) => Array.isArray(value.sourceRefs) && value.sourceRefs.length > 0 && value.sourceRefs.every((ref) =>
++        digestSfValue(ref) === digestSfValue(value.targetEvidence) || selected.value.evidenceRefs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref)))
++      if (!covered(historical) || !covered(active)) return unavailable
++      const activeTarget = object(object(active.targetEvidence).target)
++      if (activeTarget.surface !== "dashboard" || activeTarget.recordType !== "hotTopics" || activeTarget.recordId !== request.targetEvidence.target.recordId ||
++        !Number.isSafeInteger(active.version) || Number(active.version) < Number(historical.version) || typeof active.draftRef !== "string" || !active.fields ||
++        active.caseScopeDigest !== digestSfValue({ id: decision.id, incarnation: decision.incarnation, horizon: decision.horizon, currency: decision.currency, criteria: decision.criteria })) return unavailable
++      activeDraft = active
++      privateRecords.set(historicalKey, digestSfValue(historical))
++      privateRecords.set(activeKey, digestSfValue(active))
++    }
++    const proof = await input.preparePrivateDraftRead(request.targetEvidence, context)
++    if (proof.status !== "ok") return proof
++    const activeProof = activeDraft ? await input.preparePrivateDraftRead(activeDraft.targetEvidence, context) : proof
++    if (activeProof.status !== "ok") return activeProof
++    if (digestSfValue(activeProof.value.evidence) !== digestSfValue(proof.value.evidence)) return stale
++    const field = (name: string) => proof.value.projection.values.find((value) => value.id === `hotTopics:${encodeURIComponent(request.targetEvidence.target.recordId)}:${name}`)?.value
++    const action = field("action"), owner = field("owner"), due = field("due"), priority = field("priority"), notes = field("notes")
++    const target = proof.value.projection.context.sourceRefs[0]
++    if (!target || typeof action !== "string" || typeof owner !== "string" || typeof due !== "string" || typeof notes !== "string" ||
++      (priority !== "critical" && priority !== "high" && priority !== "normal")) return unavailable
++    const actions = await input.authority.humanActions(source)
++    // Cases can include independently protected sources. Re-read those producers
++    // between complete C08/source snapshots, outside the lock: their reads may
++    // issue scoped evidence and must never become a nested writer.
++    const captured = await host.persistence.transactionAll(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }), { signal: source.signal })
++    const again = await input.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, context)
++    if (again.status !== "ok") return again.status === "denied" && (["invalid-authority", "product-authority-changed"].includes(again.reason) || !await host.revalidate(context)) ? unavailable : again
++    if (digestSfValue(again.value.case) !== digestSfValue(selected.value.case) || digestSfValue(again.value.evidenceRefs) !== digestSfValue(selected.value.evidenceRefs)) return stale
++    const stable = await host.persistence.transactionAll(async (snapshots) => {
++      const product = object(snapshots.dashboard.data.__sfProductV1)
++      const actual = object(object(product.cases)[request.caseRef.id])
++      const preferences = object(product.preferences)
++      return { commit: false, value: digestSfValue(snapshots) === captured && digestSfValue(actual) === caseDigest && Array.isArray(actual.participants) && actual.participants.includes(context.binding.principalRef) &&
++        [...privateRecords].every(([key, digest]) => digestSfValue(preferences[key]) === digest) && await proof.value.fence() && await activeProof.value.fence() }
++    }, { signal: source.signal }).catch(() => undefined)
++    // Both source fences revalidate authority while the C08 lock is held. Do not
++    // open another asynchronous gap between that final observation and release.
++    if (source.signal.aborted || host.requestFor(context) !== source) return unavailable
++    if (stable === undefined) return unavailable
++    if (!stable) return stale
++    return { status: "ok" as const, value: {
++      caseRef: { id: decision.id, incarnation: decision.incarnation, version: decision.version }, label: decision.objective,
++      originalSource: { refId: request.targetEvidence.refId, refDigest: request.targetEvidence.refDigest }, currentSource: proof.value.evidence,
++      permissions: { draft: actions.includes("decisions.edit"), prepare: actions.includes("decisions.prepare-changes"), apply: actions.includes("decisions.apply"),
++        capture: actions.includes("reviews.preserve"), preserve: actions.includes("reviews.preserve") },
++      source: { label: action, sourceRef: proof.value.evidence.refId, draft: { target, targetEvidence: proof.value.evidence, fields: { action, owner, due, priority, notes } } },
++      ...(activeDraft ? { draft: { id: activeDraft.id, incarnation: activeDraft.incarnation, draftRef: activeDraft.draftRef, version: activeDraft.version,
++        caseRef: activeDraft.caseRef, fields: activeDraft.fields, target: activeDraft.target, targetEvidence: activeDraft.targetEvidence, sourceRefs: activeDraft.sourceRefs } } : {}),
++    } }
++  }
+   const load = async (ref: CaseRef, context: TrustedDomainContext) => {
+     const request = host.requestFor(context)
+     if (!request || !await host.revalidate(context)) return undefined
+@@ -193,6 +290,7 @@
+       return { state: receipt.result.ok ? "applied" : receipt.result.status === 409 ? "conflict" : "failed", evidence: { ...initial, refDigest: digestSfEvidenceRef(initial) } }
+     } })
+   return {
++    revalidateDraftRead,
+     resolveEvidence: evidence.resolveEvidence,
+     proveContinuity: evidence.proveContinuity,
+     discover: async (context: TrustedDomainContext) => {
+--- a/apps/cli/src/sucafina-product/dashboard-http.ts
++++ b/apps/cli/src/sucafina-product/dashboard-http.ts
+@@ -7,11 +7,11 @@
+ import type { SfHumanAction } from "../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
+ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import type { createSfDashboardServices, DashboardAgendaRequest, DashboardReviewRequest } from "./dashboard-services.ts"
+-import type { createSfDashboardDecisions, DashboardPrepareRequest } from "./dashboard-decisions.ts"
++import type { createSfDashboardDecisions, DashboardPrepareRequest, DashboardDraftReadRequest } from "./dashboard-decisions.ts"
+ 
+ type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; dashboard: ReturnType<typeof createSfDashboardServices>; decisions: ReturnType<typeof createSfDashboardDecisions> }
+ const modes = ["dashboard-workbench", "dashboard-agenda", "dashboard-review-preserve", "dashboard-review", "dashboard-capture", "dashboard-history", "dashboard-hot-topic-source",
+-  "dashboard-hot-topic-draft", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
++  "dashboard-draft-read", "dashboard-hot-topic-draft", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
+ 
+ /** Same-origin host routes. Browser payloads contain selections and human intent, never private commands. */
+ export function createSfDashboardHttp(input: { origin: string; mount: string; runtime: () => Runtime | undefined }) {
+@@ -34,12 +34,23 @@
+       mode === "dashboard-hot-topic-draft" ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : mode === "dashboard-hot-topic-apply" ? "decisions.apply" : undefined
+     const digest = digestSfValue(payload)
+     const admitted = action ? await runtime.authority.human.admit(request, action, payload) : await runtime.authority.ui.admit(request, "sf_dashboard_read", digest)
+-    if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
++    if (admitted.status !== "ok") {
++      if (action) return reply({ status: admitted.status }, admitted.status === "denied" ? 403 : 503)
++      // UI admission deliberately hides resolution errors behind a denied result.
++      // A data-free C08 read distinguishes an actual missing read grant/session
++      // from interrupted authority resolution. The probe never admits this call.
++      const current = await runtime.authority.state.read(request, "cases", () => null).catch(() => undefined)
++      const revoked = !request.signal.aborted && current?.status === "denied" && current.reason === "product-access-unavailable"
++      return reply({ status: revoked ? "denied" : "unavailable" }, revoked ? 403 : 503)
++    }
+     try {
+-      if (!action && !await runtime.authority.ui.validate(admitted.value, "sf_dashboard_read", digest)) return reply({ status: "denied" }, 403)
++      if (!action && !await runtime.authority.ui.validate(admitted.value, "sf_dashboard_read", digest)) return reply({ status: "unavailable" }, 503)
+       const result = await dispatch(runtime, mode!, payload, admitted.value)
+       if (!result) return reply({ status: "invalid" }, 400)
+-      if (!await runtime.authority.host.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
++      // An unavailable/changed read contains no private projection to release.
++      // A lost context is not affirmative evidence that the local form was revoked.
++      if (mode !== "dashboard-draft-read" && !await runtime.authority.host.revalidate(admitted.value))
++        return reply({ status: action ? "denied" : "unavailable" }, action ? 403 : 503)
+       return reply(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+     } catch { return reply({ status: "unavailable", reason: "dashboard-operation-unavailable" }, 503) }
+     finally { runtime.authority.ui.finish(admitted.value) }
+@@ -69,6 +80,7 @@
+       incarnation: result.value.target.incarnation, version: result.value.target.version, fields: result.value.target.fields, period: payload.period, observedAt: environment.at } } }
+   }
+   if (mode === "dashboard-hot-topic-draft" && isDraft(value)) return runtime.decisions.drafts.register(value, context)
++  if (mode === "dashboard-draft-read" && isDraftRead(value)) return runtime.decisions.revalidateDraftRead(value, context)
+   if (mode === "dashboard-hot-topic-drafts" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef)) return runtime.decisions.drafts.list({ caseRef: payload.caseRef }, context)
+   if (mode === "dashboard-hot-topic-operation" && keys(payload, ["caseRef", "draftRef", "operation"]) && isCaseRef(payload.caseRef) && text(payload.draftRef)) {
+     const operation = object(payload.operation)
+@@ -111,6 +123,14 @@
+     Array.isArray(request.sourceRefs) && request.sourceRefs.length > 0 && request.sourceRefs.length <= 100 && request.sourceRefs.every((ref) => object(ref).kind === "record" && text(object(ref).refId)) &&
+     typeof request.expectedVersion === "number" && Number.isSafeInteger(request.expectedVersion) && request.expectedVersion >= 0 && (request.draftRef === undefined || text(request.draftRef))
+ }
++function isDraftRead(value: unknown): value is DashboardDraftReadRequest {
++  const request = object(value), evidence = object(request.targetEvidence), target = object(evidence.target)
++  return keys(request, ["caseRef", "targetEvidence"], ["draftRef"]) && isCaseRef(request.caseRef) && (request.draftRef === undefined || text(request.draftRef)) &&
++    keys(evidence, ["schema", "kind", "refId", "refDigest", "installationId", "projectId", "evidenceLevel", "target"]) && evidence.schema === "sf-evidence-v1" && evidence.kind === "record" && evidence.evidenceLevel === "observed" &&
++    text(evidence.refId) && text(evidence.refDigest) && text(evidence.installationId) && text(evidence.projectId) &&
++    keys(target, ["surface", "recordType", "recordId", "incarnation", "version", "fields", "period", "projectionDigest"]) && target.surface === "dashboard" && target.recordType === "hotTopics" &&
++    text(target.recordId) && text(target.incarnation) && typeof target.version === "number" && Number.isSafeInteger(target.version) && target.version > 0 && strings(target.fields) && isSfPeriod(target.period) && text(target.projectionDigest)
++}
+ async function boundedJson(request: Request): Promise<unknown> {
+   if (!request.body) return undefined
+   const reader = request.body.getReader()
+--- a/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts
+@@ -33,7 +33,7 @@
+   const evidenceLabels = { confirmed: 'Confirmado', estimated: 'Estimado', absent: 'Ausente', unavailable: 'Indisponível', hypothetical: 'Hipótese' };
+   const origins = { hotTopics: 'Hot Topics', opsTickets: 'Chamados', projects: 'Projetos', risks: 'Riscos', contracts: 'Contratos', members: 'Pessoas', leaders: 'Estrutura da equipe', opexOwners: 'OPEX', opexEntries: 'OPEX', capexProjects: 'CAPEX', capexEntries: 'CAPEX', 'itperf-item': 'Contrato de performance', stakeholders: 'Stakeholders', secKpi: 'Segurança de TI' };
+   const states = { planned: 'Aguardando revisão', applied: 'Aplicada', conflict: 'Em conflito', failed: 'Não aplicada' };
+-  let data, agenda, review, draftBinding, draftIdentity, pendingDraft, mutation, draftConflict = false, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false, revoked = false;
++  let data, agenda, review, draftBinding, draftIdentity, draftRead, pendingDraft, mutation, draftConflict = false, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false, revoked = false, generation = 0;
+   const controllers = new Set();
+   const storedView = () => {
+     const value = history.state && history.state.sfDashboardWorkbench;
+@@ -127,18 +127,21 @@
+   };
+   const request = async (mode, payload, id, attempt) => {
+     if (revoked) throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
++    const started = generation;
+     const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('sf', mode);
+     if (id) url.searchParams.set('id', id);
+     const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 10000);
+     controllers.add(controller);
+     try {
+       const response = await fetch(url, id ? { credentials: 'same-origin', signal: controller.signal } : { method: 'POST', credentials: 'same-origin', signal: controller.signal, headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt ? attempt.key : crypto.randomUUID() }, body: attempt ? attempt.body : JSON.stringify(payload) });
++      if (started !== generation) throw new Error('A seleção mudou. Atualize as opções com o acesso atual.');
+       if (response.status === 401 || response.status === 403 && !attempt) {
+         window.dispatchEvent(new Event('sf-access-revoked'));
+         throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
+       }
+       const result = await response.json();
+       if (revoked) throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
++      if (started !== generation) throw new Error('A seleção mudou. Atualize as opções com o acesso atual.');
+       if (!response.ok || !result || result.status !== 'ok') {
+         const error = new Error(failure(result || {})); error.status = result && result.status;
+         error.rejected = [400, 401, 403, 409, 422].includes(response.status) && ['denied', 'conflict', 'stale', 'needs-input', 'invalid'].includes(error.status);
+@@ -183,7 +186,7 @@
+   const draftRequest = (value) => ({ caseRef: value.caseRef, draftRef: value.draftRef, target: value.target, targetEvidence: value.targetEvidence, fields: value.fields, sourceRefs: value.sourceRefs, expectedVersion: value.version });
+   const clearDraftReview = () => { pendingDraft = undefined; draftConflict = false; find('draft-diff').replaceChildren(); find('confirm-draft').checked = false; find('draft-confirmation').hidden = true; };
+   const selectDraft = () => {
+-    draftBinding = undefined; draftIdentity = undefined; clearDraftReview(); delete form.dataset.dirty;
++    draftBinding = undefined; draftIdentity = undefined; draftRead = undefined; clearDraftReview(); delete form.dataset.dirty;
+     const selected = choice('case', caseCatalog);
+     if (selected && find('draft-choice').value === 'new') {
+       const source = choice('draft-source', sourceCatalog);
+@@ -204,21 +207,35 @@
+   const refresh = async (recheckingDenied = false) => {
+     const from = find('from').value, to = find('to').value;
+     if ((from && !to) || (!from && to) || (from && to && from > to)) throw new Error('Informe o início e o fim do período em ordem cronológica.');
++    // An unavailable read keeps the local values, but cannot leave old action
++    // permissions enabled. Only a fresh read may restore those controls.
++    data = undefined; draftRead = undefined;
+     const next = await request('dashboard-workbench', { page: root.dataset.page, ...(from && to ? { period: { start: from, end: to } } : {}) });
+     const caseAvailable = (ref) => next.decisions.cases.some((value) => value.caseRef.id === ref.id && value.caseRef.incarnation === ref.incarnation);
+     const mutationCase = mutation && ['dashboard-hot-topic-draft', 'dashboard-hot-topic-prepare', 'dashboard-hot-topic-apply'].includes(mutation.mode) ? JSON.parse(mutation.body).caseRef : undefined;
+     const retainingDraft = draftBinding && (form.dataset.dirty || mutation && mutation.mode === 'dashboard-hot-topic-draft');
+-    // A readable case does not authorize a removed source or a draft owned by a different
+-    // current principal. Never retain a saved draft merely because its case is still listed.
+-    const listedDraft = retainingDraft && draftIdentity && next.decisions.drafts.some((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation && value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation);
+-    const listedTarget = retainingDraft && next.records.some((value) => value.draft && value.draft.target.surface === draftBinding.target.surface && value.draft.target.type === draftBinding.target.type && value.draft.target.id === draftBinding.target.id && value.draft.target.incarnation === draftBinding.target.incarnation && value.draft.targetEvidence.refId === draftBinding.targetEvidence.refId && value.draft.targetEvidence.refDigest === draftBinding.targetEvidence.refDigest);
+-    const missingDraftSource = retainingDraft && (draftIdentity ? !listedDraft : !listedTarget);
++    // A scoped incarnation can change when only writing is withdrawn. Reauthorize
++    // the original private owner and physical source in the host; a bounded list
++    // cannot prove either revocation or continuity. This does not rebind a write.
++    if (retainingDraft) {
++      const checked = await request('dashboard-draft-read', { caseRef: draftBinding.caseRef, targetEvidence: draftBinding.targetEvidence, ...(draftBinding.draftRef ? { draftRef: draftBinding.draftRef } : {}) });
++      if (!checked || !checked.caseRef || checked.caseRef.id !== draftBinding.caseRef.id || checked.caseRef.incarnation !== draftBinding.caseRef.incarnation ||
++        !checked.originalSource || checked.originalSource.refId !== draftBinding.targetEvidence.refId || checked.originalSource.refDigest !== draftBinding.targetEvidence.refDigest ||
++        !checked.currentSource || checked.currentSource.kind !== 'record' || checked.currentSource.target.surface !== draftBinding.target.surface || checked.currentSource.target.recordType !== draftBinding.target.type || checked.currentSource.target.recordId !== draftBinding.target.id ||
++        !checked.source || !checked.source.draft || checked.source.draft.targetEvidence.refId !== checked.currentSource.refId || checked.source.draft.targetEvidence.refDigest !== checked.currentSource.refDigest)
++        throw new Error('Não foi possível conferir a origem agora. Seus valores foram mantidos; atualize as opções para continuar.');
++      draftRead = checked;
++      ['draft', 'prepare', 'apply'].forEach((name) => { next.decisions.permissions[name] = next.decisions.permissions[name] && !!checked.permissions && checked.permissions[name] === true; });
++      ['capture', 'preserve'].forEach((name) => { next.permissions[name] = next.permissions[name] && !!checked.permissions && checked.permissions[name] === true; });
++      if (!caseAvailable(checked.caseRef)) next.decisions.cases.push({ caseRef: checked.caseRef, label: checked.label });
++      if (!next.records.some((value) => value.draft && value.draft.targetEvidence.refId === checked.currentSource.refId && value.draft.targetEvidence.refDigest === checked.currentSource.refDigest)) next.records.push(checked.source);
++    }
+     // Discovery is bounded and may omit a committed case whose sources advanced.
+     // A restored apply contains no private fields. Its exact POST reauthorizes the
+     // case and receipt at the host; an actual denial still takes the purge path.
+     const requireListedCase = mutation && (!mutation.restored || recheckingDenied);
+-    if (mutationCase && requireListedCase && !caseAvailable(mutationCase) || retainingDraft && !caseAvailable(draftBinding.caseRef) || missingDraftSource) {
+-      window.dispatchEvent(new CustomEvent('sf-access-revoked', { detail: { reason: missingDraftSource ? 'draft-source-unconfirmed' : 'case-unavailable' } }));
++    if (mutationCase && requireListedCase && !caseAvailable(mutationCase)) {
++      window.dispatchEvent(new CustomEvent('sf-access-revoked', { detail: { reason: 'case-unavailable' } }));
+       throw new Error('O caso, rascunho ou origem não está disponível com seu acesso atual.');
+     }
+     data = next; agenda = undefined; if (!mutation) resetReview();
+@@ -251,7 +268,7 @@
+       find('draft-choice').add(new Option('Novo rascunho', 'new'), 1);
+       const draftIndex = draftIdentity ? draftCatalog.findIndex((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation) : -1;
+       find('draft-choice').value = draftIndex >= 0 ? String(draftIndex) : 'new';
+-      const sourceIndex = sourceCatalog.findIndex((value) => value.draft.target.id === draftBinding.target.id && value.draft.target.incarnation === draftBinding.target.incarnation);
++      const sourceIndex = sourceCatalog.findIndex((value) => draftRead && value.draft.targetEvidence.refId === draftRead.currentSource.refId && value.draft.targetEvidence.refDigest === draftRead.currentSource.refDigest);
+       if (sourceIndex >= 0) find('draft-source').value = String(sourceIndex);
+     }
+     restoreApplication();
+@@ -381,16 +398,29 @@
+     clearDraftReview(); draftConflict = true;
+     await refresh();
+     const sameCase = (value) => value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation;
+-    const sameTarget = (value) => value.target.id === draftBinding.target.id && value.target.incarnation === draftBinding.target.incarnation;
++    const sameTarget = (value) => draftRead && value.targetEvidence.refId === draftRead.currentSource.refId && value.targetEvidence.refDigest === draftRead.currentSource.refDigest;
+     if (draftIdentity) {
+       const matches = data.decisions.drafts.filter((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation && sameCase(value) && sameTarget(value));
+       if (matches.length === 1) pendingDraft = draftRequest(matches[0]);
++      else if (!matches.length && draftRead && draftRead.draft && draftRead.draft.id === draftIdentity.id && draftRead.draft.incarnation === draftIdentity.incarnation) {
++        const sources = data.records.filter((value) => value.draft && sameTarget(value.draft));
++        if (sources.length === 1) {
++          const active = draftRead.draft, source = sources[0].draft;
++          pendingDraft = { ...draftRequest(active), caseRef: draftRead.caseRef, target: source.target, targetEvidence: source.targetEvidence,
++            sourceRefs: active.sourceRefs.map((ref) => ref.refId === active.targetEvidence.refId && ref.refDigest === active.targetEvidence.refDigest ? source.targetEvidence : ref) };
++        }
++      }
+     } else {
+       const cases = data.decisions.cases.filter(sameCase), sources = data.records.filter((value) => value.draft && sameTarget(value.draft));
+       if (cases.length === 1 && sources.length === 1) pendingDraft = { caseRef: cases[0].caseRef, target: sources[0].draft.target, targetEvidence: sources[0].draft.targetEvidence, fields: sources[0].draft.fields, sourceRefs: [sources[0].draft.targetEvidence], expectedVersion: 0 };
+     }
+     if (!pendingDraft) throw new Error('Este rascunho ou sua origem não está disponível com o acesso atual. Seus valores continuam no formulário.');
+     table(find('draft-diff'), ['Campo', 'Versão anterior', 'Versão atual', 'Meus valores'], fields.map((name) => [labels[name], draftBinding.fields[name], pendingDraft.fields[name], form.elements.namedItem(name).value]));
++    const currentSource = data.records.find((value) => value.draft && sameTarget(value.draft));
++    if (currentSource) {
++      const heading = document.createElement('h3'); heading.textContent = 'Valores atuais da origem'; find('draft-diff').append(heading);
++      table(find('draft-diff'), ['Campo', 'Origem atual autorizada'], fields.map((name) => [labels[name], currentSource.draft.fields[name]]));
++    }
+     find('draft-confirmation').hidden = false;
+     announce('Versão atual carregada. Compare as diferenças e confirme a base antes de salvar seus valores.');
+   }));
+@@ -423,12 +453,12 @@
+     await mutate('dashboard-hot-topic-apply', review);
+   }));
+   ['record', 'history'].forEach((name) => find(name).addEventListener('change', enable));
+-  ['from', 'to'].forEach((name) => find(name).addEventListener('change', () => { data = undefined; agenda = undefined; resetReview(); enable(); announce('Atualize as opções para usar o novo período.'); }));
++  ['from', 'to'].forEach((name) => find(name).addEventListener('change', () => { generation++; data = undefined; agenda = undefined; draftRead = undefined; resetReview(); enable(); announce('Atualize as opções para usar o novo período.'); }));
+   panel.addEventListener('toggle', retainView);
+   window.addEventListener('sf-access-revoked', (event) => {
+     if (revoked) return;
+-    revoked = true; controllers.forEach((controller) => controller.abort()); controllers.clear();
+-    data = agenda = review = draftBinding = draftIdentity = pendingDraft = mutation = applicationToRestore = draftOutcome = undefined;
++    revoked = true; generation++; controllers.forEach((controller) => controller.abort()); controllers.clear();
++    data = agenda = review = draftBinding = draftIdentity = draftRead = pendingDraft = mutation = applicationToRestore = draftOutcome = undefined;
+     draftCatalog = []; caseCatalog = []; sourceCatalog = []; delete form.dataset.dirty; delete guard.dataset.dirty;
+     remember({ draft: undefined, application: undefined, draftAttempt: undefined });
+     const note = document.createElement('p'); note.textContent = 'Seu acesso mudou. Reabra a página com o acesso atual.'; root.replaceChildren(note);
+--- a/packages/app-shell/e2e/tsconfig.json
++++ b/packages/app-shell/e2e/tsconfig.json
+@@ -30,6 +30,7 @@
+     "../../core/src/flag/flag.ts",
+     "../playwright.config.ts",
+     "./playwright.production.config.ts",
++    "./sucafina/dashboard-installed/**/*.ts",
+     "./sucafina/reports.spec.ts",
+     "./sucafina/reports-support/**/*.ts",
+     "./sucafina/operations.spec.ts",

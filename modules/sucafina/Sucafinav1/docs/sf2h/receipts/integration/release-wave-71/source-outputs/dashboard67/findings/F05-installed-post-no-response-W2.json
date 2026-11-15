@@ -1,0 +1,33 @@
+{
+  "schema": "sf2h.mission67.finding.v1",
+  "id": "M67-F05-INSTALLED-POST-NO-RESPONSE",
+  "status": "REPRODUCED_INVESTIGATING",
+  "severity": "blocks-installed-dashboard-closure",
+  "candidate": {
+    "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+    "tree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+    "S": "72032511a410840d86c6b7b76be73275a22828ca"
+  },
+  "evidence": "../validation/run-04.json",
+  "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670694769",
+  "observed": [
+    "GET Dashboard200HTML and notifications200JSON in both isolated installations",
+    "POST workbench read and canonical save receive no response until client AbortController10s cancels",
+    "No observed CSP/CORS console error; no dropped diagnostic event",
+    "CLI starts and disposes after fixture-owned SIGTERM; no handler exception in redacted log"
+  ],
+  "notEstablished": [
+    "Exact stalled stage in request-body conversion/admission/handler",
+    "Effect or Bun lifecycle as root cause",
+    "Any successful create/confirm/reopen/withdrawal installed assertions"
+  ],
+  "next": "Use actual installed CLI with bounded read-only transport probes and inspect the exact adapter path. Any external correction must remain a complete inert postimage in67 receipts and an isolated validation overlay; no shared active path edit.",
+  "ownership": {
+    "diagnosis": "67",
+    "sharedHost": "explicitly authorized host/integration owner or successor",
+    "integration60": "lease ended; no automatic restart",
+    "runtimePolicy": "outside67writegrant",
+    "bi62": "untouched"
+  },
+  "globalRelease": false
+}

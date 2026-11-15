@@ -1,0 +1,951 @@
+{
+  "schema": "sf2h.mission71.dashboard67.tests-proof-subreview.v1",
+  "mission": 71,
+  "reviewer": "review_runtime59",
+  "remote_write": false,
+  "execution": "NONE: static source/text review plus read-only GitHub MCP; no product imports, tests, builds, compiler, checks or CI dispatch/rerun",
+  "status": "NO_NEW_STATIC_BLOCKER_IN_TEST_PROOF_SUBSCOPE; READY_FOR_BOUNDED_INTAKE_SUBJECT_TO_PARENT_PRODUCT_PATCH_REVIEW",
+  "authority": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "dashboard-installed-proof",
+    "pull_request": 82,
+    "terminal": "259c4012b7e9943a7abe6803a835edae806356f9",
+    "material_source": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+    "material_source_tree": "78d26fb63de7d5210786dd01a66ca2916057e7ac",
+    "isolated_composition_W4": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+    "W4_tree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+    "release": "EXPLICIT_BOUNDED_SOURCE_RELEASE_FOR_HELD_CANDIDATE_PREPARATION",
+    "lease": "ENDED",
+    "full_text_read": [
+      "AUTHORITY.json",
+      "CONSUMER-RELEASE.json",
+      "HANDOFF.md"
+    ],
+    "unit": "17 paths: 12 active own paths (2 product + 10 tests/helpers) and 5 external/shared paths in released attempt-03 unit. Parent owns full patch/preimage/product/dependency closure review. installation52 proposal stays inert and outside17."
+  },
+  "scope": {
+    "new_files_full_read": 10,
+    "new_bun_cases": 13,
+    "installed_journey_specs": 2,
+    "transport_diagnostic_specs": 1,
+    "fixture_dependencies_full_read": 3,
+    "historical_files_full_diff_read": 2,
+    "source_runs_reconciled": 6,
+    "full_unit_product_review_by": "parent /root",
+    "new_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "bytes": 14782,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "blob": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "bytes": 19897,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+        "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "bytes": 9537,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+        "blob": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "bytes": 9508,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+        "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "bytes": 8996,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+        "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "bytes": 11309,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+        "blob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "bytes": 10417,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "blob": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "bytes": 12862,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+        "blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "bytes": 9646,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+        "blob": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "bytes": 10918,
+        "preimage": null,
+        "read": "FULL_TEXT"
+      }
+    ],
+    "fixture_dependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/business-services-fixture.ts",
+        "blob": "7294b6c3240ae4b2858dd1603b12e49b0067041f",
+        "bytes": 1317,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "blob": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+        "bytes": 7605,
+        "read": "FULL_TEXT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "blob": "cd43fad88f3424ac160f32be743df17b80a74336",
+        "bytes": 33122,
+        "read": "FULL_TEXT"
+      }
+    ]
+  },
+  "assertion_review": [
+    {
+      "group": "source-continuity.test.ts / five cases",
+      "positive_and_negative_oracles": [
+        "Withdrawal of write capability retains current authenticated read and does not create domain, audit or version effects. Original immutable write grant/evidence is not substituted.",
+        "Read source proof follows current business material and survives actual SQLite reopen. Wrong principal and tampered scope are rejected. Delete/recreate creates a different physical source incarnation without deleting unrelated records.",
+        "Late source mutation/logout invalidates a prior read fence. Interrupted request/unavailable SQLite is distinguished from actual denied read authority."
+      ],
+      "limit": "These cases exercise module/runtime seams and local fixtures, not the canonical installed CREATE path nor its missing T04 physical-incarnation acceptance."
+    },
+    {
+      "group": "confirmation.test.ts / three cases",
+      "positive_and_negative_oracles": [
+        "Monthly source selection is not invalidated by irrelevant outside-period changes; annual dependency changes invalidate annual proof. Zero and absence remain distinct.",
+        "Commit confirmation requires the locked transaction fence. Read authority revocation invalidates old admission; restored policy does not resurrect that admission. A fresh read admission obtains fresh authority.",
+        "Delete/recreate does not disclose replacement private material to an old selection; fresh independently acquired source has a new physical incarnation and valid current fence. Original draft/grant stays unchanged."
+      ],
+      "limit": "No claim of full C12 ambiguous/lost-response recovery or canonical installed CREATE qualification."
+    },
+    {
+      "group": "signals.test.ts / three cases",
+      "positive_and_negative_oracles": [
+        "Finite numeric identities, including zero, canonicalize consistently for attention, evidence and same-principal record reads. SQLite reopen preserves them; deleting selected record does not remove unrelated rows.",
+        "UTC offset and exact90-day boundary are asserted. Reads have no business effect.",
+        "Colliding numeric/string normalized identities are suppressed and rejected at durable C17 commit."
+      ],
+      "limit": "Literal D06 BudgetOverview fixture and whole C06 registry/review-request/MyWork ledger acceptance remain held."
+    },
+    {
+      "group": "consumer-read.test.ts / two browser-driven module consumers",
+      "positive_and_negative_oracles": [
+        "Actual BrowserDriver and actual HTTP responses are used; route.fetch obtains real server responses. Interception delays/aborts delivery or restricts authority, without manufacturing a positive authority result.",
+        "A real409 preserves the original draft id/version and local edits; latest source is compared to prior/local values. No write occurs before explicit reviewed checkbox, then the next exact version is saved.",
+        "An interrupted successful read leaves a dirty draft with save disabled; fresh retry re-enables authorized writes. Later write withdrawal retains private edits while all write permissions are false. Actual read loss403 clears DOM/history draft and draftAttempt; late positive context cannot restore access."
+      ],
+      "limit": "Browser/module source evidence is not installed CLI or final-product acceptance."
+    },
+    {
+      "group": "confirmation-access.spec.ts / installed journey",
+      "intended_oracles": [
+        "Real canonical CLI fixture; real fiscal-row creation, preview cancel with zero apply, lost delivery of a successful apply response, outcome read without a second apply, reload exact months/unrelated rows, logout while preview is held, DOM/history purge and rejection of late successful response."
+      ],
+      "executed_status": "FAIL at earlier installed transport boundary in relevant source attempts; downstream assertions are authored but not qualified. This legacy Dashboard preview outcome exercise cannot close original C12 F03."
+    },
+    {
+      "group": "records-signals-history.spec.ts / installed journey",
+      "intended_oracles": [
+        "Real records/history/agenda capture, competing-write409 with dirty draft, explicit review, cancel delete with zero effect, local-only discard, retained old history, attention prioritization links across apps and selected-only deletion preserving unrelated records."
+      ],
+      "executed_status": "FAIL at earlier installed transport boundary in relevant source attempts; downstream assertions are authored but not qualified."
+    },
+    {
+      "group": "transport-probe.spec.ts / bounded diagnostic",
+      "oracles": [
+        "Exactly8 read-only requests compare Node and browser GET plus empty JSON, malformed JSON and valid views-list POST. Each request keeps15-second cap. All observations are collected before expect.soft; failures still fail the test.",
+        "No synthesized positive authority response, mutation, request filter or timeout increase. Structured capped160-event diagnostic fields are allowlisted. Trace/video/screenshots are disabled for the probe."
+      ],
+      "actual": "2 GET200 and6 POST aborts; diagnostic FAIL retained. Observations locate a boundary but do not establish the exact upstream cause or installed acceptance."
+    }
+  ],
+  "fixtures_and_consumer_premises": [
+    "Module fixture uses real SQLite, source issuer/observer, actual C08 source-persistence driver, createModule and Bun HTTP server, seeded business records and persistent restrictable permissions; restart reopens the actual store. Operator identity/session and principal data are synthetic fixture inputs.",
+    "Ownhost fixture exercises createSfDashboardHttp and createSfBusinessServices with real state CAS and permission checks. Seeded DecisionCase participants include a private other-principal case that must remain excluded.",
+    "The business-services helper constructs createResidentAiBundle and initializeAtlas(undefined,...). The undefined native bridge and manifests/skill metadata do not establish native execution, resident inference or live AM/MCP coverage.",
+    "Installed helper spawns the real Bun CLI serve canonical source entry on isolated localhost4110/config/database. It rejects borrowing an occupied port, performs actual one-use enrollment/cookie setup, redacts logs and releases the owned child/port before deleting its temp state. This is source-installed CLI, not a separately compiled native binary.",
+    "BrowserDriver uses AppProcess to own Node, which owns Chromium pipes. The bounded Unix-socket/WebSocket bridge validates message/framing, permissions, one client, backpressure and teardown. Caller absolute deadline is retained; cleanup failure remains failure and waits for owned process scope. A report is impossible before full cleanup. Full helper read establishes its source premise; six actual R6 lifecycle records provide source-run observations."
+  ],
+  "anti_weakening": {
+    "baseline_W1": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "baseline_blob": "8d1a3e412156295578d7f277d2e3d95c4f8bbd3b",
+        "final_blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+        "baseline_blob": "1187e2b63475c763f37c75885e43366d7e835305",
+        "final_blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f"
+      }
+    ],
+    "confirmation_change": "The old admission stays access-unavailable after policy restoration; its fence remains false and original grant unchanged. A separately acquired fresh admission positively asserts source fingerprint/version/incarnation and true fence. After delete/recreate, the old selection has exact access-unavailable/version0 and no replacement private data; independently acquired new source proves a different physical incarnation. This sharpens confidentiality and authority boundaries rather than accepting stale access to make the test pass.",
+    "support_change": "Adds sanitized request observation and15-second fail-fast/race diagnostics; Status/Priority locator changes from label lookup to exact combobox role. HTTP status/result oracles remain, both installed files remain in identical R2/R4 request blob, no filter/skip/retry/timeout increase was added.",
+    "failure_history": "R1 23PASS/1FAIL484expects remains visible. R2/R4 installed failures and R5 probe failure remain visible. R3/R6 add consumer cases and stronger assertions to26PASS593expects; their green domain lane is not relabeled as installed green."
+  },
+  "runs": [
+    {
+      "number": 1,
+      "status": "FAIL_PRESERVED",
+      "passed": 23,
+      "failed": 1,
+      "expects": 484,
+      "test_count": 24,
+      "file_count": 9,
+      "seconds": 50.82,
+      "omni_spawn": 4,
+      "omni_delegate": 0,
+      "run_id": 43668733882,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668733882",
+      "event": "push",
+      "attempt": 1,
+      "workflow_path": ".github/workflows/test-ci.yml",
+      "head_sha": "56736466e7deb2973ac4f37540503da51057a8de",
+      "runner_branch": "ci-run-linux-astra-wp67-0b00fa5b-7e47a7c4-01",
+      "W": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+      "S": "56736466e7deb2973ac4f37540503da51057a8de",
+      "snapshot_tree": "a053369bbf0e49bbd4b86a55361490353da2c7b5",
+      "snapshot_parent_count": 1,
+      "W_to_S_paths": [
+        ".ci-run.json"
+      ],
+      "jobs": [
+        {
+          "id": 132673813569,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132674390095,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "request_blob": "ca5060602d84e8f84a4e03df416a3ca1b4356315",
+      "request_sha256": "7e47a7c4383a62e08d22d3953598d459250dbd9a0c81beb7c91edf8cccca37a6",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+          "Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+          "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+          "Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+          "Sucafinav1/test/product/wp02/signals-identity.test.ts",
+          "Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+          "Sucafinav1/test/product/wp02/confirmation.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "evidence": "MCP run metadata, actual jobs, actual job log, snapshot Git commit, complete W-to-S compare and actual .ci-run.json read independently; no run dispatched by71"
+    },
+    {
+      "number": 2,
+      "status": "INSTALLED_FAIL_PRESERVED",
+      "passed": 0,
+      "failed": 2,
+      "run_id": 43669059549,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669059549",
+      "event": "push",
+      "attempt": 1,
+      "workflow_path": ".github/workflows/test-ci.yml",
+      "head_sha": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+      "runner_branch": "ci-run-linux-astra-wp67-0b00fa5b-f12b9ae6-02",
+      "W": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+      "S": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+      "snapshot_tree": "4632d0c068a4e99ad6006a5c47e3a44333d30327",
+      "snapshot_parent_count": 1,
+      "W_to_S_paths": [
+        ".ci-run.json"
+      ],
+      "jobs": [
+        {
+          "id": 132674810209,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132676868247,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "request_blob": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+      "request_sha256": "f12b9ae62a264afbaa06acca24b7d562b7aaf6b6675deb9fd47d057a59511e08",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+          "e2e/sucafina/dashboard-installed/confirmation-access.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "evidence": "MCP run metadata, actual jobs, actual job log, snapshot Git commit, complete W-to-S compare and actual .ci-run.json read independently; no run dispatched by71"
+    },
+    {
+      "number": 3,
+      "status": "SOURCE_DOMAIN_PASS",
+      "passed": 26,
+      "failed": 0,
+      "expects": 593,
+      "test_count": 26,
+      "file_count": 10,
+      "seconds": 68.02,
+      "omni_spawn": 6,
+      "omni_delegate": 0,
+      "run_id": 43670302513,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670302513",
+      "event": "push",
+      "attempt": 1,
+      "workflow_path": ".github/workflows/test-ci.yml",
+      "head_sha": "461f1794edb80d9b29017ed18adb4019675a61a9",
+      "runner_branch": "ci-run-linux-astra-wp67-1a3a3c20-7e6f223a-03",
+      "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+      "S": "461f1794edb80d9b29017ed18adb4019675a61a9",
+      "snapshot_tree": "d4004df01abe75fbd1c6cc98b016b7e4fca02120",
+      "snapshot_parent_count": 1,
+      "W_to_S_paths": [
+        ".ci-run.json"
+      ],
+      "jobs": [
+        {
+          "id": 132678661399,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "success"
+        },
+        {
+          "id": 132679339900,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "request_blob": "b813f69318c75702ba939e7b74c94326f56913b3",
+      "request_sha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "./Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+          "./Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+          "./Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+          "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+          "./Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+          "./Sucafinav1/test/product/wp02/signals-identity.test.ts",
+          "./Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+          "./Sucafinav1/test/product/wp02/confirmation.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "evidence": "MCP run metadata, actual jobs, actual job log, snapshot Git commit, complete W-to-S compare and actual .ci-run.json read independently; no run dispatched by71"
+    },
+    {
+      "number": 4,
+      "status": "INSTALLED_FAIL_PRESERVED",
+      "passed": 0,
+      "failed": 2,
+      "observed_boundary": "POST requests abort at installed transport; downstream journey assertions have not qualified",
+      "run_id": 43670694769,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670694769",
+      "event": "push",
+      "attempt": 1,
+      "workflow_path": ".github/workflows/test-ci.yml",
+      "head_sha": "72032511a410840d86c6b7b76be73275a22828ca",
+      "runner_branch": "ci-run-linux-astra-wp67-1a3a3c20-f12b9ae6-04",
+      "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+      "S": "72032511a410840d86c6b7b76be73275a22828ca",
+      "snapshot_tree": "f483fe0924426faa6356097ff241e76a1f8b529e",
+      "snapshot_parent_count": 1,
+      "W_to_S_paths": [
+        ".ci-run.json"
+      ],
+      "jobs": [
+        {
+          "id": 132679854352,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132680682100,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "request_blob": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+      "request_sha256": "f12b9ae62a264afbaa06acca24b7d562b7aaf6b6675deb9fd47d057a59511e08",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+          "e2e/sucafina/dashboard-installed/confirmation-access.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "evidence": "MCP run metadata, actual jobs, actual job log, snapshot Git commit, complete W-to-S compare and actual .ci-run.json read independently; no run dispatched by71"
+    },
+    {
+      "number": 5,
+      "status": "TRANSPORT_DIAGNOSTIC_FAIL_PRESERVED",
+      "passed": 0,
+      "failed": 1,
+      "observations": {
+        "GET_200": 2,
+        "POST_aborted": 6,
+        "per_request_timeout_ms": 15000,
+        "network_requests_total": 8
+      },
+      "run_id": 43671673378,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671673378",
+      "event": "push",
+      "attempt": 1,
+      "workflow_path": ".github/workflows/test-ci.yml",
+      "head_sha": "5814c5f3a026d95e651244329cf461bf265fa587",
+      "runner_branch": "ci-run-linux-astra-wp67-49a8f0d5-a64b0f69-05",
+      "W": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+      "S": "5814c5f3a026d95e651244329cf461bf265fa587",
+      "snapshot_tree": "4d7e39b2741d32a7a2e5416f3ff0128c097f106f",
+      "snapshot_parent_count": 1,
+      "W_to_S_paths": [
+        ".ci-run.json"
+      ],
+      "jobs": [
+        {
+          "id": 132682862827,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132683922122,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "request_blob": "16f026e4f9ca9b28511c9a20dca7e4b1cdacecdf",
+      "request_sha256": "a64b0f696f3e9d6bf3a73c504e3b0025d26db2d1d7be568ce2a72ab72869085d",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/dashboard-installed/transport-probe.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "evidence": "MCP run metadata, actual jobs, actual job log, snapshot Git commit, complete W-to-S compare and actual .ci-run.json read independently; no run dispatched by71"
+    },
+    {
+      "number": 6,
+      "status": "SOURCE_DOMAIN_PASS",
+      "passed": 26,
+      "failed": 0,
+      "expects": 593,
+      "test_count": 26,
+      "file_count": 10,
+      "seconds": 55.31,
+      "omni_spawn": 6,
+      "omni_delegate": 0,
+      "run_id": 43672573836,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672573836",
+      "event": "push",
+      "attempt": 1,
+      "workflow_path": ".github/workflows/test-ci.yml",
+      "head_sha": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+      "runner_branch": "ci-run-linux-astra-wp67-454100dd-7e6f223a-06",
+      "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+      "snapshot_tree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+      "snapshot_parent_count": 1,
+      "W_to_S_paths": [
+        ".ci-run.json"
+      ],
+      "jobs": [
+        {
+          "id": 132685657101,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "success"
+        },
+        {
+          "id": 132686291657,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "request_blob": "b813f69318c75702ba939e7b74c94326f56913b3",
+      "request_sha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "./Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+          "./Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+          "./Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+          "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+          "./Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+          "./Sucafinav1/test/product/wp02/signals-identity.test.ts",
+          "./Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+          "./Sucafinav1/test/product/wp02/confirmation.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "evidence": "MCP run metadata, actual jobs, actual job log, snapshot Git commit, complete W-to-S compare and actual .ci-run.json read independently; no run dispatched by71"
+    }
+  ],
+  "R6_browser_lifecycle": {
+    "actual_records": [
+      {
+        "consumer": "host-draft-conflict",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4101
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4122
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4137,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 103,
+          "framesFromBrowser": 259,
+          "peakQueuedBytes": 5645,
+          "peakBufferedBytes": 1007,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "host-write-authority",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4101
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4269
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4284,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 85,
+          "framesFromBrowser": 194,
+          "peakQueuedBytes": 2954,
+          "peakBufferedBytes": 2186,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "host-contextual-controls",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4101
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4407
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4422,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 68,
+          "framesFromBrowser": 164,
+          "peakQueuedBytes": 2457,
+          "peakBufferedBytes": 953,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "host-draft-conflict",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4101
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4547
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4562,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 92,
+          "framesFromBrowser": 294,
+          "peakQueuedBytes": 7705,
+          "peakBufferedBytes": 869,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "host-write-authority",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4101
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4700
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4715,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 24,
+          "framesFromBrowser": 88,
+          "peakQueuedBytes": 2455,
+          "peakBufferedBytes": 555,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "dashboard-monthly",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4101
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4834
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4849,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 74,
+          "framesFromBrowser": 228,
+          "peakQueuedBytes": 2457,
+          "peakBufferedBytes": 661,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      }
+    ],
+    "summary": "Six actual logs; Node owns Chromium pipes via AppProcess. Each observed0remaining contexts, node/browser exit0, no signal, disconnected, bridge/listener/socket closed, cleanWS1000, pipe ended, no pending/queued frames and socket directory removed. These are source runtime/browser lifecycle observations, not native product MCP/AM evidence.",
+    "actual_artifact_count": 0,
+    "artifacts_independently_read": true,
+    "runner_ref_live_readback": "404 NOT_FOUND after cleanup; see run06-live-retention.json"
+  },
+  "source_vs_target": {
+    "source_qualification": "Only isolated W4 454100ddc351dc316d0ff1714df0ab01356b5c66 and exact S6/request; R6 includes10 explicit Bun files, no installed Playwright specs.",
+    "composed_target": "71 target has runtime59, auth72, C12 recovery65, procurement/application73 and other deliveries. Source W4 success cannot qualify those composed dependencies. Exact final target pin/trees belong to parent inventory/readback; all checks are A45-owned.",
+    "foreign_proposal": "installation52 manifest remains UNVALIDATED_NOT_APPLIED; canonical CLI installation blob21236af83e4de879242fd298d9e15a9923f3bf41 must not be replaced by proposal. Route transport work to74/52/71 authorities."
+  },
+  "validation_queue_only": {
+    "status": "NOT_RUN_NOT_DISPATCHED_BY71",
+    "domain_request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+        "./Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+        "./Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "./Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+        "./Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+        "./Sucafinav1/test/product/wp02/signals-identity.test.ts",
+        "./Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+        "./Sucafinav1/test/product/wp02/confirmation.test.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "installed_request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "e2e/sucafina/dashboard-installed/confirmation-access.spec.ts"
+      ],
+      "config": "e2e/playwright.production.config.ts",
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "transport_diagnostic_request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/dashboard-installed/transport-probe.spec.ts"
+      ],
+      "config": "e2e/playwright.production.config.ts",
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "owner": "A45; transport remediation74/52; final epic/acceptanceS0",
+    "note": "Requests are explicit evidence-backed queues, not authorizations or proof of completion. Preserve original existing domain cases and the failed installed journeys."
+  },
+  "holds_preserved": [
+    "C28 inherited holds",
+    "F01 first-save outcome",
+    "F02/T04 canonical CREATE physical incarnation",
+    "F03 C12 lost response/reload",
+    "D06 BudgetOverview literal fixture",
+    "Full C06 registry, review-request and MyWork ledger",
+    "F05 installed POST transport",
+    "Composed-candidate compiler45 and check queue",
+    "P03 and other inherited runtime/system holds",
+    "Native/live AM and product MCP qualification",
+    "Final eight journeys, three FINAL sessions, C-G7/D-G8 and S0 epic acceptance"
+  ],
+  "artifacts": [
+    "tests-proof-inputs.json",
+    "tests-fixture-dependencies.json",
+    "tests-review.json",
+    "run06-live-retention.json"
+  ],
+  "conclusion": "No additional test/proof-side static blocker was found. The17-path release can be considered only as a bounded HELD candidate input after parent code/patch/preimage review. R6 source26PASS/593expects qualifies its exact source domain request; installed transport and downstream product journeys remain unqualified. No check was run by71."
+}

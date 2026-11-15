@@ -1,0 +1,189 @@
+{
+  "schema": "sf-dashboard-installed-producer-cold-review-v1",
+  "task": "Orchestra SF mission67, read-only producer review",
+  "repository": "gustavomhss/Orchestra-SF",
+  "sourceRef": "bce4d89e252159d8574301834a72ec91f2acd791",
+  "sourceAuthority": "GitHub MCP fetch_file; local source copies are analysis material only",
+  "context": {
+    "mission": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "branch": "dashboard-installed-proof",
+    "parentReportedIntegrationHead": "d088708 (C28 Reports48); own Dashboard producer blobs unchanged"
+  },
+  "outcome": "No additional mandatory defect confirmed in the four requested producers by static review. This is not a runtime PASS or installed closure.",
+  "reviewed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+      "blob": "2f1b6f341817cbe618fe4751e2373957e34d2203",
+      "read": "complete",
+      "controls": [
+        "simulateDashboardCommand clones the snapshot before domain execution and derives before/after/diff exclusively from authorized page projection.",
+        "Both preview and apply route to the same canonical DashboardBudget, DashboardPeople, DashboardOperations or DashboardPortfolio domain.",
+        "Apply recomputes the current projection and physical visible-record/page incarnation binding; actor and command are separately bound by digest. Changed authority or visible material rejects before domain execution.",
+        "Domain CAS conflict values are filtered through visibleStored; raw hidden record fields are not sent to the caller.",
+        "Generated IDs are a host responsibility; the paired mutation-scope/prepared path supplies reserved IDs and checks exact consumption."
+      ],
+      "criteria": [
+        "WP02.T02.CHK.01",
+        "WP02.T02.CHK.02",
+        "WP02.T02.CHK.03",
+        "WP02.T02.CHK.04",
+        "WP02.T02.INV.01",
+        "WP02.T02.QLT.01",
+        "WP02.T02.SUC.01",
+        "WP02.T02.SUC.02"
+      ],
+      "finding": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts",
+      "blob": "4fc3df00edbc488852bae21c929e8b94846badf8",
+      "read": "complete",
+      "controls": [
+        "Footprint is derived from actual before/after domain data, including cascades and generated records, instead of trusting submitted field names.",
+        "Collection rows require nonempty string or safe integer unique IDs; malformed and unknown shapes fail closed.",
+        "Year and month of each logical row constrain the authorized effect period; cross-year or cross-month replacement cannot be represented as an unchanged period.",
+        "Creates and existing-target mutations have separate grants, and every changed field and period must be covered.",
+        "Scope construction replays the exact preview digest and checks unique reserved IDs with exact consumption. prepared.ts repeats live scoped identity/projection checks, the domain apply, footprint digest and grant coverage before commit."
+      ],
+      "criteria": [
+        "WP02.INV.02",
+        "WP02.T02.CHK.01",
+        "WP02.T02.CHK.02",
+        "WP02.T02.CHK.03",
+        "WP02.T02.INV.01",
+        "WP02.T02.SUC.01"
+      ],
+      "finding": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/records.ts",
+      "blob": "4f718fcf7e496ca7928583bf0b94995edf7a7887",
+      "read": "complete",
+      "controls": [
+        "budgetYtd, deviations, budgetCurrentMonth and revenueByYear are normalized into isolated logical records with authoritative key-derived IDs and periods.",
+        "budgetYtd kind and annual owner key remain distinct; string owner IDs with colons or hyphens retain their identity through the documented key format.",
+        "Record value fields cannot override the key-derived id/kind/year/month/owner identity.",
+        "Malformed keys, month outside 1..12, scalar group values and nonfinite numeric year-map values return undefined instead of silently excluding rows."
+      ],
+      "criteria": [
+        "WP02.T02.CHK.01",
+        "WP02.T02.CHK.03",
+        "WP02.T02.INV.01",
+        "WP02.T02.SUC.01"
+      ],
+      "finding": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "blob": "2493b4d16cdec9a0798fc6627a02b07f9859ad4d",
+      "read": "complete",
+      "controls": [
+        "Target surface, record type/id, nonempty fields and period are validated; unknown types return unavailable.",
+        "Record families route to the canonical authorized page; talent private-field requests use Talent Review rather than a public headcount projection.",
+        "The issuer delegates to createDashboardRecordEvidenceHost and createDashboardRecordSourceIssuer, whose real request authentication, current roleMap, actor and exact field/period checks repeat before egress.",
+        "The historical D06 issue was observer reissue under a different page, not evidence that the canonical initial issuer should be broadened; do not replace exact source matching with identity guesses."
+      ],
+      "criteria": [
+        "WP02.INV.02",
+        "WP02.T01.INV.02",
+        "WP02.T02.DOD.02",
+        "WP02.T02.INV.02",
+        "WP02.T02.CMP.02"
+      ],
+      "finding": null
+    }
+  ],
+  "dependenciesRead": [
+    {
+      "path": "product/dashboard/port.ts",
+      "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "focus": "projectDashboardSource, authorized values and current-date semantics"
+    },
+    {
+      "path": "product/dashboard/sources.ts",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "focus": "complete record evidence issue/read and egress fence"
+    },
+    {
+      "path": "product/integration/dashboard-sources.ts",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+      "focus": "complete actor/scope issuance and repeated current proof"
+    },
+    {
+      "path": "product/dashboard/prepared.ts",
+      "blob": "ffcf2027769a8800b6804b94ff22df0cea2bbb87",
+      "focus": "complete transactional consumption of mutation scope"
+    },
+    {
+      "path": "product/dashboard/prepared-review.ts",
+      "blob": "fd3639ec521dd858e5d1b427af358f32394f6409",
+      "focus": "complete current-source review binding"
+    },
+    {
+      "path": "product/dashboard/imports.ts",
+      "blob": "5af9a964f072b82d5ea3a1d07f26fc7faf02bac1",
+      "focus": "complete format-to-domain preview/apply routes"
+    },
+    {
+      "path": "product/dashboard/hot-topic-draft.ts",
+      "focus": "same-session MCP copy: callers of simulateDashboardCommand, prepareDashboardMutationScope and prepared execution"
+    },
+    {
+      "path": "runtime/dashboard-budget.ts",
+      "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+      "focus": "read command and view paths needed for monthly, annual, keyed and cascade semantics"
+    },
+    {
+      "path": "runtime/dashboard-operations.ts",
+      "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+      "focus": "read command preflight/month replacement paths; no blanket audit of all runtime domains"
+    }
+  ],
+  "existingTestSourcesRead": [
+    {
+      "path": "test/product/wp02/commands.test.ts",
+      "blob": "86fe5820ef97d56470d1cd588cdd4d9cb890a9f2"
+    },
+    {
+      "path": "test/product/wp02/scope.test.ts",
+      "blob": "811c2c42656e7e58540993ce0cd4d127fbf5d6bd"
+    },
+    {
+      "path": "test/product/wp02/keyed-update.test.ts",
+      "blob": "db4cbad9fda4972d583e48c3248024587f0c82d6"
+    },
+    {
+      "path": "test/product/wp02/confirmation.test.ts",
+      "blob": "49bf7727502b2ddf154cd75bc3e043ceaa62e1e7"
+    },
+    {
+      "path": "test/product/wp02/prepared.test.ts",
+      "blob": "f660231b54967d45f3fdfca3acab8abd8524df34"
+    }
+  ],
+  "nonFindings": [
+    "No-op mutations are currently rejected by empty footprint; no inspected canonical requirement establishes that unchanged-data confirmation must create a mutation receipt, so this was not promoted to a required defect.",
+    "Unknown or primitive collection shapes are intentionally unavailable to a prepared record mutation rather than silently authorized.",
+    "The canonical record-to-page mapping must not be broadened to repair historical original-page observation; the latter belongs to confirmation observer logic.",
+    "Suspicious legacy-domain semantics, such as zero revenue removal, were not redefined without a canonical requirement and hosted proof."
+  ],
+  "requiredMissionFocusOutsideThisReview": [
+    "F04 write-only withdrawal retaining same principal and current read/field authorization: trusted private physical-source continuity, keep unsaved input, disable mutation; read revocation/principal change/delete-recreate must purge.",
+    "signals.ts source identity preservation for valid numeric IDs and UTC date eligibility; avoid duplicate/ambiguous IDs.",
+    "Historical F01/F03 draft and C12 receipt recovery must be reproduced/reconciled against current C27/C28 and mission65; do not claim an old aggregate PASS over the exact failed tail.",
+    "Full 78-ID criteria matrix, resident and numeric annexes, confirmation oracle and historical exact findings are in criteria-review.json."
+  ],
+  "execution": {
+    "productTestsExecuted": 0,
+    "hostedRunsDispatched": 0,
+    "remoteWrites": 0,
+    "productFilesEdited": 0,
+    "artifacts": "internal scratch reports and verbatim MCP source copies only"
+  },
+  "limitations": [
+    "Static reading cannot prove runtime race behavior, exact current installed host wiring, reload continuity, final output purge or atomic receipt persistence.",
+    "Existing test source descriptions are intended coverage only; no source file or old run was treated as present-commit test success.",
+    "All criterion statuses remain subject to the parent mission67 proof matrix and hosted surgical evidence."
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "schema": "sf2h.mission67.terminal-validation-ledger.v1",
+  "createdAt": "2026-11-15 03:39:14 UTC",
+  "source": {
+    "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+    "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+  },
+  "runs": [
+    {
+      "attempt": 1,
+      "scope": "domain/source initial",
+      "W": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+      "WTree": "b11fee7674c0c69cc58ebf58cde69a94bd048670",
+      "S": "56736466e7deb2973ac4f37540503da51057a8de",
+      "STree": "a053369bbf0e49bbd4b86a55361490353da2c7b5",
+      "runId": 43668733882,
+      "jobId": 132673813569,
+      "status": "FAIL",
+      "counts": {
+        "pass": 23,
+        "fail": 1,
+        "expect": 484,
+        "files": 9,
+        "seconds": 50.82
+      },
+      "receipt": "validation/run-01.json",
+      "requestSha256": "7e47a7c4383a62e08d22d3953598d459250dbd9a0c81beb7c91edf8cccca37a6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668733882"
+    },
+    {
+      "attempt": 2,
+      "scope": "installed production Playwright",
+      "W": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+      "WTree": "b11fee7674c0c69cc58ebf58cde69a94bd048670",
+      "S": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+      "STree": "4632d0c068a4e99ad6006a5c47e3a44333d30327",
+      "runId": 43669059549,
+      "jobId": 132674810209,
+      "status": "FAIL",
+      "counts": {
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "flaky": 0
+      },
+      "receipt": "validation/run-02.json",
+      "requestSha256": "f12b9ae62a264afbaa06acca24b7d562b7aaf6b6675deb9fd47d057a59511e08",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669059549"
+    },
+    {
+      "attempt": 3,
+      "scope": "real domain, SQLite, C08, canonical HTTP and BrowserDriver consumer closure",
+      "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+      "WTree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+      "S": "461f1794edb80d9b29017ed18adb4019675a61a9",
+      "STree": "d4004df01abe75fbd1c6cc98b016b7e4fca02120",
+      "runId": 43670302513,
+      "jobId": 132678661399,
+      "status": "PASS",
+      "counts": {
+        "passed": 26,
+        "failed": 0,
+        "assertions": 593,
+        "files": 10,
+        "durationSeconds": 68.02
+      },
+      "receipt": "validation/run-03.json",
+      "requestSha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670302513"
+    },
+    {
+      "attempt": 4,
+      "scope": "installed production Playwright with corrected accessible selects",
+      "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+      "WTree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+      "S": "72032511a410840d86c6b7b76be73275a22828ca",
+      "STree": "f483fe0924426faa6356097ff241e76a1f8b529e",
+      "runId": 43670694769,
+      "jobId": 132679854352,
+      "status": "FAIL",
+      "counts": {
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "flaky": 0
+      },
+      "receipt": "validation/run-04.json",
+      "requestSha256": "f12b9ae62a264afbaa06acca24b7d562b7aaf6b6675deb9fd47d057a59511e08",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670694769"
+    },
+    {
+      "attempt": 5,
+      "scope": "installed production Node/browser transport diagnostic, read-only",
+      "W": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+      "WTree": "99610113060b1ba7c56e719a68cdad451c4c9a34",
+      "S": "5814c5f3a026d95e651244329cf461bf265fa587",
+      "STree": "4d7e39b2741d32a7a2e5416f3ff0128c097f106f",
+      "runId": 43671673378,
+      "jobId": 132682862827,
+      "status": "FAIL",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0,
+        "flaky": 0,
+        "diagnosticObservations": 8
+      },
+      "receipt": "validation/run-05.json",
+      "requestSha256": "a64b0f696f3e9d6bf3a73c504e3b0025d26db2d1d7be568ce2a72ab72869085d",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671673378"
+    },
+    {
+      "attempt": 6,
+      "scope": "exact normalized final Dashboard domain and real consumer payload",
+      "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+      "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+      "runId": 43672573836,
+      "jobId": 132685657101,
+      "status": "PASS",
+      "counts": {
+        "passed": 26,
+        "failed": 0,
+        "assertions": 593,
+        "files": 10,
+        "durationSeconds": 55.31
+      },
+      "receipt": "validation/run-06.json",
+      "requestSha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672573836"
+    }
+  ],
+  "final": {
+    "source": {
+      "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+      "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+    },
+    "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+    "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+    "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+    "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+    "runId": 43672573836,
+    "jobId": 132685657101,
+    "counts": {
+      "passed": 26,
+      "failed": 0,
+      "assertions": 593,
+      "files": 10,
+      "durationSeconds": 55.31
+    },
+    "requestSha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+    "receipt": "validation/run-06.json"
+  },
+  "sequentialWP67Runs": true,
+  "inFlightAtTerminal": 0,
+  "source26PassIsNotInstalledAcceptance": true,
+  "installedW4": "NOT_RUN_HOLD",
+  "compiler45": "NOT_RUN_CONFIRM_WITH_45",
+  "corrections": [
+    "Run01 FAIL retained: invalidated old context cannot become valid by restoring policy. Own C06 test now asserts old lease unavailable and opens a fresh admission to exercise later checks. No production authorization relaxed.",
+    "Run02 FAIL retained: nested select accessibility lookup corrected within own installed specs; bounded transport diagnostic added. Test total180s unchanged.",
+    "Run04 FAIL retained: actual installed HotTopics and OPEX requests abort before any save response. No claim that business assertions beyond first POST executed.",
+    "Run05 FAIL retained: GET controls pass while all six Node/browser POST probes abort at15s. The result does not locate the internal blocked stage or prove a Bun/Effect root cause.",
+    "Run06 is a new exact W4 qualification after correcting three final-LF preimages/postimages, not retroactive reattribution of run03."
+  ],
+  "localProductTests": 0,
+  "localTypechecks": 0,
+  "localBuilds": 0,
+  "localGuards": 0,
+  "newWorkflowPlatforms": 0,
+  "protectedInstallationApplied": false,
+  "globalRelease": false
+}

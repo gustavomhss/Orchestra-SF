@@ -1,0 +1,53 @@
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -1,10 +1,12 @@
+ import path from "node:path"
++import { IncomingMessage } from "node:http"
++import { Readable } from "node:stream"
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect, Layer } from "effect"
++import { Effect, Layer, Option } from "effect"
+ import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ import { createSfHostRuntime } from "./host-context"
+ import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+ 
+ export type SfInstallation = {
+@@ -38,20 +40,35 @@
+   const route = Effect.gen(function* () {
+     const incoming = yield* HttpServerRequest.HttpServerRequest
+     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+-    const web = yield* HttpServerRequest.toWeb(sanitized)
++    const nodeSource = sanitized.source
++    const web = nodeSource instanceof IncomingMessage
++      ? nodeWebRequest(sanitized, nodeSource)
++      : yield* HttpServerRequest.toWeb(sanitized)
+     if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
+     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+     if (!request) return HttpServerResponse.empty({ status: 403 })
+     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
+     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+   }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
+   // The listener must install privacy before HttpRouter.serve, outside the request route.
+   // Effect registers a trailing wildcard at both the subtree and its base path.
+   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
++}
++
++/** Keep one body consumer: do not create an Effect body stream before this Node conversion. */
++function nodeWebRequest(incoming: HttpServerRequest.HttpServerRequest, source: IncomingMessage): Request {
++  const url = HttpServerRequest.toURL(incoming)
++  if (Option.isNone(url)) throw new Error("SF_INSTALLATION_REQUEST_URL_INVALID")
++  const body = incoming.method !== "GET" && incoming.method !== "HEAD" ? Readable.toWeb(source) : undefined
++  return new Request(url.value, {
++    method: incoming.method,
++    headers: incoming.headers,
++    ...(body ? { body, duplex: "half" } : {}),
++  })
+ }
+ 
+ function readTransport(value: unknown, origin: string): MicrosoftTransport | undefined {
+   if (value === undefined) return undefined
+   if (!value || typeof value !== "object" || Object.keys(value).length !== 4 ||
