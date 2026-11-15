@@ -1,0 +1,176 @@
+{
+  "schema": "sf2h.closure199.artifact.v1",
+  "mission": 199,
+  "epoch": "native-closure-e1-browser199",
+  "branch": "sf-installed-host",
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/190",
+  "target": "sf2-stack",
+  "candidate_base": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+  "prepared_head": "587a4a8c632a2a510c5992cac226743ddcff6caa",
+  "code_head_before_receipt": "4854c466b94492ca690f8f1d0f91cfbdbdcdefa6",
+  "source_187": "96c01020db59d9b4f8d44300638418d67ee11fea",
+  "source_packet": "54d5786473feae8e1c7029677503ade4933605e7",
+  "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "ack_commit": "59642460dafca7ca5874f0fd03a567233b88c564",
+  "closure_import_commit": "7617fbfba203ee3d4c15cd91a18620e5ca468932",
+  "model": "GPT-6",
+  "session_id": null,
+  "session_id_not_exposed": true,
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "pre_blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "post_blob": "a67dfce9c79309b182bb25100eeb2a51e49d9a3b",
+      "purpose": "F04 exact imported, then real hosted Playwright worker/context override"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+      "pre_blob": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+      "post_blob": "3cbd63012f43c43bbbe3d2c66c03fd2ded6343f9",
+      "purpose": "original F04 live actor/context/discovery checks"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+      "pre_blob": "75181ca2d425dd71b9fb032773be16e48883c775",
+      "post_blob": "0f2463a8e6dcc201f5a8a630172e3d88c7bb3d91",
+      "purpose": "exact 187 scratch, no guard bypass"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+      "pre_blob": "abfa55b1e87622ecee4fdbb1ca962b35039dd326",
+      "post_blob": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
+      "purpose": "F04 real fault injection unchanged"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+      "pre_blob": null,
+      "post_blob": "bc84476891d97e7baad4f6462933c60688c11847",
+      "purpose": "exact 187 private manifest writer"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+      "pre_blob": null,
+      "post_blob": "66e269a78af8262764228557e2eeccd29bca1a36",
+      "purpose": "exact 187 canonical installed CAP14/04/05 helper"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+      "pre_blob": null,
+      "post_blob": "238d8329bc5677cdc98b9fa238426783bf4add65",
+      "purpose": "exact 187 pure helper tests; NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts",
+      "pre_blob": null,
+      "post_blob": "567ef2bf1d472e248468ad4eed93ead751aaaa22",
+      "purpose": "existing hosted CDP and distinct real Microsoft contexts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+      "pre_blob": null,
+      "post_blob": "7a85a85d13895ce7e1a95c543f1b3a8f13757582",
+      "purpose": "private U15/U39/U40 F01 selection and original producer CAS/permissions read/recheck"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/desktop-host.ts",
+      "pre_blob": null,
+      "post_blob": "1a6f2081664db3da72554df46fe347ae7a616352",
+      "purpose": "packaged executable path/sha + build/test run provenance"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/packaged-electron.spec.ts",
+      "pre_blob": null,
+      "post_blob": "2925ff518a78c2034f855561589f504b9ca7e48b",
+      "purpose": "real packaged Electron broker/partition/login/logout scenario"
+    },
+    {
+      "path": "script/sf2h/proofs/installed/register.ts",
+      "pre_blob": null,
+      "post_blob": "5fa9b5d1c82a9a70ea6351f4403b8854a64a2296",
+      "purpose": "host adapter registration, rollback on failure"
+    },
+    {
+      "path": "script/sf2h/proofs/installed/consume.ts",
+      "pre_blob": null,
+      "post_blob": "ce5191c0217cc581ee4258cc244ca146e1d42f06",
+      "purpose": "real per-suite pre-run read/CAS revalidation"
+    },
+    {
+      "path": "script/sf2h/proofs/installed/attest-d01.ts",
+      "pre_blob": null,
+      "post_blob": "97bde2fea8f707aafebf7bd408a21bc43bfaa4d3",
+      "purpose": "hosted private packaged provenance/sha writer"
+    },
+    {
+      "path": "script/sf2h/proofs/installed/README.md",
+      "pre_blob": null,
+      "post_blob": "726b6cb98e697d4c583fa72e8289debf74258a5e",
+      "purpose": "exact 191 +194/195 host interface contract"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/ACK.json",
+      "pre_blob": null,
+      "post_blob": "a448b0b626801cff57df3178df8dab39e75160a5",
+      "purpose": "ACK published before first write"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/EXTERNAL-DEPENDENCY.json",
+      "pre_blob": null,
+      "post_blob": "a02fb1acfd5af132c8f3a6a71311478fe896444f",
+      "purpose": "sole external dependency record"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/INERT-189-PLAYWRIGHT-PRODUCTION.patch",
+      "pre_blob": null,
+      "post_blob": "659e9b958bb59904a526de212cd9483cd975f35b",
+      "purpose": "189-only inert complete full pre/post config patch"
+    }
+  ],
+  "criteria": {
+    "F04_187_exact_closure": "CODE_COMMITTED_EXACT_7_BLOBS",
+    "microsoft_contexts_and_private_manifest": "DRIVERS_COMMITTED_NOT_RUN",
+    "original_producer_route_ref_version_and_capability_recheck": "DRIVERS_COMMITTED_NOT_RUN",
+    "U15_CAP14_six_ui_cases": "NOT_RUN_REQUIRES_194_FIX_AND_REAL_HOST",
+    "U39_CAP04_three_ui_cases": "NOT_RUN_REAL_HOST_REQUIRED",
+    "U40_CAP05_three_ui_cases": "NOT_RUN_REAL_HOST_REQUIRED",
+    "D01_packaged_electron_broker_partition": "SCENARIO_COMMITTED_NOT_RUN_MISSING_189_MAIN_BROKER_AND_191_ARTIFACT",
+    "production_playwright_config": "COMPLETE_INERT_PATCH_ONLY_189_WRITE",
+    "scratch_guard": "PRESERVED_ORIGINAL_NO_BYPASS_AWAIT_188_CAUSAL_RESOLUTION"
+  },
+  "observed_evidence": [
+    "GitHub remote head/fence inspected, ACK CAS published before first write",
+    "187 ARTIFACT/HANDOFF seven source preimages compared with integrated branch, exact 187 blobs used",
+    "Changes committed and remote CAS updated force:false",
+    "GitHub PR 190 created targeting sf2-stack without merge"
+  ],
+  "not_run": [
+    "all tests",
+    "all typechecks",
+    "all builds",
+    "all validators",
+    "all GitHub Actions/CI execution",
+    "real installed Microsoft identity/provider discovery",
+    "real source/host transaction",
+    "packaged Electron launch or D01 proof"
+  ],
+  "external_dependency": "EXTERNAL-DEPENDENCY.json",
+  "consumers": {
+    "integrator": "189 PR65",
+    "compiler": "190 PR107",
+    "ci_dispatcher": "191 PR106",
+    "u15_author": "194 PR153",
+    "u39_u40_author": "195 PR150",
+    "guard": "188"
+  },
+  "next_actions": [
+    "189: integrate branch via PR190 preserving latest sf2-stack preimages, apply 189-owned inert Playwright patch, wire original Electron broker with available codecs and main-owned providers",
+    "194: use nativeInstalledFixture in six U15 tests without deleting scenarios",
+    "191: on accepted candidate C, provide genuine preinstalled host browser/actors/registry/F01/source and packaged artifact; dispatch exact selectors and publish run IDs/evidence",
+    "188: causal guard resolution without scratch rename"
+  ],
+  "no_secrets_published": true,
+  "globalRelease": false,
+  "goal_native": "PAUSED",
+  "status": "COMMITTED_CODE_READY_EXTERNAL_PREREQUISITES_NOT_RUN"
+}
