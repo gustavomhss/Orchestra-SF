@@ -5,7 +5,7 @@ import type { SfContextHandle } from "../../context/contracts"
 
 // N29 presents F01's current installed/current-grant verdict; a source file or
 // method signature is never evidence that the installed capability is operational.
-export function n29Permitted(context: SfContext, resource: "routine-admission" | "routine-runs" | "schedules" | "residents", operationId: string) {
+export function n29Permitted(context: SfContext, resource: "routine-admission" | "routine-runs" | "schedules" | "residents" | "analysis", operationId: string) {
   const entry = context.availability.find((item) => item.family === "intelligence" && item.resource === resource)
   if (!entry || (entry.state !== "ready" && entry.state !== "partial")) return false
   return entry.operations.some((item) => item.operationId === operationId && item.state === "ready" && item.operational)
