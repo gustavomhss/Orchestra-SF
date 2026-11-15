@@ -108,13 +108,21 @@ export async function createMixedPlannerFixture(deadline: ReturnType<typeof comp
   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+  // The state reader deliberately refuses an installation with no C08 state.
+  // Initialize through the real creation transaction before observing versions.
+  const seeded = await authority.state.transaction(transport, { namespace: "cases", expectedStorageVersion: 0,
+    targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
+    idempotencyKey: "mixed-case-initial", commandDigest: digestSfValue(initial) }, async (state) => {
+    state.cases[caseRef.id] = structuredClone(initial)
+    return { commit: true, value: true }
+  })
+  if (seeded.status !== "ok") throw new Error(`Real C08 creation failed: ${JSON.stringify(seeded)}`)
   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
-    if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+    if (versions.status !== "ok") throw new Error(`Real C08 versions unavailable: ${JSON.stringify(versions)}`)
     const saved = await authority.state.transaction(transport, { namespace: "cases", expectedStorageVersion: versions.value.cases,
       ...(eventRef ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: versions.value.outbox }] } : {}),
-      targetRef: versions.value.cases === 0 ? authority.creationTarget.ref : caseRef.id,
-      targetIncarnation: versions.value.cases === 0 ? authority.creationTarget.incarnation : caseRef.incarnation,
+      targetRef: caseRef.id, targetIncarnation: caseRef.incarnation,
       idempotencyKey: randomUUID(), commandDigest: digestSfValue(value) }, async (state) => {
       state.cases[caseRef.id] = structuredClone(value)
       if (eventRef) state.outbox[JSON.stringify([caseRef.id, caseRef.incarnation, eventRef.target.eventId])] = {
@@ -123,7 +131,6 @@ export async function createMixedPlannerFixture(deadline: ReturnType<typeof comp
     })
     if (saved.status !== "ok") throw new Error(`Real C08 fixture persistence failed: ${saved.reason}`)
   }
-  await saveCase(initial)
   business.bindForecastCoverage(async (reference, context) => {
     const source = await business.plannerSources.resolveForecastSource(reference, context)
     if (source.status !== "ok") return source

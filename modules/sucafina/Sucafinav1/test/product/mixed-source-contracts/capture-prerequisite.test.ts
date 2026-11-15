@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { object } from "../../../runtime/contract.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createFixture } from "../review-fixes/procurement-apply/fixture.ts"
 import { seedChoice } from "../review-fixes/procurement-apply/choice.ts"
 
@@ -23,16 +24,22 @@ test("real C08 Procurement preparation exposes the M31 blocker and cannot manufa
     expect(decision.choices[0]?.id).toBe(selection.choiceId)
     expect(decision.preparedChanges).toHaveLength(0)
 
-    const admitted = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", selection)
+    const transport = fixture.request("alice", "decision-prepare-changes", selection)
+    const admitted = await fixture.authority.human.admit(transport, "decisions.prepare-changes", selection)
+    console.info("SF_MIXED_CAPTURE_ADMISSION", JSON.stringify({ phase: "human-admission", method: transport.method,
+      inputDigest: digestSfValue(selection), status: admitted.status, reason: admitted.status === "ok" ? null : admitted.reason }))
     expect(admitted.status).toBe("ok")
-    if (admitted.status !== "ok") throw new Error("Actual preparation admission failed")
+    if (admitted.status !== "ok") throw new Error(`Actual preparation admission failed: ${admitted.reason}`)
     try {
+      expect(await fixture.authority.human.authorize(admitted.value, "decisions.prepare-changes", selection)).toBe(true)
       const result = await fixture.business.procurementDecisions.prepareDomainCommands(selection.caseRef, selection.choiceId, selection.operations, admitted.value)
       expect(result).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
       expect(Object.hasOwn(result, "value")).toBe(false)
     } finally { fixture.authority.human.finish(admitted.value) }
 
     const response = await fixture.http("decision-prepare-changes", selection)
+    console.info("SF_MIXED_CAPTURE_ADMISSION", JSON.stringify({ phase: "http-preparation", status: response.response.status,
+      outcome: response.body.status, reason: response.body.reason, inputDigest: digestSfValue(selection) }))
     expect(response.response.status).toBe(400)
     expect(response.body).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
     expect(await snapshots(fixture)).toEqual(before)
