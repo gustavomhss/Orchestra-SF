@@ -1,0 +1,220 @@
+{
+  "schema": "sf2h.closure-intake-57.read-coverage-final.v1",
+  "mission": 57,
+  "recorded_at": "2026-11-15 01:24:22 UTC",
+  "authority": {
+    "user_package": {
+      "commit": "44f01d333618712213d2189157ca6aeace4d6d2e",
+      "blob": "9e7748018bde0e65d0daa2b0732be75ebaa3d108",
+      "read": "FULL"
+    },
+    "current_control": {
+      "branch": "sf2-control",
+      "expected": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+      "observed": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+      "advanced": false,
+      "fullComparisonRequired": false,
+      "mission57": {
+        "ref": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/released-closure-intake.json",
+        "blob": "9e7748018bde0e65d0daa2b0732be75ebaa3d108",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1809a32ad042a0f98a5d93dc90447a7e13e78434/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/released-closure-intake.json"
+      },
+      "mission57BlobUnchangedFromOriginal44f01": true,
+      "mission58": {
+        "ref": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-runtime-qualification.json",
+        "blob": "0b7e47921496525a22d904a44006f13bf5735726",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1809a32ad042a0f98a5d93dc90447a7e13e78434/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-runtime-qualification.json"
+      },
+      "disposition": "57 sole stack writer;58 Portfolio/P03 successor54;45 checks;S0 epic and acceptance"
+    },
+    "predecessor_terminal": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "predecessor_documents": [
+      "HANDOFF.md",
+      "AUTHORITY.json",
+      "candidates-final.json",
+      "dependency-closure-final.json",
+      "pending-owners-final.json",
+      "source-census-final.json",
+      "verification-final.json",
+      "validation-inputs-final.json",
+      "gate-queue-final.json",
+      "finding-routing-final.json",
+      "read-coverage-final.json",
+      "source-output-manifest-final.json"
+    ],
+    "read": "FULL_ACROSS_ROOT_AND_READ_ONLY_HELPERS"
+  },
+  "AGENTS": {
+    "root_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "root_read": true,
+    "material_scopes": "apps/cli and modules/sucafina/Sucafinav1; relevant ancestor trees inspected, no deeper AGENTS in changed material directories.",
+    "inherited_app_shell_guidance": "Original55 inventory and exact E2E inputs retained;57 did not edit packages/app-shell."
+  },
+  "plan": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "T0": "2026-11-13T04:01:10Z",
+    "documents": [
+      {
+        "document": "START",
+        "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+        "read": "FULL_ROOT"
+      },
+      {
+        "document": "WORKFLOW",
+        "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+        "read": "FULL_ROOT"
+      },
+      {
+        "document": "executionCOMMONmd",
+        "blob": "d61f32af03fe10747a50274233f953af044decf6",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+        "read": "FULL_ROOT"
+      },
+      {
+        "document": "rollingCOMMON",
+        "blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/44f01d333618712213d2189157ca6aeace4d6d2e/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/COMMON.json",
+        "read": "FULL_ROOT"
+      }
+    ],
+    "S0C": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+      "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+      "all_sections_read": true,
+      "reader_sections": {
+        "review_procurement53": [
+          "work_packages",
+          "contracts",
+          "numeric_oracles",
+          "criterion_ids"
+        ],
+        "review_portfolio54": [
+          "proof_bindings",
+          "evidence",
+          "execution_proofs",
+          "ci_plan"
+        ],
+        "census_releases": [
+          "resident",
+          "resident_ui",
+          "reference_context_rule",
+          "resident_handoff_interfaces",
+          "resident_gate_requirements",
+          "resident_packaging",
+          "mandatory_appendices"
+        ],
+        "root": [
+          "provenance",
+          "job_id",
+          "actor",
+          "session",
+          "assignment",
+          "branch_provenance",
+          "common",
+          "write_authority",
+          "allocation",
+          "physical_slot",
+          "incoming_outgoing_handoffs",
+          "task_output_dependencies",
+          "consumer_edges",
+          "coverage",
+          "dependency_context",
+          "review_assignment",
+          "review_sources_read_only",
+          "code_sources",
+          "source_receipt_index",
+          "workflow",
+          "coverage_source",
+          "selection_pointers",
+          "completion"
+        ]
+      },
+      "missing_sections": [],
+      "criterion_ids": 155,
+      "proof_bindings": 155,
+      "execution_proofs": 6
+    },
+    "annexes": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "reader": "review_procurement53",
+        "read": "FULL"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "reader": "census_releases",
+        "read": "FULL"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+        "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+        "reader": "census_releases",
+        "read": "FULL"
+      }
+    ]
+  },
+  "source_read": {
+    "Procurement53": {
+      "release": "0ad96d0ffa97d309c90847211e943e59893040cc",
+      "owned_paths": 7,
+      "shared_composite_paths": 9,
+      "shared_admission_paths": 2,
+      "canonical_dependencies": "C17 physical lineage/current ACL, C20 read scopes, Planner conditional totals, real Request/lease/fences, current Microsoft composition",
+      "review": "Full material/patch/manifests/source log; independent cold review of authority/history."
+    },
+    "Portfolio54": {
+      "release": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+      "selected_paths": 2,
+      "archive_inventory": 45,
+      "dependencies": 35,
+      "protected_paths": 28,
+      "review": "Full release/authority/handoff/patch, tested-W dependencies, canonical persistence, original P03/P02."
+    },
+    "Runtime56": {
+      "release": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+      "owned_paths": 8,
+      "external_oracle": 1,
+      "archive_inventory": 35,
+      "direct_import_edges": 60,
+      "review": "Full release/authority/handoff/manifest/runtime patch, own tests, exact oracle two-line adaptation, source job proof limits."
+    },
+    "closing_census": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-census-final.json"
+  },
+  "inheritance_read": {
+    "pending_items": 56,
+    "source_digests": 56,
+    "inherited_findings": 17,
+    "updates55": 9,
+    "new_findings55": 6,
+    "none_dropped": true
+  },
+  "independent_review": {
+    "shared53": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/review-shared53.json",
+    "final_integrity": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/verification-final.json",
+    "scope": "Bounded integration reviews only; not the three mandatory campaign FINAL reviewers."
+  },
+  "execution": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "preflights": "NOT_RUN",
+    "validator_invocations": 0,
+    "CI_dispatches": 0,
+    "epic_dispatches": 0,
+    "AM": "NOT_RUN",
+    "producer_branch_writes": 0,
+    "workflow_ref_writes": 0,
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "external_messages": false
+  },
+  "GLOBAL_RELEASE": false
+}

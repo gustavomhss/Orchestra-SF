@@ -1,0 +1,2736 @@
+{
+  "schema": "sf2h.closure-intake-57.dependency-closure-final.v1",
+  "mission": 57,
+  "recorded_at": "2026-11-15 01:24:22 UTC",
+  "candidate": {
+    "symbol": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+    "material_paths": 9,
+    "archive": 31
+  },
+  "inherited": {
+    "sha": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-final.json",
+    "blob": "a4b9f6d941245371b5238192e4a1fd2b1632ca61",
+    "all_obligations_retained": true
+  },
+  "increments": [
+    {
+      "candidate": "C24",
+      "sha": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+      "tree": "97500d1435255a2790b1e6833e5a9391ca70d860",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/dependency-closure-01.json",
+      "blob": "5fe8befaf8529b75f96bc32bd8ef33979a72f68b"
+    },
+    {
+      "candidate": "C25",
+      "sha": "4b15af2d8f8a5b96cdd0a8117951939bde0b9d02",
+      "tree": "ad67f4c0101b341e08de075c2c8ba8e599c4b3a2",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/dependency-closure-02.json",
+      "blob": "8a852aae8b1589ff33f3ac65f66aaa977628782d"
+    },
+    {
+      "candidate": "C26",
+      "sha": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+      "tree": "ab41682ea4879c5921242889dac20f4b5cec2d07",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/dependency-closure-03.json",
+      "blob": "273c9ffa6799d7dc2a06c8aa8273c7dcb3aac32b"
+    },
+    {
+      "candidate": "C27",
+      "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/dependency-closure-04.json",
+      "blob": "91b029866e88e937619100848f73e58beb12d44f"
+    }
+  ],
+  "final_direct_relative_edges": [
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../../runtime/admin.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "candidate_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../../runtime/procurement.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "candidate_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../contracts/context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "candidate_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../contracts/outputs.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "candidate_blob": "4db2e631bd83ccda67442824557881c2ed990c92"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "./scenario-producer.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "candidate_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../../runtime/admin.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "candidate_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../contracts/context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "candidate_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../contracts/operations.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "candidate_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "../contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "./sources.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "candidate_blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "./prepared.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+      "candidate_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "./scenario-producer.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "candidate_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "./decision-preparation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "candidate_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "specifier": "./decision-preparation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "candidate_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "specifier": "../../../runtime/application.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "candidate_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "specifier": "../../../runtime/procurement.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "candidate_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "specifier": "../../../product/procurement/decision-preparation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "candidate_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "3c55e90d911872591160db83d96dbe93200a617a",
+      "candidate_blob": "3c55e90d911872591160db83d96dbe93200a617a"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "3c55e90d911872591160db83d96dbe93200a617a",
+      "candidate_blob": "3c55e90d911872591160db83d96dbe93200a617a"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../runtime/application.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "candidate_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../runtime/procurement.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "candidate_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../product/procurement/decision-preparation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "candidate_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../product/procurement/sources.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "candidate_blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../../../product/procurement/scenario-producer.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "candidate_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "specifier": "../procurement-decision-producer/fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "candidate_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+      "specifier": "../../../product/procurement/decision-preparation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "candidate_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+      "specifier": "../../../product/procurement/prepared.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+      "candidate_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "3c55e90d911872591160db83d96dbe93200a617a",
+      "candidate_blob": "3c55e90d911872591160db83d96dbe93200a617a"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "candidate_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/decisions/choice.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/choice.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "ac65bdd3445113f00b643b72dfaa2a8840826a99",
+      "candidate_blob": "ac65bdd3445113f00b643b72dfaa2a8840826a99"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/decisions/result-store.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "candidate_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/host-binding/state-provider.ts",
+      "to": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "candidate_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/planner/comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "candidate_blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../../../product/procurement/scenario-preparation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+      "candidate_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "../procurement-decision-producer/fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "candidate_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "3c55e90d911872591160db83d96dbe93200a617a",
+      "candidate_blob": "3c55e90d911872591160db83d96dbe93200a617a"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../../src/form.ts",
+      "to": "modules/sucafina/Sucafinav1/src/form.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "5c2ceed59b5af1a0e2958e93c2267bee9e72a0dc",
+      "candidate_blob": "5c2ceed59b5af1a0e2958e93c2267bee9e72a0dc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../../src/procurement-screen.ts",
+      "to": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "candidate_blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "specifier": "../../src/procurement-screen.ts",
+      "to": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "observed_candidate": "C24",
+      "observed_blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "candidate_blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./procurement-scenario-services.ts",
+      "to": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "candidate_blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./procurement-composite-planner.ts",
+      "to": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+      "candidate_blob": "8570e0cab2686986ad81b304e8e3aeaf154cb20a"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b",
+      "candidate_blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "candidate_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "candidate_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "candidate_blob": "bd7df025e12aa457898f48fcf9634273ec5be381"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "candidate_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "candidate_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts",
+      "to": "modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "6b3f78f6d8f4037829db6b83259edb76dc2436a5",
+      "candidate_blob": "6b3f78f6d8f4037829db6b83259edb76dc2436a5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+      "candidate_blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "to": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "candidate_blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts",
+      "to": "modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "566776cda673751c1b6fe78f55ef53f573e83b37",
+      "candidate_blob": "566776cda673751c1b6fe78f55ef53f573e83b37"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "to": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "candidate_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "candidate_blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "to": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "candidate_blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "to": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+      "candidate_blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "to": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "e86b1ca37f7b82d1618b6209cfb362a422e475a1",
+      "candidate_blob": "e86b1ca37f7b82d1618b6209cfb362a422e475a1"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "candidate_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "candidate_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+      "candidate_blob": "40c78dee5908cd8af58cc3d58435f3cfb4542045"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249",
+      "candidate_blob": "ed4eef2c58eb7654ba13157740e5aeb7b8986249"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "candidate_blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2eb9ee92719402d137aca96c4861c086c6526971",
+      "candidate_blob": "2eb9ee92719402d137aca96c4861c086c6526971"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "4f94c3355074db43dcc4acaab09e14be9150767c",
+      "candidate_blob": "4f94c3355074db43dcc4acaab09e14be9150767c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "65e24b8fb32cede73975430a5835df9d9b54a733",
+      "candidate_blob": "65e24b8fb32cede73975430a5835df9d9b54a733"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb",
+      "candidate_blob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+      "candidate_blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "to": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "candidate_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8",
+      "candidate_blob": "d3d616e972a73748e6ccac95e3aa7aafdfd204c8"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "candidate_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+      "candidate_blob": "25e6056021a20cbdd1a3608fda515d77e052327f"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+      "candidate_blob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "to": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "candidate_blob": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+      "candidate_blob": "03e75875386483c7e37dce3f7bb21189f3066774"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "candidate_blob": "390bce2594e39a28defce1d47fafa0d7291e940e"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "to": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "candidate_blob": "11922bec60a7b9223f6f11043b02a63885b55b31"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./review-collaboration-binding.ts",
+      "to": "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0da7d51672dc2519019f7880806d61c529456aa9",
+      "candidate_blob": "0da7d51672dc2519019f7880806d61c529456aa9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./dashboard-services.ts",
+      "to": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+      "candidate_blob": "9084d0d376a5135aa5804b002d8068ac09f89f83"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./dashboard-decisions.ts",
+      "to": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+      "candidate_blob": "3061f529e1417ba29f9976c3f132c1a08ead0742"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./planner-evidence.ts",
+      "to": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "13153182e357b716a12d2554654905d54fa30ee4",
+      "candidate_blob": "13153182e357b716a12d2554654905d54fa30ee4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./planner-calculation-services.ts",
+      "to": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "5dfca7fad55453672986fbb3b29d6c68a9e1afa9",
+      "candidate_blob": "5dfca7fad55453672986fbb3b29d6c68a9e1afa9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./scenario-operation-access.ts",
+      "to": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "5a0592e200e14fa801b1ed24150384070ea5298b",
+      "candidate_blob": "5a0592e200e14fa801b1ed24150384070ea5298b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./recorded-planner-operation-access.ts",
+      "to": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "d2158a10de3473edc5f5d509f3215e84140a8382",
+      "candidate_blob": "d2158a10de3473edc5f5d509f3215e84140a8382"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./prepared-application-egress.ts",
+      "to": "apps/cli/src/sucafina-product/prepared-application-egress.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "e4af87d2a1c5f9c72f86810db1cacc39fcb19faf",
+      "candidate_blob": "e4af87d2a1c5f9c72f86810db1cacc39fcb19faf"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./memory-case-read-scope.ts",
+      "to": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ba55d4f1624dabed660e58d3d8b787bd991acd7a",
+      "candidate_blob": "ba55d4f1624dabed660e58d3d8b787bd991acd7a"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./procurement-case-read-scope.ts",
+      "to": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6",
+      "candidate_blob": "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./procurement-evidence-read-scope.ts",
+      "to": "apps/cli/src/sucafina-product/procurement-evidence-read-scope.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "68bae96124f2a0994be25b86765415b0d52452f4",
+      "candidate_blob": "68bae96124f2a0994be25b86765415b0d52452f4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./memory-case-read-scope.ts",
+      "to": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ba55d4f1624dabed660e58d3d8b787bd991acd7a",
+      "candidate_blob": "ba55d4f1624dabed660e58d3d8b787bd991acd7a"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./source-fence-read.ts",
+      "to": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+      "candidate_blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./scenario-procurement-proof-scope.ts",
+      "to": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2ebb518403bc463dddd645f77af12cb877bce3e1",
+      "candidate_blob": "2ebb518403bc463dddd645f77af12cb877bce3e1"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "./decision-baseline-services.ts",
+      "to": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "candidate_blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "to": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "candidate_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0c49c363917ffaf9062366e54a7b7b970ae471cc",
+      "candidate_blob": "0c49c363917ffaf9062366e54a7b7b970ae471cc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "to": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "candidate_blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "4fcda499e060bd77d595e4d567d7e9daed671fc4",
+      "candidate_blob": "4fcda499e060bd77d595e4d567d7e9daed671fc4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/collection-member.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "4d35da609cc89817abc1d595cdf3de64193f4f1e",
+      "candidate_blob": "4d35da609cc89817abc1d595cdf3de64193f4f1e"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "candidate_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "91784d3ea3358565e19b62922c8867f134af9ac4",
+      "candidate_blob": "91784d3ea3358565e19b62922c8867f134af9ac4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+      "to": "modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ed88a6ff4f6c42eecfd80ba13824e8122fcc774e",
+      "candidate_blob": "ed88a6ff4f6c42eecfd80ba13824e8122fcc774e"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "to": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "candidate_blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "observed_candidate": "C25",
+      "observed_blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "candidate_blob": "b20cf5cecf22885dd8858f3659056a50ab88f485"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/business-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+      "candidate_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "candidate_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "candidate_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "candidate_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "candidate_blob": "4280c9a249627893eb798eb421711d9e58e50a8f"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "candidate_blob": "4280c9a249627893eb798eb421711d9e58e50a8f"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+      "candidate_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "to": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "candidate_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "./decision-domain-http.ts",
+      "to": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "candidate_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "./decision-coverage-read.ts",
+      "to": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "cfbff030208adb764f392f637ff7b903c0c64199",
+      "candidate_blob": "cfbff030208adb764f392f637ff7b903c0c64199"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "./decision-coverage-read.ts",
+      "to": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "cfbff030208adb764f392f637ff7b903c0c64199",
+      "candidate_blob": "cfbff030208adb764f392f637ff7b903c0c64199"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "candidate_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "to": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "candidate_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "candidate_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "candidate_blob": "c357c6c66aac544394ab355306e1f6f7195395f7"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "candidate_blob": "c357c6c66aac544394ab355306e1f6f7195395f7"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "candidate_blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "8d86bc416c711169fdc678635cc5eed12481fdea",
+      "candidate_blob": "8d86bc416c711169fdc678635cc5eed12481fdea"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "candidate_blob": "64deee2c7570d718686eb2181ff197f4347e6764"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+      "candidate_blob": "8815cc1fc27b570d241e2dd464d925eff05e5455"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "24051e0a30b53e09b387ac575a658f30e098cf0a",
+      "candidate_blob": "24051e0a30b53e09b387ac575a658f30e098cf0a"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500",
+      "candidate_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/baseline-fence.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/baseline-fence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "06e8b9938ce6a09b54556aacce5894c528cd5935",
+      "candidate_blob": "06e8b9938ce6a09b54556aacce5894c528cd5935"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+      "candidate_blob": "25e6056021a20cbdd1a3608fda515d77e052327f"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+      "candidate_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "candidate_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "candidate_blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "candidate_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "candidate_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "candidate_blob": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "to": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "candidate_blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "to": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "candidate_blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "to": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "candidate_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/selection.ts",
+      "to": "modules/sucafina/Sucafinav1/product/portfolio/selection.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "candidate_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "to": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+      "candidate_blob": "5a56fb5305e64922af8b6b3246b8807256e79138"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./decision-baseline-services.ts",
+      "to": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "candidate_blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./decision-baseline-services.ts",
+      "to": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "candidate_blob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./decision-materiality-services.ts",
+      "to": "apps/cli/src/sucafina-product/decision-materiality-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2deb115ed924b39319eecada7701b8c63da79064",
+      "candidate_blob": "2deb115ed924b39319eecada7701b8c63da79064"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./decision-proposal-services.ts",
+      "to": "apps/cli/src/sucafina-product/decision-proposal-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0a3e0280c0ff6175936b53a056aecc176b129390",
+      "candidate_blob": "0a3e0280c0ff6175936b53a056aecc176b129390"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./business-services.ts",
+      "to": "apps/cli/src/sucafina-product/business-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "candidate_blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./portfolio-services.ts",
+      "to": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+      "candidate_blob": "881ce4672d9d0e641d1cc849663c0980c118774d"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./analysis-services.ts",
+      "to": "apps/cli/src/sucafina-product/analysis-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "900f199800b683503267b011af2c255be841a3a1",
+      "candidate_blob": "900f199800b683503267b011af2c255be841a3a1"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./decision-alternative-services.ts",
+      "to": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "328893225e338bc2f6d806874156bc5eef7b97b3",
+      "candidate_blob": "328893225e338bc2f6d806874156bc5eef7b97b3"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "specifier": "./analysis-native-inputs.ts",
+      "to": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "42439e65042399bb2597dc4e6e3ccb81c88f4d9b",
+      "candidate_blob": "42439e65042399bb2597dc4e6e3ccb81c88f4d9b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "candidate_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "candidate_blob": "755639b2a16265fe164ba2e6343738c1362d168c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "candidate_blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0ff544b39f61a26cea6d15c238a88217ef7e6130",
+      "candidate_blob": "0ff544b39f61a26cea6d15c238a88217ef7e6130"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "candidate_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "./scenario-operation-access.ts",
+      "to": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "5a0592e200e14fa801b1ed24150384070ea5298b",
+      "candidate_blob": "5a0592e200e14fa801b1ed24150384070ea5298b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "candidate_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "candidate_blob": "755639b2a16265fe164ba2e6343738c1362d168c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "candidate_blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-inputs.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/scenario-inputs.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f2a49fc79880ccb204184c6c83e957bab97b483f",
+      "candidate_blob": "f2a49fc79880ccb204184c6c83e957bab97b483f"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "candidate_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "candidate_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "candidate_blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "./planner-evidence.ts",
+      "to": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "13153182e357b716a12d2554654905d54fa30ee4",
+      "candidate_blob": "13153182e357b716a12d2554654905d54fa30ee4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "./recorded-planner-operation-access.ts",
+      "to": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "d2158a10de3473edc5f5d509f3215e84140a8382",
+      "candidate_blob": "d2158a10de3473edc5f5d509f3215e84140a8382"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "specifier": "./scenario-procurement-proof-scope.ts",
+      "to": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2ebb518403bc463dddd645f77af12cb877bce3e1",
+      "candidate_blob": "2ebb518403bc463dddd645f77af12cb877bce3e1"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "specifier": "../contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "specifier": "../planner/preview-comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "candidate_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "specifier": "../contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "specifier": "../contracts/operations.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "candidate_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "specifier": "../contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "specifier": "../contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "specifier": "../contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "specifier": "../contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "specifier": "../contracts/coverage-inventory.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/coverage-inventory.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8",
+      "candidate_blob": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "specifier": "../decisions/case-port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "candidate_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "specifier": "../../src/screen-shell.ts",
+      "to": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "candidate_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/contracts/business-context.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "candidate_blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/contracts/decisions.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "candidate_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "candidate_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/decisions/cost-coverage.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "candidate_blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/host-binding/state-provider.ts",
+      "to": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "candidate_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/planner/port.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "candidate_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/planner/capabilities.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+      "candidate_blob": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/planner/comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "candidate_blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/planner/preview-comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "candidate_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/procurement/scenario-producer.ts",
+      "to": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
+      "candidate_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../product/ui/decision-alternatives.ts",
+      "to": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "8c89acd506b8fc7177ea07ef7a2ffaba74634853",
+      "candidate_blob": "8c89acd506b8fc7177ea07ef7a2ffaba74634853"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "to": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+      "candidate_blob": "8570e0cab2686986ad81b304e8e3aeaf154cb20a"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "to": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "5a0592e200e14fa801b1ed24150384070ea5298b",
+      "candidate_blob": "5a0592e200e14fa801b1ed24150384070ea5298b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/planner-evidence.ts",
+      "to": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "13153182e357b716a12d2554654905d54fa30ee4",
+      "candidate_blob": "13153182e357b716a12d2554654905d54fa30ee4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "specifier": "../procurement-decision-producer/fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "observed_candidate": "C25",
+      "observed_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02",
+      "candidate_blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "specifier": "../contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "specifier": "../contracts/ports.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "candidate_blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "specifier": "../contracts/sf-execution.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "candidate_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "specifier": "../decisions/result-store.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "candidate_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "specifier": "../decisions/criterion-comparison.ts",
+      "to": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "candidate_blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "specifier": "../planner/persistence.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "candidate_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "specifier": "./production.ts",
+      "to": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "candidate_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "to": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "candidate_blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "specifier": "../../../product/integration/ui-authority.ts",
+      "to": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "candidate_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "specifier": "../../../product/planner/persistence.ts",
+      "to": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "candidate_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "specifier": "../../../product/portfolio/analysis.ts",
+      "to": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+      "candidate_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "specifier": "../wp13/sensitivity-fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "observed_candidate": "C26",
+      "observed_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "candidate_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "specifier": "./local-contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "candidate_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "specifier": "./contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "specifier": "./assets.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "candidate_blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "specifier": "../src/identity.ts",
+      "to": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "candidate_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+      "specifier": "../../../product/host-binding/state-provider.ts",
+      "to": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "candidate_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+      "specifier": "../finance-state-read-performance/fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "e0405a7c523702482ffd1c8a9b500f4ca241b3a8",
+      "candidate_blob": "e0405a7c523702482ffd1c8a9b500f4ca241b3a8"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+      "candidate_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+      "specifier": "../../../runtime/local-contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "candidate_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+      "specifier": "../../../runtime/local-store.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "candidate_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+      "candidate_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "specifier": "../../../runtime/assets.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "candidate_blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "specifier": "../../../runtime/local-contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "candidate_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "specifier": "../../../runtime/local-store.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "candidate_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+      "specifier": "../../../runtime/local-store.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "candidate_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+      "candidate_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+      "specifier": "../../../runtime/assets.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "candidate_blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+      "candidate_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+      "specifier": "../../../runtime/local-store.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "candidate_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+      "specifier": "./fixture.ts",
+      "to": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+      "candidate_blob": "fbf54acc8bc81a9afa27a5299bca305946597e98"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+      "specifier": "../../../runtime/local-contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "candidate_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+      "specifier": "../../../src/identity.ts",
+      "to": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "candidate_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+      "specifier": "../../../runtime/local-store.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "candidate_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "specifier": "../../../runtime/contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "candidate_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "specifier": "../../../runtime/local-contract.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "candidate_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "specifier": "../../../src/identity.ts",
+      "to": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "candidate_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "specifier": "../../../runtime/local-store.ts",
+      "to": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed_candidate": "C27",
+      "observed_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "candidate_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    }
+  ],
+  "relative_edge_count": 287,
+  "unresolved": 0,
+  "boundary": "This is a static path/blob closure for the27 changed material files and explicitly inspected canonical dependencies. It does not claim transitive compiler success or behavioral execution. A45 owns actual effective program inclusion and checks.",
+  "portfolio35_dependency_rebinding": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "source_tested_W_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "C26_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "C27_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "source_tested_W_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "C26_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "C27_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "source_tested_W_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "C26_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "C27_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "source_tested_W_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "C26_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "C27_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "source_tested_W_blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "C26_blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "C27_blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "source_tested_W_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "C26_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "C27_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "source_tested_W_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "C26_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "C27_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "source_tested_W_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "C26_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "C27_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "source_tested_W_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+      "C26_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+      "C27_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "source_tested_W_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "C26_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "C27_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "source_tested_W_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "C26_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "C27_blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "source_tested_W_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "C26_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "C27_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "source_tested_W_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "C26_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "C27_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "source_tested_W_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "C26_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "C27_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "source_tested_W_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "C26_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "C27_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "source_tested_W_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "C26_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "C27_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "source_tested_W_blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "C26_blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "C27_blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "source_tested_W_blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+      "C26_blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+      "C27_blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "source_tested_W_blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "C26_blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "C27_blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "source_tested_W_blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "C26_blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "C27_blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "source_tested_W_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "C26_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "C27_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "source_tested_W_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+      "C26_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+      "C27_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/selection.ts",
+      "source_tested_W_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "C26_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "C27_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+      "source_tested_W_blob": "8d86bc416c711169fdc678635cc5eed12481fdea",
+      "C26_blob": "8d86bc416c711169fdc678635cc5eed12481fdea",
+      "C27_blob": "8d86bc416c711169fdc678635cc5eed12481fdea",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "source_tested_W_blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "C26_blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "C27_blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "source_tested_W_blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "C26_blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "C27_blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "source_tested_W_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "C26_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "C27_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "source_tested_W_blob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+      "C26_blob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+      "C27_blob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "source_tested_W_blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "C26_blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "C27_blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "source_tested_W_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "C26_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "C27_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "source_tested_W_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "C26_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "C27_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "source_tested_W_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "C26_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "C27_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "source_tested_W_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "C26_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "C27_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "changed_in57": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "source_tested_W_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "C26_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "C27_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "changed_in57": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "source_tested_W_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "C26_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "C27_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "changed_in57": false
+    }
+  ],
+  "changed_portfolio_dependency": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "source_tested_W_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "C26_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "C27_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "changed_in57": true
+    }
+  ],
+  "source_limits": {
+    "Procurement53": "20 source PASS does not cover shared9 or original financial replacement; source admission harness does not mount Application helper.",
+    "Portfolio54": "8 controls PASS87 assertions; original P03 FAIL. Two old source-branch dependency blobs were not copied over C23.",
+    "Runtime56": "65 source PASS1filtered; legacy oracle adapted only in C27 and requires unfiltered composed validation.",
+    "Portfolio58": "Actual P03 FAIL on different isolated W; no equivalence or source release transferred."
+  },
+  "consumers": {
+    "A45": "Checks and supported interface only",
+    "S0": "Eight full recipes, inherited suites, AM and acceptance",
+    "Portfolio58": "C27 available; diagnose existing isolated failure and establish relevant material change before retry",
+    "Decisions52": "Original five journeys remain mandatory; own explicit release required",
+    "Reports48": "Original four journeys and86criteria remain mandatory; explicit complete release required",
+    "Memory_successor": "Original financial capture prerequisite must be satisfied before MI07 retry"
+  },
+  "shared_review": {
+    "admission53": "HOLD_INERT",
+    "mixed53": "ADMITTED_AS_CANDIDATE_UNQUALIFIED",
+    "cold_review": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/review-shared53.json",
+    "missing_real_proofs": [
+      {
+        "id": "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+        "state": "MISSING_POSITIVE_PROOF_REAL_CAPTURE_PREREQUISITE_HELD",
+        "owner": "Canonical Procurement/C17 plus authorized Memory successor",
+        "test_path": null,
+        "executable_request": null,
+        "required": "Use genuine archived C08 original. Reissued scope may have a new scoped incarnation while archived physicalIncarnation proves continuity. Return original content/version/fields/period under current authorized actor, with independent egress observations. Reject broken lineage; never fake archive.",
+        "related_existing_paths": [
+          "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+          "apps/cli/src/sucafina-product/scenario-operation-access.ts"
+        ],
+        "candidate": {
+          "symbol": "C27",
+          "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+          "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+        },
+        "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+      },
+      {
+        "id": "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+        "state": "MISSING_MIXED_FALLBACK_DISCRIMINATOR",
+        "owner": "Planner/CurrentChoice plus Procurement/C17 owners",
+        "test_path": null,
+        "executable_request": null,
+        "required": "A stored mixed alternative reaches recorded Planner fallback for stale original selectors while independently reauthorizing external Procurement original and every Planner original. Preserve original bytes,current case version and all source/authority fences. Existing four mixed tests are not declared proof of this branch.",
+        "related_existing_paths": [
+          "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+          "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+          "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts"
+        ],
+        "candidate": {
+          "symbol": "C27",
+          "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+          "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+        },
+        "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+      },
+      {
+        "id": "Q57-MIXED-TOMBSTONE-RECREATE",
+        "state": "MISSING_MIXED_PHYSICAL_LINEAGE_DISCRIMINATOR",
+        "owner": "Canonical Procurement/C17 and Memory owners",
+        "test_path": null,
+        "executable_request": null,
+        "required": "Delete/tombstone original physical record and recreate the same visible ID with a new physical incarnation. Old mixed source must be denied with no private original disclosure or grant. Legitimate scope rotation must remain distinguishable from a new physical record.",
+        "related_existing_paths": [
+          "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "apps/cli/src/sucafina-product/scenario-operation-access.ts"
+        ],
+        "candidate": {
+          "symbol": "C27",
+          "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+          "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+        },
+        "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+      },
+      {
+        "id": "Q57-MIXED-REVOKE-BETWEEN-READS",
+        "state": "MISSING_MIXED_INTEROBSERVATION_DISCRIMINATOR",
+        "owner": "Canonical authority/C17 plus Planner/Memory owners",
+        "test_path": null,
+        "executable_request": null,
+        "required": "Revoke access or change policy,actor,binding,Request lease,case version or source between independent observations. No result/private projection/promotion persistence or financial effect may escape. Include Request abort. Observation-time normalization must not ignore authority or content.",
+        "related_existing_paths": [
+          "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+          "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+          "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts"
+        ],
+        "candidate": {
+          "symbol": "C27",
+          "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+          "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+        },
+        "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+      }
+    ]
+  },
+  "Microsoft49": {
+    "map": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "blob": "302334c0e5a50c681005d6c6463132abce84d8b1"
+    },
+    "fixture": {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b"
+    },
+    "changed": false,
+    "rule": "Any later HTTP material edit requires new integration mapping/fixture pointers; preserve existing55 map and source manifest bytes."
+  },
+  "execution": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "preflights": "NOT_RUN",
+    "validator_invocations": 0,
+    "CI_dispatches": 0,
+    "epic_dispatches": 0,
+    "AM": "NOT_RUN",
+    "producer_branch_writes": 0,
+    "workflow_ref_writes": 0,
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "external_messages": false
+  },
+  "GLOBAL_RELEASE": false
+}

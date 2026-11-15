@@ -1,0 +1,737 @@
+{
+  "schema": "sf2h.closure-intake-57.finding-routing-final.v1",
+  "mission": 57,
+  "recorded_at": "2026-11-15 01:24:22 UTC",
+  "candidate": {
+    "symbol": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+    "material_paths": 9,
+    "archive": 31
+  },
+  "inherited_source": {
+    "terminal55": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/finding-routing-final.json",
+    "blob": "7b0da0044701345cf8a889bf59888778d90ba53e"
+  },
+  "inherited_routes47": [
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "owner": "S0/WP00 with Procurement/C12",
+      "status": "MANDATORY_NOT_SATISFIED",
+      "candidate_effect": "Useful Procurement37 paths admitted at C15; financial write refusal retained.",
+      "cause": "save permits draft/pr_rejected; submit writes/freezes amount before approval; approve ends editable sourcing stage. No canonical detached approval for unwritten replacement.",
+      "required_action": "Decide canonical edit/submit/approve order, a separately typed post-approval effect, or explicit detached-proposal approval contract; supply complete released producer/consumer patch and genuine positive journey.",
+      "forbidden_substitution": "Human choice, checkbox, old approved amount or another Apply.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-03.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/procurement37"
+      ],
+      "qualification": "NOT_RUN"
+    },
+    {
+      "id": "M41-AUTHENTICATED-NATIVE-ADMISSION",
+      "owner": "S0 / authentic native Request-to-Maestro admission, continuation and readiness owner",
+      "status": "HOLD_REAL_ADMISSION",
+      "candidate_effect": "Eight private component/test paths admitted at C17; offered host activation remains inert.",
+      "cause": "No actual authenticated SF Request plus legitimate native Maestro Task admission origin; coordinator-safe continuation and readiness missing.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "offered_preimage": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+      "offered_postimage": "ce3081f75ec97fd3daa7ef4073c51963bdff606f",
+      "offered_patch_blob": "a7b92ff4b0c4a35504d3f3a7872bdf4285ea6f1a",
+      "prior_C19_current": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "required_action": "Release genuine operation-specific C07/case/source/publication admission and safe continuation/readiness, then reconcile complete host patch against latest candidate. No identity-derived registry or fabricated session.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-05.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/native41/assembly/missing-capability.json"
+      ],
+      "qualification": "AM02/AM06_OPEN",
+      "current_target": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "last_change": "C20 CurrentChoice route-only host extension; actual native admission remains absent"
+    },
+    {
+      "id": "M41-WATCH-SCHEDULE",
+      "owner": "S0 / actual Schedule admission owner",
+      "status": "HOLD",
+      "cause": "No actual Schedule admission for sf_watch_prepare.",
+      "required_action": "Provide actual authenticated admission and live proof before exposing watch; no descriptor-only activation.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-05.json"
+      ]
+    },
+    {
+      "id": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "owner": "Reports48 with Collaboration/WP08",
+      "status": "HOLD_OLD14_TARGET_BUNDLE",
+      "cause": "Old consumer converts collaboration-thread-read/thread-access-unavailable to lost(), but producer also returns it for authorized second-read digest drift/unavailability; draft and exact pending intent are purged without evidence of revocation.",
+      "source_snippet": "if (mode === \"collaboration-thread-read\" && result?.reason === \"thread-access-unavailable\") throw lost()",
+      "required_action": "Release coherent discriminants for recoverable drift/unavailability versus real denied/scope loss; retain draft, exact payload/key and intent on recoverable states; purge private data on actual revocation. Preserve four original reports journeys and86criteria.",
+      "held_semantics": "The old Reports36 payload remains unactivated. Independently admitted Procurement/Decisions/CurrentChoice changes to shared paths are separately traced and do not release the Reports bundle.",
+      "source48_at_cutoff": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+      "source48_state": "PREPARED_NOT_RELEASED",
+      "qualification": "NOT_RUN; prior4FAILED_SETUP retained",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/finding-routing-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-census-final.json"
+      ]
+    },
+    {
+      "id": "WP13-P02-HISTORY-FINAL-CAS",
+      "owner": "Portfolio50",
+      "status": "SOURCE_FAIL_RETAINED_NEW_OWNER_ACTIVE_NO_RELEASE",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "retained_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "source43_proposed_postimage": "d99af3b43388b510e510908fff2371a34b57eee1",
+      "source43_patch_blob": "a51440534d11b34ade267eaa8a0574f3e13b732d",
+      "source_fail": {
+        "run": 43649352866,
+        "W": "0528307ee1f95dbec44f07d3dd5b2e3d1b156bc5",
+        "result": "39PASS/1FAIL; final callback returned ok"
+      },
+      "required_action": "Supply explicit scoped release for real reader final-CAS correction and preserved regression; latest50 manifest/ACK request with R2 in progress is not release.",
+      "source50_at_cutoff": "561be4643ef901870ba5a6734791129444213ee7",
+      "source50_manifest_blob": "dc23bdf0909b3d0acd464c0889aa2fb4545be099",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-06.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/portfolio43/external/proof-owner/owner-handoff.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-census-final.json"
+      ]
+    },
+    {
+      "id": "WP13-P03-SEMANTIC-SOURCE-TIMEOUT",
+      "owner": "Portfolio50 with Finance persistence owner / S0",
+      "status": "OPEN",
+      "source_fail": {
+        "run": 43649882839,
+        "W": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+        "result": "27PASS/1FAIL/1error at180009.58ms with unchanged180000ms budget"
+      },
+      "cause": "Causal persistence improvement exists in C13 but sufficiency for full semantic journey is not demonstrated; late binding error followed deadline.",
+      "required_action": "Preserve original budget/oracles and P01/19KEEP_CURRENT; qualify real semantic source journey on exact later composition.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-06.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/portfolio43/external/p03/DIAGNOSIS-P03.md"
+      ]
+    },
+    {
+      "id": "M47-P43-HANDOFF-FAULT-BOUNDARY",
+      "owner": "S0 / C12 and Portfolio contract owners; Portfolio50 for its authorized scope",
+      "status": "PRESERVATION_ADAPTATION_PUBLISHED_C18_CONTRACT_OPEN",
+      "cause": "Source two replacement tests moved refusal from post-reservation dispatch to pre-dispatch revalidateProducer. Exact expect-line preservation did not preserve event boundary.",
+      "resolution": "Kept both original test blobs byte-identical; added released bodies under separate names and explicit README note. No disable/skip or changed old oracle.",
+      "kept": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+          "blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+          "blob": "d5327a70410a6c52c64b534056939cbfc9eb9483"
+        }
+      ],
+      "required_action": "Resolve real post-reservation/receipt/no-redispatch contract and preserve its positive/fault obligations. Existing legacy-domain Request-stability patch alone is insufficient.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-06.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/portfolio43-preserving-integration.patch"
+      ]
+    },
+    {
+      "id": "M35-C17-ORIGINAL-REVALIDATION",
+      "owner": "Memory51 for continued history;45 composed checks;S0 acceptance",
+      "status": "SOURCE40_FIX_CONSUMED_C19_COMPOSED_NOT_RUN",
+      "resolution": "ReadOriginal and settled replay reauthorize current case/all linked sources; private per-call capture scope prevents recursive proof; original35 files unchanged.",
+      "historical_failure": "Original35 runtimeFAIL retained; Memory40 original35 scoped closure PASS does not rewrite that run.",
+      "required_action": "Qualify actual later candidate and preserve all original read/recall/replay/restart/ACL obligations.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-07.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/memory40/HANDOFF-TERMINAL.json"
+      ]
+    },
+    {
+      "id": "MI07",
+      "owner": "Memory51",
+      "status": "INHERITED_TIMEOUT_OPEN",
+      "source_fail": {
+        "run": 43637227753,
+        "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+        "S": "e63511737be687a2e42f9a15706a229db42a31c1",
+        "reason": "225000ms deadline before corruption/revocation tail"
+      },
+      "required_action": "Complete original long historical/restart/recall/UI journey under225000/240000 budgets with required observations. No short40 proof closes it.",
+      "source51_at_cutoff": "f2794784551e25ce2a2f56f408506cd790fae976",
+      "source51_state": "ACTIVE_BOUNDED_CONTINUATION / MI07 NOT_RUN_AT_PUBLICATION",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-07.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-census-final.json"
+      ]
+    },
+    {
+      "id": "DECISIONS-FIVE-INSTALLED-JOURNEYS",
+      "owner": "Decisions52 / Compiler45 / S0",
+      "status": "OPEN",
+      "required_action": "Qualify all five unchanged nominal identities/assertions/budgets and actual installed C12/Procurement/CurrentChoice behavior. Financial positive remains mandatory and routed policy gap is not waiver.",
+      "source52_at_cutoff": "19a69145e2b4e938c1abf50985488fdb714a4e56",
+      "source52_ack_blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+      "source52_state": "ACK52_ACTIVE_BOUNDED_SUCCESSION_NO_RELEASE",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-04.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/pending-owners-final.json"
+      ]
+    },
+    {
+      "id": "BI38-INSTALLED-FULL-NUMERIC",
+      "owner": "BI38 / canonical financial owners;45/S0 qualification",
+      "status": "OPEN",
+      "required_action": "Qualify canonical paired waterfall/portfolio and BI10/8+3 selection/literal training40000; preserve unknown/null versus zero and exact arithmetic. Source adapter17PASS is not installed proof.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-02.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/dependency-closure-03.json"
+      ]
+    },
+    {
+      "id": "M47-CHECKS-EXACT-CANDIDATE",
+      "owner": "Compiler45; source diagnostic owners; S0 final dispatcher",
+      "status": "NOT_RUN",
+      "required_action": "Use terminal candidate commit/tree and all eight incremental dependency records. Execute only through authorized45/S0 lanes with exact W/S/config/selection/artifact identities; retain all inherited suites, generation/spawn/guards, no scope or timeout reduction.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/candidates-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/dependency-closure-final.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/read-coverage-final.json"
+      ],
+      "criteria": "15WP/74tasks/17contracts/1610criteria;S0-C155;5profiles18skills8packs39operations;AM01–06;C/G7,D/G8,threeFINALreviews allOPEN"
+    },
+    {
+      "id": "M46-COMPOSED-C",
+      "owner": "session45 checks; integration47 composition; S0 final acceptance",
+      "status": "PENDING",
+      "finding": "Qualify one exact composed candidate with current driver/provider/Memory40 and applicable source regressions. Source successes are not inherited.",
+      "candidate": {
+        "symbol": "C20",
+        "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+        "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+        "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "increment": 8,
+        "sources": [
+          46
+        ]
+      },
+      "required_action": "Qualify one exact composed candidate with current driver/provider/Memory40 and applicable source regressions. Source successes are not inherited.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-08.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/dependency-closure-08.json"
+      ]
+    },
+    {
+      "id": "M46-SHARED-UI",
+      "owner": "integration47/session45/S0",
+      "status": "NOT_RUN_ON_COMPOSED_C",
+      "finding": "Six shared files were delivered as unapplied artifacts. Discovery, actual planner.preview preparation, independent human review/promotion, revoked access and lost-response idempotent recovery need composed HTTP/UI evidence.",
+      "candidate": {
+        "symbol": "C20",
+        "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+        "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+        "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "increment": 8,
+        "sources": [
+          46
+        ]
+      },
+      "required_action": "Six shared files were delivered as unapplied artifacts. Discovery, actual planner.preview preparation, independent human review/promotion, revoked access and lost-response idempotent recovery need composed HTTP/UI evidence.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-08.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/dependency-closure-08.json"
+      ]
+    },
+    {
+      "id": "M46-NUMERIC-LITERAL",
+      "owner": "canonical financial owners/S0",
+      "status": "PARTIAL",
+      "finding": "Known subtotal250000 with totalnull/conditioned is not the full literal250000 total/difference-10000/threshold15000/min20000 proof. Keep omitted/zero/not-applicable requirements and engines/policy unchanged.",
+      "candidate": {
+        "symbol": "C20",
+        "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+        "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+        "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "increment": 8,
+        "sources": [
+          46
+        ]
+      },
+      "required_action": "Known subtotal250000 with totalnull/conditioned is not the full literal250000 total/difference-10000/threshold15000/min20000 proof. Keep omitted/zero/not-applicable requirements and engines/policy unchanged.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-08.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/dependency-closure-08.json"
+      ]
+    },
+    {
+      "id": "M46-TYPECHECK-EXTERNAL",
+      "owner": "respective owners/session45",
+      "status": "SOURCE_FAILURE_NOT_CANDIDATE_GREEN",
+      "finding": "Source check records131external diagnostics and0CurrentChoice; source guards pass. Parent proof helper separately verifies logs. No integrated check result claimed.",
+      "candidate": {
+        "symbol": "C20",
+        "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+        "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+        "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "increment": 8,
+        "sources": [
+          46
+        ]
+      },
+      "required_action": "Source check records131external diagnostics and0CurrentChoice; source guards pass. Parent proof helper separately verifies logs. No integrated check result claimed.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-08.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/dependency-closure-08.json"
+      ]
+    },
+    {
+      "id": "M46-NATIVE-RESIDENT",
+      "owner": "native/resident owners/S0",
+      "status": "NOT_RUN_HOLD_RETAINED",
+      "finding": "Installed native admission/watch, AM05/native equivalence and resident acceptance remain open. Update held Native41 proposed-host preimage metadata from0705 to composedb19c if these15 paths publish; do not activate the held patch.",
+      "candidate": {
+        "symbol": "C20",
+        "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+        "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+        "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "increment": 8,
+        "sources": [
+          46
+        ]
+      },
+      "required_action": "Installed native admission/watch, AM05/native equivalence and resident acceptance remain open. Update held Native41 proposed-host preimage metadata from0705 to composedb19c if these15 paths publish; do not activate the held patch.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-08.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/dependency-closure-08.json"
+      ]
+    }
+  ],
+  "updates55": [
+    {
+      "id": "WP13-P02-HISTORY-FINAL-CAS",
+      "status55": "SOURCE50_EXPLICIT_RELEASE_CONSUMED_C23_TARGET_NOT_RUN",
+      "owner55": "45 checks / S0 authorized qualifier",
+      "source_release": "c01520cb6a09e580897ebdb46e75e40a536b80be",
+      "current_postblob": "d99af3b43388b510e510908fff2371a34b57eee1",
+      "retained_original_failure": true,
+      "source_history22pass_not_composed": true,
+      "required_action": "Qualify actual C23 with preserved originalfinal-CAS oracle and addedrealreopenregression; no installedUI/native proof inferred."
+    },
+    {
+      "id": "WP13-P03-SEMANTIC-SOURCE-TIMEOUT",
+      "status55": "OPEN_54_ACTIVE_56_RUNTIME_DEPENDENCY_UNRELEASED",
+      "owner55": "54 /56 boundedruntime /S0",
+      "required_action": "OriginalnumericP03 under180000ms/72assertions; source50 failedruns43653550785/43654501551 preserved. No active54or inert56proposalintake."
+    },
+    {
+      "id": "MI07",
+      "status55": "EXTERNAL_FINANCIAL_CAPTURE_BLOCKED",
+      "owner55": "S0/WP00+Procurement53/C12;explicitMemorysuccessor",
+      "finding": "M51-MI07-PROCUREMENT-CAPTURE-BLOCKED",
+      "required_action": "Compatible released producer/contract before original full225000/240000journey. No Memory phase reached by51."
+    },
+    {
+      "id": "DECISIONS-FIVE-INSTALLED-JOURNEYS",
+      "status55": "OPEN_52_NO_RELEASE",
+      "owner55": "Decisions52/45/S0",
+      "latest_source": "e0ad5906a74517cb579932f4bc304d071d7583cd",
+      "latest_proposal": {
+        "preimage": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "postimage": "2e51c6741dae8b4ae2bd24b07b3bd1acb2eaa25c",
+        "manifest_blob": "110332e13b568a07811abfaa991d03a94199f636",
+        "current_target": "21236af83e4de879242fd298d9e15a9923f3bf41"
+      },
+      "required_action": "After explicit release reconcile transportbody/auth/privacy/origin; preserve financialpositive and allfive nominal assertions/budgets."
+    },
+    {
+      "id": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "status55": "HOLD_48_NOT_RELEASED_OLD14_BUNDLE_INERT",
+      "owner55": "Reports48/CollaborationWP08",
+      "latest_source": "2a5ced326a20bc67ac50b40cb756c8d6f4e5c6fa",
+      "required_action": "Released coherent recoverable-vs-revoked discriminants; preserve originalfourjourneys,86criteria, sourceFAILs andC21Agenda."
+    },
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "status55": "MANDATORY_NOT_SATISFIED_53_UNRELEASED",
+      "owner55": "S0/WP00/Procurement53/C12",
+      "required_action": "Original effect/order/approval distinction retained. Canonical lifecycle alone does not satisfy different unpersisted replacement predicate."
+    },
+    {
+      "id": "M47-CHECKS-EXACT-CANDIDATE",
+      "status55": "C23_EXACT_INPUTS_DELIVERED_NOT_RUN",
+      "owner55": "45 checks /S0 final",
+      "candidate": {
+        "symbol": "C23",
+        "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+        "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+        "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe"
+      },
+      "inputs": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/validation-inputs-final.json"
+    },
+    {
+      "id": "M46-COMPOSED-C",
+      "status55": "CURRENTCHOICE_PRESERVED_IN_C22_C23_TARGET_NOT_RUN",
+      "owner55": "45/S0",
+      "candidate": {
+        "symbol": "C23",
+        "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+        "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+        "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe"
+      },
+      "entry_postblob": "0591ee43590b6db4f7b574b071eaada8346ccc1f"
+    },
+    {
+      "id": "M46-NATIVE-RESIDENT",
+      "status55": "HOLD_RETAINED_NO_NATIVE_ACTIVATION",
+      "owner55": "Native/resident/Schedule owners andS0",
+      "candidate": {
+        "symbol": "C23",
+        "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+        "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+        "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe"
+      }
+    }
+  ],
+  "new_routes55": [
+    {
+      "id": "M39-C9-DISCOVERY-AFTER-LARGE-CAPTURE",
+      "owner": "Agenda39/performance owner /S0",
+      "status": "OPEN",
+      "source_run": 43653855014,
+      "W": "cb092403e7234a4b6294cfa6819448d1a3917d0c",
+      "S": "7ef9ad32d113273297341bbd8f5607ca443796b6",
+      "reason": "Discovery exceeded30000ms after six-section largecapture; later freshfixture3PASS does notclose samepath.",
+      "evidence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/DISCOVERY-AFTER-CAPTURE-LIMIT.json"
+    },
+    {
+      "id": "M49-COMPOSED-AUTH-INSTALLATION",
+      "owner": "45 compiler checks /S0 authorized qualifier",
+      "status": "NOT_RUN_ON_C23",
+      "candidate": {
+        "symbol": "C23",
+        "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+        "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+        "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe"
+      },
+      "required_action": "Qualify exact20canonical files + materialfixture map302334... and archivedsourceartifacts; never import sourcepostimage instead ofactualcanonicalentry."
+    },
+    {
+      "id": "M49-LIVE-MICROSOFT-B2B",
+      "owner": "User Azure provisioning/session owner /S0",
+      "status": "NOT_RUN",
+      "required_action": "Actual Webredirect/consent/resource-tenantB2Boid, assigned/unassignedidentities, role removal, copiedcookielogout andcross-userdenials with sanitizedproof. No localcloudfallback/configfabrication."
+    },
+    {
+      "id": "M51-MI07-PROCUREMENT-CAPTURE-BLOCKED",
+      "state": "EXTERNAL_CONTRACT_BLOCKED",
+      "mandatory": true,
+      "owner": "S0/WP00 + Procurement/C12",
+      "consumer": 47,
+      "related": "M31-FINANCIAL-APPROVAL",
+      "observed": {
+        "W": "4f736943df7916964a231461d33ae0c84e5f2c01",
+        "S": "0a0b1a9110bdf2e068745f284c97c86f3d0cd2e4",
+        "run": 43654082252,
+        "job": 132628655525,
+        "phase": "procurement.capture-original",
+        "elapsedMs": 825,
+        "reason": "financial-approval-command-unavailable"
+      },
+      "provenance": {
+        "source37": "ab2a967125b3c767067797a27b919466020fbd82",
+        "integration": "C15",
+        "integrationManifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-03.json",
+        "integrationManifestBlob": "15ad5a0640c312e03d32e7c1cb74187c9d3a3eba",
+        "integrationDecision": "ACCEPTED_COMPLETE_24_PATH_PROCUREMENT37_UNIT_WITH_FINANCIAL_HOLD",
+        "financialAuditBlob": "4d77fd48977058d6033a89592463198b76d87b65",
+        "financialAuditState": "NO_COMPATIBLE_CANONICAL_COMMAND_FOR_CURRENT_PR_REPLACEMENT"
+      },
+      "callChain": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+          "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+          "lines": "205,235-243",
+          "fact": "Original PR100/draft, chosen replace150/USD/period; real human prepareDomainCommands must return ok and exactly1 command before Atlas emission."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+          "lines": "429-435",
+          "fact": "Installed real Procurement decision host."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+          "lines": "114-131",
+          "fact": "Revalidates human/case/choice; bridge.prepareScenario; line125 returns any failure before line128 private captureSource."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "preimage": "bdea5d497b4e8fa7e540cfb44d427cd3696678db",
+          "postimage": "7fce64e7e213693d505f9bc6e08835468b7ead41",
+          "fact": "Current replace amount preparation revalidates real source, then deliberately needs-input financial-approval-command-unavailable; no ok path exists."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+          "preimage": "e613a1bf32fe1ee75574139cf699c34843cf25d1",
+          "postimage": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+          "lines": "91-98",
+          "fact": "Noneditable stages refused; same value refused as no-op; any remaining values.pr.estAmount refused by financial hold."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "preimage": "c8d476a1be6d2b839a087b2bc248293014599791",
+          "postimage": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+          "lines": "13-15",
+          "fact": "Retained numeric commands cannot bypass policy through review."
+        }
+      ],
+      "cause": "The canonical PR edit and completed financial approval states do not intersect for a still-unwritten replacement. submit_pr already writes/freezes the submitted amount; final approve enters sourcing; saving after approval cannot represent the same pending replacement. Mission37 intentionally preserved this contract gap rather than fabricate approval.",
+      "captureCoupling": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "captureLines": "67-102",
+        "capturePublic": false,
+        "onlyCallSite": 128,
+        "historicalReaderLines": "325-352",
+        "continuityLines": "393-401",
+        "fact": "Historical source resolution and continuity require the genuine C08 archive. There is no public independent capture capability; manually seeding it or only emitting Atlas does not preserve this original test."
+      },
+      "safeOwnedFixAvailable": false,
+      "safeFixtureOnlyAdaptationAvailable": false,
+      "forbiddenWorkarounds": [
+        "Remove37 financial hold",
+        "Treat management choice/checkbox as approval",
+        "Forge prApproval or archive",
+        "Grant a permissive provider",
+        "Switch to no-op/smaller data/different operation",
+        "Change original ok/one-command assertions",
+        "Silently roll back Procurement37 or test C13 as if current C18/C19",
+        "Raise225000/240000 budgets or skip the tail"
+      ],
+      "executableExternalCorrectionPatch": {
+        "status": "NOT_PRODUCED_CONTRACT_DECISION_REQUIRED",
+        "reason": "No available canonical capability can make this exact current producer return ok while preserving37 policy and original assertion. A made-up postimage would bypass the mandated financial gate. No external source was edited."
+      },
+      "requiredOwnerAction": [
+        "S0/WP00 + Procurement/C12 resolves the effect/order contract for M31-FINANCIAL-APPROVAL and publishes a complete compatible implementation with pre/postimages and authentic positive/negative proof.",
+        "Alternatively, owner may explicitly authorize a separate current-authority archival-capture contract reusing the private real producer. That changes the original preparation precondition/assertion and requires explicit test-contract reauthorization; it is not a fixture-only fix within51.",
+        "47 selectively integrates the released exact dependency. Only then successor Memory reruns the full original MI07 on a new fixed composition, preserving all still-authorized assertions, corruption/replay/revocation and original budgets."
+      ],
+      "retryCondition": "Material released compatible producer/contract patch, reconciled authority, exact new W/S manifest and dedup. No unchanged retry."
+    },
+    {
+      "id": "M55-45-SUPPORTED-INTERFACE",
+      "owner": 45,
+      "status": "REQUIRES_OWNER_INTERFACE_NO_TAKEOVER",
+      "required_action": "Use or release documented compiler-only tooling. C23 has no scoped-checkworkflow. Full SF2epic remainsS0, test-ci isn't inventedcompilerinterface. Newgatefiles require newmaterialcandidate."
+    },
+    {
+      "id": "M55-RUNTIME56-DEPENDENCY",
+      "owner": "Runtime56 /Portfolio54 /successorintegrator",
+      "status": "UNRELEASED",
+      "required_action": "New control3796e60 authorizes isolatedLocalStorework. Inert54proposalpre e9da289...post c283f126... is notrelease. Keep currentFinance34 until fullrelease+closure."
+    }
+  ],
+  "updates57": [
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "state": "MANDATORY_OPEN_DESPITE_CANONICAL53_INTAKE",
+      "owner": "S0/WP00 + Procurement/C12",
+      "action": "Satisfy original unwritten-replacement approval/effect order. No approval inference from choice, draft save, submit or frozen snapshot."
+    },
+    {
+      "id": "MI07",
+      "state": "ORIGINAL_CAPTURE_CONTRACT_BLOCKED",
+      "owner": "S0/WP00 + Procurement/C12, then authorized Memory successor",
+      "action": "Resolve authentic preparation/capture prerequisite before full original journey; no unchanged retry or synthetic archive."
+    },
+    {
+      "id": "M55-RUNTIME56-DEPENDENCY",
+      "state": "EXPLICIT_RELEASE_CONSUMED_C27_COMPOSED_QUALIFICATION_OPEN",
+      "owner": "Authorized runtime qualifier / A45 checks /58 P03",
+      "source_release": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e"
+    },
+    {
+      "id": "WP13-P03-SEMANTIC-SOURCE-TIMEOUT",
+      "state": "OPEN_ACTUAL_58_TIMEOUT_ON_DIFFERENT_W",
+      "owner": 58,
+      "run": 43661532296,
+      "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+      "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+      "action": "58 should produce a bounded causal correction or document a materially changed relevant closure before another full unchanged-budget P03 qualification; do not infer a useful retry merely from C27's newer SHA."
+    },
+    {
+      "id": "M55-45-SUPPORTED-INTERFACE",
+      "state": "OWNER_INTERFACE_PENDING_NO_TAKEOVER",
+      "owner": 45,
+      "action": "Release supported bounded compiler-only tooling if needed and bind a new candidate; otherwise run existing authorized interface with full exact input/effective program evidence."
+    },
+    {
+      "id": "DECISIONS-FIVE-INSTALLED-JOURNEYS",
+      "state": "OPEN_NO_COMPLETE_RELEASE52",
+      "owner": "Decisions52 / S0",
+      "head": "14360372153592d944aa10e42bcac1b6d86680f5"
+    },
+    {
+      "id": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "state": "HOLD_NO_COMPLETE_RELEASE48",
+      "owner": "Reports48 / CollaborationWP08",
+      "head": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf"
+    },
+    {
+      "id": "M49-COMPOSED-AUTH-INSTALLATION",
+      "state": "C22_MATERIAL_PRESERVED_C27_NOT_RUN",
+      "owner": "A45 checks / S0 authorized qualifier",
+      "map_blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+      "fixture_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b"
+    }
+  ],
+  "new_routes57": [
+    {
+      "id": "M57-SHARED53-APPLICATION-ADMISSION",
+      "state": "HOLD_INERT",
+      "owner": "Canonical Procurement/Application integration owner under new authority",
+      "reason": "No concrete existingUiContextFor/requestFor provider is mounted by the released Application proposal. Source admission tests use a domain harness wrapper. Do not activate either proposed path.",
+      "required": "Real UI context provider/caller, exact live Request/lease/actor/policy/fences and installed positive/negative proof; domain harness green is insufficient."
+    },
+    {
+      "id": "M57-MIXED53-REAL-HISTORY-AUTHORITY",
+      "state": "OPEN_PROOF_GAPS",
+      "owner": "Canonical Procurement/C17, Planner/CurrentChoice and authorized Memory qualifier",
+      "gaps": [
+        {
+          "id": "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+          "state": "MISSING_POSITIVE_PROOF_REAL_CAPTURE_PREREQUISITE_HELD",
+          "owner": "Canonical Procurement/C17 plus authorized Memory successor",
+          "test_path": null,
+          "executable_request": null,
+          "required": "Use genuine archived C08 original. Reissued scope may have a new scoped incarnation while archived physicalIncarnation proves continuity. Return original content/version/fields/period under current authorized actor, with independent egress observations. Reject broken lineage; never fake archive.",
+          "related_existing_paths": [
+            "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+            "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+            "apps/cli/src/sucafina-product/scenario-operation-access.ts"
+          ],
+          "candidate": {
+            "symbol": "C27",
+            "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+            "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+            "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+          },
+          "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+        },
+        {
+          "id": "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+          "state": "MISSING_MIXED_FALLBACK_DISCRIMINATOR",
+          "owner": "Planner/CurrentChoice plus Procurement/C17 owners",
+          "test_path": null,
+          "executable_request": null,
+          "required": "A stored mixed alternative reaches recorded Planner fallback for stale original selectors while independently reauthorizing external Procurement original and every Planner original. Preserve original bytes,current case version and all source/authority fences. Existing four mixed tests are not declared proof of this branch.",
+          "related_existing_paths": [
+            "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+            "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+            "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts"
+          ],
+          "candidate": {
+            "symbol": "C27",
+            "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+            "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+            "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+          },
+          "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+        },
+        {
+          "id": "Q57-MIXED-TOMBSTONE-RECREATE",
+          "state": "MISSING_MIXED_PHYSICAL_LINEAGE_DISCRIMINATOR",
+          "owner": "Canonical Procurement/C17 and Memory owners",
+          "test_path": null,
+          "executable_request": null,
+          "required": "Delete/tombstone original physical record and recreate the same visible ID with a new physical incarnation. Old mixed source must be denied with no private original disclosure or grant. Legitimate scope rotation must remain distinguishable from a new physical record.",
+          "related_existing_paths": [
+            "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+            "apps/cli/src/sucafina-product/scenario-operation-access.ts"
+          ],
+          "candidate": {
+            "symbol": "C27",
+            "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+            "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+            "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+          },
+          "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+        },
+        {
+          "id": "Q57-MIXED-REVOKE-BETWEEN-READS",
+          "state": "MISSING_MIXED_INTEROBSERVATION_DISCRIMINATOR",
+          "owner": "Canonical authority/C17 plus Planner/Memory owners",
+          "test_path": null,
+          "executable_request": null,
+          "required": "Revoke access or change policy,actor,binding,Request lease,case version or source between independent observations. No result/private projection/promotion persistence or financial effect may escape. Include Request abort. Observation-time normalization must not ignore authority or content.",
+          "related_existing_paths": [
+            "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+            "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+            "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts"
+          ],
+          "candidate": {
+            "symbol": "C27",
+            "W": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+            "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+            "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7"
+          },
+          "existence_claim": "Requirement only. No existing authored test or executable request for this precise discriminator is asserted."
+        }
+      ],
+      "rule": "No filename or existing test coverage invented for missing discriminators."
+    },
+    {
+      "id": "M57-RUNTIME56-UNFILTERED-ORACLE",
+      "state": "NOT_RUN_ON_C27",
+      "owner": "S0 or authorized functional qualifier",
+      "requirement": "Run original11-file56 selection without -t filter, including legacy structural oracle title/count1->4 with all19 case assertions.",
+      "source_limit": "65PASS1filtered is not full legacy file or C27 proof."
+    },
+    {
+      "id": "M57-P03-QUALIFICATION58-FAIL",
+      "state": "OPEN_DIAGNOSTIC_OBSERVATION_ONLY",
+      "owner": 58,
+      "evidence": {
+        "head": "d00a74824c360fc557521ca77097e7593961909e",
+        "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+        "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+        "run": 43661532296,
+        "job": 132651714845,
+        "result": "P03_FAIL",
+        "expect_calls": 24,
+        "budget_ms": 180000
+      },
+      "limit": "24 expect calls include helpers and are not24of72 assertions. Different isolated W; no release58 or candidate equivalence.",
+      "required_action": "58 should produce a bounded causal correction or document a materially changed relevant closure before another full unchanged-budget P03 qualification; do not infer a useful retry merely from C27's newer SHA."
+    },
+    {
+      "id": "M57-INTEGRITY-01",
+      "state": "CORRECTED_ADDITIVELY_IN_TERMINAL_ERRATA",
+      "owner": 57,
+      "artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/errata-final.json",
+      "material_changed": false
+    }
+  ],
+  "rule": "Delivery/release availability updates do not close original criteria, remove mandatory findings, transfer source results, or revive ended leases. Remaining native/BI/C12/Agenda/live Microsoft obligations keep their prior exact dispositions.",
+  "communication": "Published only on sf2-stack/PR65. No messages to other actors, source branches or third parties.",
+  "execution": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "preflights": "NOT_RUN",
+    "validator_invocations": 0,
+    "CI_dispatches": 0,
+    "epic_dispatches": 0,
+    "AM": "NOT_RUN",
+    "producer_branch_writes": 0,
+    "workflow_ref_writes": 0,
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "external_messages": false
+  },
+  "GLOBAL_RELEASE": false
+}
