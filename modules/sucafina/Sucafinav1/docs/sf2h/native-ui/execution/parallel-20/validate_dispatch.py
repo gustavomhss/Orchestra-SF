@@ -105,11 +105,11 @@ def validate(root: Path, launch: Path | None):
     ensure(set(main["pilot"]["incremental_outputs"]) == {"U10.queue", "U11.title-save", "U13.pr-approval", "Q01.pilot", "Q02.pilot"}, "no skipped or fake pilot output")
     ensure(any(c.get("output_id") == "U11.title-save" for c in cards), "missing P0 author")
     ensure(any(c.get("output_id") == "U13.pr-approval" for c in cards), "missing P1 author")
-    ensure(surface["surfaces"] and next(s for s in surface["surfaces"] if s["id"] == "UI32")["primaryOwner"] == "U43", "UI32 exact U43 owner")
+    ensure(any(x.get("id") == "UI32" and x.get("primaryOwner") == "U43" for x in surface["surfaces"]), "UI32 exact U43 owner")
     ensure("ui-grid" in locks["locks"], "monthly component lock missing")
     for rev, needle in (("R01","UX"),("R02","C03"),("R03","MCP")):
         ensure(needle in json.dumps(orders[rev].get("reviewScope", "") + " " + " ".join(orders[rev].get("reviewRequiredChecks", []))), f"{rev} missing independent original review scope")
-        ensure(orders[rev].get("kind") == "review", f"{rev} is not independent review order")
+        ensure(orders[rev].get("kind") == "independent-review", f"{rev} is not independent review order")
     ensure(all(c.get("role") == "writer" for c in cards[1:]), "writer role mislabeled")
     md = (pack / "PROMPTS.md").read_text(encoding="utf-8")
     for card in cards:
