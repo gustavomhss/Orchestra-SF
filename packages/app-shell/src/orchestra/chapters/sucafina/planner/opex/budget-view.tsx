@@ -87,6 +87,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     error: "",
     refresh: 0,
     selected: "" as string,
+    chosenVersion: "" as string,
     selection: null as SfCellCoordinate | null,
     selectedRange: null as Readonly<{ anchor: SfCellCoordinate; extent: SfCellCoordinate }> | null,
     paste: { phase: "idle" } as SfPasteState,
@@ -130,7 +131,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   }
   const pageQuery = () => ({
     ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
-    ...(props.route.query.version ? { version: props.route.query.version } : {}),
+    ...((state.chosenVersion || props.route.query.version) ? { version: state.chosenVersion || props.route.query.version } : {}),
     ...(props.route.query.filter === undefined ? {} : { q: props.route.query.filter }),
   })
   const reload = () => setState("refresh", (n) => n + 1)
@@ -139,12 +140,13 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const generation = owner.generation()
     const ready = owner.ready()
     const route = props.route.href
+    const chosenVersion = state.chosenVersion
     state.refresh
     const identity = ready ? JSON.stringify([generation, ready.context.stamp, route]) : ""
     if (lastIdentity !== identity) {
       editors.clear()
       monthlyDrafts.clear()
-      setState({ selected: "", paste: { phase: "idle" }, pasteInput: null, review: null,
+      setState({ selected: "", chosenVersion: "", paste: { phase: "idle" }, pasteInput: null, review: null,
         uncertainty: false })
       lastIdentity = identity
     }
@@ -597,7 +599,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       ]}
       tabs={[]} activeTab={null} secondaryActions={[]}
       primaryAction={{
-        id:"review-dirty",labelKey:key("sf.cap18.primary"),tone:"primary",
+        id:"review-dirty",labelKey:key(isOpex()?"sf.cap18.primary":"sf.cap19.primary"),tone:"primary",
         disabled:!allowed("save") || !draftCells().some((cell)=>cell.dirty), busy:state.busy,
         onInvoke:previewDirtyCells,
       }}
@@ -607,10 +609,15 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         <Show when={state.page}>
           {(page) => <div class="sf-u07" data-sf-surface={props.surfaceId}>
             <section class="sf-u07-toolbar">
-              <div>
-                <strong>{t("sf.u07.version")}</strong>{" "}
-                <span>{page().data.selectedVersion?.name??t("sf.u07.noVersion")}</span>
-              </div>
+              <label>{t("sf.u07.version")}
+                <select value={page().data.selectedVersion?.id ?? ""} disabled={state.busy || state.uncertainty}
+                  onChange={(event) => setState({ chosenVersion: event.currentTarget.value,
+                    selected: "", review: null, paste: { phase: "idle" }, pasteInput: null })}>
+                  <For each={page().data.versions}>{(entry) =>
+                    <option value={entry.id}>{entry.name} · {entry.year}</option>}
+                  </For>
+                </select>
+              </label>
               <a class="mx-btn" href="/orchestra/sf-imports/new" aria-disabled={!allowed("import-workbook")}>
                 {t("sf.u07.import")}
               </a>
