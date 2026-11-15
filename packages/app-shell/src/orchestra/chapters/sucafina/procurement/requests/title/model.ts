@@ -39,6 +39,7 @@ export function decodeSfRequestTitlePage(
   if (!stamp || stamp.installationId !== expected.installationId ||
       stamp.projectId !== expected.projectId || stamp.hostId !== expected.hostId ||
       stamp.principalRef !== expected.principalRef ||
+      stamp.policyVersion !== expected.policyVersion ||
       stamp.accessRevision !== expected.accessRevision) return { kind: "stale" }
 
   const projection = record(envelope.value)

@@ -17,7 +17,7 @@
 4. `packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts`: five **real producer** P0 tests, not mock-based proof; environment-restricted and SKIPPED if F04 fixture is absent (skip does NOT qualify product).
 5. `modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/ACK.json`: remote preflight proof.
 
-Diff from cohort to W19 independently verified: **5 changed paths**, all inside W19 allowlist. No shared registry, generated client, producer, Azure, merge, deployment or policy edit.
+Diff from cohort verified before handoff: **5 authored/ACK paths**; final branch adds exactly three receipts (`HANDOFF-114.md`, `EVIDENCE.json`, `SHARED-PATCH-114.diff`) for **8 total changed paths**. All remain inside W19 allowlist. No shared registry, generated client, producer, Azure, merge, deployment or policy edit.
 
 ## Exactly what is / is not delivered
 

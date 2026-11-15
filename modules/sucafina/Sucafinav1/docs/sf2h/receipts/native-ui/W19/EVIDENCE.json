@@ -69,7 +69,10 @@
     "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/model.ts",
     "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/index.tsx",
     "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
-    "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+    "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/HANDOFF-114.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/EVIDENCE.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/SHARED-PATCH-114.diff"
   ],
   "properties": {
     "source_locked_title_only": true,
@@ -85,7 +88,8 @@
     "no_auto_retry_on_lost_response": true,
     "no_financial_approval": true,
     "no_C12_receipt": true,
-    "no_generated_or_shared_direct_edits": true
+    "no_generated_or_shared_direct_edits": true,
+    "policyVersion_matched_on_read": true
   },
   "qualifications": {
     "local_tests": "NOT_RUN_AS_REQUESTED",
@@ -112,5 +116,6 @@
     "e2b84f2bd1820c32f4cf6c80a47cb3803edc8ba2",
     "d0a1ab18d605f294dac7e7b1cbd92ae43f11d3f1",
     "91d824d8bef4666b7c51c0641588c72bcd54cf16"
-  ]
+  ],
+  "changed_path_count": 8
 }
