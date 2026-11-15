@@ -1,0 +1,265 @@
+{
+  "schema": "sf2h-compiler-108-hosted-receipt-v1",
+  "mission": 108,
+  "status": "FAIL",
+  "campaign": "sf2h-integral-20261112",
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "workflow_tooling_S": "255de6221343b98cafaece35bc6f5029cb087c45",
+  "workflow_branch": "sf-compiler-checks",
+  "workload": "compiler/generation/guards only; no product tests",
+  "run1": {
+    "id": 43708133478,
+    "attempt": 1,
+    "job": 132793604402,
+    "result": "FAIL",
+    "workflow_sha": "fe3fbb73019667cfb2bc95e78299064cf4b63549",
+    "reason": "SOURCE_DRIFT preflight; own workflow unintentionally exited early under Bash -e; 16 remaining checks NOT_RUN",
+    "fixed_by_commit": "255de6221343b98cafaece35bc6f5029cb087c45",
+    "artifact_id": 14159716242
+  },
+  "run2": {
+    "id": 43708496555,
+    "attempt": 1,
+    "job": 132794704289,
+    "result": "FAIL",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43708496555",
+    "artifact_id": 14158854987,
+    "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43708496555/artifacts/14158854987",
+    "artifact_name": "sf-compiler-c53-108",
+    "artifact_zip_sha256": "evidence referenced in artifact; verify raw bytes on download",
+    "commands_executed": 17,
+    "commands_passed": 11,
+    "commands_failed": 6
+  },
+  "host": {
+    "os": "ubuntu-24.04",
+    "bun": "1.3.14",
+    "node": "24.22.2",
+    "dev_resolved": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "source_identity_verified": true,
+    "readonly": true,
+    "generated_diff_clean": true,
+    "status_after_generation": "M bun.lock"
+  },
+  "commands": [
+    {
+      "name": "bundle-build",
+      "cwd": ".",
+      "exit_code": 1,
+      "status": "FAIL",
+      "full_log": "artifact:sf-compiler-c53-108/bundle-build.log"
+    },
+    {
+      "name": "bundle-requests",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/bundle-requests.log"
+    },
+    {
+      "name": "e2e-inventory",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/e2e-inventory.log"
+    },
+    {
+      "name": "typecheck-atlas",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/typecheck-atlas.log"
+    },
+    {
+      "name": "typecheck-sucafina",
+      "cwd": "modules/sucafina",
+      "exit_code": 2,
+      "status": "FAIL",
+      "full_log": "artifact:sf-compiler-c53-108/typecheck-sucafina.log"
+    },
+    {
+      "name": "typecheck-core",
+      "cwd": "packages/core",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/typecheck-core.log"
+    },
+    {
+      "name": "typecheck-cli",
+      "cwd": "apps/cli",
+      "exit_code": 2,
+      "status": "FAIL",
+      "full_log": "artifact:sf-compiler-c53-108/typecheck-cli.log"
+    },
+    {
+      "name": "typecheck-app",
+      "cwd": "packages/app-shell",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/typecheck-app.log"
+    },
+    {
+      "name": "sf-e2e-showConfig",
+      "cwd": "packages/app-shell",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/sf-e2e-showConfig.log"
+    },
+    {
+      "name": "sf-e2e-listFiles",
+      "cwd": "packages/app-shell",
+      "exit_code": 2,
+      "status": "FAIL",
+      "full_log": "artifact:sf-compiler-c53-108/sf-e2e-listFiles.log"
+    },
+    {
+      "name": "sf-e2e-verify",
+      "cwd": ".",
+      "exit_code": 1,
+      "status": "FAIL",
+      "full_log": "artifact:sf-compiler-c53-108/sf-e2e-verify.log"
+    },
+    {
+      "name": "atlas-generated-before",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/atlas-generated-before.log"
+    },
+    {
+      "name": "atlas-generate",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/atlas-generate.log"
+    },
+    {
+      "name": "atlas-generated-after",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/atlas-generated-after.log"
+    },
+    {
+      "name": "atlas-generated-diff",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/atlas-generated-diff.log"
+    },
+    {
+      "name": "spawn-imports",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS",
+      "full_log": "artifact:sf-compiler-c53-108/spawn-imports.log"
+    },
+    {
+      "name": "guards",
+      "cwd": ".",
+      "exit_code": 1,
+      "status": "FAIL",
+      "full_log": "artifact:sf-compiler-c53-108/guards.log"
+    }
+  ],
+  "observations": {
+    "bundle_requests": {
+      "status": "VALID_REQUESTS_NOT_RUN",
+      "recipes": 8,
+      "runner_execution": "NOT_RUN",
+      "note": "107 owns product CI"
+    },
+    "e2e_inventory": {
+      "status": "INPUTS_PRESENT_COMPILER_NOT_RUN",
+      "declared_inputs": 72
+    },
+    "e2e_compiler": {
+      "showConfig_exit": 0,
+      "listFiles_exit": 2,
+      "ts_diagnostics": 3,
+      "real_program_nonempty": true,
+      "verifier_exit": 1,
+      "verifier_input_issue": "Bun logs `$ tsgo ...` and native tsgo showConfig is flat; verifier JSON.parse fails (script/sf2h/final-bundle/verify-e2e-typecheck.mjs:118). No PASS claimed."
+    },
+    "typescript": {
+      "sucafina_errors": 119,
+      "cli_errors": 5,
+      "e2e_errors": 3,
+      "unique_error_locations": 119,
+      "unique_files": 56,
+      "duplicate_note": "The CLI five and E2E three diagnostics repeat findings within Sucafina typecheck."
+    },
+    "atlas": {
+      "boundary_typecheck": "PASS",
+      "generated_before": "PASS",
+      "generate": "PASS",
+      "generated_after": "PASS",
+      "generated_diff": "PASS",
+      "raw_git_status": "M bun.lock, not generated files"
+    },
+    "guards": {
+      "status": "FAIL",
+      "rules": 78,
+      "changed_paths": 4830,
+      "gates": 55,
+      "gate_rule": "agent-scratch",
+      "warnings": 114,
+      "other_errors": 0,
+      "owner": "S0/106 integration receipt owner",
+      "note": "All 55 gates on committed .log files under previous integration receipts; no exclusions, ignore comments or approval labels applied."
+    },
+    "spawn_imports": {
+      "status": "PASS",
+      "files_checked": 4750,
+      "allowlisted_sites": 66
+    }
+  },
+  "not_run": [
+    "product tests by this mission (107 exclusive)",
+    "sf2-epic",
+    "G7/C-final",
+    "G8/D",
+    "Azure",
+    "deployment",
+    "restart"
+  ],
+  "open_issues": [
+    {
+      "id": "BUNDLE-SOURCE-DRIFT",
+      "owner": "S0/106 final bundle owner",
+      "file": "script/sf2h/final-bundle/build-artifact.py:16-22",
+      "code": "SOURCE_DRIFT"
+    },
+    {
+      "id": "E2E-VERIFIER-SHOWCONFIG",
+      "owner": "S0/106 final bundle owner",
+      "file": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs:118",
+      "code": "SyntaxError + native tsgo flat config"
+    },
+    {
+      "id": "COMPILE-PRODUCT-C53",
+      "owner": "Product WP authors / S0/106",
+      "file": "56 files in FINDINGS-108.md",
+      "code": "119 distinct TS file/line/code locations"
+    },
+    {
+      "id": "GUARDS-AGENT-SCRATCH",
+      "owner": "S0/106 integration receipts",
+      "file": "55 committed .log inputs",
+      "code": "agent-scratch"
+    }
+  ],
+  "proposed_patch": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/compiler-c53-108/C53-PROPOSED-TYPE-FIXES.patch",
+    "status": "UNAPPLIED_UNVALIDATED",
+    "targets": 4,
+    "edits": 5,
+    "owner": "product source authors / 106"
+  },
+  "integrator_consumer": "PR #65 / session 106",
+  "pr_number": 107,
+  "gate_statement": "FAIL and NOT_RUN remain explicit; neither green compilation nor global acceptance asserted."
+}

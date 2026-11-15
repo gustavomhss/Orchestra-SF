@@ -1,0 +1,56 @@
+# C53 candidate compiler fixes — PROPOSED ONLY (NOT_APPLIED, NOT_TYPECHECKED)
+# Four product/source files, five one-line changes. No assertions removed, no any/ignore/suppression.
+# Apply only by each current owner after reconciling C53 preimages with newer integration commits.
+# User requires product paths remain untouched by compiler mission 108.
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts b/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
+--- a/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
+@@ -23,7 +23,7 @@
+         const resolve = () => Promise.all(request.operations.map((operation) => input.resolveOperation(operation, context)))
+         const proofs = await resolve()
+         const failure = proofs.find((item) => item.status !== "ok")
+-        if (failure && failure.status !== "ok") return failure
++        if (failure) return failure
+         if (proofs.some((item, index) => item.status !== "ok" || item.value.operationDigest !== digestSfValue(request.operations[index]) || item.value.kind === "external" && (!item.value.sourceRefs.length || !item.value.condition.trim()))) return { status: "unavailable", reason: "scenario-operation-proof-unavailable" }
+         const plannerOperations = request.operations.filter((_operation, index) => { const proof = proofs[index]; return proof?.status === "ok" && proof.value.kind === "planner" })
+         const external = proofs.flatMap((item) => item.status === "ok" && item.value.kind === "external" ? [item.value] : [])
+diff --git a/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts b/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts
+--- a/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts
+@@ -132,10 +132,10 @@
+       if (typeof item.id !== "string" || !item.id || !isSfPeriod(item.period)) return false
+       if (item.kind === "dashboard") return option.domain === "dashboard" && typeof item.topic === "string" && typeof item.selectionRef === "string" && !!item.selectionRef
+       if (item.kind === "forecast-comparison") return option.domain === "planner" && typeof item.title === "string" && typeof item.baseRef === "string" && typeof item.candidateRef === "string" && typeof item.currency === "string" && Array.isArray(item.sides) && item.sides.length > 0 && item.sides.every((side) => side === "baseline" || side === "candidate")
+-      if (option.domain !== "procurement" || typeof item.title !== "string") return false
++      if (option.domain !== "procurement" || !("title" in item) || typeof item.title !== "string") return false
+       if (item.kind === "procurement-request") return typeof item.requestRef === "string" && !!item.requestRef
+       if (item.kind !== "procurement-supplier" && item.kind !== "procurement-contract") return false
+-      return typeof (item.kind === "procurement-supplier" ? item.supplierRef : item.contractRef) === "string" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === "string" && !!field)
++      return typeof (item.kind === "procurement-supplier" ? item.supplierRef : "contractRef" in item ? item.contractRef : undefined) === "string" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === "string" && !!field)
+     })
+ }
+ 
+diff --git a/apps/cli/src/sucafina-product/bi-services.ts b/apps/cli/src/sucafina-product/bi-services.ts
+--- a/apps/cli/src/sucafina-product/bi-services.ts
++++ b/apps/cli/src/sucafina-product/bi-services.ts
+@@ -210,7 +210,7 @@
+       digestSfValue(combination.components) !== digestSfValue(analysis.scenario.components)) return { status: "stale", reason: "portfolio-waterfall-analysis-mismatch" }
+     const scenario = createScenarioCostBiHost({ host: input.host, results: input.results, scenarios: input.scenarios, scenario: {
+       revalidate: (_request, call) => input.host.revalidate(call),
+-      readView: async (forwarded, call) => {
++      readView: async (forwarded, call): Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>> => {
+         if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "portfolio-waterfall-request-changed" }
+         const portfolio = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selected.portfolioResultRef }, call)
+         if (portfolio.status !== "ok") return portfolio
+diff --git a/apps/cli/src/sucafina-product/current-choice-services.ts b/apps/cli/src/sucafina-product/current-choice-services.ts
+--- a/apps/cli/src/sucafina-product/current-choice-services.ts
++++ b/apps/cli/src/sucafina-product/current-choice-services.ts
+@@ -221,7 +221,7 @@
+     finally { actors.release(call) }
+   }
+   return {
+-    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run(call, async () => {
++    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run<SfCurrentChoiceOptions>(call, async () => {
+       const request = host.requestFor(call)
+       if (!request) return unavailable()
+       const candidates = await authority.state.read(request, "cases", (state, actor) => sameActor(actor, call)
