@@ -11,7 +11,7 @@
   "final_operational_gate": "HOLD",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-ux-a09",
-  "pr_base": "sf2-stack",
+  "pr_base": "sf-ux-next30-dispatch-20261115",
   "source_fence": {
     "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
     "observed_initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
@@ -172,5 +172,24 @@
   "handoff_documents": [
     "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A09/HANDOFF.md",
     "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A09/EQUIVALENCE.md"
-  ]
+  ],
+  "eventual_integration_target": "sf2-stack via 114/I00, after authoritative wave2 control is reconciled",
+  "pr_number": 140,
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/140",
+  "pr_base_reconciliation": {
+    "initial_target": "sf2-stack",
+    "initial_compare": {
+      "changed_files": 164,
+      "reason": "sf-ux-a09 inherited native-ui planning/control files at f8e4426 not yet in sf2-stack material baseline"
+    },
+    "review_target": "sf-ux-next30-dispatch-20261115",
+    "review_target_sha": "1d9d49ec26281ffd6486d722a97298596289605d",
+    "observed_diff": {
+      "changed_files": 8,
+      "adds": 1057,
+      "deletes": 0,
+      "unrelated_files": 0
+    },
+    "constraint": "review base only; 114 owns final composition and move to sf2-stack; no merge was performed"
+  }
 }
