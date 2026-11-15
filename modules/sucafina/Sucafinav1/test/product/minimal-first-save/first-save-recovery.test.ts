@@ -266,7 +266,7 @@ test("outcome HTTP refuses foreign actor, missing/wrong key, wrong case/incarnat
       await f.live.http(outcome, { caseRef }),
       await f.live.http(outcome, { caseRef, draftRef: "forged" }, "first-save-key-003"),
     ]
-    expect(wrong.map((result) => result.code)).toEqual([503, 403, 403, 403, 403, 503, 400])
+    expect(wrong.map((result) => result.code)).toEqual([503, 403, 403, 403, 403, 403, 400])
     expect(wrong.every((result) => result.body.status !== "ok" && !result.body.value)).toBe(true)
     expect(await f.live.snapshot()).toBe(before)
     f.access.revision = "changed-access"
