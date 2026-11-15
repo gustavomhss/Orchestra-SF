@@ -1,0 +1,172 @@
+{
+  "schema": "sf2h.native-ui.correction-receipt.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 157,
+  "slot": "N11",
+  "order": "U41",
+  "surface": "UI30",
+  "epoch": "ux-native-n11-e2-browser157",
+  "actor": {
+    "effective_model": "GPT-6",
+    "astra_runtime_exposed": false,
+    "session_id": null,
+    "github_connector_login": "gustavomhss",
+    "connector_login_is_not_session_identity": true
+  },
+  "authority": {
+    "branch": "sf-ux-n11",
+    "pr": 158,
+    "previous_epoch": "ux-native-n11-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "prior_process_terminated_claimed": false,
+    "approved_by_user_in_current_chat": true,
+    "allowlist": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/work/**",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-u41.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u41.spec.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/**"
+    ]
+  },
+  "ack": {
+    "channel": "GitHub PR #158 comment",
+    "comment_id": 6901383549,
+    "epoch": "ux-native-n11-e2-browser157",
+    "pre_head": "586b1551ec42b9d3fa4918fc3aa6956ba7d84721",
+    "fence_blob": "6129e9d03eaab931c0e874a4c8902a236c3cff95"
+  },
+  "source": {
+    "pre_commit": "586b1551ec42b9d3fa4918fc3aa6956ba7d84721",
+    "pre_tree": "25efd1214d049aaca0c18551d8bf9e0f7f3a41d7",
+    "post_commit": "SEE_PR_158_HEAD_AFTER_CAS",
+    "post_tree": "SEE_PR_158_HEAD_TREE_AFTER_CAS",
+    "files": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+        "pre_blob": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+        "post_blob": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+        "finding_ids": [
+          "PRE-R01-146-001",
+          "PRE-R01-146-006"
+        ]
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u41.ts",
+        "pre_blob": "ce36f38be93751fb2a555ec98fe366a628b3a8d6",
+        "post_blob": "de979d8164960b0eb60d9fb30d6ecb22362142a2",
+        "finding_ids": [
+          "PRE-R01-146-001"
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u41.spec.ts",
+        "pre_blob": "572ba4ed030182460da282bd56b20f35fa8cda3d",
+        "post_blob": "53bcdf935e2b777c25059fe895c96780b93bbae7",
+        "finding_ids": [
+          "PRE-R01-146-001",
+          "PRE-R01-146-006"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/owner-seams.md",
+        "pre_blob": null,
+        "post_blob": "f007199fcdcee02e379a65a24c9c072376481f85",
+        "finding_ids": [
+          "PRE-R01-146-001",
+          "PRE-R01-146-006"
+        ]
+      }
+    ]
+  },
+  "consumer": {
+    "owner": "132",
+    "pr": 65,
+    "pre_commit": "8094e599e3d18609e269548d24619a3246fbc735",
+    "pre_tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+    "pre_ui30_blob": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+    "pre_work_adapter_blob": "402b8a4599807d403065e561a427e230ae5981cb",
+    "pre_native_mount_blob": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+    "post_commit": null,
+    "post_tree": null,
+    "post_status": "NOT_APPLIED_NOT_INTEGRATED",
+    "consumer_ack": null,
+    "expected_product_blobs": {
+      "work/index.tsx": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+      "sf-u41.ts": "de979d8164960b0eb60d9fb30d6ecb22362142a2",
+      "u41.spec.ts": "53bcdf935e2b777c25059fe895c96780b93bbae7"
+    }
+  },
+  "observed_causal_findings": [
+    {
+      "id": "PRE-R01-146-001",
+      "severity": "P1",
+      "pre": "Leaf calls projection.work-item while A12 handler list excludes it",
+      "post_leaf": "Retains genuine selectionRef/period/actionRef and selected row owner/kind/state/sourceVersion/observedVersion/destination; rejects missing/mismatched/stale results; denies purge private view; no fake detail",
+      "upstream_pending": "153 supplies real workDestinations.read+verify, 132 mounts handler; no installed proof",
+      "state": "LEAF_PATCH_READY_UPSTREAM_OPEN"
+    },
+    {
+      "id": "PRE-R01-146-006",
+      "severity": "P2",
+      "pre": "safeSourceHref rejects desktop because renderer window.location.origin != producer publicOrigin",
+      "post_leaf": "No renderer-origin comparison. Validates exact source-approved publicOrigin native F01 route from item + work-destination on every click; no arbitrary URLs, query/hash/userinfo, openExternal or DOM direct href. Errors visible with detail retained except denial",
+      "upstream_pending": "132 owner must publish admitted typed source route; frozen D01 has no openUrl; current legacy href rejected",
+      "state": "FAIL_CLOSED_LEAF_PATCH_READY_ROUTE_SEAM_OPEN"
+    }
+  ],
+  "contract_pins": {
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "WP08_T04_blob": "42afe6b6194a9cd4de038743673923609059b6a0",
+    "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "D01_host_signature_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "A12_work_schema_blob": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+    "A12_work_adapter_blob": "402b8a4599807d403065e561a427e230ae5981cb"
+  },
+  "criteria": {
+    "U41_AC01": "LEAF_HANDLES_CURRENT_SOURCE_AND_CHECKS; BLOCKED_REAL_PRODUCER_AND_TYPED_DESTINATION",
+    "U41_AC02": "LEAF_STATES_AND_IDENTITY_MATCH; NOT_RUN_DENIED_STALE_INSTALLED",
+    "U41_AC03": "NOT_RUN_REQUIRED_VIEWPORTS_AND_ACCESSIBILITY",
+    "WP08_T04_CHK_01_02_03_04_20_18": "NOT_RUN_REAL_DOMAIN_PROOFS",
+    "WP08_T04_DOD_INV_QLT_CMP_SUC": "NOT_CLOSED_OR_WAIVED",
+    "surface_refs": [
+      "NUI01",
+      "NUI03",
+      "NUI04",
+      "NUI13",
+      "NUI14",
+      "NUI15"
+    ]
+  },
+  "regression_specs": {
+    "path": "packages/app-shell/e2e/sucafina/native/journeys/u41.spec.ts",
+    "cases": [
+      "current selection with real row, owner/ref/version/filter",
+      "approved native source route OR explicit unavailable on legacy href",
+      "real denied owner purges private work",
+      "real stale selection not empty success"
+    ],
+    "uses_mock": false,
+    "fixture_source": "150 approved installed identities and work periods",
+    "status": "NOT_RUN",
+    "reason": "149/150 are sole hosted validators and real A12/132 integration not yet admitted"
+  },
+  "validation": {
+    "local_tests": "NOT_RUN_USER_FORBIDDEN",
+    "local_parser": "NOT_RUN_USER_FORBIDDEN",
+    "typecheck": "NOT_RUN_149_OWNS",
+    "sdk_generation": "NOT_RUN_149_OWNS",
+    "product_ci": "NOT_RUN_150_OWNS",
+    "desktop_runtime": "NOT_RUN_REAL_D01_INSTALLATION_REQUIRED",
+    "reviewer_recheck": "NOT_RUN_AFTER_CONSUMER_INTEGRATION",
+    "release": "NOT_AUTHORIZED"
+  },
+  "delivery": {
+    "state": "ARTIFACT_READY_WITH_BLOCKED_SHARED_SEAMS",
+    "next_action": "132 fetch PR#158 post CAS source blobs and apply only N11 allowlist to candidate after 153 installs actual work-item and owner validates typed F01 source mapping; publish consumer ACK; 149 compile/SDK and 150 surgical installed tests; independent reviewer rechecks.",
+    "shared_seam_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/owner-seams.md",
+    "other_writers_modified": false,
+    "global_release": false,
+    "goal": "PAUSED"
+  }
+}

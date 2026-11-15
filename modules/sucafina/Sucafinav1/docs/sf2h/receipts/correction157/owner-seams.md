@@ -1,0 +1,26 @@
+# Mission 157 — handoff of unavailable shared seams (INERT, not applied)
+
+Epoch: `ux-native-n11-e2-browser157`. This file is **not** authority to edit another writer's paths. It identifies the exact withheld capabilities and their owner; it is not a simulated implementation.
+
+## A12 / 153 — native work-item read+verify (P1 PRE-R01-146-001)
+
+**Actual preimage:** `apps/cli/src/sucafina-product/native-ui/work.ts@402b8a4599807d403065e561a427e230ae5981cb`; `createSfWorkProjectionHandlers(deps: SfNativeHostDependencies): readonly SfProjectionHandler[]` returns handlers `projection.home`, `projection.search`, `projection.work`, `projection.work-selection`, but explicitly **omits** `projection.work-item`. Source comment says private `workDestinations.read(selection,actionRef,call)` plus `verify()` is absent. `packages/schema/src/sucafina/work.ts@0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b` publishes the browser-safe operation but does not install a producer. Host `modules/sucafina/Sucafinav1/local/entry.ts@14e0c24ecc13ead7d7f6c818689d8901f3b8568a` mounts only returned handlers.
+
+**Required owner change, no dummy port:** 153 binds an actual current-owner private `workDestinations.read(selection, actionRef, call)` with the real `found.value.verify()` and preserves `runtime.ui.admit/validate/revalidate/finish`; implements GET `{mount}/api/ui/projections/work-item`, closed query `selectionRef,actionRef,start,end`, no body/extras; returns the frozen `SfProjectionWorkItem` output `{status:"ok",value:{item,details,links}}` only after verification. Negative statuses `denied/stale/conflict/invalid/needs-input/unavailable` are kept, no HTML scrape, no placeholder, no cross-owner fallback. N11 `SfWorkView` consumes the exact frozen client signature `createSfWorkClient(transport)["projection.work-item"]({selectionRef,actionRef,start,end},{signal})`.
+
+**132 / PR65 consumer:** register that real A12 handler, schema and operation in the candidate native router/metadata (no new worker/dispatcher); prove consumer preimage (currently integrator C `8094e599e3d18609e269548d24619a3246fbc735`, tree `b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8`, work leaf blob `32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3`). Integrator applies the three explicitly owned N11 product/test blobs and records their *actual* postimages/consumer ACK. Consumer postimage at author handoff: **NOT_APPLIED**.
+
+## 132 / D01 — typed source destination in native routing (P2 PRE-R01-146-006)
+
+**Actual preimage:** frozen `host-signatures.ts@e99e094fc3ad5e74832a55aa2639c6bdb27f5255` `SfDesktopCapability` exposes exactly `registerConnection,bind,invoke,abort,login,logout,release`; there is **no** generic `openUrl`, and renderer origin is `oc://renderer`. `collaboration.work-destination` in `packages/schema/src/sucafina/collaboration/operations.ts@a37dc39b600740af0a78345dfa3d4565256c791a` returns only `{href:string}`, historically a legacy approved-workbench href; it is not an F01 route proof.
+
+**N11 safe consumer, written in authorized leaf:** `admittedNativeSource(raw, publicOrigin, nativeRoute)` only accepts the exact `/orchestra/sf-work/threads/{encodeSfRouteRef(threadId)}` F01 route derived from the freshly reverified `projection.work-item.item.destination` **and** an approved same-origin `collaboration.work-destination.href` with exactly matching pathname, no query/hash/userinfo/cross-origin. It does **not** compare `window.location.origin` with `publicOrigin`. Source labels cannot open arbitrary URLs. `useNavigate` is invoked only on that exact admitted native route, after an in-flight user-action recheck; a prior check never serves as authority.
+
+**Exact unresolved integration condition:** the current work destination producer may continue to return a legacy HTML path, which this leaf correctly rejects as `unavailable` even on web; no `oc://` navigation or external-window fallback is allowed. 132 must independently verify and expose **an actually authorized typed F01 route** for the same owner/action and reference/version, via the approved producer/route contract (coordinate with A12/153 if the frozen `href` cannot carry it). If this requires a new API/contract, obtain its owner's contract revision and explicit lease first, then hand N11 a new fenced correction. Do **not** insert an `any` cast, invent a private desktop IPC `navigate` call, interpret arbitrary URLs as `SfHref`, or claim desktop parity before an installed D01 session navigates successfully.
+
+## Owner gates and evidence
+
+- `149/PR107`: compile/SDK/guards only on integrated new code, source/consumer SHAs, no unchanged C64 rerun.
+- `150/PR106`: installed UI30 list→detail→source, native browser+desktop with real work-item, a nonempty source-backed item, owner/selection/version checks, denied/revoked/stale/cross-owner, non-native paths/userinfo/hash rejected, and 320–1440 px/200%/400% accessibility sampling, using new `u41.spec.ts` and real fixtures.
+- `132/PR65`: only integrator, resolve the two blockers, apply N11 path-limited diff by observed blob CAS, publish consumer ACK and invalidate affected checks. Do not broad-merge the entire branch.
+- PRE-R01/146 original reviewers independently recheck installed C; preliminary static findings are not execution evidence. `Goal` remains paused. `ARTIFACT_READY` is not `INTEGRATED`, `QUALIFIED` or `GLOBAL_RELEASE`.
