@@ -2,9 +2,7 @@
   "schema": "sf2h.p03-boundary-probe.ack.v1",
   "mission": 109,
   "state": "ACK_IN_PROGRESS",
-  "campaign": "sf2h-integral-20261112",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
-  "T0": "2026-11-13T04:01:10Z",
   "mission_ref": "7e56fa8bd9f3ea288ad9625be7b4b2ab8dd56314",
   "branch": "p03-boundary-probe",
   "lease_epoch": "p03-probe-browser109",
@@ -66,5 +64,11 @@
     "R3": "PASS 22 scoped controls; does not execute P03 original, selection or final history"
   },
   "next": "Construct boundary-specific short reproduction, distinguish drift from reentrancy, publish inert product patch and handoff to owner99/106 and test request via107",
-  "global_release": false
+  "global_release": false,
+  "clock": {
+    "t0_policy": "Do not reset the existing S0 T0; the absolute start timestamp was not independently observed in session109",
+    "t0_new_epoch_started": false,
+    "relative_deadlines_unchanged": true
+  },
+  "correction": "Replaced an unverified absolute T0/campaign label in the initial ACK with an explicit non-reset policy; neither time nor source of S0 clock is invented."
 }
