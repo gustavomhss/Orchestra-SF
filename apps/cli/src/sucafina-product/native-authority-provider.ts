@@ -1,4 +1,5 @@
-import { Effect } from "effect"
+import { randomUUID } from "node:crypto"
+import { Effect, Schema } from "effect"
 import { SessionSchema } from "@orchestra/core/session/schema"
 import type { Location } from "@orchestra/core/location"
 import type { ModelV2 } from "@orchestra/core/model"
@@ -8,7 +9,8 @@ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
-import type { SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+import type { SfProductState, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+import type { SfTokenCountReceipt } from "./token-count.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { SfMaestroHostInput, SfNativeHostApi } from "./native-host.ts"
@@ -58,6 +60,7 @@ type Marker = Readonly<{
   scopeDigest: string
   generation: number
   createdAt: string
+  tokenReceipts: ReadonlyArray<{ attemptId: string; generation: number; receipt: SfTokenCountReceipt }>
 }>
 type HostIdentity = Readonly<{ installationId: string; hostId: string; projectId: string; location: Location.Ref }>
 
@@ -168,7 +171,7 @@ export function createSfNativeAuthorityProducer(input: {
       const row = state.cases[caseRef.id as string]
       if (!row || row.incarnation !== caseRef.incarnation || row.version !== caseRef.version ||
         !row.participants.includes(actor.principalRef)) return undefined
-      return raw as Marker
+      return raw as unknown as Marker
     }).catch(() => undefined)
     return result?.status === "ok" ? result.value : undefined
   }
@@ -187,10 +190,9 @@ export function createSfNativeAuthorityProducer(input: {
       originDigest: digestSfValue({ admission: intent, caseRef, model, identity: { installationId: identity.installationId, projectId: identity.projectId },
         principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion }),
       caseRef: { ...caseRef }, model: { ...model }, scopeDigest: digestSfValue(scope), generation,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(), tokenReceipts: [],
     })
-    const work = async (state: Parameters<Authority["state"]["transaction"]>[2] extends (s: infer S, ...rest: never[]) => unknown ? S : never,
-      actor: SfStateAuthority) => {
+    const work = async (state: SfProductState, actor: SfStateAuthority) => {
       const row = state.cases[caseRef.id]
       if (!row || row.incarnation !== caseRef.incarnation || row.version !== caseRef.version ||
         !row.participants.includes(actor.principalRef) || actor.principalRef !== marker.principalRef ||
@@ -200,7 +202,7 @@ export function createSfNativeAuthorityProducer(input: {
       return { commit: true, value: true }
     }
     input.authority.nativeEvidenceWrites.add(work)
-    let saved: Awaited<ReturnType<Authority["state"]["transaction"]>> | undefined
+    let saved: { status: string; value?: boolean } | undefined
     try {
       saved = await input.authority.state.transaction(request, {
         namespace: "preferences", expectedStorageVersion: before.storageVersion,
@@ -234,6 +236,8 @@ export function createSfNativeAuthorityProducer(input: {
       !validCase(value.caseRef)) return { status: "denied", reason: "native-maestro-start-unavailable" }
     acquiring.add(request)
     let context: TrustedUiContext | undefined
+    let created: SessionSchema.ID | undefined
+    let native: SfNativeHostApi | undefined
     try {
       const accepted = await input.authority.human.admit(request, "routines.admit", value)
       if (accepted.status !== "ok") return accepted
@@ -241,6 +245,7 @@ export function createSfNativeAuthorityProducer(input: {
       if (!await admission(context, request, "routines.admit", value) ||
         !await currentCase(request, context, value.caseRef)) return { status: "denied", reason: "native-maestro-case-unavailable" }
       const host = input.nativeHost()
+      native = host
       const identity = input.identity()
       const model = await input.model().catch(() => undefined)
       const generation = await input.generation().catch(() => undefined)
@@ -265,9 +270,17 @@ export function createSfNativeAuthorityProducer(input: {
         },
       }
       const result = await Effect.runPromise(host.admitMaestro(plan), { signal: request.signal }).catch(() => undefined)
-      return result ?? { status: "unavailable", reason: "native-maestro-admission-failed" }
+      if (result?.status !== "ok") return result ?? { status: "unavailable", reason: "native-maestro-admission-failed" }
+      created = result.value.sessionID
+      // The authenticated human objective is the first native Maestro message.
+      // No approval text or Permission reply is synthesized.
+      const started = await Effect.runPromise(host.resumeMaestro(created, value.objective), { signal: request.signal })
+        .catch(() => undefined)
+      return started?.status === "ok" ? result :
+        { status: "unavailable", reason: "native-maestro-first-turn-unavailable" }
     } finally {
       acquiring.delete(request)
+      if (created && native) await Effect.runPromise(native.releaseMaestro(created)).catch(() => {})
       if (context) input.authority.human.finish(context)
     }
   }
@@ -276,7 +289,7 @@ export function createSfNativeAuthorityProducer(input: {
     intent: RunIntent
     humanText: string
   }>): Promise<PortResult<{ sessionID: SessionSchema.ID }>> => {
-    if (!ready() || acquiring.has(request) || !SessionSchema.ID.is(value?.sessionID) || !validIntent(value.intent) ||
+    if (!ready() || acquiring.has(request) || !Schema.is(SessionSchema.ID)(value?.sessionID) || !validIntent(value.intent) ||
       !value.humanText?.trim() || value.humanText.length > 100_000 ||
       active.has(value.sessionID)) return { status: "denied", reason: "native-maestro-run-unavailable" }
     acquiring.add(request)
