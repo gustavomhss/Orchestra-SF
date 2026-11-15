@@ -73,8 +73,8 @@ class HtmlEvidence(HTMLParser):
 def text_view(title, contents):
     return ('<!doctype html><html><head><meta charset="utf-8">'
             '<style>body{font:12px/1.4 "DejaVu Sans Mono",monospace; margin:25px}'
-            'pre{white-space:pre-wrap;overflow-wrap:anywhere}table{border-collapse:collapse}'
-            'td,th{border:1px solid #777;padding:4px;text-align:left;vertical-align:top}'
+            'pre{white-space:pre-wrap;overflow-wrap:anywhere}table{width:100%;table-layout:fixed;border-collapse:collapse}'
+            'td,th{border:1px solid #777;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere;white-space:pre-wrap}''th{width:34%;background:#eee}section{break-inside:avoid;margin:0 0 16px}'
             'h1{font:19px sans-serif}</style></head><body><h1>' +
             html.escape(title) + '</h1>' + contents + '</body></html>')
 
@@ -108,10 +108,19 @@ def source_view(source, format_, target, case):
             raise ValueError("CSV size/shape outside bounded inspection")
         details.update({"rows": len(rows), "columns": len(rows[0]),
                         "rowWidths": sorted(set(map(len, rows)))})
-        cells = "<table>" + "".join("<tr>" + "".join(
-            ("<th>" if index == 0 else "<td>") + html.escape(cell) +
-            ("</th>" if index == 0 else "</td>") for cell in row)
-            + "</tr>" for index, row in enumerate(rows)) + "</table>"
+        headers = rows[0]
+        if len(rows) < 2 or any(len(row) != len(headers) for row in rows[1:]):
+            raise ValueError("CSV column count mismatch")
+        # Wide source CSVs are losslessly transposed into readable field/value pairs.
+        # This is a reader-only derivative; the original CSV stays untouched.
+        records = []
+        for number, row in enumerate(rows[1:], 1):
+            fields = "".join("<tr><th>" + html.escape(header) + "</th><td>" +
+                             html.escape(value) + "</td></tr>"
+                             for header, value in zip(headers, row))
+            records.append("<section><h2>Record " + str(number) + "</h2><table>" +
+                           fields + "</table></section>")
+        cells = "".join(records)
         preview = target / "csv-source-view.html"
         put(preview, text_view("CSV source reader (derived view, not a product render)", cells))
         return preview, details
