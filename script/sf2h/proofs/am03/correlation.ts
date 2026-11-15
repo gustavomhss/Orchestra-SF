@@ -133,7 +133,11 @@ export function correlateAm03(input: Am03HostedCandidate) {
       record.ciRunId !== input.ciRunId || record.ciRunUrl !== input.ciRunUrl)
       gaps.push("scenario:" + id + ":source-or-run-mismatch")
     const binding = record.binding
-    if (!binding?.authenticatedBindingId || !binding.authenticatedRequestId ||
+    if (!binding) {
+      gaps.push("scenario:" + id + ":missing-authenticated-native-binding")
+      continue
+    }
+    if (!binding.authenticatedBindingId || !binding.authenticatedRequestId ||
       !binding.nativeSessionId || !binding.nativeRunId ||
       !binding.principalRef || !binding.profileId || !binding.profileVersion ||
       !binding.caseId || !binding.caseIncarnation || !Number.isSafeInteger(binding.caseVersion) ||
@@ -187,6 +191,7 @@ export function correlateAm03(input: Am03HostedCandidate) {
   const a = input.observations.find((item) => item.scenario === "actor-a")
   const b = input.observations.find((item) => item.scenario === "actor-b")
   if (a && b && (
+    !a.binding || !b.binding ||
     a.binding.profileId !== b.binding.profileId ||
     a.binding.profileVersion !== b.binding.profileVersion ||
     a.binding.principalRef === b.binding.principalRef ||
@@ -202,7 +207,8 @@ export function correlateAm03(input: Am03HostedCandidate) {
     gaps.push("scenario:cache-isolation:private-count-or-cache-egress")
   const old = input.observations.find((item) => item.scenario === "restart-old-binding-denied")
   const fresh = input.observations.find((item) => item.scenario === "restart-new-binding-authenticated")
-  if (old && fresh && (old.binding.authenticatedBindingId !== fresh.oldAuthenticatedBindingId ||
+  if (old && fresh && (!old.binding || !fresh.binding ||
+    old.binding.authenticatedBindingId !== fresh.oldAuthenticatedBindingId ||
     old.binding.nativeSessionId !== fresh.oldNativeSessionId ||
     old.binding.authenticatedRequestId !== fresh.oldAuthenticatedRequestId ||
     old.binding.providerGeneration !== fresh.oldProviderGeneration))
