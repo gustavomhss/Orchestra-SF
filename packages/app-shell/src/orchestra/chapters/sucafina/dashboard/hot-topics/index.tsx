@@ -28,9 +28,11 @@ function topicPath(props: SfSurfaceProps<"CAP02">, view: "list" | "new" | "detai
     "/" + encodeSfRouteRef(id ?? "") + (view === "edit" ? "/edit" : "")
   // Keep the explicit canonical selection, never borrow the ambient connection.
   const query = new URLSearchParams()
-  query.set("server", props.route.ownerSelection.serverKey)
-  query.set("project", props.route.ownerSelection.projectId)
-  if (props.route.ownerSelection.installationId) query.set("installation", props.route.ownerSelection.installationId)
+  if (props.route.ownerSelection.installationId) {
+    query.set("server", props.route.ownerSelection.serverKey)
+    query.set("project", props.route.ownerSelection.projectId)
+    query.set("installation", props.route.ownerSelection.installationId)
+  }
   if (props.route.query.year !== undefined) query.set("year", String(props.route.query.year))
   if (props.route.query.month !== undefined) query.set("month", String(props.route.query.month))
   if (props.route.query.status) query.set("status", props.route.query.status)
@@ -102,7 +104,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
     reasonKey: !source.allowed("save") ? key("sf.u38.saveDenied") : undefined,
     onInvoke: () => navigate(topicPath(props, "new")),
   })
-  return <SfPageFrame titleKey={key("sf.cap02.title")} context={[]} tabs={[]} activeTab={null}
+  return <SfPageFrame titleKey={key("sf.cap02.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="work" onLayoutMode={() => {}} primaryAction={primaryAction()}>
     <div class="sf-u38-page" data-sf-surface="CAP02">
       <SfStatePanel state={state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[state()])}
@@ -140,11 +142,11 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
             </Show>
           </section>
         </Show>
-        <Show when={props.route.kind === "new" && current()}>
+        <Show when={props.route.kind === "new" ? current() : undefined}>
           {(ready) => <SfHotTopicEditor transport={ready().transport} drafts={ready().drafts}
             canSave={source.allowed("save")} scope="new" version={0} onBack={back} onRefetch={source.refresh} />}
         </Show>
-        <Show when={(props.route.kind === "edit" || props.route.kind === "detail") && selected()}>
+        <Show when={props.route.kind === "edit" || props.route.kind === "detail" ? selected() : undefined}>
           {(topic) => <section class="sf-u38-section" data-sf-topic-detail aria-labelledby="sf-topic-heading">
             <header class="sf-u38-detail-header">
               <h2 id="sf-topic-heading">{topic().action ?? t(key("sf.u38.topicDetail"))}</h2>
@@ -195,7 +197,7 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
                   deleteState() === "unknown" ? "sf.u38.savePending" : "sf.u38.applyError"))}
               </p></Show>
             </Show>
-            <Show when={props.route.kind === "edit" && current()}>
+            <Show when={props.route.kind === "edit" ? current() : undefined}>
               {(ready) => <SfHotTopicEditor record={topic()} version={version()} transport={ready().transport}
                 drafts={ready().drafts} canSave={source.allowed("save")}
                 scope={topic().id} onBack={back} onRefetch={source.refresh} />}
