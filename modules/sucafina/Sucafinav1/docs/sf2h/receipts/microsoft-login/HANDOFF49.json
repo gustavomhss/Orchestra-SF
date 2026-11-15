@@ -1,0 +1,170 @@
+{
+  "schema": "sucafina.microsoft-login.terminal-handoff.v1",
+  "mission": 49,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "recorded_at": "2026-11-15 00:02:07 UTC",
+  "state": "DELIVERED_TO_47_WITH_COMPILER_AND_LIVE_GATES_PENDING",
+  "source_writer_terminal": true,
+  "source": {
+    "branch": "microsoft-login",
+    "W": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+    "tree": "7af26c42a054abe09d0585567953f512c32ebf82",
+    "pr": 69,
+    "base": "sf2-stack",
+    "draft": true
+  },
+  "delivery_manifest": "DELIVERY49.json",
+  "implementation": {
+    "engine": "Existing entra-client.ts and local-identity.ts reused; no second authentication engine.",
+    "client": "Explicit Web confidential profile, resource-tenant authorization code + S256 PKCE, strict RSA/JWT claims, fixed Entra/Graph endpoints.",
+    "identity": "Validated resource tid and guest oid; actor oid only within durably pinned tenant/client installation. Name/email/UPN/idp/roles claim are not authority.",
+    "authorization": "Fresh immutable group memberships resolve existing per-surface roles. Explicit SfProductGrant is separately bound to the exact resource-tenant oid; no automatic guest privilege.",
+    "session": "Opaque scoped __Secure- cookies, HttpOnly/Secure/SameSite=Lax; AES-256-GCM private storage, absolute lifetime, refresh identity pinning, durable logout and concurrent work fences.",
+    "configuration": "Explicit private canonical JSON, owner-only files/keys/client credential, separate agent workspace, immutable installation identity pin, no local-operator fallback.",
+    "composition": "Complete entry, CLI loader and serve postimages; fixed HTTPS/public and HTTP ingress/listener origins; forwarded headers stripped before Node conversion; CSRF; trace suppression; installation preflight before host DB."
+  },
+  "criteria": [
+    {
+      "id": "M49-CONFIG",
+      "result": "PASS_SYNTHETIC",
+      "evidence": "microsoft-configuration.test.ts (7) + microsoft-node.test.ts preflight"
+    },
+    {
+      "id": "M49-CALLBACK-CLAIMS",
+      "result": "PASS_SYNTHETIC",
+      "evidence": "entra-client.test.ts (78), microsoft-entra-client.test.ts (22), microsoft-session.test.ts signed callback negatives"
+    },
+    {
+      "id": "M49-SESSION-REVOCATION",
+      "result": "PASS_SYNTHETIC",
+      "evidence": "microsoft-session.test.ts (24): state/replay, expiry, durable revoke, callback/refresh/Graph/SQL races, key/tenant/client boundaries"
+    },
+    {
+      "id": "M49-PRODUCT-AUTHORIZATION",
+      "result": "PASS_SYNTHETIC",
+      "evidence": "microsoft-routes.test.ts (5): actual product HTTP and authority, no role/grant fallback, removal, oid isolation and real Procurement HTML/CSV/write denials"
+    },
+    {
+      "id": "M49-INSTALLATION",
+      "result": "PASS_SYNTHETIC",
+      "evidence": "microsoft-composition.test.ts (4) and microsoft-node.test.ts (2): exact full postimages, real Node ingress, secure cookie, same-origin fence, startup ordering, tracing positive/negative controls"
+    },
+    {
+      "id": "M49-LOCAL-COMPATIBILITY",
+      "result": "PASS_SCOPE",
+      "evidence": "local-identity.test.ts (11), local-entry.test.ts (9), retained public client tests"
+    },
+    {
+      "id": "M49-TYPECHECK",
+      "result": "NOT_RUN",
+      "owner": "mission45",
+      "request": "requests/COMPILER49-02.json"
+    },
+    {
+      "id": "M49-GUARDS",
+      "result": "NOT_RUN",
+      "owner": "mission45 / S0",
+      "request": "requests/COMPILER49-02.json"
+    },
+    {
+      "id": "M49-TARGET-CONSUMPTION",
+      "result": "NOT_RUN",
+      "owner": "integration47",
+      "evidence": "TARGET-RECONCILIATION49.json; no target writes"
+    },
+    {
+      "id": "M49-LIVE-MICROSOFT-B2B",
+      "result": "NOT_RUN",
+      "owner": "Azure provisioning/session owner"
+    }
+  ],
+  "actual_runs": [
+    {
+      "run_id": 43655093802,
+      "W": "63eb9626a437af7df11966fbbb86cbb2d4ad287d",
+      "S": "8be70804ce551a471a733a38ef0b72fbf3d53921",
+      "result": "FAIL",
+      "summary": "159 pass, 2 fail, 1 error; two introduced test-harness defects preserved",
+      "receipt": "runs/CI49-01.json"
+    },
+    {
+      "run_id": 43655680707,
+      "W": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+      "S": "61d531f6be247e26dc66836effc427ba7403fce6",
+      "result": "PASS",
+      "summary": "162 pass, 0 fail, 9 files, 1216 assertions, 27.02s; omni control valid not-applicable for declared scope",
+      "receipt": "runs/CI49-02.json"
+    }
+  ],
+  "azure_contract": {
+    "selector": "SUCAFINA_MICROSOFT_CONFIG",
+    "mutually_exclusive": "SUCAFINA_LOCAL_CONFIG",
+    "json_fields": [
+      "version",
+      "deployment",
+      "authentication",
+      "origin",
+      "listenerOrigin",
+      "ingressOrigin",
+      "mount",
+      "tenantId",
+      "clientId",
+      "groups",
+      "grants",
+      "workspaceDirectory",
+      "scanner",
+      "sessionSeconds",
+      "loginSeconds"
+    ],
+    "redirect_uri": "${origin}${mount}/auth/callback",
+    "application_platform": "Web confidential client",
+    "scopes": [
+      "openid",
+      "profile",
+      "offline_access",
+      "User.Read"
+    ],
+    "graph_permission": "delegated User.Read; no Directory.Read.All, application permission or guest directory enumeration",
+    "private_client_credential": "client-secret.txt; never environment, CLI argument, JSON policy, tool output or model context",
+    "tls_ingress": "Azure owner enforces public HTTPS-only, private trusted backend, exact Host/ingressOrigin and excludes auth query/cookies/bodies from upstream logs",
+    "first_use": "Existing canonical bootstrap requires a configured real admin; never make André admin to bypass bootstrap. Saved explicit empty maps remain empty.",
+    "upgrade": "Prior Microsoft session format requires re-login; no automatic tenant/data migration.",
+    "live_proof": "Validate actual resource tenant Web redirect/consent/B2B oid, assigned and unassigned identities, role removal, copied-cookie logout and cross-user denials; preserve sanitized results only."
+  },
+  "consumer_actions": [
+    "integration47: acknowledge W/tree and complete pre/post manifest; preserve current target and shared writers; consume all three patches atomically with source.",
+    "integration47/compiler45: requalify the named composed candidate; run canonical package bun typechecks and root check:guards --base origin/dev. Source green is not a target green.",
+    "Azure owner: provision private configuration, credentials and TLS/ingress policy; perform real Microsoft/B2B login. No real tenant data was needed or read by49."
+  ],
+  "preserved_limits": {
+    "local_tests": false,
+    "local_typechecks": false,
+    "epic": false,
+    "workflows_modified": false,
+    "shared_active_sources_modified": false,
+    "target_branch_modified": false,
+    "azure_provisioning": false,
+    "real_credentials_read": false,
+    "automatic_guest_or_Andre_role": false,
+    "financial_policy_changed": false,
+    "native_engine_changed": false,
+    "GLOBAL_RELEASE": false
+  },
+  "coordination": {
+    "route": "repository handoff only",
+    "consumer47_ack_requested": true,
+    "consumer47_ack_received": false,
+    "waited_for_routine_owner_replies": false,
+    "compiler45_head_observed": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "final_epic_and_acceptance_owner": "S0",
+    "existing_campaign_holds": "Preserved. This source release does not close finance approval, installed native admission, AM01-AM06, three FINAL reviews or final composed gates."
+  },
+  "writer_roster": {
+    "root": "Only remote source writer, configuration/composition modules, test composition harness, CI/PR/receipts",
+    "entra_engine": "Owned Entra client/auth types and crypto fixtures plus real route/grant tests",
+    "session_engine": "Owned session engine, session negatives and guide",
+    "ci_route": "Inert shared integration artifacts and owned Node test; no active shared path edits"
+  }
+}
