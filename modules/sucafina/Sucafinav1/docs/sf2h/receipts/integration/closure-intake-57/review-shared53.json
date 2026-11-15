@@ -1,0 +1,150 @@
+{
+  "schema": "sf2h.closure-intake-57.shared-review.v1",
+  "decision": "ADMIT_REVIEWED_SHARED_COMPOSITE9_AS_CANDIDATE",
+  "root_review": "All nine paths and all22 hunks inspected; exact preimages, postimages, modes, SHA256 and byte counts reconciled against C24. Static artifact review only.",
+  "independent": {
+    "schema": "sf2h.mission57.independent-shared53-cold-review.v1",
+    "reviewer": "review_portfolio54",
+    "source_commit": "0ad96d0ffa97d309c90847211e943e59893040cc",
+    "target_reviewed": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-approval-closure/shared/composite/shared-composite.patch",
+      "blob": "3c6a4785ae0a0129c71e038e47e67ecb3cba5af9"
+    },
+    "decision": "ADMIT_CANDIDATE_PENDING_COMPOSED_VALIDATION",
+    "scope": "Independent cold static review concentrated on scenario-operation-access.ts, recorded-planner-operation-access.ts and decision-controls.ts; read composition wiring plus canonical C17/C20 implementations. Complements primary review of the complete 9-path mixed proposal.",
+    "verification": "GitHub MCP read-only; exact text patch reconstruction on actual terminal55 preimages. No product code, tests, typechecks, guards, CI or AM executed; no remote mutations.",
+    "exact_pre_post": [
+      {
+        "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+        "pre": "e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7",
+        "post": "23721ab89535bcf8644a98cf3ed2de65a929a329",
+        "mode": "100644",
+        "reconstructed_exactly": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+        "pre": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+        "post": "d2158a10de3473edc5f5d509f3215e84140a8382",
+        "mode": "100644",
+        "reconstructed_exactly": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "pre": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+        "post": "5a0592e200e14fa801b1ed24150384070ea5298b",
+        "mode": "100644",
+        "reconstructed_exactly": true
+      }
+    ],
+    "preserved_authority_dependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "blob": "390bce2594e39a28defce1d47fafa0d7291e940e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-evidence-read-scope.ts",
+        "blob": "68bae96124f2a0994be25b86765415b0d52452f4"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+        "blob": "64a7252089ca33d9f316a4382a0ef73fb70d8466"
+      }
+    ],
+    "findings": [
+      {
+        "id": "M57-COLD53-01",
+        "severity": "nonblocking-static-acceptance",
+        "subject": "Historical scoped incarnation",
+        "detail": "Dropping equality of original/current scoped incarnation is consistent with canonical C17 physical continuity. Context.resolve refuses historical results without proveContinuity. Procurement decision-host rereads archived evidence, resolves current actor scope, reauthenticates current roles and roleMap/canWrite, checks isCurrent, requires exactly one original and one current live scope pointing to the archive physicalIncarnation, and the same living physical record. Fresh resolution still requires byte-equal currentRef. Tombstone/recreate cannot satisfy the canonical physical identity comparison. This is source-level reasoning, not a runtime pass."
+      },
+      {
+        "id": "M57-COLD53-02",
+        "severity": "nonblocking-static-acceptance",
+        "subject": "C20 / Memory40 / CurrentChoice46 composition",
+        "detail": "The 3 reviewed hunks add external selectors and attached-only readers without replacing existing request/binding pinning, source fences, duplicate-proof closure/finally close, stored-case double reads, participant checks or recordedPlanner recursion sentinel. Canonical C17 and C20 files above are absent from owned7 and mixed9. Historical originals remain attached to each recorded result; newer top-level evidence is not substituted into it."
+      },
+      {
+        "id": "M57-COLD53-03",
+        "severity": "validation-gap",
+        "subject": "Mixed historical/ACL coverage",
+        "detail": "New composite-planner.test.ts contains 4 tests. Its fixture uses synthetic Planner source membership and a Procurement resolver that only returns fresh/unavailable. It does not exercise actual C17 historical archive/physical continuity or recordedPlanner historical fallback, tombstone/recreate or mid-read revocation. It is complementary evidence only, not acceptance of original journey52 or M31/MI07."
+      },
+      {
+        "id": "M57-COLD53-04",
+        "severity": "nonblocking-static-acceptance",
+        "subject": "Read-only attached controls",
+        "detail": "procurement=attached now reopens only decision-attached refs with originalAmount, budget64, exact source reads before/after projection, matching currency/horizon, final authority and source-fence checks. It does not issue collection-member source metadata. UI source selection now uses the freshly authorized projection context instead of assuming Procurement is a priced Planner component. Outer exact case reread/currentList/revalidate remains."
+      }
+    ],
+    "validation_queue": {
+      "owner": "A45 for checks; mission52 for original decision journeys; S0 for final acceptance",
+      "candidate_requirement": "Run only when authorized by next owner on the exact published composed candidate SHA. Reconcile the pinned C17/C20 semantics if later runtime56 affects transitive behavior. No green transfer from producer W.",
+      "files_existing": [
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/procurement-evidence.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts"
+      ],
+      "missing_behavior_coverage_to_qualify": [
+        "Real installed C17 archive resolution of mixed recorded choice with scoped-incarnation rotation but unchanged physical record",
+        "Real installed C17 denial after tombstone/recreate with the same textual record id",
+        "Current source ACL/policy/revocation changes between the two resolver reads and at final egress",
+        "Real recordedPlanner fallback with historical Planner plus external Procurement evidence",
+        "Original decision52 prior/current journeys, including source refresh while retained choice keeps exact original evidence",
+        "Attached-only controls preserve snapshots and emit no issue/source metadata or approval"
+      ],
+      "acceptance_not_closed": [
+        "M31",
+        "MI07",
+        "original journeys52",
+        "same-C full validation",
+        "S0 final acceptance"
+      ]
+    }
+  },
+  "admission": {
+    "decision": "HOLD_INERT",
+    "paths": [
+      {
+        "path": "application-command-admission.patch",
+        "bytes": 6067,
+        "sha256": "edc4fd6eba567e9af90ae6a41302f888c2011f33777159c56df9bb312afb0327"
+      },
+      {
+        "path": "procurement-approval-admission.example.ts.txt",
+        "bytes": 4605,
+        "sha256": "338dc5fe5bc5d4b6db5ff475d55345b06c439d13738b09cce65f901b83d22cce"
+      },
+      {
+        "path": "CONTRACT.md",
+        "bytes": 12701,
+        "sha256": "85d3b285e4c58a6722ac85d74496974ccdf545ff75c7f90f202cce855df92d64"
+      }
+    ],
+    "reason": "No concrete existingUiContextFor/requestFor provider is mounted by the released Application proposal. Source admission tests use a domain harness wrapper. Do not activate either proposed path."
+  },
+  "limits": {
+    "source_shared_tests": "NOT_RUN",
+    "composed_tests": "NOT_RUN",
+    "static_review": "Root complete nine-path review plus independent concentrated cold review; no static blocker found.",
+    "known_gap": "Four new mixed tests have synthetic Planner membership and fresh-only Procurement resolution; historical C17, recorded fallback, tombstone/recreate and mid-read revocation remain to qualify.",
+    "checks_owner": 45,
+    "acceptance_owner": "S0",
+    "M31": "OPEN",
+    "MI07": "OPEN",
+    "GLOBAL_RELEASE": false
+  }
+}

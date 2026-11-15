@@ -1,4 +1,5 @@
 import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
+import { createSfProcurementCompositePlanner } from "./procurement-composite-planner.ts"
 import { randomUUID } from "node:crypto"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createPlannerConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
@@ -418,7 +419,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     }, decision: coverage }),
     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
-  const planner = product.planner
+  const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
+  const planner = procurementComposite.planner
+  const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
@@ -453,15 +456,15 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
     } })
   calculationVerifier.current = calculations.verifyCalculationSources
-  // A Procurement preview is transient. Only the existing explicit human
-  // promotion may publish its C08 result; it is never a Planner calculation.
-  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && procurementScenarios.producer.supports(incoming.request)
+  // Standalone and composite Procurement previews are transient. Only the
+  // existing explicit human promotion may publish their C08 result.
+  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && readOnlyScenario(incoming.request)
     ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculations.persist(incoming, callId, call, replay)
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
     ...input.extraDescriptors ?? [],
     ...createDashboardCapabilities(dashboard, async (call, operation, digest, result) => receipt(call, operation, digest, result)),
-    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario: procurementScenarios.producer.supports }),
+    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario }),
     ...createProcurementCapabilities({ port: procurement, authority: input.authority.authority }),
     ...collaboration.capabilities,
     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),

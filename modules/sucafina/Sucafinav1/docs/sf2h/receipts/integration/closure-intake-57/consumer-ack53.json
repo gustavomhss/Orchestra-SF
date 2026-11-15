@@ -1,0 +1,33 @@
+{
+  "schema": "sf2h.closure-intake-57.consumer-ack.v1",
+  "consumer": 57,
+  "source": 53,
+  "source_release": "0ad96d0ffa97d309c90847211e943e59893040cc",
+  "owned": {
+    "state": "CONSUMED_AS_CANDIDATE",
+    "symbol": "C24",
+    "sha": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+    "tree": "97500d1435255a2790b1e6833e5a9391ca70d860",
+    "parent": "666ed28668ad3fc0bb9c89fdb57a0da33c57e2e4",
+    "material_paths": 7,
+    "archive": 63,
+    "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/increment-01.json",
+    "manifest_blob": "4ce231f498e00a598d4b185eb8c4eb8f6398a97c"
+  },
+  "composite": {
+    "state": "CONSUMED_REVIEWED_AS_CANDIDATE",
+    "candidate": "C25",
+    "sha_resolution": "Containing commit",
+    "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/increment-02.json"
+  },
+  "admission": {
+    "state": "HOLD_INERT",
+    "reason": "No concrete existingUiContextFor/requestFor provider is mounted by the released Application proposal. Source admission tests use a domain harness wrapper. Do not activate either proposed path."
+  },
+  "requirements": {
+    "M31": "OPEN",
+    "MI07": "OPEN",
+    "reason": "edit persisted draft -> submit exact persisted amount -> approve frozen holder snapshot does not approve an unwritten replacement for later Apply."
+  },
+  "source_test_results_transferred": false
+}

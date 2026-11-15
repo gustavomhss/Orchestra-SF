@@ -87,7 +87,12 @@ export function createSfDecisionDomainServices(input: {
     const transport = host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
     const current = await rawCase(captured.caseRef, call), fences = await business.readSourceFences(call)
     if (!transport || transport.signal.aborted || !current || !fences || !input.sharedPortfolio || captured.metricRef !== "planner:known-subtotal-difference" || captured.unit !== current.currency || !same(captured.period, current.horizon)) return false
-    const allowed = current.alternatives.filter((alternative) => business.procurementScenarios.producer.supports(alternative.scenario)).flatMap((alternative) => alternative.result.sourceRefs)
+    const allowed = current.alternatives.flatMap((alternative) => alternative.result.sourceRefs.filter((ref) =>
+      business.procurementScenarios.producer.supports(alternative.scenario) || ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" &&
+      current.sourceRefs.some((attached) => same(attached, ref)) && alternative.result.comparisonStatus === "conditioned" && alternative.result.total === null &&
+      alternative.scenario.operations.some((operation) => operation.kind === "replace" && operation.targetRef === ref.refId && operation.replacementRef === undefined &&
+        typeof operation.amount === "number" && Number.isFinite(operation.amount) && operation.amount >= 0 && operation.currency === current.currency && same(operation.period, current.horizon) &&
+        alternative.result.unresolvedConditions.includes(`external-operation:${digestSfValue(operation)}:procurement-replacement-cost-unresolved`))))
     for (const ref of procurement) {
       if (!allowed.some((source) => same(source, ref))) return false
       const observed = await procurementReadonly.resolveSource(ref.refId, call)

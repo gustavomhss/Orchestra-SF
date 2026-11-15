@@ -26,7 +26,9 @@ export function decisionFormContext(projection: AuthorizedCaseProjection) {
 /** Start with human-selected, existing Planner scenarios. Coverage never supplies amounts. */
 export function decisionAlternativesForm(projection: AuthorizedCaseProjection) {
   const context = { ...decisionFormContext(projection), bases: projection.case.costCoverageBases.filter((basis) => requiredSfCostCategories(basis)), categories: RENEWAL_TRANSITION_CATEGORIES }
-  return `<section aria-label="Initial alternatives"><h3>Add an alternative</h3><p>Select an attached Planner version and inspect its current amounts. The scenario keeps that version's values. Creating an alternative neither changes the official plan nor approves a purchase.</p><form data-decision-alternatives data-context="${esc(JSON.stringify(context))}"><button type="button" data-alternative-discover>Load attached scenarios</button><label>Source for alternative<select name="source" required disabled><option value="">Load attached scenarios first</option></select></label><button type="button" data-alternative-inspect disabled>Inspect scenario</button><div data-alternative-preview aria-live="polite"></div><label>Alternative title<input name="title" required maxlength="500"></label><label>Cost inventory<select name="basis" required disabled><option value="">Inspect a scenario first</option></select></label><div data-alternative-inventory></div><label>Reason for pending cost review<textarea name="coverage-reason" maxlength="2000"></textarea></label><button type="button" data-alternative-coverage disabled>Save pending coverage</button><button type="submit" disabled>Create alternative</button><button type="button" data-alternative-retry hidden style="display:none">Retry same request</button><button type="button" data-alternative-review hidden style="display:none">Review current case</button><p role="status" aria-live="polite"></p><div data-alternative-current></div></form></section>`
+  const procurement = projection.case.sourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.target.fields.includes("originalAmount"))
+    ? '<fieldset><legend>Optional Procurement proposal</legend><p>An explicit replacement remains an unresolved external operation. This form does not save or submit the requisition or grant financial approval.</p><label>Procurement request<select name="procurement-request" disabled><option value="">No Procurement replacement</option></select></label><label>Proposed estimated amount<input name="procurement-proposed-amount" type="number" min="0" step="any" disabled></label><div data-alternative-procurement-preview aria-live="polite"></div></fieldset>' : ""
+  return `<section aria-label="Initial alternatives"><h3>Add an alternative</h3><p>Select an attached Planner version and inspect its current amounts. The scenario keeps that version's values. Creating an alternative neither changes the official plan nor approves a purchase.</p><form data-decision-alternatives data-context="${esc(JSON.stringify(context))}"><button type="button" data-alternative-discover>Load attached scenarios</button><label>Source for alternative<select name="source" required disabled><option value="">Load attached scenarios first</option></select></label><button type="button" data-alternative-inspect disabled>Inspect scenario</button><div data-alternative-preview aria-live="polite"></div><label>Alternative title<input name="title" required maxlength="500"></label>${procurement}<label>Cost inventory<select name="basis" required disabled><option value="">Inspect a scenario first</option></select></label><div data-alternative-inventory></div><label>Reason for pending cost review<textarea name="coverage-reason" maxlength="2000"></textarea></label><button type="button" data-alternative-coverage disabled>Save pending coverage</button><button type="submit" disabled>Create alternative</button><button type="button" data-alternative-retry hidden style="display:none">Retry same request</button><button type="button" data-alternative-review hidden style="display:none">Review current case</button><p role="status" aria-live="polite"></p><div data-alternative-current></div></form></section>`
 }
 
 // Shared transport/state code runs inside each mounted form. It is not an authorization port.
@@ -186,7 +188,7 @@ export const decisionScriptHelpers = `
     target.append(list); target.dataset.state = 'ready'
   }
   const currentCase = async (target) => {
-    const value = await read('decision-controls', { case: context.caseSelector, format: 'json' })
+    const value = await read('decision-controls', { case: context.caseSelector, procurement: 'attached', format: 'json' })
     if (!live()) return
     if (!value.selected || value.selected.caseRef.id !== context.caseRef.id || value.selected.caseRef.incarnation !== context.caseRef.incarnation) throw new Error('case-unavailable')
     target.replaceChildren()
@@ -207,12 +209,28 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
   const reason = form.elements.namedItem('coverage-reason'); const discover = form.querySelector('[data-alternative-discover]'); const inspect = form.querySelector('[data-alternative-inspect]')
   const coverage = form.querySelector('[data-alternative-coverage]'); const submit = form.querySelector('button[type=submit]'); const retry = form.querySelector('[data-alternative-retry]'); const review = form.querySelector('[data-alternative-review]')
   const preview = form.querySelector('[data-alternative-preview]'); const inventory = form.querySelector('[data-alternative-inventory]'); const current = form.querySelector('[data-alternative-current]')
-  let choices = []; let loaded; let prepared; let newBasis; let pending
+  const procurement = form.elements.namedItem('procurement-request'); const proposedAmount = form.elements.namedItem('procurement-proposed-amount')
+  const procurementPreview = form.querySelector('[data-alternative-procurement-preview]')
+  let choices = []; let procurementChoices = []; let loaded; let prepared; let newBasis; let pending
+  const procurementOperation = () => {
+    if (!procurement?.value) return undefined
+    const selected = procurementChoices.find((item) => item.source.refDigest === procurement.value)
+    const amount = proposedAmount?.value.trim() ? Number(proposedAmount.value) : NaN
+    if (!selected || !Number.isFinite(amount) || amount < 0 || selected.projection.context.currency !== context.currency || !same(selected.projection.context.period, context.horizon)) return null
+    return { kind: 'replace', targetRef: selected.source.refId, amount, currency: context.currency, period: context.horizon }
+  }
+  const showProcurementProposal = () => {
+    if (!procurementPreview) return
+    const operation = procurementOperation()
+    procurementPreview.textContent = operation ? 'Proposed estimated amount: ' + operation.amount + ' ' + operation.currency + '. Planner amounts remain unchanged; this external cost remains unresolved. This replacement has no financial approval.' : procurement?.value ? 'Enter the proposed estimated amount explicitly.' : ''
+  }
   const lock = (value) => { form.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = value }) }
   const ready = () => {
     lock(false); source.disabled = !choices.length || !!prepared; discover.disabled = !!prepared; inspect.disabled = !source.value || !!prepared; basis.disabled = !loaded || !!prepared
     coverage.disabled = !loaded || !!prepared || loaded.expectedVersion !== 0 || !basis.value
-    reason.disabled = !!prepared; submit.disabled = !prepared
+    if (procurement) procurement.disabled = !loaded || !procurementChoices.length
+    if (proposedAmount) { proposedAmount.disabled = !loaded || !procurement?.value; proposedAmount.required = !!procurement?.value }
+    reason.disabled = !!prepared; submit.disabled = !prepared || procurementOperation() === null
     shown(retry, false); shown(review, false)
   }
   const unresolved = (error) => {
@@ -265,30 +283,48 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
     busy = true; lock(true); preview.replaceChildren(); delete preview.dataset.state; loaded = undefined; prepared = undefined
     status.textContent = 'Loading attached scenarios…'
     try {
-      const result = await read('decision-controls', { case: context.caseSelector, format: 'json' })
+      const result = await read('decision-controls', { case: context.caseSelector, procurement: 'attached', format: 'json' })
       if (!sameCase(result.selected?.caseRef)) throw new Error('conflict')
       const options = await read('bi-options', { viewId: 'BI01', start: context.horizon.start, end: context.horizon.end })
       if (!live()) return
       choices = result.selected.forecasts.filter((item) => item.source.kind === 'record' && item.source.target.surface === 'planner' && item.source.target.recordType === 'planner-version' && context.sourceRefs.some((ref) => ref.refDigest === item.source.refDigest && same(ref, item.source)))
+      procurementChoices = (result.selected.procurementEvidence?.sources || []).filter((item) => item.source.kind === 'record' && item.source.target.surface === 'procurement' && item.source.target.recordType === 'procurement-request' && item.source.target.fields.includes('originalAmount') && context.sourceRefs.some((ref) => same(ref, item.source)) && item.projection.context.currency === context.currency && same(item.projection.context.period, context.horizon))
+      if (procurement) {
+        procurement.replaceChildren(new Option('No Procurement replacement', ''))
+        procurementChoices.forEach((item) => procurement.append(new Option(item.source.target.recordId + ' · source revision ' + item.source.target.version, item.source.refDigest)))
+        proposedAmount.value = ''; showProcurementProposal()
+      }
       source.replaceChildren(new Option('Select an attached scenario', ''))
       choices.forEach((item) => { const labels = options.versions.filter((entry) => entry.ref === item.source.refId); source.append(new Option(labels.length === 1 ? labels[0].label : item.label, item.source.refDigest)) })
       status.textContent = choices.length ? 'Choose an attached scenario to inspect.' : 'No attached Planner scenarios are currently available. Attach sources in Edit decision and save first.'
-    } catch (error) { if (live()) { choices = []; source.replaceChildren(); status.textContent = error.message === 'conflict' ? 'The case changed. Reopen it; your title is preserved.' : 'Attached scenarios are unavailable. Recheck current access and sources.' } }
+    } catch (error) { if (live()) { choices = []; procurementChoices = []; source.replaceChildren(); if (procurement) procurement.replaceChildren(); status.textContent = error.message === 'conflict' ? 'The case changed. Reopen it; your title is preserved.' : 'Attached scenarios are unavailable. Recheck current access and sources.' } }
     finally { busy = false; if (live()) ready() }
   })
   source.addEventListener('change', () => { loaded = undefined; prepared = undefined; preview.replaceChildren(); delete preview.dataset.state; inventory.replaceChildren(); basis.replaceChildren(); ready() })
   basis.addEventListener('change', () => { prepared = undefined; renderInventory(); ready() })
   title.addEventListener('input', () => { form.dataset.dirty = 'true' })
+  procurement?.addEventListener('change', () => { if (busy || pending) return; proposedAmount.value = ''; form.dataset.dirty = 'true'; showProcurementProposal(); ready() })
+  proposedAmount?.addEventListener('input', () => { if (busy || pending) return; form.dataset.dirty = 'true'; showProcurementProposal(); ready() })
   inspect.addEventListener('click', async () => {
     if (busy || pending) return
     const selected = choices.find((item) => item.source.refDigest === source.value)
     if (!selected) return
     busy = true; lock(true); loaded = undefined; prepared = undefined; preview.replaceChildren(); delete preview.dataset.state; status.textContent = 'Inspecting current scenario…'
     try {
-      const result = await read('decision-controls', { case: context.caseSelector, source: selected.source.refDigest, format: 'json' })
+      const result = await read('decision-controls', { case: context.caseSelector, source: selected.source.refDigest, procurement: 'attached', format: 'json' })
       const forecast = result.selected?.forecast
       if (!sameCase(result.selected?.caseRef) || result.accessRevision !== context.authority.accessRevision || !forecast || !same(forecast.source, selected.source) || !project(forecast.projection) || !Number.isSafeInteger(forecast.expectedVersion) || forecast.expectedVersion < 0) throw new Error('conflict')
       loaded = forecast
+      const currentProcurement = result.selected.procurementEvidence?.sources || []
+      procurementChoices = procurementChoices.filter((item) => currentProcurement.some((current) => same(current.source, item.source)))
+      if (procurement) {
+        const retainedRequest = procurement.value
+        procurement.replaceChildren(new Option('No Procurement replacement', ''))
+        procurementChoices.forEach((item) => procurement.append(new Option(item.source.target.recordId + ' · source revision ' + item.source.target.version, item.source.refDigest)))
+        if (procurementChoices.some((item) => item.source.refDigest === retainedRequest)) procurement.value = retainedRequest
+        else proposedAmount.value = ''
+      }
+      showProcurementProposal()
       const retainedText = sessionStorage.getItem(storageKey + ':coverage')
       const retained = retainedText ? JSON.parse(retainedText) : undefined
       // A confirmed inventory can precede the first promotion; keep its exact identity across reload/source changes.
@@ -328,7 +364,9 @@ document.querySelectorAll('[data-decision-alternatives]').forEach((form) => {
     event.preventDefault(); if (busy || pending || !prepared || !loaded || !form.reportValidity()) return
     if (!title.value.trim()) { status.textContent = 'Enter an alternative title before creating it.'; title.focus(); return }
     try {
-      pending = begin('decision-promote', { caseRef: context.caseRef, title: title.value.trim(), scenario: { baseRef: loaded.source.refId, operations: [], assumptions: [] }, coverageRef: prepared.coverageRef }, { title: title.value, source: loaded.source.refDigest })
+      const operation = procurementOperation()
+      if (operation === null) { status.textContent = 'Review the attached requisition and enter a valid proposed amount.'; return }
+      pending = begin('decision-promote', { caseRef: context.caseRef, title: title.value.trim(), scenario: { baseRef: loaded.source.refId, operations: operation ? [operation] : [], assumptions: [] }, coverageRef: prepared.coverageRef }, { title: title.value, source: loaded.source.refDigest, procurement: procurement?.value || '', proposedAmount: proposedAmount?.value || '' })
       execute(pending)
     } catch { if (live()) { status.textContent = 'Could not retain the intention safely. No new alternative was submitted.'; lock(true) } }
   })

@@ -1,4 +1,5 @@
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ScenarioOperation, ScenarioRequest } from "../contracts/operations.ts"
 import type { PlannerPort, PortResult } from "../contracts/ports.ts"
@@ -40,7 +41,7 @@ export function createCompositeDecisionPlanner(input: {
         const conditions = external.map((item) => `external-operation:${item.operationDigest}:${item.condition}`)
         const sourceRefs = [...value.sourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
         const costCoverage = { ...value.costCoverage, coverageState: value.costCoverage.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...new Set([...value.costCoverage.issues, "external-operation-cost-unresolved"])], evaluatedSourceRefs: [...value.costCoverage.evaluatedSourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index) }
-        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: value, proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions])] } }
+        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: plannerScenarioDigest(value), proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions])] } }
       } catch { return { status: "unavailable", reason: "scenario-composition-unavailable" } }
     },
   }

@@ -1,3 +1,4 @@
+import { authorizeSfCompositeProcurementOperations } from "./scenario-operation-access.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, Period, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -62,8 +63,10 @@ export function createSfRecordedPlannerOperationAccess(input: {
       }
       const base = select(item.scenario.baseRef)
       if (!base || !coversMonths(base.target.period!, item.result.horizon)) return false
-      const operations = item.scenario.operations.filter((operation) => !operation.replacementRef?.startsWith("hot-topic-draft:"))
-      if (!operations.length) return false
+      const external = item.scenario.operations.some((operation) => operation.targetRef.startsWith("sf-procurement:"))
+      if (external && !await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: input.resolveEvidence }, decision, item, call)) return false
+      const operations = item.scenario.operations.filter((operation) => !operation.replacementRef?.startsWith("hot-topic-draft:") && !operation.targetRef.startsWith("sf-procurement:"))
+      if (!operations.length && !external) return false
       const replacements = operations.map((operation) => operation.replacementRef ? amountSelector(operation.replacementRef) : undefined)
       if (operations.some((operation, index) => operation.replacementRef && (!replacements[index] || !select(replacements[index]!.source)))) return false
       const read = async () => {

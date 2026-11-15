@@ -96,7 +96,7 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         if (resolved.status !== "ok" || !same(resolved.value.evidence, ref)) continue
         const projected = await runtime.business.procurementScenarios.producer.readProjection(ref.refId, call)
         if (projected.status !== "ok" || projected.value.context.currency !== decision.currency || !same(projected.value.context.period, decision.horizon)) continue
-        const source = decision.alternatives.flatMap((alternative) => alternative.result.components.flatMap((component) => component.sourceRefs)).find((item) => item.surface === "procurement" && item.type === ref.target.recordType && item.id === ref.target.recordId && item.incarnation === ref.target.incarnation && item.version === ref.target.version && same(item.period, ref.target.period) && item.fields.length > 0 && item.fields.every((field) => ref.target.fields.includes(field)))
+        const source = projected.value.context.sourceRefs.find((item) => item.surface === "procurement" && item.type === ref.target.recordType && item.id === ref.target.recordId && item.incarnation === ref.target.incarnation && item.version === ref.target.version && same(item.period, ref.target.period) && item.fields.length > 0 && item.fields.every((field) => ref.target.fields.includes(field)))
         if (!source) continue
         const again = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
         if (again.status !== "ok" || !same(again.value.evidence, ref)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
@@ -140,7 +140,9 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         return person ? [{ ref, label: person.name }] : []
       })
       const conditions = decision.choices.length ? await runtime.domain.materiality.registry.list(caseRef, call) : undefined
-      const procurementEvidence = await readProcurementEvidence(runtime, request, caseRef, call).catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" }))
+      const procurementEvidence = await (url.searchParams.get("procurement") === "attached"
+        ? readAttachedProcurementEvidence(runtime, decision, call)
+        : readProcurementEvidence(runtime, request, caseRef, call)).catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" }))
       const again = await runtime.business.cases.read({ caseRef: wanted }, call)
       if (again.status !== "ok" || !same(again.value.case, decision) || !await currentList() || !await runtime.authority.host.revalidate(call)) return { status: "denied", reason: "decision-controls-authority-changed" }
       return { status: "ok", value: withFingerprint({ ...base, selected: { ref: wanted, caseRef, decision, forecasts,
@@ -169,6 +171,27 @@ async function readForecast(runtime: SfDecisionHttpRuntime, request: Request, ca
 }
 
 type ProcurementEvidence = { sources: readonly { source: RecordEvidence; projection: DomainProjection; label: string }[] }
+
+/** Alternative inspection reopens only attached sources and cannot issue source metadata. */
+async function readAttachedProcurementEvidence(runtime: SfDecisionHttpRuntime, decision: AuthorizedCaseProjection["case"], call: TrustedUiContext): Promise<PortResult<ProcurementEvidence>> {
+  const fences = await runtime.business.readSourceFences(call)
+  if (!fences) return { status: "unavailable", reason: "decision-controls-source-fences-unavailable" }
+  const refs = decision.sourceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.refId.startsWith("sf-procurement:") && ref.target.fields.includes("originalAmount"))
+  if (refs.length > 64) return { status: "needs-input", reason: "decision-controls-evidence-budget-exceeded" }
+  const sources: ProcurementEvidence["sources"][number][] = []
+  for (const ref of refs) {
+    const source = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
+    if (source.status !== "ok" || !same(source.value.evidence, ref)) continue
+    const projection = await runtime.business.procurementScenarios.producer.readProjection(ref.refId, call)
+    if (projection.status !== "ok" || projection.value.context.currency !== decision.currency || !same(projection.value.context.period, decision.horizon)) continue
+    const again = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
+    if (again.status !== "ok" || !same(again.value.evidence, ref)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
+    sources.push({ source: ref, projection: projection.value, label: `${ref.target.recordId} · source revision ${ref.target.version}` })
+  }
+  if (!await runtime.authority.host.revalidate(call)) return { status: "denied", reason: "decision-controls-authority-changed" }
+  if (!same(await runtime.business.readSourceFences(call), fences)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
+  return { status: "ok", value: { sources } }
+}
 
 /** Convert canonical collection members into durable individual sources before
  * offering them for a human case edit. The collection never leaves this read.

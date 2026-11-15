@@ -1,4 +1,4 @@
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
@@ -85,6 +85,9 @@ export function createSfScenarioOperationAccess(input: {
         }
         continue
       }
+      const external = domain.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
+      if (external.length && !await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: input.resolveProcurementEvidence }, captured, item, call)) return false
+      const plannerOperations = domain.filter((operation) => !operation.targetRef.startsWith("sf-procurement:"))
       const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
       if (source.status !== "ok") {
         if (source.status !== "stale" || !input.recordedPlanner || !await input.recordedPlanner(captured, item, call)) return false
@@ -103,7 +106,7 @@ export function createSfScenarioOperationAccess(input: {
         digestSfValue(current.value.context.period) !== digestSfValue(item.result.horizon) || !current.value.context.sourceRefs.length ||
         current.value.context.sourceRefs.some((ref) => !covered(ref, [source.value.evidence])) ||
         new Set(current.value.values.map((entry) => entry.id)).size !== current.value.values.length) return false
-      for (const operation of domain) {
+      for (const operation of plannerOperations) {
         const targets = current.value.components.filter((component) => component.id === operation.targetRef)
         if (targets.length !== 1 || !targets[0]!.sourceRefs.length || targets[0]!.sourceRefs.some((ref) => !covered(ref, refs))) return false
         if (operation.replacementRef) {
@@ -136,4 +139,57 @@ function covered(source: SourceRef, refs: readonly BusinessEvidenceRef[]) {
   return refs.some((ref) => ref.kind === "record" && ref.target.surface === source.surface && ref.target.recordType === source.type && ref.target.recordId === source.id &&
     ref.target.incarnation === source.incarnation && ref.target.version === source.version && !!ref.target.period && ref.target.period.start <= source.period.start && ref.target.period.end >= source.period.end &&
     source.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field)))
+}
+
+/** Reauthorize every explicit external selector against C17; a condition is never an approval.
+ * A retained choice owns its original evidence even when the case attaches a newer source. */
+export async function authorizeSfCompositeProcurementOperations(input: {
+  host: Pick<DomainPortHost, "revalidate">
+  resolve: BusinessContextService["resolve"]
+}, decision: DecisionCase, item: Pick<DecisionCase["alternatives"][number], "scenario" | "result">, call: TrustedDomainContext) {
+  const operations = item.scenario.operations.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
+  if (!operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
+    item.result.comparisonStatus !== "conditioned" || item.result.total !== null || item.result.currency !== decision.currency ||
+    digestSfValue(item.result.horizon) !== digestSfValue(decision.horizon) ||
+    ![...decision.alternatives, ...decision.choices].some((stored) => digestSfValue(stored.scenario) === digestSfValue(item.scenario) && digestSfValue(stored.result) === digestSfValue(item.result)) ||
+    !await input.host.revalidate(call)) return false
+  const refs = operations.map((operation) => {
+    const matches = item.result.sourceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record" &&
+      ref.refId === operation.targetRef && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request")
+    const ref = matches[0]
+    return ref && matches.every((other) => digestSfValue(other) === digestSfValue(ref)) && ref.refDigest === digestSfEvidenceRef(ref) &&
+      ref.installationId === call.binding.installationId && ref.projectId === call.binding.projectId && ref.target.fields.includes("originalAmount") &&
+      digestSfValue(ref.target.period) === digestSfValue(item.result.horizon) ? ref : undefined
+  })
+  if (refs.some((ref) => !ref) || operations.some((operation) => operation.kind !== "replace" || operation.replacementRef !== undefined ||
+    typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || operation.currency !== item.result.currency ||
+    digestSfValue(operation.period) !== digestSfValue(item.result.horizon) || !item.result.unresolvedConditions.includes(`external-operation:${digestSfValue(operation)}:procurement-replacement-cost-unresolved`))) return false
+  const read = () => Promise.all(refs.map((ref) => input.resolve(ref!, call)))
+  const first = await read()
+  if (first.some((resolution, index) => {
+    const ref = refs[index]!, current = resolution.currentRef, projection = resolution.authorizedProjection
+    // C17 proves physical continuity. Reissuing the current actor's scope may
+    // rotate its scoped incarnation; the fresh branch still requires the exact ref.
+    return (resolution.state !== "fresh" && resolution.state !== "historical") || digestSfValue(resolution.ref) !== digestSfValue(ref) ||
+      resolution.accessRevision !== call.binding.accessRevision || !current || current.kind !== "record" || current.refDigest !== digestSfEvidenceRef(current) ||
+      current.installationId !== ref.installationId || current.projectId !== ref.projectId || current.target.surface !== "procurement" ||
+      current.target.recordType !== ref.target.recordType || current.target.recordId !== ref.target.recordId ||
+      digestSfValue(current.target.fields) !== digestSfValue(ref.target.fields) || digestSfValue(current.target.period) !== digestSfValue(ref.target.period) ||
+      !projection || !("components" in projection) || projection.version !== ref.target.version || projection.context.surface !== "procurement" ||
+      projection.context.installationId !== ref.installationId || projection.context.projectId !== ref.projectId || projection.context.currency !== item.result.currency ||
+      digestSfValue(projection.context.period) !== digestSfValue(item.result.horizon) || !projection.context.sourceRefs.length ||
+      projection.context.sourceRefs.some((source) => !covered(source, [ref])) ||
+      resolution.state === "historical" && !resolution.differences || resolution.state === "fresh" &&
+      (digestSfValue(current) !== digestSfValue(ref) || projection.context.principalRef !== call.binding.principalRef ||
+        projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion)
+  })) return false
+  const material = (values: typeof first) => values.map(({ checkedAt: _checkedAt, ...value }) => {
+    const projection = value.authorizedProjection
+    if (value.state !== "fresh" || !projection || !("components" in projection)) return value
+    const source = ({ observedAt: _observedAt, ...ref }: SourceRef) => ref
+    return { ...value, authorizedProjection: { ...projection, context: { ...projection.context, sourceRefs: projection.context.sourceRefs.map(source) },
+      components: projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) } }
+  })
+  const second = await read()
+  return digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call)
 }
