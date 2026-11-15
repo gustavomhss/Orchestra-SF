@@ -23,7 +23,7 @@ export const SucafinaHandler = HttpApiBuilder.group(Api, "server.sucafina", (han
       // The selected connection is already fixed by the HTTP transport; raw query
       // cannot switch servers, inject a directory into ids, or enumerate another runtime.
       return yield* Effect.tryPromise({
-        try: () => readSfInstallations(installed, selector, raw.signal),
+        try: (signal) => readSfInstallations(installed, selector, signal),
         catch: () => new InvalidRequestError({ message: "Installation discovery unavailable", field: "select" }),
       })
     }))
