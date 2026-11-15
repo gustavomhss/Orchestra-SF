@@ -1,0 +1,84 @@
+{
+  "schema": "sf2h.integration114.C56.v1",
+  "lease": "S0-C-e17-browser114",
+  "mission": 114,
+  "campaign": "sf2h-integral-20261112",
+  "candidate": {
+    "id": "C56",
+    "sha": "a832bd50c0efd271fc79b407f219098a5f342cd5",
+    "tree": "9ec59a0543c4c574eda88094e5552360dbf040f5",
+    "parent": "b1194147b7feb8b20278d07aedf438cd8fb1117f",
+    "prior_material": "C55@8b2a3efe17340b2a23fd038b877455a93cd0379b",
+    "state": "COMPOSED_UNTESTED_NOT_FROZEN"
+  },
+  "source115": {
+    "branch": "native-runtime-finish",
+    "pr": 96,
+    "sourceW": "2eab3b6df7cbeb1be791a8e451e507b67f8b2f37",
+    "sourceTree": "a80f87cb7b964d1b8f1b5b385bd65e86e7b989d4",
+    "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-history-repair/SOURCE-MANIFEST-115.json",
+    "handoff": "HANDOFF-114.md",
+    "shared_patch": "ADAPTER-ALIAS-PROPOSAL-114.patch",
+    "shared_patch_preimage": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+    "shared_patch_postimage": "d70e2e66488d5f4e40d963d664d05a254034e32b",
+    "owner_review": "integrator114 code-checked native reader authorization/reservation alias chain"
+  },
+  "source_fidelity": {
+    "four_prior_Git_auth_checks": true,
+    "authorization_and_reservation_row_verified_before_projection": true,
+    "reader_checkPlan_mutation_false": true,
+    "checkPlan_access_source_publication_revalidation_preserved": true,
+    "no_new_Task_grant": true
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "preimage": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+      "postimage": "d70e2e66488d5f4e40d963d664d05a254034e32b",
+      "status": "modified",
+      "changes": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts",
+      "preimage": "12d73520e558ffec6b63dcc1c3f452f6add41ec6",
+      "postimage": "9978f5bcddc8b3e23a1c0247ece19133b14fda72",
+      "status": "modified",
+      "changes": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-history-repair/historical-contract.test.ts",
+      "preimage": null,
+      "postimage": "81f2174de72b204db9e01661d75302f19bd8c24c",
+      "status": "added",
+      "changes": 108
+    }
+  ],
+  "patch": "C56-INCREMENTAL.patch",
+  "historical_original_test_blob": "79ada67b416fbe453fdf99da2e2582f76501338f",
+  "historical_original_test_unchanged": true,
+  "gates": {
+    "original_C53_run": "43707901079:178PASS+1FAIL historical-read.ts line54",
+    "C56_Actions120": "NOT_RUN",
+    "C56_compiler119": "NOT_RUN",
+    "native_installed_C15": false,
+    "readiness_watch": false,
+    "recheck_independent": "PENDING"
+  },
+  "request120": {
+    "selector": [
+      "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+      "Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+      "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "Sucafinav1/test/product/native-consumer-repair/observe.test.ts",
+      "Sucafinav1/test/product/native-consumer-repair/deadline.test.ts",
+      "Sucafinav1/test/product/native-history-repair/historical-contract.test.ts"
+    ],
+    "linux_bun_only": true,
+    "source_W": "a832bd50c0efd271fc79b407f219098a5f342cd5",
+    "dedup_prior_C53": true
+  },
+  "staging_nonrelease": true,
+  "GLOBAL_RELEASE": false
+}
