@@ -1,0 +1,420 @@
+{
+  "schema": "sf2h.advance143.handoff.v1",
+  "mission": 143,
+  "slot": "N15",
+  "lease_state": "ARTIFACT_READY_HANDOFF_TERMINAL",
+  "qualification": "BLOCKED_INTEGRATION_AND_PROOF",
+  "actor": {
+    "name": "ChatGPT",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "reason": "runtime did not expose a verifiable session identifier"
+  },
+  "epoch": "ux-native-n15-e2",
+  "branch": "sf-ux-n15",
+  "prepared_head": "4020cb43e3381f2769bf02a7c0ec75d88b1c91a1",
+  "ack_commit": "18784988adab5dbed083216f5df109ed80b08f97",
+  "code_head_before_terminal_receipt": "b4b8219e16b82552a7c3efa65081138ff5e37b2f",
+  "code_tree_before_terminal_receipt": "c09e91f7031eb6345d417e906b92a59dec03a405",
+  "source_packet": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/143.json",
+    "pinned_commit": "81fbb8364ca474db8f718faad20c9235519e98fe",
+    "blob": "705e5cb10a485032a2fa4159896e68e7c12b586a"
+  },
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance143/S0-FENCE.json",
+    "blob": "e18104893aac2b0215e36c2a6769b9f03e6c29b4",
+    "previous_epoch": "ux-native-n15-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH"
+  },
+  "authoring_history": [
+    {
+      "sha": "18784988adab5dbed083216f5df109ed80b08f97",
+      "purpose": "real_ack_epoch_cas"
+    },
+    {
+      "sha": "5e8abfb1504647a87cd53177e90923d91c69da9f",
+      "purpose": "cap11_conflicts_reads_drafts"
+    },
+    {
+      "sha": "be4c3c8c78fc442733c7e6c8aa3ff76524171695",
+      "purpose": "cap12_source_identity_conflicts"
+    },
+    {
+      "sha": "307d4bc31fb6a0cb454fc6f0d46e010547e1aa5f",
+      "purpose": "explicit_discard_and_concurrency_recovery"
+    },
+    {
+      "sha": "a540ec097b520ae2fd5ee8f2bb4c12b519d47dd4",
+      "purpose": "authoritative_trend_tables_keyboard"
+    },
+    {
+      "sha": "594a9cdd8da273f1bf760dda2a57f3dc23b79efd",
+      "purpose": "installed_journeys_and_isolated_mutation_specs"
+    },
+    {
+      "sha": "e03efcdc8b410990f97c9dd91d1f0fa5858619bb",
+      "purpose": "absence_vs_empty_and_partial_write_guard"
+    },
+    {
+      "sha": "b4b8219e16b82552a7c3efa65081138ff5e37b2f",
+      "purpose": "heterogeneous_source_record_narrowing"
+    }
+  ],
+  "pr": {
+    "number": 174,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/174",
+    "base": "sf2-stack",
+    "head": "sf-ux-n15",
+    "draft": true,
+    "observed_mergeable": false
+  },
+  "changed_files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+      "preimage": "f8a0a81d4e750e739aec68fd17654704035ec00c",
+      "postimage": "e2eaa417dd8fda4aba9fe28d43e6c69f9986f521",
+      "kind": "modified"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/model.ts",
+      "preimage": "3d8df95317b7edd95c715994c475e40de4ecacf5",
+      "postimage": "3d8df95317b7edd95c715994c475e40de4ecacf5",
+      "kind": "preserved"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/service.css",
+      "preimage": "d3b25b104f96124c2552054c7b9959fb662714b6",
+      "postimage": "d3b25b104f96124c2552054c7b9959fb662714b6",
+      "kind": "preserved"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+      "preimage": "7fa574c20e64215b0cc9b854a1e48ce43e845554",
+      "postimage": "69cedff9bd0bb291dd1d94f9dbfa05bdce0cbe4f",
+      "kind": "modified"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/model.ts",
+      "preimage": "aac9d3cf25049dd9d13f80e258846ccfe97e26e9",
+      "postimage": "aac9d3cf25049dd9d13f80e258846ccfe97e26e9",
+      "kind": "preserved"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/security.css",
+      "preimage": "2b19c3b4fd5d38126e603a92850480676795c8f8",
+      "postimage": "2b19c3b4fd5d38126e603a92850480676795c8f8",
+      "kind": "preserved"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u04.ts",
+      "preimage": "a2079510fa6570355c58e09d4005820942a8f015",
+      "postimage": "a2079510fa6570355c58e09d4005820942a8f015",
+      "kind": "preserved"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u29.ts",
+      "preimage": "60c0022a7323d9d2c58e344e32803dfe8f707786",
+      "postimage": "60c0022a7323d9d2c58e344e32803dfe8f707786",
+      "kind": "preserved"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u04.spec.ts",
+      "preimage": "61a9eb621b2fc1d8b4445c4dcf76408bfe17f42a",
+      "postimage": "4def10995fa088949231534b6f8bc3e5ab07bac8",
+      "kind": "modified"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u29.spec.ts",
+      "preimage": "5dfdb1de69e74697192107ed8115df4d538bb116",
+      "postimage": "e6908c151c9232c281ba1b02722e21477fddb585",
+      "kind": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance143/ACK.json",
+      "preimage": null,
+      "postimage": "9a4581b4195da3b6df805f42e19633342ac8ce59",
+      "kind": "created"
+    }
+  ],
+  "frozen_sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "a0deff8a3b272019f472aa2f93499d1940a78370"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+      "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/contract-catalog.json",
+      "blob": "31dbec1726fd8147156b01dc545726650ffd49e1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/surface-manifest.json",
+      "blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/component-locks.json",
+      "blob": "818728d0a47c3f4c826943a7ab7262b4faac6a24"
+    }
+  ],
+  "authorized_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u04.ts",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u29.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u04.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u29.spec.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance143/**"
+  ],
+  "source_compatibility": {
+    "cap11": "domain.page.CAP11, save-categories, save-items, save-tickets, save-sla, save-heatmap, import-month",
+    "cap12": "domain.page.CAP12, save/delete kpi, action, incident, campaign",
+    "client_schema": "@orchestra/schema/sucafina/operations; source response ok:true excludes new record ID",
+    "browser_source": "Original renderer-CAP11/CAP12 preserved; no producer modifications",
+    "copy_policy": "COPY-01: source English literals in pt-BR remain legacy-source-copy-preserved; only frozen titles/primary translated; no unapproved new translations",
+    "native_exports": [
+      {
+        "symbol": "SfServiceView",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+        "surface": "CAP11"
+      },
+      {
+        "symbol": "SfSecurityView",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+        "surface": "CAP12"
+      },
+      {
+        "symbol": "SF_U04_COPY",
+        "pt_br": "SF_U04_COPY_BR",
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u04.ts"
+      },
+      {
+        "symbol": "SF_U29_COPY",
+        "pt_br": "SF_U29_COPY_BR",
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u29.ts"
+      }
+    ]
+  },
+  "implementation": {
+    "U04": [
+      "permitted page renders monthly tickets, SLA, heatmap, category/item catalogues, reviewed import-month",
+      "producer-projected opened/closed and SLA trends rendered as keyboard-scrollable tables without recomputed aggregates",
+      "month/catalogue source versions kept independent and reviewed; unresolved response has no auto replay",
+      "missing/partial/empty/filtered-empty/read-only/denied/unauthenticated/stale/conflict handled separately",
+      "owner/generation fenced reads, dirty draft preservation and explicit discard; Escape and trigger focus return"
+    ],
+    "U29": [
+      "month/reference KPI, SOC/patch views, campaigns/departments, incidents/consequences, management actions, eight original mutations",
+      "saved new entity without source ref uses confirmed-without-projection rather than invented postimage",
+      "current source version checked before command and on refetch; conflicts do not hide the page",
+      "owner/generation fencing, dirty draft preservation, typed fieldsets, Escape and discard"
+    ]
+  },
+  "verification": {
+    "local_test": "NOT_RUN_PER_M143",
+    "local_typecheck": "NOT_RUN_PER_M143",
+    "local_parser": "NOT_RUN_PER_M143",
+    "local_validator": "NOT_RUN_PER_M143",
+    "compiler_149_pr107": "NOT_RUN_NOT_DELEGATED_YET",
+    "ci_150_pr106": "NOT_RUN_NOT_DELEGATED_YET",
+    "source_browser_journeys": "NOT_RUN",
+    "screenshots": "NOT_RUN",
+    "a11y": "NOT_RUN",
+    "release": "NOT_APPROVED",
+    "global_release": false,
+    "note": "No local checks permitted for writer; authored tests and source-code inspection are not execution proofs"
+  },
+  "acceptance": [
+    {
+      "id": "U04-AC01",
+      "authored": "YES",
+      "proof": "NOT_RUN",
+      "evidence": [
+        "service/index.tsx: CAP11 commands and independent source versions",
+        "u04.spec.ts: explicit review/cancel and isolated SLA readback"
+      ]
+    },
+    {
+      "id": "U04-AC02",
+      "authored": "YES",
+      "proof": "NOT_RUN",
+      "evidence": [
+        "service/index.tsx: owner fenced reads, partial/empty/conflict, draft registry",
+        "u04.spec.ts: escape and month change"
+      ]
+    },
+    {
+      "id": "U04-AC03",
+      "authored": "YES",
+      "proof": "NOT_RUN",
+      "evidence": [
+        "service/service.css preserved, tokens/focus/reflow",
+        "u04.spec.ts 320–1440, 200%, 400%"
+      ]
+    },
+    {
+      "id": "U29-AC01",
+      "authored": "YES",
+      "proof": "NOT_RUN",
+      "evidence": [
+        "security/index.tsx: eight source commands, typed nested forms and monthly KPI",
+        "u29.spec.ts: actual isolated save/delete when 150 attests"
+      ]
+    },
+    {
+      "id": "U29-AC02",
+      "authored": "YES",
+      "proof": "NOT_RUN",
+      "evidence": [
+        "security/index.tsx: owner fencing, distinct states, no invented new record identity",
+        "u29.spec.ts: escape and reference changes"
+      ]
+    },
+    {
+      "id": "U29-AC03",
+      "authored": "YES",
+      "proof": "NOT_RUN",
+      "evidence": [
+        "security/security.css preserved, focus/reflow",
+        "u29.spec.ts 320–1440, 200%, 400%"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "M143-F01",
+      "severity": "BLOCKER",
+      "evidence": "PR174 compare sf2-stack...sf-ux-n15 returned diverged: 27 ahead/21 behind; 205 file paths, 193 inherited/unowned",
+      "status": "OPEN",
+      "owner": 132,
+      "action": "Do not merge wholesale; integrate only the owned 12 N15/receipt paths, honor all unrelated authors and current candidate HEAD"
+    },
+    {
+      "id": "M143-F02",
+      "severity": "BLOCKER",
+      "evidence": "All compiler and installed journey proofs intentionally NOT_RUN by author restriction",
+      "status": "OPEN",
+      "owner": "149/150",
+      "action": "149 compile/SDK PR107, then 150 scoped CI PR106 on same C with authorized installed fixture; record actual results"
+    },
+    {
+      "id": "M143-F03",
+      "severity": "CONTRACT_NOTE",
+      "evidence": "A11 SfOperationsLegacyResult success exposes ok:true but no newly-created id",
+      "status": "DOCUMENTED",
+      "owner": 132,
+      "action": "Keep confirmed-without-projection for created CAP12 entities until a real authorized ID/projection is returned; do not synthesize IDs"
+    },
+    {
+      "id": "M143-F04",
+      "severity": "CONTRACT_NOTE",
+      "evidence": "COPY-01 explicitly preserves source-English literals where no frozen pt-BR source translation exists",
+      "status": "DOCUMENTED",
+      "owner": 132,
+      "action": "Integrate SF_U04_COPY/SF_U04_COPY_BR and SF_U29_COPY/SF_U29_COPY_BR unchanged; do not invent unpinned translations"
+    },
+    {
+      "id": "M143-F05",
+      "severity": "QUALIFICATION_GAP",
+      "evidence": "CAP11 legacy workbook .xlsx/.xlsm UI was source renderer input; native CAP11 uses admitted structured import-month command and no new browser workbook decoder",
+      "status": "OPEN",
+      "owner": 132,
+      "action": "If workbook upload is required for accepted parity, route to the existing authorized import/workbook workflow after checking owner/contract; do not introduce a second parser or claim workbook-file proof"
+    },
+    {
+      "id": "M143-F06",
+      "severity": "QUALIFICATION_GAP",
+      "evidence": "CAP11 and CAP12 legacy charts represented as source-backed accessible tables, not an independently admitted BI visual projection",
+      "status": "OPEN",
+      "owner": 132,
+      "action": "Only compose U21 SfOperationalFigure from A08 admitted projections when suitable; no invented BI series or direct renderer aggregation"
+    }
+  ],
+  "integration_instructions": {
+    "owner": 132,
+    "branch": "sf2-stack",
+    "pr": 174,
+    "exact_action": "Fetch PR174 source blobs on sf-ux-n15, transplant allowed N15 files onto current sf2-stack candidate with preimage/CAS, preserving all other commits/paths; compose exports/routes/copy under 132's own registry lease. Do not direct merge the 205-path historical diff.",
+    "read_source_blobs": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+        "blob": "e2eaa417dd8fda4aba9fe28d43e6c69f9986f521"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/model.ts",
+        "blob": "3d8df95317b7edd95c715994c475e40de4ecacf5"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/service.css",
+        "blob": "d3b25b104f96124c2552054c7b9959fb662714b6"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+        "blob": "69cedff9bd0bb291dd1d94f9dbfa05bdce0cbe4f"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/model.ts",
+        "blob": "aac9d3cf25049dd9d13f80e258846ccfe97e26e9"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/security.css",
+        "blob": "2b19c3b4fd5d38126e603a92850480676795c8f8"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u04.ts",
+        "blob": "a2079510fa6570355c58e09d4005820942a8f015"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u29.ts",
+        "blob": "60c0022a7323d9d2c58e344e32803dfe8f707786"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u04.spec.ts",
+        "blob": "4def10995fa088949231534b6f8bc3e5ab07bac8"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u29.spec.ts",
+        "blob": "e6908c151c9232c281ba1b02722e21477fddb585"
+      }
+    ],
+    "import_fragment": [
+      "import { SfServiceView } from \"@/orchestra/chapters/sucafina/operations/service\"",
+      "import { SfSecurityView } from \"@/orchestra/chapters/sucafina/operations/security\"",
+      "import { SF_U04_COPY, SF_U04_COPY_BR } from \"@/i18n/orchestra-chapters/sf-u04\"",
+      "import { SF_U29_COPY, SF_U29_COPY_BR } from \"@/i18n/orchestra-chapters/sf-u29\""
+    ],
+    "composed_routes": [
+      "/orchestra/sf-operations/service",
+      "/orchestra/sf-operations/service/edit",
+      "/orchestra/sf-operations/service/settings",
+      "/orchestra/sf-operations/service/import",
+      "/orchestra/sf-operations/security",
+      "/orchestra/sf-operations/security/kpi/edit",
+      "/orchestra/sf-operations/security/campaigns/:recordRef",
+      "/orchestra/sf-operations/security/incidents/:recordRef",
+      "/orchestra/sf-operations/security/actions/:recordRef"
+    ],
+    "route_rules": "Use I00 frozen route registry, owner and routeRefCodec; never construct a new dispatcher, priviledged parser or alternate backend."
+  },
+  "downstream_checks": [
+    {
+      "actor": 149,
+      "pr": 107,
+      "action": "After 132 integration on same candidate C, compile packages/app-shell and generate SDK via existing authorized compiler; attach definitive diagnostics and SHA; do not run tests from author session"
+    },
+    {
+      "actor": 150,
+      "pr": 106,
+      "action": "After 149 compile/SDK on same C, run existing surgical CI and browser renderer for u04.spec.ts and u29.spec.ts only with real authorized isolated fixture. Verify role/owner revocation, version conflict, source refetch, 320-1440/200%/400% and capture observed PASS/FAIL/SKIP, not inferred"
+    }
+  ],
+  "goal": "PAUSED",
+  "release_gate": "NOT_RELEASED",
+  "no_merge": true,
+  "no_deploy": true,
+  "no_azure": true,
+  "no_engine_changes": true,
+  "next_actor_exact": "132 selective integration of N15 owned source blobs and registry composition, then 149/PR107 compile SDK, then 150/PR106 scoped CI; no release approval until proofs"
+}
