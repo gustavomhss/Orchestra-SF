@@ -1,0 +1,25 @@
+{
+  "schema": "sf2-mission52-shared-proposal-v1",
+  "status": "NOMINAL09_RUNNING_NOT_ACCEPTED",
+  "owner": "47; integration authority externally60; root52 only proposal and isolated W",
+  "base": "C28",
+  "candidate_W": "0917b48676b2828b94ec85a9926f79db49e6076e",
+  "candidate_S": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+  "patch_sha256": "5a3d9a416edafc70d7e94ae71702d2a207fa2cff725816b3912ec653148d9c9c",
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "preimage": "13188a92ace68e6730bd22f8ee87872af2c1dea1",
+      "postimage": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+      "postimage_sha256": "d372e00eee1052518821370b808bea30c13999bf86143def56cdeab987a619d9"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "preimage": "881ce4672d9d0e641d1cc849663c0980c118774d",
+      "postimage": "9d17760c418ee9b48b97443d90a994c31cc415f5",
+      "postimage_sha256": "4c8e09e4a1fb369259d0b90657882f19045cdfc1e6e8df7bc874958208f6398b"
+    }
+  ],
+  "requires": "comparison-read-scope patch is incremental over P4 decision-case-http; canonical integration/complete-shared.patch already composes it exactly once.",
+  "GLOBAL_RELEASE": false
+}

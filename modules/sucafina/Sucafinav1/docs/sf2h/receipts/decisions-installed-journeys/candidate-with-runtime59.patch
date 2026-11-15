@@ -1,0 +1,2161 @@
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
+@@ -0,0 +1,84 @@
++import type { Locator, Page, Request, Response } from "@playwright/test"
++
++type CommandRequest = Pick<Request, "url" | "method" | "postDataJSON">
++export type CommandResponse = Pick<Response, "url" | "status" | "headers" | "json">
++type PausedResponse = {
++  requestId: string
++  request: { url: string; method: string; postData?: string; headers: Record<string, string> }
++  responseStatusCode?: number
++  responseErrorReason?: string
++  responseHeaders?: { name: string; value: string }[]
++}
++
++/** Copy the original response while paused, then resume it unchanged; never replay a UI command. */
++export async function clickForResponse<T>(page: Page, button: Locator, urlPattern: string, matches: (request: CommandRequest) => boolean,
++  read: (response: CommandResponse) => Promise<T>) {
++  const session = await page.context().newCDPSession(page)
++  const pending = Promise.withResolvers<T>()
++  const running = new Set<Promise<void>>()
++  let claimed = false
++  let closing = false
++  const capture = async (event: PausedResponse) => {
++    const request: CommandRequest = {
++      url: () => event.request.url,
++      method: () => event.request.method,
++      postDataJSON: () => {
++        if (!event.request.postData) return null
++        const type = Object.entries(event.request.headers).find(([name]) => name.toLowerCase() === "content-type")?.[1] ?? ""
++        return type.includes("application/x-www-form-urlencoded")
++          ? Object.fromEntries(new URLSearchParams(event.request.postData)) : JSON.parse(event.request.postData)
++      },
++    }
++    if (closing || claimed || !matches(request)) return
++    claimed = true
++    if (event.responseErrorReason) throw new Error(`The original UI response failed: ${event.responseErrorReason}`)
++    if ([301, 302, 303, 307, 308].includes(event.responseStatusCode ?? 0) && event.responseHeaders?.some(({ name }) => name.toLowerCase() === "location"))
++      throw new Error(`The original UI response redirected with HTTP ${event.responseStatusCode}; its body is unavailable`)
++    const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId }) as { body: string; base64Encoded: boolean }
++    const body = raw.base64Encoded ? Buffer.from(raw.body, "base64").toString("utf8") : raw.body
++    const headers = Object.fromEntries((event.responseHeaders ?? []).map(({ name, value }) => [name.toLowerCase(), value]))
++    const response: CommandResponse = {
++      url: () => event.request.url,
++      status: () => event.responseStatusCode ?? 0,
++      headers: () => headers,
++      json: async () => JSON.parse(body),
++    }
++    return { value: await read(response) }
++  }
++  const paused = (event: PausedResponse) => {
++    const task = capture(event)
++      .then((value) => ({ status: "fulfilled" as const, value }), (reason: unknown) => ({ status: "rejected" as const, reason }))
++      .then(async (outcome) => {
++        try { await session.send("Fetch.continueRequest", { requestId: event.requestId }) }
++        catch (error) {
++          pending.reject(outcome.status === "rejected"
++            ? new AggregateError([outcome.reason, error], "Original response capture and continuation failed") : error)
++          return
++        }
++        if (outcome.status === "rejected") pending.reject(outcome.reason)
++        else if (outcome.value) pending.resolve(outcome.value.value)
++      })
++      .catch((error: unknown) => { pending.reject(error) })
++    running.add(task)
++    void task.then(() => { running.delete(task) })
++  }
++  const failed = (request: Request) => {
++    try {
++      if (matches(request)) pending.reject(new Error(`The original UI request failed before a response: ${request.failure()?.errorText ?? "requestfailed"}`))
++    } catch (error) { pending.reject(error) }
++  }
++  page.on("requestfailed", failed)
++  session.on("Fetch.requestPaused", paused)
++  try {
++    await session.send("Fetch.enable", { patterns: [{ urlPattern, requestStage: "Response" }] })
++    const [result] = await Promise.all([pending.promise, button.click()])
++    return result
++  } finally {
++    closing = true
++    page.off("requestfailed", failed)
++    // Fetch must stay enabled until every body read and original-response continuation completes.
++    await Promise.all(running)
++    try { await session.send("Fetch.disable") }
++    finally { session.off("Fetch.requestPaused", paused); await Promise.all(running); await session.detach() }
++  }
++}
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
+index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
+@@ -1,5 +1,6 @@
+ import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+ import { startPlannerInstallation } from "../wp03/installation-fixture"
++import { clickForResponse, type CommandResponse } from "./command-response"
+ 
+ export const draft = {
+   objective: "CI Decisions — annual service decision",
+@@ -9,7 +10,7 @@
+   sourceRefs: [],
+ }
+ 
+-export function isCommand(request: Request, mode: string, method = "POST") {
++export function isCommand(request: Pick<Request, "url" | "method">, mode: string, method = "POST") {
+   const url = new URL(request.url())
+   return request.method() === method && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
+ }
+@@ -42,17 +43,38 @@
+       ...(body && typeof body === "object" && "operation" in body && typeof body.operation === "string" ? { operation: body.operation } : {}),
+       ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
+   }
++  const network: Record<string, unknown>[] = []
++  const selected = (request: Request) => {
++    const url = new URL(request.url())
++    return url.origin === installation.origin && ["/sucafina/dashboard", "/sucafina/planner", "/sucafina/procurement"].includes(url.pathname)
++  }
++  const responseListener = (response: Response) => {
++    if (!selected(response.request())) return
++    const url = new URL(response.url())
++    network.push({ event: "response", method: response.request().method(), path: url.pathname, mode: url.searchParams.get("sf"),
++      httpStatus: response.status(), contentType: response.headers()["content-type"] ?? "" })
++  }
++  const failureListener = (request: Request) => {
++    if (!selected(request)) return
++    const url = new URL(request.url())
++    network.push({ event: "requestfailed", method: request.method(), path: url.pathname, mode: url.searchParams.get("sf"),
++      error: request.failure()?.errorText ?? "requestfailed" })
++  }
+   page.on("request", listener)
++  page.on("response", responseListener)
++  page.on("requestfailed", failureListener)
+   try {
+     await page.context().addCookies([installation.cookie])
+     await action(installation, observations)
+     body.completed = true
+   } finally {
+     page.off("request", listener)
++    page.off("response", responseListener)
++    page.off("requestfailed", failureListener)
+     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
+     try {
+       await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
+-        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests,
++        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, network,
+         verdict: "The Playwright runtime report owns the terminal test result.",
+         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
+       }, null, 2) })
+@@ -86,13 +108,10 @@
+ 
+ export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
+   await expect(button).toBeEnabled()
+-  const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
+-  await button.click()
+-  const response = await pending
+-  return readReply(response, observations)
++  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/dashboard*`, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
+ }
+ 
+-export async function readReply(response: Response, observations: Record<string, unknown>[]) {
++export async function readReply(response: CommandResponse, observations: Record<string, unknown>[]) {
+   const contentType = response.headers()["content-type"] ?? ""
+   const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
+   observations.push(record)
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
+index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
+@@ -1,5 +1,6 @@
+ import { expect, type Locator, type Page } from "@playwright/test"
+ import { asRecord } from "./journey"
++import { clickForResponse } from "./command-response"
+ 
+ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
+ 
+@@ -26,9 +27,9 @@
+   const line = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
+   await expect(line).toHaveCount(1)
+   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
+-  await line.getByLabel("Owner", { exact: true }).selectOption(actorId)
+-  await line.getByLabel("Element", { exact: true }).selectOption("licenses")
+-  await expect(line.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await line.getByRole("combobox", { name: "Owner", exact: true }).selectOption({ value: actorId })
++  await line.getByRole("combobox", { name: "Element", exact: true }).selectOption({ value: "licenses" })
++  await expect(line.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await line.getByLabel("Annual budget", { exact: true }).fill("1200")
+   await plannerCommand(page, line.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -51,7 +52,7 @@
+   const copiedLine = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
+   await expect(copiedLine).toHaveCount(1)
+   await copiedLine.getByRole("button", { name: "Manage", exact: true }).click()
+-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await manager.getByLabel("Annual budget", { exact: true }).fill("2400")
+   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -68,7 +69,7 @@
+   await row.getByRole("button", { name: "Manage", exact: true }).click()
+   const manager = page.getByRole("dialog", { name: "Manage record", exact: true })
+   await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue("2400")
+-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await manager.getByLabel("Annual budget", { exact: true }).fill(String(annualBudget))
+   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -79,13 +80,12 @@
+ 
+ async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
+   await expect(button).toBeEnabled()
+-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
+-  await button.click()
+-  const response = await pending
+-  expect(response.status()).toBe(200)
+-  expect(response.headers()["content-type"]).toContain("application/json")
+-  const result = asRecord(await response.json())
+-  expect(result.ok).toBe(true)
+-  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
+-  return result
++  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/planner*`, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
++    expect(response.status()).toBe(200)
++    expect(response.headers()["content-type"]).toContain("application/json")
++    const result = asRecord(await response.json())
++    expect(result.ok).toBe(true)
++    observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
++    return result
++  })
+ }
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
+index c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e..9fe64294027cf6805ff8e7ba4b7cfac83455de85 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
+@@ -1,4 +1,4 @@
+-import { expect, type Page } from "@playwright/test"
++import { expect, type Page, type Request } from "@playwright/test"
+ 
+ type PausedResponse = {
+   requestId: string
+@@ -11,7 +11,13 @@
+ export async function loseCreationResponse(page: Page, origin: string) {
+   const session = await page.context().newCDPSession(page)
+   const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
++  const state = { responsePaused: false }
++  const failed = (request: Request) => {
++    if (request.url() === `${origin}/sucafina/dashboard?sf=workbench-command` && request.method() === "POST" && !state.responsePaused)
++      completed.reject(new Error(`Creation failed before the original response could be intercepted: ${request.failure()?.errorText ?? "requestfailed"}`))
++  }
+   const listener = async (event: PausedResponse) => {
++    state.responsePaused = true
+     try {
+       const payload: unknown = event.request.postData ? JSON.parse(event.request.postData) : undefined
+       expect(event.request.url).toBe(`${origin}/sucafina/dashboard?sf=workbench-command`)
+@@ -27,7 +33,8 @@
+       completed.reject(error)
+     }
+   }
++  page.on("requestfailed", failed)
+   session.once("Fetch.requestPaused", listener)
+   await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=workbench-command`, requestStage: "Response" }] })
+-  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
++  return { completed: completed.promise, close: async () => { page.off("requestfailed", failed); await session.send("Fetch.disable"); await session.detach() } }
+ }
+diff --git a/packages/app-shell/e2e/sucafina/decisions.spec.ts b/packages/app-shell/e2e/sucafina/decisions.spec.ts
+index 2d9c867af87fa0a26b182365b1780232b49bcaf9..b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf 100644
+--- a/packages/app-shell/e2e/sucafina/decisions.spec.ts
++++ b/packages/app-shell/e2e/sucafina/decisions.spec.ts
+@@ -146,9 +146,8 @@
+       // CDP pauses the original browser response, after the real handler committed.
+       // It neither issues an APIRequest/route.fetch nor supplies a synthetic response.
+       const failed = page.waitForEvent("requestfailed", { predicate: (request) => isCommand(request, "workbench-command") })
+-      const observed = Promise.all([interruption.completed, failed])
+-      await form.getByRole("button", { name: "Create decision", exact: true }).click()
+-      const [lost] = await observed
++      const [lost] = await Promise.all([interruption.completed, failed,
++        form.getByRole("button", { name: "Create decision", exact: true }).click()])
+       observations.push({ stage: "creation-response-dropped", httpStatus: lost.httpStatus, contentType: lost.contentType })
+       expect(lost.httpStatus).toBe(200)
+       expect(lost.contentType).toContain("application/json")
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
+index 979bfeeb460e85fe1911affe0ac9ad4d21a27e3a..903b48594ff95e0d1f78539982adcf75eb3b9272 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
+@@ -24,7 +24,7 @@
+     const editor = page.locator("form[data-decision-edit]")
+     await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
+     await editor.getByRole("button", { name: "Find Planner sources", exact: true }).click()
+-    const select = editor.getByLabel("Planner source", { exact: true })
++    const select = editor.getByRole("combobox", { name: "Planner source", exact: true })
+     for (const entry of [{ name: sourceNames.baseline, id: sources.baseline, monthlyAmount: 100, count: 1 }, { name: sourceNames.candidate, id: sources.candidate, monthlyAmount: 200, count: 2 }]) {
+       await selectSource(select, entry.name, entry.id)
+       await editor.getByRole("button", { name: "Inspect selected source", exact: true }).click()
+@@ -106,7 +106,7 @@
+       expect(lost.body).toEqual({ status: "ok", value: { caseRef: { ...identity, version: 4 }, resultRef: receipt.resultRef } })
+       await expect(editor.getByLabel("Alternative title", { exact: true })).toHaveValue(titles.candidate)
+       await expect(editor.getByLabel("Alternative title", { exact: true })).toBeDisabled()
+-      await expect(editor.getByLabel("Source for alternative", { exact: true })).toBeDisabled()
++      await expect(editor.getByRole("combobox", { name: "Source for alternative", exact: true })).toBeDisabled()
+       await expect(editor.getByRole("button", { name: "Retry same request", exact: true })).toBeEnabled()
+       expect(promotions).toHaveLength(2)
+       const original = promotions[1]!
+@@ -140,8 +140,8 @@
+       expect(new Set(alternatives.map((item) => item.id)).size).toBe(2)
+       expect(alternatives.map((item) => item.title).sort()).toEqual(Object.values(titles).sort())
+       for (const alternative of alternatives) expect(alternative).toMatchObject({ version: 1, currency: "USD", horizon: draft.horizon })
+-      await choice.getByLabel("Baseline", { exact: true }).selectOption({ label: titles.baseline })
+-      await choice.getByLabel("Alternative", { exact: true }).selectOption({ label: titles.candidate })
++      await choice.getByRole("combobox", { name: "Baseline", exact: true }).selectOption({ label: titles.baseline })
++      await choice.getByRole("combobox", { name: "Alternative", exact: true }).selectOption({ label: titles.candidate })
+       const compared = await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)
+       const value = asRecord(compared.value)
+       // C10 compares cost as alternative minus baseline; savings has the opposite orientation.
+@@ -222,7 +222,7 @@
+   const editor = page.locator("form[data-decision-alternatives]")
+   await expect(editor).toHaveAttribute("data-sf-alternatives-ready", "true")
+   await editor.getByRole("button", { name: "Load attached scenarios", exact: true }).click()
+-  const source = editor.getByLabel("Source for alternative", { exact: true })
++  const source = editor.getByRole("combobox", { name: "Source for alternative", exact: true })
+   await selectSource(source, sourceName, versionId)
+   const sourceDigest = await source.inputValue()
+   const inspected = page.waitForResponse((response) => isCommand(response.request(), "decision-controls", "GET") && new URL(response.url()).searchParams.get("source") === sourceDigest)
+@@ -240,7 +240,7 @@
+   await expect(preview).toContainText("USD")
+   await expect(preview).toContainText(`Component: ${monthlyAmount} USD · 2027-01-01 – 2027-01-31`)
+   await editor.getByLabel("Alternative title", { exact: true }).fill(title)
+-  const inventory = editor.getByLabel("Cost inventory", { exact: true })
++  const inventory = editor.getByRole("combobox", { name: "Cost inventory", exact: true })
+   const offered = inventory.getByRole("option", { name: /renewal|transition/i })
+   await expect(offered).toHaveCount(1)
+   await inventory.selectOption({ label: (await offered.textContent())!.trim() })
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
+index c469187a2e04d49d157cf9d3830145ca845f4064..de8671b4482339791b8f03bd5616c13d50dc4a87 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
+@@ -23,8 +23,8 @@
+   expect(before.choices).toEqual([])
+   const alternative = (before.alternatives as unknown[]).map(asRecord).find((item) => item.title === selection.titles.candidate)
+   expect(alternative).toBeDefined()
+-  await choice.getByLabel("Baseline", { exact: true }).selectOption({ label: selection.titles.baseline })
+-  await choice.getByLabel("Alternative", { exact: true }).selectOption({ label: selection.titles.candidate })
++  await choice.getByRole("combobox", { name: "Baseline", exact: true }).selectOption({ label: selection.titles.baseline })
++  await choice.getByRole("combobox", { name: "Alternative", exact: true }).selectOption({ label: selection.titles.candidate })
+   const initial = asRecord((await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
+   expect(asRecord(initial.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
+   await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
+index 9e02b30fee0e1f37afeac28b0296bdfbbbab70aa..10b59adfce7d8fb5143f49c9df9a0d7321425018 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
+@@ -25,7 +25,7 @@
+     await expect(evidence.getByRole("option")).not.toHaveCount(0)
+     const digests = await evidence.getByRole("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value))
+     expect(new Set(digests).size).toBe(digests.length)
+-    const selectedIds = [await form.getByLabel("Baseline", { exact: true }).inputValue(), await form.getByLabel("Alternative", { exact: true }).inputValue()]
++    const selectedIds = [await form.getByRole("combobox", { name: "Baseline", exact: true }).inputValue(), await form.getByRole("combobox", { name: "Alternative", exact: true }).inputValue()]
+     const comparedAlternatives = (asRecord(selected.decision).alternatives as unknown[]).map(asRecord).filter((alternative) => selectedIds.includes(String(alternative.id)))
+     expect(comparedAlternatives).toHaveLength(2)
+     const comparedRefs = comparedAlternatives.flatMap((alternative) => asRecord(alternative.result).sourceRefs as unknown[]).map(asRecord)
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/http.ts b/modules/sucafina/Sucafinav1/product/decisions/http.ts
+index 596512b4e12c094fd178ea845f4b560bbf23a348..a77da76589ece60a6925bdd20731efbc8f19b597 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/http.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/http.ts
+@@ -169,6 +169,55 @@
+   }
+ }
+ 
++/** Installed case routes share the canonical validators without rebuilding the other Decision services. */
++export function createDecisionCaseHttp(input: Pick<Parameters<typeof createDecisionHttp>[0],
++  "origin" | "mount" | "human" | "withCase" | "admitList" | "admitComparison" | "management" | "compare"> & {
++  finishList: (context: TrustedUiContext) => void
++  catalog: Parameters<typeof createDecisionHttp>[0]["portfolio"]["catalog"]
++}) {
++  return async (request: Request): Promise<Response | undefined> => {
++    const url = new URL(request.url)
++    if (url.origin !== input.origin || url.pathname !== input.mount) return undefined
++    const action = url.searchParams.get("sf")
++    if (!action || !["decision-list", "decision-edit", "decision-compare", "decision-portfolio-catalog"].includes(action)) return undefined
++    if (request.signal.aborted || request.headers.get("sec-fetch-site") === "cross-site")
++      return response({ status: "denied", reason: "decision-origin-unavailable" })
++    if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf"))
++      return response({ status: "needs-input", reason: "invalid-decision-request" })
++    try {
++      if (action === "decision-list") {
++        if (request.method !== "GET") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
++        const admitted = await input.admitList(request)
++        if (admitted.status !== "ok") return response(admitted)
++        try { return response(await input.management.list(admitted.value)) }
++        finally { input.finishList(admitted.value) }
++      }
++      if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
++      if (request.headers.get("origin") !== input.origin) return response({ status: "denied", reason: "decision-origin-unavailable" })
++      if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json"))
++        return response({ status: "needs-input", reason: "invalid-content-type" }, 415)
++      const body = await request.text()
++      if (body.length > 1_000_000) return response({ status: "needs-input", reason: "request-too-large" }, 413)
++      const payload: unknown = JSON.parse(body)
++      if (!valid(action, payload)) return response({ status: "needs-input", reason: "invalid-decision-input" })
++      const admitted = action === "decision-compare"
++        ? await input.admitComparison(request, payload as Compare)
++        : await input.human.admit(request, action === "decision-edit" ? "decisions.edit" : "decisions.portfolio.read", payload)
++      if (admitted.status !== "ok") return response(admitted)
++      try {
++        const context = admitted.value
++        if (action === "decision-portfolio-catalog")
++          return response(await input.catalog((payload as { caseRefs: CaseRef[] }).caseRefs, context))
++        const caseRef = (payload as { caseRef: CaseRef }).caseRef
++        return response(await input.withCase<unknown>(context, caseRef, { allowHistoricalRetry: action === "decision-edit" }, () =>
++          action === "decision-edit" ? input.management.edit(payload as Edit, context) : input.compare(payload as Compare, context)))
++      } finally { input.human.finish(admitted.value) }
++    } catch {
++      return response({ status: "unavailable", reason: "decision-request-unavailable" })
++    }
++  }
++}
++
+ function response(result: PortResult<unknown>, status?: number) {
+   return Response.json(result, { status: status ?? (result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : 503), headers: { "cache-control": "no-store" } })
+ }
+diff --git a/apps/cli/src/sucafina-product/installation.ts b/apps/cli/src/sucafina-product/installation.ts
+index 21236af83e4de879242fd298d9e15a9923f3bf41..5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437 100644
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -2,8 +2,8 @@
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect, Layer } from "effect"
+-import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
++import { Cause, Effect, Layer, Option } from "effect"
++import { Headers, HttpMethod, HttpMiddleware, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ import { createSfHostRuntime } from "./host-context"
+ import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+ 
+@@ -40,13 +40,26 @@
+     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+-    const web = yield* HttpServerRequest.toWeb(sanitized)
+-    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    const url = HttpServerRequest.toURL(sanitized)
++    if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
++    if (url.value.origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    // Consume the bounded body in the server request scope before crossing the Web Request boundary.
++    const body = HttpMethod.hasBody(sanitized.method) ? yield* sanitized.arrayBuffer.pipe(Effect.orDie) : undefined
++    const web = new Request(url.value, { method: sanitized.method, headers: sanitized.headers, ...(body === undefined ? {} : { body }) })
+     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+     if (!request) return HttpServerResponse.empty({ status: 403 })
+     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
+     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+-  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++  }).pipe(Effect.catchCause((cause) => {
++    for (const reason of cause.reasons) {
++      if (!Cause.isDieReason(reason)) continue
++      const defect = reason.defect
++      // Only the canonical bounded-body error reaches BodyLimit; all other causes remain redacted.
++      if (HttpServerError.isHttpServerError(defect) && defect.reason._tag === "RequestParseError" &&
++        defect.reason.cause instanceof Error && defect.reason.cause.message === "maxBytes exceeded") return Effect.die(defect)
++    }
++    return Effect.succeed(HttpServerResponse.empty({ status: 503 }))
++  }))
+   // The listener must install privacy before HttpRouter.serve, outside the request route.
+   // Effect registers a trailing wildcard at both the subtree and its base path.
+   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
+index 302334c0e5a50c681005d6c6463132abce84d8b1..b572fbf4525e2d5015a1e8d4245c96085703e1c1 100644
+--- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
+@@ -22,9 +22,9 @@
+       "path": "apps/cli/src/sucafina-product/installation.ts",
+       "mode": "100644",
+       "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+-      "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+-      "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+-      "bytes": 5315,
++      "postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
++      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
++      "bytes": 6258,
+       "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+       "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+       "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
+diff --git a/apps/cli/src/sucafina-product/decision-case-http.ts b/apps/cli/src/sucafina-product/decision-case-http.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..1c0fabda68c92b3d7a14b569c2c3e960ff39476c 100644
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/decision-case-http.ts
+@@ -0,0 +1,84 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { createDecisionCaseManagement } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
++import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
++import { createDecisionCaseHttp } from "../../../../modules/sucafina/Sucafinav1/product/decisions/http.ts"
++import { readPortfolioSnapshot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import type { createSfBusinessServices } from "./business-services.ts"
++import type { createSfPortfolioServices } from "./portfolio-services.ts"
++
++type ProductRevision = { incarnation: string; aggregateRevision: number }
++
++/** Bind the installed case UI to its existing authority, C08 state and Portfolio registries. */
++export function createSfDecisionCaseHttp(input: {
++  origin: string
++  mount: string
++  available: () => boolean
++  lockedProductRevision: () => ProductRevision | undefined
++  authority: ReturnType<typeof createSfProductAuthority>
++  business: ReturnType<typeof createSfBusinessServices>
++  portfolio: ReturnType<typeof createSfPortfolioServices>
++}) {
++  const { authority, business, portfolio } = input
++  const evidence = createDecisionEvidenceChecks({ host: authority.host, evidence: business.context, recomputeMetric: portfolio.readMetric })
++  const editFences = new WeakMap<object, ProductRevision & { source: Request; bindingDigest: string; payloadDigest: string }>()
++  const management = createDecisionCaseManagement({
++    state: authority.state, host: authority.host, authorizeCase: portfolio.authorizeCase, operationIdentity: business.operationIdentity,
++    authorizeEdit: async (request, call) => {
++      editFences.delete(call)
++      const source = authority.host.requestFor(call)
++      const bindingDigest = digestSfValue([call.kind, call.binding])
++      const payloadDigest = digestSfValue(request)
++      const current = () => !!source && authority.host.requestFor(call) === source && !source.signal.aborted && digestSfValue([call.kind, call.binding]) === bindingDigest
++      if (!source || !current() || !await portfolio.intent.authorize(call, "decisions.edit", request) || !current()) return false
++      const read = await authority.state.read(source, "cases", (_state, actor) =>
++        actor.principalRef === call.binding.principalRef && actor.policyVersion === call.binding.policyVersion && actor.accessRevision === call.binding.accessRevision)
++      if (read.status !== "ok" || !read.value || !await authority.host.revalidate(call) || !current()) return false
++      editFences.set(call, { source, bindingDigest, payloadDigest, incarnation: read.incarnation, aggregateRevision: read.aggregateRevision })
++      return true
++    },
++    verifyEvidence: evidence.refs, verifyReadEvidence: evidence.readRefs,
++    verifyEdit: (_snapshot, _before, _after, call) => {
++      const payload = portfolio.intent.payload(call, "decisions.edit")
++      const captured = editFences.get(call)
++      const locked = input.lockedProductRevision()
++      return payload !== undefined && !!captured && !!locked && authority.host.requestFor(call) === captured.source && !captured.source.signal.aborted &&
++        digestSfValue([call.kind, call.binding]) === captured.bindingDigest && digestSfValue(payload) === captured.payloadDigest &&
++        locked.incarnation === captured.incarnation && locked.aggregateRevision === captured.aggregateRevision &&
++        portfolio.intent.verify(call, "decisions.edit", payload)
++    },
++  })
++  const handlers = new Map(["dashboard", "planner", "procurement"].map((surface): [string, ReturnType<typeof createDecisionCaseHttp>] => [surface, createDecisionCaseHttp({
++    origin: input.origin, mount: `${input.mount}/${surface}`, human: authority.human,
++    withCase: business.withCase, management,
++    compare: (request, call) => readPortfolioSnapshot(authority.host, call, request,
++      () => portfolio.compare(request, call), { status: "unavailable", reason: "decision-comparison-snapshot-unavailable" }),
++    admitList: async (request) => {
++      const operation = "sf_case_read"
++      const digest = digestSfValue({ purpose: "decision-list", surface })
++      const admitted = await authority.ui.admit(request, operation, digest)
++      if (admitted.status !== "ok") return admitted
++      if (!await authority.ui.validate(admitted.value, operation, digest)) {
++        authority.ui.finish(admitted.value)
++        return { status: "denied", reason: "decision-list-authority-unavailable" }
++      }
++      return admitted
++    },
++    finishList: authority.ui.finish,
++    admitComparison: (request, payload) => authority.human.admit(request, "decisions.portfolio.read", payload),
++    catalog: (caseRefs, call) => portfolio.product
++      ? portfolio.product.http.catalog(caseRefs, call)
++      : Promise.resolve({ status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }),
++  })]))
++  return async (request: Request, surface: string): Promise<Response | undefined> => {
++    const url = new URL(request.url)
++    const action = url.searchParams.get("sf")
++    if (!action || !["decision-list", "decision-edit", "decision-compare", "decision-portfolio-catalog"].includes(action)) return undefined
++    const handler = handlers.get(surface)
++    if (!handler || url.origin !== input.origin || url.pathname !== `${input.mount}/${surface}`)
++      return Response.json({ status: "denied", reason: "decision-origin-unavailable" }, { status: 403, headers: { "cache-control": "no-store" } })
++    if (!input.available())
++      return Response.json({ status: "unavailable", reason: "native-host-unavailable" }, { status: 503, headers: { "cache-control": "no-store" } })
++    return handler(request)
++  }
++}
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b..36ad71ccbeacc42382dcc2d0f35ee7f707981790 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -42,6 +42,7 @@
+ import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
+ import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
+ import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
++import { createSfDecisionCaseHttp } from "./decision-case-http.ts"
+ import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
+ import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
+ import { createSfAlternativeCaptures } from "./alternative-captures.ts"
+@@ -276,6 +277,15 @@
+     runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
+   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
+   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
++  const decisionCaseHttp = createSfDecisionCaseHttp({ origin: input.origin, mount: input.mount, available: () => !!identity(), authority, business, portfolio: extended.portfolioServices,
++    lockedProductRevision: () => {
++      const snapshots = input.persistence.currentSnapshots?.()
++      if (!snapshots) return undefined
++      const stored = object(snapshots.dashboard.data.__sfProductV1)
++      return stored.schemaVersion === 1 && typeof stored.incarnation === "string" && !!stored.incarnation.trim() && Number.isSafeInteger(stored.revision) && Number(stored.revision) >= 0
++        ? { incarnation: stored.incarnation, aggregateRevision: Number(stored.revision) } : undefined
++    },
++  })
+   residentReviewReaders.bindOutcome(memory.reviewOutcome)
+   const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
+   for (const replacement of extended.replacements) {
+@@ -836,7 +846,7 @@
+   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
+-    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
++    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await decisionCaseHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
+diff --git a/apps/cli/src/sucafina-product/portfolio-http.ts b/apps/cli/src/sucafina-product/portfolio-http.ts
+index 6cbfc373ea72a90351e4f9997f65663e0f5fc775..8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90 100644
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -97,7 +97,7 @@
+       digest(value.combinationId) && digest(value.expectedEvaluationDigest) && fields.every((field) => text(value[field]))
+   }
+   if (mode === "decision-review") return closed(value, ["caseRef", "choiceId", "changeId"]) && text(value.choiceId) && text(value.changeId)
+-  if (mode === "decision-portfolio-results") return closed(value, ["caseRef"])
++  if (mode === "decision-portfolio-results") return closed(value, ["caseRef"], ["purpose"]) && (value.purpose === undefined || value.purpose === "results")
+   if (mode === "decision-portfolio-read" || mode === "decision-sensitivity-read") return closed(value, ["caseRef", "resultRef"]) && text(value.resultRef)
+   if (mode === "decision-sensitivity-units") return closed(value, ["caseRef", "scenarioRef", "baselineRef", "parameterRef"]) && text(value.scenarioRef) && text(value.baselineRef) && text(value.parameterRef)
+   return closed(value, ["caseRef", "request"]) && decodeSfOperationInput(mode === "decision-sensitivity-evaluate" ? "sf_sensitivity_evaluate" : "sf_portfolio_evaluate", value.request).ok
+diff --git a/apps/cli/src/sucafina-product/decision-domain-http.ts b/apps/cli/src/sucafina-product/decision-domain-http.ts
+index 5cb8e4e45c1e68af4c59ec096b499ed0907f6c66..e91191ec5fa37da12db4d92e973e9105c00be4e5 100644
+--- a/apps/cli/src/sucafina-product/decision-domain-http.ts
++++ b/apps/cli/src/sucafina-product/decision-domain-http.ts
+@@ -19,8 +19,8 @@
+     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement" || url.origin !== input.origin || url.pathname !== `${input.mount}/${surface}` || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+     if (mode === "decision-controls") {
+       if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+-      const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "format"]
+-      if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) || url.searchParams.has("format") && url.searchParams.get("format") !== "json") return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
++      const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "format", "procurement"]
++      if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) || url.searchParams.has("format") && url.searchParams.get("format") !== "json" || url.searchParams.has("procurement") && url.searchParams.get("procurement") !== "attached") return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
+       const runtime = input.runtime()
+       if (!runtime) return reply({ status: "unavailable" }, 503)
+       try {
+diff --git a/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts b/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts
+index 7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11..feae4846feb657924d9229193eeeded58b378851 100644
+--- a/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts
++++ b/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts
+@@ -134,6 +134,32 @@
+       return result
+     } finally { scope.reading.delete(key) }
+   }
++  const resolveMany: PlannerScenarioHost["resolveMany"] = input.scenarios?.resolveMany ? async (incoming, call) => {
++    const references = structuredClone([...incoming])
++    const referenceDigest = digestSfValue(references)
++    const producer = input.scenarios
++    const batch = producer?.resolveMany
++    const scope = active.get(call)
++    const request = host.requestFor(call)
++    const binding = digestSfValue([call.kind, call.binding])
++    const deniedBatch = () => references.map(() => denied())
++    const currentBatch = () => !!request && !request.signal.aborted && host.requestFor(call) === request &&
++      binding === digestSfValue([call.kind, call.binding]) && digestSfValue(incoming) === referenceDigest &&
++      input.scenarios === producer && producer?.resolveMany === batch &&
++      (scope ? current(call, scope) : !active.has(call))
++    if (!producer || !batch || !currentBatch()) return deniedBatch()
++    const selected = scope ? await input.business.selectedCase(call) : undefined
++    if (scope && (selected?.status !== "ok" || !currentBatch())) return deniedBatch()
++    const keys = scope && selected?.status === "ok"
++      ? [...new Set(references.map((reference) => digestSfValue({ reference, caseRef: selected.value, binding: scope.binding })))] : []
++    if (scope && keys.some((key) => scope.reading.has(key))) return deniedBatch()
++    if (scope) keys.forEach((key) => scope.reading.add(key))
++    try {
++      // Each phase invokes the actual producer anew. No observation enters either proof map.
++      const observed = structuredClone(await batch.call(producer, structuredClone(references), call))
++      return currentBatch() ? observed : deniedBatch()
++    } finally { if (scope) keys.forEach((key) => scope.reading.delete(key)) }
++  } : undefined
+   const compare: Compare = async (request, call) => {
+     const captured = structuredClone(request)
+     const requestDigest = digestSfValue(captured)
+@@ -183,7 +209,7 @@
+       } finally { if (active.get(call) === scope) active.delete(call) }
+     })
+   }
+-  return { compare, run, scenarios: input.scenarios ? { resolve: resolveScenario } : undefined }
++  return { compare, run, scenarios: input.scenarios ? { resolve: resolveScenario, ...(resolveMany ? { resolveMany } : {}) } : undefined }
+ }
+ 
+ function plannerOnlyEvidence(decision: DecisionCase): readonly Extract<BusinessEvidenceRef, { kind: "record" }>[] | undefined {
+diff --git a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+index 529e29806b3faf15f88eec009c198e783f4248a3..1761a5d2558c9091d1c02730774751ace44e9131 100644
+--- a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+@@ -19,6 +19,9 @@
+   store: ReturnType<typeof createSfDecisionResultStore> & { readHistoricalScenario?: (request: { resultRef: string }, context: TrustedDomainContext) => ReturnType<ReturnType<typeof createSfDecisionResultStore>["read"]> }
+   cases: DecisionCasePort
+   planner: Pick<PlannerPort, "compareForecast">
++  /** Private factual projection; case coverage remains a separate current proof. */
++  projectForecast?: (source: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext,
++    selected: { period: DomainProjection["context"]["period"]; currency: "USD" }) => Promise<PortResult<DomainProjection>>
+   external?: { supports: (request: ScenarioRequest) => boolean; resolve: (alternative: DecisionCase["alternatives"][number], basis: CostCoverageBasis, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }>> }
+   coverageRefFor: (caseRef: { id: string; incarnation: string; version: number }, alternative: { id: string; version: number }) => string
+ }): PlannerScenarioHost {
+@@ -66,9 +69,19 @@
+       }
+       const refs = alternative.result.sourceRefs.filter((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+       if (refs.length !== 1 || refs[0].kind !== "record") { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
+-      const projection = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
++      let projection: PortResult<DomainProjection>
++      const projectForecast = input.projectForecast
++      if (projectForecast && alternative.result.currency === "USD") {
++        projection = structuredClone(await projectForecast.call(input, structuredClone(refs[0]), context,
++          { period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }))
++        if (input.projectForecast !== projectForecast) { prepared.push({ status: "denied", reason: "planner-projection-reader-changed" }); continue }
++      } else {
++        // Preserve the public Forecast contract when the private capability is absent.
++        const compared = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
++        projection = compared.status === "ok" ? { status: "ok", value: compared.value.baseline } : compared
++      }
+       if (projection.status !== "ok") { prepared.push(projection); continue }
+-      prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value.baseline, source: refs[0] }) } })
++      prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value, source: refs[0] }) } })
+     }
+     const checked: PortResult<PreparedScenario>[] = []
+     const rereadReferences = prepared.flatMap((entry) => entry.status === "ok" ? [entry.value.reference] : [])
+diff --git a/apps/cli/src/sucafina-product/planner-evidence.ts b/apps/cli/src/sucafina-product/planner-evidence.ts
+index 13153182e357b716a12d2554654905d54fa30ee4..30e67e56d5b78ebb2adebbec10194f19d725b570 100644
+--- a/apps/cli/src/sucafina-product/planner-evidence.ts
++++ b/apps/cli/src/sucafina-product/planner-evidence.ts
+@@ -1,23 +1,33 @@
+-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+ import { buildPlannerFinancialProjection, projectPlannerSource } from "../../../../modules/sucafina/Sucafinav1/product/planner/port.ts"
+ import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ 
+ /** Project the current source without asking coverage to authorize its own evidence recursively. */
+ export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: PlannerSourceHost }) {
+-  const project = async (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext, selected?: { period: { start: string; end: string }; currency: "USD" }): Promise<PortResult<DomainProjection>> => {
++  const project = async (incoming: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext, requested?: { period: { start: string; end: string }; currency: "USD" }): Promise<PortResult<DomainProjection>> => {
++    const ref = structuredClone(incoming), selected = requested ? structuredClone(requested) : undefined
++    const binding = digestSfValue([call.kind, call.binding])
+     const request = input.host.requestFor(call)
+-    if (!request || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call))
++    const sources = input.sources, resolveSource = sources.resolveForecastSource
++    const current = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
++      binding === digestSfValue([call.kind, call.binding]) && digestSfValue(incoming) === digestSfValue(ref) &&
++      digestSfValue(requested ?? null) === digestSfValue(selected ?? null) && input.sources === sources && sources.resolveForecastSource === resolveSource
++    if (!request || !current() || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== call.binding.installationId ||
++      ref.projectId !== call.binding.projectId || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call) || !current())
+       return { status: "denied", reason: "planner-source-authority-unavailable" }
+-    const first = await input.sources.resolveForecastSource(ref.refId, call)
++    const first = structuredClone(await resolveSource.call(sources, ref.refId, call))
++    if (!current()) return { status: "stale", reason: "planner-source-changed" }
+     if (first.status !== "ok") return first
++    if (first.value.versionId !== ref.target.recordId) return { status: "denied", reason: "planner-source-scope-mismatch" }
+     if (digestSfValue(first.value.evidence) !== digestSfValue(ref)) return { status: "stale", reason: "planner-source-changed" }
+     const period = selected?.period ?? ref.target.period
+-    if (ref.target.period.start > period.start || ref.target.period.end < period.end || selected && selected.currency !== "USD")
++    if (!isSfPeriod(period) || !isSfPeriod(ref.target.period) || ref.target.period.start > period.start || ref.target.period.end < period.end || selected && selected.currency !== "USD")
+       return { status: "needs-input", reason: "planner-source-period-or-currency-mismatch" }
+     const start = /^(\d{4})-(\d{2})-01$/.exec(period.start), end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(period.end)
+     if (!start || !end || start[1] !== end[1] || Number(start[2]) < 1 || Number(end[2]) > 12 || Number(start[2]) > Number(end[2]) ||
+@@ -37,9 +47,14 @@
+       digestSfValue({ versionId: ref.target.recordId, projection }) !== ref.target.projectionDigest || projection.year !== Number(period.start.slice(0, 4)))
+       return { status: "stale", reason: "planner-source-changed" }
+     const result = buildPlannerFinancialProjection({ projection, ref, period, binding: call, at: environment.at })
+-    const latest = await read(), second = await input.sources.resolveForecastSource(ref.refId, call)
+-    if (!latest || digestSfValue(latest) !== digestSfValue(projection) || second.status !== "ok" || digestSfValue(second.value.evidence) !== digestSfValue(ref) ||
+-      request.signal.aborted || !await input.host.revalidate(call)) return { status: "stale", reason: "planner-source-changed" }
++    if (new Set(result.values.map((value) => value.id)).size !== result.values.length)
++      return { status: "unavailable", reason: "duplicate-projection-value-id" }
++    const latest = await read()
++    if (!current()) return { status: "stale", reason: "planner-source-changed" }
++    const second = structuredClone(await resolveSource.call(sources, ref.refId, call))
++    if (!latest || digestSfValue(latest) !== digestSfValue(projection) || second.status !== "ok" || second.value.versionId !== ref.target.recordId ||
++      digestSfValue(second.value.evidence) !== digestSfValue(ref) || !current() || !await input.host.revalidate(call) || !current())
++      return { status: "stale", reason: "planner-source-changed" }
+     return { status: "ok", value: result }
+   }
+   // Only the host composition supplies this full reader. It retains the source and
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index 0181267b67b74a8df338999ddb7745cfee42bb29..844edd2860e11d5de165c09c7863f4cc6ef5ad67 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -8,7 +8,7 @@
+ import { object, rows, text } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import type { Actor, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+-import type { ConfirmationScope, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
++import type { ConfirmationScope, DomainProjection, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { ForecastCompareRequest, WorkListRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+ import type { CapabilityDescriptor } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+@@ -418,7 +418,10 @@
+         : forecastCoverage.current?.(ref, call) ?? baselineCoverage.resolveForecastCoverage(ref, call)
+     }, decision: coverage }),
+     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
+-    storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
++    storedScenarios: { store: results, cases,
++      // Factories only retain this callback; the real projector is initialized before reads begin.
++      projectForecast: (ref, call, selected): Promise<PortResult<DomainProjection>> => projectPlannerEvidence(ref, call, selected),
++      coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
+   const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
+   const planner = procurementComposite.planner
+   const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
+diff --git a/apps/cli/src/sucafina-product/portfolio-authority.ts b/apps/cli/src/sucafina-product/portfolio-authority.ts
+index 138238ca9273e84f39f8e1db484378a3e62d41d4..cb89ba0139a7cf3965e0bb2898ab13f3015d7837 100644
+--- a/apps/cli/src/sucafina-product/portfolio-authority.ts
++++ b/apps/cli/src/sucafina-product/portfolio-authority.ts
+@@ -10,7 +10,7 @@
+ import { createDecisionIntentFences } from "../../../../modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts"
+ import { createDecisionCandidateResolver } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
+ import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+-import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
++import { compareScenarios, type PlannerScenarioHost } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import type { createSfBusinessServices } from "./business-services.ts"
+ import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
+@@ -50,11 +50,36 @@
+     // reopens both scenarios and validates these final snapshots before return.
+     // No observation serves a resolve call or survives this metric invocation.
+     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
++    const producer = scenarios
++    const batch = producer.resolveMany
++    const requestFor = host.requestFor
++    const callBinding = call.binding
++    const callLease = call.lease
++    const requestDigest = digestSfValue(captured)
++    const observeMany: PlannerScenarioHost["resolveMany"] = batch ? async (incoming, context) => {
++      const references = structuredClone([...incoming])
++      const referencesDigest = digestSfValue(references)
++      const producerReferences = structuredClone(references)
++      const deniedBatch = () => references.map(() => ({ status: "denied" as const, reason: "criterion-metric-observation-unavailable" }))
++      const current = () => context === call && !!source && !source.signal.aborted && host.requestFor === requestFor &&
++        requestFor.call(host, context) === source && call.binding === callBinding && call.lease === callLease &&
++        binding === digestSfValue([call.kind, call.binding]) && digestSfValue(request) === requestDigest &&
++        digestSfValue(captured) === requestDigest && business.plannerProduct.scenarios === producer && producer.resolveMany === batch &&
++        digestSfValue(incoming) === referencesDigest && digestSfValue(producerReferences) === referencesDigest
++      if (!current()) return deniedBatch()
++      // Observe the real producer on every phase; this map never serves a read.
++      const values = structuredClone(await batch.call(producer, producerReferences, context))
++      if (!current()) return deniedBatch()
++      if (!Array.isArray(values) || values.length !== references.length || references.some((_, index) => !(index in values)))
++        return references.map(() => ({ status: "unavailable" as const, reason: "scenario-batch-invalid" }))
++      for (const [index, reference] of references.entries()) observed.set(reference, structuredClone(values[index]!))
++      return values.map((value) => structuredClone(value))
++    } : undefined
+     const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
+       const observation = structuredClone(await scenarios.resolve(reference, context))
+       observed.set(reference, observation)
+       return observation
+-    } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
++    }, ...(observeMany ? { resolveMany: observeMany } : {}) } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
+     if (result.status !== "ok") return result
+     const baseline = observed.get(captured.baselineRef!)
+     const candidate = observed.get(captured.scenarioRef)
+diff --git a/apps/cli/src/sucafina-product/portfolio-services.ts b/apps/cli/src/sucafina-product/portfolio-services.ts
+index 881ce4672d9d0e641d1cc849663c0980c118774d..9d17760c418ee9b48b97443d90a994c31cc415f5 100644
+--- a/apps/cli/src/sucafina-product/portfolio-services.ts
++++ b/apps/cli/src/sucafina-product/portfolio-services.ts
+@@ -1,6 +1,7 @@
+ import { randomUUID } from "node:crypto"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { createPortfolioProduct } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts"
++import { readPortfolioSnapshot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
+ import { createDecisionMutations } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import type { DecisionMutationOperation } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
+@@ -36,9 +37,18 @@
+   const registries = createSfPortfolioAuthority({ ...input, proof: () => verification.proof })
+   const composed = createSfPortfolioPreparation({ ...input, registries })
+   const preparation = input.preparation ?? composed
++  // Only these default read callbacks enter a snapshot root; recordChoice and its commit remain outside.
++  const mutationPlanner: typeof registries.planner = input.preparation ? registries.planner : {
++    ...composed.mutationPlanner,
++    compareScenarios: (request, call) => readPortfolioSnapshot(authority.host, call, request,
++      () => composed.mutationPlanner.compareScenarios(request, call), { status: "unavailable", reason: "choice-comparison-snapshot-unavailable" }),
++  }
++  const resolveChoiceValues: Mutations["resolveChoiceValues"] = input.preparation ? preparation.resolveChoiceValues
++    : (caseRef, comparison, call) => readPortfolioSnapshot(authority.host, call, { caseRef, comparison },
++      () => composed.resolveChoiceValues(caseRef, comparison, call), { status: "unavailable", reason: "choice-values-snapshot-unavailable" })
+   const action = (operation: DecisionMutationOperation) => operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : operation === "answer-question" ? "decisions.answer-question" : undefined
+   const rawMutations = createDecisionMutations({ state: authority.state, host: authority.host,
+-    planner: input.preparation ? registries.planner : composed.mutationPlanner, sources: business.plannerSources,
++    planner: mutationPlanner, sources: business.plannerSources,
+     authorizeCase: registries.authorizeCase, operationIdentity: business.operationIdentity,
+     authorizeMutation: preparation.authorizeMutation ?? ((operation, request, call) => {
+       const selected = action(operation)
+@@ -54,7 +64,7 @@
+     confirmAnswer: preparation.confirmAnswer,
+     resolveQuestion: business.collaboration.resolveQuestion,
+     resolveAnswer: business.collaboration.resolveAnswer,
+-    resolveChoiceValues: preparation.resolveChoiceValues,
++    resolveChoiceValues,
+     prepareDomainCommands: preparation.prepareDomainCommands,
+     readScenarioResult: (resultRef, call) => business.results.readHistoricalScenario({ resultRef }, call),
+     createId: input.preparation ? randomUUID : composed.createMutationId, now: () => new Date().toISOString(),
+diff --git a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+index d43a630..0e81284 100644
+--- a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+@@ -20,12 +20,12 @@ export type SfSourceIdentityInput = { recordType: string; recordId: string; inpu
+ 
+ /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
+ export function createSfSourcePersistence(input: {
+-  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots">
++  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot">
+   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
+   createId: () => string
+   purpose?: "business-restore"
+   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
+-}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
++}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+     requireSourceIdentities(snapshot)
+     const scope = structuredClone(requested)
+@@ -74,8 +74,12 @@ export function createSfSourcePersistence(input: {
+       requireSourceIdentities(snapshot)
+     }
+   }
+-  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
++  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+     ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
++    // Scope forwarding does not admit a source. Callers still enter transaction
++    // below, preserving source guards and any underlying CurrentChoice fence.
++    ...(input.persistence.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, options?: TransactionOptions) =>
++      input.persistence.readSnapshotRoot!(work, options) } : {}),
+     resolveScopedSource: async (surface, incarnation, authorize) => {
+       const scope = await input.persistence.transaction(surface, async (snapshot) => {
+         requireSourceIdentities(snapshot)
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts b/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts
+index 095a0e5..3cf82bd 100644
+--- a/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts
+@@ -1,4 +1,5 @@
+ import { AsyncLocalStorage } from "node:async_hooks"
++import type { TransactionOptions } from "../../runtime/contract.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { DomainPortHost } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+@@ -18,6 +19,7 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+     const persistence = host.persistence
+     const transaction = persistence.transaction
+     const currentSnapshots = persistence.currentSnapshots
++    const readSnapshotRoot = persistence.readSnapshotRoot
+     const requestFor = host.requestFor
+     const revalidate = host.revalidate
+     const request = requestFor.call(host, context)
+@@ -31,7 +33,7 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+     }
+     const source = fingerprint()
+     const unchanged = () => !request.signal.aborted && host.persistence === persistence && host.requestFor === requestFor && host.revalidate === revalidate &&
+-      persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots && requestFor.call(host, context) === request && fingerprint() === source &&
++      persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots && persistence.readSnapshotRoot === readSnapshotRoot && requestFor.call(host, context) === request && fingerprint() === source &&
+       digestSfValue({ kind: context.kind, binding: context.binding }) === authority && digestSfValue(incoming) === payload
+     const inherited = reads.getStore()
+     if (currentSnapshots.call(persistence)) {
+@@ -44,7 +46,9 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+     let invocations = 0
+     let accepted = false
+     try {
+-      const result = await persistence.transaction<{ valid: true; value: T } | { valid: false }>("dashboard", async () => reads.run(scope, async () => {
++      // Keep canonical Dashboard admission inside the optional root. Calling
++      // work directly would bypass SourcePersistence and CurrentChoice guards.
++      const run = () => persistence.transaction<{ valid: true; value: T } | { valid: false }>("dashboard", async () => reads.run(scope, async () => {
+         invocations++
+         if (invocations !== 1 || !currentSnapshots.call(persistence) || !unchanged()) return { commit: false, value: { valid: false as const } }
+         const value = await work()
+@@ -52,6 +56,8 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+         accepted = unchanged() && (rejected || await revalidate.call(host, context)) && unchanged() && !!currentSnapshots.call(persistence)
+         return { commit: false, value: accepted ? { valid: true as const, value } : { valid: false as const } }
+       }), { signal: request.signal })
++      const root: ((work: typeof run, options?: TransactionOptions) => ReturnType<typeof run>) | undefined = readSnapshotRoot
++      const result = root ? await root.call(persistence, run, { signal: request.signal }) : await run()
+       // No external awaited callback may follow this point. LocalStore already
+       // rejected poisoned/unjoined reads before returning this captured value.
+       return accepted && invocations === 1 && unchanged() && result.valid ? result.value : refused
+diff --git a/modules/sucafina/Sucafinav1/runtime/contract.ts b/modules/sucafina/Sucafinav1/runtime/contract.ts
+index 9e9bac9..8be1156 100644
+--- a/modules/sucafina/Sucafinav1/runtime/contract.ts
++++ b/modules/sucafina/Sucafinav1/runtime/contract.ts
+@@ -79,6 +79,13 @@ export type Persistence = {
+   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
++  // Internal root-only scope, not source admission or business authorization.
++  // Consumers must still use their canonical transaction(surface, work) inside it
++  // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
++  // Fresh SQL, independent copies, abort/lifetime fences and joined readers are
++  // required. Any attempted write poisons the root even when its error is caught.
++  // Older adapters omit this capability and retain their existing transaction path.
++  readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>
+ }
+ 
+ export function object(value: unknown): Record<string, unknown> {
+diff --git a/modules/sucafina/Sucafinav1/runtime/local-store.ts b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+index 6662595..a36440a 100644
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -111,7 +111,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
+ 
+   type ReadScope = {
+-    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number }
++    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number; readOnly?: true }
+     parent?: ReadScope
+     open: boolean
+     signal?: AbortSignal
+@@ -129,7 +129,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+   const active = new Set<Promise<unknown>>()
+   const queue = { tail: undefined as Promise<void> | undefined }
+   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
+-    if (lifecycle.closed) return Promise.reject(new Error("Local store is disposed"))
++    if (lifecycle.closed) {
++      const scope = context.getStore()
++      // An admitted readonly root may drain during disposal, but a rejected
++      // write must not disappear when its caller catches the disposed error.
++      if (write && scope?.root.readOnly) scope.root.poisoned = true
++      return Promise.reject(new Error("Local store is disposed"))
++    }
+     const inherited = context.getStore()
+     if (inherited) {
+       try {
+@@ -183,6 +189,45 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+   }
+ 
+   return {
++    readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
++      operation(true, async (db) => {
++        const copies: Partial<Record<Surface, () => Snapshot>> = {}
++        const read = (surface: Surface) => {
++          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++          // Keep the same SQL order and changed-payload admission as mutable
++          // roots. No target escapes here, so every initial memo hit can copy.
++          const source = observeSnapshot(surface, row?.payload)
++          if (source.copy) copies[surface] = source.copy
++          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
++          return () => {
++            if (observed.value) return observed.value
++            observed.value = observed.materialize!()
++            observed.materialize = undefined
++            return observed.value
++          }
++        }
++        const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
++        const snapshots = {
++          get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
++          get procurement() { return observed.procurement() },
++        }
++        const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
++        try {
++          const value = await context.run(scope, work)
++          requireScope(scope)
++          if (scope.root.poisoned) throw new Error("Nested local write attempted")
++          if (scope.root.readers) throw new Error("Nested local read still active")
++          return value
++        } finally {
++          scope.open = false
++          // This root never exposes its private observations. Closed descendants
++          // need neither their graphs/getters nor the initial memo's copy plans.
++          scope.root.snapshots = {}
++          delete copies.dashboard
++          delete copies.planner
++          delete copies.procurement
++        }
++      }, transactionOptions?.signal),
+     currentSnapshots: () => {
+       const scope = context.getStore()
+       if (!scope) return undefined
+@@ -199,7 +244,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+       const parent = context.getStore()
+       if (parent) return (async () => {
+-        if (lifecycle.closed) throw new Error("Local store is disposed")
++        if (lifecycle.closed) {
++          // No callback can be admitted after disposal to establish read-only
++          // intent. Invalidate only the new readonly root, not mutable roots.
++          if (parent.root.readOnly) parent.root.poisoned = true
++          throw new Error("Local store is disposed")
++        }
+         requireScope(parent)
+         transactionOptions?.signal?.throwIfAborted()
+         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts
+new file mode 100644
+index 0000000..3574177
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts
+@@ -0,0 +1,154 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { AssetPersistence, BlobTransaction } from "../../../runtime/assets.ts"
++import type { Persistence, Snapshot, TransactionOptions } from "../../../runtime/contract.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import type { Surface } from "../../../src/identity.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createCurrentChoiceFence } from "../../../product/decisions/current-choice-preview.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++
++const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
++type ReadPersistence = AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot">
++
++/** Real SQLite, UI lease and canonical wrappers. Fixture rows make no financial
++ * claim. The enumerator identifies this fixture's one record on each surface;
++ * source admission, identity validation and fence publication are production code. */
++export async function createCanonicalReadFixture(options: {
++  wrapper?: "source" | "fence"
++  legacy?: boolean
++  initialized?: readonly Surface[]
++  rows?: number
++} = {}) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-readonly-root-canonical-"))
++  await chmod(directory, 0o700)
++  const driver = await openLocalStore(directory)
++  const abort = new AbortController()
++  const request = new Request("https://example.test/readonly-root", {
++    headers: { authorization: "readonly-root-fixture" }, signal: abort.signal,
++  })
++  const identity = {
++    installationId: "readonly-installation", projectId: "readonly-project", principalRef: "readonly-principal",
++    policyVersion: "readonly-policy", accessRevision: "readonly-access",
++  }
++  const metrics = {
++    roots: 0, snapshots: 0, authorizations: 0, revalidations: 0,
++    transactions: { dashboard: 0, planner: 0, procurement: 0 },
++    callbacks: { dashboard: 0, planner: 0, procurement: 0 },
++    events: [] as string[],
++  }
++  const controls: {
++    enabled: boolean
++    requestOverride?: Request
++    identityOverride?: { installationId: string; projectId: string }
++    onRevalidate?: (index: number) => void | Promise<void>
++  } = { enabled: true }
++  const ui = createSfUiAuthority({
++    authorize: async (incoming) => {
++      metrics.authorizations++
++      metrics.events.push("authorize")
++      return controls.enabled && incoming === request && incoming.headers.get("authorization") === "readonly-root-fixture" ? identity : undefined
++    },
++    commandIdentity: async () => "readonly-root-operation",
++    createId: () => "readonly-root-ui-request", now: () => Date.parse("2026-11-15T00:00:00Z"),
++  })
++  const intent = digestSfValue({ fixture: "readonly-root" })
++  const admitted = await ui.admit(request, "sf_case_read", intent)
++  if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_case_read", intent)) {
++    await driver.dispose()
++    await rm(directory, { recursive: true, force: true })
++    throw new Error("Readonly root fixture UI admission unavailable")
++  }
++  const context = admitted.value
++  const host = {
++    persistence: driver as Persistence,
++    requestFor: (trusted: TrustedDomainContext) => trusted.kind === "ui" ? controls.requestOverride ?? ui.requestFor(trusted) : undefined,
++    revalidate: async (trusted: TrustedDomainContext) => {
++      metrics.revalidations++
++      metrics.events.push("revalidate")
++      await controls.onRevalidate?.(metrics.revalidations)
++      return trusted.kind === "ui" && await ui.revalidate(trusted)
++    },
++  }
++  const fence = createCurrentChoiceFence({
++    persistence: driver, host: () => host, identity: () => controls.identityOverride ?? identity,
++    operationIdentity: (trusted) => trusted.kind === "ui" ? ui.operationIdentity(trusted) : undefined,
++  })
++  let sourceId = 0
++  const sources = createSfSourcePersistence({
++    persistence: fence.persistence,
++    enumerate: (surface, snapshot) => [{ recordType: "readonly-fixture", recordId: surface, inputDigest: digestSfValue(snapshot.data) }],
++    createId: () => `readonly-source-${++sourceId}`,
++  })
++  try {
++    for (const surface of surfaces) {
++      await driver.transaction(surface, async (snapshot) => {
++        snapshot.data.marker = surface
++        snapshot.data.readonlyRootRows = Array.from({ length: options.rows ?? 4 }, (_, index) => ({
++          __readonlyRootSurface: surface, index, amount: 1000 + index,
++          detail: { label: `${surface}-row-${index}`, active: index % 2 === 0, values: [index, index + 1] },
++        }))
++        return { commit: true, value: undefined }
++      })
++    }
++    for (const surface of options.initialized ?? surfaces) await sources.initializeSources(surface)
++  } catch (error) {
++    ui.finish(context)
++    await driver.dispose()
++    await rm(directory, { recursive: true, force: true })
++    throw error
++  }
++  const canonical: ReadPersistence = options.wrapper === "fence" ? fence.persistence : sources
++  const capablePersistence: ReadPersistence = {
++    ...canonical,
++    transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
++      metrics.transactions[surface]++
++      metrics.events.push(`transaction:${surface}`)
++      return canonical.transaction(surface, async (snapshot, blobs) => {
++        metrics.callbacks[surface]++
++        metrics.events.push(`callback:${surface}`)
++        return work(snapshot, blobs)
++      }, transactionOptions)
++    },
++    ...(canonical.currentSnapshots ? { currentSnapshots: () => {
++      metrics.snapshots++
++      metrics.events.push("currentSnapshots")
++      return canonical.currentSnapshots!()
++    } } : {}),
++    ...(canonical.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) => {
++      metrics.roots++
++      return canonical.readSnapshotRoot!(work, transactionOptions)
++    } } : {}),
++  }
++  const legacyPersistence = { ...capablePersistence }
++  delete legacyPersistence.readSnapshotRoot
++  const persistence = options.legacy ? legacyPersistence : capablePersistence
++  host.persistence = persistence
++  const resetMetrics = () => {
++    metrics.roots = 0
++    metrics.snapshots = 0
++    metrics.authorizations = 0
++    metrics.revalidations = 0
++    for (const surface of surfaces) {
++      metrics.transactions[surface] = 0
++      metrics.callbacks[surface] = 0
++    }
++    metrics.events.length = 0
++  }
++  resetMetrics()
++  return {
++    directory, driver, persistence, capablePersistence, legacyPersistence, host, fence, sources,
++    ui, context, request, abort, identity, controls, metrics, resetMetrics,
++    read: (work: () => Promise<boolean>, refused = false, incoming: unknown = {}) => readPortfolioSnapshot(host, context, incoming, work, refused),
++    withinFence: <T>(work: () => Promise<T>) => fence.run(context, work),
++    close: async () => {
++      ui.finish(context)
++      await driver.dispose()
++      await rm(directory, { recursive: true, force: true })
++    },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts
+new file mode 100644
+index 0000000..6b0e7ae
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts
+@@ -0,0 +1,171 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { createHash } from "node:crypto"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { Surface } from "../../../src/identity.ts"
++import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
++import { createCanonicalReadFixture } from "./canonical-fixture.ts"
++
++type Fixture = Awaited<ReturnType<typeof createCanonicalReadFixture>>
++type Row = { __readonlyRootSurface: Surface; index: number; amount: number; detail: { label: string; active: boolean; values: number[] } }
++const surfaces = ["dashboard", "planner", "procurement"] as const
++const rowCount = 160
++const observations = 6
++const hash = (value: string) => createHash("sha256").update(value).digest("hex")
++const counts = () => ({ dashboard: 0, planner: 0, procurement: 0 })
++
++function consume(snapshot: Snapshot, surface: Surface) {
++  const rows = snapshot.data.readonlyRootRows as Row[]
++  if (snapshot.data.marker !== surface || !Array.isArray(rows) || rows.length !== rowCount) throw new Error("Readonly cost fixture shape changed")
++  let digest = 0
++  for (let index = 0; index < rows.length; index++) {
++    const row = rows[index]!
++    if (row.__readonlyRootSurface !== surface || row.index !== index || row.amount !== 1000 + index ||
++      row.detail.label !== `${surface}-row-${index}` || row.detail.active !== (index % 2 === 0) ||
++      row.detail.values.length !== 2 || row.detail.values[0] !== index || row.detail.values[1] !== index + 1)
++      throw new Error("Readonly cost fixture lost data or copy isolation")
++    digest += row.amount + row.detail.values[0]! + row.detail.values[1]!
++  }
++  // Every following observation must still consume the original value.
++  rows[0]!.amount = -1
++  rows[0]!.detail.values[0] = -1
++  return digest
++}
++
++async function workload(fixture: Fixture, variant: "legacy" | "capability", probe: { active: boolean }) {
++  const persistence = variant === "legacy" ? fixture.legacyPersistence : fixture.capablePersistence
++  const host = { ...fixture.host, persistence }
++  const work = { callbacks: 0, nested: counts(), observations: 0, consumedRows: counts(), digest: 0, order: [] as string[] }
++  const retained: Partial<Record<Surface, Snapshot>> = {}
++  fixture.resetMetrics()
++  const started = performance.now()
++  const accepted = await fixture.withinFence(() => readPortfolioSnapshot(host, fixture.context, {}, async () => {
++    work.callbacks++
++    probe.active = true
++    try {
++      for (let observation = 0; observation < observations; observation++) {
++        for (const surface of ["dashboard", "planner", "dashboard", "procurement"] as const) {
++          await persistence.transaction(surface, async (snapshot) => {
++            work.callbacks++
++            work.nested[surface]++
++            work.order.push(surface)
++            if (retained[surface] === snapshot || retained[surface]?.data === snapshot.data) throw new Error("Readonly observation shared a mutable graph")
++            work.digest += consume(snapshot, surface)
++            work.consumedRows[surface] += rowCount
++            retained[surface] = snapshot
++            return { commit: false, value: undefined }
++          })
++        }
++        const current = persistence.currentSnapshots!()
++        if (!current) throw new Error("Readonly observation disappeared")
++        work.observations++
++        work.order.push("current:all")
++        for (const surface of surfaces) {
++          if (retained[surface] === current[surface] || retained[surface]?.data === current[surface].data)
++            throw new Error("Readonly currentSnapshots shared a mutable graph")
++          work.digest += consume(current[surface], surface)
++          work.consumedRows[surface] += rowCount
++          retained[surface] = current[surface]
++        }
++      }
++      return true
++    } finally { probe.active = false }
++  }, false))
++  const elapsedMs = performance.now() - started
++  if (!accepted) throw new Error("Canonical readonly cost workload was refused")
++  expect(fixture.metrics.roots).toBe(variant === "capability" ? 1 : 0)
++  const { roots: _roots, ...metrics } = structuredClone(fixture.metrics)
++  return { variant, elapsedMs, summary: { ...work, order: hash(work.order.join("\n")), metrics } }
++}
++
++function countWork(probe: { active: boolean }) {
++  const descriptors = Object.getOwnPropertyDescriptors
++  const parse = JSON.parse
++  const result = { descriptors: 0, markedObjects: counts(), parseCalls: 0, parseCharacters: 0, wireParses: 0 }
++  Object.getOwnPropertyDescriptors = ((value: object) => {
++    const observed = descriptors(value)
++    if (probe.active) {
++      result.descriptors++
++      const surface: unknown = observed.__readonlyRootSurface?.value
++      if (surface === "dashboard" || surface === "planner" || surface === "procurement") result.markedObjects[surface]++
++    }
++    return observed
++  }) as typeof Object.getOwnPropertyDescriptors
++  JSON.parse = (...args: Parameters<typeof JSON.parse>) => {
++    if (probe.active) {
++      result.parseCalls++
++      result.parseCharacters += args[0].length
++      if (args[0].startsWith('["sucafina-snapshot",1,')) result.wireParses++
++    }
++    return parse(...args)
++  }
++  return { result, restore: () => { Object.getOwnPropertyDescriptors = descriptors; JSON.parse = parse } }
++}
++
++function distribution(samples: number[]) {
++  const ordered = [...samples].sort((left, right) => left - right)
++  return { samples, min: ordered[0], median: (ordered[1]! + ordered[2]!) / 2, max: ordered.at(-1) }
++}
++
++// One serial test, same driver/SQLite/guards, alternating AB/BA order. Timed
++// samples use native functions. Pass-through probes run separately and only
++// attribute synchronous descriptor/parsing work inside the unchanged workload.
++test("readonly root removes defensive Dashboard traversal with equivalent real SQLite Source and CurrentChoice work", async () => {
++  const fixture = await createCanonicalReadFixture({ rows: rowCount })
++  try {
++    const persisted = () => {
++      const db = new Database(join(fixture.directory, "installation.sqlite"), { strict: true })
++      try {
++        return surfaces.map((surface) => {
++          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++          if (!row) throw new Error("Readonly cost fixture SQL row missing")
++          return { surface, characters: row.payload.length, sha256: hash(row.payload) }
++        })
++      } finally { db.close() }
++    }
++    const before = persisted()
++    const probe = { active: false }
++    const expected = (await workload(fixture, "legacy", probe)).summary
++    expect((await workload(fixture, "capability", probe)).summary).toEqual(expected)
++    expect(expected.callbacks).toBe(25)
++    expect(expected.nested).toEqual({ dashboard: 12, planner: 6, procurement: 6 })
++    expect(expected.observations).toBe(6)
++    expect(expected.consumedRows).toEqual({ dashboard: 2880, planner: 1920, procurement: 1920 })
++    expect(expected.metrics.transactions).toEqual({ dashboard: 13, planner: 6, procurement: 6 })
++    expect(expected.metrics.callbacks).toEqual(expected.metrics.transactions)
++    const samples: { variant: "legacy" | "capability"; elapsedMs: number }[] = []
++    for (let pair = 0; pair < 4; pair++) {
++      const order = pair % 2 === 0 ? ["legacy", "capability"] as const : ["capability", "legacy"] as const
++      for (const variant of order) {
++        const observed = await workload(fixture, variant, probe)
++        expect(observed.summary).toEqual(expected)
++        samples.push({ variant, elapsedMs: observed.elapsedMs })
++      }
++    }
++    const structural: Partial<Record<"legacy" | "capability", ReturnType<typeof countWork>["result"]>> = {}
++    for (const variant of ["legacy", "capability"] as const) {
++      const counter = countWork(probe)
++      try {
++        expect((await workload(fixture, variant, probe)).summary).toEqual(expected)
++        structural[variant] = counter.result
++      } finally { counter.restore() }
++    }
++    expect(structural.legacy!.markedObjects.dashboard).toBeGreaterThan(0)
++    expect(structural.capability!.markedObjects.dashboard).toBe(0)
++    expect(structural.legacy!.markedObjects.planner).toBe(0)
++    expect(structural.legacy!.markedObjects.procurement).toBe(0)
++    expect(structural.capability!.markedObjects.planner).toBe(0)
++    expect(structural.capability!.markedObjects.procurement).toBe(0)
++    expect(structural.capability!.wireParses).toBe(0)
++    expect(persisted()).toEqual(before)
++    const metrics = { ...expected.metrics, events: hash(expected.metrics.events.join("\n")) }
++    console.log("RUNTIME59_COST " + JSON.stringify({
++      schema: "sf2h.runtime-readonly-root.cost.v1", rowsPerSurface: rowCount, observations, persisted: before,
++      work: { ...expected, metrics }, samples, structural,
++      legacy: distribution(samples.filter((sample) => sample.variant === "legacy").map((sample) => sample.elapsedMs)),
++      capability: distribution(samples.filter((sample) => sample.variant === "capability").map((sample) => sample.elapsedMs)),
++      limitations: "One hosted runner, four AB/BA pairs, descriptive timing only; no elapsed-time/ratio assertion, heap estimate, P03 result or clone-only CPU claim. Structural probe excludes root admission and final publication, keeps real wrappers, and is restored before reporting.",
++    }))
++  } finally { await fixture.close() }
++}, 120000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts
+new file mode 100644
+index 0000000..0dac654
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts
+@@ -0,0 +1,133 @@
++import { Database } from "bun:sqlite"
++import { expect, test } from "bun:test"
++import { join } from "node:path"
++import { decodeSnapshot, encodeSnapshot } from "../../../runtime/local-store.ts"
++import { current, read, record, seed, surfaces, warm, withStores } from "../runtime-fresh-copy-cost/fixture.ts"
++
++test("each readonly root reads fresh SQL while retained observations remain detached across connections and reopen", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    const writer = await open()
++    await seed(store)
++    await warm(store)
++    const first = await store.readSnapshotRoot!(async () => current(store))
++    const pending: { write?: Promise<void> } = {}
++    try {
++      await store.readSnapshotRoot!(async () => {
++        pending.write = writer.transaction("planner", async (snapshot) => {
++          record(snapshot.data.left).count = 9
++          return { commit: true, value: undefined }
++        })
++        void pending.write.catch(() => undefined)
++        expect(current(store)).toEqual(first)
++      })
++      await pending.write
++      const next = await store.readSnapshotRoot!(async () => current(store))
++      expect(record(next.planner.data.left).count).toBe(9)
++      expect(record(first.planner.data.left).count).toBe(1)
++      record(next.planner.data.left).count = 80
++      await store.dispose()
++      const reopened = await open()
++      expect(await reopened.readSnapshotRoot!(async () => record(current(reopened).planner.data.left).count)).toBe(9)
++    } finally {
++      await pending.write?.catch(() => undefined)
++    }
++  })
++})
++
++test("readonly admission observes changed equal-length payloads and deleted rows on every surface", async () => {
++  await withStores(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const db = new Database(join(directory, "installation.sqlite"), { strict: true })
++    try {
++      for (const surface of surfaces) {
++        const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++        if (!row) throw new Error("SQL fixture row missing")
++        const changed = decodeSnapshot(row.payload)
++        record(changed.data.left).count = 9
++        const payload = encodeSnapshot(changed)
++        expect(payload.length).toBe(row.payload.length)
++        db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(payload, surface)
++        const observed = await store.readSnapshotRoot!(async () => current(store)[surface])
++        expect(record(observed.data.left).count).toBe(9)
++        expect(observed.versions).toEqual(changed.versions)
++        db.query("DELETE FROM snapshots WHERE surface = ?").run(surface)
++        expect(await store.readSnapshotRoot!(async () => current(store)[surface])).toEqual({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
++        db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?)").run(surface, row.payload)
++        expect(await store.readSnapshotRoot!(async () => record(current(store)[surface].data.left).count)).toBe(1)
++        expect(record(observed.data.left).count).toBe(9)
++      }
++    } finally {
++      db.close()
++    }
++  })
++})
++
++for (const temperature of ["cold", "warm"] as const) {
++  test(`${temperature} readonly root rejects corrupt unrequested SQL before invoking its callback`, async () => {
++    await withStores(async (directory, open) => {
++      const writer = await open()
++      await seed(writer)
++      const db = new Database(join(directory, "installation.sqlite"), { strict: true })
++      const calls = { root: 0 }
++      try {
++        for (const surface of surfaces) {
++          const store = await open()
++          if (temperature === "warm") await warm(store)
++          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++          if (!row) throw new Error("SQL fixture row missing")
++          const invalid = decodeSnapshot(row.payload)
++          invalid.versions.seed = { version: -1, by: "fixture" }
++          for (const corrupt of ["not-json", encodeSnapshot(invalid)]) {
++            db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(corrupt, surface)
++            await expect(store.readSnapshotRoot!(async () => { calls.root++; return "no-reads-requested" })).rejects.toThrow()
++            expect(calls.root).toBe(0)
++          }
++          db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(row.payload, surface)
++        }
++        const recovered = await open()
++        expect(await recovered.readSnapshotRoot!(async () => current(recovered).dashboard.data.surface)).toBe("dashboard")
++      } finally {
++        db.close()
++      }
++    })
++  })
++}
++
++test("readonly copies remain independent when depth and undefined counts require the original decoder fallback", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await store.transaction("planner", async (snapshot) => {
++      const deep: Record<string, unknown> = {}
++      let cursor = deep
++      for (let index = 0; index < 140; index++) {
++        const child = { next: {} }
++        cursor.next = child
++        cursor = child.next
++      }
++      cursor.leaf = "preserved"
++      snapshot.data.deep = deep
++      snapshot.data.missing = Object.fromEntries(Array.from({ length: 4100 }, (_, index) => [`field${index}`, undefined]))
++      return { commit: true, value: undefined }
++    })
++    await warm(store)
++    const before = (await read(store, "planner")).snapshot
++    await store.readSnapshotRoot!(async () => {
++      const first = current(store).planner
++      record(first.data.deep).next = "discarded"
++      record(first.data.missing).field0 = "discarded"
++      await store.transaction("planner", async (snapshot) => {
++        expect(snapshot).toEqual(before)
++        snapshot.data.deep = "discarded"
++        expect(Object.hasOwn(record(snapshot.data.missing), "field4099")).toBe(true)
++        expect(record(snapshot.data.missing).field4099).toBeUndefined()
++        return { commit: false, value: undefined }
++      })
++      expect(current(store).planner).toEqual(before)
++    })
++    expect((await read(store, "planner")).snapshot).toEqual(before)
++  })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts
+new file mode 100644
+index 0000000..14ad0af
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts
+@@ -0,0 +1,355 @@
++import { expect, test } from "bun:test"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { bytes, current, read, record, seed, surfaces, warm, withStores } from "../runtime-fresh-copy-cost/fixture.ts"
++
++for (const temperature of ["cold", "warm"] as const) {
++  test(`${temperature} readonly root supplies no mutable target and detaches every surface observation`, async () => {
++    await withStores(async (_directory, open) => {
++      const writer = await open()
++      await seed(writer)
++      const before = await Promise.all(surfaces.map((surface) => read(writer, surface)))
++      const store = await open()
++      if (temperature === "warm") await warm(store)
++      const calls = { root: 0, nested: 0, getters: 0 }
++      expect(typeof store.readSnapshotRoot).toBe("function")
++      expect(await store.readSnapshotRoot!(async (...args: unknown[]) => {
++        calls.root++
++        expect(args).toEqual([])
++        const first = current(store)
++        for (const [index, surface] of surfaces.entries()) {
++          expect(first[surface]).toEqual(before[index]!.snapshot)
++          expect(first[surface].data.left).not.toBe(first[surface].data.right)
++          record(first[surface].data.left).count = 90
++          first[surface].data.invalid = Object.defineProperty({}, "value", {
++            get() { calls.getters++; throw new Error("detached getter must not run") }, enumerable: true,
++          })
++          await store.transaction(surface, async (snapshot) => {
++            calls.nested++
++            expect(snapshot).toEqual(before[index]!.snapshot)
++            expect(snapshot).not.toBe(first[surface])
++            record(snapshot.data.left).count = 70
++            const cycle: Record<string, unknown> = {}
++            cycle.self = cycle
++            snapshot.data.discarded = cycle
++            await store.transaction(surface, async (again) => {
++              calls.nested++
++              expect(again).toEqual(before[index]!.snapshot)
++              expect(again).not.toBe(snapshot)
++              record(again.data.right).count = 80
++              return { commit: false, value: undefined }
++            })
++            expect(current(store)[surface]).toEqual(before[index]!.snapshot)
++            return { commit: false, value: undefined }
++          })
++        }
++        const second = current(store)
++        for (const [index, surface] of surfaces.entries()) {
++          expect(second[surface]).toEqual(before[index]!.snapshot)
++          expect(second[surface]).not.toBe(first[surface])
++          expect(Object.is(second[surface].data.minusZero, -0)).toBe(true)
++          expect(Object.hasOwn(second[surface].data, "optional")).toBe(true)
++        }
++        return "read-complete"
++      })).toBe("read-complete")
++      expect(calls).toEqual({ root: 1, nested: 6, getters: 0 })
++      expect(store.currentSnapshots?.()).toBeUndefined()
++      expect(await Promise.all(surfaces.map((surface) => read(store, surface)))).toEqual(before)
++    })
++  })
++}
++
++for (const effect of ["commit", "transaction-all", "nested-root", "blob-put", "blob-remove", "secret-put", "secret-take", "secret-remove"] as const) {
++  test(`readonly root refuses a swallowed ${effect} and leaves snapshots, blobs and secrets unchanged`, async () => {
++    await withStores(async (_directory, open) => {
++      const store = await open()
++      await seed(store)
++      await store.transaction("procurement", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++        await blobs.put("document", bytes, "binary")
++        return { commit: true, value: undefined }
++      })
++      await store.secrets.put("session", bytes, 1000)
++      await warm(store)
++      const before = await Promise.all(surfaces.map((surface) => read(store, surface)))
++      const calls = { root: 0, nested: 0, forbidden: 0, caught: 0 }
++      await expect(store.readSnapshotRoot!(async () => {
++        calls.root++
++        current(store)
++        const attempt = effect === "commit" ? store.transaction("planner", async (snapshot) => {
++          calls.nested++
++          snapshot.data.attempt = "must not survive"
++          return { commit: true, value: undefined }
++        }) : effect === "transaction-all" ? store.transactionAll!(async () => {
++          calls.forbidden++
++          return { commit: true, value: undefined }
++        }) : effect === "nested-root" ? store.readSnapshotRoot!(async () => {
++          calls.forbidden++
++          return undefined
++        }) : effect === "blob-put" || effect === "blob-remove" ? store.transaction("procurement", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++          calls.nested++
++          await (effect === "blob-put" ? blobs.put("document", new Uint8Array([4]), "changed") : blobs.remove("document"))
++            .catch(() => { calls.caught++ })
++          return { commit: false, value: undefined }
++        }) : effect === "secret-put" ? store.secrets.put("session", new Uint8Array([4]), 2000)
++          : effect === "secret-take" ? store.secrets.take("session", 0)
++            : store.secrets.remove("session")
++        await attempt.catch(() => { calls.caught++ })
++        expect(await store.secrets.get("session", 0)).toEqual(bytes)
++        return "must-not-escape"
++      })).rejects.toThrow("Nested local write attempted")
++      expect(calls).toEqual({
++        root: 1, nested: ["commit", "blob-put", "blob-remove"].includes(effect) ? 1 : 0,
++        forbidden: 0, caught: effect === "blob-put" || effect === "blob-remove" ? 2 : 1,
++      })
++      expect(await Promise.all(surfaces.map((surface) => read(store, surface)))).toEqual(before)
++      expect(await store.secrets.get("session", 0)).toEqual(bytes)
++      await store.dispose()
++      const reopened = await open()
++      expect(await Promise.all(surfaces.map((surface) => read(reopened, surface)))).toEqual(before)
++      expect(await reopened.secrets.get("session", 0)).toEqual(bytes)
++    })
++  })
++}
++
++test("a readonly root attempted inside a mutable transaction poisons the original writer even when caught", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const before = await read(store)
++    const calls = { forbidden: 0, caught: 0 }
++    await expect(store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.changed = "must roll back"
++      await store.readSnapshotRoot!(async () => { calls.forbidden++ }).catch(() => { calls.caught++ })
++      return { commit: true, value: undefined }
++    })).rejects.toThrow("Nested local write attempted")
++    expect(calls).toEqual({ forbidden: 0, caught: 1 })
++    expect(await read(store)).toEqual(before)
++  })
++})
++
++test("readonly roots reject pre-aborted work and a swallowed parent abort at the final fence", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const controller = new AbortController()
++    const calls = { root: 0, nested: 0, preaborted: 0 }
++    await expect(store.readSnapshotRoot!(async () => {
++      calls.root++
++      await expect(store.transaction("planner", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++        calls.nested++
++        controller.abort(new Error("readonly request revoked"))
++        expect(() => current(store)).toThrow("readonly request revoked")
++        await expect(blobs.get("document")).rejects.toThrow("readonly request revoked")
++        return { commit: false, value: undefined }
++      })).rejects.toThrow("readonly request revoked")
++      return "must-not-escape"
++    }, { signal: controller.signal })).rejects.toThrow("readonly request revoked")
++    await expect(store.readSnapshotRoot!(async () => {
++      calls.preaborted++
++    }, { signal: controller.signal })).rejects.toThrow("readonly request revoked")
++    expect(calls).toEqual({ root: 1, nested: 1, preaborted: 0 })
++    expect(await store.readSnapshotRoot!(async () => record(current(store).planner.data.left).count)).toBe(1)
++  })
++})
++
++test("a nested read abort does not revoke the still-open readonly parent", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const controller = new AbortController()
++    expect(await store.readSnapshotRoot!(async () => {
++      const before = current(store)
++      await expect(store.transaction("planner", async (snapshot) => {
++        record(snapshot.data.left).count = 9
++        controller.abort(new Error("child revoked"))
++        expect(() => current(store)).toThrow("child revoked")
++        return { commit: false, value: undefined }
++      }, { signal: controller.signal })).rejects.toThrow("child revoked")
++      expect(current(store)).toEqual(before)
++      return "parent-valid"
++    })).toBe("parent-valid")
++  })
++})
++
++test("a thrown readonly callback closes descendants and releases the store for a fresh root", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const before = await read(store)
++    const release = Promise.withResolvers<void>()
++    const retained: { observation?: Promise<unknown> } = {}
++    await expect(store.readSnapshotRoot!(async () => {
++      retained.observation = release.promise.then(() => current(store))
++      void retained.observation.catch(() => undefined)
++      record(current(store).dashboard.data.left).count = 90
++      throw new Error("readonly callback failed")
++    })).rejects.toThrow("readonly callback failed")
++    await store.readSnapshotRoot!(async () => {
++      release.resolve()
++      await expect(retained.observation).rejects.toThrow("scope has ended")
++      expect(current(store).dashboard).toEqual(before.snapshot)
++    })
++    expect(await read(store)).toEqual(before)
++  })
++})
++
++test("an unjoined reader prevents readonly success and cannot observe a closed root", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const started = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const child: { pending?: Promise<void> } = {}
++    try {
++      await expect(store.readSnapshotRoot!(async () => {
++        child.pending = store.transaction("planner", async () => {
++          started.resolve()
++          await release.promise
++          expect(() => current(store)).toThrow("scope has ended")
++          return { commit: false, value: undefined }
++        })
++        void child.pending.catch(() => undefined)
++        await started.promise
++        return "must-not-escape"
++      })).rejects.toThrow("Nested local read still active")
++      release.resolve()
++      await expect(child.pending).rejects.toThrow("scope has ended")
++      expect(await store.readSnapshotRoot!(async () => record(current(store).planner.data.left).count)).toBe(1)
++    } finally {
++      release.resolve()
++      await child.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("captured readonly descendants and blob capabilities expire without borrowing a later root", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const release = Promise.withResolvers<void>()
++    const retained: { observations?: Promise<unknown>; blobs?: BlobTransaction } = {}
++    await store.readSnapshotRoot!(async () => {
++      retained.observations = release.promise.then(() => current(store))
++      void retained.observations.catch(() => undefined)
++      await store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++        retained.blobs = blobs
++        return { commit: false, value: undefined }
++      })
++      await expect(retained.blobs!.get("document")).rejects.toThrow("scope has ended")
++    })
++    expect(await store.readSnapshotRoot!(async () => {
++      const fresh = current(store)
++      release.resolve()
++      await expect(retained.observations).rejects.toThrow("scope has ended")
++      await expect(retained.blobs!.get("document")).rejects.toThrow("scope has ended")
++      await expect(retained.blobs!.put("document", bytes, "binary")).rejects.toThrow("scope has ended")
++      await expect(retained.blobs!.remove("document")).rejects.toThrow("scope has ended")
++      expect(current(store)).toEqual(fresh)
++      return "new-root-valid"
++    })).toBe("new-root-valid")
++    expect((await read(store)).blob).toBeUndefined()
++  })
++})
++
++test("dispose drains an admitted readonly root and refuses subsequent admissions", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const started = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const calls: string[] = []
++    const running = store.readSnapshotRoot!(async () => {
++      calls.push("admitted")
++      const before = current(store)
++      started.resolve()
++      await release.promise
++      expect(current(store)).toEqual(before)
++      return "drained"
++    })
++    await started.promise
++    const completions: string[] = []
++    const disposing = store.dispose().then(() => { completions.push("disposed") })
++    try {
++      await expect(store.readSnapshotRoot!(async () => { calls.push("late") })).rejects.toThrow("disposed")
++      expect(completions).toEqual([])
++    } finally {
++      release.resolve()
++      expect(await running).toBe("drained")
++      await disposing
++    }
++    expect(calls).toEqual(["admitted"])
++    expect(completions).toEqual(["disposed"])
++    expect(record((await read(await open())).snapshot.data.left).count).toBe(1)
++  })
++})
++
++for (const effect of ["transaction", "transaction-all", "secret-put", "secret-take", "secret-remove"] as const) {
++  test(`a ${effect} refused after concurrent dispose still poisons its admitted readonly root when caught`, async () => {
++    await withStores(async (_directory, open) => {
++      const store = await open()
++      await seed(store)
++      await store.secrets.put("session", bytes, 1000)
++      const before = await read(store)
++      const started = Promise.withResolvers<void>()
++      const release = Promise.withResolvers<void>()
++      const calls = { forbidden: 0, caught: 0 }
++      const running = store.readSnapshotRoot!(async () => {
++        started.resolve()
++        await release.promise
++        const attempt = effect === "transaction" ? store.transaction("dashboard", async (snapshot) => {
++          calls.forbidden++
++          snapshot.data.attempt = "must not survive"
++          return { commit: true, value: undefined }
++        }) : effect === "transaction-all" ? store.transactionAll!(async () => {
++          calls.forbidden++
++          return { commit: true, value: undefined }
++        }) : effect === "secret-put" ? store.secrets.put("session", new Uint8Array([4]), 2000)
++          : effect === "secret-take" ? store.secrets.take("session", 0)
++            : store.secrets.remove("session")
++        await attempt.catch(() => { calls.caught++ })
++        return "must-not-escape"
++      })
++      void running.catch(() => undefined)
++      await started.promise
++      const disposing = store.dispose()
++      try {
++        release.resolve()
++        await expect(running).rejects.toThrow("Nested local write attempted")
++      } finally {
++        release.resolve()
++        await disposing
++      }
++      expect(calls).toEqual({ forbidden: 0, caught: 1 })
++      const reopened = await open()
++      expect(await read(reopened)).toEqual(before)
++      expect(await reopened.secrets.get("session", 0)).toEqual(bytes)
++    })
++  })
++}
++
++test("readonly materialization never sanitizes invalid values inserted into a later mutable target", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await store.readSnapshotRoot!(async () => current(store))
++    const before = await read(store)
++    const calls = { getters: 0, nested: 0 }
++    const cycle: Record<string, unknown> = {}
++    cycle.self = cycle
++    const accessor = Object.defineProperty({}, "hidden", { get() { calls.getters++; return 1 }, enumerable: true })
++    for (const invalid of [Object.create({ inherited: true }), accessor, cycle, { fn: () => undefined }, { value: Symbol("invalid") }, { value: Infinity }]) {
++      await store.transaction("dashboard", async (snapshot) => {
++        snapshot.data.invalid = invalid
++        expect(() => current(store)).toThrow()
++        await expect(store.transaction("dashboard", async () => {
++          calls.nested++
++          return { commit: false, value: undefined }
++        })).rejects.toThrow()
++        return { commit: false, value: undefined }
++      })
++      expect(await read(store)).toEqual(before)
++      expect(await store.readSnapshotRoot!(async () => current(store).dashboard)).toEqual(before.snapshot)
++    }
++    expect(calls).toEqual({ getters: 0, nested: 0 })
++  })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts
+new file mode 100644
+index 0000000..1d0ca64
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts
+@@ -0,0 +1,236 @@
++import { expect, test } from "bun:test"
++import type { Surface } from "../../../src/identity.ts"
++import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
++import { createCanonicalReadFixture } from "./canonical-fixture.ts"
++
++const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
++
++for (const wrapper of ["source", "fence"] as const) test(`readonly root preserves canonical ${wrapper} callbacks, observations and authorizations against legacy on the same SQLite`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper })
++  try {
++    expect(typeof fixture.capablePersistence.readSnapshotRoot).toBe("function")
++    expect(Object.hasOwn(fixture.legacyPersistence, "readSnapshotRoot")).toBe(false)
++    const records: unknown[] = []
++    for (const persistence of [fixture.legacyPersistence, fixture.capablePersistence]) {
++      fixture.resetMetrics()
++      const host = { ...fixture.host, persistence }
++      let work = 0
++      let joined = 0
++      let observers = 0
++      const accepted = await fixture.withinFence(async () => {
++        fixture.fence.observe(fixture.context, (snapshots) => {
++          observers++
++          return surfaces.every((surface) => snapshots[surface].data.marker === surface)
++        })
++        return readPortfolioSnapshot(host, fixture.context, {}, async () => {
++          work++
++          for (const surface of surfaces) {
++            const marker = await persistence.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot.data.marker }))
++            if (marker !== surface) return false
++          }
++          return readPortfolioSnapshot(host, fixture.context, {}, async () => { joined++; return true }, false)
++        }, false)
++      })
++      expect(accepted).toBe(true)
++      expect(work).toBe(1)
++      expect(joined).toBe(1)
++      expect(observers).toBeGreaterThan(0)
++      expect(fixture.metrics.transactions).toEqual({ dashboard: 2, planner: 1, procurement: 1 })
++      expect(fixture.metrics.callbacks).toEqual({ dashboard: 2, planner: 1, procurement: 1 })
++      records.push({ observers, ...structuredClone(fixture.metrics), roots: 0 })
++      expect(fixture.metrics.roots).toBe(persistence === fixture.capablePersistence ? 1 : 0)
++    }
++    expect(records[1]).toEqual(records[0])
++  } finally { await fixture.close() }
++})
++
++for (const legacy of [true, false]) test(`readonly root keeps the Dashboard source anchor with partial metadata (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ legacy, initialized: ["procurement"] })
++  try {
++    let work = 0
++    expect(await fixture.read(async () => { work++; return true })).toBe(false)
++    expect(work).toBe(0)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(0)
++    expect(fixture.metrics.transactions.procurement).toBe(0)
++  } finally { await fixture.close() }
++})
++
++for (const legacy of [true, false]) test(`readonly root admits unobserved partial source metadata without inventing new guards (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ legacy, initialized: ["dashboard"] })
++  try {
++    expect(await fixture.read(async () => true)).toBe(true)
++    expect(fixture.metrics.callbacks).toEqual({ dashboard: 1, planner: 0, procurement: 0 })
++    expect(fixture.metrics.revalidations).toBe(1)
++    const snapshots = await fixture.driver.transaction("dashboard", async () => ({ commit: false, value: fixture.driver.currentSnapshots!() }))
++    expect(snapshots?.dashboard.sfSources?.schemaVersion).toBe(1)
++    expect(snapshots?.planner.sfSources).toBeUndefined()
++    expect(snapshots?.procurement.sfSources).toBeUndefined()
++  } finally { await fixture.close() }
++})
++
++for (const surface of surfaces) for (const damage of ["missing", "record", "scope"] as const) test(`readonly root preserves the ${surface} source guard for ${damage} metadata`, async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    await fixture.driver.transaction(surface, async (snapshot) => {
++      if (damage === "missing") delete snapshot.sfSources
++      if (damage === "record") snapshot.sfSources!.records[JSON.stringify(["readonly-fixture", surface])]!.version = 0
++      if (damage === "scope") Reflect.set(snapshot.sfSources!, "scopes", { corrupt: { version: 1 } })
++      return { commit: true, value: undefined }
++    })
++    const observations: unknown[] = []
++    for (const persistence of [fixture.legacyPersistence, fixture.capablePersistence]) {
++      fixture.resetMetrics()
++      let work = 0
++      let target = 0
++      const accepted = await readPortfolioSnapshot({ ...fixture.host, persistence }, fixture.context, {}, async () => {
++        work++
++        return persistence.transaction(surface, async () => { target++; return { commit: false, value: true } })
++      }, false)
++      expect(accepted).toBe(false)
++      expect(work).toBe(surface === "dashboard" ? 0 : 1)
++      expect(target).toBe(0)
++      expect(fixture.metrics.callbacks[surface]).toBe(0)
++      observations.push({ ...structuredClone(fixture.metrics), roots: 0 })
++    }
++    expect(observations[1]).toEqual(observations[0])
++  } finally { await fixture.close() }
++})
++
++for (const wrapper of ["source", "fence"] as const) test(`readonly root cannot return success before the canonical ${wrapper} publication guard`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper })
++  try {
++    let result: boolean | undefined
++    let observers = 0
++    await expect(fixture.withinFence(async () => {
++      fixture.fence.observe(fixture.context, () => { observers++; return false })
++      result = await fixture.read(async () => true)
++      return result
++    })).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
++    expect(result).toBe(false)
++    expect(observers).toBeGreaterThan(0)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++  } finally { await fixture.close() }
++})
++
++for (const drift of ["installation", "project", "request", "authorization", "lease"] as const) test(`readonly root refuses ${drift} drift across a canonical read`, async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    let work = 0
++    const accepted = await fixture.read(async () => {
++      work++
++      if (drift === "installation") fixture.identity.installationId = "different-installation"
++      if (drift === "project") fixture.identity.projectId = "different-project"
++      if (drift === "request") fixture.controls.requestOverride = new Request(fixture.request.url, { headers: fixture.request.headers })
++      if (drift === "authorization") fixture.controls.enabled = false
++      if (drift === "lease") fixture.ui.finish(fixture.context)
++      return true
++    })
++    expect(work).toBe(1)
++    expect(accepted).toBe(false)
++    expect(fixture.request.signal.aborted).toBe(false)
++  } finally { await fixture.close() }
++})
++
++for (const field of ["installationId", "projectId"] as const) for (const wrapper of ["source", "fence"] as const) test(`readonly root preserves ${wrapper} installation fencing when ${field} changes but UI authority stays valid`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper })
++  try {
++    let result: boolean | undefined
++    await expect(fixture.withinFence(async () => {
++      result = await fixture.read(async () => {
++        fixture.controls.identityOverride = {
++          installationId: fixture.identity.installationId, projectId: fixture.identity.projectId, [field]: "other-installation-context",
++        }
++        return true
++      })
++      return result
++    })).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
++    expect(result).toBe(false)
++    expect(await fixture.ui.revalidate(fixture.context)).toBe(true)
++    expect(fixture.ui.requestFor(fixture.context)).toBe(fixture.request)
++  } finally { await fixture.close() }
++})
++
++for (const wrapper of ["source", "fence"] as const) for (const legacy of [true, false]) test(`readonly root preserves caught-write poison through ${wrapper} (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper, legacy })
++  try {
++    let caught = 0
++    expect(await fixture.read(async () => {
++      await fixture.persistence.transaction("procurement", async (snapshot) => {
++        snapshot.data.marker = "attempted-write"
++        return { commit: true, value: true }
++      }).catch(() => { caught++; return false })
++      return true
++    })).toBe(false)
++    expect(caught).toBe(1)
++    expect(fixture.metrics.callbacks.procurement).toBe(1)
++    expect(await fixture.driver.transaction("procurement", async (snapshot) => ({ commit: false, value: snapshot.data.marker }))).toBe("procurement")
++  } finally { await fixture.close() }
++})
++
++test("readonly root keeps the final host revalidation after the work callback", async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    let workFinished = false
++    fixture.controls.onRevalidate = () => {
++      expect(workFinished).toBe(true)
++      fixture.controls.enabled = false
++    }
++    expect(await fixture.read(async () => { workFinished = true; return true })).toBe(false)
++    expect(fixture.metrics.revalidations).toBe(1)
++    expect(fixture.metrics.authorizations).toBe(1)
++  } finally { await fixture.close() }
++})
++
++test("readonly root joins only the helper's matching own scope and keeps the nested authorization", async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    let foreign = 0
++    const refused = await fixture.persistence.transaction("dashboard", async () => ({
++      commit: false, value: await fixture.read(async () => { foreign++; return true }),
++    }))
++    expect(refused).toBe(false)
++    expect(foreign).toBe(0)
++    fixture.resetMetrics()
++    let nested = 0
++    expect(await fixture.read(async () => fixture.read(async () => { nested++; return true }))).toBe(true)
++    expect(nested).toBe(1)
++    expect(fixture.metrics.roots).toBe(1)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++    expect(fixture.metrics.revalidations).toBe(2)
++  } finally { await fixture.close() }
++})
++
++for (const legacy of [true, false]) test(`readonly root pins capability identity during the read (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ legacy })
++  try {
++    const original = fixture.persistence.readSnapshotRoot
++    const capability = fixture.capablePersistence.readSnapshotRoot
++    if (!capability) throw new Error("Readonly fixture capability unavailable")
++    const accepted = await fixture.read(async () => {
++      if (legacy) fixture.persistence.readSnapshotRoot = capability
++      if (!legacy) delete fixture.persistence.readSnapshotRoot
++      return true
++    })
++    expect(accepted).toBe(false)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++    if (original) fixture.persistence.readSnapshotRoot = original
++    if (!original) delete fixture.persistence.readSnapshotRoot
++  } finally { await fixture.close() }
++})
++
++test("legacy persistence remains usable after unrelated capability-backed reads", async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    expect(await fixture.read(async () => true)).toBe(true)
++    fixture.resetMetrics()
++    expect(await readPortfolioSnapshot({ ...fixture.host, persistence: fixture.legacyPersistence }, fixture.context, {}, async () => true, false)).toBe(true)
++    expect(fixture.metrics.roots).toBe(0)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++    expect(fixture.metrics.revalidations).toBe(1)
++    expect(fixture.driver.currentSnapshots!()).toBeUndefined()
++  } finally { await fixture.close() }
++})

@@ -1,0 +1,1072 @@
+{
+  "schema": "sf2-mission52-diagnostic-profile-v2",
+  "run_id": 43665193618,
+  "purpose": "DIAGNOSTIC_ONLY_NOT_FINAL_ACCEPTANCE",
+  "profile_records": 124,
+  "allowed_fields_only": true,
+  "pairing_key": [
+    "case_line",
+    "stage",
+    "id"
+  ],
+  "paired_calls": [
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 1,
+      "start": 42600.190706,
+      "end": 42947.142188,
+      "elapsed_ms": 346.9521339999992,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 2,
+      "start": 42953.727875,
+      "end": 43658.566007,
+      "elapsed_ms": 704.8385800000033,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 3,
+      "start": 42957.289897,
+      "end": 43666.131309,
+      "elapsed_ms": 708.8415649999952,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 4,
+      "start": 43670.33961,
+      "end": 44395.98388,
+      "elapsed_ms": 725.6448669999954,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 5,
+      "start": 43677.212677,
+      "end": 44405.265176,
+      "elapsed_ms": 728.0526579999932,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 6,
+      "start": 44396.270895,
+      "end": 45104.51007,
+      "elapsed_ms": 708.2396420000005,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 7,
+      "start": 44405.571789,
+      "end": 45119.186511,
+      "elapsed_ms": 713.6148299999986,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 8,
+      "start": 45104.559146,
+      "end": 45835.071912,
+      "elapsed_ms": 730.5132529999973,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 9,
+      "start": 45119.226573,
+      "end": 45845.226532,
+      "elapsed_ms": 726.0001859999975,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 1,
+      "start": 45871.148769,
+      "end": 46586.845542,
+      "elapsed_ms": 715.6967730000033,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 2,
+      "start": 46587.3872,
+      "end": 46930.357316,
+      "elapsed_ms": 342.97011600000405,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 3,
+      "start": 46932.553326,
+      "end": 47732.031334,
+      "elapsed_ms": 799.4780079999982,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 4,
+      "start": 47733.514072,
+      "end": 48088.635125,
+      "elapsed_ms": 355.1210530000026,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 5,
+      "start": 48090.384431,
+      "end": 48882.378118,
+      "elapsed_ms": 791.993687000002,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 6,
+      "start": 48883.925589,
+      "end": 49602.960708,
+      "elapsed_ms": 719.0351190000001,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 7,
+      "start": 49604.135135,
+      "end": 49948.040793,
+      "elapsed_ms": 343.9056580000033,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 8,
+      "start": 49950.129586,
+      "end": 50308.789972,
+      "elapsed_ms": 358.6603859999959,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.resolveMany",
+      "id": 1,
+      "start": 45857.164729,
+      "end": 50313.636442,
+      "elapsed_ms": 4456.471713000006,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 2,
+      "start": 50314.013981,
+      "end": 50330.774408,
+      "elapsed_ms": 16.760427000001073,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 3,
+      "start": 50330.845472,
+      "end": 50689.547408,
+      "elapsed_ms": 358.70193599999766,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 4,
+      "start": 50689.847909,
+      "end": 50707.609913,
+      "elapsed_ms": 17.7620040000038,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 5,
+      "start": 50707.683404,
+      "end": 51156.082583,
+      "elapsed_ms": 448.399179,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 9,
+      "start": 51174.057521,
+      "end": 51978.621604,
+      "elapsed_ms": 804.5640829999975,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 10,
+      "start": 51979.034354,
+      "end": 52326.734042,
+      "elapsed_ms": 347.69968799999333,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 11,
+      "start": 52328.575283,
+      "end": 53073.287579,
+      "elapsed_ms": 744.7122960000052,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 12,
+      "start": 53074.651998,
+      "end": 53432.244189,
+      "elapsed_ms": 357.5921909999961,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 13,
+      "start": 53433.969118,
+      "end": 54192.383234,
+      "elapsed_ms": 758.4141159999999,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 14,
+      "start": 54193.843046,
+      "end": 54881.594542,
+      "elapsed_ms": 687.7514959999971,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 15,
+      "start": 54882.700441,
+      "end": 55221.133961,
+      "elapsed_ms": 338.4335199999987,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 16,
+      "start": 55223.096087,
+      "end": 55575.398599,
+      "elapsed_ms": 352.302512000002,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.resolveMany",
+      "id": 6,
+      "start": 51157.138557,
+      "end": 55580.486415,
+      "elapsed_ms": 4423.347858000001,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 7,
+      "start": 55596.959669,
+      "end": 55614.164732,
+      "elapsed_ms": 17.20506299999397,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 8,
+      "start": 55614.242479,
+      "end": 55957.064385,
+      "elapsed_ms": 342.8219059999974,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 9,
+      "start": 55957.389965,
+      "end": 55976.102306,
+      "elapsed_ms": 18.71234099999856,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 10,
+      "start": 55976.178894,
+      "end": 56320.553051,
+      "elapsed_ms": 344.37415700000565,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.evaluateCriterion",
+      "id": 11,
+      "start": 56324.298031,
+      "end": 56687.032928,
+      "elapsed_ms": 362.7348970000021,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.evaluateCriterion",
+      "id": 12,
+      "start": 56687.198881,
+      "end": 57057.608574,
+      "elapsed_ms": 370.4096930000014,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 17,
+      "start": 57070.384642,
+      "end": 57768.649299,
+      "elapsed_ms": 698.2646569999997,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 18,
+      "start": 57769.079508,
+      "end": 58112.618774,
+      "elapsed_ms": 343.53926599999977,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 19,
+      "start": 58114.571098,
+      "end": 58890.782607,
+      "elapsed_ms": 776.2115090000007,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 20,
+      "start": 58892.224221,
+      "end": 59240.549583,
+      "elapsed_ms": 348.3253620000032,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 21,
+      "start": 59242.542958,
+      "end": 60003.133704,
+      "elapsed_ms": 760.5907460000017,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 22,
+      "start": 60004.546039,
+      "end": 60722.713292,
+      "elapsed_ms": 718.1672529999996,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 23,
+      "start": 60723.886511,
+      "end": 61052.6317,
+      "elapsed_ms": 328.7451890000011,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 24,
+      "start": 61055.055106,
+      "end": 61403.360537,
+      "elapsed_ms": 348.3054310000007,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.resolveMany",
+      "id": 13,
+      "start": 57057.692753,
+      "end": 61408.431672,
+      "elapsed_ms": 4350.738918999996,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 14,
+      "start": 61424.602467,
+      "end": 61441.380592,
+      "elapsed_ms": 16.778125000004366,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 15,
+      "start": 61441.47945,
+      "end": 61789.542539,
+      "elapsed_ms": 348.06308900000295,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 16,
+      "start": 61789.838771,
+      "end": 61806.502121,
+      "elapsed_ms": 16.663349999995262,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 17,
+      "start": 61806.59591,
+      "end": 62158.584714,
+      "elapsed_ms": 351.9888040000005,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "planner.compareScenarios",
+      "id": 10,
+      "start": 45853.043151,
+      "end": 62162.251789,
+      "elapsed_ms": 16309.209336,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 11,
+      "start": 62162.344455,
+      "end": 62519.396683,
+      "elapsed_ms": 357.053101000005,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 12,
+      "start": 62526.059167,
+      "end": 63188.515537,
+      "elapsed_ms": 662.4566100000011,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 13,
+      "start": 62529.476449,
+      "end": 63195.408067,
+      "elapsed_ms": 665.9318490000005,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 14,
+      "start": 63199.232445,
+      "end": 63920.215869,
+      "elapsed_ms": 720.9837299999999,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 15,
+      "start": 63205.530396,
+      "end": 63930.157665,
+      "elapsed_ms": 724.6274369999956,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 16,
+      "start": 63920.564572,
+      "end": 64607.389629,
+      "elapsed_ms": 686.8253889999978,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "case.read",
+      "id": 17,
+      "start": 63930.462786,
+      "end": 64614.044106,
+      "elapsed_ms": 683.5823120000059,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 18,
+      "start": 64607.475494,
+      "end": 65298.577695,
+      "elapsed_ms": 691.1039450000026,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "result.readHistoricalScenario",
+      "id": 19,
+      "start": 64614.088099,
+      "end": 65308.505502,
+      "elapsed_ms": 694.4176129999978,
+      "event": "end"
+    }
+  ],
+  "unpaired": [],
+  "planner_intervals": [
+    {
+      "case_line": 12,
+      "stage": "planner.compareScenarios",
+      "id": 10,
+      "start": 45853.043151,
+      "end": 62162.251789,
+      "elapsed_ms": 16309.209336,
+      "event": "end"
+    }
+  ],
+  "inside_planner": [
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 1,
+      "start": 45871.148769,
+      "end": 46586.845542,
+      "elapsed_ms": 715.6967730000033,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 2,
+      "start": 46587.3872,
+      "end": 46930.357316,
+      "elapsed_ms": 342.97011600000405,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 3,
+      "start": 46932.553326,
+      "end": 47732.031334,
+      "elapsed_ms": 799.4780079999982,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 4,
+      "start": 47733.514072,
+      "end": 48088.635125,
+      "elapsed_ms": 355.1210530000026,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 5,
+      "start": 48090.384431,
+      "end": 48882.378118,
+      "elapsed_ms": 791.993687000002,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 6,
+      "start": 48883.925589,
+      "end": 49602.960708,
+      "elapsed_ms": 719.0351190000001,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 7,
+      "start": 49604.135135,
+      "end": 49948.040793,
+      "elapsed_ms": 343.9056580000033,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 8,
+      "start": 49950.129586,
+      "end": 50308.789972,
+      "elapsed_ms": 358.6603859999959,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.resolveMany",
+      "id": 1,
+      "start": 45857.164729,
+      "end": 50313.636442,
+      "elapsed_ms": 4456.471713000006,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 2,
+      "start": 50314.013981,
+      "end": 50330.774408,
+      "elapsed_ms": 16.760427000001073,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 3,
+      "start": 50330.845472,
+      "end": 50689.547408,
+      "elapsed_ms": 358.70193599999766,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 4,
+      "start": 50689.847909,
+      "end": 50707.609913,
+      "elapsed_ms": 17.7620040000038,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 5,
+      "start": 50707.683404,
+      "end": 51156.082583,
+      "elapsed_ms": 448.399179,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 9,
+      "start": 51174.057521,
+      "end": 51978.621604,
+      "elapsed_ms": 804.5640829999975,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 10,
+      "start": 51979.034354,
+      "end": 52326.734042,
+      "elapsed_ms": 347.69968799999333,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 11,
+      "start": 52328.575283,
+      "end": 53073.287579,
+      "elapsed_ms": 744.7122960000052,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 12,
+      "start": 53074.651998,
+      "end": 53432.244189,
+      "elapsed_ms": 357.5921909999961,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 13,
+      "start": 53433.969118,
+      "end": 54192.383234,
+      "elapsed_ms": 758.4141159999999,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 14,
+      "start": 54193.843046,
+      "end": 54881.594542,
+      "elapsed_ms": 687.7514959999971,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 15,
+      "start": 54882.700441,
+      "end": 55221.133961,
+      "elapsed_ms": 338.4335199999987,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 16,
+      "start": 55223.096087,
+      "end": 55575.398599,
+      "elapsed_ms": 352.302512000002,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.resolveMany",
+      "id": 6,
+      "start": 51157.138557,
+      "end": 55580.486415,
+      "elapsed_ms": 4423.347858000001,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 7,
+      "start": 55596.959669,
+      "end": 55614.164732,
+      "elapsed_ms": 17.20506299999397,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 8,
+      "start": 55614.242479,
+      "end": 55957.064385,
+      "elapsed_ms": 342.8219059999974,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 9,
+      "start": 55957.389965,
+      "end": 55976.102306,
+      "elapsed_ms": 18.71234099999856,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 10,
+      "start": 55976.178894,
+      "end": 56320.553051,
+      "elapsed_ms": 344.37415700000565,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.evaluateCriterion",
+      "id": 11,
+      "start": 56324.298031,
+      "end": 56687.032928,
+      "elapsed_ms": 362.7348970000021,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.evaluateCriterion",
+      "id": 12,
+      "start": 56687.198881,
+      "end": 57057.608574,
+      "elapsed_ms": 370.4096930000014,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 17,
+      "start": 57070.384642,
+      "end": 57768.649299,
+      "elapsed_ms": 698.2646569999997,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 18,
+      "start": 57769.079508,
+      "end": 58112.618774,
+      "elapsed_ms": 343.53926599999977,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 19,
+      "start": 58114.571098,
+      "end": 58890.782607,
+      "elapsed_ms": 776.2115090000007,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 20,
+      "start": 58892.224221,
+      "end": 59240.549583,
+      "elapsed_ms": 348.3253620000032,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.compareForecast",
+      "id": 21,
+      "start": 59242.542958,
+      "end": 60003.133704,
+      "elapsed_ms": 760.5907460000017,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readHistoricalBatch",
+      "id": 22,
+      "start": 60004.546039,
+      "end": 60722.713292,
+      "elapsed_ms": 718.1672529999996,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 23,
+      "start": 60723.886511,
+      "end": 61052.6317,
+      "elapsed_ms": 328.7451890000011,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "stored.readCase",
+      "id": 24,
+      "start": 61055.055106,
+      "end": 61403.360537,
+      "elapsed_ms": 348.3054310000007,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.resolveMany",
+      "id": 13,
+      "start": 57057.692753,
+      "end": 61408.431672,
+      "elapsed_ms": 4350.738918999996,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 14,
+      "start": 61424.602467,
+      "end": 61441.380592,
+      "elapsed_ms": 16.778125000004366,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 15,
+      "start": 61441.47945,
+      "end": 61789.542539,
+      "elapsed_ms": 348.06308900000295,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateSource",
+      "id": 16,
+      "start": 61789.838771,
+      "end": 61806.502121,
+      "elapsed_ms": 16.663349999995262,
+      "event": "end"
+    },
+    {
+      "case_line": 12,
+      "stage": "scenario.validateCoverage",
+      "id": 17,
+      "start": 61806.59591,
+      "end": 62158.584714,
+      "elapsed_ms": 351.9888040000005,
+      "event": "end"
+    }
+  ],
+  "inside_planner_stage_totals": {
+    "stored.readHistoricalBatch": {
+      "count": 6,
+      "inclusive_elapsed_ms": 4343.479380999997,
+      "maximum_elapsed_ms": 804.5640829999975,
+      "values_ms": [
+        715.6967730000033,
+        719.0351190000001,
+        804.5640829999975,
+        687.7514959999971,
+        698.2646569999997,
+        718.1672529999996
+      ]
+    },
+    "stored.readCase": {
+      "count": 12,
+      "inclusive_elapsed_ms": 4165.600372000001,
+      "maximum_elapsed_ms": 358.6603859999959,
+      "values_ms": [
+        342.97011600000405,
+        355.1210530000026,
+        343.9056580000033,
+        358.6603859999959,
+        347.69968799999333,
+        357.5921909999961,
+        338.4335199999987,
+        352.302512000002,
+        343.53926599999977,
+        348.3253620000032,
+        328.7451890000011,
+        348.3054310000007
+      ]
+    },
+    "stored.compareForecast": {
+      "count": 6,
+      "inclusive_elapsed_ms": 4631.400362000008,
+      "maximum_elapsed_ms": 799.4780079999982,
+      "values_ms": [
+        799.4780079999982,
+        791.993687000002,
+        744.7122960000052,
+        758.4141159999999,
+        776.2115090000007,
+        760.5907460000017
+      ]
+    },
+    "scenario.resolveMany": {
+      "count": 3,
+      "inclusive_elapsed_ms": 13230.558490000003,
+      "maximum_elapsed_ms": 4456.471713000006,
+      "values_ms": [
+        4456.471713000006,
+        4423.347858000001,
+        4350.738918999996
+      ]
+    },
+    "scenario.validateSource": {
+      "count": 6,
+      "inclusive_elapsed_ms": 103.88130999999703,
+      "maximum_elapsed_ms": 18.71234099999856,
+      "values_ms": [
+        16.760427000001073,
+        17.7620040000038,
+        17.20506299999397,
+        18.71234099999856,
+        16.778125000004366,
+        16.663349999995262
+      ]
+    },
+    "scenario.validateCoverage": {
+      "count": 6,
+      "inclusive_elapsed_ms": 2194.349071000004,
+      "maximum_elapsed_ms": 448.399179,
+      "values_ms": [
+        358.70193599999766,
+        448.399179,
+        342.8219059999974,
+        344.37415700000565,
+        348.06308900000295,
+        351.9888040000005
+      ]
+    },
+    "scenario.evaluateCriterion": {
+      "count": 2,
+      "inclusive_elapsed_ms": 733.1445900000035,
+      "maximum_elapsed_ms": 370.4096930000014,
+      "values_ms": [
+        362.7348970000021,
+        370.4096930000014
+      ]
+    }
+  },
+  "http_markers": [
+    {
+      "case_line": 12,
+      "stage": "http.before-withCase",
+      "at": 42232.538009
+    },
+    {
+      "case_line": 12,
+      "stage": "http.producer-start",
+      "at": 42591.229304,
+      "elapsed": 358.6973969999963
+    },
+    {
+      "case_line": 12,
+      "stage": "http.producer-end",
+      "at": 65333.786894,
+      "elapsed": 23101.249634999993,
+      "status": "ok"
+    },
+    {
+      "case_line": 12,
+      "stage": "http.after-withCase",
+      "at": 65337.371475,
+      "elapsed": 23104.834250999993,
+      "status": "ok"
+    }
+  ],
+  "limits": [
+    "Nested stage durations overlap and cannot be added as exclusive CPU.",
+    "Async elapsed includes descendants and waiting; no SQL/CPU/clone exclusive attribution.",
+    "Profile status does not expose a response body or qualify subsequent browser assertions.",
+    "Temporary profiling must be removed before final nominal qualification."
+  ],
+  "intervals_ms": {
+    "before_withCase_to_producer_start": 358.6912949999969,
+    "producer_start_to_planner_start": 3261.8138469999976,
+    "planner_compareScenarios": 16309.209336,
+    "planner_end_to_producer_end": 3171.5351049999954,
+    "producer_wall_total": 22742.557589999997,
+    "before_withCase_to_after_withCase": 23104.833465999996
+  },
+  "conclusion": "The preserved three fresh scenario-resolution phases consume 13230.558ms of the single 16309.209ms Planner interval. Their descendants are real historical batches, case reads and Forecast comparison. Coverage adds 2194.349ms outside resolution. This localizes elapsed work but does not establish an exclusive SQL, clone or CPU cause or qualify a safe optimization.",
+  "comparison_to_diagnostic07": "Different hosted invocations with additional timers; no isolated regression or speedup inference from 12551ms versus16309ms."
+}

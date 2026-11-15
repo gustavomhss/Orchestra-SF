@@ -1404,11 +1404,58 @@
     "planner_ms": 12551.298028
   },
   "eighth_diagnostic": {
-    "status": "RUNNING_DIAGNOSTIC_ONLY",
+    "status": "COMPLETED_DIAGNOSTIC_ONLY",
     "run": 43665193618,
     "W": "a6e4102a92742bda6bfede2c66ce1130b3d6df07",
     "S": "8392e09ae87a6df68790a69d223585e830ec82ca",
     "request": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
-    "scope": "D7 measured Planner 12551ms; D8 separates scenario batch, stored-case, Forecast projection, source, coverage and criterion callbacks."
+    "scope": "D7 measured Planner 12551ms; D8 separates scenario batch, stored-case, Forecast projection, source, coverage and criterion callbacks.",
+    "passed": 3,
+    "failed": 2,
+    "receipt": "diagnostic-08.json",
+    "planner_ms": 16309.209336,
+    "profile": "diagnostics/08/profile-summary.json"
+  },
+  "ninth_qualification": {
+    "status": "RUNNING_CLEAN_CANDIDATE",
+    "run": 43667462702,
+    "job": 132669914814,
+    "W": "0917b48676b2828b94ec85a9926f79db49e6076e",
+    "S": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+    "base": "C28",
+    "base_sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "original_tests": 5,
+    "own_shared_paths": 21,
+    "foreign59_paths": 9,
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "diagnostics_removed": true,
+    "foreign_proposal_only": true,
+    "GLOBAL_RELEASE": false
+  },
+  "current_target_authority": {
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "material": "C28",
+    "integrator": "60",
+    "ACK60": "95a0a793cce1c5c0e03942306189cd518afbe1ce",
+    "epoch": "S0-C-e12-browser60",
+    "requested_terminal_owner": "47",
+    "root52_does_not_integrate": true
+  },
+  "foreign59_proposal": {
+    "source_publication": "f1796aaa74ed0095f64e1f33ef45261f338edd4b",
+    "source_latest_observed": "648499843124aebcb97111e1e671b1fe5009ea59",
+    "unit_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "manifest_blob": "8831e0ee2a12f409bb855796a311ca54ed4189e9",
+    "R2": {
+      "run": 43665988509,
+      "status": "130PASS0FAIL_CONFORMANCE_ONLY"
+    },
+    "P03": {
+      "run": 43666746009,
+      "status": "FAIL_180000MS_PRESERVED"
+    },
+    "source_lease": "ACTIVE",
+    "integration_and_release": "HOLD",
+    "isolated_W52": "Allowed by execution[3] of pinned package52; no PASS transfer"
   }
 }

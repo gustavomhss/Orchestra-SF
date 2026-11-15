@@ -1,6 +1,6 @@
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65
+index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65 100644
 --- /dev/null
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
 @@ -0,0 +1,84 @@
@@ -481,14 +481,15 @@ index 302334c0e5a50c681005d6c6463132abce84d8b1..b572fbf4525e2d5015a1e8d4245c9608
        "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
 diff --git a/apps/cli/src/sucafina-product/decision-case-http.ts b/apps/cli/src/sucafina-product/decision-case-http.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..13188a92ace68e6730bd22f8ee87872af2c1dea1
+index 0000000000000000000000000000000000000000..1c0fabda68c92b3d7a14b569c2c3e960ff39476c 100644
 --- /dev/null
 +++ b/apps/cli/src/sucafina-product/decision-case-http.ts
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,84 @@
 +import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 +import { createDecisionCaseManagement } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
 +import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
 +import { createDecisionCaseHttp } from "../../../../modules/sucafina/Sucafinav1/product/decisions/http.ts"
++import { readPortfolioSnapshot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
 +import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 +import type { createSfBusinessServices } from "./business-services.ts"
 +import type { createSfPortfolioServices } from "./portfolio-services.ts"
@@ -536,7 +537,9 @@ index 0000000000000000000000000000000000000000..13188a92ace68e6730bd22f8ee87872a
 +  })
 +  const handlers = new Map(["dashboard", "planner", "procurement"].map((surface): [string, ReturnType<typeof createDecisionCaseHttp>] => [surface, createDecisionCaseHttp({
 +    origin: input.origin, mount: `${input.mount}/${surface}`, human: authority.human,
-+    withCase: business.withCase, management, compare: portfolio.compare,
++    withCase: business.withCase, management,
++    compare: (request, call) => readPortfolioSnapshot(authority.host, call, request,
++      () => portfolio.compare(request, call), { status: "unavailable", reason: "decision-comparison-snapshot-unavailable" }),
 +    admitList: async (request) => {
 +      const operation = "sf_case_read"
 +      const digest = digestSfValue({ purpose: "decision-list", surface })
@@ -677,3 +680,217 @@ index 7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11..feae4846feb657924d9229193eeeded5
  }
  
  function plannerOnlyEvidence(decision: DecisionCase): readonly Extract<BusinessEvidenceRef, { kind: "record" }>[] | undefined {
+diff --git a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+index 529e29806b3faf15f88eec009c198e783f4248a3..1761a5d2558c9091d1c02730774751ace44e9131 100644
+--- a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+@@ -19,6 +19,9 @@
+   store: ReturnType<typeof createSfDecisionResultStore> & { readHistoricalScenario?: (request: { resultRef: string }, context: TrustedDomainContext) => ReturnType<ReturnType<typeof createSfDecisionResultStore>["read"]> }
+   cases: DecisionCasePort
+   planner: Pick<PlannerPort, "compareForecast">
++  /** Private factual projection; case coverage remains a separate current proof. */
++  projectForecast?: (source: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext,
++    selected: { period: DomainProjection["context"]["period"]; currency: "USD" }) => Promise<PortResult<DomainProjection>>
+   external?: { supports: (request: ScenarioRequest) => boolean; resolve: (alternative: DecisionCase["alternatives"][number], basis: CostCoverageBasis, context: TrustedDomainContext) => Promise<PortResult<{ projection: DomainProjection; source: Extract<BusinessEvidenceRef, { kind: "record" }> }>> }
+   coverageRefFor: (caseRef: { id: string; incarnation: string; version: number }, alternative: { id: string; version: number }) => string
+ }): PlannerScenarioHost {
+@@ -66,9 +69,19 @@
+       }
+       const refs = alternative.result.sourceRefs.filter((ref) => ref.kind === "record" && ref.refId === alternative.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+       if (refs.length !== 1 || refs[0].kind !== "record") { prepared.push({ status: "unavailable", reason: "scenario-proof-unavailable" }); continue }
+-      const projection = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
++      let projection: PortResult<DomainProjection>
++      const projectForecast = input.projectForecast
++      if (projectForecast && alternative.result.currency === "USD") {
++        projection = structuredClone(await projectForecast.call(input, structuredClone(refs[0]), context,
++          { period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }))
++        if (input.projectForecast !== projectForecast) { prepared.push({ status: "denied", reason: "planner-projection-reader-changed" }); continue }
++      } else {
++        // Preserve the public Forecast contract when the private capability is absent.
++        const compared = structuredClone(await input.planner.compareForecast({ baseRef: refs[0].refId, candidateRef: refs[0].refId, period: structuredClone(alternative.result.horizon), currency: alternative.result.currency }, context))
++        projection = compared.status === "ok" ? { status: "ok", value: compared.value.baseline } : compared
++      }
+       if (projection.status !== "ok") { prepared.push(projection); continue }
+-      prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value.baseline, source: refs[0] }) } })
++      prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value, source: refs[0] }) } })
+     }
+     const checked: PortResult<PreparedScenario>[] = []
+     const rereadReferences = prepared.flatMap((entry) => entry.status === "ok" ? [entry.value.reference] : [])
+diff --git a/apps/cli/src/sucafina-product/planner-evidence.ts b/apps/cli/src/sucafina-product/planner-evidence.ts
+index 13153182e357b716a12d2554654905d54fa30ee4..30e67e56d5b78ebb2adebbec10194f19d725b570 100644
+--- a/apps/cli/src/sucafina-product/planner-evidence.ts
++++ b/apps/cli/src/sucafina-product/planner-evidence.ts
+@@ -1,23 +1,33 @@
+-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+ import { buildPlannerFinancialProjection, projectPlannerSource } from "../../../../modules/sucafina/Sucafinav1/product/planner/port.ts"
+ import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ 
+ /** Project the current source without asking coverage to authorize its own evidence recursively. */
+ export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: PlannerSourceHost }) {
+-  const project = async (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext, selected?: { period: { start: string; end: string }; currency: "USD" }): Promise<PortResult<DomainProjection>> => {
++  const project = async (incoming: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext, requested?: { period: { start: string; end: string }; currency: "USD" }): Promise<PortResult<DomainProjection>> => {
++    const ref = structuredClone(incoming), selected = requested ? structuredClone(requested) : undefined
++    const binding = digestSfValue([call.kind, call.binding])
+     const request = input.host.requestFor(call)
+-    if (!request || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call))
++    const sources = input.sources, resolveSource = sources.resolveForecastSource
++    const current = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
++      binding === digestSfValue([call.kind, call.binding]) && digestSfValue(incoming) === digestSfValue(ref) &&
++      digestSfValue(requested ?? null) === digestSfValue(selected ?? null) && input.sources === sources && sources.resolveForecastSource === resolveSource
++    if (!request || !current() || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== call.binding.installationId ||
++      ref.projectId !== call.binding.projectId || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call) || !current())
+       return { status: "denied", reason: "planner-source-authority-unavailable" }
+-    const first = await input.sources.resolveForecastSource(ref.refId, call)
++    const first = structuredClone(await resolveSource.call(sources, ref.refId, call))
++    if (!current()) return { status: "stale", reason: "planner-source-changed" }
+     if (first.status !== "ok") return first
++    if (first.value.versionId !== ref.target.recordId) return { status: "denied", reason: "planner-source-scope-mismatch" }
+     if (digestSfValue(first.value.evidence) !== digestSfValue(ref)) return { status: "stale", reason: "planner-source-changed" }
+     const period = selected?.period ?? ref.target.period
+-    if (ref.target.period.start > period.start || ref.target.period.end < period.end || selected && selected.currency !== "USD")
++    if (!isSfPeriod(period) || !isSfPeriod(ref.target.period) || ref.target.period.start > period.start || ref.target.period.end < period.end || selected && selected.currency !== "USD")
+       return { status: "needs-input", reason: "planner-source-period-or-currency-mismatch" }
+     const start = /^(\d{4})-(\d{2})-01$/.exec(period.start), end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(period.end)
+     if (!start || !end || start[1] !== end[1] || Number(start[2]) < 1 || Number(end[2]) > 12 || Number(start[2]) > Number(end[2]) ||
+@@ -37,9 +47,14 @@
+       digestSfValue({ versionId: ref.target.recordId, projection }) !== ref.target.projectionDigest || projection.year !== Number(period.start.slice(0, 4)))
+       return { status: "stale", reason: "planner-source-changed" }
+     const result = buildPlannerFinancialProjection({ projection, ref, period, binding: call, at: environment.at })
+-    const latest = await read(), second = await input.sources.resolveForecastSource(ref.refId, call)
+-    if (!latest || digestSfValue(latest) !== digestSfValue(projection) || second.status !== "ok" || digestSfValue(second.value.evidence) !== digestSfValue(ref) ||
+-      request.signal.aborted || !await input.host.revalidate(call)) return { status: "stale", reason: "planner-source-changed" }
++    if (new Set(result.values.map((value) => value.id)).size !== result.values.length)
++      return { status: "unavailable", reason: "duplicate-projection-value-id" }
++    const latest = await read()
++    if (!current()) return { status: "stale", reason: "planner-source-changed" }
++    const second = structuredClone(await resolveSource.call(sources, ref.refId, call))
++    if (!latest || digestSfValue(latest) !== digestSfValue(projection) || second.status !== "ok" || second.value.versionId !== ref.target.recordId ||
++      digestSfValue(second.value.evidence) !== digestSfValue(ref) || !current() || !await input.host.revalidate(call) || !current())
++      return { status: "stale", reason: "planner-source-changed" }
+     return { status: "ok", value: result }
+   }
+   // Only the host composition supplies this full reader. It retains the source and
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index 0181267b67b74a8df338999ddb7745cfee42bb29..844edd2860e11d5de165c09c7863f4cc6ef5ad67 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -8,7 +8,7 @@
+ import { object, rows, text } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import type { Actor, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+-import type { ConfirmationScope, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
++import type { ConfirmationScope, DomainProjection, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { ForecastCompareRequest, WorkListRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+ import type { CapabilityDescriptor } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+@@ -418,7 +418,10 @@
+         : forecastCoverage.current?.(ref, call) ?? baselineCoverage.resolveForecastCoverage(ref, call)
+     }, decision: coverage }),
+     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
+-    storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
++    storedScenarios: { store: results, cases,
++      // Factories only retain this callback; the real projector is initialized before reads begin.
++      projectForecast: (ref, call, selected): Promise<PortResult<DomainProjection>> => projectPlannerEvidence(ref, call, selected),
++      coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
+   const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
+   const planner = procurementComposite.planner
+   const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
+diff --git a/apps/cli/src/sucafina-product/portfolio-authority.ts b/apps/cli/src/sucafina-product/portfolio-authority.ts
+index 138238ca9273e84f39f8e1db484378a3e62d41d4..cb89ba0139a7cf3965e0bb2898ab13f3015d7837 100644
+--- a/apps/cli/src/sucafina-product/portfolio-authority.ts
++++ b/apps/cli/src/sucafina-product/portfolio-authority.ts
+@@ -10,7 +10,7 @@
+ import { createDecisionIntentFences } from "../../../../modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts"
+ import { createDecisionCandidateResolver } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
+ import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+-import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
++import { compareScenarios, type PlannerScenarioHost } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import type { createSfBusinessServices } from "./business-services.ts"
+ import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
+@@ -50,11 +50,36 @@
+     // reopens both scenarios and validates these final snapshots before return.
+     // No observation serves a resolve call or survives this metric invocation.
+     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
++    const producer = scenarios
++    const batch = producer.resolveMany
++    const requestFor = host.requestFor
++    const callBinding = call.binding
++    const callLease = call.lease
++    const requestDigest = digestSfValue(captured)
++    const observeMany: PlannerScenarioHost["resolveMany"] = batch ? async (incoming, context) => {
++      const references = structuredClone([...incoming])
++      const referencesDigest = digestSfValue(references)
++      const producerReferences = structuredClone(references)
++      const deniedBatch = () => references.map(() => ({ status: "denied" as const, reason: "criterion-metric-observation-unavailable" }))
++      const current = () => context === call && !!source && !source.signal.aborted && host.requestFor === requestFor &&
++        requestFor.call(host, context) === source && call.binding === callBinding && call.lease === callLease &&
++        binding === digestSfValue([call.kind, call.binding]) && digestSfValue(request) === requestDigest &&
++        digestSfValue(captured) === requestDigest && business.plannerProduct.scenarios === producer && producer.resolveMany === batch &&
++        digestSfValue(incoming) === referencesDigest && digestSfValue(producerReferences) === referencesDigest
++      if (!current()) return deniedBatch()
++      // Observe the real producer on every phase; this map never serves a read.
++      const values = structuredClone(await batch.call(producer, producerReferences, context))
++      if (!current()) return deniedBatch()
++      if (!Array.isArray(values) || values.length !== references.length || references.some((_, index) => !(index in values)))
++        return references.map(() => ({ status: "unavailable" as const, reason: "scenario-batch-invalid" }))
++      for (const [index, reference] of references.entries()) observed.set(reference, structuredClone(values[index]!))
++      return values.map((value) => structuredClone(value))
++    } : undefined
+     const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
+       const observation = structuredClone(await scenarios.resolve(reference, context))
+       observed.set(reference, observation)
+       return observation
+-    } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
++    }, ...(observeMany ? { resolveMany: observeMany } : {}) } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
+     if (result.status !== "ok") return result
+     const baseline = observed.get(captured.baselineRef!)
+     const candidate = observed.get(captured.scenarioRef)
+diff --git a/apps/cli/src/sucafina-product/portfolio-services.ts b/apps/cli/src/sucafina-product/portfolio-services.ts
+index 881ce4672d9d0e641d1cc849663c0980c118774d..9d17760c418ee9b48b97443d90a994c31cc415f5 100644
+--- a/apps/cli/src/sucafina-product/portfolio-services.ts
++++ b/apps/cli/src/sucafina-product/portfolio-services.ts
+@@ -1,6 +1,7 @@
+ import { randomUUID } from "node:crypto"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { createPortfolioProduct } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts"
++import { readPortfolioSnapshot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
+ import { createDecisionMutations } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import type { DecisionMutationOperation } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
+@@ -36,9 +37,18 @@
+   const registries = createSfPortfolioAuthority({ ...input, proof: () => verification.proof })
+   const composed = createSfPortfolioPreparation({ ...input, registries })
+   const preparation = input.preparation ?? composed
++  // Only these default read callbacks enter a snapshot root; recordChoice and its commit remain outside.
++  const mutationPlanner: typeof registries.planner = input.preparation ? registries.planner : {
++    ...composed.mutationPlanner,
++    compareScenarios: (request, call) => readPortfolioSnapshot(authority.host, call, request,
++      () => composed.mutationPlanner.compareScenarios(request, call), { status: "unavailable", reason: "choice-comparison-snapshot-unavailable" }),
++  }
++  const resolveChoiceValues: Mutations["resolveChoiceValues"] = input.preparation ? preparation.resolveChoiceValues
++    : (caseRef, comparison, call) => readPortfolioSnapshot(authority.host, call, { caseRef, comparison },
++      () => composed.resolveChoiceValues(caseRef, comparison, call), { status: "unavailable", reason: "choice-values-snapshot-unavailable" })
+   const action = (operation: DecisionMutationOperation) => operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : operation === "answer-question" ? "decisions.answer-question" : undefined
+   const rawMutations = createDecisionMutations({ state: authority.state, host: authority.host,
+-    planner: input.preparation ? registries.planner : composed.mutationPlanner, sources: business.plannerSources,
++    planner: mutationPlanner, sources: business.plannerSources,
+     authorizeCase: registries.authorizeCase, operationIdentity: business.operationIdentity,
+     authorizeMutation: preparation.authorizeMutation ?? ((operation, request, call) => {
+       const selected = action(operation)
+@@ -54,7 +64,7 @@
+     confirmAnswer: preparation.confirmAnswer,
+     resolveQuestion: business.collaboration.resolveQuestion,
+     resolveAnswer: business.collaboration.resolveAnswer,
+-    resolveChoiceValues: preparation.resolveChoiceValues,
++    resolveChoiceValues,
+     prepareDomainCommands: preparation.prepareDomainCommands,
+     readScenarioResult: (resultRef, call) => business.results.readHistoricalScenario({ resultRef }, call),
+     createId: input.preparation ? randomUUID : composed.createMutationId, now: () => new Date().toISOString(),

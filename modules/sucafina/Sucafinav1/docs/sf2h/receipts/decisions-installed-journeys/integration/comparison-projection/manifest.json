@@ -1,0 +1,31 @@
+{
+  "schema": "sf2-mission52-shared-proposal-v1",
+  "status": "NOMINAL09_RUNNING_NOT_ACCEPTED",
+  "owner": "47; integration authority externally60; root52 only proposal and isolated W",
+  "base": "C28",
+  "candidate_W": "0917b48676b2828b94ec85a9926f79db49e6076e",
+  "candidate_S": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+  "patch_sha256": "b602f801cad67cb50e74f87e6be081d66b74366a2b12e9da4a44208613c30bf5",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "preimage": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "postimage": "1761a5d2558c9091d1c02730774751ace44e9131",
+      "postimage_sha256": "61770800dff8bd4dcf64e2a34557ad9468226584640e92072fe786f1a55786ac"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "preimage": "13153182e357b716a12d2554654905d54fa30ee4",
+      "postimage": "30e67e56d5b78ebb2adebbec10194f19d725b570",
+      "postimage_sha256": "0b2d7cfcfb18149e07b117447c3425180a0867202efc317c5eddc9562908c523"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "preimage": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "postimage": "844edd2860e11d5de165c09c7863f4cc6ef5ad67",
+      "postimage_sha256": "ecda99355b371a295e6d0befacbd5c9f2fe3fc75d2e0062dc143f9b4a04ef1fd"
+    }
+  ],
+  "requires": "comparison-read-scope patch is incremental over P4 decision-case-http; canonical integration/complete-shared.patch already composes it exactly once.",
+  "GLOBAL_RELEASE": false
+}

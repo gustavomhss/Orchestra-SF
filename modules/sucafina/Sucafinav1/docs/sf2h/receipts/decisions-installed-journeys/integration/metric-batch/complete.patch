@@ -1,0 +1,51 @@
+diff --git a/apps/cli/src/sucafina-product/portfolio-authority.ts b/apps/cli/src/sucafina-product/portfolio-authority.ts
+index 138238ca9273e84f39f8e1db484378a3e62d41d4..cb89ba0139a7cf3965e0bb2898ab13f3015d7837 100644
+--- a/apps/cli/src/sucafina-product/portfolio-authority.ts
++++ b/apps/cli/src/sucafina-product/portfolio-authority.ts
+@@ -10,7 +10,7 @@
+ import { createDecisionIntentFences } from "../../../../modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts"
+ import { createDecisionCandidateResolver } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
+ import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+-import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
++import { compareScenarios, type PlannerScenarioHost } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import type { createSfBusinessServices } from "./business-services.ts"
+ import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
+@@ -50,11 +50,36 @@
+     // reopens both scenarios and validates these final snapshots before return.
+     // No observation serves a resolve call or survives this metric invocation.
+     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
++    const producer = scenarios
++    const batch = producer.resolveMany
++    const requestFor = host.requestFor
++    const callBinding = call.binding
++    const callLease = call.lease
++    const requestDigest = digestSfValue(captured)
++    const observeMany: PlannerScenarioHost["resolveMany"] = batch ? async (incoming, context) => {
++      const references = structuredClone([...incoming])
++      const referencesDigest = digestSfValue(references)
++      const producerReferences = structuredClone(references)
++      const deniedBatch = () => references.map(() => ({ status: "denied" as const, reason: "criterion-metric-observation-unavailable" }))
++      const current = () => context === call && !!source && !source.signal.aborted && host.requestFor === requestFor &&
++        requestFor.call(host, context) === source && call.binding === callBinding && call.lease === callLease &&
++        binding === digestSfValue([call.kind, call.binding]) && digestSfValue(request) === requestDigest &&
++        digestSfValue(captured) === requestDigest && business.plannerProduct.scenarios === producer && producer.resolveMany === batch &&
++        digestSfValue(incoming) === referencesDigest && digestSfValue(producerReferences) === referencesDigest
++      if (!current()) return deniedBatch()
++      // Observe the real producer on every phase; this map never serves a read.
++      const values = structuredClone(await batch.call(producer, producerReferences, context))
++      if (!current()) return deniedBatch()
++      if (!Array.isArray(values) || values.length !== references.length || references.some((_, index) => !(index in values)))
++        return references.map(() => ({ status: "unavailable" as const, reason: "scenario-batch-invalid" }))
++      for (const [index, reference] of references.entries()) observed.set(reference, structuredClone(values[index]!))
++      return values.map((value) => structuredClone(value))
++    } : undefined
+     const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
+       const observation = structuredClone(await scenarios.resolve(reference, context))
+       observed.set(reference, observation)
+       return observation
+-    } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
++    }, ...(observeMany ? { resolveMany: observeMany } : {}) } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
+     if (result.status !== "ok") return result
+     const baseline = observed.get(captured.baselineRef!)
+     const candidate = observed.get(captured.scenarioRef)

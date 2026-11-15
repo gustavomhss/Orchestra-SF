@@ -1,0 +1,384 @@
+{
+  "schema": "sf2-mission52-observed-runtime59-R2-v1",
+  "observed_at": "2026-11-15T02:07:10Z",
+  "method": "Read-only GitHub MCP immutable source/commit/root-tree/manifest/run/job/logs; no dispatch, mutation, cancellation or execution by52 auditor.",
+  "source59": {
+    "head": "f1796aaa74ed0095f64e1f33ef45261f338edd4b",
+    "tree": "ae608c4ad5e28ca00b98ba02c77b99b5fbde6a9a",
+    "PR": 72,
+    "branch": "runtime-read-scope",
+    "state": "ACTIVE_SOURCE_WITH_COMPONENT_CONFORMANCE_AND_STRUCTURAL_DISCRIMINANT_PASS_RELEASE_PENDING",
+    "source_lease_ended": false,
+    "delivery_manifest_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/delivery/MANIFEST.json",
+    "delivery_manifest_blob": "8831e0ee2a12f409bb855796a311ca54ed4189e9",
+    "delivery_manifest": {
+      "schema": "sf2h.runtime-readonly-root.delivery.v1",
+      "source_base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+      "files": [
+        "runtime/contract.ts",
+        "runtime/local-store.ts",
+        "product/integration/source-lifecycle.ts",
+        "product/portfolio/read-snapshot.ts",
+        "test/product/runtime-readonly-root/canonical-fixture.ts",
+        "test/product/runtime-readonly-root/wrappers.test.ts",
+        "test/product/runtime-readonly-root/runtime.test.ts",
+        "test/product/runtime-readonly-root/freshness.test.ts",
+        "test/product/runtime-readonly-root/cost.test.ts"
+      ],
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "mode": "100644",
+          "status": "modified",
+          "preimage": {
+            "bytes": 4774,
+            "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+            "sha256": "809bdbfe8b1efd05e4c0a3d8b78eea726c729d1767e8c4569fa6a31e78bb1c7a"
+          },
+          "postimage": {
+            "bytes": 5363,
+            "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+            "sha256": "4e44c93060c70ddebd1f85ecbe78b4ecaca311e19985df4c610c84529085cbee"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "mode": "100644",
+          "status": "modified",
+          "preimage": {
+            "bytes": 32899,
+            "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+            "sha256": "1f4b260f41c1d6aa521f9e127c912cdaff5aac903525de7a8d49b3d145b0f192"
+          },
+          "postimage": {
+            "bytes": 35607,
+            "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+            "sha256": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "mode": "100644",
+          "status": "modified",
+          "preimage": {
+            "bytes": 15333,
+            "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+            "sha256": "0936904cb37246dfa9df990580a87ac1398a5bc31c725e5ec2e136a2ab1ae915"
+          },
+          "postimage": {
+            "bytes": 15748,
+            "blob": "0e812842ad0d534998c182100a8466548d70e915",
+            "sha256": "52116581fb89dd0065a1fbfe6a82829fe306faa09c46135aa06775ff21ca6f9d"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+          "mode": "100644",
+          "status": "modified",
+          "preimage": {
+            "bytes": 4193,
+            "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+            "sha256": "9982156692099d6f9663794186c8398632a5c33abd3615809cfe8ec6e8e409a1"
+          },
+          "postimage": {
+            "bytes": 4757,
+            "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+            "sha256": "5d1b5706c68b4ac9489fb9cb5c58aa9f050994329e9361306892599fe71ccbc1"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+          "mode": "100644",
+          "status": "added",
+          "preimage": null,
+          "postimage": {
+            "bytes": 7414,
+            "blob": "35741770154ccea55944674239e5b29cadc3abb6",
+            "sha256": "537af7091d6b55bc3f383265b1049b8ef2f6debb19d75fa8051d165ff413b707"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+          "mode": "100644",
+          "status": "added",
+          "preimage": null,
+          "postimage": {
+            "bytes": 11882,
+            "blob": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+            "sha256": "13f6495ecd0475d75d38cb91dce6b23ec62e46ff310d8ae63fad9c39f6d96f2c"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+          "mode": "100644",
+          "status": "added",
+          "preimage": null,
+          "postimage": {
+            "bytes": 16782,
+            "blob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+            "sha256": "e5816b6a9aa73bbea88efcde2223afc65e45c1199b2669d460e7bc2edf3e0e3e"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+          "mode": "100644",
+          "status": "added",
+          "preimage": null,
+          "postimage": {
+            "bytes": 6279,
+            "blob": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+            "sha256": "4c38ea40691c6fdf24b387d5422272eedbc5dffba4d9a196c284402f9ea8f4a2"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+          "mode": "100644",
+          "status": "added",
+          "preimage": null,
+          "postimage": {
+            "bytes": 9435,
+            "blob": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+            "sha256": "12772949b77ceba728dd1d3584ad021beebeedc4fa59c99eff64ff5dbba00d94"
+          }
+        }
+      ],
+      "patches": [
+        {
+          "path": "source-and-tests.patch",
+          "bytes": 67570,
+          "blob": "028f6bf1bca295b051ca422e8d5158e6b4bcc6e0",
+          "sha256": "ed9f06725f1ed76c3ebf9dc94ecb4c77bb0d6dc35ec10e276222199eb92eb4fa"
+        },
+        {
+          "path": "product.patch",
+          "bytes": 13044,
+          "blob": "ed63a66bdbd55e136105c21459769a1d4e1b6052",
+          "sha256": "a773c1162f74d033d19e67bcdc5a586543da0f811c164eac7c97da989ef37eef"
+        }
+      ],
+      "reconstruction": "git apply --check and apply on scratch partial baseline, all nine postimages byte-verified; no product executed",
+      "GLOBAL_RELEASE": false
+    }
+  },
+  "R1": {
+    "run": 43665180272,
+    "W": "ba393316f7c7350cdd519068808baafb7edb2393",
+    "S": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+    "excluded_from_qualification": true,
+    "reason": "Owner-documented test barrier/matcher deadlock; corrected only test order in W26f7.",
+    "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/ci/R1-deadlock.json",
+    "receipt_blob": "ba6135ba283d4ea62a5f5fb211e7ebbaa60b4ff4"
+  },
+  "R2": {
+    "run": 43665988509,
+    "job": 132665341557,
+    "cleanup_job": 132665818764,
+    "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "W_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+    "S": "8ac14c407824626adbe53f8eeec82d6572ee1630",
+    "S_tree": "035be0ea1f2657cdfcde2c5ce4de2866adaac649",
+    "sentinel": {
+      "unchanged": true,
+      "count": 43,
+      "extra": [
+        {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "567f065937a6b1227479ec8e86a0acbc1073f93d",
+          "size": 1315,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/567f065937a6b1227479ec8e86a0acbc1073f93d"
+        }
+      ]
+    },
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+        "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "status": "completed",
+    "conclusion": "success",
+    "completed_at": "2026-11-15T02:05:57Z",
+    "passes": 130,
+    "failures": 0,
+    "expect_calls": 25064,
+    "files": 15,
+    "reported_duration_s": 4.38,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43665988509",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43665988509/job/132665341557",
+    "evidence_kind": "Actual completed source component/conformance run and canonical structural discriminant. Not mission52 installed UI or P03 acceptance."
+  },
+  "cost_discriminant": {
+    "schema": "sf2h.runtime-readonly-root.cost.v1",
+    "rowsPerSurface": 160,
+    "observations": 6,
+    "persisted": [
+      {
+        "surface": "dashboard",
+        "characters": 41800,
+        "sha256": "c717d99c17ad6a69b0fe4b221ce92b7b7f78136e031e8abd842bf02e7d8dad48"
+      },
+      {
+        "surface": "planner",
+        "characters": 41156,
+        "sha256": "40f316843f4b881638ba5103acc3c22123aae435deb76c042d919b9e0ed94001"
+      },
+      {
+        "surface": "procurement",
+        "characters": 42444,
+        "sha256": "9e0c53d6c8e904874a9043a9f6eaee6abbbd8181dc1d018bbcb64466340c4a55"
+      }
+    ],
+    "work": {
+      "callbacks": 25,
+      "nested": {
+        "dashboard": 12,
+        "planner": 6,
+        "procurement": 6
+      },
+      "observations": 6,
+      "consumedRows": {
+        "dashboard": 2880,
+        "planner": 1920,
+        "procurement": 1920
+      },
+      "digest": 8329440,
+      "order": "4251558a1da56a05ed819d58553863913c6ce219ab7952e8f88a26186f896532",
+      "metrics": {
+        "snapshots": 9,
+        "authorizations": 27,
+        "revalidations": 27,
+        "transactions": {
+          "dashboard": 13,
+          "planner": 6,
+          "procurement": 6
+        },
+        "callbacks": {
+          "dashboard": 13,
+          "planner": 6,
+          "procurement": 6
+        },
+        "events": "8e23912be41935178630d3065d987fa0c32efd9a427bcafe7ec7c904c48c6285"
+      }
+    },
+    "samples": [
+      {
+        "variant": "legacy",
+        "elapsedMs": 61.767202
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 52.94714099999999
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 50.213212999999996
+      },
+      {
+        "variant": "legacy",
+        "elapsedMs": 65.73564599999997
+      },
+      {
+        "variant": "legacy",
+        "elapsedMs": 63.72601199999997
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 51.35737000000006
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 49.640748999999914
+      },
+      {
+        "variant": "legacy",
+        "elapsedMs": 62.395174999999995
+      }
+    ],
+    "structural": {
+      "legacy": {
+        "descriptors": 21582,
+        "markedObjects": {
+          "dashboard": 10560,
+          "planner": 0,
+          "procurement": 0
+        },
+        "parseCalls": 120,
+        "parseCharacters": 2607840,
+        "wireParses": 0
+      },
+      "capability": {
+        "descriptors": 0,
+        "markedObjects": {
+          "dashboard": 0,
+          "planner": 0,
+          "procurement": 0
+        },
+        "parseCalls": 186,
+        "parseCharacters": 4042152,
+        "wireParses": 0
+      }
+    },
+    "legacy": {
+      "samples": [
+        61.767202,
+        65.73564599999997,
+        63.72601199999997,
+        62.395174999999995
+      ],
+      "min": 61.767202,
+      "median": 63.06059349999998,
+      "max": 65.73564599999997
+    },
+    "capability": {
+      "samples": [
+        52.94714099999999,
+        50.213212999999996,
+        51.35737000000006,
+        49.640748999999914
+      ],
+      "min": 49.640748999999914,
+      "median": 50.78529150000003,
+      "max": 52.94714099999999
+    },
+    "limitations": "One hosted runner, four AB/BA pairs, descriptive timing only; no elapsed-time/ratio assertion, heap estimate, P03 result or clone-only CPU claim. Structural probe excludes root admission and final publication, keeps real wrappers, and is restored before reporting."
+  },
+  "interpretation": {
+    "equivalent_observations": "Source test checks equal work summaries including25callbacks,6explicitobservations,9snapshotobservations,27authorizations,27revalidations and per-surface transactions/callbacks under real SQLite Source/CurrentChoice wrappers.",
+    "structural_reduction": "Measured marked Dashboard descriptor traversals10560 to0 and total descriptor calls21582 to0 inside unchanged workload probe.",
+    "tradeoff": "JSON.parse calls120 to186 and parsed characters2607840 to4042152; wire parses remain0. The mechanism changes copy representation/work; it does not remove independent observations.",
+    "timing": "Four AB/BA pairs on one hosted runner. Median63.0605935ms legacy versus50.7852915ms capability. Descriptive only, no independent CPU/SQL attribution or guarantee for installed UI.",
+    "relevance_to52": "Material root capability can affect the nested producers localized byD8; this evidence does not prove which portion of52's23.1s interval it removes or that10000ms UI deadline is met.",
+    "not_accepted": "No source59 consumer release/terminal or originalP03 run/result published in observed pin. No product consumed by52 or integrated target."
+  },
+  "pending": {
+    "consumer_release": "Explicit full release/authority and consumer acceptance",
+    "P03": "Original72assertions/fullfixture/order/180000ms preserved at blob47b5358c8dda3179045499388ce98871576a2aa9; qualification not observed.",
+    "owner45": "Typecheck/guards requested at corrected W26f7; results not observed in this namespace.",
+    "target60": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85 remains materialC27; A60 holds stack custody. No C28 observed."
+  },
+  "GLOBAL_RELEASE": false
+}

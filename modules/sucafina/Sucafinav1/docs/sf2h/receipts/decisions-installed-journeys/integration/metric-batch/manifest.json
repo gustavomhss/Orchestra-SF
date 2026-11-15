@@ -1,0 +1,19 @@
+{
+  "schema": "sf2-mission52-shared-proposal-v1",
+  "status": "NOMINAL09_RUNNING_NOT_ACCEPTED",
+  "owner": "47; integration authority externally60; root52 only proposal and isolated W",
+  "base": "C28",
+  "candidate_W": "0917b48676b2828b94ec85a9926f79db49e6076e",
+  "candidate_S": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+  "patch_sha256": "f1f53230e965f10dfaa447d35736b2b272a219e4575c805bbef59ce0d984ddef",
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "preimage": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+      "postimage": "cb89ba0139a7cf3965e0bb2898ab13f3015d7837",
+      "postimage_sha256": "4223c72f6f981de82f1a4471b3806160d928fd32299945fe8e1a2b44e8164da7"
+    }
+  ],
+  "requires": "comparison-read-scope patch is incremental over P4 decision-case-http; canonical integration/complete-shared.patch already composes it exactly once.",
+  "GLOBAL_RELEASE": false
+}
