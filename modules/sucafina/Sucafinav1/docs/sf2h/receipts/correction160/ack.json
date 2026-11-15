@@ -1,0 +1,37 @@
+{
+  "schema": "sf2h.correction160.ack.v1",
+  "mission": 160,
+  "branch": "sf-ux-n27",
+  "pr": 157,
+  "epoch": "ux-native-n27-e2-browser160",
+  "actor": "ChatGPT GitHub MCP new-session operator",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_note": "No stable runtime session ID exposed by available tools; no invented identifier.",
+  "authority": "S0 explicit user go; prior epoch ux-native-n27-e1 revoked for future writes/dispatch, no process termination inferred",
+  "head_pre": "a7812ec4b38a1f95f3751525345b6f27ec6d913d",
+  "tree_pre": "5694561d87f0f42555faec4768d13a1c2616f034",
+  "fence_previous_head": "19b0a65713287d0285b192a5f3c055a4ead6ec64",
+  "input_packet": {
+    "commit": "cf58a4f4197da24cfcff769cbdff08b5fc8b90c5",
+    "blob": "ba120aa629f031900ad0fcb5542c97bcefaef75f"
+  },
+  "source": {
+    "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+    "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b"
+  },
+  "consumer": {
+    "path": "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
+    "blob": "adeb55aa710ccf64209f96c196c6fe13c9a29d59"
+  },
+  "producer": {
+    "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+    "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+  },
+  "finding": "PRE147-R02-04",
+  "confirmation": "Static current code inspection: change() only fences review and preserves targets/selectionRef after start/end edit; prepare() obtains stale selectedTarget.",
+  "s0_fence": "PREPARED_NOT_STARTED -> ACK; authority limited to packet write_paths; no other owners, tests or CI dispatched",
+  "tests": "NOT_RUN",
+  "global_release": false,
+  "native_goal": "paused"
+}
