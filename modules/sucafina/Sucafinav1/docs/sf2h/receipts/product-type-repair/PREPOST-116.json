@@ -1,0 +1,126 @@
+{
+  "schema": "sf2h-product-type-repair-prepost-v1",
+  "mission": 116,
+  "branch": "product-type-repair",
+  "campaign": "sf2h-integral-20261112",
+  "lease_epoch": "product-types-browser116",
+  "state": "SOURCE_PATCH_READY_COMPILER_NOT_RUN",
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_c53_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "ack_sha": "0cda65fe05e6fd4b6efc5aa40b69c94ba3b6e386",
+  "material_sha": "b2b56c8e4583cc01ddad9b30733c45003fbd982d",
+  "material_tree": "776a34cdacdd46291ea0e1c571768d1aff1347df",
+  "material_parent": "0cda65fe05e6fd4b6efc5aa40b69c94ba3b6e386",
+  "diagnostic_source": {
+    "head_108": "59490441e732c025933484a0c4907c353c1e2874",
+    "run": 43708496555,
+    "job": 132794704289,
+    "source": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "overall_result": "FAIL",
+    "patch_status": "UNVERIFIED_REFERENCE_ONLY"
+  },
+  "changed_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "preimage_blob": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575",
+      "postimage_blob": "597b5c3b536c2416d9d7d39c7d4329ce5c4183ff",
+      "postimage_verified_via_remote_fetch": true,
+      "diagnostic": "213:7 TS2322"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-services.ts",
+      "preimage_blob": "c2ef2828e824a46d67d7c6e79012656a092a3c82",
+      "postimage_blob": "d6662e987bc149b0b6dd161e5f637ed75c6a55c7",
+      "postimage_verified_via_remote_fetch": true,
+      "diagnostic": "224:129 TS2345"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "preimage_blob": "0ff544b39f61a26cea6d15c238a88217ef7e6130",
+      "postimage_blob": "571bd21a23c9992ab6d8f32363a173596fdc704e",
+      "postimage_verified_via_remote_fetch": true,
+      "diagnostic": "26:24 TS2367"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+      "preimage_blob": "4d2e9087e4adfb57cdcfb6b0c686e1a6b9d7a516",
+      "postimage_blob": "4a49ca7808ae1fe64060ff002c85643c87a85d1a",
+      "postimage_verified_via_remote_fetch": true,
+      "diagnostic": "135:58/138:85 TS2339"
+    }
+  ],
+  "unchanged_source_paths": "All paths other than these four retained from ACK material parent (GitHub commit diff has exactly 4 files).",
+  "diff": {
+    "source": "GitHub fetch_commit(material)",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-type-repair/PATCH-116.patch",
+    "hunks": [
+      {
+        "path": "apps/cli/src/sucafina-product/bi-services.ts",
+        "patch": "@@ -210,7 +210,7 @@ function createPortfolioCostProjection(input: {\n       digestSfValue(combination.components) !== digestSfValue(analysis.scenario.components)) return { status: \"stale\", reason: \"portfolio-waterfall-analysis-mismatch\" }\n     const scenario = createScenarioCostBiHost({ host: input.host, results: input.results, scenarios: input.scenarios, scenario: {\n       revalidate: (_request, call) => input.host.revalidate(call),\n-      readView: async (forwarded, call) => {\n+      readView: async (forwarded, call): Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>> => {\n         if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: \"stale\", reason: \"portfolio-waterfall-request-changed\" }\n         const portfolio = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selected.portfolioResultRef }, call)\n         if (portfolio.status !== \"ok\") return portfolio"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/current-choice-services.ts",
+        "patch": "@@ -221,7 +221,7 @@ export function createSfCurrentChoiceServices(input: {\n     finally { actors.release(call) }\n   }\n   return {\n-    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run(call, async () => {\n+    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run<SfCurrentChoiceOptions>(call, async () => {\n       const request = host.requestFor(call)\n       if (!request) return unavailable()\n       const candidates = await authority.state.read(request, \"cases\", (state, actor) => sameActor(actor, call)"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+        "patch": "@@ -23,7 +23,7 @@ export function createCompositeDecisionPlanner(input: {\n         const resolve = () => Promise.all(request.operations.map((operation) => input.resolveOperation(operation, context)))\n         const proofs = await resolve()\n         const failure = proofs.find((item) => item.status !== \"ok\")\n-        if (failure && failure.status !== \"ok\") return failure\n+        if (failure) return failure\n         if (proofs.some((item, index) => item.status !== \"ok\" || item.value.operationDigest !== digestSfValue(request.operations[index]) || item.value.kind === \"external\" && (!item.value.sourceRefs.length || !item.value.condition.trim()))) return { status: \"unavailable\", reason: \"scenario-operation-proof-unavailable\" }\n         const plannerOperations = request.operations.filter((_operation, index) => { const proof = proofs[index]; return proof?.status === \"ok\" && proof.value.kind === \"planner\" })\n         const external = proofs.flatMap((item) => item.status === \"ok\" && item.value.kind === \"external\" ? [item.value] : [])"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+        "patch": "@@ -132,9 +132,10 @@ function validCatalog(value: unknown): value is ReviewAgendaCatalog {\n       if (typeof item.id !== \"string\" || !item.id || !isSfPeriod(item.period)) return false\n       if (item.kind === \"dashboard\") return option.domain === \"dashboard\" && typeof item.topic === \"string\" && typeof item.selectionRef === \"string\" && !!item.selectionRef\n       if (item.kind === \"forecast-comparison\") return option.domain === \"planner\" && typeof item.title === \"string\" && typeof item.baseRef === \"string\" && typeof item.candidateRef === \"string\" && typeof item.currency === \"string\" && Array.isArray(item.sides) && item.sides.length > 0 && item.sides.every((side) => side === \"baseline\" || side === \"candidate\")\n-      if (option.domain !== \"procurement\" || typeof item.title !== \"string\") return false\n+      if (option.domain !== \"procurement\" || !(\"title\" in item) || typeof item.title !== \"string\") return false\n       if (item.kind === \"procurement-request\") return typeof item.requestRef === \"string\" && !!item.requestRef\n       if (item.kind !== \"procurement-supplier\" && item.kind !== \"procurement-contract\") return false\n-      return typeof (item.kind === \"procurement-supplier\" ? item.supplierRef : item.contractRef) === \"string\" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === \"string\" && !!field)\n+      const recordRef = item.kind === \"procurement-supplier\" ? item.supplierRef : \"contractRef\" in item ? item.contractRef : undefined\n+      return typeof recordRef === \"string\" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === \"string\" && !!field)\n     })\n }"
+      }
+    ]
+  },
+  "contract_reads": [
+    "modules/sucafina/Sucafinav1/product/contracts/ports.ts: PortResult<T> discriminated status and PlannerPort",
+    "modules/sucafina/Sucafinav1/product/contracts/context.ts: DomainProjection, BiPresentation",
+    "modules/sucafina/Sucafinav1/product/analytics/scenario.ts: ScenarioBiHost.readView",
+    "modules/sucafina/Sucafinav1/product/contracts/decisions.ts: ScenarioResult and cost-coverage",
+    "modules/sucafina/Sucafinav1/product/reviews/selection.ts: ReviewAgendaItem discriminated union"
+  ],
+  "semantic_reconciliation": [
+    {
+      "path": "bi-services.ts",
+      "reason": "Explicit contextual return type on scenario BI projection callback; keeps stale/denied/ok and producer cost semantics."
+    },
+    {
+      "path": "current-choice-services.ts",
+      "reason": "Explicit generic result for options port, matching optional selected choice structure; retains withCase and private authority checks."
+    },
+    {
+      "path": "composite-planner.ts",
+      "reason": "Failure is already narrowed by find(item.status !== ok); return it without unreachable second comparison. External operations and pending costs stay intact."
+    },
+    {
+      "path": "agenda-picker.ts",
+      "reason": "Title and contractRef guarded by property presence; discriminant-kind selection preserved; input rejection remains explicit."
+    }
+  ],
+  "prohibited_modifications": {
+    "policy": false,
+    "oracles": false,
+    "fixtures": false,
+    "tests115_117_118": false,
+    "any_added": false,
+    "casts_added": false,
+    "ts_ignore_added": false,
+    "exclusions_added": false
+  },
+  "verification": {
+    "remote_blob_prepost": "PASS",
+    "remote_changed_path_scope": "PASS",
+    "static_contract_review": "COMPLETED",
+    "bun_typecheck": "NOT_RUN_OWNED_BY_119",
+    "surgical_tests": "NOT_RUN_OWNED_BY_120",
+    "epic": "NOT_RUN_OWNED_BY_S0",
+    "acceptance": "OPEN"
+  },
+  "consumer": {
+    "integration": "114 sole writer sf2-stack PR65",
+    "compiler": 119,
+    "product_ci": 120,
+    "consumer_ack": "PENDING"
+  },
+  "next_checkpoint": "119 compile on new source SHA; 120 GitHub Actions surgical tests; 114 reconcile/fence integration and retain immutable receipts"
+}
