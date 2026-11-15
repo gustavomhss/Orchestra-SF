@@ -327,7 +327,7 @@ import { SfOperationId } from "./common"
 
 /** Frozen UI inventory; route parsing never implies a principal or grant. */
 export const SurfaceIdSchema = Schema.Literals(["CAP01", "CAP02", "CAP03", "CAP04", "CAP05", "CAP06", "CAP07", "CAP08", "CAP09", "CAP10", "CAP11", "CAP12", "CAP13", "CAP14", "CAP15", "CAP16", "CAP17", "CAP18", "CAP19", "CAP20", "CAP21", "CAP22", "CAP23", "CAP24", "CAP25", "CAP26", "CAP27", "CAP28", "UI29", "UI30", "UI31", "UI32", "UI33", "UI34", "UI35", "UI36", "UI37", "UI38", "UI39", "UI40", "UI41", "UI42", "UI43", "UI44", "UI45", "UI46", "UI47", "UI48", "UI49", "UI50", "UI51", "UI52", "UI53", "UI54", "UI55", "UI56", "UI57", "UI58", "UI59", "UI60", "UI61", "UI62", "UI63", "UI64", "UI65", "UI66", "UI67", "UI68", "UI69", "UI70"]).annotate({ identifier: "Sucafina.SurfaceId" })
-const NonEmpty = Schema.String.check(Schema.isNonEmpty())
+const NonEmpty = Schema.NonEmptyString
 const AuthMode = Schema.Literals(["microsoft", "local-operator"])
 
 export const SfInstallationDescriptor = Schema.Struct({
@@ -438,7 +438,7 @@ export const SfResourceKey = Schema.Union([
 export type SfResourceKey = Schema.Schema.Type<typeof SfResourceKey>
 export const SfOperationAvailability = Schema.Union([
   Schema.Struct({ operationId: SfOperationId, state: Schema.Literal("ready"), reason: Schema.Null, operational: Schema.Literal(true) }),
-  Schema.Struct({ operationId: SfOperationId, state: Schema.Literal("denied", "unavailable"), reason: NonEmpty, operational: Schema.Literal(false) }),
+  Schema.Struct({ operationId: SfOperationId, state: Schema.Literals(["denied", "unavailable"]), reason: NonEmpty, operational: Schema.Literal(false) }),
 ]).annotate({ identifier: "Sucafina.OperationAvailability" })
 export type SfOperationAvailability = Schema.Schema.Type<typeof SfOperationAvailability>
 const ResourceStatus = Schema.Literals(["ready", "partial", "denied", "unavailable"])
