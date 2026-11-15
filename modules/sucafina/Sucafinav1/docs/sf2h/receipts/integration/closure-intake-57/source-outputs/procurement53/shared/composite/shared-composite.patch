@@ -1,0 +1,651 @@
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index 6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee..0181267b67b74a8df338999ddb7745cfee42bb29 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -1,4 +1,5 @@
+ import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
++import { createSfProcurementCompositePlanner } from "./procurement-composite-planner.ts"
+ import { randomUUID } from "node:crypto"
+ import { AsyncLocalStorage } from "node:async_hooks"
+ import { createPlannerConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
+@@ -418,7 +419,9 @@
+     }, decision: coverage }),
+     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
+     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
+-  const planner = product.planner
++  const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
++  const planner = procurementComposite.planner
++  const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
+   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
+   plannerHolder.current = planner
+   const plannerSources = product.sources
+@@ -453,15 +456,15 @@
+         : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
+     } })
+   calculationVerifier.current = calculations.verifyCalculationSources
+-  // A Procurement preview is transient. Only the existing explicit human
+-  // promotion may publish its C08 result; it is never a Planner calculation.
+-  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && procurementScenarios.producer.supports(incoming.request)
++  // Standalone and composite Procurement previews are transient. Only the
++  // existing explicit human promotion may publish their C08 result.
++  const persist: typeof calculations.persist = (incoming, callId, call, replay) => incoming.kind === "scenario" && readOnlyScenario(incoming.request)
+     ? Promise.resolve({ status: "needs-input", reason: "procurement-scenario-explicit-promotion-required" }) : calculations.persist(incoming, callId, call, replay)
+   const receipt = input.authority.authority.receiptFor
+   const descriptors = [
+     ...input.extraDescriptors ?? [],
+     ...createDashboardCapabilities(dashboard, async (call, operation, digest, result) => receipt(call, operation, digest, result)),
+-    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario: procurementScenarios.producer.supports }),
++    ...createPlannerCapabilities(planner, receipt, persist, { readOnlyScenario }),
+     ...createProcurementCapabilities({ port: procurement, authority: input.authority.authority }),
+     ...collaboration.capabilities,
+     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),
+diff --git a/apps/cli/src/sucafina-product/decision-controls.ts b/apps/cli/src/sucafina-product/decision-controls.ts
+index e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7..23721ab89535bcf8644a98cf3ed2de65a929a329 100644
+--- a/apps/cli/src/sucafina-product/decision-controls.ts
++++ b/apps/cli/src/sucafina-product/decision-controls.ts
+@@ -96,7 +96,7 @@
+         if (resolved.status !== "ok" || !same(resolved.value.evidence, ref)) continue
+         const projected = await runtime.business.procurementScenarios.producer.readProjection(ref.refId, call)
+         if (projected.status !== "ok" || projected.value.context.currency !== decision.currency || !same(projected.value.context.period, decision.horizon)) continue
+-        const source = decision.alternatives.flatMap((alternative) => alternative.result.components.flatMap((component) => component.sourceRefs)).find((item) => item.surface === "procurement" && item.type === ref.target.recordType && item.id === ref.target.recordId && item.incarnation === ref.target.incarnation && item.version === ref.target.version && same(item.period, ref.target.period) && item.fields.length > 0 && item.fields.every((field) => ref.target.fields.includes(field)))
++        const source = projected.value.context.sourceRefs.find((item) => item.surface === "procurement" && item.type === ref.target.recordType && item.id === ref.target.recordId && item.incarnation === ref.target.incarnation && item.version === ref.target.version && same(item.period, ref.target.period) && item.fields.length > 0 && item.fields.every((field) => ref.target.fields.includes(field)))
+         if (!source) continue
+         const again = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
+         if (again.status !== "ok" || !same(again.value.evidence, ref)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
+@@ -140,7 +140,9 @@
+         return person ? [{ ref, label: person.name }] : []
+       })
+       const conditions = decision.choices.length ? await runtime.domain.materiality.registry.list(caseRef, call) : undefined
+-      const procurementEvidence = await readProcurementEvidence(runtime, request, caseRef, call).catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" }))
++      const procurementEvidence = await (url.searchParams.get("procurement") === "attached"
++        ? readAttachedProcurementEvidence(runtime, decision, call)
++        : readProcurementEvidence(runtime, request, caseRef, call)).catch(() => ({ status: "unavailable" as const, reason: "decision-procurement-evidence-unavailable" }))
+       const again = await runtime.business.cases.read({ caseRef: wanted }, call)
+       if (again.status !== "ok" || !same(again.value.case, decision) || !await currentList() || !await runtime.authority.host.revalidate(call)) return { status: "denied", reason: "decision-controls-authority-changed" }
+       return { status: "ok", value: withFingerprint({ ...base, selected: { ref: wanted, caseRef, decision, forecasts,
+@@ -169,6 +171,27 @@
+ }
+ 
+ type ProcurementEvidence = { sources: readonly { source: RecordEvidence; projection: DomainProjection; label: string }[] }
++
++/** Alternative inspection reopens only attached sources and cannot issue source metadata. */
++async function readAttachedProcurementEvidence(runtime: SfDecisionHttpRuntime, decision: AuthorizedCaseProjection["case"], call: TrustedUiContext): Promise<PortResult<ProcurementEvidence>> {
++  const fences = await runtime.business.readSourceFences(call)
++  if (!fences) return { status: "unavailable", reason: "decision-controls-source-fences-unavailable" }
++  const refs = decision.sourceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.refId.startsWith("sf-procurement:") && ref.target.fields.includes("originalAmount"))
++  if (refs.length > 64) return { status: "needs-input", reason: "decision-controls-evidence-budget-exceeded" }
++  const sources: ProcurementEvidence["sources"][number][] = []
++  for (const ref of refs) {
++    const source = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
++    if (source.status !== "ok" || !same(source.value.evidence, ref)) continue
++    const projection = await runtime.business.procurementScenarios.producer.readProjection(ref.refId, call)
++    if (projection.status !== "ok" || projection.value.context.currency !== decision.currency || !same(projection.value.context.period, decision.horizon)) continue
++    const again = await runtime.business.procurementScenarios.producer.resolveSource(ref.refId, call)
++    if (again.status !== "ok" || !same(again.value.evidence, ref)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
++    sources.push({ source: ref, projection: projection.value, label: `${ref.target.recordId} · source revision ${ref.target.version}` })
++  }
++  if (!await runtime.authority.host.revalidate(call)) return { status: "denied", reason: "decision-controls-authority-changed" }
++  if (!same(await runtime.business.readSourceFences(call), fences)) return { status: "stale", reason: "decision-controls-procurement-source-changed" }
++  return { status: "ok", value: { sources } }
++}
+ 
+ /** Convert canonical collection members into durable individual sources before
+  * offering them for a human case edit. The collection never leaves this read.
+diff --git a/apps/cli/src/sucafina-product/decision-domain-services.ts b/apps/cli/src/sucafina-product/decision-domain-services.ts
+index 4f654783f4fa0d3ed1f4495b0c2fece0ae802d9f..9f8cd652fca2bc771e2ee6fa5c8a1e9df373a592 100644
+--- a/apps/cli/src/sucafina-product/decision-domain-services.ts
++++ b/apps/cli/src/sucafina-product/decision-domain-services.ts
+@@ -87,7 +87,12 @@
+     const transport = host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
+     const current = await rawCase(captured.caseRef, call), fences = await business.readSourceFences(call)
+     if (!transport || transport.signal.aborted || !current || !fences || !input.sharedPortfolio || captured.metricRef !== "planner:known-subtotal-difference" || captured.unit !== current.currency || !same(captured.period, current.horizon)) return false
+-    const allowed = current.alternatives.filter((alternative) => business.procurementScenarios.producer.supports(alternative.scenario)).flatMap((alternative) => alternative.result.sourceRefs)
++    const allowed = current.alternatives.flatMap((alternative) => alternative.result.sourceRefs.filter((ref) =>
++      business.procurementScenarios.producer.supports(alternative.scenario) || ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" &&
++      current.sourceRefs.some((attached) => same(attached, ref)) && alternative.result.comparisonStatus === "conditioned" && alternative.result.total === null &&
++      alternative.scenario.operations.some((operation) => operation.kind === "replace" && operation.targetRef === ref.refId && operation.replacementRef === undefined &&
++        typeof operation.amount === "number" && Number.isFinite(operation.amount) && operation.amount >= 0 && operation.currency === current.currency && same(operation.period, current.horizon) &&
++        alternative.result.unresolvedConditions.includes(`external-operation:${digestSfValue(operation)}:procurement-replacement-cost-unresolved`))))
+     for (const ref of procurement) {
+       if (!allowed.some((source) => same(source, ref))) return false
+       const observed = await procurementReadonly.resolveSource(ref.refId, call)
+diff --git a/apps/cli/src/sucafina-product/procurement-composite-planner.ts b/apps/cli/src/sucafina-product/procurement-composite-planner.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8570e0cab2686986ad81b304e8e3aeaf154cb20a
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/procurement-composite-planner.ts
+@@ -0,0 +1,82 @@
++import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
++import type { ScenarioRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
++import type { DomainPortHost, PlannerPort, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { SfProductStatePort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
++import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
++import { createCompositeDecisionPlanner } from "../../../../modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts"
++import { createProcurementReadonlySourceResolver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts"
++
++type CaseRef = { id: string; incarnation: string; version: number }
++type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
++
++/** Attach an evidenced PR hypothesis to a Planner scenario without quantifying or executing that external effect. */
++export function createSfProcurementCompositePlanner(input: {
++  host: DomainPortHost
++  state: SfProductStatePort
++  planner: PlannerPort
++  selectedCase: (call: TrustedDomainContext) => Promise<PortResult<CaseRef>>
++  readSourceFences: (call: TrustedDomainContext) => Promise<unknown | undefined>
++}) {
++  const readonly = createProcurementReadonlySourceResolver({ host: input.host })
++  const supports = (request: ScenarioRequest) => typeof request.baseRef === "string" && !request.baseRef.startsWith("sf-procurement:") && Array.isArray(request.operations) && request.operations.some((operation) => typeof operation.targetRef === "string" && operation.targetRef.startsWith("sf-procurement:"))
++  const planner: PlannerPort = { ...input.planner, simulateScenario: async (incoming, call) => {
++    const request = structuredClone(incoming)
++    if (!supports(request)) return input.planner.simulateScenario(request, call)
++    const parsed = decodeSfOperationInput("sf_scenario_simulate", request)
++    if (!parsed.ok || digestSfValue(parsed.value) !== digestSfValue(request)) return { status: "needs-input", reason: "invalid-composite-procurement-scenario" }
++    const transport = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
++    const current = () => !!transport && !transport.signal.aborted && input.host.requestFor(call) === transport && binding === digestSfValue([call.kind, call.binding])
++    if (!current() || !transport || !await input.host.revalidate(call)) return { status: "denied", reason: "composite-scenario-authority-unavailable" }
++    const selected = await input.selectedCase(call)
++    if (selected.status !== "ok") return selected
++    const readCase = async (): Promise<DecisionCase | undefined> => {
++      const selectedAgain = await input.selectedCase(call)
++      if (selectedAgain.status !== "ok" || digestSfValue(selectedAgain.value) !== digestSfValue(selected.value)) return undefined
++      const result = await input.state.read(transport, "cases", (state, actor) => {
++        const value = state.cases[selected.value.id]
++        return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
++          value?.incarnation === selected.value.incarnation && value.version === selected.value.version && value.participants.includes(actor.principalRef) ? structuredClone(value) : undefined
++      })
++      return result.status === "ok" && current() && await input.host.revalidate(call) ? result.value : undefined
++    }
++    const decision = await readCase(), fences = await input.readSourceFences(call)
++    if (!decision || !fences) return { status: "denied", reason: "composite-scenario-case-unavailable" }
++    const attached = decision.sourceRefs.filter((ref): ref is RecordRef => ref.kind === "record" && ref.installationId === call.binding.installationId && ref.projectId === call.binding.projectId && ref.refDigest === digestSfEvidenceRef(ref))
++    if (attached.filter((ref) => ref.refId === request.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version").length !== 1) return { status: "denied", reason: "composite-planner-source-not-attached" }
++    const external = request.operations.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
++    if (new Set(external.map((operation) => operation.targetRef)).size !== external.length) return { status: "needs-input", reason: "duplicate-composite-procurement-target" }
++    if (external.some((operation) => operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || operation.currency !== decision.currency || digestSfValue(operation.period) !== digestSfValue(decision.horizon))) return { status: "needs-input", reason: "explicit-composite-requisition-amount-required" }
++    const resolve = async (ref: BusinessEvidenceRef): Promise<BusinessEvidenceResolution> => {
++      const environment = await input.host.environment(transport)
++      const unavailable: BusinessEvidenceResolution = { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: environment.at }
++      if (!Number.isFinite(Date.parse(environment.at)) || !current() || ref.kind !== "record" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request" || !ref.target.fields.includes("originalAmount") || !attached.some((entry) => digestSfValue(entry) === digestSfValue(ref))) return unavailable
++      const source = await readonly.resolveSource(ref.refId, call)
++      if (source.status !== "ok" || digestSfValue(source.value.evidence) !== digestSfValue(ref)) return unavailable
++      const projected = await readonly.readProjection(ref.refId, call)
++      if (projected.status !== "ok" || projected.value.version !== ref.target.version || projected.value.context.currency !== decision.currency || digestSfValue(projected.value.context.period) !== digestSfValue(decision.horizon)) return unavailable
++      const again = await readonly.resolveSource(ref.refId, call)
++      if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || !current() || !await input.host.revalidate(call)) return unavailable
++      return { ...unavailable, state: "fresh", currentRef: source.value.evidence, authorizedProjection: projected.value }
++    }
++    const composite = createCompositeDecisionPlanner({ planner: input.planner, revalidate: async (context) => context === call && current() && await input.host.revalidate(call),
++      evidence: { context: async ({ refs }, context) => context === call ? Promise.all(refs.map(resolve)) : [] },
++      resolveOperation: async (operation, context) => {
++        if (context !== call || !current()) return { status: "denied", reason: "composite-scenario-authority-unavailable" }
++        if (!operation.targetRef.startsWith("sf-procurement:")) return { status: "ok", value: { kind: "planner", operationDigest: digestSfValue(operation) } }
++        const matches = attached.filter((ref) => ref.refId === operation.targetRef && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request")
++        if (matches.length !== 1) return { status: "denied", reason: "composite-procurement-source-not-attached" }
++        const found = await resolve(matches[0]!)
++        if (found.state !== "fresh") return { status: "stale", reason: "composite-procurement-source-changed" }
++        return { status: "ok", value: { kind: "external", operationDigest: digestSfValue(operation), sourceRefs: [matches[0]!], condition: "procurement-replacement-cost-unresolved" } }
++      } })
++    const result = await composite.simulateScenario(request, call)
++    if (result.status !== "ok") return result
++    if (result.value.comparisonStatus !== "conditioned" || result.value.total !== null || result.value.currency !== decision.currency || digestSfValue(result.value.horizon) !== digestSfValue(decision.horizon)) return { status: "needs-input", reason: "composite-planner-result-basis-unavailable" }
++    if (!current() || digestSfValue(await readCase()) !== digestSfValue(decision) || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call)) return { status: "stale", reason: "composite-scenario-source-or-case-changed" }
++    return result
++  } }
++  return { planner, supports }
++}
+diff --git a/apps/cli/src/sucafina-product/recorded-planner-operation-access.ts b/apps/cli/src/sucafina-product/recorded-planner-operation-access.ts
+index 38b832f73b0eaa615d5fdf2d7838b0e5635440fa..d2158a10de3473edc5f5d509f3215e84140a8382 100644
+--- a/apps/cli/src/sucafina-product/recorded-planner-operation-access.ts
++++ b/apps/cli/src/sucafina-product/recorded-planner-operation-access.ts
+@@ -1,3 +1,4 @@
++import { authorizeSfCompositeProcurementOperations } from "./scenario-operation-access.ts"
+ import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection, Period, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+@@ -62,8 +63,10 @@
+       }
+       const base = select(item.scenario.baseRef)
+       if (!base || !coversMonths(base.target.period!, item.result.horizon)) return false
+-      const operations = item.scenario.operations.filter((operation) => !operation.replacementRef?.startsWith("hot-topic-draft:"))
+-      if (!operations.length) return false
++      const external = item.scenario.operations.some((operation) => operation.targetRef.startsWith("sf-procurement:"))
++      if (external && !await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: input.resolveEvidence }, decision, item, call)) return false
++      const operations = item.scenario.operations.filter((operation) => !operation.replacementRef?.startsWith("hot-topic-draft:") && !operation.targetRef.startsWith("sf-procurement:"))
++      if (!operations.length && !external) return false
+       const replacements = operations.map((operation) => operation.replacementRef ? amountSelector(operation.replacementRef) : undefined)
+       if (operations.some((operation, index) => operation.replacementRef && (!replacements[index] || !select(replacements[index]!.source)))) return false
+       const read = async () => {
+diff --git a/apps/cli/src/sucafina-product/scenario-operation-access.ts b/apps/cli/src/sucafina-product/scenario-operation-access.ts
+index f83b79d838deb2fcdd09300903d2469b3de6d32e..5a0592e200e14fa801b1ed24150384070ea5298b 100644
+--- a/apps/cli/src/sucafina-product/scenario-operation-access.ts
++++ b/apps/cli/src/sucafina-product/scenario-operation-access.ts
+@@ -1,4 +1,4 @@
+-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+@@ -85,6 +85,9 @@
+         }
+         continue
+       }
++      const external = domain.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
++      if (external.length && !await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: input.resolveProcurementEvidence }, captured, item, call)) return false
++      const plannerOperations = domain.filter((operation) => !operation.targetRef.startsWith("sf-procurement:"))
+       const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
+       if (source.status !== "ok") {
+         if (source.status !== "stale" || !input.recordedPlanner || !await input.recordedPlanner(captured, item, call)) return false
+@@ -103,7 +106,7 @@
+         digestSfValue(current.value.context.period) !== digestSfValue(item.result.horizon) || !current.value.context.sourceRefs.length ||
+         current.value.context.sourceRefs.some((ref) => !covered(ref, [source.value.evidence])) ||
+         new Set(current.value.values.map((entry) => entry.id)).size !== current.value.values.length) return false
+-      for (const operation of domain) {
++      for (const operation of plannerOperations) {
+         const targets = current.value.components.filter((component) => component.id === operation.targetRef)
+         if (targets.length !== 1 || !targets[0]!.sourceRefs.length || targets[0]!.sourceRefs.some((ref) => !covered(ref, refs))) return false
+         if (operation.replacementRef) {
+@@ -137,3 +140,56 @@
+     ref.target.incarnation === source.incarnation && ref.target.version === source.version && !!ref.target.period && ref.target.period.start <= source.period.start && ref.target.period.end >= source.period.end &&
+     source.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field)))
+ }
++
++/** Reauthorize every explicit external selector against C17; a condition is never an approval.
++ * A retained choice owns its original evidence even when the case attaches a newer source. */
++export async function authorizeSfCompositeProcurementOperations(input: {
++  host: Pick<DomainPortHost, "revalidate">
++  resolve: BusinessContextService["resolve"]
++}, decision: DecisionCase, item: Pick<DecisionCase["alternatives"][number], "scenario" | "result">, call: TrustedDomainContext) {
++  const operations = item.scenario.operations.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
++  if (!operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
++    item.result.comparisonStatus !== "conditioned" || item.result.total !== null || item.result.currency !== decision.currency ||
++    digestSfValue(item.result.horizon) !== digestSfValue(decision.horizon) ||
++    ![...decision.alternatives, ...decision.choices].some((stored) => digestSfValue(stored.scenario) === digestSfValue(item.scenario) && digestSfValue(stored.result) === digestSfValue(item.result)) ||
++    !await input.host.revalidate(call)) return false
++  const refs = operations.map((operation) => {
++    const matches = item.result.sourceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record" &&
++      ref.refId === operation.targetRef && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request")
++    const ref = matches[0]
++    return ref && matches.every((other) => digestSfValue(other) === digestSfValue(ref)) && ref.refDigest === digestSfEvidenceRef(ref) &&
++      ref.installationId === call.binding.installationId && ref.projectId === call.binding.projectId && ref.target.fields.includes("originalAmount") &&
++      digestSfValue(ref.target.period) === digestSfValue(item.result.horizon) ? ref : undefined
++  })
++  if (refs.some((ref) => !ref) || operations.some((operation) => operation.kind !== "replace" || operation.replacementRef !== undefined ||
++    typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || operation.currency !== item.result.currency ||
++    digestSfValue(operation.period) !== digestSfValue(item.result.horizon) || !item.result.unresolvedConditions.includes(`external-operation:${digestSfValue(operation)}:procurement-replacement-cost-unresolved`))) return false
++  const read = () => Promise.all(refs.map((ref) => input.resolve(ref!, call)))
++  const first = await read()
++  if (first.some((resolution, index) => {
++    const ref = refs[index]!, current = resolution.currentRef, projection = resolution.authorizedProjection
++    // C17 proves physical continuity. Reissuing the current actor's scope may
++    // rotate its scoped incarnation; the fresh branch still requires the exact ref.
++    return (resolution.state !== "fresh" && resolution.state !== "historical") || digestSfValue(resolution.ref) !== digestSfValue(ref) ||
++      resolution.accessRevision !== call.binding.accessRevision || !current || current.kind !== "record" || current.refDigest !== digestSfEvidenceRef(current) ||
++      current.installationId !== ref.installationId || current.projectId !== ref.projectId || current.target.surface !== "procurement" ||
++      current.target.recordType !== ref.target.recordType || current.target.recordId !== ref.target.recordId ||
++      digestSfValue(current.target.fields) !== digestSfValue(ref.target.fields) || digestSfValue(current.target.period) !== digestSfValue(ref.target.period) ||
++      !projection || !("components" in projection) || projection.version !== ref.target.version || projection.context.surface !== "procurement" ||
++      projection.context.installationId !== ref.installationId || projection.context.projectId !== ref.projectId || projection.context.currency !== item.result.currency ||
++      digestSfValue(projection.context.period) !== digestSfValue(item.result.horizon) || !projection.context.sourceRefs.length ||
++      projection.context.sourceRefs.some((source) => !covered(source, [ref])) ||
++      resolution.state === "historical" && !resolution.differences || resolution.state === "fresh" &&
++      (digestSfValue(current) !== digestSfValue(ref) || projection.context.principalRef !== call.binding.principalRef ||
++        projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion)
++  })) return false
++  const material = (values: typeof first) => values.map(({ checkedAt: _checkedAt, ...value }) => {
++    const projection = value.authorizedProjection
++    if (value.state !== "fresh" || !projection || !("components" in projection)) return value
++    const source = ({ observedAt: _observedAt, ...ref }: SourceRef) => ref
++    return { ...value, authorizedProjection: { ...projection, context: { ...projection.context, sourceRefs: projection.context.sourceRefs.map(source) },
++      components: projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) } }
++  })
++  const second = await read()
++  return digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call)
++}
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts b/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
+index 74cd720489adde4b8a341c3d4c378194f58afa16..0ff544b39f61a26cea6d15c238a88217ef7e6130 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
+@@ -1,4 +1,5 @@
+ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
++import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
+ import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { ScenarioOperation, ScenarioRequest } from "../contracts/operations.ts"
+ import type { PlannerPort, PortResult } from "../contracts/ports.ts"
+@@ -40,7 +41,7 @@
+         const conditions = external.map((item) => `external-operation:${item.operationDigest}:${item.condition}`)
+         const sourceRefs = [...value.sourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
+         const costCoverage = { ...value.costCoverage, coverageState: value.costCoverage.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...new Set([...value.costCoverage.issues, "external-operation-cost-unresolved"])], evaluatedSourceRefs: [...value.costCoverage.evaluatedSourceRefs, ...refs].filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index) }
+-        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: value, proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions])] } }
++        return { status: "ok", value: { ...value, id: `composite:${digestSfValue({ request, planner: plannerScenarioDigest(value), proofs })}`, sourceRefs, costCoverage, comparisonStatus: value.comparisonStatus === "incompatible" || value.comparisonStatus === "unavailable" ? value.comparisonStatus : "conditioned", total: null, unresolvedConditions: [...new Set([...value.unresolvedConditions, ...conditions])] } }
+       } catch { return { status: "unavailable", reason: "scenario-composition-unavailable" } }
+     },
+   }
+diff --git a/modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts b/modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts
+index a731b36427ffbdbc30d19b3b7785be16e5c9747d..8c89acd506b8fc7177ea07ef7a2ffaba74634853 100644
+--- a/modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts
+@@ -26,7 +26,9 @@
+ /** Start with human-selected, existing Planner scenarios. Coverage never supplies amounts. */
+ export function decisionAlternativesForm(projection: AuthorizedCaseProjection) {
+   const context = { ...decisionFormContext(projection), bases: projection.case.costCoverageBases.filter((basis) => requiredSfCostCategories(basis)), categories: RENEWAL_TRANSITION_CATEGORIES }
+-  return `<section aria-label="Initial alternatives"><h3>Add an alternative</h3><p>Select an attached Planner version and inspect its current amounts. The scenario keeps that version's values. Creating an alternative neither changes the official plan nor approves a purchase.</p><form data-decision-alternatives data-context="${esc(JSON.stringify(context))}"><button type="button" data-alternative-discover>Load attached scenarios</button><label>Source for alternative<select name="source" required disabled><option value="">Load attached scenarios first</option></select></label><button type="button" data-alternative-inspect disabled>Inspect scenario</button><div data-alternative-preview aria-live="polite"></div><label>Alternative title<input name="title" required maxlength="500"></label><label>Cost inventory<select name="basis" required disabled><option value="">Inspect a scenario first</option></select></label><div data-alternative-inventory></div><label>Reason for pending cost review<textarea name="coverage-reason" maxlength="2000"></textarea></label><button type="button" data-alternative-coverage disabled>Save pending coverage</button><button type="submit" disabled>Create alternative</button><button type="button" data-alternative-retry hidden style="display:none">Retry same request</button><button type="button" data-alternative-review hidden style="display:none">Review current case</button><p role="status" aria-live="polite"></p><div data-alternative-current></div></form></section>`
++  const procurement = projection.case.sourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.target.fields.includes("originalAmount"))
++    ? '<fieldset><legend>Optional Procurement proposal</legend><p>An explicit replacement remains an unresolved external operation. This form does not save or submit the requisition or grant financial approval.</p><label>Procurement request<select name="procurement-request" disabled><option value="">No Procurement replacement</option></select></label><label>Proposed estimated amount<input name="procurement-proposed-amount" type="number" min="0" step="any" disabled></label><div data-alternative-procurement-preview aria-live="polite"></div></fieldset>' : ""
++  return `<section aria-label="Initial alternatives"><h3>Add an alternative</h3><p>Select an attached Planner version and inspect its current amounts. The scenario keeps that version's values. Creating an alternative neither changes the official plan nor approves a purchase.</p><form data-decision-alternatives data-context="${esc(JSON.stringify(context))}"><button type="button" data-alternative-discover>Load attached scenarios</button><label>Source for alternative<select name="source" required disabled><option value="">Load attached scenarios first</option></select></label><button type="button" data-alternative-inspect disabled>Inspect scenario</button><div data-alternative-preview aria-live="polite"></div><label>Alternative title<input name="title" required maxlength="500"></label>${procurement}<label>Cost inventory<select name="basis" required disabled><option value="">Inspect a scenario first</option></select></label><div data-alternative-inventory></div><label>Reason for pending cost review<textarea name="coverage-reason" maxlength="2000"></textarea></label><button type="button" data-alternative-coverage disabled>Save pending coverage</button><button type="submit" disabled>Create alternative</button><button type="button" data-alternative-retry hidden style="display:none">Retry same request</button><button type="button" data-alternative-review hidden style="display:none">Review current case</button><p role="status" aria-live="polite"></p><div data-alternative-current></div></form></section>`
+ }
+ 
+ // Shared transport/state code runs inside each mounted form. It is not an authorization port.
+@@ -186,7 +188,7 @@
+     target.append(list); target.dataset.state = 'ready'
+   }
+   const currentCase = async (target) => {
+-    const value = await read('decision-controls', { case: context.caseSelector, format: 'json' })
++    const value = await read('decision-controls', { case: context.caseSelector, procurement: 'attached', format: 'json' })
+     if (!live()) return
+     if (!value.selected || value.selected.caseRef.id !== context.caseRef.id || value.selected.caseRef.incarnation !== context.caseRef.incarnation) throw new Error('case-unavailable')
+     target.replaceChildren()
+@@ -207,12 +209,28 @@
+   const reason = form.elements.namedItem('coverage-reason'); const discover = form.querySelector('[data-alternative-discover]'); const inspect = form.querySelector('[data-alternative-inspect]')
+   const coverage = form.querySelector('[data-alternative-coverage]'); const submit = form.querySelector('button[type=submit]'); const retry = form.querySelector('[data-alternative-retry]'); const review = form.querySelector('[data-alternative-review]')
+   const preview = form.querySelector('[data-alternative-preview]'); const inventory = form.querySelector('[data-alternative-inventory]'); const current = form.querySelector('[data-alternative-current]')
+-  let choices = []; let loaded; let prepared; let newBasis; let pending
++  const procurement = form.elements.namedItem('procurement-request'); const proposedAmount = form.elements.namedItem('procurement-proposed-amount')
++  const procurementPreview = form.querySelector('[data-alternative-procurement-preview]')
++  let choices = []; let procurementChoices = []; let loaded; let prepared; let newBasis; let pending
++  const procurementOperation = () => {
++    if (!procurement?.value) return undefined
++    const selected = procurementChoices.find((item) => item.source.refDigest === procurement.value)
++    const amount = proposedAmount?.value.trim() ? Number(proposedAmount.value) : NaN
++    if (!selected || !Number.isFinite(amount) || amount < 0 || selected.projection.context.currency !== context.currency || !same(selected.projection.context.period, context.horizon)) return null
++    return { kind: 'replace', targetRef: selected.source.refId, amount, currency: context.currency, period: context.horizon }
++  }
++  const showProcurementProposal = () => {
++    if (!procurementPreview) return
++    const operation = procurementOperation()
++    procurementPreview.textContent = operation ? 'Proposed estimated amount: ' + operation.amount + ' ' + operation.currency + '. Planner amounts remain unchanged; this external cost remains unresolved. This replacement has no financial approval.' : procurement?.value ? 'Enter the proposed estimated amount explicitly.' : ''
++  }
+   const lock = (value) => { form.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = value }) }
+   const ready = () => {
+     lock(false); source.disabled = !choices.length || !!prepared; discover.disabled = !!prepared; inspect.disabled = !source.value || !!prepared; basis.disabled = !loaded || !!prepared
+     coverage.disabled = !loaded || !!prepared || loaded.expectedVersion !== 0 || !basis.value
+-    reason.disabled = !!prepared; submit.disabled = !prepared
++    if (procurement) procurement.disabled = !loaded || !procurementChoices.length
++    if (proposedAmount) { proposedAmount.disabled = !loaded || !procurement?.value; proposedAmount.required = !!procurement?.value }
++    reason.disabled = !!prepared; submit.disabled = !prepared || procurementOperation() === null
+     shown(retry, false); shown(review, false)
+   }
+   const unresolved = (error) => {
+@@ -265,30 +283,48 @@
+     busy = true; lock(true); preview.replaceChildren(); delete preview.dataset.state; loaded = undefined; prepared = undefined
+     status.textContent = 'Loading attached scenarios…'
+     try {
+-      const result = await read('decision-controls', { case: context.caseSelector, format: 'json' })
++      const result = await read('decision-controls', { case: context.caseSelector, procurement: 'attached', format: 'json' })
+       if (!sameCase(result.selected?.caseRef)) throw new Error('conflict')
+       const options = await read('bi-options', { viewId: 'BI01', start: context.horizon.start, end: context.horizon.end })
+       if (!live()) return
+       choices = result.selected.forecasts.filter((item) => item.source.kind === 'record' && item.source.target.surface === 'planner' && item.source.target.recordType === 'planner-version' && context.sourceRefs.some((ref) => ref.refDigest === item.source.refDigest && same(ref, item.source)))
++      procurementChoices = (result.selected.procurementEvidence?.sources || []).filter((item) => item.source.kind === 'record' && item.source.target.surface === 'procurement' && item.source.target.recordType === 'procurement-request' && item.source.target.fields.includes('originalAmount') && context.sourceRefs.some((ref) => same(ref, item.source)) && item.projection.context.currency === context.currency && same(item.projection.context.period, context.horizon))
++      if (procurement) {
++        procurement.replaceChildren(new Option('No Procurement replacement', ''))
++        procurementChoices.forEach((item) => procurement.append(new Option(item.source.target.recordId + ' · source revision ' + item.source.target.version, item.source.refDigest)))
++        proposedAmount.value = ''; showProcurementProposal()
++      }
+       source.replaceChildren(new Option('Select an attached scenario', ''))
+       choices.forEach((item) => { const labels = options.versions.filter((entry) => entry.ref === item.source.refId); source.append(new Option(labels.length === 1 ? labels[0].label : item.label, item.source.refDigest)) })
+       status.textContent = choices.length ? 'Choose an attached scenario to inspect.' : 'No attached Planner scenarios are currently available. Attach sources in Edit decision and save first.'
+-    } catch (error) { if (live()) { choices = []; source.replaceChildren(); status.textContent = error.message === 'conflict' ? 'The case changed. Reopen it; your title is preserved.' : 'Attached scenarios are unavailable. Recheck current access and sources.' } }
++    } catch (error) { if (live()) { choices = []; procurementChoices = []; source.replaceChildren(); if (procurement) procurement.replaceChildren(); status.textContent = error.message === 'conflict' ? 'The case changed. Reopen it; your title is preserved.' : 'Attached scenarios are unavailable. Recheck current access and sources.' } }
+     finally { busy = false; if (live()) ready() }
+   })
+   source.addEventListener('change', () => { loaded = undefined; prepared = undefined; preview.replaceChildren(); delete preview.dataset.state; inventory.replaceChildren(); basis.replaceChildren(); ready() })
+   basis.addEventListener('change', () => { prepared = undefined; renderInventory(); ready() })
+   title.addEventListener('input', () => { form.dataset.dirty = 'true' })
++  procurement?.addEventListener('change', () => { if (busy || pending) return; proposedAmount.value = ''; form.dataset.dirty = 'true'; showProcurementProposal(); ready() })
++  proposedAmount?.addEventListener('input', () => { if (busy || pending) return; form.dataset.dirty = 'true'; showProcurementProposal(); ready() })
+   inspect.addEventListener('click', async () => {
+     if (busy || pending) return
+     const selected = choices.find((item) => item.source.refDigest === source.value)
+     if (!selected) return
+     busy = true; lock(true); loaded = undefined; prepared = undefined; preview.replaceChildren(); delete preview.dataset.state; status.textContent = 'Inspecting current scenario…'
+     try {
+-      const result = await read('decision-controls', { case: context.caseSelector, source: selected.source.refDigest, format: 'json' })
++      const result = await read('decision-controls', { case: context.caseSelector, source: selected.source.refDigest, procurement: 'attached', format: 'json' })
+       const forecast = result.selected?.forecast
+       if (!sameCase(result.selected?.caseRef) || result.accessRevision !== context.authority.accessRevision || !forecast || !same(forecast.source, selected.source) || !project(forecast.projection) || !Number.isSafeInteger(forecast.expectedVersion) || forecast.expectedVersion < 0) throw new Error('conflict')
+       loaded = forecast
++      const currentProcurement = result.selected.procurementEvidence?.sources || []
++      procurementChoices = procurementChoices.filter((item) => currentProcurement.some((current) => same(current.source, item.source)))
++      if (procurement) {
++        const retainedRequest = procurement.value
++        procurement.replaceChildren(new Option('No Procurement replacement', ''))
++        procurementChoices.forEach((item) => procurement.append(new Option(item.source.target.recordId + ' · source revision ' + item.source.target.version, item.source.refDigest)))
++        if (procurementChoices.some((item) => item.source.refDigest === retainedRequest)) procurement.value = retainedRequest
++        else proposedAmount.value = ''
++      }
++      showProcurementProposal()
+       const retainedText = sessionStorage.getItem(storageKey + ':coverage')
+       const retained = retainedText ? JSON.parse(retainedText) : undefined
+       // A confirmed inventory can precede the first promotion; keep its exact identity across reload/source changes.
+@@ -328,7 +364,9 @@
+     event.preventDefault(); if (busy || pending || !prepared || !loaded || !form.reportValidity()) return
+     if (!title.value.trim()) { status.textContent = 'Enter an alternative title before creating it.'; title.focus(); return }
+     try {
+-      pending = begin('decision-promote', { caseRef: context.caseRef, title: title.value.trim(), scenario: { baseRef: loaded.source.refId, operations: [], assumptions: [] }, coverageRef: prepared.coverageRef }, { title: title.value, source: loaded.source.refDigest })
++      const operation = procurementOperation()
++      if (operation === null) { status.textContent = 'Review the attached requisition and enter a valid proposed amount.'; return }
++      pending = begin('decision-promote', { caseRef: context.caseRef, title: title.value.trim(), scenario: { baseRef: loaded.source.refId, operations: operation ? [operation] : [], assumptions: [] }, coverageRef: prepared.coverageRef }, { title: title.value, source: loaded.source.refDigest, procurement: procurement?.value || '', proposedAmount: proposedAmount?.value || '' })
+       execute(pending)
+     } catch { if (live()) { status.textContent = 'Could not retain the intention safely. No new alternative was submitted.'; lock(true) } }
+   })
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..24dda67176121efe50f91148d6b2291a4f975d4b
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts
+@@ -0,0 +1,201 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { CostCoverageBasis, DecisionCase } from "../../../product/contracts/decisions.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
++import { createPlannerCapabilities } from "../../../product/planner/capabilities.ts"
++import { comparePlannerScenarios } from "../../../product/planner/comparison.ts"
++import { plannerScenarioDigest } from "../../../product/planner/preview-comparison.ts"
++import { createProcurementReadonlySourceResolver } from "../../../product/procurement/scenario-producer.ts"
++import { decisionAlternativesForm, decisionAlternativesScript } from "../../../product/ui/decision-alternatives.ts"
++import { createSfProcurementCompositePlanner } from "../../../../../../apps/cli/src/sucafina-product/procurement-composite-planner.ts"
++import { createSfScenarioOperationAccess } from "../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts"
++import { createSfPlannerEvidence } from "../../../../../../apps/cli/src/sucafina-product/planner-evidence.ts"
++import { createScenarioFixture, scenarioPeriod } from "../procurement-decision-producer/fixture.ts"
++
++// Complementary evidence only. The original mission52 helper/spec remains byte-for-byte unchanged.
++// Synthetic source membership, real SQLite/Planner/Procurement/composition/UI authority; no approval is performed.
++test("mixed original52 shape retains Planner 2400, difference 1200 and an unresolved external Procurement operation without writes", async () => {
++  const fixture = await createCompositeFixture()
++  try {
++    const before = await fixture.snapshots(), writes = fixture.writes.length
++    const proposal = fixture.proposal(140)
++    const base = await fixture.raw.simulateScenario({ baseRef: "baseline", operations: [], assumptions: [] }, fixture.context)
++    const result = await fixture.composite.planner.simulateScenario(proposal, fixture.context)
++    expect(base.status).toBe("ok")
++    expect(result.status).toBe("ok")
++    if (base.status !== "ok" || result.status !== "ok") throw new Error(`Real composed producer failed: ${JSON.stringify({ base, result })}`)
++    expect(base.value.knownSubtotal).toBe(1200)
++    expect(result.value).toMatchObject({ knownSubtotal: 2400, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending" } })
++    expect(result.value.sourceRefs).toContainEqual(fixture.evidence)
++    expect(result.value.components.some((component) => component.sourceRefs.some((ref) => ref.surface === "procurement"))).toBe(false)
++    expect(result.value.unresolvedConditions).toContain(`external-operation:${digestSfValue(proposal.operations[0])}:procurement-replacement-cost-unresolved`)
++    const comparison = comparePlannerScenarios({ baselineRef: "baseline-result", alternativeRef: "mixed-result", baselineCoverageRef: "coverage:baseline", alternativeCoverageRef: "coverage:candidate", baseline: base.value, alternative: result.value })
++    expect(comparison).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
++    expect(comparison.unresolvedConditions).toContain(`external-operation:${digestSfValue(proposal.operations[0])}:procurement-replacement-cost-unresolved`)
++    expect(await fixture.snapshots()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++
++    fixture.clock.at = "2026-11-14T12:00:01Z"
++    const repeated = await fixture.composite.planner.simulateScenario(proposal, fixture.context)
++    expect(repeated.status).toBe("ok")
++    if (repeated.status !== "ok") throw new Error("Repeated readonly composition failed")
++    expect(repeated.value.id).toBe(result.value.id)
++    expect(plannerScenarioDigest(repeated.value)).toBe(plannerScenarioDigest(result.value))
++    expect(await fixture.snapshots()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++
++    const mutable = fixture.proposal(140)
++    const pending = fixture.composite.planner.simulateScenario(mutable, fixture.context)
++    mutable.operations[0]!.amount = 999
++    const captured = await pending
++    expect(captured.status).toBe("ok")
++    if (captured.status !== "ok") throw new Error("Captured mixed request unavailable")
++    expect(plannerScenarioDigest(captured.value)).toBe(plannerScenarioDigest(result.value))
++    expect(await fixture.snapshots()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++  } finally { await fixture.dispose() }
++})
++
++test("mixed capability is transient and current case guards authorize the explicit external selector", async () => {
++  const fixture = await createCompositeFixture()
++  try {
++    const proposal = fixture.proposal(140), digest = digestSfValue(proposal)
++    const transport = new Request("https://scenario.invalid/procurement", { headers: { authorization: "Bearer alice" } })
++    const admitted = await fixture.ui.admit(transport, "sf_scenario_simulate", digest)
++    if (admitted.status !== "ok" || !await fixture.ui.validate(admitted.value, "sf_scenario_simulate", digest)) throw new Error("Real UI admission unavailable")
++    let persisted = 0
++    const descriptors = createPlannerCapabilities(fixture.composite.planner, (call, operation, inputDigest, outputDigest) => call.kind === "ui" ? fixture.ui.receiptFor(call, operation, inputDigest, outputDigest) : undefined,
++      async () => { persisted++; throw new Error("Mixed preview attempted to publish a result") }, { readOnlyScenario: fixture.composite.supports })
++    const descriptor = descriptors.find((entry) => entry.id === "sf_scenario_simulate")
++    if (!descriptor) throw new Error("Scenario descriptor missing")
++    const before = await fixture.snapshots(), writes = fixture.writes.length
++    const preview = await descriptor.handler(proposal, admitted.value)
++    expect(preview.status).toBe("ok")
++    expect(Object.hasOwn(preview, "outputRef")).toBe(false)
++    expect(persisted).toBe(0)
++    const scenario = await fixture.composite.planner.simulateScenario(proposal, fixture.context)
++    if (scenario.status !== "ok") throw new Error("Mixed scenario unavailable")
++    const decision: DecisionCase = { ...fixture.decision, alternatives: [{ id: "mixed", version: 1, title: "Human proposal", scenario: proposal, result: scenario.value }] }
++    expect(await fixture.guard(decision, fixture.context)).toBe(true)
++    // The protected recorded alternative retains its exact source when top-level attachments move on.
++    expect(await fixture.guard({ ...decision, sourceRefs: fixture.plannerRefs }, fixture.context)).toBe(true)
++    const changed = structuredClone(decision)
++    changed.alternatives[0]!.scenario.operations[0]!.amount = 100
++    expect(await fixture.guard(changed, fixture.context)).toBe(false)
++    const missing = structuredClone(decision)
++    missing.alternatives[0]!.result.sourceRefs = missing.alternatives[0]!.result.sourceRefs.filter((ref) => ref.refId !== fixture.sourceRef)
++    expect(await fixture.guard(missing, fixture.context)).toBe(false)
++    expect(await fixture.snapshots()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++    fixture.ui.finish(admitted.value)
++  } finally { await fixture.dispose() }
++})
++
++test("mixed preview rejects another holder, unbound currency, duplicated targets and stale Procurement source without writes", async () => {
++  const fixture = await createCompositeFixture()
++  try {
++    const before = await fixture.snapshots(), writes = fixture.writes.length
++    const foreign = await fixture.admit("bob")
++    expect((await fixture.composite.planner.simulateScenario(fixture.proposal(140), foreign.context)).status).toBe("denied")
++    fixture.ui.finish(foreign.context)
++    const currency = fixture.proposal(140)
++    currency.operations[0]!.currency = "EUR"
++    expect(await fixture.composite.planner.simulateScenario(currency, fixture.context)).toMatchObject({ status: "needs-input", reason: "explicit-composite-requisition-amount-required" })
++    const duplicate = fixture.proposal(140)
++    duplicate.operations = [...duplicate.operations, structuredClone(duplicate.operations[0]!)]
++    expect(await fixture.composite.planner.simulateScenario(duplicate, fixture.context)).toMatchObject({ status: "needs-input", reason: "duplicate-composite-procurement-target" })
++    expect(await fixture.snapshots()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++    const current = await fixture.snapshot()
++    expect((await fixture.execute(fixture.requester, { page: "Requests", action: "save", id: fixture.requestId, version: current.versions[`requests:${fixture.requestId}`]!.version, values: { pr: { estAmount: 120 } } })).ok).toBe(true)
++    const after = await fixture.snapshots(), afterWrites = fixture.writes.length
++    expect(await fixture.composite.planner.simulateScenario(fixture.proposal(140), fixture.context)).toMatchObject({ status: "stale", reason: "composite-procurement-source-changed" })
++    expect(await fixture.snapshots()).toEqual(after)
++    expect(fixture.writes).toHaveLength(afterWrites)
++  } finally { await fixture.dispose() }
++})
++
++test("mixed form offers explicit request and amount controls only for attached Procurement evidence", async () => {
++  const fixture = await createCompositeFixture()
++  try {
++    const binding = fixture.context.binding
++    const projection = { context: { kind: "ui" as const, installationId: binding.installationId, projectId: binding.projectId, principalRef: binding.principalRef, accessRevision: binding.accessRevision, policyVersion: binding.policyVersion }, case: fixture.decision, events: [], evidenceRefs: fixture.decision.sourceRefs, checkedAt: fixture.clock.at }
++    const before = structuredClone(projection)
++    const html = decisionAlternativesForm(projection)
++    expect(html).toContain('Procurement request<select name="procurement-request" disabled')
++    expect(html).toContain('Proposed estimated amount<input name="procurement-proposed-amount" type="number" min="0" step="any" disabled')
++    expect(html).toContain("does not save or submit the requisition or grant financial approval")
++    expect(decisionAlternativesForm({ ...projection, case: { ...fixture.decision, sourceRefs: fixture.plannerRefs } })).not.toContain('name="procurement-proposed-amount"')
++    expect(projection).toEqual(before)
++    // Parse in Actions only. This file is delivered inert and is never executed locally.
++    expect(() => new Bun.Transpiler({ loader: "js" }).transformSync(decisionAlternativesScript)).not.toThrow()
++  } finally { await fixture.dispose() }
++})
++
++async function createCompositeFixture() {
++  const fixture = await createScenarioFixture()
++  try {
++    const host: DomainPortHost = { ...fixture.host, authenticate: async (request, scope) => {
++      const principal = await fixture.host.authenticate(request, scope)
++      return principal ? { ...principal, roles: [...principal.roles, { surface: "planner", role: "finance" }] } : null
++    } }
++    const reader = { id: "alice", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
++    const plannerSnapshot = await fixture.persistence.transaction("planner", async (snapshot) => {
++      snapshot.data.versions = [100, 200].map((amount, index) => ({ id: index ? "candidate" : "baseline", year: 2026, closed: 0,
++        lines: [{ id: "service", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(amount), a: Array(12).fill(null), f: Array(12).fill(amount) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++      return { commit: true, value: structuredClone(snapshot) }
++    })
++    const plannerRefs = ["baseline", "candidate"].map((id): Extract<BusinessEvidenceRef, { kind: "record" }> => {
++      const projection = projectPlannerSource(plannerSnapshot, reader, id)
++      if (!projection) throw new Error("Real Planner projection unavailable")
++      const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: id, installationId: fixture.context.binding.installationId, projectId: fixture.context.binding.projectId, refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `fixture-${id}`, version: 1, fields: Object.keys(projection), period: scenarioPeriod, projectionDigest: digestSfValue({ versionId: id, projection }) } }
++      return { ...ref, refDigest: digestSfEvidenceRef(ref) }
++    })
++    const basis: CostCoverageBasis = { id: "fixture-cost-inventory", version: 1, decisionType: "renewal-transition-v1", categoryIds: RENEWAL_TRANSITION_CATEGORIES, additionalCategoryIds: [], sourceRefs: plannerRefs }
++    const sources: PlannerSourceHost = {
++      resolveForecastSource: async (reference, call) => {
++        const ref = plannerRefs.find((value) => value.refId === reference)
++        const projection = ref ? await fixture.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: projectPlannerSource(snapshot, reader, reference) })) : undefined
++        return ref && projection && await host.revalidate(call) && digestSfValue({ versionId: reference, projection }) === ref.target.projectionDigest
++          ? { status: "ok", value: { versionId: reference, evidence: ref } } : { status: "stale", reason: "fixture-planner-source-changed" }
++      },
++      resolveForecastCoverage: async (reference, call) => {
++        const source = await sources.resolveForecastSource(reference, call)
++        if (source.status !== "ok") return source
++        return { status: "ok", value: { coverageRef: `coverage:${reference}`, basis, assessment: assessCostCoverage({ basis, alternativeId: reference, alternativeVersion: 1, currency: "USD", horizon: scenarioPeriod,
++          entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending", reason: "human-review-pending" })), components: [],
++          evidence: plannerRefs.map((ref) => ({ state: "fresh", ref, accessRevision: call.binding.accessRevision, checkedAt: fixture.clock.at })), supports: () => false }) } }
++      },
++    }
++    const caseRef = { id: "fixture-composite-case", incarnation: "fixture-case-incarnation", version: 1 }
++    const decision: DecisionCase = { ...caseRef, state: "draft", objective: "Planner alternatives plus explicit Procurement operation", currency: "USD", horizon: scenarioPeriod, criteria: [], participants: ["alice"], sourceRefs: [...plannerRefs, fixture.evidence], alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++    const state = createSfProductState({ persistence: fixture.persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (request) => {
++      const actor = await host.authenticate(request)
++      return actor ? { principalRef: actor.id, accessRevision: "access-1", policyVersion: "policy-1" } : undefined
++    } })
++    const saved = await state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: 0, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "seed-composite", commandDigest: digestSfValue(decision) }, async (current) => { current.cases[caseRef.id] = structuredClone(decision); return { commit: true, value: true } })
++    if (saved.status !== "ok") throw new Error("Synthetic case membership unavailable")
++    const snapshots = () => Promise.all((["dashboard", "planner", "procurement"] as const).map((surface) => fixture.persistence.transaction(surface, async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))))
++    const readSourceFences = async () => digestSfValue(await snapshots())
++    const raw = createPlannerPort({ host, sources })
++    const composite = createSfProcurementCompositePlanner({ host, state, planner: raw, selectedCase: async () => ({ status: "ok", value: caseRef }), readSourceFences })
++    const readonly = createProcurementReadonlySourceResolver({ host })
++    const resolve: BusinessContextService["resolve"] = async (ref, call) => {
++      const source = await readonly.resolveSource(ref.refId, call), projection = await readonly.readProjection(ref.refId, call)
++      return source.status === "ok" && projection.status === "ok" && digestSfValue(source.value.evidence) === digestSfValue(ref)
++        ? { state: "fresh", ref, currentRef: source.value.evidence, authorizedProjection: projection.value, accessRevision: call.binding.accessRevision, checkedAt: fixture.clock.at }
++        : { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: fixture.clock.at }
++    }
++    const unused = async (): Promise<never> => { throw new Error("Unexpected replacement or external-domain resolver") }
++    const guard = createSfScenarioOperationAccess({ host, sources, projectPlanner: createSfPlannerEvidence({ host, sources }), scenarioInputs: { resolveAmount: unused, verifyAssumption: unused }, readSourceFences, resolveProcurementEvidence: resolve, externalOperation: unused })
++    const proposal = (amount: number): ScenarioRequest => ({ baseRef: "candidate", operations: [{ kind: "replace", targetRef: fixture.sourceRef, amount, currency: "USD", period: scenarioPeriod }], assumptions: [] })
++    return { ...fixture, raw, composite, snapshots, guard, proposal, decision, plannerRefs }
++  } catch (error) { await fixture.dispose(); throw error }
++}

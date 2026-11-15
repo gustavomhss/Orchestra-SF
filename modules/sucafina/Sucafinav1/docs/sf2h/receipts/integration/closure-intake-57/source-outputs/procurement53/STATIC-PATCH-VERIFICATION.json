@@ -1,0 +1,151 @@
+{
+  "schema": "sf2h.mission53.static-patch-verification.v1",
+  "method": "Pure byte processing: unified diff hunks applied to exact preimages and compared byte-for-byte with full postimages. Git blob and SHA256 hashes independently calculated. No product import, test, typecheck, build or guard run locally.",
+  "status": "STATIC_MATERIALIZATION_MATCH",
+  "packages": [
+    {
+      "package": "owned",
+      "patch_sha256": "cdee5e1aa03098dfe6789fc4f7dcfb83c2b53b9bedf3d085efe7e2f11653f2e6",
+      "files": {
+        "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts": {
+          "pre_blob": "454524fc49ec61c1b8984e7bfe8c1e0a765a242b",
+          "post_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+          "post_sha256": "010ca5481305d2ab3db069814682a69c5d23f00e6cbe8bed8b0bb1ac5ec66795",
+          "bytes": 20166
+        },
+        "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts": {
+          "pre_blob": "7fce64e7e213693d505f9bc6e08835468b7ead41",
+          "post_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+          "post_sha256": "b6363178c119a5fbb7bfce66142e50ed74663e47c47c9244ccdf2c4074702930",
+          "bytes": 8361
+        },
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts": {
+          "pre_blob": null,
+          "post_blob": "7239db74d724e95f007f9815f5e88b5199dd62df",
+          "post_sha256": "4cce5aafa1747ba6d5987da48000a0342af9365bcd30923d4e9aaf594a00d98f",
+          "bytes": 8952
+        },
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts": {
+          "pre_blob": null,
+          "post_blob": "567fae18d564cbc2c428dd6c86437c5f72941087",
+          "post_sha256": "d4ff55d78c0c451fda1f4c6e112c1be7668e65a3e9088b66b3753dc7d903b2f4",
+          "bytes": 5128
+        },
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts": {
+          "pre_blob": null,
+          "post_blob": "3c55e90d911872591160db83d96dbe93200a617a",
+          "post_sha256": "8141fa9d9c5e1004a412e63626ccd0f11ba0a2df5b2f89c4782618edc3b5c2cd",
+          "bytes": 4536
+        },
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts": {
+          "pre_blob": null,
+          "post_blob": "1818c0f20b6121a810d09094dba41f62c46b76ac",
+          "post_sha256": "647ba9ab615cbfd488a629ed8c99ca0e511628f96737209802ff6ee18ccf83a6",
+          "bytes": 14840
+        },
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts": {
+          "pre_blob": null,
+          "post_blob": "d71a7b8003071bcbc0f144f682cc34920cd00d0a",
+          "post_sha256": "49cc23d9cd5c5ad3b1883d9e79dbcbfa75698d52955904520ab46c8bc814542b",
+          "bytes": 11145
+        }
+      }
+    },
+    {
+      "package": "shared/composite",
+      "patch_sha256": "8f20c531cbaef9c8cdbc04f5578379004dd67f3d5a1da4678a3ad4984acfe942",
+      "files": {
+        "apps/cli/src/sucafina-product/business-services.ts": {
+          "pre_blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+          "post_blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+          "post_sha256": "b09992087f3aed42da28b527bd07682fe244b639dd6804ec954a3fc109ceda71",
+          "bytes": 71752
+        },
+        "apps/cli/src/sucafina-product/decision-controls.ts": {
+          "pre_blob": "e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7",
+          "post_blob": "23721ab89535bcf8644a98cf3ed2de65a929a329",
+          "post_sha256": "daf793ea6dcc69cfcd517f78807c434bd8747d5d06a4bf7d86cf0375a59f8624",
+          "bytes": 49601
+        },
+        "apps/cli/src/sucafina-product/decision-domain-services.ts": {
+          "pre_blob": "4f654783f4fa0d3ed1f4495b0c2fece0ae802d9f",
+          "post_blob": "9f8cd652fca2bc771e2ee6fa5c8a1e9df373a592",
+          "post_sha256": "7a8cb9edc6267e90eea6cf020c1a8ed01315b8416721a76bb5be41a1425aeec4",
+          "bytes": 24150
+        },
+        "apps/cli/src/sucafina-product/procurement-composite-planner.ts": {
+          "pre_blob": null,
+          "post_blob": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+          "post_sha256": "a6f1ccb25e7418d8739f024c77f7ab5e6fa129710567aea4549318ecb4866b14",
+          "bytes": 8959
+        },
+        "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts": {
+          "pre_blob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+          "post_blob": "d2158a10de3473edc5f5d509f3215e84140a8382",
+          "post_sha256": "f5340af9a9495365d9baec6bf0a898a2555a93705e665638ab54354b4e5b5984",
+          "bytes": 12729
+        },
+        "apps/cli/src/sucafina-product/scenario-operation-access.ts": {
+          "pre_blob": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+          "post_blob": "5a0592e200e14fa801b1ed24150384070ea5298b",
+          "post_sha256": "ad917f80c95a7e92445581ca3165828d72d02ac780c2d57fc1a6fcc04c0c6e31",
+          "bytes": 17932
+        },
+        "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts": {
+          "pre_blob": "74cd720489adde4b8a341c3d4c378194f58afa16",
+          "post_blob": "0ff544b39f61a26cea6d15c238a88217ef7e6130",
+          "post_sha256": "0a2f233c674d3aad4a3c307dda76c42f5a138d7e22a6a9f0fd5f9cbf9b4e9881",
+          "bytes": 5402
+        },
+        "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts": {
+          "pre_blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d",
+          "post_blob": "8c89acd506b8fc7177ea07ef7a2ffaba74634853",
+          "post_sha256": "32cfc83cd08b4cb472b09357bd19a9025eac62e5eb95832752675f77e4080e65",
+          "bytes": 36474
+        },
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts": {
+          "pre_blob": null,
+          "post_blob": "24dda67176121efe50f91148d6b2291a4f975d4b",
+          "post_sha256": "ba97b8efb4ab12464127aa1286a2c01175f0dbc17776a30ef41741b387fc974c",
+          "bytes": 17994
+        }
+      }
+    },
+    {
+      "package": "shared/admission",
+      "patch_sha256": "edc4fd6eba567e9af90ae6a41302f888c2011f33777159c56df9bb312afb0327",
+      "files": {
+        "modules/sucafina/Sucafinav1/runtime/application.ts": {
+          "pre_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "post_blob": "d544e79d40f05cb8fa048b21d1a815e512184b6a",
+          "post_sha256": "f12db76770ac0c7d9be999b3444be1be8ccced2e4a474e632ed95e6c8257a390",
+          "bytes": 42289
+        }
+      }
+    },
+    {
+      "package": "shared/admission/combined-application-and-helper",
+      "patch_sha256": "4c5bd2d6f14f02a6b8d649ff729c0c44f28099ad7324278baf0f5cd94196d6f7",
+      "files": {
+        "modules/sucafina/Sucafinav1/runtime/application.ts": {
+          "pre_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "post_blob": "d544e79d40f05cb8fa048b21d1a815e512184b6a",
+          "post_sha256": "f12db76770ac0c7d9be999b3444be1be8ccced2e4a474e632ed95e6c8257a390",
+          "bytes": 42289
+        },
+        "modules/sucafina/Sucafinav1/product/integration/procurement-approval-admission.ts": {
+          "pre_blob": null,
+          "post_blob": "20b7bef8b868a65183ee8a327906bf0e25efc518",
+          "post_sha256": "338dc5fe5bc5d4b6db5ff475d55345b06c439d13738b09cce65f901b83d22cce",
+          "bytes": 4605
+        }
+      },
+      "superset_of": "shared/admission"
+    }
+  ],
+  "unique_target_files": 18,
+  "runtime_only_patch_is_subset_not_additional_install": true,
+  "json_files_validated": 16,
+  "active_typescript_files_in_receipts": 0,
+  "shared_runtime_qualification": "NOT_RUN"
+}

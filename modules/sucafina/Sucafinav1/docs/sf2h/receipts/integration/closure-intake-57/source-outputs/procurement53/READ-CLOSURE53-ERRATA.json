@@ -1,0 +1,18 @@
+{
+  "schema": "sf2h.procurement-approval-closure.read-errata.v1",
+  "corrects": "READ-CLOSURE53.json",
+  "original_blob": "aa88810b0383438f1f4f3c7fdbbcf4b786109054",
+  "reason": "Three consumer52 helper paths in the initial read index used the shorthand directory support; actual inspected directory is decisions-support. Preserve the original receipt and correct the exact locator explicitly.",
+  "correct_paths": [
+    "packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts",
+    "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+    "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts"
+  ],
+  "source_blobs": [
+    "5784a995ba25d042101fe2eed63ce96957b711b1",
+    "7a7553b89af8f90592603f7d454ba164cbb81afd",
+    "cb70480c28e9382629d289c1c954e88379e173d3"
+  ],
+  "current_consumer_pins": "CONSUMERS.md and shared/composite/CONSUMERS.json",
+  "changes_to_consumers_or_authority": false
+}

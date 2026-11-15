@@ -1,0 +1,101 @@
+--- a/modules/sucafina/Sucafinav1/runtime/application.ts
++++ b/modules/sucafina/Sucafinav1/runtime/application.ts
+@@ -15,6 +15,20 @@
+ import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
+ import { publicSfData } from "../product/integration/public-state.ts"
+ 
++/** Transport selector for a reviewed canonical command; the payload is never authority. */
++export const APPLICATION_COMMAND_REVIEW_HEADER = "x-sf-command-review"
++
++export type ApplicationCommandAdmissionDecision =
++  | { allowed: true }
++  | { allowed: false; status: 403 | 409 | 422 | 503 }
++
++export type ApplicationCommandAdmission = {
++  // Synchronous and read-only. No I/O, nested transaction, identifier allocation or domain execution.
++  current: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => ApplicationCommandAdmissionDecision
++  // Releases only this request's retained context; must be idempotent and must not throw.
++  finish?: () => void
++}
++
+ export type Contribution = {
+   pages: readonly string[]
+   domain: Domain
+@@ -39,6 +53,9 @@
+   product?: (request: Request, surface: Surface) => Promise<Response | undefined>
+   // Prepare outside the page lock; fence the retained projection against the authenticated snapshot inside it.
+   productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
++  // Prepare the retained review outside the lock. Its current predicate runs after destination authentication.
++  // A managed review must return an admission or refusal, never undefined as an ordinary-command fallback.
++  prepareCommandAdmission?: (request: Request, surface: Surface, command: Command) => Promise<ApplicationCommandAdmission | Response | undefined>
+   // Runs within the authorized page transaction; the decorator must be synchronous and pure.
+   productHtml?: (html: string, surface: Surface, page: string) => string
+ }
+@@ -64,8 +81,14 @@
+     )
+       return reply("Access denied", 403)
+     const uploading = request.method === "POST" && url.searchParams.has("upload")
++    const reviewedCommand = request.headers.has(APPLICATION_COMMAND_REVIEW_HEADER)
++    if (reviewedCommand && (request.method !== "POST" || uploading))
++      return reply("Reviewed commands require the canonical JSON POST route", 422)
++    if (reviewedCommand && !application.prepareCommandAdmission)
++      return reply("Command review admission is unavailable", 503)
++    // A reviewed command always reaches the canonical decoder and destination transaction.
+     // Product operations own fresh authentication and transactions; never nest them in the page lock.
+-    const product = await application.product?.(request, surface)
++    const product = reviewedCommand ? undefined : await application.product?.(request, surface)
+     if (product) return product
+     const parsed =
+       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
+@@ -81,7 +104,13 @@
+     if (preparedUpload instanceof Response) return preparedUpload
+     const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
+     if (productView instanceof Response) return productView
+-    const response = await transaction(async (snapshot, blobs) => {
++    const commandAdmission = parsed
++      ? await application.prepareCommandAdmission?.(request, surface, structuredClone(parsed))
++      : undefined
++    if (commandAdmission instanceof Response) return commandAdmission
++    if (reviewedCommand && !commandAdmission)
++      return reply("Command review admission is unavailable", 503)
++    const response = await Promise.resolve().then(() => transaction(async (snapshot, blobs) => {
+       // Resolve current roles INSIDE the same transaction that rereads records and locks.
+       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+       if (!principal || !principal.id || principal.id.startsWith("local:"))
+@@ -228,6 +257,25 @@
+         }
+       }
+       if (parsed) {
++        if (commandAdmission) {
++          let admission: ApplicationCommandAdmissionDecision | undefined
++          try {
++            // Isolate all mutable inputs. A predicate cannot alter the snapshot, actor or command to be executed.
++            admission = commandAdmission.current(structuredClone(snapshot), structuredClone(actor), structuredClone(parsed), {
++              ...environment,
++              directory: structuredClone(environment.directory),
++              bankKey: environment.bankKey?.slice(),
++              id: () => { throw new Error("Command admission cannot allocate identifiers") },
++            })
++          } catch {
++            return { commit: false, value: json({ ok: false, status: 503, errors: ["Command review admission is unavailable"] }, 503) }
++          }
++          if (!admission || admission.allowed !== true) {
++            const status = admission?.allowed === false && [403, 409, 422, 503].includes(admission.status) ? admission.status : 503
++            return { commit: false, value: json({ ok: false, status, errors: ["Command review is no longer current"] }, status) }
++          }
++        }
++        // The managed Procurement save/submit_pr/approve/reject path contains no await from this fence to execute.
+         if (surface === "dashboard") {
+           const preview = handleDashboardPreview(snapshot, actor, parsed, environment, decodeCommand)
+           if (preview) return { commit: preview.commit, value: json(preview.value, preview.value.ok ? 200 : preview.value.status) }
+@@ -443,7 +491,9 @@
+           "Content-Security-Policy": htmlPolicy(finalHtml),
+         }),
+       }
+-    }).finally(() => productView?.finish())
++    })).finally(() => {
++      try { commandAdmission?.finish?.() } finally { productView?.finish() }
++    })
+     return request.method === "HEAD"
+       ? new Response(null, {
+           status: response.status,

@@ -1,0 +1,108 @@
+{
+  "schema": "sf2h.final-intake-55.authority-ack.v1",
+  "mission": 55,
+  "actor": "S0-C",
+  "epoch": "S0-C-e10-browser55",
+  "state": "ACCEPTED_SUCCESSION_SOLE_STACK_WRITER",
+  "accepted_at": "2026-11-15T00:19:56Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "authority_source": {
+    "control": "c1df70b2fedd2183d243a523fbfef9c7c6ddff35",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/rolling-final-intake.json",
+    "blob": "b97e6d28f9d69da3f2737b31739bb69e2318d356",
+    "user": "Execute mission55 as successor of integration47; sole stack writer; GitHub MCP/CAS."
+  },
+  "predecessor": {
+    "mission": 47,
+    "terminal": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "tree": "ccfd6a27e927d27994b35b7de948c58cbe643ff3",
+    "authority_blob": "076d2b0c277c7101b387e3d76ff80d3423d85c8a",
+    "handoff_blob": "38505e14a10af389bc8f467f67ea5293572280c7",
+    "lease": "ENDED",
+    "observed_head_matches": true,
+    "prior_candidate": {
+      "symbol": "C20",
+      "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+      "tree": "b51fce068f7cee96e6f22013d729087643e3b684"
+    }
+  },
+  "reconciliation": {
+    "control_head": "c1df70b2fedd2183d243a523fbfef9c7c6ddff35",
+    "stack_head": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "newer_authority_observed": false,
+    "check": "Live branch/PR HEAD and pinned explicit47 terminal/lease reconciled before this ACK. Same control head checked again before publication; no inferred replacement based on silence."
+  },
+  "planning": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "actor_criteria": 155
+  },
+  "reading": {
+    "root": "Applicable AGENTS, mission55, rolling COMMON, pinned START/WORKFLOW/execution COMMON, root S0-C sections; entire47 authority/handoff/dependency closure/source census; ancestry and current refs.",
+    "delegated": "Remaining full S0-C pack keys and all three mandatory annexes read by three read-only helpers; all56 prior pending items/17 findings read and preserved. Full source/code/patch/dependency reviews precede each material intake.",
+    "actor_pack_blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "scope": "Distributed complete reading, not a claim that each helper read every file."
+  },
+  "helpers": [
+    {
+      "id": "/root/audit_agenda39",
+      "scope": "Read-only Agenda39 intake and pack task/contracts/numeric/criteria review"
+    },
+    {
+      "id": "/root/audit_microsoft49",
+      "scope": "Read-only Microsoft49 intake and resident/packaging review"
+    },
+    {
+      "id": "/root/audit_portfolio_census",
+      "scope": "Read-only Portfolio50/census and proof/pending queue review"
+    }
+  ],
+  "writer": "Root55 only; helpers have no remote write or execution authority.",
+  "scope": "Selective explicit released coherent code/tests/config/guides on sf2-stack and own final-intake-55 receipts. Preserve all C20 work and prior eight intakes; no source/control branch edits.",
+  "initial_release_inputs": {
+    "Agenda39": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+    "Microsoft49": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+    "Portfolio50": "c01520cb6a09e580897ebdb46e75e40a536b80be",
+    "Memory51": "51de99e5c663dc31ce1bcf4b1f694399a0cf33c9"
+  },
+  "policy": [
+    "Publish material candidates without waiting for final proof; source green never qualifies composed candidate.",
+    "Microsoft auth code and three entry/CLI/Node patches form an atomic unit; preserve CurrentChoice fence; cloud local-operator fallback forbidden; no invented config/credentials.",
+    "Only explicit releases admit Reports48/Decisions52/Procurement53 or later work; preserve Reports36 HOLD and Portfolio54 in-flight isolation.",
+    "All56 inherited IDs/states and previous raw evidence remain immutable; mission55 updates are additive."
+  ],
+  "execution": {
+    "remote": "GitHub MCP",
+    "ref_updates": "CAS expected_sha force:false",
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "preflights": "NOT_RUN",
+    "CI_dispatches": 0,
+    "AM": "NOT_RUN",
+    "producer_branch_writes": 0,
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false
+  },
+  "gates": {
+    "checks_owner": 45,
+    "epic_and_acceptance_owner": "S0",
+    "C_G7": "OPEN",
+    "D_G8": "OPEN",
+    "eight_final_selections": "OPEN",
+    "AM01_AM06": "OPEN",
+    "three_FINAL_reviews": "OPEN",
+    "GLOBAL_RELEASE": false
+  },
+  "lease_end": "Only explicit terminal authority in this namespace ends55; this ACK grants no source ownership or campaign acceptance."
+}

@@ -1,0 +1,295 @@
+{
+  "schema": "sf2h.procurement-approval-closure.ci-results.v1",
+  "mission": 53,
+  "product": {
+    "commit": "179a766bb1e3b6b15523ba6c2be8553207d543fd",
+    "tree": "7c93fb5495e89055e4a9f2a0363d9cfc97702cf6",
+    "parent": "7c2e2fa6c3ed7cada52570c95a54e46420d601a3",
+    "paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-approval-closure/READ-CLOSURE53.json",
+        "blob": "aa88810b0383438f1f4f3c7fdbbcf4b786109054"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+        "blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+        "blob": "7239db74d724e95f007f9815f5e88b5199dd62df"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts",
+        "blob": "567fae18d564cbc2c428dd6c86437c5f72941087"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+        "blob": "3c55e90d911872591160db83d96dbe93200a617a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+        "blob": "1818c0f20b6121a810d09094dba41f62c46b76ac"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+        "blob": "d71a7b8003071bcbc0f144f682cc34920cd00d0a"
+      }
+    ]
+  },
+  "functional": {
+    "status": "PASS",
+    "run_id": 43656852980,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43656852980",
+    "job_id": 132637170051,
+    "job": "test (ubuntu-24.04)",
+    "snapshot": "093524ed255db8aeb66eaca2df41b6246bdef938",
+    "snapshot_tree": "c8ef338e342a6544956cc6dfa9449188fd5718b2",
+    "branch": "ci-run-linux-astra-wp04-179a766b-78bb6f4c-m53-01",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "@orchestra/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+        "Sucafinav1/test/product/procurement-approval-closure/authority.test.ts",
+        "Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+        "Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+        "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+        "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "request_blob": "252c1983bb2dbf0453a43b85aa383c9c585af5bb",
+    "request_sha256": "78bb6f4c584bd8b9062048e0bcf89a81e313ea3a82b0e7de6372e5665240080e",
+    "validation": {
+      "existing_validateRequest_step": "success",
+      "existing_locateTestPackage": "success",
+      "actual_file_set_matches_selection": true,
+      "omni_scope": "declared"
+    },
+    "observed_files": [
+      "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+      "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+      "Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+      "Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "Sucafinav1/test/product/procurement-approval-closure/authority.test.ts"
+    ],
+    "selected": 20,
+    "executed": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped_tests": 0,
+    "expect_calls": 336,
+    "test_elapsed_ms": 1392,
+    "new_cases53": 14,
+    "original_regressions37": 6,
+    "case_results": [
+      "a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry [79.47ms]",
+      "a legacy-shaped financial command cannot bypass the low-level preparation or review boundary [32.67ms]",
+      "canonical approval reviews the exact proposed amount and ends outside the prepared PR-save stage [2.78ms]",
+      "approval rejects stale CAS, another holder and admin override and applies one approval once [1.78ms]",
+      "approving a pending old amount with a new amount in the payload does not approve the proposal [0.92ms]",
+      "rejected proposal requires a new submission and review version for its changed amount [2.19ms]",
+      "explicit canonical save, submit and approve bind 140 to its frozen holder and retained CAS survives SQLite reopen [169.41ms]",
+      "reject and resubmit require a fresh review of 140; the retained approval of 100 cannot approve it [143.80ms]",
+      "amount, holder and admin cannot authorize a replacement of the submitted snapshot [88.20ms]",
+      "the synchronous admission permits exactly the reviewed command before the canonical HTTP effect [56.81ms]",
+      "transaction admission refuses policy drift while the request CAS is unchanged [50.72ms]",
+      "transaction admission refuses currency drift while the request CAS is unchanged [51.47ms]",
+      "transaction admission refuses roles drift while the request CAS is unchanged [41.26ms]",
+      "transaction admission refuses finished-gate without executing the domain [40.50ms]",
+      "transaction admission refuses finished-ui without executing the domain [40.48ms]",
+      "transaction admission refuses replaced-request without executing the domain [40.54ms]",
+      "malformed prepare payloads fail closed without throwing or writing [45.10ms]",
+      "a persisted C08 choice supplies the exact draft value while remaining distinct from approval and C12 Apply [216.95ms]",
+      "preparation requires the live UI admission, the same Request and current write authority [73.37ms]",
+      "a changed requisition invalidates source and review without silently refreshing the retained command CAS [57.58ms]"
+    ],
+    "omni": {
+      "nonce": "5f7cb9139cc8ac0a404ce9fcb2881847",
+      "verdict": "not applicable",
+      "reason": "focused: no declaring test ran",
+      "spawn_claim": false
+    },
+    "artifacts": [],
+    "required_artifact_for_this_bun_selection": false,
+    "output": "ci/test-output.log",
+    "snapshot_branch_cleanup": "success"
+  },
+  "checks": {
+    "status": "PASS_WITH_INHERITED_WARNINGS",
+    "run_id": 43656868087,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43656868087",
+    "job_id": 132637214874,
+    "product": "179a766bb1e3b6b15523ba6c2be8553207d543fd",
+    "product_tree": "7c93fb5495e89055e4a9f2a0363d9cfc97702cf6",
+    "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "branch": "astra-check-wp04",
+    "workflow_blob": "dab8d29f69d78ba304325333e03fb8d729fe026e",
+    "generation": "PASS: output-schemas generate/check/diff",
+    "typecheck": "PASS: bun typecheck from modules/sucafina",
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "rules": 78,
+      "changed_paths_against_dev": 795,
+      "gates": 0,
+      "errors": 0,
+      "warnings": 11,
+      "own_delta_warnings": 0,
+      "findings": [
+        {
+          "path": "apps/cli/package.json",
+          "line": 37,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 66,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 67,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 68,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 17,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 18,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 19,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 20,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 21,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 22,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "introduced_by53": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+          "line": 46,
+          "rule": "ts-double-cast",
+          "message": "Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.",
+          "introduced_by53": false
+        }
+      ],
+      "guide_read": {
+        "path": ".orchestra/skills/guardrail-usage/SKILL.md",
+        "blob": "c2333f8b46d780f6b52bba2ae9f6696e840d18a0"
+      },
+      "interpretation": "All 11 warning paths predate53 and are absent from the exact ACK53..W53 delta. No waiver, suppression, approval label or out-of-scope edit."
+    },
+    "artifact": {
+      "id": 14138716560,
+      "name": "astra-wp04-checks",
+      "size_in_bytes": 15011,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14138716560",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14138716560/zip",
+      "expired": false,
+      "created_at": "2026-11-15T00:11:57Z",
+      "expires_at": "2027-02-13T00:10:39Z",
+      "updated_at": "2026-11-15T00:11:57Z",
+      "digest": "sha256:ae3dc8d0c1d79b5222a5093296a091abd267e4e81d9575686604a9ad3e25890f",
+      "workflow_run": {
+        "id": 43656868087,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp04",
+        "head_sha": "179a766bb1e3b6b15523ba6c2be8553207d543fd"
+      }
+    },
+    "output": "ci/checks-output.log"
+  },
+  "envelope": {
+    "W": "179a766bb1e3b6b15523ba6c2be8553207d543fd",
+    "W_tree": "7c93fb5495e89055e4a9f2a0363d9cfc97702cf6",
+    "S": "093524ed255db8aeb66eaca2df41b6246bdef938",
+    "S_tree": "c8ef338e342a6544956cc6dfa9449188fd5718b2",
+    "root_entries_identical_excluding_ci_request": true,
+    "recursive_identity_by_unchanged_subtree_hashes": true,
+    "request_blob": "252c1983bb2dbf0453a43b85aa383c9c585af5bb",
+    "W_request": null,
+    "S_request": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "252c1983bb2dbf0453a43b85aa383c9c585af5bb",
+      "size": 608,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/252c1983bb2dbf0453a43b85aa383c9c585af5bb"
+    }
+  },
+  "dedup": {
+    "attempt": 1,
+    "prior_exact_branch_runs": 0,
+    "prior_product_head_runs": 0,
+    "own_functional_runs_inflight_before_dispatch": 0,
+    "queued_runs_observed_before_dispatch": 0,
+    "run_head_equals_snapshot": true,
+    "functional_dispatches": 1,
+    "check_dispatches": 1,
+    "retries": 0
+  },
+  "scope": {
+    "local_product_tests": 0,
+    "local_typechecks": 0,
+    "local_guards": 0,
+    "epic_dispatches": 0,
+    "workflow_changes": 0,
+    "consumer_files_changed": 0,
+    "shared_patches_applied": false,
+    "shared_patches_tested": false,
+    "original52_or_MI07_pass_claim": false,
+    "global_release": false
+  },
+  "immutable_proof_rule": "Later receipt-only commits preserve all product/test/config/fixture blobs from W. No green is assigned to a different product or integrated candidate."
+}
