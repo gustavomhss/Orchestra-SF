@@ -1,0 +1,58 @@
+{
+  "mission": 103,
+  "id": "native-consumer-repair",
+  "actor": "S0-B",
+  "session_label": "Astra",
+  "actual_model": "GPT-6",
+  "session_id": "not exposed by this interface",
+  "github_actor": "gustavomhss",
+  "branch": "native-runtime-finish",
+  "pr": 96,
+  "lease_epoch": "native-consumer-browser103",
+  "state": "ACK_ACTIVE_PRE_FIX",
+  "head_preimage": "f6abbcc1677be93122f19ae3c2846fececeadbf4",
+  "tree_preimage": "ea9854260d58be3f988af6c4ad91aebab49143a8",
+  "code_preimages": {
+    "apps/cli/src/sucafina-product/routine-native-origin.ts": "da69328f9e8aa4d68a08faf7c858ccae9d5c0e5b",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts": "a6e4f6580cf5380d637ae5add2e7317606ccbf38"
+  },
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "8819df6169abd94aaa89d50a21f113e5596d2aae",
+  "material_baseline": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "inputs": [
+    "terminal90 f6abbcc1677be93122f19ae3c2846fececeadbf4 (lease closed)",
+    "C51 run43682450677 job132715786509 attempt1, 0 PASS, 5 import errors",
+    "PR96 ACK100 C49 included in C51, HEAD matched",
+    "producer95 PR104 distinct scope, readiness OFF"
+  ],
+  "writable_paths": [
+    "apps/cli/src/sucafina-product/routine-native-origin.ts",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts only if required",
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-consumer-repair/"
+  ],
+  "excluded": [
+    "native-authority-provider95",
+    "native-host/token-gate95",
+    "host-context105",
+    "native engines",
+    "CI dispatch by101",
+    "typecheck guards by45"
+  ],
+  "current_evidence": {
+    "W": null,
+    "S": "a856513eb61ca0d7c1cb7ddaf03a2b911e737d05",
+    "run": 43682450677,
+    "job": 132715786509,
+    "attempt": 1,
+    "status": "C51_IMPORT_FAIL"
+  },
+  "readiness": "OFF",
+  "global_release": false,
+  "requested_handoffs": [
+    "101 exact five suites / negative regressions and dedup",
+    "45 compiler/guard",
+    "105 composition after verified release",
+    "93 independent recheck"
+  ]
+}
