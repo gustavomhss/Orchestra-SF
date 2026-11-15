@@ -1,0 +1,17 @@
+{
+  "schema": "sf2h.installed-bi.external-proposal.v1",
+  "state": "INERT_OWNER_PATCH_NOT_APPLIED",
+  "owner": "60 composition; existing bi-cost-waterfall test path owner",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+  "preimage": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+  "postimage": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+  "patch_sha256": "198ccfed4b7276048a60742cd03d73012d3f2a8bd230fcb2100a4b29f65648df",
+  "reason": "M38 deliberately recorded the absent BI10 timeline. Mission62 connects its canonical period producer, so the prior empty-series/undefined-timeline expectations now contradict the intended installed behavior.",
+  "behavior": "Expect BI10 period-before, period-after and period-difference series, a nonempty timeline and no waterfall. Preserve source mutation denial and BI11 sensitivity requirements.",
+  "dependencies": [
+    "mission62 analytics/scenario.ts BI09+BI10 gate",
+    "mission62 bi-services.ts BI09+BI10 mounting"
+  ],
+  "validation": "NOT_RUN. Owner should run only the legacy presentation.test.ts and installed-bi-closure temporal/numerical targets in Actions after composing the patch. Existing 120000ms test budget remains unchanged."
+}
