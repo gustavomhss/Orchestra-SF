@@ -99,7 +99,6 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     clear()
     if (!ready) return
     catalogAbort = new AbortController()
-    const epoch = requestEpoch
     const signal = catalogAbort.signal
     setView("catalogState", "loading")
     void createSfMemoryClient(ready.transport)["intelligence.memory-catalog"](undefined, { signal })
