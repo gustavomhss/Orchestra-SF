@@ -1,0 +1,98 @@
+{
+  "schema": "sf2h.am02.terminal.v1",
+  "mission": 166,
+  "epoch": "proof-am02-e1-browser166",
+  "branch": "sf-am02-proof",
+  "phase": "ARTIFACT_READY_UNQUALIFIED",
+  "actual_executor": "ChatGPT GPT-6 via installed GitHub MCP",
+  "actual_native_astra_session_id": null,
+  "actual_native_model": null,
+  "source_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "product_base": "sf2-stack",
+  "product_integrator": "162/S0-C-e20-browser162/PR65",
+  "product_code_change": false,
+  "goal_state": "paused",
+  "delivered_pr": {
+    "number": 180,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/180",
+    "target": "sf2-stack",
+    "draft": true,
+    "merged": false
+  },
+  "proof_code_candidate": {
+    "head": "d3274b4cacf8c4c96ffe66f7a439227c2468bf46",
+    "tree": "87eea6c0a10f6bef3cd065dc24e6084d9b88b40b",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+        "status": "NOT_RUN"
+      },
+      {
+        "path": "script/sf2h/proofs/am02/qualify.ts",
+        "blob": "86870360f94d77e57b4a21dcff9455934b324804",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/ack.json",
+      "blob": "1abb0fee47f870531d6c458652a09d7b3a1afe28"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/am02-coverage-handoff.json",
+      "blob": "9f65d4039a83fc446727b51404c4076de1aefb65",
+      "evidence": "84 canonical criterion rows and 39 operation routes, all NOT_RUN"
+    }
+  ],
+  "handoffs": [
+    {
+      "recipient": "162/S0-C-e20",
+      "pr": 65,
+      "comment_id": 6902411967,
+      "state": "posted_not_acknowledged",
+      "request": "Integrate only two proof code blobs into one coherent W, never branch merge/reset"
+    },
+    {
+      "recipient": "164/product-ci-e4",
+      "pr": 106,
+      "comment_id": 6902412411,
+      "state": "posted_not_acknowledged",
+      "request": "Only after 162, dedupe and execute existing test:ci hosted selector on W"
+    },
+    {
+      "recipient": "163/compiler-e4",
+      "pr": 107,
+      "comment_id": 6902412810,
+      "state": "posted_not_acknowledged",
+      "request": "Only after 162, compiler/SDK/guards selection of changed W"
+    }
+  ],
+  "exact_ci_request": {
+    "package": "sucafina",
+    "packageSelector": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+      "--timeout",
+      "30000"
+    ],
+    "env": {},
+    "os_outside_request": "linux"
+  },
+  "evidence_status": "NOT_RUN",
+  "native_provider_call": null,
+  "real_model_inference": null,
+  "scanner_binary_version": null,
+  "host_task_admission": null,
+  "hosted_ci_run_id": null,
+  "ci_snapshot_sha": null,
+  "ci_request_hash": null,
+  "consumer_after_reload": null,
+  "current_proof_scope": "One new real component Planner domain-call correlation plus a nonfinal 39-route trace qualifier; seven other pack positives and current real model/host admission remain unproven",
+  "next_executable_action": "162 confirm code blob integration and W; 163 compile on W; 164 run singular exact selector on same W using test:ci and publish actual results or failures",
+  "pending_release": "C/8 same-C CI/epic/AM01–06/3 independent FINAL/D/guards; no release or owner goal restart"
+}
