@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.causal-correction-author-ack.v1",
+  "mission": 155,
+  "order": "A15",
+  "epoch": "ux-native-a15-e2-browser155",
+  "state": "ACK_AUTHORING",
+  "actor": "ChatGPT via GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "branch": "sf-ux-a15",
+  "pr": 137,
+  "expected_head": "51df0d66fb71fa6896ed50180270d39fbe1b316b",
+  "expected_tree": "d6015a2c757c197bb68eac12bdd9a3517d7c30c4",
+  "instruction_preimages": {
+    "AGENTS.md": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "packages/schema/AGENTS.md": "2dc577ff394a02b4c6812d78e23ef43da869f850"
+  },
+  "s0_fence_blob": "41d114de06781e0bb8ecc089ded80cff29d2f530",
+  "authority": "Only successor epoch; predecessor write authority revoked administratively; no runtime termination asserted",
+  "source_preimages": {
+    "packages/schema/src/sucafina/analyses.ts": "ff222fcc02d26dbe59ccb40da797d2a723c2ed47",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts": "df21e9284d7cbcb46ff1ddf553a8bf4c12ee601c"
+  },
+  "consumer_preimages": {
+    "packages/schema/src/sucafina/analyses.ts": "ff222fcc02d26dbe59ccb40da797d2a723c2ed47",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts": "df21e9284d7cbcb46ff1ddf553a8bf4c12ee601c"
+  },
+  "producer_pins": {
+    "analysis-base": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+    "analysis-host": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+    "host-types": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+    "resident-types": "38e3d664f4dedb56f3e614bde41d51548e44f805"
+  },
+  "finding": {
+    "pr": 137,
+    "comment": 6901000387,
+    "run": 43758731378,
+    "job": 132948475697,
+    "kind": "import error before assertions",
+    "cause": "Effect 4.0.0-beta.83 Schema.Record(key,value,options); old object-form passes undefined value"
+  },
+  "validation": "NOT_RUN_BY_155; only hosted 149/150 after A132 composition",
+  "native_goal": "paused",
+  "global_release": false
+}
