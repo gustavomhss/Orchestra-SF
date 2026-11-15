@@ -1,0 +1,64 @@
+{
+  "schema": "sf2h-tooling-canonical-patch-v1",
+  "mission": 119,
+  "status": "SOURCE_PATCH_READY_NOT_COMPOSED",
+  "source_c53": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "owner_branch": "sf-compiler-checks",
+  "owner_pr": 107,
+  "patch_origin": "PR107 GitHub unified diff (strict filter to two authorized canonical paths)",
+  "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/gate-tooling-repair/TOOLING-PATCH119.patch",
+  "source_code": [
+    {
+      "path": "script/sf2h/final-bundle/build-artifact.py",
+      "old_blob": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2",
+      "old_mode": "100755",
+      "new_blob": "7fbb0561314ebf746635772f80ee98a7aab43b8f",
+      "new_mode": "100755",
+      "generator": "Validate source post-SF66 full Git blob 3185885e..., request-derived sf66_exports, product_step id, Linux SF66 reader/render/upload and per-recipe artifacts; rebuild epic output and compare byte-for-byte"
+    },
+    {
+      "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+      "old_blob": "9f8ce79ce8a8611451ad550f8807b4fa2a33ea30",
+      "old_mode": "100644",
+      "new_blob": "ef96a75e4e8e16b048740cba02539ae45a70c580",
+      "new_mode": "100644",
+      "validator": "Strict known Bun prefix, TSGo native flat showConfig, effective strict/options and real files from listFiles with 3 named specs and 4 runtime roots; preserve TS errors and statuses"
+    }
+  ],
+  "generated_epic_current_blob": "b332d777e4465469e9e4869e29f4339a95853d21",
+  "generated_epic_target": ".github/workflows/sf2-epic.yml",
+  "generated_epic_status": "NOT_INTEGRATED",
+  "dependency_closure": {
+    "source_workflow": ".github/workflows/test-ci.yml",
+    "source_workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "inherited_source": ".github/inherited-workflows/test.yml.disabled",
+    "requests": "script/sf2h/final-bundle/requests.json",
+    "requests_count": 8,
+    "readonly_runner": ".github/workflows/sf-compiler-c53.yml",
+    "runner_blob": "ff52fbbb519dd113dacd70b1f56f1a1501a66162"
+  },
+  "consumer": {
+    "session": 114,
+    "pr": 65,
+    "branch": "sf2-stack",
+    "instruction": "Verify exact preimage or explicitly reconcile newer edits. Apply only two canonical source patch paths, generate epic YAML using actual C and preserve reviewed SF66 section; no product tests, epic, merge or deployment by 119. Consume full generated YAML artifact after hosted run."
+  },
+  "independent_ci": {
+    "session": 120,
+    "status": "separate producer; do not dispatch product or epic"
+  },
+  "guard55": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/gate-tooling-repair/GUARD55-MANIFEST.json",
+    "status": "OPEN_REVIEWER_DECISION_REQUIRED"
+  },
+  "source_validation": {
+    "e2e_run": 43724588416,
+    "e2e_file_count": 3691,
+    "declared_inputs": 72,
+    "e2e_diagnostics": 3,
+    "compiler_status": "FAIL_REQUIRES_117_118",
+    "builder_run_status": "FAIL_REQUIRES_SF66_CORRECTION_RECHECK"
+  },
+  "run2": 43725115280
+}
