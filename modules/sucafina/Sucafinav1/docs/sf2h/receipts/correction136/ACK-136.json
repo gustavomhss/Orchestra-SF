@@ -1,0 +1,36 @@
+{
+  "schema": "sf2h.correction-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 136,
+  "actor": "ChatGPT (fresh conversation for mission 136; not predecessor W02)",
+  "effective_model": "GPT-6",
+  "actual_session_id": null,
+  "session_id_note": "ChatGPT conversation identifier not exposed in this runtime; no fabricated ID",
+  "branch": "sf-ux-w02",
+  "pr": 131,
+  "lease_epoch": "ux-native-w02-e2",
+  "status": "ACK_ACTUAL_PREFLIGHT",
+  "observed_head_before_ack": "846e0939cf080160183fc6d485dd5d77489d534f",
+  "expected_head_from_packet": "846e0939cf080160183fc6d485dd5d77489d534f",
+  "s0_fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/S0-FENCE.json",
+  "s0_fence_blob": "6a0f36cf50c7444d965b889182e376b4173bc00c",
+  "s0_previous_epoch": "ux-native-w02-e1",
+  "previous_writes": "REVOKED_FOR_FUTURE_WRITES",
+  "source_packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/136.json",
+  "source_packet_blob": "25971b856688727fc9368703c22c583dfc90b082",
+  "scope": [
+    "packages/protocol/src/groups/sucafina.ts",
+    "packages/schema/src/sucafina/context.ts",
+    "apps/cli/src/sucafina-product/native-ui/context.ts",
+    "packages/server/src/handlers/sucafina.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/**"
+  ],
+  "assurances": [
+    "No second writer opened",
+    "No force/reset/rebase/merge/deploy",
+    "Native Goal remains paused",
+    "No local tests or SDK generation",
+    "Foreign commits/authors preserved"
+  ]
+}
