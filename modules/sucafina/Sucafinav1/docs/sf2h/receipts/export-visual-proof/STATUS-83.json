@@ -1,0 +1,95 @@
+{
+  "schema": "sf2h.export-visual-proof.status.v1",
+  "mission": 83,
+  "state": "PARTIAL_READER_PATCH_NO_VISUAL_ACCEPTANCE",
+  "branch": "export-visual-proof",
+  "sourceHead": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+  "readerCommit": "34b929880c4a297e768b8d72105d66e3bc61a7f9",
+  "workflowPreimageBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "workflowPostimageBlob": "0b6cf888faa82d3be7b2c683f4bff3b17a6e53e3",
+  "sourceProposal": {
+    "sha": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/owner-proposals/OWNER-REQUEST.json"
+  },
+  "historicalRuns": [
+    {
+      "run": 43667294352,
+      "artifacts": 0,
+      "knownFunctionalFailures": 2
+    },
+    {
+      "run": 43667789028,
+      "artifacts": 0
+    },
+    {
+      "run": 43668383518,
+      "artifacts": 0
+    }
+  ],
+  "historicalOriginalsAvailable": false,
+  "historicalFilesVisuallyInspected": 0,
+  "originalHashBeforeAfter": "NOT_OBSERVED_NO_FILES_AVAILABLE",
+  "newGeneration": {
+    "executed": false,
+    "sourceSha": null,
+    "manifestSha": null,
+    "files": 0
+  },
+  "installedReader": {
+    "mode": "Linux-only validated own-only SF66 surgical request",
+    "supportedFormats": [
+      "docx",
+      "pptx",
+      "xlsx"
+    ],
+    "outputs": "_inspection/manifest.json plus PDF/text/PNG",
+    "mutatesOriginals": false,
+    "hashCheck": "SHA-256 before and after conversion",
+    "visualInspection": "PENDING_HUMAN_REVIEW",
+    "functionalAcceptance": "NOT_ASSERTED",
+    "otherFormats": [
+      "csv",
+      "json",
+      "html"
+    ],
+    "otherFormatsVisualCoverage": "NOT_IMPLEMENTED"
+  },
+  "findings": [
+    {
+      "id": "EV83-01",
+      "severity": "BLOCKER",
+      "description": "Runs referenced by mission66 have no downloadable GitHub Actions artifacts; historical 14 originals cannot be independently rendered or hash-compared."
+    },
+    {
+      "id": "EV83-02",
+      "severity": "BLOCKER",
+      "description": "SF66 proposed reader covers DOCX/PPTX/XLSX, not CSV/JSON/HTML. Current reader manifest does not prove all 14 visual outcomes."
+    },
+    {
+      "id": "EV83-03",
+      "severity": "BLOCKER",
+      "description": "No new eligible workflow run, PNG gallery, or visual findings from genuine pages/cells/slides. Mark PENDING rather than PASS."
+    },
+    {
+      "id": "EA66-LEGACY-EGRESS",
+      "severity": "FUNCTIONAL_FAIL",
+      "description": "R1 observed expected HTTP 403 but actual 200; owned outside mission83, must not be hidden by reader evidence."
+    }
+  ],
+  "nextStepsFor71": [
+    "Integrate reader patch after checking concurrent workflow changes and 75 ownership.",
+    "Request fresh own-only surgical generation with pinned W/S and unique ci-run branch through authorized central test:ci request lane.",
+    "Extend coverage of CSV/JSON/HTML and verify all 14 manifest hashes before calling export visual inspection complete.",
+    "Download generated artifact ZIP, visually inspect every rendered page/sheet/slide and publish exact gallery + findings."
+  ],
+  "forbiddenChangesObserved": {
+    "exporters": false,
+    "layouts": false,
+    "sourceExportBytes": false,
+    "otherBranches": false
+  },
+  "tests": {
+    "launched": false,
+    "reason": "No authorized deduplicated snapshot request and historic outputs unavailable; no local tests permitted."
+  }
+}
