@@ -25,6 +25,8 @@ import { createResidentAiBundle } from "../../../../modules/sucafina/Sucafinav1/
 
 const wp12 = "Sucafinav1/test/product/wp12/"
 const proof = "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts"
+const matrixProof = "Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts"
+const fiveProfiles = ["sf_finance", "sf_procurement", "sf_portfolio", "sf_maestro", "sf_reviewer"] as const
 const assignments = [
   { caseId: "AM01-FINANCE", profileId: "sf_finance", skillId: "sf-explicar-forecast", source: wp12 + "native-execution-forecast-kpi.test.ts" },
   { caseId: "AM01-FINANCE", profileId: "sf_finance", skillId: "sf-comparar-cenarios", source: wp12 + "native-execution-scenarios-review.test.ts" },
@@ -118,6 +120,8 @@ async function correlate(input: Input) {
       loads: tagged("WP12 native skill loads:"),
       portfolio: tagged("SF_AM01_PORTFOLIO_RECALL_CONSUMED:"),
       negatives: tagged("SF_AM01_PORTFOLIO_RECALL_NEGATIVE:"),
+      matrix: tagged("SF_AM01_PROFILE_RECALL_CONSUMED:"),
+      matrixNegatives: tagged("SF_AM01_PROFILE_RECALL_NEGATIVE:"),
     }
   })
   assert(new Set(runEvidence.map((run) => run.id)).size === runEvidence.length, "duplicate Actions run ID")
@@ -227,12 +231,60 @@ async function correlate(input: Input) {
       item.skillId === portfolio.skillId && item.deniedBeforeInference === true &&
       item.unrelatedTrainingRemainsMissing === true &&
       Array.isArray(item.refused) && item.refused.length === 3)
+  // A catalog load or a standalone source correlator cannot establish a five-
+  // profile execution. Require each profile's distinct ready native run, full
+  // source/version/digest receipt, verified tool calls, negative HTTP decisions
+  // and reopened durable HTTP output in the SAME real Actions log.
+  const matrixCovered = runEvidence.some((run) => {
+    if (!run.selectedFiles.includes(matrixProof)) return false
+    const matched = fiveProfiles.map((profileId) => {
+      const selected = bundle.selected.find((item) => item.profile.id === profileId)
+      const skill = selected?.skills.find((item) => item.id === "sf-consultar-memoria-decisoria")
+      if (!selected || !skill) return undefined
+      const negatives = run.matrixNegatives.find((value) => value.githubSha === run.headSha &&
+        value.profileId === profileId && value.skillId === skill.id &&
+        value.outsideGrantDenied === true && value.wrongIncarnationDenied === true &&
+        value.unissuedPrecedentDenied === true && value.missingTrainingWasNotConvertedToZero === true)
+      const consumption = run.matrix.find((value) => value.githubSha === run.headSha &&
+        value.profileId === profileId && value.skillId === skill.id &&
+        value.inferenceExecuted === true && value.consumerRef === "handleSfAnalysis:output" &&
+        value.observedAction === "reopened-host-rendered-persisted-output" &&
+        value.missingTrainingRemainsUnknown === true)
+      if (!negatives || !consumption || !consumption.receipt || typeof consumption.receipt !== "object")
+        return undefined
+      const receipt = record(consumption.receipt)
+      const actual = run.prepared.find((value) =>
+        value.runRef === consumption.runRef && value.profileId === profileId && value.skillId === skill.id &&
+        value.inferenceExecuted === true && value.outputRef === consumption.outputRef &&
+        value.outputDigest === consumption.outputDigest && value.inputDigest === negatives.inputDigest &&
+        value.consumerRef === "handleSfAnalysis:output" && value.actualModel === consumption.actualModel)
+      const started = run.runs.find((value) => value.githubSha === run.headSha &&
+        value.runRef === consumption.runRef && value.skillId === skill.id &&
+        value.nativeSessionId === consumption.nativeSessionId && value.state === "ready")
+      if (!actual || !started || !sha64.test(text(consumption.outputDigest)) ||
+        !Array.isArray(consumption.toolCallIds) || consumption.toolCallIds.length < 4 ||
+        receipt.nativeSessionId !== consumption.nativeSessionId || receipt.runId !== consumption.runRef ||
+        receipt.loadedMessageId !== actual.receipt?.loadedMessageId ||
+        receipt.profileId !== profileId || receipt.profileVersion !== selected.profile.version ||
+        receipt.profileDigest !== selected.profile.sourceDigest || receipt.skillId !== skill.id ||
+        receipt.skillVersion !== skill.version || receipt.sourceDigest !== skill.sourceDigest ||
+        receipt.instructionsDigest !== skill.instructionsDigest || receipt.manifestDigest !== bundle.manifestDigest ||
+        !consumption.caseRef || !negatives.caseRef ||
+        !sameRef(record(consumption.caseRef), record(negatives.caseRef))) return undefined
+      return { profileId, runRef: consumption.runRef, sessionId: receipt.nativeSessionId, outputRef: consumption.outputRef }
+    }).filter((value): value is { profileId: string; runRef: unknown; sessionId: unknown; outputRef: unknown } => !!value)
+    return matched.length === 5 &&
+      new Set(matched.map((item) => item.runRef)).size === 5 &&
+      new Set(matched.map((item) => item.sessionId)).size === 5 &&
+      new Set(matched.map((item) => item.outputRef)).size === 5
+  })
   const pending = [
     ...(!loadCovered ? ["native-load-and-18-refusals"] : []),
     ...witnesses.filter((item) => item.status === "NOT_RUN").map((item) => item.profileId + "/" + item.skillId),
     ...(!skillsUnique || !profilesUnique || !noRunOrOutputReuse ? ["unique-5/18-run-output-session"] : []),
     ...(!reviewerDistinct ? ["independent-reviewer-linked-to-author"] : []),
     ...(!portfolioNegative ? ["portfolio-recall-forbidden-grant-and-missing-data"] : []),
+    ...(!matrixCovered ? ["five-profile-recall-native-runs-denials-and-reopened-consumers"] : []),
     "independent-164-log-and-162-candidate-attestation",
     "real-scanner-admission-and-identity-receipts",
     "human-consumer-authority-and-five-case-negative-variants",
@@ -244,7 +296,7 @@ async function correlate(input: Input) {
     candidateSha: input.candidateSha, candidateTreeSha: input.candidateTreeSha,
     sucafinaSubtreeSha: input.sucafinaSubtreeSha,
     manifestDigest: bundle.manifestDigest, profiles: bundle.profiles.length, skills: bundle.skills.length,
-    loadedAndRefused: loadCovered, witnesses, reviewerDistinct, portfolioNegative,
+    loadedAndRefused: loadCovered, witnesses, reviewerDistinct, portfolioNegative, matrixCovered,
     runs: runEvidence.map((run) => ({ runId: run.id, url: run.url,
       ciSnapshotSha: run.headSha, ciRequestSha256: run.ciRequestSha256,
       logSha256: run.logSha256, selectedFiles: run.selectedFiles })),

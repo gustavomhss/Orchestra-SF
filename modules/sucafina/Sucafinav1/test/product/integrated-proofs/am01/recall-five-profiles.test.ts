@@ -82,6 +82,12 @@ test("AM01 shared recall runs under all five real profiles and reopens five sepa
           wrongIncarnationDenied: true, unissuedPrecedentDenied: true,
           missingTrainingWasNotConvertedToZero: true, inferenceExecuted: false,
         }))
+        // A refused selection is never reused as authority for a later native run.
+        // Obtain a fresh preparation of the exact original human selection.
+        const restored = await prepare(incoming)
+        expect(restored.response.status).toBe(200)
+        expect(restored.body.status).toBe("ok")
+        expect(digestSfValue(restored.body.value)).toBe(digestSfValue(decoded.value))
         const before = await context.human("analysis.read", { caseRef: scenario.caseRef },
           (call) => context.services.analyses!.list(call, scenario.caseRef))
         expect(before.status).toBe("ok")
