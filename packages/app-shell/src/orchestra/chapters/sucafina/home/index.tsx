@@ -162,6 +162,17 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
         setResume({ caseRef: null, status: "idle" })
         return
       }
+      if (result.status === "denied" || result.status === "not-found") {
+        // A target-level revocation or removal must not leave that case's
+        // previously authorized title/version in the in-memory home list.
+        const current = screen.data
+        if (current?.cases.status === "ok") {
+          setScreen("data", {
+            ...current,
+            cases: { status: "ok", items: current.cases.items.filter((entry) => entry.caseRef !== source.caseRef) },
+          })
+        }
+      }
       setResume({
         caseRef: source.caseRef,
         status: result.status === "invalid-link" ? "invalid" : result.status,
