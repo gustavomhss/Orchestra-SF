@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "slot": "N21",
+  "orders": [
+    "U10.overview",
+    "U36"
+  ],
+  "lease_epoch": "ux-native-n21-e1",
+  "actor": {
+    "github_login": "gustavomhss",
+    "executor": "GPT-6",
+    "session_id": null,
+    "session_id_status": "not exposed"
+  },
+  "branch": "sf-ux-n21",
+  "observed_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "expected_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "source_pins": {
+    "procurement-scenario-services.ts": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+    "runtime/procurement.ts": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "sourcing-input-http.ts": "de85660b664826163c2e157ec382b97a425bb10d",
+    "runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370"
+  },
+  "preflight": {
+    "branch_matches_launch": true,
+    "protected_exclusions": [
+      "procurement/queues/**",
+      "sf-u10.ts",
+      "u10.spec.ts",
+      "shared registries, routes, generated, other writers"
+    ],
+    "admission": "S0 leaf authorization, no new admission required",
+    "source_semantic_delta": "C60 matches launch pins; renderer/application historical delta inspected",
+    "test_policy": "120 only; no local test or compiler",
+    "integrator": "125",
+    "compiler": "119"
+  },
+  "status": "ACK_REAL_AUTHORING",
+  "created_by": "GitHub connector with current selected branch; no invented host session identity"
+}
