@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h.native-ui.writer-ack.v1",
+  "mission_id": "UX20-W05-R2",
+  "seat": "W05",
+  "order": "F04",
+  "status": "ACK_REAL_SUCCESSOR_E2_AUTHORING",
+  "actor": {
+    "github": "gustavomhss",
+    "effective_model": "GPT-6",
+    "requested_model": "Astra (label only)",
+    "actual_session_id": null,
+    "reason": "ChatGPT session identifier unavailable to current actor; no invented ID"
+  },
+  "branch": {
+    "name": "sf-ux-w05",
+    "pr": 120,
+    "observed_head": "a55c868cb3fce003ed7ea285c58a6712d3cd7301",
+    "expected_head": "a55c868cb3fce003ed7ea285c58a6712d3cd7301",
+    "head_relation": "IDENTICAL",
+    "base": "sf2-stack"
+  },
+  "fence": {
+    "epoch": "ux-native-w05-e2",
+    "previous_epoch": "ux-native-w05-e1",
+    "previous_epoch_state": "REVOKED_FOR_FUTURE_ACCEPTANCE",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/S0-FENCE-e2.json",
+    "blob": "800425c9d934fcb9dd43a9cb7bb4aea675ddadd8",
+    "runtime_termination_claimed": false
+  },
+  "authorization": {
+    "s0_admission": "8852ed4a060f6eb3b49c142b894852d0af49740f",
+    "exclusive_product_paths": [
+      "packages/app-shell/e2e/sucafina/native/fixture/**",
+      "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "packages/app-shell/test-browser/sucafina-native/fixture/**"
+    ],
+    "receipts": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/**",
+    "shared_owner": 114,
+    "ci_owner": 120,
+    "compiler_owner": 119
+  },
+  "inputs": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+    "order_blob": "1b25898e583e1eb247a3eec889d0da4e6bb61ab3",
+    "contract_blobs": {
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81"
+    }
+  },
+  "proof": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "desktop": "NOT_PROVEN",
+    "native_installed": "NOT_PROVEN",
+    "domain_fixture_is_not_installed_auth_proof": true
+  },
+  "limits": [
+    "no local test/validator/typecheck",
+    "no fake authorization",
+    "no force/reset/rebase",
+    "no merge/deploy/Goal resume"
+  ],
+  "lease_terminal": "PENDING_ARTIFACT_HANDOFF"
+}
