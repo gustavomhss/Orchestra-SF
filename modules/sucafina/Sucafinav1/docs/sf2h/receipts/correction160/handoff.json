@@ -1,0 +1,143 @@
+{
+  "schema": "sf2h.correction160.terminal-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 160,
+  "slot": "N27",
+  "finding": "PRE147-R02-04",
+  "epoch": "ux-native-n27-e2-browser160",
+  "actor": "ChatGPT GitHub MCP new session",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "status": "SOURCE_READY_NOT_GLOBAL_RELEASE",
+  "native_goal": "paused",
+  "global_release": false,
+  "authority": {
+    "ack_commit": "fef161ff797ef3c64a05fb2d020b5d1e747a75b9",
+    "s0": "ACK_PUBLISHED",
+    "previous_epoch": "ux-native-n27-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "termination_inferred": false
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-n27",
+  "pr": 157,
+  "target": "sf2-stack",
+  "integrator": "132/PR65",
+  "compiler": "149/PR107",
+  "ci": "150/PR106",
+  "fence_and_input": {
+    "expected_initial_head": "a7812ec4b38a1f95f3751525345b6f27ec6d913d",
+    "initial_tree": "5694561d87f0f42555faec4768d13a1c2616f034",
+    "ack_tree": "395ecd11e481c4911bbdfc93e771d43d852c2b74",
+    "packet_commit": "cf58a4f4197da24cfcff769cbdff08b5fc8b90c5",
+    "packet_blob": "ba120aa629f031900ad0fcb5542c97bcefaef75f",
+    "original_work_order_U23_blob": "29d36b6262f3c174106970fa7dd2c7cbf780791f",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "patch_integral": {
+    "source_commit": "3bf036f71f45d0945531cdfdf6880c328014ce19",
+    "source_commit_parent": "fef161ff797ef3c64a05fb2d020b5d1e747a75b9",
+    "source_tree": "c770de183a50fb86339429722e65c3376836dd3c",
+    "readable_diff_url": "https://github.com/gustavomhss/Orchestra-SF/compare/fef161ff797ef3c64a05fb2d020b5d1e747a75b9...3bf036f71f45d0945531cdfdf6880c328014ce19",
+    "files": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "pre_blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b",
+        "post_blob": "ddd1b441f869e6824d6919827b9c53faa17f84ac"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+        "pre_blob": "a5e70551947081c7ee63f51fde8ed499d1e3c53a",
+        "first_post_blob": "b03966a945ad87bfead0ee392ab90cd147ebec1b",
+        "final_post_blob": "5099ce391a96929259df3ce5d0bc9aa2d5717b17"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
+        "pre_blob": "adeb55aa710ccf64209f96c196c6fe13c9a29d59",
+        "post_blob": "e9518d0c9dfdb8779123b92624af276abf470579"
+      }
+    ],
+    "owner_paths_only": true,
+    "no_engine_or_shared_path_edit": true
+  },
+  "evidence": {
+    "confirmation": "Static current code inspection on original blob 3f3ff...: date onChange invokes change(), which fences reviewed preview but preserves targets/selectionRef; selectedTarget() matches old selectionRef and prepare() admits it. No backend exploit asserted.",
+    "fix": "changePeriod clears target list, discovery token, selectionRef, reviewedSelectionRef, manifest, reference and detail; discovery captures start/end/surface/owner stamp and ignores late or foreign replies; selectedTarget and prepare/apply enforce that capture. Unknown-result locks editing until read reconciliation.",
+    "producer_source": {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+      "boundary": "files.import-admit delegates prepareTarget under live UI authority then asks human admit; files.import-apply requires human admit. Untouched and not runtime-qualified."
+    },
+    "criteria": [
+      "U23-AC01",
+      "U23-AC02",
+      "R02-AC02"
+    ],
+    "mapping": [
+      {
+        "finding": "PRE147-R02-04",
+        "state": "IMPLEMENTED_SOURCE_REVIEW_PENDING",
+        "evidence": "source blob + E2E scenario for January to February, source change, return, no mutations"
+      }
+    ]
+  },
+  "consumer": {
+    "pull_request": 157,
+    "branch": "sf-ux-n27",
+    "status": "SOURCE_READY",
+    "integration_target": "sf2-stack",
+    "consumer_pre_snapshot": "a15434ab558a650137f2472c7d59e6ae1e98e72a",
+    "consumer_post_sha": null,
+    "consumer_ack": "PENDING_132",
+    "not_a_release": true
+  },
+  "regressions": {
+    "spec": "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
+    "cases": [
+      "real January planner discovery/target selected with installed file",
+      "change to February clears target, selected ref and review immediately",
+      "February requires new target discovery and explicit re-selection",
+      "source change clears target and prevents admit/preview/apply",
+      "route export/back does not resurrect prior selection",
+      "passive network observer rejects import-admit/preview/apply requests during invalidation"
+    ],
+    "seeds": [
+      "SF_NATIVE_IMPORT_PERIOD_TEST_YEAR (year with real January/February targets)",
+      "SF_NATIVE_IMPORT_FILE_PATH (actual readable installed file)"
+    ],
+    "limitations": [
+      "Network abort/late response is statically fenced but no deterministic controlled latency scenario was run",
+      "Independent owner/revocation/version stress and producer reauthorization require installed real actors/data",
+      "Existing native fixture dependency must be available to CI150"
+    ],
+    "runs": {
+      "local_tests": "NOT_RUN",
+      "local_typecheck": "NOT_RUN",
+      "local_parser": "NOT_RUN",
+      "local_validator": "NOT_RUN",
+      "local_build": "NOT_RUN",
+      "compiler_or_ci": "NOT_RUN",
+      "reason": "Explicit mission fence: 149 compiles; 150 selects CI after coherent inputs, no local checks or dispatcher."
+    }
+  },
+  "shared_seams": {
+    "no_shared_seam_modified": true,
+    "producer_owner": "A06, current imported backend; 151/A07 and 153/A12 separate",
+    "unproven_claims": [
+      "backend denial of stale/foreign/revoked selection not exercised",
+      "no financial import/application or release has been proven"
+    ]
+  },
+  "handoff": {
+    "next_action": "132 adopts branch source and terminal receipt by CAS into sf2-stack; inspect actual patch and owner boundaries, publish consumer ACK SHA/tree. 149 compiles/SDK/guards only for new integrated input. 150 runs surgical U23 E2E with two seeded months, stale/revoked/owner/version/live late-result cases after 132 ACK. R02 independently rechecks PRE147-R02-04.",
+    "do_not_do": [
+      "No Goal activation",
+      "No PR closure/merge/deploy",
+      "No local tests",
+      "No second dispatcher",
+      "No edits to A07/A12 or other writers"
+    ],
+    "terminal": true
+  }
+}
