@@ -1,0 +1,35 @@
+{
+  "schema": "sf2h.native-ui.test-selection-request.v1",
+  "from": "W06",
+  "to": "120",
+  "output": "S01",
+  "state": "REQUEST_NOT_DISPATCH",
+  "candidate": "TO_BE_RESOLVED_BY_114",
+  "source_head": "caa812eff298ac5666b62aa2e8b2a01534405e3d",
+  "package": "app-shell",
+  "file": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+  "runner": "canonical test:ci GitHub Actions only",
+  "prerequisites": [
+    "F03 in same C",
+    "F01 public types in same C",
+    "114 i18n sf.common + sf.s01 registry patch composed",
+    "114 output admission"
+  ],
+  "dedup": "must compare C/tree, normalized request, selection, workflow/runtime, fixtures and omni control",
+  "scope": [
+    "S01-AC01",
+    "S01-AC02",
+    "WP01.T02"
+  ],
+  "results": {
+    "status": "NOT_RUN",
+    "run": null,
+    "job": null,
+    "observed": null
+  },
+  "never": [
+    "no local run",
+    "no full epic or FINAL",
+    "no duplicate dispatcher"
+  ]
+}
