@@ -38,7 +38,7 @@ export async function loadSfDesktopContext(options: Shared): Promise<
     if (response.status === 401) return { status: "unauthenticated" }
     if (response.status === 403) return { status: "denied" }
     if (response.status !== 200) return { status: "unavailable" }
-    const decoded = decodeSfWireBody(planned.value, response.bytes)
+    const decoded = decodeSfWireBody(planned.value, response.bytes, response.headers["content-type"])
     if (decoded.status !== "ok" || !isRecord(decoded.value)) return { status: "unavailable" }
     if (decoded.value.status === "unauthenticated") return { status: "unauthenticated" }
     if (decoded.value.status === "denied") return { status: "denied" }
@@ -85,9 +85,11 @@ export function allowSfAuthNavigation(value: string, descriptor: SfInstallationD
 export async function requestSfReturnIntent(options: Shared & Readonly<{ route: SfResolvedRoute; serverKey: string }>) {
   const route = options.route
   if (
-    route.ownerSelection.serverKey !== options.serverKey
+    !isRecord(route.ownerSelection)
+    || route.ownerSelection.serverKey !== options.serverKey
     || route.ownerSelection.projectId !== options.descriptor.projectId
-    || route.ownerSelection.installationId !== options.descriptor.installationId
+    || route.ownerSelection.installationId !== undefined
+       && route.ownerSelection.installationId !== options.descriptor.installationId
     || typeof route.pathname !== "string" || !/^\/orchestra\/sf-[a-z0-9-]+(?:\/[A-Za-z0-9_%.-]+)*$/.test(route.pathname)
     || typeof route.href !== "string" || !route.href.startsWith(route.pathname)
     || !/^(CAP(?:0[1-9]|1[0-9]|2[0-8])|UI(?:[2-6][0-9]|70))$/.test(route.surfaceId)
@@ -154,13 +156,11 @@ export async function loginSfMicrosoft(options: Shared & Readonly<{
     const abort = () => finish({ status: "unavailable", reason: "auth-unavailable" })
     options.signal?.addEventListener("abort", abort, { once: true })
     window.once("closed", () => finish({ status: "cancelled" }))
-    const navigation = (event: { preventDefault(): void }, url: string) => {
-      if (!allowSfAuthNavigation(url, options.descriptor)) event.preventDefault()
-    }
-    window.webContents.on("will-navigate", navigation)
-    window.webContents.on("will-redirect", navigation)
-    const check = (url: string) => {
-      if (!sfMarker(url, options.descriptor) || probing || finished) return
+    let markerEntered = false
+    const check = () => {
+      // Never report successful login until I00 has consumed the one-use native-return
+      // marker and has redirected to the internal Orchestra href, not merely seen a URL.
+      if (!markerEntered || probing || finished) return
       probing = true
       void loadSfDesktopContext(options).then((state) => {
         if (state.status === "ok") return finish({ status: "authenticated", context: state.context })
@@ -168,8 +168,24 @@ export async function loginSfMicrosoft(options: Shared & Readonly<{
         probing = false
       })
     }
-    window.webContents.on("did-navigate", (_event, url) => check(url))
-    window.webContents.on("will-redirect", (_event, url) => check(url))
+    const navigation = (event: { preventDefault(): void }, raw: unknown) => {
+      const url = typeof raw === "string" ? raw : isRecord(raw) && typeof raw.url === "string" ? raw.url : ""
+      if (sfMarker(url, options.descriptor)) { markerEntered = true; return }
+      if (markerEntered && URL.canParse(url)) {
+        const destination = new URL(url)
+        if (destination.origin === options.descriptor.publicOrigin
+          && destination.pathname.startsWith("/orchestra/sf-")) {
+          // This redirect proves the server consumed native-return. Keep the auth
+          // BrowserWindow away from the privileged app renderer's internal routes.
+          event.preventDefault()
+          check()
+          return
+        }
+      }
+      if (!allowSfAuthNavigation(url, options.descriptor)) event.preventDefault()
+    }
+    window.webContents.on("will-navigate", navigation)
+    window.webContents.on("will-redirect", navigation)
     void window.loadURL(options.loginUrl).catch(() => finish({ status: "unavailable", reason: "auth-unavailable" }))
   })
 }
