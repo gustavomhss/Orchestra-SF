@@ -100,23 +100,23 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
       source.context.binding.projectId === resources.identity.projectId && isDeepStrictEqual(source.intent, intent)
 
     try {
-      if (!sync() || !await bounded(() => input.authorize(source.context), signal) ||
-        !await bounded(() => input.authorizeIntent(source.context, intent), signal) ||
-        !await bounded(source.current, signal) || !await bounded(source.nativePolicy.current, signal) || !sync())
+      if (!sync() || !await observeSfRoutineNative(() => input.authorize(source.context), signal) ||
+        !await observeSfRoutineNative(() => input.authorizeIntent(source.context, intent), signal) ||
+        !await observeSfRoutineNative(source.current, signal) || !await observeSfRoutineNative(source.nativePolicy.current, signal) || !sync())
         return undefined
-      const generation = await bounded(input.generation, signal)
+      const generation = await observeSfRoutineNative(input.generation, signal)
       if (generation === undefined || !Number.isSafeInteger(generation) || generation < 0 || !sync()) return undefined
-      const parent = await bounded(() => Effect.runPromise(resources.store.get(source.authoritySessionID)), signal)
+      const parent = await observeSfRoutineNative(() => Effect.runPromise(resources.store.get(source.authoritySessionID)), signal)
       // Real Session placement is necessary, not sufficient; the C15 proof is supplied by its native owner.
       if (!parent || parent.time.archived || parent.projectID !== resources.identity.projectId ||
         (parent.agent !== undefined && parent.agent !== AgentV2.defaultID) ||
         !isDeepStrictEqual(parent.location, resources.identity.location) || !sync()) return undefined
       const current = async () => {
-        if (!sync() || await bounded(input.generation, signal) !== generation ||
-          !await bounded(source.nativePolicy.current, signal) || !await bounded(source.current, signal) ||
-          !await bounded(() => input.authorize(source.context), signal) ||
-          !await bounded(() => input.authorizeIntent(source.context, intent), signal) ||
-          !sync() || await bounded(input.generation, signal) !== generation) {
+        if (!sync() || await observeSfRoutineNative(input.generation, signal) !== generation ||
+          !await observeSfRoutineNative(source.nativePolicy.current, signal) || !await observeSfRoutineNative(source.current, signal) ||
+          !await observeSfRoutineNative(() => input.authorize(source.context), signal) ||
+          !await observeSfRoutineNative(() => input.authorizeIntent(source.context, intent), signal) ||
+          !sync() || await observeSfRoutineNative(input.generation, signal) !== generation) {
           close()
           return false
         }
@@ -150,7 +150,7 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
         !Schema.is(SessionSchema.ID)(invocation.sessionID)) return undefined
       const entry = entries.get(invocation.sessionID)
       if (!entry || !matches(invocation, entry.binding.intent) ||
-        !await bounded(entry.current, entry.binding.signal) || entries.get(invocation.sessionID) !== entry)
+        !await observeSfRoutineNative(entry.current, entry.binding.signal) || entries.get(invocation.sessionID) !== entry)
         return undefined
       return entry.binding
     },
@@ -194,7 +194,7 @@ async function bounded<T>(read: () => Promise<T>, signal: AbortSignal): Promise<
   const cancelled = new Promise<undefined>((resolve) => {
     onAbort = () => resolve(undefined)
     signal.addEventListener("abort", onAbort, { once: true })
-    timer = setTimeout(() => resolve(undefined), 2_000)
+    timer = setTimeout(() => resolve(undefined), timeoutMs)
     if (signal.aborted) onAbort()
   })
   try { return await Promise.race([Promise.resolve().then(read).catch(() => undefined), cancelled]) }
