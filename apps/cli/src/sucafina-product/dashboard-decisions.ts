@@ -90,6 +90,14 @@ export function createSfDashboardDecisions(input: {
   }
   const drafts = createHotTopicDraftStore({ state, host, authorizeCase,
     authorizeDraft: (request, context) => human.authorize(context, "decisions.edit", request),
+    authorizeLookup: (request, context) => human.authorize(context, "decisions.edit", request),
+    verifyLookupSnapshot: (draft, context) => {
+      const dashboard = host.persistence.currentSnapshots?.()?.dashboard
+      const environment = environments.get(context)
+      return !!dashboard && !!environment && dashboardSourceCurrent(dashboard, draft.target, context, environment.at) &&
+        draft.sourceRefs.every((ref) => ref.kind === "record" && ref.target.surface === "dashboard" && !!ref.target.period && dashboardSourceCurrent(dashboard,
+          { surface: "dashboard", type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period: ref.target.period, observedAt: environment.at }, context, environment.at))
+    },
     verifySources,
     verifySnapshot: (snapshot, _request, draft, context) => {
       const environment = environments.get(context)
@@ -363,7 +371,14 @@ export function createSfDashboardDecisions(input: {
         if (!source) return { status: "denied" as const, reason: "hot-topic-draft-access-unavailable" }
         environments.set(context, await host.environment(source))
         try { return await drafts.register(request, context) } finally { environments.delete(context) }
-      }, readCurrent: drafts.readCurrent, list: drafts.list,
+      },
+      lookupFirstSave: async (request: { caseRef: CaseRef }, context: TrustedDomainContext) => {
+        const source = host.requestFor(context)
+        if (!source) return { status: "denied" as const, reason: "hot-topic-draft-outcome-access-unavailable" }
+        environments.set(context, await host.environment(source))
+        try { return await drafts.lookupFirstSave(request, context) } finally { environments.delete(context) }
+      },
+      readCurrent: drafts.readCurrent, list: drafts.list,
     },
     resolveOperation: async (request: { caseRef: CaseRef; draftRef: string; operation: ScenarioOperation }, context: TrustedDomainContext) => {
       // Reading an already applied choice uses its immutable C12 command/capture
