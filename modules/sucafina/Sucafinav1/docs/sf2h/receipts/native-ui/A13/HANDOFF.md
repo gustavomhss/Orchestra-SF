@@ -1,6 +1,6 @@
 # A13 collaboration — author handoff to 114 / 119 / 120
 
-**Branch:** `sf-ux-a13`  **PR:** [#139](https://github.com/gustavomhss/Orchestra-SF/pull/139)  **Code HEAD:** `77b720c59da8a5bd88a28e2c35022b0f1ab52c52`  **Tree:** `e5de02af4ea4b97fbcddccb7096c7396aa04b778`
+**Branch:** `sf-ux-a13`  **PR:** [#139](https://github.com/gustavomhss/Orchestra-SF/pull/139)  **Code HEAD:** `4ae17cb6c35dbb214d06882f3ae6dd50bcef62d2`  **Tree:** `89a4b5b56630355060cd0ef43a4a24756eab7115`
 
 ## Delivery
 
@@ -10,7 +10,7 @@ Six exclusive A13 files authored and pushed with `SfCollaboration` / `createSfCo
 
 ## Exact authored file blobs (all added; preimage absent)
 
-- `packages/schema/src/sucafina/collaboration/fields.ts` — `5c75027bb3fb7b7cfd34662f6ae55d87f6fd4019`
+- `packages/schema/src/sucafina/collaboration/fields.ts` — `8a41fc6915dfbdcb76cee6521218c3ab72156749`
 - `packages/schema/src/sucafina/collaboration/contracts.ts` — `ffbfd2e1816125a3ae3b8a04a15e4c80f202da08`
 - `packages/schema/src/sucafina/collaboration/operations.ts` — `a37dc39b600740af0a78345dfa3d4565256c791a`
 - `packages/schema/src/sucafina/collaboration.ts` — `03bb179e7e6260aaded62fba075c4def3bdd7b46`
@@ -35,3 +35,7 @@ These are proposed shared patches, **not applied**. Preimages must be verified a
 - **119:** run compiler and guards only in authorized role after integration. **120:** run surgical Actions specs after same-material C is composed. No author local test, parser, typecheck or CI run.
 - **114:** branch and `sf2-stack` diverged; the overall PR comparison includes inherited UX planning docs. **Consume the six A13 source blobs selectively** and do not merge the inherited cohort or rebase this author branch.
 - **No verified consumer ACK yet;** authoring handoff submitted. Status `ARTIFACT_READY` (not `INTEGRATED`, `QUALIFIED` or `GLOBAL_RELEASE`). No merge, deploy, Azure or Goal resume.
+
+## Source-equivalence review correction
+
+After source review, commit `4ae17cb6c35dbb214d06882f3ae6dd50bcef62d2` corrected `SensitivityResult.unresolvedConditions` to the producer's structured `UnresolvedCondition` (evidenceRefs retained), and narrowed complete cost-coverage and portfolio status discriminants. Updated fields blob `8a41fc6915dfbdcb76cee6521218c3ab72156749`. No tests, typecheck or service probes were executed. GitHub PR mergeability was `unknown` at latest read; diverged baseline still requires selective integration.

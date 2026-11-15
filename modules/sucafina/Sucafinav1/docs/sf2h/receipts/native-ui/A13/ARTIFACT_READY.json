@@ -13,19 +13,20 @@
   "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/139",
   "base_author_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
   "ack_commit": "fda223a74149c8dbc4c0b0400325d03071881c88",
-  "code_head": "77b720c59da8a5bd88a28e2c35022b0f1ab52c52",
-  "code_tree": "e5de02af4ea4b97fbcddccb7096c7396aa04b778",
+  "code_head": "4ae17cb6c35dbb214d06882f3ae6dd50bcef62d2",
+  "code_tree": "89a4b5b56630355060cd0ef43a4a24756eab7115",
   "artifact_commits": [
     "19e609d73419c4f73dfb34eb4565bded9fccc318",
     "e71f7f69c020d5d4449fc9d36f939a475e459041",
     "884b2e6de6ba19387080d266f4d5e5d946693064",
-    "77b720c59da8a5bd88a28e2c35022b0f1ab52c52"
+    "77b720c59da8a5bd88a28e2c35022b0f1ab52c52",
+    "4ae17cb6c35dbb214d06882f3ae6dd50bcef62d2"
   ],
   "files": [
     {
       "path": "packages/schema/src/sucafina/collaboration/fields.ts",
       "preimage": null,
-      "postimage": "5c75027bb3fb7b7cfd34662f6ae55d87f6fd4019",
+      "postimage": "8a41fc6915dfbdcb76cee6521218c3ab72156749",
       "change": "added",
       "owner": "A13"
     },
@@ -158,7 +159,7 @@
     {
       "kind": "BLOCKED_MERGE",
       "owner": "114",
-      "dependency": "sf2-stack diverged; PR currently mergeable=false, select A13 own blobs, not inherited cohort"
+      "dependency": "sf2-stack diverged and PR contains inherited UX planning docs; GitHub mergeability latest observed null/unknown; 114 must consume A13 blobs selectively"
     }
   ],
   "consumer_acks": [],
@@ -167,5 +168,14 @@
   "lease_terminal": "AUTHOR_HANDOFF_SUBMITTED_PENDING_114_CONSUMER_ACK",
   "merge_to_dev": false,
   "deploy": false,
-  "goal_reactivated": false
+  "goal_reactivated": false,
+  "review_corrections": [
+    {
+      "code_commit": "4ae17cb6c35dbb214d06882f3ae6dd50bcef62d2",
+      "file": "packages/schema/src/sucafina/collaboration/fields.ts",
+      "reason": "Correct canonical SensitivityResult unresolvedConditions as typed evidence records, enforce complete cost-coverage correlation and portfolio eligibility/status discriminants",
+      "old_blob": "5c75027bb3fb7b7cfd34662f6ae55d87f6fd4019",
+      "new_blob": "8a41fc6915dfbdcb76cee6521218c3ab72156749"
+    }
+  ]
 }
