@@ -1,0 +1,32 @@
+{
+  "schema": "sf2h.189.F04-and-journeys.handoff.v1",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "material_W": "4426445c05823ed4932b8a8e35391df024bf74f3",
+  "material_tree": "61b5cfc0df910105a67a344706795b4c3b7d30b7",
+  "source_missions": [
+    185,
+    186,
+    187
+  ],
+  "compiler190": {
+    "pr": 107,
+    "request": "Hosted app-shell/E2E configuration/typecheck on latest complete W; 187 fixture files and 185/186 specs; dedup prior W77e. Guards188 remain FAIL/PENDING, no waive or deletion."
+  },
+  "ci191": {
+    "pr": 106,
+    "request": "Only existing E2E test-ci authorized dispatcher, exact U15/U39/U40 selectors with real authenticated manifests, per-surface genuine Request and actor; fail explicitly when missing prerequisites; no skip/no mocked grants.",
+    "selectors": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts"
+    ],
+    "known_source_issues": [
+      "U15 denied proof and lost-response exact route need producer/owner agreement"
+    ],
+    "required": "Run ID, job, W/S, count of actual nested cases and outcomes before PASS"
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,179 @@
+{
+  "schema": "sf2h.integration.source-consumption.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "source_heads": {
+    "185": "97c2c456cd0edf688392faa06bd1dffe6233a890",
+    "186": "7534cb39a2024f5c4d258845a874e82156cb343d",
+    "187": "96c01020db59d9b4f8d44300638418d67ee11fea",
+    "188": "0730dfa7134ca46df3d89c46801ee200f28e168e"
+  },
+  "consumer_branch": "sf2-stack",
+  "pr": 65,
+  "material_commits": [
+    {
+      "mission": 187,
+      "W": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "tree": "5e6f3ef25a328f2586185c3d326dc5b373321886",
+      "files": 7
+    },
+    {
+      "missions": [
+        185,
+        186
+      ],
+      "W": "4426445c05823ed4932b8a8e35391df024bf74f3",
+      "tree": "61b5cfc0df910105a67a344706795b4c3b7d30b7",
+      "files": 3
+    }
+  ],
+  "source_to_consumer": [
+    {
+      "mission": 187,
+      "source_sha": "96c01020db59d9b4f8d44300638418d67ee11fea",
+      "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "consumer_pre_blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "source_post_blob": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12",
+      "consumer_post_blob": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12",
+      "consumer_commit": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 187,
+      "source_sha": "96c01020db59d9b4f8d44300638418d67ee11fea",
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+      "consumer_pre_blob": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+      "source_post_blob": "3cbd63012f43c43bbbe3d2c66c03fd2ded6343f9",
+      "consumer_post_blob": "3cbd63012f43c43bbbe3d2c66c03fd2ded6343f9",
+      "consumer_commit": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 187,
+      "source_sha": "96c01020db59d9b4f8d44300638418d67ee11fea",
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+      "consumer_pre_blob": "75181ca2d425dd71b9fb032773be16e48883c775",
+      "source_post_blob": "0f2463a8e6dcc201f5a8a630172e3d88c7bb3d91",
+      "consumer_post_blob": "0f2463a8e6dcc201f5a8a630172e3d88c7bb3d91",
+      "consumer_commit": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 187,
+      "source_sha": "96c01020db59d9b4f8d44300638418d67ee11fea",
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+      "consumer_pre_blob": "abfa55b1e87622ecee4fdbb1ca962b35039dd326",
+      "source_post_blob": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
+      "consumer_post_blob": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
+      "consumer_commit": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 187,
+      "source_sha": "96c01020db59d9b4f8d44300638418d67ee11fea",
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+      "consumer_pre_blob": null,
+      "source_post_blob": "bc84476891d97e7baad4f6462933c60688c11847",
+      "consumer_post_blob": "bc84476891d97e7baad4f6462933c60688c11847",
+      "consumer_commit": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 187,
+      "source_sha": "96c01020db59d9b4f8d44300638418d67ee11fea",
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+      "consumer_pre_blob": null,
+      "source_post_blob": "66e269a78af8262764228557e2eeccd29bca1a36",
+      "consumer_post_blob": "66e269a78af8262764228557e2eeccd29bca1a36",
+      "consumer_commit": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 187,
+      "source_sha": "96c01020db59d9b4f8d44300638418d67ee11fea",
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+      "consumer_pre_blob": null,
+      "source_post_blob": "238d8329bc5677cdc98b9fa238426783bf4add65",
+      "consumer_post_blob": "238d8329bc5677cdc98b9fa238426783bf4add65",
+      "consumer_commit": "487fdfcd90e7ace7a52ff88eb50b4c1e4443549a",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 185,
+      "source_sha": "97c2c456cd0edf688392faa06bd1dffe6233a890",
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+      "consumer_pre_blob": "f849819ecc16cb8b45fe6a7657cad8f36e0764d2",
+      "source_post_blob": "1d59507133649d2ca57c0c30e2507193f35181fd",
+      "consumer_post_blob": "1d59507133649d2ca57c0c30e2507193f35181fd",
+      "consumer_commit": "4426445c05823ed4932b8a8e35391df024bf74f3",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 186,
+      "source_sha": "7534cb39a2024f5c4d258845a874e82156cb343d",
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "consumer_pre_blob": "b70dbe0afe080421bfc1a3b78abdefa3b8abe85c",
+      "source_post_blob": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "consumer_post_blob": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "consumer_commit": "4426445c05823ed4932b8a8e35391df024bf74f3",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    },
+    {
+      "mission": 186,
+      "source_sha": "7534cb39a2024f5c4d258845a874e82156cb343d",
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "consumer_pre_blob": "4ec12656bff8ba284a53810a73b9e863a7a62cb4",
+      "source_post_blob": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "consumer_post_blob": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "consumer_commit": "4426445c05823ed4932b8a8e35391df024bf74f3",
+      "source_match": "MATCH",
+      "consumer_readback": "MATCH"
+    }
+  ],
+  "result": {
+    "blobs": "10_OF_10_MATCH",
+    "native_installed_manifest": "NOT_PRESENT_OR_ATTESTED",
+    "real_authorized_principals": "NOT_OBSERVED",
+    "source_skips": "REMOVED_IN_SOURCE_NOT_HOSTED_QUALIFIED",
+    "E2E": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "sameC": "NOT_PROVEN"
+  },
+  "known_open_input_requirements": {
+    "U15": [
+      "distinct real CAP14 list/edit/denied/stale/lost installed URLs bound to same principal/installation/candidate",
+      "context-only denied negative instead of requesting forbidden surface from proveWeb needs review",
+      "lost-response exact command target query matcher may need refinement before hosted run"
+    ],
+    "U39_U40": [
+      "separate real CAP04/CAP05 chapterHref",
+      "authorized requester/holder and real domain read/save evidence",
+      "valid CAPEX/OPEX producer sources, 200%/400% keyboard/viewport verification"
+    ],
+    "F04": [
+      "private installed manifest candidate binding, real actors and producer",
+      "D01 packaged desktop independent verification"
+    ]
+  },
+  "guard_review_188": {
+    "head": "0730dfa7134ca46df3d89c46801ee200f28e168e",
+    "classification": "66 historical gates; no disposable log positively proven",
+    "cleanup_patch": "EMPTY",
+    "guard_deletions": 0,
+    "guard_waivers": 0,
+    "status": "REVIEW_ONLY_NOT_GUARD_PASS"
+  },
+  "local_checks": "NOT_RUN_BY_POLICY",
+  "GLOBAL_RELEASE": false,
+  "native_goal": "paused"
+}
