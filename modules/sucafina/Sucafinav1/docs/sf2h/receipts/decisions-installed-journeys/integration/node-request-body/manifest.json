@@ -1,0 +1,52 @@
+{
+  "status": "PROPOSED_SHARED_PATCH_ISOLATED_W2_ONLY",
+  "path": "apps/cli/src/sucafina-product/installation.ts",
+  "preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+  "postimage_blob": "3664ef2af77e447323e20d5b70095683dae00aee",
+  "files": {
+    "installation-buffer-candidate.patch": {
+      "bytes": 2358,
+      "sha256": "72308c2e05f058711a110f6d3fa2b7dc475b7601590d08b37235a44cc0fb25f5"
+    },
+    "installation.ts.preimage.txt": {
+      "bytes": 2476,
+      "sha256": "26c989c2ab37d87363e77a06b96ed55eaccb97f9c4f586879bd4539de869f93d"
+    },
+    "effect-api-excerpts.json": {
+      "bytes": 11367,
+      "sha256": "83b3da09e7b09fa9b60c5da3f782861bd04b846c7c3b61ec83ff38d342718104"
+    },
+    "installation.ts.postimage.txt": {
+      "bytes": 2855,
+      "sha256": "dc658cd65e38adfb875fc7e281f6698766a9cde1199f896f9018546f69261c03"
+    }
+  },
+  "owner": 47,
+  "source_namespace_only": true,
+  "source_live_file_unchanged": true,
+  "stack_live_file_unchanged": true,
+  "base_C20": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+  "preimage_C20_confirmed": true,
+  "qualification": {
+    "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+    "baseTree": "b51fce068f7cee96e6f22013d729087643e3b684",
+    "W": "7493ea6500c113ee83f785244ab6a9c2b5bc7f6b",
+    "Wtree": "6d1a2f1b593fcb9ce2d821d34ba2bf07000db3aa",
+    "S": "70dfa38e6ae258e1b9a3001db5f6d24b1a7cdaf5",
+    "Stree": "94bd05f72b2f460dc25c922b49c6b3961562a526",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "unchanged_root_entries": 43,
+    "only_extra": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "size": 229,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+    },
+    "source": "a0f69c88607461820a92e9fcde785fd813f8f03f",
+    "sourceTree": "27a1de25f94e98f239809f22e8ed83be833f9cd5"
+  },
+  "runtime_verdict": "PENDING_nominal-02.json",
+  "causal_limit": "Baseline did not capture requestfailed details. The exact low-level Bun/Effect cause is not asserted; the pinned API supports the proposed canonical binary body consumption."
+}

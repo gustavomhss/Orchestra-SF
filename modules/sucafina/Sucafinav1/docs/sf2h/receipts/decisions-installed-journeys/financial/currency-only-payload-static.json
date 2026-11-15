@@ -1,0 +1,70 @@
+{
+  "schema": "m52-static-ui-payload-analysis-v1",
+  "status": "NOT_SENT_NOT_RUNTIME",
+  "source_commit": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+  "initial_state": "Fresh isolated installation; no persisted Procurement settings",
+  "interaction": "Only fill Currency with USD and click Save settings",
+  "payload": {
+    "page": "Settings",
+    "action": "save",
+    "version": 0,
+    "values": {
+      "currency": "USD",
+      "prApprovalMode": "first",
+      "minQuotes": null,
+      "techWeight": null,
+      "commWeight": null,
+      "blockSelfApproval": false,
+      "requireActiveSupplier": false,
+      "uploadCap": null,
+      "reminderDays": null,
+      "escalationDays": null,
+      "levels": [
+        {
+          "_new": "true",
+          "id": "levels-1",
+          "name": "",
+          "threshold": null,
+          "holderId": ""
+        }
+      ],
+      "fxRates": [
+        {
+          "_new": "true",
+          "code": "",
+          "rate": null
+        }
+      ],
+      "fxUpdated": "",
+      "criteria": [
+        {
+          "_new": "true",
+          "name": "",
+          "weight": null
+        }
+      ],
+      "commCriteria": [
+        {
+          "_new": "true",
+          "name": "",
+          "weight": null,
+          "auto": false
+        }
+      ],
+      "paymentTerms": "",
+      "categories": "",
+      "incoterms": "",
+      "billingAddress": "",
+      "defaultDeliveryAddress": ""
+    },
+    "confirmed": false
+  },
+  "expected_domain_response": {
+    "ok": false,
+    "status": 422,
+    "errors": [
+      "Invalid matrix or currencies"
+    ]
+  },
+  "expected_commit": false
+}

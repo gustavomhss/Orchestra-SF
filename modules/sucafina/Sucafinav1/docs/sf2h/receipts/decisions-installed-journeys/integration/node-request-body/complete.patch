@@ -1,0 +1,31 @@
+diff --git a/apps/cli/src/sucafina-product/installation.ts b/apps/cli/src/sucafina-product/installation.ts
+index e1392759f00d6d42477249823bbb6b3cec51601c..3664ef2af77e447323e20d5b70095683dae00aee 100644
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -2,8 +2,8 @@
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect } from "effect"
+-import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
++import { Effect, Option } from "effect"
++import { HttpMethod, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ import { createSfHostRuntime } from "./host-context"
+ 
+ export type SfInstallation = {
+@@ -24,9 +24,12 @@
+   const route = Effect.gen(function* () {
+     const incoming = yield* HttpServerRequest.HttpServerRequest
+     if (incoming.headers.host?.toLowerCase() !== new URL(origin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+-    const web = yield* HttpServerRequest.toWeb(incoming)
+-    if (new URL(web.url).origin !== origin) return HttpServerResponse.empty({ status: 403 })
+-    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(web, { signal })), catch: () => "installation-unavailable" as const })
++    const url = HttpServerRequest.toURL(incoming)
++    if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
++    if (url.value.origin !== origin) return HttpServerResponse.empty({ status: 403 })
++    // Consume the bounded body in the server request scope before crossing the Web Request boundary.
++    const body = HttpMethod.hasBody(incoming.method) ? yield* incoming.arrayBuffer : undefined
++    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(url.value, { method: incoming.method, headers: incoming.headers, ...(body === undefined ? {} : { body }), signal })), catch: () => "installation-unavailable" as const })
+     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+   }).pipe(Effect.catch(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
+   // Effect registers a trailing wildcard at both the subtree and its base path.

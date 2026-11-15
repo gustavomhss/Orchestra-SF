@@ -1,0 +1,410 @@
+{
+  "mission": 52,
+  "run_id": 43654219902,
+  "job_id": 132629086161,
+  "attempt": 1,
+  "W": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+  "candidate": "C18",
+  "S": "fbc76905438455be37aeda813b380924d594de8f",
+  "run_conclusion": "failure",
+  "stats": {
+    "startTime": "2026-11-14T23:39:47.185Z",
+    "duration": 787215.7100000001,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  },
+  "selected": 5,
+  "executed": 5,
+  "passed": 0,
+  "failed": 5,
+  "timed_out": 4,
+  "assertion_failed": 1,
+  "skipped": 0,
+  "flaky": 0,
+  "retries": 0,
+  "artifact_id": 14137344442,
+  "artifact_sha256": "9bb13f6bfee41a5e8f97f994c688d460dc0ab04ff24619d80f2106c6a049edad",
+  "cases": [
+    {
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 12,
+      "configured_budget_ms": 180000,
+      "runtime_status": "timedOut",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 184329,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create two actual Planner versions through human controls",
+          "duration_ms": 180289,
+          "error": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.",
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+            "column": 24,
+            "line": 82
+          }
+        }
+      ],
+      "reached": [
+        "real installation/enrollment completed",
+        "Planner Versions page rendered",
+        "first-version create action entered uncertainty"
+      ],
+      "not_reached": [
+        "two Planner versions confirmed",
+        "decision creation",
+        "evidence attachment",
+        "alternatives",
+        "comparison/coverage",
+        "numeric rule",
+        "human choice/history",
+        "source-change recovery"
+      ],
+      "failure": "page.waitForResponse in planner-sources.ts:82 timed out after first-version click; DOM explicitly says save outcome unknown",
+      "http_status": "NOT_OBSERVED",
+      "request_scope_limit": "observations recorder excludes native Planner POSTs without sf mode",
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "sha256": "005ced4548b3237eb0e3a276697225b55af01471319f52a4d808ef02506dbba9",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png"
+        },
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "sha256": "1494670b77231f88ec8959100a1e2dc6928631360b721823863828fd41e641f0",
+          "embedded_source": {
+            "member": "test-ci-evidence/playwright-runtime.json",
+            "attachment": "decisions-observations.json",
+            "spec_line": 12,
+            "decoded_content_sha256": "1494670b77231f88ec8959100a1e2dc6928631360b721823863828fd41e641f0"
+          }
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "sha256": "6484b3ac3d64deee2eb6926675b1f8c700da2dd5a7550feda51e37fd0935e4fe",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "sha256": "f8edc9ac1e5b7a4f2a4aa68d1d4433f4c9d91992705ecc2799d7d86408a50c7d",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 21,
+      "configured_budget_ms": 180000,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 14623,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create the real requisition through its human form",
+          "duration_ms": 10063,
+          "error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: 1\nReceived: 0\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 10000ms\n  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n",
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+            "column": 22,
+            "line": 7
+          }
+        }
+      ],
+      "reached": [
+        "real installation/enrollment completed",
+        "navigation to /sucafina/procurement?page=Requests",
+        "body rendered procurement-queue-unavailable JSON"
+      ],
+      "not_reached": [
+        "requisition create form",
+        "requisition mutation",
+        "proposal producer",
+        "comparison/choice",
+        "financial approval contract gate",
+        "Apply/recovery"
+      ],
+      "failure": "expected one create Requests form, actual zero; procurement-source.ts:7; original 10000ms assertion budget",
+      "http_status": "NOT_RECORDED_IN_ARTIFACT",
+      "visible_body": {
+        "status": "unavailable",
+        "reason": "procurement-queue-unavailable"
+      },
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "sha256": "61b41a231b2865d4eb53ae961c96bf0212e15460261c8ba4211dde4ee91d4775",
+          "embedded_source": {
+            "member": "test-ci-evidence/playwright-runtime.json",
+            "attachment": "decisions-observations.json",
+            "spec_line": 21,
+            "decoded_content_sha256": "61b41a231b2865d4eb53ae961c96bf0212e15460261c8ba4211dde4ee91d4775"
+          }
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain",
+          "embedded_source": {
+            "member": "test-ci-evidence/playwright-runtime.json",
+            "attachment": "wp03-real-cli.log",
+            "spec_line": 21
+          }
+        },
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "sha256": "00e43d7f14bee553e9a5c7b32ece32a8eb22d1cd2ae6bb70996639c1717399dc",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "sha256": "f3796b647a510ee06cac8a3e6a01d83b83d077f2abe819e5b13f10cc5adf4d3b",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 35,
+      "configured_budget_ms": 180000,
+      "runtime_status": "timedOut",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 184366,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "enter the installed Workbench from the dashboard",
+          "duration_ms": 315,
+          "error": null,
+          "location": null
+        },
+        {
+          "title": "submit one explicit human intention",
+          "duration_ms": 179965,
+          "error": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.",
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+            "column": 24,
+            "line": 89
+          }
+        }
+      ],
+      "reached": [
+        "real installation/enrollment completed",
+        "dashboard to Workbench navigation",
+        "human creation fields filled",
+        "one workbench-command/sf_case_draft POST emitted",
+        "uncertain creation locks fields and offers Retry same creation"
+      ],
+      "not_reached": [
+        "successful creation receipt",
+        "durable case confirmation",
+        "edit",
+        "reopen"
+      ],
+      "failure": "page.waitForResponse in journey.ts:89; no matching response observed before original case budget",
+      "http_status": "NOT_OBSERVED",
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "sha256": "63e8f380a1a4312ca4080e839a38ec250ce83c2d94efb46521af5d5ca8de6eae",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/test-failed-1.png"
+        },
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "sha256": "a66ff34518acbc46e95ddb373264181aab0e3b1c217ce401ae2bd18537094abf",
+          "embedded_source": {
+            "member": "test-ci-evidence/playwright-runtime.json",
+            "attachment": "decisions-observations.json",
+            "spec_line": 35,
+            "decoded_content_sha256": "a66ff34518acbc46e95ddb373264181aab0e3b1c217ce401ae2bd18537094abf"
+          }
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "sha256": "7570c2100ab810ab9362173faab95a19ed884b1f1e366f8b1c6350d7561c5f13",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "sha256": "b7a80a4d637fca73dd2d04eead5c3c657b574ea1a0280a3eec499e5191d885f6",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 87,
+      "configured_budget_ms": 180000,
+      "runtime_status": "timedOut",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 184462,
+      "retry": 0,
+      "steps": [],
+      "reached": [
+        "real installation/enrollment completed",
+        "Workbench rendered",
+        "one workbench-command/sf_case_draft POST emitted",
+        "uncertain creation locks fields and offers Retry same creation"
+      ],
+      "not_reached": [
+        "successful creation receipt",
+        "catalog read",
+        "domain JSON vs HTML oracle"
+      ],
+      "failure": "original case budget exhausted while creation remains unconfirmed; later catalog assertions not reached",
+      "http_status": "NOT_OBSERVED",
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "sha256": "63e8f380a1a4312ca4080e839a38ec250ce83c2d94efb46521af5d5ca8de6eae",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/test-failed-1.png"
+        },
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "sha256": "a1116881a872113d8b195698174c8268bc5d1f072e5256ff8d4ba7c32631d927",
+          "embedded_source": {
+            "member": "test-ci-evidence/playwright-runtime.json",
+            "attachment": "decisions-observations.json",
+            "spec_line": 87,
+            "decoded_content_sha256": "a1116881a872113d8b195698174c8268bc5d1f072e5256ff8d4ba7c32631d927"
+          }
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "sha256": "9159d0e250e85a8b11782aaf0f168f0ac734b17367c3e87d2f55f8639507de55",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "sha256": "578f16504ccf4ebfade21f8a71766a58e6fb2e9c0c8d68a464dc67238877b754",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 135,
+      "configured_budget_ms": 180000,
+      "runtime_status": "timedOut",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 184768,
+      "retry": 0,
+      "steps": [],
+      "reached": [
+        "real installation/enrollment completed",
+        "Workbench rendered",
+        "creation form contains user input and shows unconfirmed/locked status"
+      ],
+      "not_reached": [
+        "confirmed controlled loss of committed creation response",
+        "same-case read recovery",
+        "no-resubmit completion oracle"
+      ],
+      "failure": "original case budget exhausted; no observations attachment, so response-loss hook completion and request count are not evidenced",
+      "http_status": "NOT_OBSERVED",
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "sha256": "63e8f380a1a4312ca4080e839a38ec250ce83c2d94efb46521af5d5ca8de6eae",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-74dca-e-case-without-resubmitting-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "sha256": "941e3d4f52aa7848258e37bb3af8c57140b0abe14ce7e290f24daba374137822",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-74dca-e-case-without-resubmitting-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "sha256": "9a7eca9f52d358754703becfa8bc7dcdfed530f763197be400d90c05026c73e5",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-74dca-e-case-without-resubmitting-chromium/error-context.md"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "No trace or HAR archive in artifact",
+    "No transfer to later C19 or control mission53",
+    "No pass for nominal journeys",
+    "Financial approval contract blocker was not reached: earlier Procurement queue failure owns observed failure"
+  ],
+  "schema": "sf2-mission52-hosted-observation-v1",
+  "source_at_dispatch": "19a69145e2b4e938c1abf50985488fdb714a4e56",
+  "Wtree": "8563e04f8751ed786ccdbc086ed6566c410af3fe",
+  "Stree": "4cb500603291c7a73c9ed6b86db6c502230468cc",
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "packages/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/decisions.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654219902",
+  "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654219902/artifacts/14137344442",
+  "original_contract": {
+    "spec_blob": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+    "titles": [
+      "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+    ],
+    "per_case_budgets_ms": [
+      180000,
+      180000,
+      180000,
+      180000,
+      180000
+    ],
+    "retries": 0,
+    "workers": 1,
+    "repeatEach": 1,
+    "trace": "off",
+    "added_skips": 0,
+    "added_replacements": 0,
+    "scope": "Static preservation verification; runtime outcome is owned by Playwright report."
+  }
+}

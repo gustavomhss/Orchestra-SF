@@ -1,0 +1,164 @@
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..d4806a864d09ad2dea87df086f12ee743d54af3d 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
+@@ -0,0 +1,24 @@
++import type { Locator, Page, Request, Response } from "@playwright/test"
++
++/** Observe the original UI request. A transport failure cannot produce a later response. */
++export async function clickForResponse(page: Page, button: Locator, matches: (request: Request) => boolean) {
++  const pending = Promise.withResolvers<Response>()
++  const matching = (request: Request) => {
++    try { return matches(request) } catch (error) { pending.reject(error); return false }
++  }
++  const responded = (response: Response) => {
++    if (matching(response.request())) pending.resolve(response)
++  }
++  const failed = (request: Request) => {
++    if (matching(request)) pending.reject(new Error(`The original UI request failed before a response: ${request.failure()?.errorText ?? "requestfailed"}`))
++  }
++  page.on("response", responded)
++  page.on("requestfailed", failed)
++  try {
++    const [response] = await Promise.all([pending.promise, button.click()])
++    return response
++  } finally {
++    page.off("response", responded)
++    page.off("requestfailed", failed)
++  }
++}
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
+index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..d4e36f9a5ca4885f5432bdfef8c9c99bf059a6f6 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
+@@ -1,5 +1,6 @@
+ import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+ import { startPlannerInstallation } from "../wp03/installation-fixture"
++import { clickForResponse } from "./command-response"
+ 
+ export const draft = {
+   objective: "CI Decisions — annual service decision",
+@@ -42,17 +43,38 @@
+       ...(body && typeof body === "object" && "operation" in body && typeof body.operation === "string" ? { operation: body.operation } : {}),
+       ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
+   }
++  const network: Record<string, unknown>[] = []
++  const selected = (request: Request) => {
++    const url = new URL(request.url())
++    return url.origin === installation.origin && ["/sucafina/dashboard", "/sucafina/planner", "/sucafina/procurement"].includes(url.pathname)
++  }
++  const responseListener = (response: Response) => {
++    if (!selected(response.request())) return
++    const url = new URL(response.url())
++    network.push({ event: "response", method: response.request().method(), path: url.pathname, mode: url.searchParams.get("sf"),
++      httpStatus: response.status(), contentType: response.headers()["content-type"] ?? "" })
++  }
++  const failureListener = (request: Request) => {
++    if (!selected(request)) return
++    const url = new URL(request.url())
++    network.push({ event: "requestfailed", method: request.method(), path: url.pathname, mode: url.searchParams.get("sf"),
++      error: request.failure()?.errorText ?? "requestfailed" })
++  }
+   page.on("request", listener)
++  page.on("response", responseListener)
++  page.on("requestfailed", failureListener)
+   try {
+     await page.context().addCookies([installation.cookie])
+     await action(installation, observations)
+     body.completed = true
+   } finally {
+     page.off("request", listener)
++    page.off("response", responseListener)
++    page.off("requestfailed", failureListener)
+     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
+     try {
+       await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
+-        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests,
++        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, network,
+         verdict: "The Playwright runtime report owns the terminal test result.",
+         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
+       }, null, 2) })
+@@ -86,9 +108,7 @@
+ 
+ export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
+   await expect(button).toBeEnabled()
+-  const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
+-  await button.click()
+-  const response = await pending
++  const response = await clickForResponse(page, button, (request) => isCommand(request, mode, method))
+   return readReply(response, observations)
+ }
+ 
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
+index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..c8a8ea0072624e78833bd87a6819a3fcb83a1ed9 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
+@@ -1,5 +1,6 @@
+ import { expect, type Locator, type Page } from "@playwright/test"
+ import { asRecord } from "./journey"
++import { clickForResponse } from "./command-response"
+ 
+ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
+ 
+@@ -79,9 +80,7 @@
+ 
+ async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
+   await expect(button).toBeEnabled()
+-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
+-  await button.click()
+-  const response = await pending
++  const response = await clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action)
+   expect(response.status()).toBe(200)
+   expect(response.headers()["content-type"]).toContain("application/json")
+   const result = asRecord(await response.json())
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
+index c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e..9fe64294027cf6805ff8e7ba4b7cfac83455de85 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
+@@ -1,4 +1,4 @@
+-import { expect, type Page } from "@playwright/test"
++import { expect, type Page, type Request } from "@playwright/test"
+ 
+ type PausedResponse = {
+   requestId: string
+@@ -11,7 +11,13 @@
+ export async function loseCreationResponse(page: Page, origin: string) {
+   const session = await page.context().newCDPSession(page)
+   const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
++  const state = { responsePaused: false }
++  const failed = (request: Request) => {
++    if (request.url() === `${origin}/sucafina/dashboard?sf=workbench-command` && request.method() === "POST" && !state.responsePaused)
++      completed.reject(new Error(`Creation failed before the original response could be intercepted: ${request.failure()?.errorText ?? "requestfailed"}`))
++  }
+   const listener = async (event: PausedResponse) => {
++    state.responsePaused = true
+     try {
+       const payload: unknown = event.request.postData ? JSON.parse(event.request.postData) : undefined
+       expect(event.request.url).toBe(`${origin}/sucafina/dashboard?sf=workbench-command`)
+@@ -27,7 +33,8 @@
+       completed.reject(error)
+     }
+   }
++  page.on("requestfailed", failed)
+   session.once("Fetch.requestPaused", listener)
+   await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=workbench-command`, requestStage: "Response" }] })
+-  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
++  return { completed: completed.promise, close: async () => { page.off("requestfailed", failed); await session.send("Fetch.disable"); await session.detach() } }
+ }
+diff --git a/packages/app-shell/e2e/sucafina/decisions.spec.ts b/packages/app-shell/e2e/sucafina/decisions.spec.ts
+index 2d9c867af87fa0a26b182365b1780232b49bcaf9..b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf 100644
+--- a/packages/app-shell/e2e/sucafina/decisions.spec.ts
++++ b/packages/app-shell/e2e/sucafina/decisions.spec.ts
+@@ -146,9 +146,8 @@
+       // CDP pauses the original browser response, after the real handler committed.
+       // It neither issues an APIRequest/route.fetch nor supplies a synthetic response.
+       const failed = page.waitForEvent("requestfailed", { predicate: (request) => isCommand(request, "workbench-command") })
+-      const observed = Promise.all([interruption.completed, failed])
+-      await form.getByRole("button", { name: "Create decision", exact: true }).click()
+-      const [lost] = await observed
++      const [lost] = await Promise.all([interruption.completed, failed,
++        form.getByRole("button", { name: "Create decision", exact: true }).click()])
+       observations.push({ stage: "creation-response-dropped", httpStatus: lost.httpStatus, contentType: lost.contentType })
+       expect(lost.httpStatus).toBe(200)
+       expect(lost.contentType).toContain("application/json")
