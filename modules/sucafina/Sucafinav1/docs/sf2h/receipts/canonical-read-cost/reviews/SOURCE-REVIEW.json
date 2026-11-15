@@ -1,0 +1,79 @@
+{
+  "schema": "sf2h.canonical-read-cost.independent-source-review.v1",
+  "mission": 76,
+  "reviewer": "ci_contract",
+  "scope": "Bounded independent cold review of the published result-store candidate and diagnostic/regression source; no global campaign review.",
+  "status": "SOURCE_SEMANTICS_PASS_RUNTIME_QUALIFICATION_PENDING",
+  "independence": {
+    "product_authorship": false,
+    "test_authorship": false,
+    "product_or_test_edits": false,
+    "local_test_execution": false,
+    "remote_mutations": false
+  },
+  "source": {
+    "commit": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "tree": "fd815bff71b812debd0a7773e33060fe21427e55"
+  },
+  "validation": {
+    "commit": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "tree": "51fedc4707ccb553e95658720678562390e16edc"
+  },
+  "baseline_source": {
+    "commit": "c9285ddf74eb4260162f6040226e4745dab184ff",
+    "tree": "2d60474a9782481e88d5d1a5e574fe8d9787f371"
+  },
+  "baseline_validation": {
+    "commit": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12",
+    "tree": "88e78f1578e1e5393d34c372f2cfb8852ea052cf"
+  },
+  "reviewed_sha256": {
+    "product/decisions/result-store.ts": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de",
+    "test/product/canonical-read-cost/calculation-fixture.ts": "bc6dcec62f41d61d2d5174fa8a3ce55ed7f7bdaa7ffcdc89043335e0aa9af777",
+    "test/product/canonical-read-cost/calculation-sources.test.ts": "9c693c846ea02db4476d6582e13495a3eb45291cfa44257cc521aa64793ac8ac",
+    "test/product/canonical-read-cost/diagnostic-cost.test.ts": "c5fdcdaf84e986fb00d2148f9ccd878cb27d14bff22d284e08a6590b10a82eb6",
+    "test/product/canonical-read-cost/diagnostic-expected.ts": "58c88ca60fbc80ca294cbf8878ee481848644edd6717da33eb56e3ab0c3283a6",
+    "test/product/canonical-read-cost/diagnostic-fixture.ts": "0853f2a63ea2d0f11ff2630107cb98884ea8f47755b7e811aa5ee46852ce1939",
+    "test/product/canonical-read-cost/diagnostic-probe.ts": "17b51edde620637193b92c581e38d67d81aea0cfd29bf1c4a0a02accca058860"
+  },
+  "reviewed_blobs": {
+    "product/decisions/result-store.ts": "c76d9bc385a4b5102b756812b778c844f20ab733",
+    "test/product/canonical-read-cost/calculation-fixture.ts": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+    "test/product/canonical-read-cost/calculation-sources.test.ts": "7013df4178b57b6ea55c55e223749904008095a0",
+    "test/product/canonical-read-cost/diagnostic-cost.test.ts": "8f0051c478d0ade11b044d95e2928206a008308a",
+    "test/product/canonical-read-cost/diagnostic-expected.ts": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+    "test/product/canonical-read-cost/diagnostic-fixture.ts": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+    "test/product/canonical-read-cost/diagnostic-probe.ts": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f"
+  },
+  "findings": [
+    "Scalar and batch latest-result digests are retained only at the original guarded comparison point. Complete observations remain private structured clones; external case/source callbacks receive separate clones.",
+    "Scalar publication returns the stored graph already cloned with the complete final envelope. Regressions retain callback/caller isolation and final-envelope getter and clone-failure observability.",
+    "The new final batch case-digest WeakMap is lazy, per-invocation and created only after the independent final envelope clone and sameRequest. Object identity preserves separate latest/final observations. All per-occurrence guards, callbacks and output clones remain.",
+    "The same-version objective-drift regression uses real CAS after the fourth source callback and requires both duplicate occurrences to be denied after three fresh C08 reads. It distinguishes full content comparison from version-only validation.",
+    "Source union keeps complete canonical reference equality and first-occurrence order. Separate calculation-path work counters and replay/refusal controls qualify it; it is not treated as evidence of P03-path improvement.",
+    "The diagnostic preserves C08 reader/work identity, both persistence callback arguments, receivers, original primitive implementations and returned promises. Numeric-only spy history accounting and entry/phase/report clears replace B0's unbounded framework recording.",
+    "The diagnostic includes an unsupported-canonical-value preflight to check exception preservation through active-call spy clearing. Runtime confirmation remains required.",
+    "C08 opaque reads and criterion-comparison's independent observations and replay remain unchanged. No rejected58 projection or foreign product/workflow modification is present."
+  ],
+  "materiality_judgment": {
+    "state": "CONDITIONAL_ON_B2_R1",
+    "criterion": "A measured structural reduction of redundant full-graph producer traversals, with equivalent outputs, callbacks and negative controls, is sufficient to qualify one original P03 under the mission's stated rule; no new elapsed-time or percentage threshold is invented.",
+    "limits": "This is bounded producer-work materiality, not evidence that the dominant composed P03 cost is fixed. Preserve the larger unresolved C08 and Planner-verifier callsites in the handoff.",
+    "B0": "Unbounded spy history contaminates B0 timing and memory comparisons. Use only revised identical B2/R1 observer/test bytes for qualification; do not claim a product heap bound."
+  },
+  "remote_scope_checks": {
+    "B2W_to_W1_exactly_two_files": true,
+    "fixed_diagnostic_regression_files_identical": true,
+    "source_paths_all_owned": true,
+    "V1_exact_complete_readonly59_bundle": true
+  },
+  "remaining_requirements": [
+    "R1 must confirm exact removed work, stable functional output digests and unchanged callback/fence behavior against B2, with observer availability, exception preservation, pending=0 and cleared-history residuals.",
+    "A45 must qualify the exact V1 composition, including readonly59's contract dependency.",
+    "Only after material candidate/regressions qualify may one original P03 run with all 72 assertions and 180000 ms unchanged. Its result and any failure remain independent evidence."
+  ],
+  "remaining_static_blockers": [],
+  "runtime_qualification": "PENDING_B2_R1_AND_A45",
+  "p03_status": "NOT_REVIEWED",
+  "GLOBAL_RELEASE": false
+}

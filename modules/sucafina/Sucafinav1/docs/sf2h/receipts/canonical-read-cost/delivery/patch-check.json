@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.canonical-read-cost.patch-check.v1",
+  "result": "PASS_TEXT_RECONSTRUCTION",
+  "method": "git apply --check and apply on isolated partial preimage tree; Python Git blob verification. No product code, tests, typechecks or guards executed. No remote git operations.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "expected": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "actual": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+      "expected": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+      "actual": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "expected": "7013df4178b57b6ea55c55e223749904008095a0",
+      "actual": "7013df4178b57b6ea55c55e223749904008095a0",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "expected": "8f0051c478d0ade11b044d95e2928206a008308a",
+      "actual": "8f0051c478d0ade11b044d95e2928206a008308a",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts",
+      "expected": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+      "actual": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+      "expected": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+      "actual": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+      "expected": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+      "actual": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+      "match": true
+    }
+  ]
+}

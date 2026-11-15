@@ -1,0 +1,90 @@
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+index 23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85..c76d9bc385a4b5102b756812b778c844f20ab733 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+@@ -106,7 +106,11 @@
+     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
+     const latest = structuredClone(again.value)
+     if (historicalRequest && (!latest?.stored || !historicalCalculationMatches(latest.current, latest.stored, historicalRequest, context) || digestSfValue(latest.current) !== digestSfValue(value.current))) return { status: "denied", reason: "historical-calculation-changed" }
+-    if (!latest || !allowedCase(latest.current, value.stored.caseRef, context, historical) || latest.current?.version !== value.current?.version || !latest.stored || digestSfValue(latest.stored) !== digestSfValue(value.stored) || !await authorizeCase(latest.current!, context).catch(() => false) || !await verifySources(latest.stored, calculation && latest.stored.kind === "scenario" ? calculationSources(latest.stored) : latest.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
++    if (!latest || !allowedCase(latest.current, value.stored.caseRef, context, historical) || latest.current?.version !== value.current?.version || !latest.stored) return { status: "denied", reason: "result-access-unavailable" }
++    // This observation is private; every external callback receives another clone.
++    // Retain only its digest until the independent final observation below.
++    const latestDigest = digestSfValue(latest.stored)
++    if (latestDigest !== digestSfValue(value.stored) || !await authorizeCase(latest.current!, context).catch(() => false) || !await verifySources(latest.stored, calculation && latest.stored.kind === "scenario" ? calculationSources(latest.stored) : latest.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+     if (calculation && latest.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(latest.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
+     if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+     // Source replay can await domain reads. Observe the same authorized case and result
+@@ -115,8 +119,10 @@
+     if (final.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
+     const observed = structuredClone(final.value)
+     if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || digestSfValue(observed.current) !== digestSfValue(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
+-    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || digestSfValue(observed.current) !== digestSfValue(latest.current) || !observed.stored || digestSfValue(observed.stored) !== digestSfValue(latest.stored) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "result-access-unavailable" }
+-    return { status: "ok", value: structuredClone(observed.stored) }
++    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || digestSfValue(observed.current) !== digestSfValue(latest.current) || !observed.stored || digestSfValue(observed.stored) !== latestDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "result-access-unavailable" }
++    // The entire final envelope was already cloned, including unselected fields.
++    // No callback or earlier observation retains this returned graph.
++    return { status: "ok", value: observed.stored }
+   }
+   const read = (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext) => readResult(request, context, false)
+   const readForCalculation = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, false, true)
+@@ -174,11 +180,17 @@
+     const again = await observe()
+     if (again.status !== "ok") return failRemaining(unavailable())
+     const latest = structuredClone(again.value)
++    const latestDigests: (string | undefined)[] = []
+     for (const index of references.keys()) {
+       if (failures[index]) continue
+       const value = values?.[index]
+       const current = latest?.[index]
+-      if (!value || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || current.current?.version !== value.current?.version || digestSfValue(current.stored) !== digestSfValue(value.stored) || !await authorizeCase(current.current!, context).catch(() => false) || !await verifySources(current.stored, current.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) {
++      if (!value || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || current.current?.version !== value.current?.version) {
++        failures[index] = denied()
++        continue
++      }
++      latestDigests[index] = digestSfValue(current.stored)
++      if (latestDigests[index] !== digestSfValue(value.stored) || !await authorizeCase(current.current!, context).catch(() => false) || !await verifySources(current.stored, current.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) {
+         failures[index] = denied()
+         continue
+       }
+@@ -193,13 +205,24 @@
+     if (final.status !== "ok") return failRemaining(unavailable())
+     const observed = structuredClone(final.value)
+     if (!sameRequest()) return failRemaining(denied())
++    // Siblings may share a case inside each private cloned observation. Hash
++    // each object only when its final comparison is reached; never join phases.
++    const caseDigests = new WeakMap<object, string>()
++    const caseDigest = (value: unknown) => {
++      if (!value || typeof value !== "object") return digestSfValue(value)
++      const prior = caseDigests.get(value)
++      if (prior !== undefined) return prior
++      const digest = digestSfValue(value)
++      caseDigests.set(value, digest)
++      return digest
++    }
+     return references.map((_, index): PortResult<StoredDecisionResult> => {
+       const failure = failures[index]
+       if (failure) return failure
+       const value = values?.[index]
+       const previous = latest?.[index]
+       const current = observed?.[index]
+-      if (!value || !previous || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || digestSfValue(current.current) !== digestSfValue(previous.current) || digestSfValue(current.stored) !== digestSfValue(previous.stored)) return denied()
++      if (!value || !previous || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || caseDigest(current.current) !== caseDigest(previous.current) || digestSfValue(current.stored) !== latestDigests[index]) return denied()
+       return { status: "ok", value: structuredClone(current.stored) }
+     })
+   }
+@@ -269,7 +292,13 @@
+ }
+ 
+ function calculationSources(value: Extract<StoredDecisionResult, { kind: "scenario" }>) {
+-  return [...value.sourceRefs, ...value.result.sourceRefs, ...value.result.costCoverage.evaluatedSourceRefs, ...value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, refs) => refs.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
++  const seen = new Set<string>()
++  return [...value.sourceRefs, ...value.result.sourceRefs, ...value.result.costCoverage.evaluatedSourceRefs, ...value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref) => {
++    const digest = digestSfValue(ref)
++    if (seen.has(digest)) return false
++    seen.add(digest)
++    return true
++  })
+ }
+ 
+ function sameAuthority(authority: { principalRef: string; policyVersion: string; accessRevision: string }, context: TrustedDomainContext) {
