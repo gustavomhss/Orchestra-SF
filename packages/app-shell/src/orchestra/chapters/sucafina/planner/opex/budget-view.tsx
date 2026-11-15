@@ -21,9 +21,10 @@ import type { SfCopyKey, SfUiState, SfMessage } from "../../shared/frame"
 import { SfMonthlyGrid } from "../../shared/monthly-grid"
 import type {
   SfGridCell, SfDraftCell, SfMonth, SfMonthId, SfPasteRequest, SfPasteRow,
-  SfPasteState, SfCellCoordinate, SfColumn,
+  SfPasteState, SfCellCoordinate,
 } from "../../shared/monthly-grid"
 import { SfStatePanel } from "../../shared/states"
+import type { SfColumn } from "../../shared/monthly-grid/types"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewField } from "../../shared/change-review"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
@@ -92,6 +93,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     pasteInput: null as SfPlannerMonthlyDraftInput | null,
     review: null as Review | null,
     closedChoice: 0,
+    draftRevision: 0,
   })
   const editors = new Map<string, SfPublicDraftController<Edit>>()
   const monthlyDrafts = new Map<string, SfPublicDraftController<Readonly<Record<string,string>>>>()
@@ -129,8 +131,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   const pageQuery = () => ({
     ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
     ...(props.route.query.version ? { version: props.route.query.version } : {}),
-    ...(props.route.query.mode === undefined ? {} : { mode: props.route.query.mode }),
-    ...(props.route.query.q === undefined ? {} : { q: props.route.query.q }),
+    ...(props.route.query.filter === undefined ? {} : { q: props.route.query.filter }),
   })
   const reload = () => setState("refresh", (n) => n + 1)
 
@@ -278,18 +279,19 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     return result
   })
   const sourceMonths = createMemo<readonly SfMonth[]>(() => Array.from({length:12}, (_, index) => ({
-    id: index as SfMonthId, labelKey: key("sf.u07.month." + (index+1)),
+    id: index as SfMonthId, labelKey: ("sf.u07.month." + (index+1)) as SfMonth["labelKey"],
     closed: index < (grid()?.closedThrough ?? 0),
   })))
   const columns: readonly SfColumn<GridRow>[] = [{
-    id: "line", labelKey: key("sf.u07.columns.line"), align: "start",
+    id: "line", labelKey: "sf.u07.columns.line" as SfColumn<GridRow>["labelKey"], align: "start",
     widthPolicy: { kind: "flex", minPx: 160, weight: 1 },
     render: (row) => <span title={row.id}>{row.label}</span>,
   },{
-    id: "currency", labelKey: key("sf.u07.columns.currency"), align: "center",
+    id: "currency", labelKey: "sf.u07.columns.currency" as SfColumn<GridRow>["labelKey"], align: "center",
     widthPolicy: { kind: "fixed", px: 64 }, render: (row) => <span>{row.currency}</span>,
   }]
   const draftCells = createMemo<readonly SfDraftCell[]>(() => {
+    state.draftRevision
     if (!state.page || !grid()) return []
     const result: SfDraftCell[] = []
     for (const row of grid()!.rows) {
@@ -312,8 +314,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       c.permission.editable)) return
     const ctrl = getCellDraft(row)
     const snapshot = ctrl?.snapshot()
-    if (snapshot?.availability === "active")
+    if (snapshot?.availability === "active") {
       ctrl?.edit({ ...snapshot.value, [cellKey(event.coordinate)]: event.text })
+      setState("draftRevision", (n) => n + 1)
+    }
   }
   const previewRows = async (input:SfPlannerMonthlyDraftInput, original: SfPasteState) => {
     const ready = owner.ready()
@@ -427,7 +431,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     if (revision === undefined || !Number.isSafeInteger(revision) || !allowed(action)) return
     setState("review",{kind,id,revision,operationRef:crypto.randomUUID() as SfOperationRef,...extras})
   }
-  const fields = (values:Readonly<Record<string,string|number|boolean>>) =>
+  const fields = (values: object) =>
     Object.entries(values).map(([path,value]):SfReviewField => ({
       path, label: msg("sf.u07." + path), value: textual(String(value)),
     }))
@@ -609,7 +613,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                   onApplyPastedRows={(rows)=>void applyPaste(rows)}
                   onRetryFailedPasteRows={retryFailedPaste}
                   onCancelPaste={()=>setState({paste:{phase:"idle"},pasteInput:null})}
-                  onNavigate={(event)=>setState("selection",event.from)}
+                  onNavigate={navigateCell}
                   onEdit={editCell} onCommitCell={editCell} onCancelCell={()=>undefined}
                   onOpenRow={(rowRef)=>setState("selected",String(rowRef))}
                   readOnlyReason={allowed("save")?undefined:msg("sf.u07.statusReadonly")}
