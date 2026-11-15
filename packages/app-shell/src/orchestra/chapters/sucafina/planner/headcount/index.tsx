@@ -11,7 +11,8 @@ import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import type { SfOperationRef, SfRef, SfEditScopeKey, SfIntentRef } from "@orchestra/schema/sucafina/context"
 import { useLanguage } from "@/context/language"
 import { SfPageFrame } from "../../shared/frame"
-import type { SfCopyKey, SfUiState, SfMessage, SfReviewField } from "../../shared/frame"
+import type { SfCopyKey, SfUiState, SfMessage } from "../../shared/frame"
+import type { SfReviewField } from "../../shared/change-review"
 import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
@@ -45,7 +46,7 @@ const toPositionForm = (position: Position): PositionForm => ({
     ? "" : String(position.rateOverride),
 })
 const toRateForm = (rate: Rate): RateForm => ({
-  name: rate.name, locs: Array.isArray(rate.locs) ? rate.locs.join(", ") : rate.locs ?? "",
+  name: rate.name, locs: typeof rate.locs === "string" ? rate.locs : Array.isArray(rate.locs) ? rate.locs.join(", ") : "",
   cur: rate.cur, annual: rate.annual === null ? "" : String(rate.annual),
 })
 const money = (value: number | null | undefined, currency: string, locale: string) =>
@@ -96,6 +97,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   const rate = () => state.page?.data.rates?.find((r) => r.id === state.recordId)
   const currentYear = () => state.page?.selection.year ?? props.route.query.year
   const currentForm = () => pos() ? positionDraft(pos()!)?.snapshot() : undefined
+  const activePosition = () => { const snapshot = currentForm(); return snapshot?.availability === "active" ? snapshot : undefined }
 
   const positionDraft = (p: Position): SfPublicDraftController<PositionForm> | undefined => {
     const ready = owner.ready()
@@ -272,7 +274,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
           values: {
             versionId, collection: "positions", name: next.name, type: next.type, location: next.location,
             include: next.include, fte, start, end, domain: next.domain, rateId: next.rateId,
-            rateOverride,
+            ...(p.rateOverride !== undefined ? { rateOverride } : {}),
           },
         }, { signal: ctrl.signal, idempotencyKey })
       } else if (review.kind === "position-delete") {
@@ -296,7 +298,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
         const form = state.increaseForm
         const inc = form ? numerically(form.inc) : undefined
         const incMonth = form ? numerically(form.incMonth) : undefined
-        if (inc === undefined || !Number.isInteger(incMonth) || !incMonth || incMonth < 1 || incMonth > 12) {
+        if (inc === undefined || incMonth === undefined || !Number.isInteger(incMonth) || incMonth < 1 || incMonth > 12) {
           setState("error", t("sf.common.fieldErrorSummary")); return
         }
         response = await client["domain.command.CAP20.save"]({
@@ -376,12 +378,13 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                       setState({ pageVersion: id, page: null, phase: "loading" })
                       const ready = owner.ready()
                       if (!ready) return
+                      const generation = owner.generation()
                       const abort = new AbortController()
                       void createSfPlannerClient(ready.transport)["domain.page.CAP20"](
                         { ...(currentYear() === undefined ? {} : { year: currentYear() }), version: id },
                         { signal: abort.signal },
                       ).then((reply) => {
-                        if (reply.kind === "response" && reply.body.status === "ok" && owner.ready() === ready)
+                        if (reply.kind === "response" && reply.body.status === "ok" && owner.generation() === generation && owner.ready()?.context.stamp.accessRevision === ready.context.stamp.accessRevision)
                           setState({ page: reply.body.value, phase: "ready" })
                         else setState("phase", "unavailable")
                       }).catch(() => setState("phase", "unavailable"))
@@ -437,7 +440,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                         <div class="sf-u08-fields">
                           <For each={["name","type","location","domain","rateId"] as const}>{(field) =>
                             <label>{t("sf.u08." + field)}
-                              <input value={(currentForm()?.availability === "active" ? currentForm()!.value[field] : "") ?? ""}
+                              <input value={activePosition()?.value[field] ?? ""}
                                 disabled={readOnly()} onInput={(e) => {
                                   const draft = positionDraft(selected())
                                   const snapshot = draft?.snapshot()
@@ -450,7 +453,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                               <input type="number" step={field === "fte" ? "0.01" : "1"}
                                 min={field === "fte" ? "0" : "1"}
                                 max={field === "fte" ? "2" : "12"}
-                                value={currentForm()?.availability === "active" ? currentForm()!.value[field] : ""}
+                                value={activePosition()?.value[field] ?? ""}
                                 disabled={readOnly()} onInput={(e) => {
                                   const draft = positionDraft(selected())
                                   const snapshot = draft?.snapshot()
@@ -461,7 +464,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                           <Show when={page().data.rates !== undefined && selected().rateOverride !== undefined}>
                             <label>{t("sf.u08.rateOverride")}
                               <input type="number" step="any"
-                                value={currentForm()?.availability === "active" ? currentForm()!.value.rateOverride : ""}
+                                value={activePosition()?.value.rateOverride ?? ""}
                                 disabled={readOnly()} onInput={(e) => {
                                   const draft = positionDraft(selected())
                                   const snapshot = draft?.snapshot()
@@ -469,7 +472,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                                 }} />
                             </label>
                           </Show>
-                          <label><input type="checkbox" checked={currentForm()?.availability === "active" && currentForm()!.value.include}
+                          <label><input type="checkbox" checked={activePosition()?.value.include ?? false}
                             disabled={readOnly()} onChange={(e) => {
                               const draft = positionDraft(selected())
                               const snapshot = draft?.snapshot()
@@ -480,7 +483,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                         </div>
                         <p>{t("sf.u08.restricted")}</p>
                         <div class="sf-u08-actions">
-                          <button type="submit" class="mx-btn primary" disabled={readOnly() || !currentForm()?.dirty}>
+                          <button type="submit" class="mx-btn primary" disabled={readOnly() || !activePosition()?.dirty}>
                             {t("sf.common.review")}
                           </button>
                           <button type="button" class="mx-btn" disabled={state.busy}
@@ -596,12 +599,12 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
           <SfChangeReview
             operation={{ ref: current().operationRef, label: msg("sf.cap20.primary"),
               scope: { kind: "data", text: currentVersion() } }}
-            base={{ kind: "persisted", ref: ("id" in current() ? current().id : currentVersion()) as SfRef,
+            base={{ kind: "persisted", ref: ("id" in current() ? (current() as {id: string}).id : currentVersion()) as SfRef,
               version: current().version, fields: reviewFields() }}
-            current={{ kind: "persisted", ref: ("id" in current() ? current().id : currentVersion()) as SfRef,
+            current={{ kind: "persisted", ref: ("id" in current() ? (current() as {id: string}).id : currentVersion()) as SfRef,
               version: current().version, fields: reviewFields() }}
             proposed={{ kind: "draft", intentRef: current().operationRef as unknown as SfIntentRef,
-              sourceRef: ("id" in current() ? current().id : currentVersion()) as SfRef,
+              sourceRef: ("id" in current() ? (current() as {id: string}).id : currentVersion()) as SfRef,
               sourceVersion: current().version, fields: proposedFields() }}
             effects={[]}
             coverage={{ state: "complete", summary: msg("sf.u08.scope"), reasons: [], knownCount: 1, expectedCount: 1 }}
