@@ -29,6 +29,7 @@ export const SF_U31_COPY = {
   "sf.u31.name": "Name",
   "sf.u31.contractName": "Contract name",
   "sf.u31.ownerDashboard": "Owner Dashboard",
+  "sf.u31.role": "Role",
   "sf.u31.saveContract": "Save contract",
   "sf.u31.saveItem": "Save item",
   "sf.u31.deleteItem": "Delete item",
