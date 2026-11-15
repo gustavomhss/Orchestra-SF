@@ -1,0 +1,172 @@
+{
+  "schema": "sf2h.closure195.artifact.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 195,
+  "orders": [
+    "U39",
+    "U40"
+  ],
+  "surfaces": [
+    "CAP04",
+    "CAP05"
+  ],
+  "epoch": "source-closure-e1-browser195",
+  "status": "ARTIFACT_READY_BLOCKED_INTEGRATION_AND_INSTALLED_VALIDATION",
+  "branch": "sf-ux-n13",
+  "pr": 150,
+  "expected_head_initial": "7534cb39a2024f5c4d258845a874e82156cb343d",
+  "authority": {
+    "source_packet_commit": "e027e7ba4141d42075714939f8d9f686b1fec157",
+    "source_packet_blob": "147670b7a63461df6f09d9b6e6910e40541ca777",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/S0-FENCE.json",
+    "fence_pre_post_blob": "159d298f54a71d8981c422053f3e8d2d31b31e30",
+    "previous": 186,
+    "previous_epoch_revoked_for_future_writes": true,
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_exposure": "NOT_EXPOSED",
+    "github_login_not_native_identity": true
+  },
+  "source": {
+    "canonical_planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "u39_order": "7c4fa620fbded6226a0bfc5e5aa16553d6d47ee6",
+    "u40_order": "8f9e0e021b1871054be0d371f0f717a5bbd42d36",
+    "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "f04_contract_commit": "96c01020db59d9b4f8d44300638418d67ee11fea",
+    "f04_source_commit": "2fb480328fc316259b7a22d58513f9a241058d8a",
+    "f04_fixture": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12",
+    "f04_journey": "66e269a78af8262764228557e2eeccd29bca1a36",
+    "f04_readiness": "3cbd63012f43c43bbbe3d2c66c03fd2ded6343f9",
+    "product_budget_model": "a21b1fc6b3cdceec6e666d8d7d8fa760911f2668",
+    "product_budget_surface": "ed94efe4d919eb80e4592057170d03c4b2348eb6"
+  },
+  "commits": [
+    {
+      "sha": "87fb1a3be33b9afa91a6de3be9d4ea8fd5d1da19",
+      "tree": "451605661ed69fb37d2b8b01dc1eb9c11f9201ea",
+      "type": "AUTHENTICATED_DASHBOARD_SPECS",
+      "cas": "PASSED_FORCE_FALSE"
+    },
+    {
+      "sha": "5d8e2a00895abea3bbfb0ce97ea9c514f79bbd50",
+      "tree": "99c79ebdb0e60332147f0fbe7081ed86b8d70425",
+      "type": "DIRECT_F04_REQUIR_NATIVE_JOURNEY",
+      "cas": "PASSED_FORCE_FALSE"
+    }
+  ],
+  "paths": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "pre": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "post": "285db9bfdd046366f8fd814991f9f0724eff445f",
+      "output": "U39",
+      "complete_source_spec": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "pre": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "post": "83ee904b4ecf79248410a7714bb63ed7baf4aaf5",
+      "output": "U40",
+      "complete_source_spec": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/HANDOFF-189.md",
+      "pre": null,
+      "post": "dfaf4128f1a98d22167e2bcf2f94b2e6fb513e34"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/VALIDATION-REQUEST-191.json",
+      "pre": null,
+      "post": "04a0c3587ddc7e1a6cf396ab80bb4a7205b8a474"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/START195.json",
+      "pre": null,
+      "post": "992d2426d8b724c4799fa47eb32e587f27324896"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/ARTIFACT.json",
+      "pre": null,
+      "post": "SELF_IDENTIFIED_BY_GIT_COMMIT_TREE"
+    }
+  ],
+  "behavior": [
+    "Real F04 nativeJourneyEntryHref and exact chapterHref CAP04/CAP05 year2026",
+    "Original authenticated BrowserContext discovery + SfContext principal mapping requester/holder/dashboardAdmin",
+    "Direct requireNativeJourney with intent read or edit, year2026, actual canRead/canSave and owner/policy/access revisions",
+    "Separate proveWeb + original context reread and domain.page/save operational readiness",
+    "Exact nativeDashboardCommandTarget matching fixed source page POST; no mutation before review",
+    "Read filter-empty preserves search, real source IDs nonempty, absent annual budget vs numeric zero",
+    "Viewport 320/768/1024/1280/1440 and font 200%/400% controls visible"
+  ],
+  "test_specs": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "cases": 3,
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "cases": 3,
+      "execution": "NOT_RUN"
+    }
+  ],
+  "criteria": {
+    "U39-AC01": "SOURCE_ASSERTIONS_AUTHORED_FULL_CRUD_NOT_QUALIFIED",
+    "U39-AC02": "SOURCE_ADMISSION_AND_FILTER_REVIEW_ASSERTIONS_AUTHORED_OWNER_NEGATIVE_LATE_RESPONSE_PENDING",
+    "U39-AC03": "RESPONSIVE_ASSERTIONS_PRESERVED_NOT_RUN_A11Y_PENDING",
+    "U40-AC01": "SOURCE_ASSERTIONS_AUTHORED_FULL_CRUD_NOT_QUALIFIED",
+    "U40-AC02": "SOURCE_ADMISSION_AND_FILTER_REVIEW_ASSERTIONS_AUTHORED_OWNER_NEGATIVE_LATE_RESPONSE_PENDING",
+    "U40-AC03": "RESPONSIVE_ASSERTIONS_PRESERVED_NOT_RUN_A11Y_PENDING"
+  },
+  "evidence": {
+    "github_cas": "SUCCESS",
+    "git_blob_readback": "VERIFIED_AFTER_CODE_COMMIT",
+    "tests": "NOT_RUN",
+    "playwright": "NOT_RUN",
+    "test_collection": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "build": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "parsers": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "real_installed_sessions": "NOT_OBSERVED",
+    "desktop": "NOT_RUN_D01",
+    "run_ids": [],
+    "job_ids": [],
+    "passes_claimed": 0
+  },
+  "integration": {
+    "integrator": "189",
+    "pr": 65,
+    "observed_sf2_stack_head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "observed_sf2_stack_tree": "61b5cfc0df910105a67a344706795b4c3b7d30b7",
+    "observed_stack_preimages_match": true,
+    "candidate_C": "TO_BE_ASSIGNED_BY_INTEGRATOR",
+    "consumer_ack": "PENDING",
+    "next": "189 recheck live stack head/preimages and CAS apply two exact source postblobs; provide installed Microsoft manifest per selected chapter and qualified Dashboard editor, publish C/tree/ACK"
+  },
+  "validation": {
+    "dispatcher": "191",
+    "pr": 106,
+    "request_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/VALIDATION-REQUEST-191.json",
+    "status": "REQUESTED_NOT_DISPATCHED",
+    "when": "AFTER_189_SAME_C_AND_INSTALLED_FIXTURE_READY",
+    "compiler": "190",
+    "compiler_pr": 107
+  },
+  "blockers": [
+    "Real installed production shell and private F04 manifest per CAP04/CAP05 exact chapter",
+    "Authentic Microsoft BrowserContext and admitted CAP04/CAP05 canRead/save, with genuine 4th dashboardAdmin when requester/holder are not admitted",
+    "Original A01 domain.page and domain.command.save operational, real nonempty source records",
+    "189/PR65 not yet acknowledged consumption and C/tree",
+    "191/PR106 not dispatched, 190/PR107 hosted typecheck/guards pending",
+    "Full CRUD/negative/owner/revocation/visual/keyboard/a11y/D01/final canonical gates pending"
+  ],
+  "native_goal": "PAUSED",
+  "global_release": false
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.closure195.source-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 195,
+  "epoch": "source-closure-e1-browser195",
+  "state": "AUTHORING_COMPLETE_HANDOFF_PENDING_CONSUMER",
+  "actor": {
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_status": "NOT_EXPOSED",
+    "github_actor_is_not_native_identity": true
+  },
+  "authority": {
+    "prepared_head": "7534cb39a2024f5c4d258845a874e82156cb343d",
+    "fence_blob": "159d298f54a71d8981c422053f3e8d2d31b31e30",
+    "previous_186": "REVOKED_FOR_FUTURE_WRITES",
+    "allowed_only": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/**"
+    ]
+  },
+  "source": {
+    "code_commit": "5d8e2a00895abea3bbfb0ce97ea9c514f79bbd50",
+    "code_tree": "99c79ebdb0e60332147f0fbe7081ed86b8d70425",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "proof": {
+    "git_CAS": "SUCCESS_EXPECTED_HEAD_FORCE_FALSE",
+    "tests": "NOT_RUN",
+    "playwright": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "build": "NOT_RUN",
+    "browser": "NOT_RUN"
+  },
+  "consumer_ack": "PENDING_189",
+  "request_191": "REQUESTED_NOT_DISPATCHED",
+  "release": false
+}

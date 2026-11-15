@@ -1,0 +1,88 @@
+{
+  "schema": "sf2h.closure195.surgical-validation-request.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 195,
+  "epoch": "source-closure-e1-browser195",
+  "state": "REQUESTED_NOT_DISPATCHED",
+  "role": "SOLE_PRODUCT_CI_DISPATCHER_191",
+  "pr": 106,
+  "branch": "sf-ci-validation",
+  "source": {
+    "branch": "sf-ux-n13",
+    "pr": 150,
+    "code_sha": "5d8e2a00895abea3bbfb0ce97ea9c514f79bbd50",
+    "tree": "99c79ebdb0e60332147f0fbe7081ed86b8d70425",
+    "files": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+        "pre": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+        "post": "285db9bfdd046366f8fd814991f9f0724eff445f",
+        "order": "U39",
+        "capability": "CAP04",
+        "chapterHref": "/orchestra/sf-dashboard/opex?year=2026"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+        "pre": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+        "post": "83ee904b4ecf79248410a7714bb63ed7baf4aaf5",
+        "order": "U40",
+        "capability": "CAP05",
+        "chapterHref": "/orchestra/sf-dashboard/capex?year=2026"
+      }
+    ]
+  },
+  "only_after": {
+    "integrator": "189 / PR65",
+    "candidate": "same material C with two exact postblobs consumed; F04 installed and original A01 producer",
+    "consumer_ack": "PENDING",
+    "observed_stack_head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "resolve_live_head_before_dispatch": true
+  },
+  "selection": {
+    "runner": "existing production Playwright config; dispatcher resolves actual canonical selector",
+    "exact_paths": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts"
+    ],
+    "allow_full_suite": false,
+    "allow_concurrent_dispatch": false,
+    "dedup": [
+      "candidate_sha",
+      "candidate_tree",
+      "runner_and_config",
+      "installed_manifest_fingerprint",
+      "exact_selection",
+      "runtime"
+    ],
+    "zero_collected_cases": "FAIL"
+  },
+  "required_external_inputs": {
+    "GITHUB_ACTIONS": "true",
+    "SF_NATIVE_CANDIDATE_SHA": "must equal C",
+    "SF_NATIVE_INSTALLED_MANIFEST": "absolute private 0600 file inside 0700 real installation root, per exact chapter, no serialized credentials",
+    "target": "existing approved serverKey->connection, original shellOrigin/publicOrigin/mount/installationId/projectId/hostId; discovery/context same original authenticated browser context",
+    "actors": "three genuinely distinct Microsoft principals requester/holder/denied; for edit use genuinely admitted requester/holder or fourth dashboardAdmin browser context with CAP04+CAP05 read and save admitted; actual test page must be that authenticated context",
+    "readiness": "current SfContext stamp principalRef policyVersion accessRevision; canRead/save; domain.page.CAP04/CAP05 ready operational and domain.command.CAP04/CAP05.save ready operational; nonempty original OPEX/CAPEX source records",
+    "runtime": "installed production shell on same C; original producer, no fake tokens, no separate host, no skipped collection"
+  },
+  "report": [
+    "candidate_sha",
+    "candidate_tree",
+    "actual_selector_and_collected_tests",
+    "run_id",
+    "job_id",
+    "pass_fail_per_case",
+    "live_installed_context_and_principal_proof",
+    "same-owner revisions",
+    "read_filter_empty_refs",
+    "zero_vs_absent_no_POST_review",
+    "viewports_and_resize",
+    "precondition_failures_if_any"
+  ],
+  "execution_evidence": "NOT_RUN",
+  "run_ids": [],
+  "job_ids": [],
+  "false_green_prohibited": true,
+  "compiler": "190 / PR107, separate only authorized app-shell typecheck+guards request after C integration",
+  "release": false
+}
