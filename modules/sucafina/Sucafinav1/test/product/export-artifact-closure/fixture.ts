@@ -23,6 +23,7 @@ import { createReviewApplication } from "../../../product/reviews/application.ts
 import type { ReviewAgendaCatalog } from "../../../product/reviews/agenda-picker.ts"
 import type { ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
 import { object, rows } from "../../../runtime/contract.ts"
+import { validReportArtifactMetadata, validateReportArtifact } from "../../../runtime/artifact.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
 import { DashboardPeople } from "../../../runtime/dashboard-people.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
@@ -44,7 +45,8 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
   const clock = { at: "2026-11-13T04:01:10Z" }
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const origin = "https://export-artifact.example.test"
-  const maxBytes = options.maxBytes ?? 1024 * 1024
+  // Match createSfReviewServices' production default (review-services.ts@da98ee9).
+  const maxBytes = options.maxBytes ?? 8 * 1024 * 1024
   const owner = "synthetic-export-owner"
   const sessions: Record<string, { principal: string; memberships: string[]; active: boolean; expiresAt: number }> = {
     owner: { principal: owner, memberships: ["admins"], active: true, expiresAt: Infinity },
@@ -128,6 +130,19 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
       authorizeDecision: async (_call, values) => values.length === 0, authorizeSensitivity: async (_call, values) => values.length === 0 },
     collaboration: { threads: { read: unavailable }, history: { readVersion: unavailable }, authorizeSourceMapping: async () => false, maxMessages: 100 },
   })
+  // Observe the same renderer-issued object after the unchanged storage call.
+  // This cannot issue a seal, change authorization, or replace the returned result.
+  const artifactPut = app.artifacts.put
+  app.artifacts.put = async (entry, call) => {
+    const result = await artifactPut(entry, call)
+    console.log("SF66_ARTIFACT_PUT_OBSERVATION " + JSON.stringify({ format: entry.format, name: entry.artifact.name, media_type: entry.artifact.type,
+      bytes: entry.artifact.bytes.length, sha256: createHash("sha256").update(entry.artifact.bytes).digest("hex"), max_bytes: maxBytes,
+      metadata_valid: validReportArtifactMetadata(entry.artifact, entry.format),
+      valid_at_current_limit: await validateReportArtifact(entry.artifact, entry.format, maxBytes),
+      prior_fixture_max_bytes: 1024 * 1024, valid_at_prior_fixture_limit: await validateReportArtifact(entry.artifact, entry.format, 1024 * 1024),
+      storage_status: result.status, ...(result.status === "ok" ? {} : { storage_reason: result.reason }) }))
+    return result
+  }
   const readScope = protectSfReviewReads({ authority, reviews: app.reviews, localSnapshotReaders: true })
   const discoveryHttp = createSfReviewAgendaHttp({ authority, agenda: discovery, origin })
   const handle = async (request: Request) => await discoveryHttp(request, "dashboard")
