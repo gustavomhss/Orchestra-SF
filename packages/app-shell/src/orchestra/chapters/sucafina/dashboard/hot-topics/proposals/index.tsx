@@ -280,7 +280,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     value: displayValue(item.after),
   })) ?? []
 
-  return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null}
+  return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
     <div class="sf-u38-page" data-sf-surface="UI54">
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
