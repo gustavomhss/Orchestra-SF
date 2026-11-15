@@ -29,6 +29,15 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
     })
   const snapshot = () => session.ready()
   const data = () => snapshot()?.value.data
+  const structureDenied = () => {
+    const active = snapshot()
+    if (!active) return false
+    const destination = active.context.destinations.find((item) =>
+      item.capabilityId === "CAP07" && item.surface === "dashboard")
+    const resource = active.context.availability.find((item) =>
+      item.family === "domain-read" && item.resource === "CAP07")
+    return !destination?.canRead || resource?.state === "denied"
+  }
   const metric = (labelKey: string, value: string | number | undefined) => (
     <Show when={value !== undefined}>
       <div class="sf-people-stat">
@@ -54,12 +63,14 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
           value: { kind: "data", text: String(snapshot()!.value.selection.year ?? "") } },
       ] : []}
       tabs={[]} activeTab={null}
-      // I00/125 owns route builders. The caption is presented, but no leaf
-      // fabricates an owner-aware href or performs an unsafe cross-owner jump.
+      // A valid CAP07 route/permission does not supply an owner-bound SfHref.
+      // Keep this action fail-closed until I00/132 installs the public builder
+      // and native transition; report an actual denied destination as denied.
       primaryAction={{
         id: "open-team-structure", labelKey: key("sf.cap06.primary"),
         tone: "primary", disabled: true, busy: false,
-        reasonKey: sfCommonKey("sf.common.unavailable"), onInvoke: () => undefined,
+        reasonKey: sfCommonKey(structureDenied() ? "sf.common.noAccess" : "sf.common.unavailable"),
+        onInvoke: () => undefined,
       }}
       secondaryActions={[]} density="comfortable" layout="reading"
       onLayoutMode={() => undefined}
