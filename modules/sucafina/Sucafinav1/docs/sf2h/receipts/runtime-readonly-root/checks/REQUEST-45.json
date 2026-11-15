@@ -5,8 +5,8 @@
   "state": "REQUESTED_NOT_RUN_BY59",
   "PR": 72,
   "candidate": {
-    "W": "ba393316f7c7350cdd519068808baafb7edb2393",
-    "tree": "9da06e22fae4445e174771d678934a0bebe4838a",
+    "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
     "branch": "runtime-read-scope",
     "source_base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a"
   },
@@ -71,9 +71,9 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
-      "bytes": 16772,
-      "sha256": "f2e66c9ae663c246879356e0e3d6946855f2436c4c27d121c4c124045abeed29",
-      "blob": "93d0c84699c09bd35a2d73890112630bf20c5832"
+      "bytes": 16782,
+      "blob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+      "sha256": "e5816b6a9aa73bbea88efcde2223afc65e45c1199b2669d460e7bc2edf3e0e3e"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
@@ -91,5 +91,9 @@
   "generated_protocol_change": false,
   "atlas_change": false,
   "limits": "59 did not execute local tests, typechecks or guards. Source test-ci results are a different gate and do not substitute these checks. 45 must pin its exact input/configuration and publish actual results.",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "supersedes": {
+    "W": "ba393316f7c7350cdd519068808baafb7edb2393",
+    "reason": "Same four product blobs; disposal test ordering corrected for the pinned Bun matcher without changing its oracle"
+  }
 }

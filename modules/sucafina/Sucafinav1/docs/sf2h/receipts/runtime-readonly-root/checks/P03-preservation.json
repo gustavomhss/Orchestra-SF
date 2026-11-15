@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h.runtime-readonly-root.p03-preservation.v1",
+  "mission": 59,
+  "source_ref": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+  "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "candidate_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "assertion_lines": 72,
+    "individual_timeout_ms": 180000,
+    "changed": false
+  },
+  "analysis": {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+    "blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+    "release": 54,
+    "changed": false
+  },
+  "runtime56_preimage": {
+    "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+    "all_mutable_paths_preserved": "New readonly-only conditional checks documented separately; no behavior change to roots without readOnly flag"
+  },
+  "rejected_proposals": {
+    "opaque_C08_projection": "NOT_APPLIED",
+    "anchor_swap": "NOT_APPLIED"
+  },
+  "original_semantics": "240000 baseline; omitted training 210000 and selected-minus-baseline -30000; confirmed 40000 training yields250000 and +10000. Both original rules, all ChoiceRecord/history/replay/revocation assertions and full fixture preserved byte-for-byte.",
+  "retry_state": "NOT_REQUESTED_UNTIL_R1_SAFETY_AND_STRUCTURAL_BENEFIT_PASS",
+  "GLOBAL_RELEASE": false
+}
