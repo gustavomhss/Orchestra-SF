@@ -623,9 +623,9 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                   </For>
                 </select>
               </label>
-              <a class="mx-btn" href="/orchestra/sf-imports/new" aria-disabled={!allowed("import-workbook")}>
-                {t("sf.u07.import")}
-              </a>
+              <Show when={allowed("import-workbook")} fallback={<span aria-disabled="true">{t("sf.u07.import")}</span>}>
+                <a class="mx-btn" href="/orchestra/sf-imports/new">{t("sf.u07.import")}</a>
+              </Show>
               <Show when={isOpex()}>
                 <label>{t("sf.u07.period")}
                   <select disabled={!allowed("save")} value={state.closedChoice}
