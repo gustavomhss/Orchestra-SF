@@ -1,0 +1,18 @@
+{
+  "schema": "sf2h.mission67.transport-diagnostic-plan.v1",
+  "status": "NOT_RUN",
+  "rootFinding": "M67-F05-INSTALLED-POST-NO-RESPONSE",
+  "baseW": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+  "productionDelta": "none; only the diagnostic spec and receipts",
+  "scope": "Eight real installed HTTP observations: Node/browser GET, empty POST, malformed nonempty POST, legitimate views list",
+  "expected": "GET200; invalid JSON400; list200ok+array",
+  "diagnosticOnly": true,
+  "businessWrites": 0,
+  "requestDeadlineMs": 15000,
+  "totalTestBudgetMs": 180000,
+  "selection": [
+    "e2e/sucafina/dashboard-installed/transport-probe.spec.ts"
+  ],
+  "config": "e2e/playwright.production.config.ts",
+  "globalRelease": false
+}
