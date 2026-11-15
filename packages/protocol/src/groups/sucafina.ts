@@ -1,4 +1,4 @@
-import { SfInstallationSelector, SfInstallationList } from "@orchestra/schema/sucafina/context"
+import { SfInstallationQuery, SfInstallationList } from "@orchestra/schema/sucafina/context"
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/unstable/httpapi"
 import { InvalidRequestError } from "../errors"
 import { locationQueryOpenApi } from "./location"
@@ -7,7 +7,7 @@ import { locationQueryOpenApi } from "./location"
 export const SucafinaGroup = HttpApiGroup.make("server.sucafina")
   .add(
     HttpApiEndpoint.get("sucafina.installations", "/api/sucafina/installations", {
-      query: SfInstallationSelector,
+      query: SfInstallationQuery,
       success: SfInstallationList,
       error: InvalidRequestError,
     })
