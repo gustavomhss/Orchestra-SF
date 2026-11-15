@@ -1,0 +1,70 @@
+{
+  "schema": "sf2h.p03-boundary-probe.ack.v1",
+  "mission": 109,
+  "state": "ACK_IN_PROGRESS",
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission_ref": "7e56fa8bd9f3ea288ad9625be7b4b2ab8dd56314",
+  "branch": "p03-boundary-probe",
+  "lease_epoch": "p03-probe-browser109",
+  "identity": {
+    "model_effective": "GPT-6",
+    "astra_attestation": false,
+    "session_id": null,
+    "agents_spawned": 0,
+    "transport": "GitHub connected MCP, Git Data CAS expected_sha, force=false",
+    "authenticated_github_actor": "gustavomhss"
+  },
+  "authority": {
+    "writer99_branch": "planner-p03-finish",
+    "writer99_head_observed": "54cff4caf3cbd1d94751009bcfa9564622e926b3",
+    "writer99_lease": "p03-causal-browser99",
+    "integrator106_branch": "sf2-stack",
+    "ci_dispatcher107_branch": "sf-ci-validation",
+    "product_write_authority": false,
+    "owner99_files_untouched": true
+  },
+  "input_refs": {
+    "base_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "base_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "original1": {
+      "run": 43681302722,
+      "job": 132712328135,
+      "conclusion": "failure"
+    },
+    "original2": {
+      "run": 43682515795,
+      "job": 132715983023,
+      "conclusion": "failure"
+    },
+    "causal_R3": {
+      "run": 43682264507,
+      "job": 132715223675,
+      "conclusion": "success"
+    },
+    "F2_product_source": "a3cca4abea8ad81782f97633568fe3a2c0175356",
+    "F2_document_source": "54cff4caf3cbd1d94751009bcfa9564622e926b3",
+    "original_test_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "actor_pack": "execution/actors/S4-B.json@dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "agent_instructions": "AGENTS.md@base; sf2h-plan/START.md,WORKFLOW.md,execution/COMMON.md@dbf9547"
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/p03-boundary-probe/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/p03-boundary-probe/"
+  ],
+  "constraints": [
+    "No edits to owner99 product files",
+    "Original P03 72 assertions, fixture, order and timeout 180000ms remain unchanged",
+    "Only existing hosted GitHub Actions test:ci via dispatcher107; no duplicate P03 run",
+    "C08 and Planner actual ports; independent callback, getters/noncloneables/revocation, drift",
+    "Inert patch with full pre/post and explanation goes to owner99 and integrator106"
+  ],
+  "initial_findings": {
+    "original1": "FAIL 180s, 10897 C08 case reads, 132668 revalidations, 4236 verifyOperation, stale portfolio-selection-changed",
+    "original2": "FAIL 180s, 11452 C08 case reads, 139454 revalidations, 4454 verifyOperation, stale portfolio-selection-changed",
+    "R3": "PASS 22 scoped controls; does not execute P03 original, selection or final history"
+  },
+  "next": "Construct boundary-specific short reproduction, distinguish drift from reentrancy, publish inert product patch and handoff to owner99/106 and test request via107",
+  "global_release": false
+}
