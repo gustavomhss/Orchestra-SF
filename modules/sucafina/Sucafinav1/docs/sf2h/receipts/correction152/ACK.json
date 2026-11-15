@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.correction152.ack.v1",
+  "mission": 152,
+  "order": "A09",
+  "actor": "ChatGPT via connected GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_disclosure": "Session identifier not exposed; no claim about predecessor runtime termination",
+  "branch": "sf-ux-a09",
+  "pr": 140,
+  "epoch": "ux-native-a09-e2-browser152",
+  "source_fence": {
+    "expected_head": "8a9a252f44510f4b25e91387c7a5b8b1fd3dffb9",
+    "observed_head": "8a9a252f44510f4b25e91387c7a5b8b1fd3dffb9",
+    "observed_tree": "c9c0e8440a85c125586ee83485a53f122f170fbb",
+    "previous_epoch": "ux-native-a09-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "s0_fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/S0-FENCE.json",
+    "native_goal": "paused",
+    "release": false
+  },
+  "finding": {
+    "comment_id": 6900999941,
+    "run_id": 43758731378,
+    "job_id": 132948475697,
+    "error": "Cannot find module '../../schema' from packages/schema/src/sucafina/routines.ts",
+    "source_blob": "daaf552a1974b7120213b9636972ec3dda7ac6dc"
+  },
+  "dependencies": {
+    "existing_public_schema_helper": "packages/schema/src/schema.ts",
+    "helper_blob": "d19a39b9708cfcaeedc1d7c62503afbadfee5dd7",
+    "exports": [
+      "NonNegativeInt",
+      "optional"
+    ],
+    "effect_schema_version": "4.0.0-beta.83",
+    "effect_json_codec": "Schema.Json (public export confirmed)",
+    "consumer_head": "8094e599e3d18609e269548d24619a3246fbc735",
+    "consumer_preimage_schema_blob": "daaf552a1974b7120213b9636972ec3dda7ac6dc",
+    "workbench_c60_blob": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+    "host_blob": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+    "ports_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+    "routine_services_blob": "4b455444cdeb560e85f6a17e6192c0420287d48a"
+  },
+  "allowed_paths": [
+    "packages/schema/src/sucafina/routines.ts",
+    "packages/client/src/sucafina/routines.ts",
+    "apps/cli/src/sucafina-product/native-ui/routines.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/**"
+  ],
+  "stage": "AUTHORING_STARTED",
+  "local_tests": "NOT_RUN",
+  "local_typecheck": "NOT_RUN",
+  "hosted_recheck": "NOT_RUN_ON_CORRECTION",
+  "integrator": 132,
+  "compiler": 149,
+  "ci": 150
+}
