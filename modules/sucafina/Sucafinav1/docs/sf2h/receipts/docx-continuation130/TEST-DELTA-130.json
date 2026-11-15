@@ -1,0 +1,27 @@
+{
+  "schema": "sf2h.docx-continuation-superseding-test-proof.v1",
+  "mission": 130,
+  "lease_epoch": "docx-e2-browser130",
+  "status": "AMENDMENT_ONLY_APPENDED;ALL_TESTS_NOT_RUN",
+  "predecessor_source_W": "f47b278b9667dedb106e53a75b8ab9f3d5c475d7",
+  "previous_handoff_receipt_commit": "abc7e001e30a329788ed24d7cd5569b0b364a211",
+  "supersedes_previously_reported_test_blob": "9ef0efd8772bcf4546bf5ef340d041ff3252bd8f",
+  "actual_test_blob": "2c457ec8c0ffb485c8e013e6e0d8d12b23fa6081",
+  "actual_test_commit": "20bf400e5114b6c4861165ad09d26ad0f9084e4e",
+  "current_source_blob": "2a42b20133651bcff54f0a4f1ed2eb3590c06cc9",
+  "actual_test_tree": "a6a39f00774c1527e27d91b84b7bc9ad9e138b3e",
+  "path": "modules/sucafina/Sucafinav1/test/product/docx-continuation130/table-flow.test.ts",
+  "change": "Surgical robustness change: reconstruct sentinel markers via parsed w:t runs, not contiguous raw XML bytes, and normalize whitespace between physical continuation rows in aggregate assertions. Preserves all three original test intentions.",
+  "impact": "Only regression test file changed; production renderer remains original postimage. This is a new source/test candidate W for hosted request and integration. Original receipts remain immutable with explicit supersession rather than rewriting evidence.",
+  "routing": {
+    "integrator": 125,
+    "dispatcher": 129,
+    "compiler": 128,
+    "reviewer": 131
+  },
+  "statuses": {
+    "CI": "NOT_RUN",
+    "after_render": "NOT_RUN",
+    "visual": "OPEN"
+  }
+}
