@@ -1,0 +1,273 @@
+{
+  "schema": "sf2h.runtime-readonly-root.p03-result.v1",
+  "mission": 59,
+  "state": "QUALIFIED_READONLY_ROOT_IS_NOT_SUFFICIENT_TO_CLOSE_P03",
+  "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "source_qualification": "R2 source conformance130PASS/0FAIL; real wrapper discriminant independently qualified before R3",
+  "run": 43666746009,
+  "result": {
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "expect_calls": 24,
+    "test_files": 1,
+    "test_cases": 1,
+    "bun_elapsed_seconds": 180.16,
+    "case_elapsed_ms": 180009.39,
+    "fixture_deadline_elapsed_ms": 180002,
+    "original_deadline_ms": 180000,
+    "original_assertion_lines_preserved": 72,
+    "remaining_assertions_not_proved": true,
+    "reported_error": {
+      "status": "stale",
+      "reason": "portfolio-analysis-changed"
+    },
+    "reported_at": "semantic-union-source-scenario.test.ts:50 after evaluateAndStore at49"
+  },
+  "original_file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "byte_identical_to_C27": true,
+    "assertion_lines": 72,
+    "individual_deadline_ms": 180000
+  },
+  "fixture_path": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+    "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+    "observed": "Uses openLocalStore and host.persistence=store; P03 exercises new capability directly. Real Source/CurrentChoice composition is independently exercised by R2, not by this original fixture."
+  },
+  "trace": [
+    {
+      "timestamp": "2026-11-15T02:14:47.7301001Z",
+      "trace": {
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-start",
+        "elapsedMs": 0,
+        "budgetMs": 180000,
+        "counts": {}
+      }
+    },
+    {
+      "timestamp": "2026-11-15T02:14:47.7836543Z",
+      "trace": {
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-complete",
+        "elapsedMs": 54,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1,
+            "elapsedMs": 3,
+            "maximumMs": 3
+          }
+        },
+        "stateBytes": 38346,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-15T02:14:47.7853897Z",
+      "trace": {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:start",
+        "elapsedMs": 56,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2,
+            "elapsedMs": 4,
+            "maximumMs": 3
+          }
+        },
+        "stateBytes": 38346,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      }
+    },
+    {
+      "timestamp": "2026-11-15T02:14:52.4877116Z",
+      "trace": {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:complete",
+        "elapsedMs": 4758,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 426,
+            "elapsedMs": 1591,
+            "maximumMs": 15
+          },
+          "host.revalidate": {
+            "calls": 2962,
+            "elapsedMs": 24,
+            "maximumMs": 3
+          },
+          "operation-source": {
+            "calls": 846,
+            "elapsedMs": 34,
+            "maximumMs": 2
+          },
+          "operation-coverage": {
+            "calls": 462,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 96,
+            "elapsedMs": 379,
+            "maximumMs": 7
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 52,
+            "maximumMs": 24
+          },
+          "classified-source": {
+            "calls": 39,
+            "elapsedMs": 3,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 41,
+            "elapsedMs": 710,
+            "maximumMs": 28
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 139,
+            "maximumMs": 32
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 172,
+            "maximumMs": 6
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 1096,
+            "maximumMs": 20
+          },
+          "planner.verifySourceProjection": {
+            "calls": 192,
+            "elapsedMs": 130,
+            "maximumMs": 6
+          }
+        },
+        "stateBytes": 484469,
+        "transactionsBytes": 104018,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      }
+    },
+    {
+      "timestamp": "2026-11-15T02:17:47.7322324Z",
+      "trace": {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:complete",
+        "elapsedMs": 180002,
+        "budgetMs": 180000,
+        "status": "deadline-exceeded",
+        "counts": {
+          "c08.read.cases": {
+            "calls": 14061,
+            "elapsedMs": 49150,
+            "maximumMs": 33
+          },
+          "host.revalidate": {
+            "calls": 171830,
+            "elapsedMs": 8268,
+            "maximumMs": 17
+          },
+          "operation-source": {
+            "calls": 46390,
+            "elapsedMs": 1451,
+            "maximumMs": 3
+          },
+          "operation-coverage": {
+            "calls": 24454,
+            "elapsedMs": 113,
+            "maximumMs": 2
+          },
+          "c08.read.preferences": {
+            "calls": 96,
+            "elapsedMs": 379,
+            "maximumMs": 7
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 52,
+            "maximumMs": 24
+          },
+          "classified-source": {
+            "calls": 39,
+            "elapsedMs": 3,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 41,
+            "elapsedMs": 710,
+            "maximumMs": 28
+          },
+          "c08.transaction.cases": {
+            "calls": 6,
+            "elapsedMs": 167,
+            "maximumMs": 32
+          },
+          "planner.verifySourceOnly": {
+            "calls": 5484,
+            "elapsedMs": 8114,
+            "maximumMs": 12
+          },
+          "planner.verifyOperation": {
+            "calls": 5484,
+            "elapsedMs": 55091,
+            "maximumMs": 29
+          },
+          "planner.verifySourceProjection": {
+            "calls": 10968,
+            "elapsedMs": 5867,
+            "maximumMs": 6
+          }
+        }
+      }
+    }
+  ],
+  "interpretation": [
+    "P03 did not complete at its unchanged180000ms deadline and only24 expect calls executed. No closure, latency gain or success of unexecuted assertions is claimed.",
+    "portfolio-analysis-changed is a reported refusal, not proof that data actually mutated or that this patch caused a semantic regression. Several original branches can return that reason; R3 has no branch-attribution instrumentation.",
+    "The deadline trace keeps the last completed checkpoint label prepare:transition-omitted:complete; it does not identify the function still executing at the deadline.",
+    "Counts/timings in fixture trace are overlapping/inclusive. Do not sum them as exclusive CPU or attribute all180s to snapshot cloning.",
+    "R2 trades defensive traversal for additional JSON parsing and shows a bounded wrapper-workload benefit. That benefit is insufficient evidence of composed P03 success."
+  ],
+  "historical58": {
+    "terminal": "00813b2ebacf5b0cd1c69d871c7a757ac323ebb4",
+    "run": 43661532296,
+    "state": "FAIL_PRESERVED",
+    "expect_calls": 24,
+    "deadline_ms": 180000,
+    "diagnosis": "Existing precise58 boundaries remain evidence for58; R3 cannot inherit their exact branch attribution."
+  },
+  "remaining": {
+    "owner": "S0 and requested integrator57 must route any new Portfolio/C08 source work to an explicitly authorized successor;58 remains terminal. New observed control succession60 is recorded separately, not silently assigned by59.",
+    "next_action": "Use complete58 diagnosis plus R3 original failure and R2 discriminant to define a bounded semantic-preserving causal change outside59's finished scope. Preserve independent observations, source/identity authorization and all replays. No repeat without new qualified material change.",
+    "forbidden_shortcuts": [
+      "Swap Dashboard anchor",
+      "Project opaque C08 callbacks",
+      "Cache/drop independent authorization, observations or replay",
+      "Relax assertions/fixture/budgets"
+    ]
+  },
+  "GLOBAL_RELEASE": false
+}

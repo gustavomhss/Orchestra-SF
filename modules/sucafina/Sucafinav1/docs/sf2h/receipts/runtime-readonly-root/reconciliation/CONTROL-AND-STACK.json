@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.runtime-readonly-root.authority-observation.v1",
+  "mission": 59,
+  "recorded_at": "2026-11-15T02:16:08Z",
+  "source": {
+    "head": "6f5dc1cb963db78cbbd3cffea1272d64ddcd62c1",
+    "branch": "runtime-read-scope",
+    "qualified_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "lease": "59 isolated writer remains active while evidence/terminal handoff completes"
+  },
+  "requested_consumer": {
+    "actor": 57,
+    "basis": "Explicit current user instruction and mission59 consumer;59 does not reassign stack custody"
+  },
+  "observed_external_control": {
+    "head": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "mission60_blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+    "mission60_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/integration-after-c27.json",
+    "declared": "Mission60 claims bounded succession after57's terminald6d9816b; existing mission59 blob unchanged in control comparison"
+  },
+  "observed_external_stack": {
+    "head": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "ack60_blob": "95a0a793cce1c5c0e03942306189cd518afbe1ce",
+    "ack60_state": "ACK60_ACCEPTED_BOUNDED_SUCCESSION",
+    "runtime59_observation_blob": "d758303a620e3a85ecbd93319986b70da86716d6",
+    "observation_pin": "c0d2094357a8566d3a1329f0ec2dab70378d1892",
+    "observation_state": "ACK/contract only at historical pin; no received consumer ACK for final59 release",
+    "preimages": [
+      {
+        "path": "runtime/contract.ts",
+        "sha": "9e9bac976b503409de65868a366f352ca1e65071",
+        "isError": false
+      },
+      {
+        "path": "runtime/local-store.ts",
+        "sha": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "isError": false
+      },
+      {
+        "path": "product/integration/source-lifecycle.ts",
+        "sha": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+        "isError": false
+      },
+      {
+        "path": "product/portfolio/read-snapshot.ts",
+        "sha": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "isError": false
+      }
+    ],
+    "scope": "All four59 production preimages directly fetched and equal C27. Stack compare has300 entries (GitHub cap); no blanket full-diff claim."
+  },
+  "decision": "Preserve handoff addressed to57 and explicitly expose newer external succession60 for S0/integrator reconciliation. No59 stack/control writes or assumption of received ACK. W2 qualifications do not become tests of the new composed stack.",
+  "unmodified_ownership": {
+    "checks": 45,
+    "reports": 48,
+    "decisions": 52
+  },
+  "GLOBAL_RELEASE": false
+}
