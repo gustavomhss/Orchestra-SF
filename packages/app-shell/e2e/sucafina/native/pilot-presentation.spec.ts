@@ -187,6 +187,34 @@ test("Q02-P0P1-P1-WEB — holder reviews real submitted PR, amount/version and a
   expect(writes).toHaveLength(1)
 })
 
+test("Q02-P0P1-P1-LOSS — lost holder approval response is unknown, never resubmitted", async ({ page, nativeHarness }) => {
+  const target = await requireActor(page, nativeHarness, "holder")
+  await openPilotRecord(page, target.shellOrigin, pilot.approvals, pilot.p1)
+  const operation = new URL(target.mount + "/procurement", target.publicOrigin)
+  const fault = await armLostResponse(page, {
+    origin: operation.origin, pathname: operation.pathname, method: "POST",
+  })
+  const writes: Request[] = []
+  page.on("request", (request) => { if (isCommand(request, "My approvals")) writes.push(request) })
+  try {
+    const review = page.getByRole("button", { name: /Review decision|Revisar decisão/ })
+    await expect(review).toBeEnabled()
+    await review.click()
+    const approve = page.getByRole("button", { name: /^(Approve|Aprovar)$/ })
+    await expect(approve).toBeEnabled()
+    await approve.click()
+    await expect(page.getByRole("alert")).toContainText(/unknown|desconhecid|response was lost|resposta foi perdida/i)
+    const observed = fault.observations()
+    expect(observed.attempts).toBe(1)
+    expect(observed.producerCommit).toBe("UNPROVEN_REQUIRES_ORIGINAL_AUTHORIZED_READ")
+    expect(writes).toHaveLength(1)
+    await page.reload() // Read-only navigation may not replay uncertain approval.
+    expect(writes).toHaveLength(1)
+  } finally {
+    await fault.dispose()
+  }
+})
+
 test("Q02-P0P1-P1-DENIED — non-holder cannot approve and has no stale private projection", async ({ page, nativeHarness }) => {
   const target = await requireActor(page, nativeHarness, "denied")
   const writes: Request[] = []
