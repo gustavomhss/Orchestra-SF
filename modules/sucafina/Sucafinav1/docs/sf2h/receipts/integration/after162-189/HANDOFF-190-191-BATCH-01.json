@@ -1,0 +1,44 @@
+{
+  "schema": "sf2h.integration.compiler-product-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "material_W": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+  "material_tree": "471797cdec07d8d2700b1d6910ea497d76a5a725",
+  "source_units": [
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181
+  ],
+  "scope": [
+    "packages/schema/src/sucafina/decisions/source-contracts.ts",
+    "packages/schema/src/sucafina/decisions.ts",
+    "packages/schema/src/sucafina/planner.ts",
+    "packages/schema/src/sucafina/portfolio.ts",
+    "packages/schema/src/sucafina/operations.ts",
+    "packages/schema/src/sucafina/memory.ts",
+    "apps/cli/src/sucafina-product/native-ui/domain.ts",
+    "apps/cli/src/sucafina-product/native-ui/people.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+    "apps/cli/src/sucafina-product/native-ui/routines.ts",
+    "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+  ],
+  "compiler190": {
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "request": "Dedup by W/tree and full input hashes; inspect hosted typechecks schema/client/cli and original TS diagnostics; SDK generation only if public API changed; do not run on stale W if additional product commits supersede it"
+  },
+  "product191": {
+    "branch": "sf-ci-validation",
+    "pr": 106,
+    "request": "Plan scoped existing tests for 9 corrected contracts and transitive consumers; request real selected tests only via existing test:ci dispatcher, distinguish historical source runs from new C; do not duplicate open tests or assert native admission"
+  },
+  "validity": "HANDOFF_RECORD_ONLY_NOT_A_RUN_OR_ACK",
+  "GLOBAL_RELEASE": false
+}

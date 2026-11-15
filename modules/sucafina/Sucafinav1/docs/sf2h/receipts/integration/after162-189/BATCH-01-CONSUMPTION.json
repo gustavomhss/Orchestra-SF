@@ -1,0 +1,172 @@
+{
+  "schema": "sf2h.integration.source-consumption.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "actor": "GPT-6/ChatGPT GitHub MCP; Astra session ID not exposed",
+  "product_branch": "sf2-stack",
+  "pr": 65,
+  "source_units": 9,
+  "consumed_paths": 11,
+  "baseline": {
+    "ack": "ecd5e40d1f82f609dce6b936e290344d1735b1d5",
+    "predecessor_material": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "original_entries_preserved": 23
+  },
+  "batches": [
+    {
+      "name": "schema",
+      "missions": [
+        173,
+        174,
+        175,
+        176,
+        180
+      ],
+      "commit": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "tree": "d950e96d6f3b6e488e6e5587a0bdc93b471339cf",
+      "paths": 6
+    },
+    {
+      "name": "cli+native contract",
+      "missions": [
+        177,
+        178,
+        179,
+        181
+      ],
+      "commit": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+      "tree": "471797cdec07d8d2700b1d6910ea497d76a5a725",
+      "paths": 5
+    }
+  ],
+  "source_to_consumer": [
+    {
+      "mission": 173,
+      "source_sha": "1710bfd33d0db91be4eee3158e25da995f6d87e3",
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "consumer_pre_blob": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "source_post_blob": "1a77ff23bee415941916467d75c81304a4aab382",
+      "consumer_post_blob": "1a77ff23bee415941916467d75c81304a4aab382",
+      "consumer_commit": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 173,
+      "source_sha": "1710bfd33d0db91be4eee3158e25da995f6d87e3",
+      "path": "packages/schema/src/sucafina/decisions.ts",
+      "consumer_pre_blob": "f648fe7011029920f7915ee9225b066da30be4c9",
+      "source_post_blob": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+      "consumer_post_blob": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+      "consumer_commit": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 174,
+      "source_sha": "0bcf034da608b5a89576f5e43fcd66349b397baa",
+      "path": "packages/schema/src/sucafina/planner.ts",
+      "consumer_pre_blob": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+      "source_post_blob": "0a85a3f33bc384196100ee75c974102e04f9868a",
+      "consumer_post_blob": "0a85a3f33bc384196100ee75c974102e04f9868a",
+      "consumer_commit": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 175,
+      "source_sha": "7b1a076f2f9270fc37c136245232e6d4b7674881",
+      "path": "packages/schema/src/sucafina/portfolio.ts",
+      "consumer_pre_blob": "708731dbbaf1fe69664715a4f34007976a4b0476",
+      "source_post_blob": "5ace759126c6e810d9718df01ce22779146193ce",
+      "consumer_post_blob": "5ace759126c6e810d9718df01ce22779146193ce",
+      "consumer_commit": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 176,
+      "source_sha": "2baa39cef66153d75a363958fe716d80ed1c2081",
+      "path": "packages/schema/src/sucafina/operations.ts",
+      "consumer_pre_blob": "d1f3b9b23c4d4ee2442f293ddb0816063062b63f",
+      "source_post_blob": "d2f9e89c5815dff4207769f75c263d908c474ca1",
+      "consumer_post_blob": "d2f9e89c5815dff4207769f75c263d908c474ca1",
+      "consumer_commit": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 180,
+      "source_sha": "c9afc262f7cfac3b4a11e2ad10922d0f893ea671",
+      "path": "packages/schema/src/sucafina/memory.ts",
+      "consumer_pre_blob": "d501d30c2e0f0693f8533c8fe4d217f0068cde86",
+      "source_post_blob": "554c07bbf881b89ab9df852cdbf61322547f6382",
+      "consumer_post_blob": "554c07bbf881b89ab9df852cdbf61322547f6382",
+      "consumer_commit": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 177,
+      "source_sha": "dc4beff8175629b1d62cd972d8393b7cd817054c",
+      "path": "apps/cli/src/sucafina-product/native-ui/domain.ts",
+      "consumer_pre_blob": "1aa4a2360f94cadfdc49e7e0579f61fb97dfa0f4",
+      "source_post_blob": "9c5eb4b4139315d20b5ae40a06d58f955984596a",
+      "consumer_post_blob": "9c5eb4b4139315d20b5ae40a06d58f955984596a",
+      "consumer_commit": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 178,
+      "source_sha": "51e229ccbc24edbacd2634aa7390dda8fef5a28d",
+      "path": "apps/cli/src/sucafina-product/native-ui/people.ts",
+      "consumer_pre_blob": "6b76597dadb57f5530348059ef79b04e324712dc",
+      "source_post_blob": "239fd5a86aa541dd6990c9d870148d5753d72dbb",
+      "consumer_post_blob": "239fd5a86aa541dd6990c9d870148d5753d72dbb",
+      "consumer_commit": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 178,
+      "source_sha": "51e229ccbc24edbacd2634aa7390dda8fef5a28d",
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+      "consumer_pre_blob": "7df1e268540e6f3ab1c79b2961fcb7def12966a8",
+      "source_post_blob": "0f5d05fba397355585e8a96013387f146f4208f5",
+      "consumer_post_blob": "0f5d05fba397355585e8a96013387f146f4208f5",
+      "consumer_commit": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 179,
+      "source_sha": "3b93d1c9cca27fde60896fbf42af1b6ead637b75",
+      "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+      "consumer_pre_blob": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6",
+      "source_post_blob": "6948316a7dc0b07296180fed7f5b32f613bcc106",
+      "consumer_post_blob": "6948316a7dc0b07296180fed7f5b32f613bcc106",
+      "consumer_commit": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+      "readback": "MATCH_GITHUB_MCP"
+    },
+    {
+      "mission": 181,
+      "source_sha": "d234efa53262b2bcf157292be1a5aa729c3adb11",
+      "path": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+      "consumer_pre_blob": "39ebdb2ecfd3d897ccd0989bdd989b82f27dbcda",
+      "source_post_blob": "8ea7c0c87dc02165ca29be44bc947a6813f96832",
+      "consumer_post_blob": "8ea7c0c87dc02165ca29be44bc947a6813f96832",
+      "consumer_commit": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+      "readback": "MATCH_GITHUB_MCP"
+    }
+  ],
+  "checks": {
+    "source_preimage": "11_OF_11_MATCH",
+    "source_postimage": "11_OF_11_MATCH",
+    "consumer_post_readback": "11_OF_11_MATCH",
+    "git_commit_parent_chain": "CONFIRMED",
+    "git_ref_CAS": "force=false both commits",
+    "local_checks": "NOT_RUN_PROHIBITED",
+    "hosted_compiler": "NOT_RUN_ON_NEW_W",
+    "hosted_product": "NOT_RUN_ON_NEW_W",
+    "native_positive_witness": "NOT_PROVEN",
+    "full_release": false
+  },
+  "policy": {
+    "native_goal": "paused",
+    "GLOBAL_RELEASE": false
+  },
+  "next": "Integrate released 171/172, then native shared consumers and remaining released modules. 190/191 own hosted verification, no duplicate dispatcher."
+}
