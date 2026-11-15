@@ -1,0 +1,44 @@
+{
+  "number": 98,
+  "id": "report-title-fix",
+  "branch": "report-title-fix",
+  "actor": "S3-A export DOCX rendering correction (outside collaboration48)",
+  "actor_pack": "execution/actors/S3-A.json",
+  "lease_epoch": "report-title-browser98",
+  "inputs": [
+    "VIS88-001 realPNG page1/15 in composed-docx/after-drift-docx;PR93terminal88@057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f FINDINGS-R1,MATRIX-14,RESULTS-R3",
+    "66source@097e05ea951f19a3e856461ccc361848cb5a49ae and currentC45 product/reviews/render.ts/runtime/reports.ts",
+    "48owns collaboration/browser/reportse2e;88readerterminal,91independentreviewer"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/reviews/render.ts (DOCX typography/flow only)",
+    "modules/sucafina/Sucafinav1/runtime/reports.ts (same DOCX title flow if affected)",
+    "modules/sucafina/Sucafinav1/test/product/report-title-fix/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/report-title-fix/"
+  ],
+  "mission": "Corrigir título DOCX longo Review+opaqueID que sobrepõe palavras na página1/15. Entregar bytes reais com layout legível eprova visual viareader existente88; não recriarreader.",
+  "acceptance": [
+    "Ajustar estiloTITLE/lineheight/wrap/spacing e quebraadequada emdocx real;mantertítulo/IDcompletos, metadados, notaslongas/tabelas/charts/branding/selos/digests eordem; semtruncarconteúdopara caber.",
+    "Regressões title curto/longo/extremo e caractunicode reais no produtor;render hospedado pelo88 já existente com PDF/PNG e inspeçãoantes/depois,páginas/fontversions/hashes. XMLassertionsozinho nãoresolveoverlap.",
+    "Mudança material nos bytes exige novosdigests/manifestos coerentes; originais88 permanecem históricos. Nãoeditar report-layout shared48,collaboration/browser/e2eReports48,reader88,source-lifecycle97,egressapplication86,políticas ou exportbusinesscontent.",
+    "Não declarar corrigidos XLSXpaginação21/6páginas, fontfallbackAptos ou outrosfindings88 foraescopo; encaminhar responsáveis. Requestgeração/render único pelo dispatcher45, preservarexitstatusfuncional. PedirrecheckvisualindependenteR1/R3."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "expected_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "consumer": "71 sole integrator;45 dispatcher/checks;91–93 independent reviewers",
+  "common": [
+    "Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d; campanha sf2h-integral-20261112; T0 2026-11-13T04:01:10Z; preservar15WP74tasks17contratos1610critérios. Ler AGENTS, START, WORKFLOW, execution/COMMON, pack COMPLETO atribuído e anexos/critérios pertinentes. Não refazer planejamento.",
+    "Nova sessão browser; publicar ACK com modelo/session realmente observados, inputsSHA, paths e lease antes de editar. Reconciliar HEAD, manifests e comentários/liveauthority; nenhum silêncio revoga writer. Se conflito posterior real, preservar writer e avançar em testes/patches disjuntos com handoff ao owner.",
+    "71 única integradora de sf2-stack,45 único dispatcher/checks;52UIdecisões/87hotdraft/89P03/90routineconsumidor/94HTTP/81WP14/88reader e reviewers91–93 mantêm seus escopos. Sidebar review/planejamento e Azure são do usuário.",
+    "GitHub remoto somente MCP/CAS expectedhead/forcefalse; semgh/push/devmerge/deploy/Azure/segredos/enginechange/restartdesktopserver/novoGoal/controller. Goal nativa continua pausada; este pacote só autoriza sessão manual atual.",
+    "Testes de produto só cirúrgicos GitHub Actions pela interface test:ci/request existente e dispatcher/dedup por árvore/seleção/config. Nada de bun test/testes pesados locais/fullEPIC/nova plataformaCI. bun typecheck/guards perAGENTS pela interface autorizada45, registrar NOT_RUN se ausente. Não repetir run sem mudança causal.",
+    "Entregar código real, commits remotos e uma PR para sf2-stack, patch completo/prepost/dependencyclosure, source/tree,W/S/run/job/evidências, critérios e lacunas, handoff terminal para71 e reviewer específico. PedirACK sem presumir consumo. Reviewers corrigem apenas pareceres; você implementa. Não marcarGLOBAL_RELEASE nem herdarPASS de outroSHA.",
+    "Correções preservam contratos/oráculos/fixtures/seleções/timeouts, origem/principal/grants/políticas e dados; mocks/syntheticadmission não provam runtime. Sem permissões fabricadas ou novos efeitos financeiros/mensagens externas. Completar todo trabalho independente; bloqueio real recebe assinatura/capability faltante e patch mínimo, não inventário genérico."
+  ]
+}

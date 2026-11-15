@@ -1,0 +1,45 @@
+{
+  "number": 96,
+  "id": "creation-reload-fix",
+  "branch": "creation-reload-fix",
+  "actor": "S1-A/S4-A creation UI correction (outside UI52 and hot-topic87)",
+  "actor_pack": "execution/actors/S1-A.json",
+  "lease_epoch": "creation-reload-browser96",
+  "inputs": [
+    "R1-91-001@3f3198e7636242421ef71a788502b10179893e5c FINDINGS-91.json",
+    "PR43WP01handoff@2ee71fc90055814912654ae198f7a1dcf9583943; currentC45",
+    "PR92first-save87@995e29f5b0028f713cfe76026e192a91d6fb7582 is a different HotTopic flow;52UI continues"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/case-port.ts (creation correlation recovery only; reconcile sharedauthor)",
+    "modules/sucafina/Sucafinav1/product/ui/creation-intent.ts (new bounded helper if needed)",
+    "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-reload-fix/"
+  ],
+  "mission": "Corrigir perda da identidade idempotente no formulário de criação sf_case_draft apóscommit+resposta perdida+reload. Não confundir com lookupFirstSaveHotTopic87.",
+  "acceptance": [
+    "Persistência de intenção escopada porprincipal/installation/projeto e recuperação autoritativa da criação original semoutputRef obtido porCDP, timestampguess ou novaUUID no retryincerto.",
+    "ApósperdaACK/reload/restart provarumcaso/umefeito e mesmachave/intenção; duascriações deliberadas iguais comchavesdistintas permanecemdistintas; payloadmudado exige decisãohumana, não replaycegopermissivo.",
+    "Erro/expiração/revogação/outroator/caso recriado não expõemdados nem executamsegundaescrita. Não guardar tokens/segredos browser. Nãoeditarserverapplication86,casecontractssemowner,decision-http/UI52 ou hotdraft87.",
+    "Testes reais C08SQLiteHTTP e browser limitado próprio se suportado; nãoeditar decisions.spec.ts52. PatchAPI/host completo para71/owner52 se necessário;pedirrecheckR1-91-001 independente."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "expected_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "consumer": "71 sole integrator;45 dispatcher/checks;91–93 independent reviewers",
+  "common": [
+    "Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d; campanha sf2h-integral-20261112; T0 2026-11-13T04:01:10Z; preservar15WP74tasks17contratos1610critérios. Ler AGENTS, START, WORKFLOW, execution/COMMON, pack COMPLETO atribuído e anexos/critérios pertinentes. Não refazer planejamento.",
+    "Nova sessão browser; publicar ACK com modelo/session realmente observados, inputsSHA, paths e lease antes de editar. Reconciliar HEAD, manifests e comentários/liveauthority; nenhum silêncio revoga writer. Se conflito posterior real, preservar writer e avançar em testes/patches disjuntos com handoff ao owner.",
+    "71 única integradora de sf2-stack,45 único dispatcher/checks;52UIdecisões/87hotdraft/89P03/90routineconsumidor/94HTTP/81WP14/88reader e reviewers91–93 mantêm seus escopos. Sidebar review/planejamento e Azure são do usuário.",
+    "GitHub remoto somente MCP/CAS expectedhead/forcefalse; semgh/push/devmerge/deploy/Azure/segredos/enginechange/restartdesktopserver/novoGoal/controller. Goal nativa continua pausada; este pacote só autoriza sessão manual atual.",
+    "Testes de produto só cirúrgicos GitHub Actions pela interface test:ci/request existente e dispatcher/dedup por árvore/seleção/config. Nada de bun test/testes pesados locais/fullEPIC/nova plataformaCI. bun typecheck/guards perAGENTS pela interface autorizada45, registrar NOT_RUN se ausente. Não repetir run sem mudança causal.",
+    "Entregar código real, commits remotos e uma PR para sf2-stack, patch completo/prepost/dependencyclosure, source/tree,W/S/run/job/evidências, critérios e lacunas, handoff terminal para71 e reviewer específico. PedirACK sem presumir consumo. Reviewers corrigem apenas pareceres; você implementa. Não marcarGLOBAL_RELEASE nem herdarPASS de outroSHA.",
+    "Correções preservam contratos/oráculos/fixtures/seleções/timeouts, origem/principal/grants/políticas e dados; mocks/syntheticadmission não provam runtime. Sem permissões fabricadas ou novos efeitos financeiros/mensagens externas. Completar todo trabalho independente; bloqueio real recebe assinatura/capability faltante e patch mínimo, não inventário genérico."
+  ]
+}

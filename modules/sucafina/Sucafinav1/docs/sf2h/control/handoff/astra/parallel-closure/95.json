@@ -1,0 +1,45 @@
+{
+  "number": 95,
+  "id": "native-host-provider",
+  "branch": "native-host-provider",
+  "actor": "S0-B native authority producer (disjoint from consumer90)",
+  "actor_pack": "execution/actors/S0-B.json",
+  "lease_epoch": "native-producer-browser95",
+  "inputs": [
+    "PR96consumer90@e7ff72e996969b86e590e67734b84fb57e11a549; contrato resolve e readonlyhistorical",
+    "PR80terminal64@4d0421669054a131de0df0c95994b45229ab354e:contracts/API-NOTES.md,capability-contract.json,source-pins.json,HANDOFF-FINAL",
+    "reviewsR3mission93@28e770f600b835a5f59d9e301a40f5441a76e56b"
+  ],
+  "write_paths": [
+    "apps/cli/src/sucafina-product/native-host.ts (only native origin/C15 legitimate producer integration)",
+    "apps/cli/src/sucafina-product/token-gate.ts (only native C15 admission integration; no relaxedauth)",
+    "apps/cli/src/sucafina-product/native-authority-provider.ts (new bounded SF producer)",
+    "modules/sucafina/Sucafinav1/test/product/native-host-provider/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-host-provider/"
+  ],
+  "mission": "Implementar produtor de origem/C15/admissão nativa que64 e90 apenas consomem. Não criar outro consumidor que exige a mesma capability injetada. Unir APIs públicas existentes à autoridade SF em pontos de composição autorizados.",
+  "acceptance": [
+    "Usar Request/context/principal reais e SessionMaestro legítima; possuir ligação desdeadmissão, nunca gerar porIDs/plan.owner nem chamar sf_maestro de maestro.",
+    "Conectar admissão C15/policy/budget/filhos e continuação Permission humana pelos mecanismos públicos. Provider/Taskrunning e scopeLocation/model reais; preservar revisão/approval. Não responderPermission pelohumano nem alterarengine/policyfinanceira.",
+    "Conectar produtor ao contrato90 e emitir patch completo de host-context/registration para71 semeditarhost-context. Não editar routine-native-* de90 ou auth85/HTTP94/application86. Atalho de caller com fixture não é integração.",
+    "Provar origem/cancel/revoke/readiness e lifecycle legítimos, devolver novo atestado autenticado de leitura apósreload semressuscitar Task/grant. Schedule/watch continuamoff semadmissãoreal. Faltando APIpública: implementar todoindependente e demonstrarsignature+sourcefaltante. Nãofabricar execuções."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "expected_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "consumer": "71 sole integrator;45 dispatcher/checks;91–93 independent reviewers",
+  "common": [
+    "Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d; campanha sf2h-integral-20261112; T0 2026-11-13T04:01:10Z; preservar15WP74tasks17contratos1610critérios. Ler AGENTS, START, WORKFLOW, execution/COMMON, pack COMPLETO atribuído e anexos/critérios pertinentes. Não refazer planejamento.",
+    "Nova sessão browser; publicar ACK com modelo/session realmente observados, inputsSHA, paths e lease antes de editar. Reconciliar HEAD, manifests e comentários/liveauthority; nenhum silêncio revoga writer. Se conflito posterior real, preservar writer e avançar em testes/patches disjuntos com handoff ao owner.",
+    "71 única integradora de sf2-stack,45 único dispatcher/checks;52UIdecisões/87hotdraft/89P03/90routineconsumidor/94HTTP/81WP14/88reader e reviewers91–93 mantêm seus escopos. Sidebar review/planejamento e Azure são do usuário.",
+    "GitHub remoto somente MCP/CAS expectedhead/forcefalse; semgh/push/devmerge/deploy/Azure/segredos/enginechange/restartdesktopserver/novoGoal/controller. Goal nativa continua pausada; este pacote só autoriza sessão manual atual.",
+    "Testes de produto só cirúrgicos GitHub Actions pela interface test:ci/request existente e dispatcher/dedup por árvore/seleção/config. Nada de bun test/testes pesados locais/fullEPIC/nova plataformaCI. bun typecheck/guards perAGENTS pela interface autorizada45, registrar NOT_RUN se ausente. Não repetir run sem mudança causal.",
+    "Entregar código real, commits remotos e uma PR para sf2-stack, patch completo/prepost/dependencyclosure, source/tree,W/S/run/job/evidências, critérios e lacunas, handoff terminal para71 e reviewer específico. PedirACK sem presumir consumo. Reviewers corrigem apenas pareceres; você implementa. Não marcarGLOBAL_RELEASE nem herdarPASS de outroSHA.",
+    "Correções preservam contratos/oráculos/fixtures/seleções/timeouts, origem/principal/grants/políticas e dados; mocks/syntheticadmission não provam runtime. Sem permissões fabricadas ou novos efeitos financeiros/mensagens externas. Completar todo trabalho independente; bloqueio real recebe assinatura/capability faltante e patch mínimo, não inventário genérico."
+  ]
+}

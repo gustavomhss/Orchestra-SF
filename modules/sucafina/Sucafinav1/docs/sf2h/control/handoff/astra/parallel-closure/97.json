@@ -1,0 +1,44 @@
+{
+  "number": 97,
+  "id": "denied-read-fix",
+  "branch": "denied-read-fix",
+  "actor": "S0-C source lifecycle correction; not target integrator",
+  "actor_pack": "execution/actors/S0-C.json",
+  "lease_epoch": "denied-read-browser97",
+  "inputs": [
+    "VIS88-010 and composed-storage.test.ts:157 actualFAIL; PR93terminal88@057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f",
+    "R2preliminary92@bdd03fc33d8e4b67905ee087d6c7bec81773640d",
+    "runtime-readonly59 and currentC45 readonly72 integration; old59 lease must be reconciled"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts (denied/read-only lifecycle effects only)",
+    "modules/sucafina/Sucafinav1/product/host-binding/denied-read.ts (new bounded adapter if causallyneeded)",
+    "modules/sucafina/Sucafinav1/test/product/denied-read-fix/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/denied-read-fix/"
+  ],
+  "mission": "Diagnosticar e corrigir metadados duráveis novos durante transição negada a viewer readonly; snapshot muda57linhas de lifecycle. Consertarcausa, nãoexpectativa.",
+  "acceptance": [
+    "Reproduzir originalcomposed-storage negado, compararsnapshotantes/depois integralincluindo sourceentries;401/403/404read/deny não cria/revive/versiona lifecycle nem alteraauditoria deproduto indevidamente conformecontrato.",
+    "Preservar captura legítima/publicação/revogação/incarnation/sourceversion e behaviorReadSnapshotRoot; semmigrar efeito para novaescrita ou desativar fencing. Controlespositivo/retry/reopen/crossprincipal.",
+    "Nãoeditar local-store/contract/auth85,application86,downloadstorage66 ou runtime-sourceproviders deoutroowner. Se causa requer outroarquivo,entregar patchcompleto/prepost/repro aoowner71 emvezdesobrescrever.",
+    "Pedido cirúrgico originaltest intacto e controlespróprios;novoC45egress impede atribuirfalhaantiga86 aoalvo atual. Peça recheckR2 eR388 sobre candidato integrado."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "expected_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "consumer": "71 sole integrator;45 dispatcher/checks;91–93 independent reviewers",
+  "common": [
+    "Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d; campanha sf2h-integral-20261112; T0 2026-11-13T04:01:10Z; preservar15WP74tasks17contratos1610critérios. Ler AGENTS, START, WORKFLOW, execution/COMMON, pack COMPLETO atribuído e anexos/critérios pertinentes. Não refazer planejamento.",
+    "Nova sessão browser; publicar ACK com modelo/session realmente observados, inputsSHA, paths e lease antes de editar. Reconciliar HEAD, manifests e comentários/liveauthority; nenhum silêncio revoga writer. Se conflito posterior real, preservar writer e avançar em testes/patches disjuntos com handoff ao owner.",
+    "71 única integradora de sf2-stack,45 único dispatcher/checks;52UIdecisões/87hotdraft/89P03/90routineconsumidor/94HTTP/81WP14/88reader e reviewers91–93 mantêm seus escopos. Sidebar review/planejamento e Azure são do usuário.",
+    "GitHub remoto somente MCP/CAS expectedhead/forcefalse; semgh/push/devmerge/deploy/Azure/segredos/enginechange/restartdesktopserver/novoGoal/controller. Goal nativa continua pausada; este pacote só autoriza sessão manual atual.",
+    "Testes de produto só cirúrgicos GitHub Actions pela interface test:ci/request existente e dispatcher/dedup por árvore/seleção/config. Nada de bun test/testes pesados locais/fullEPIC/nova plataformaCI. bun typecheck/guards perAGENTS pela interface autorizada45, registrar NOT_RUN se ausente. Não repetir run sem mudança causal.",
+    "Entregar código real, commits remotos e uma PR para sf2-stack, patch completo/prepost/dependencyclosure, source/tree,W/S/run/job/evidências, critérios e lacunas, handoff terminal para71 e reviewer específico. PedirACK sem presumir consumo. Reviewers corrigem apenas pareceres; você implementa. Não marcarGLOBAL_RELEASE nem herdarPASS de outroSHA.",
+    "Correções preservam contratos/oráculos/fixtures/seleções/timeouts, origem/principal/grants/políticas e dados; mocks/syntheticadmission não provam runtime. Sem permissões fabricadas ou novos efeitos financeiros/mensagens externas. Completar todo trabalho independente; bloqueio real recebe assinatura/capability faltante e patch mínimo, não inventário genérico."
+  ]
+}
