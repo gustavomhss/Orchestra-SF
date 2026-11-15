@@ -6,7 +6,7 @@
  * network mutations, or persist drafts. The A02 producer adapter alone maps
  * 0-based grid months to 1-based MonthlyDraft months and owns preview/apply.
  */
-import { createMemo, createUniqueId, For, Show } from "solid-js"
+import { createEffect, createMemo, createUniqueId, For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
@@ -52,20 +52,39 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
   let scroller: HTMLDivElement | undefined
 
   const protectedState = () => props.state === "denied" || props.state === "session-expired"
+  // Do not retain local clipboard/editor text across an access boundary.
+  createEffect(() => {
+    if (protectedState()) setLocal({ editing: null, text: "", mobileTsv: "", rejectedTsv: "", pasteError: null })
+  })
   const readable = () => props.state === "ready" || props.state === "partial"
     || props.state === "stale" || props.state === "conflict" || props.state === "outcome-unknown"
   const monthShapeValid = () => props.months.length === 12 && props.months.every((month, index) => month.id === index)
-  const writable = () => (props.state === "ready" || props.state === "partial") && !props.readOnlyReason && monthShapeValid()
+  const writable = () => (props.state === "ready" || props.state === "partial") && !props.readOnlyReason && monthShapeValid() && props.paste.phase !== "applying"
 
   // Identity is the source's opaque row ref and canonical month ID, never array index.
   const rowIndex = (ref: SfCellCoordinate["rowRef"]) =>
     props.rows.findIndex((row) => props.getRowKey(row) === ref)
   const monthIndex = (month: SfCellCoordinate["month"]) =>
     props.months.findIndex((item) => item.id === month)
+  // Index once per owner projection: a full 12-month grid must not scan every
+  // cell for each rendered row/month or on every authorized clipboard copy.
+  const cellIndex = createMemo(() => {
+    const byRow = new Map<SfCellCoordinate["rowRef"], Map<SfCellCoordinate["month"], SfGridCell[]>>()
+    props.cells.forEach((cell) => {
+      const months = byRow.get(cell.coordinate.rowRef) ?? new Map<SfCellCoordinate["month"], SfGridCell[]>()
+      const cells = months.get(cell.coordinate.month) ?? []
+      cells.push(cell)
+      months.set(cell.coordinate.month, cells)
+      byRow.set(cell.coordinate.rowRef, months)
+    })
+    return byRow
+  })
   const cellVariants = (ref: SfCellCoordinate["rowRef"], month: SfCellCoordinate["month"]) =>
-    props.cells.filter((item) => item.coordinate.rowRef === ref && item.coordinate.month === month)
+    cellIndex().get(ref)?.get(month) ?? []
+  const draftIndex = createMemo(() => new Map(props.draftCells.map((draft) =>
+    [JSON.stringify([draft.coordinate.rowRef, draft.coordinate.month, draft.coordinate.measure]), draft] as const)))
   const draftFor = (coordinate: SfCellCoordinate): SfDraftCell | undefined =>
-    props.draftCells.find((draft) => SAME_CELL(draft.coordinate, coordinate))
+    draftIndex().get(JSON.stringify([coordinate.rowRef, coordinate.month, coordinate.measure]))
   const activeId = createMemo(() => {
     const coordinate = props.activeCell
     if (!coordinate || rowIndex(coordinate.rowRef) < 0 || monthIndex(coordinate.month) < 0) return undefined
@@ -134,6 +153,7 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
     event.stopPropagation()
   }
   const focusCell = (coordinate: SfCellCoordinate) => {
+    if (local.editing && !SAME_CELL(local.editing, coordinate)) cancelEdit()
     props.onSelectRange({ anchor: coordinate, extent: coordinate })
     focusTarget?.focus()
   }
@@ -247,15 +267,15 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
   }
 
   const readCellForCopy = (ref: SfCellCoordinate["rowRef"], month: SfCellCoordinate["month"], measure: SfCellCoordinate["measure"]) => {
-    const cell = props.cells.find((entry) => entry.coordinate.rowRef === ref
-      && entry.coordinate.month === month && entry.coordinate.measure === measure)
+    const cell = cellVariants(ref, month).find((entry) => entry.coordinate.measure === measure)
     if (!cell) return ""
     if (cell.value.kind === "known") return String(cell.value.value)
     if (cell.value.kind === "inherited" && cell.value.value !== null) return String(cell.value.value)
     return "" // Missing/denied/unavailable are never reconstructed.
   }
   const handleCopy: JSX.EventHandler<HTMLDivElement, ClipboardEvent> = (event) => {
-    if (!readable()) return
+    // While editing, allow the input to copy its own selected raw characters.
+    if (!readable() || local.editing) return
     const range = props.selectedRange ?? (props.activeCell
       ? { anchor: props.activeCell, extent: props.activeCell } : null)
     if (!range || !event.clipboardData) return
@@ -321,7 +341,8 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
     : props.state === "conflict" || props.state === "stale" ? "sf.common.conflict"
     : props.state === "partial" ? "sf.common.partial"
     : props.state === "empty" || props.state === "filtered-empty" ? "sf.common.empty"
-    : props.state === "unavailable" ? "sf.common.unavailable" : null
+    : props.state === "unavailable" || props.state === "invalid" || props.state === "not-found"
+      ? "sf.common.unavailable" : null
   const firstIssue = (cell: SfGridCell) => {
     const draft = draftFor(cell.coordinate)
     if (draft?.error) return message(draft.error)
@@ -414,6 +435,9 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
                             type="text"
                             inputMode="decimal"
                             class="sf-s02-editor"
+                            ref={(element) => {
+                              queueMicrotask(() => { if (element.isConnected) element.focus() })
+                            }}
                             aria-label={t("sf.s02.edit")}
                             value={local.text}
                             onInput={(event) => {

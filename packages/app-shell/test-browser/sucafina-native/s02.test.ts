@@ -39,6 +39,7 @@ if (process.env.SF_S02_DOM !== "1") {
   const { solidDom } = await import("../solid-dom")
   mock.module(solidDom("@/context/language", import.meta.dir), () => ({
     useLanguage: () => ({
+      intl: () => "en-US",
       t: (key: string, params?: Record<string, string | number>) =>
         Object.entries(params ?? {}).reduce((text, [name, value]) =>
           text.replace("{{" + name + "}}", String(value)), key),
@@ -223,6 +224,48 @@ if (process.env.SF_S02_DOM !== "1") {
       keydown(page.grid(), "F2")
       expect(page.host.querySelector(".sf-s02-editor")).toBeNull()
       page.setUi("activeCell", coordinate(0, 8))
+      keydown(page.grid(), "F2")
+      expect(page.host.querySelector(".sf-s02-editor")).toBeNull()
+    } finally { page.close() }
+  })
+
+  test("editor takes focus, Esc cancels raw input, and copy is never hijacked by the grid", async () => {
+    const page = mount()
+    try {
+      keydown(page.grid(), "F2")
+      await Promise.resolve()
+      const editor = page.host.querySelector<HTMLInputElement>(".sf-s02-editor")
+      if (!editor) throw Error("missing editor")
+      expect(document.activeElement).toBe(editor)
+      const copy = new Event("copy", { bubbles: true, cancelable: true })
+      Object.defineProperty(copy, "clipboardData", {
+        value: { setData: () => { throw Error("grid must not replace editor clipboard") } },
+      })
+      editor.dispatchEvent(copy)
+      expect(copy.defaultPrevented).toBe(false)
+      editor.value = "001.25"
+      editor.dispatchEvent(new Event("input", { bubbles: true }))
+      keydown(editor, "Escape")
+      expect(page.events.canceled).toEqual([coordinate(0, 0)])
+      expect(page.events.commits).toHaveLength(0)
+      expect(page.host.querySelector(".sf-s02-editor")).toBeNull()
+      keydown(page.grid(), "F2")
+      const next = page.host.querySelector<HTMLInputElement>(".sf-s02-editor")!
+      next.value = "2.5"
+      next.dispatchEvent(new Event("input", { bubbles: true }))
+      keydown(next, "Tab", true)
+      expect(page.events.commits.at(-1)?.exit).toBe("Shift+Tab")
+    } finally { page.close() }
+  })
+
+  test("applying paste blocks a second preview and inline mutation", () => {
+    const page = mount({ paste: {
+      phase: "applying", originalTsv: "1",
+      range: { anchor: coordinate(0, 0), extent: coordinate(0, 0) }, rows: [],
+    } })
+    try {
+      paste(page.grid(), "3")
+      expect(page.events.pastes).toHaveLength(0)
       keydown(page.grid(), "F2")
       expect(page.host.querySelector(".sf-s02-editor")).toBeNull()
     } finally { page.close() }
