@@ -10,10 +10,15 @@ import { SF_S05_COPY, SF_S05_COPY_BR } from "./orchestra-chapters/sf-s05"
 import { SF_U01_COPY, SF_U01_COPY_BR } from "./orchestra-chapters/sf-u01"
 import { SF_U02_COPY, SF_U02_COPY_BR } from "./orchestra-chapters/sf-u02"
 import { SF_U03_COPY, SF_U03_COPY_BR } from "./orchestra-chapters/sf-u03"
+import { SF_U04_COPY, SF_U04_COPY_BR } from "./orchestra-chapters/sf-u04"
 import { SF_U05_COPY, SF_U05_COPY_BR } from "./orchestra-chapters/sf-u05"
+import { SF_U06_COPY, SF_U06_COPY_BR } from "./orchestra-chapters/sf-u06"
 import { SF_U07_COPY, SF_U07_COPY_BR } from "./orchestra-chapters/sf-u07"
 import { SF_U08_COPY, SF_U08_COPY_BR } from "./orchestra-chapters/sf-u08"
 import { SF_U09_COPY, SF_U09_COPY_BR } from "./orchestra-chapters/sf-u09"
+import { SF_U12_COPY, SF_U12_COPY_BR } from "./orchestra-chapters/sf-u12"
+import { SF_U13_COPY, SF_U13_COPY_BR } from "./orchestra-chapters/sf-u13"
+import { SF_U14_COPY, SF_U14_COPY_BR } from "./orchestra-chapters/sf-u14"
 import { SF_U15_COPY, SF_U15_COPY_BR } from "./orchestra-chapters/sf-u15"
 import { SF_U16_COPY, SF_U16_COPY_BR } from "./orchestra-chapters/sf-u16"
 import { SF_U17_COPY, SF_U17_COPY_BR } from "./orchestra-chapters/sf-u17"
@@ -28,6 +33,7 @@ import { SF_U25_COPY, SF_U25_COPY_BR } from "./orchestra-chapters/sf-u25"
 import { SF_U26_COPY, SF_U26_COPY_BR } from "./orchestra-chapters/sf-u26"
 import { SF_U27_COPY, SF_U27_COPY_BR } from "./orchestra-chapters/sf-u27"
 import { SF_U28_COPY, SF_U28_COPY_BR } from "./orchestra-chapters/sf-u28"
+import { SF_U29_COPY, SF_U29_COPY_BR } from "./orchestra-chapters/sf-u29"
 import { SF_U30_COPY, SF_U30_COPY_BR } from "./orchestra-chapters/sf-u30"
 import { SF_U31_COPY, SF_U31_COPY_BR } from "./orchestra-chapters/sf-u31"
 import { SF_U32_COPY, SF_U32_COPY_BR } from "./orchestra-chapters/sf-u32"
@@ -44,6 +50,7 @@ import { SF_U42_COPY, SF_U42_COPY_BR } from "./orchestra-chapters/sf-u42"
 import { SF_U43_COPY, SF_U43_COPY_BR } from "./orchestra-chapters/sf-u43"
 import { SF_U44_COPY, SF_U44_COPY_BR } from "./orchestra-chapters/sf-u44"
 import { SF_U45_COPY, SF_U45_COPY_BR } from "./orchestra-chapters/sf-u45"
+import { SF_U46_COPY, SF_U46_COPY_BR } from "./orchestra-chapters/sf-u46"
 import { SF_U47_COPY, SF_U47_COPY_BR } from "./orchestra-chapters/sf-u47"
 import { MCP_COPY, MCP_COPY_BR } from "./orchestra-chapters/mcp"
 import { SKILLS_COPY, SKILLS_COPY_BR } from "./orchestra-chapters/skills"
@@ -418,10 +425,15 @@ export const ORCHESTRA_COPY = {
   ...SF_U01_COPY,
   ...SF_U02_COPY,
   ...SF_U03_COPY,
+  ...SF_U04_COPY,
   ...SF_U05_COPY,
+  ...SF_U06_COPY,
   ...SF_U07_COPY,
   ...SF_U08_COPY,
   ...SF_U09_COPY,
+  ...SF_U12_COPY,
+  ...SF_U13_COPY,
+  ...SF_U14_COPY,
   ...SF_U15_COPY,
   ...SF_U16_COPY,
   ...SF_U17_COPY,
@@ -436,6 +448,7 @@ export const ORCHESTRA_COPY = {
   ...SF_U26_COPY,
   ...SF_U27_COPY,
   ...SF_U28_COPY,
+  ...SF_U29_COPY,
   ...SF_U30_COPY,
   ...SF_U31_COPY,
   ...SF_U32_COPY,
@@ -452,6 +465,7 @@ export const ORCHESTRA_COPY = {
   ...SF_U43_COPY,
   ...SF_U44_COPY,
   ...SF_U45_COPY,
+  ...SF_U46_COPY,
   ...SF_U47_COPY,
   ...MCP_COPY,
   ...SKILLS_COPY,
@@ -812,10 +826,15 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SF_U01_COPY_BR,
   ...SF_U02_COPY_BR,
   ...SF_U03_COPY_BR,
+  ...SF_U04_COPY_BR,
   ...SF_U05_COPY_BR,
+  ...SF_U06_COPY_BR,
   ...SF_U07_COPY_BR,
   ...SF_U08_COPY_BR,
   ...SF_U09_COPY_BR,
+  ...SF_U12_COPY_BR,
+  ...SF_U13_COPY_BR,
+  ...SF_U14_COPY_BR,
   ...SF_U15_COPY_BR,
   ...SF_U16_COPY_BR,
   ...SF_U17_COPY_BR,
@@ -830,6 +849,7 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SF_U26_COPY_BR,
   ...SF_U27_COPY_BR,
   ...SF_U28_COPY_BR,
+  ...SF_U29_COPY_BR,
   ...SF_U30_COPY_BR,
   ...SF_U31_COPY_BR,
   ...SF_U32_COPY_BR,
@@ -846,6 +866,7 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SF_U43_COPY_BR,
   ...SF_U44_COPY_BR,
   ...SF_U45_COPY_BR,
+  ...SF_U46_COPY_BR,
   ...SF_U47_COPY_BR,
   ...MCP_COPY_BR,
   ...SKILLS_COPY_BR,
