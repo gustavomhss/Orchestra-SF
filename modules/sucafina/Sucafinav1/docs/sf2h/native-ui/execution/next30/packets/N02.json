@@ -1,0 +1,139 @@
+{
+  "schema": "sf2h.next30.packet.v1",
+  "slot": "N02",
+  "role": "new-implementer",
+  "lane": "adapter",
+  "title": "Bindings finos: Visualizações BI",
+  "execution_state": "PREPARED_NOT_STARTED",
+  "authorization": false,
+  "actor": null,
+  "lease": null,
+  "branch_hint": "sf-ux-n02",
+  "source": {
+    "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "work_order_blobs": {
+      "A08": "3dd786fe80aac782a7956f0ec869015613d2bac0"
+    },
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "live_material": "REPIN_BY_114_AT_LAUNCH"
+  },
+  "scope": [
+    {
+      "order": "A08",
+      "output": "complete",
+      "title": "Bindings finos: Visualizações BI",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A08.json",
+      "surfaces": [],
+      "operation_refs": [
+        "contract-catalog.json#/operations/bi.bi-data",
+        "contract-catalog.json#/operations/bi.bi-decision",
+        "contract-catalog.json#/operations/bi.bi-options",
+        "contract-catalog.json#/operations/bi.bi-source"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/bi.ts",
+          "symbol": "SfBi",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/bi.ts",
+          "symbol": "createSfBiClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A08-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A08-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A08-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A08.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/extended"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    }
+  ],
+  "write_paths": [
+    "packages/schema/src/sucafina/bi.ts",
+    "packages/client/src/sucafina/bi.ts",
+    "apps/cli/src/sucafina-product/native-ui/bi.ts",
+    "packages/schema/src/sucafina/bi/**",
+    "packages/client/src/sucafina/bi/**",
+    "apps/cli/src/sucafina-product/native-ui/bi/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+  ],
+  "protected_paths": [
+    "any path owned by active other writer",
+    "shared registries/composition/global i18n/generated/producer code under 114"
+  ],
+  "test_files": [
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N02/",
+  "handoff_to": "114 only",
+  "compiler": "119 only",
+  "tests": "120 via GitHub Actions only",
+  "note": "Thin adapter only: schema/client/host to existing authorized producer. No recreated backend, business logic, mock-success or client Core/Server import. Read COMMON.md."
+}
