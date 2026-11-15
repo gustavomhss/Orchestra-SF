@@ -294,7 +294,7 @@ export const SfDomainPageCap12 = {
     Schema.Struct({
       status: Schema.Literal("ok"), context: SfContextStamp,
       value: Schema.Struct({
-        capabilityId: Schema.Literal("CAP12"), selection: SelectionResolved,
+        capabilityId: Schema.Literal("CAP12"), selection: SelectionResolvedCAP12,
         data: SfOperationsPageData.CAP12, versions: Versions,
         allowedActionIds: Schema.Array(Schema.String),
       }),

@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { optional } from "../schema.ts"
+import { optional } from "../schema"
 
 // This leaf is a closed projection of memory-http.ts, not an Atlas store or a
 // second materiality engine. All permissions and source-digest checks remain in

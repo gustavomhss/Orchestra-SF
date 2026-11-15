@@ -242,11 +242,24 @@ const CommandValues = {
     "import-workbook": ImportValues,
   },
 } as const
-function legacyInput<P extends keyof typeof CommandValues, A extends keyof (typeof CommandValues)[P] & string>(
-  page: string, action: A, values: (typeof CommandValues)[P][A],
-) {
+// The selected capability fixes both the source page and the legal action set.
+// Values stays a concrete Schema.Top subtype, not the entire command catalog.
+const PageByCapability = {
+  CAP17: "Overview",
+  CAP18: "OPEX",
+  CAP19: "CAPEX",
+  CAP20: "Headcount",
+  CAP21: "Entities & allocations",
+  CAP22: "FX rates",
+  CAP23: "Versions",
+} as const
+function legacyInput<
+  P extends keyof typeof CommandValues,
+  A extends keyof (typeof CommandValues)[P] & string,
+  Values extends Schema.Top,
+>(capability: P, action: A, values: Values & (typeof CommandValues)[P][A]) {
   return Schema.Struct({
-    page: Schema.Literal(page), action: Schema.Literal(action),
+    page: Schema.Literal(PageByCapability[capability]), action: Schema.Literal(action),
     id: Optional(NonEmpty), version: NonNegativeInt, values,
     confirmed: Optional(Schema.Boolean),
   })
@@ -308,7 +321,7 @@ export const SfDomainPageCap17 = {
 /** domain.command.CAP17.import-workbook — SfDomainCommandCap17ImportWorkbook, decodeCommand + domain.execute(page="Overview",action="import-workbook"). */
 export const SfDomainCommandCap17ImportWorkbook = {
   operationId: "domain.command.CAP17.import-workbook" as const,
-  input: legacyInput("Overview", "import-workbook", CommandValues.CAP17["import-workbook"]),
+  input: legacyInput("CAP17", "import-workbook", CommandValues.CAP17["import-workbook"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -333,7 +346,7 @@ export const SfDomainPageCap18 = {
 /** domain.command.CAP18.save — SfDomainCommandCap18Save, decodeCommand + domain.execute(page="OPEX",action="save"). */
 export const SfDomainCommandCap18Save = {
   operationId: "domain.command.CAP18.save" as const,
-  input: legacyInput("OPEX", "save", CommandValues.CAP18["save"]),
+  input: legacyInput("CAP18", "save", CommandValues.CAP18["save"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -347,7 +360,7 @@ export const SfDomainCommandCap18Save = {
 /** domain.command.CAP18.delete — SfDomainCommandCap18Delete, decodeCommand + domain.execute(page="OPEX",action="delete"). */
 export const SfDomainCommandCap18Delete = {
   operationId: "domain.command.CAP18.delete" as const,
-  input: legacyInput("OPEX", "delete", CommandValues.CAP18["delete"]),
+  input: legacyInput("CAP18", "delete", CommandValues.CAP18["delete"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -361,7 +374,7 @@ export const SfDomainCommandCap18Delete = {
 /** domain.command.CAP18.spread — SfDomainCommandCap18Spread, decodeCommand + domain.execute(page="OPEX",action="spread"). */
 export const SfDomainCommandCap18Spread = {
   operationId: "domain.command.CAP18.spread" as const,
-  input: legacyInput("OPEX", "spread", CommandValues.CAP18["spread"]),
+  input: legacyInput("CAP18", "spread", CommandValues.CAP18["spread"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -375,7 +388,7 @@ export const SfDomainCommandCap18Spread = {
 /** domain.command.CAP18.reset — SfDomainCommandCap18Reset, decodeCommand + domain.execute(page="OPEX",action="reset"). */
 export const SfDomainCommandCap18Reset = {
   operationId: "domain.command.CAP18.reset" as const,
-  input: legacyInput("OPEX", "reset", CommandValues.CAP18["reset"]),
+  input: legacyInput("CAP18", "reset", CommandValues.CAP18["reset"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -389,7 +402,7 @@ export const SfDomainCommandCap18Reset = {
 /** domain.command.CAP18.import-workbook — SfDomainCommandCap18ImportWorkbook, decodeCommand + domain.execute(page="OPEX",action="import-workbook"). */
 export const SfDomainCommandCap18ImportWorkbook = {
   operationId: "domain.command.CAP18.import-workbook" as const,
-  input: legacyInput("OPEX", "import-workbook", CommandValues.CAP18["import-workbook"]),
+  input: legacyInput("CAP18", "import-workbook", CommandValues.CAP18["import-workbook"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -414,7 +427,7 @@ export const SfDomainPageCap19 = {
 /** domain.command.CAP19.save — SfDomainCommandCap19Save, decodeCommand + domain.execute(page="CAPEX",action="save"). */
 export const SfDomainCommandCap19Save = {
   operationId: "domain.command.CAP19.save" as const,
-  input: legacyInput("CAPEX", "save", CommandValues.CAP19["save"]),
+  input: legacyInput("CAP19", "save", CommandValues.CAP19["save"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -428,7 +441,7 @@ export const SfDomainCommandCap19Save = {
 /** domain.command.CAP19.delete — SfDomainCommandCap19Delete, decodeCommand + domain.execute(page="CAPEX",action="delete"). */
 export const SfDomainCommandCap19Delete = {
   operationId: "domain.command.CAP19.delete" as const,
-  input: legacyInput("CAPEX", "delete", CommandValues.CAP19["delete"]),
+  input: legacyInput("CAP19", "delete", CommandValues.CAP19["delete"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -442,7 +455,7 @@ export const SfDomainCommandCap19Delete = {
 /** domain.command.CAP19.spread — SfDomainCommandCap19Spread, decodeCommand + domain.execute(page="CAPEX",action="spread"). */
 export const SfDomainCommandCap19Spread = {
   operationId: "domain.command.CAP19.spread" as const,
-  input: legacyInput("CAPEX", "spread", CommandValues.CAP19["spread"]),
+  input: legacyInput("CAP19", "spread", CommandValues.CAP19["spread"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -456,7 +469,7 @@ export const SfDomainCommandCap19Spread = {
 /** domain.command.CAP19.reset — SfDomainCommandCap19Reset, decodeCommand + domain.execute(page="CAPEX",action="reset"). */
 export const SfDomainCommandCap19Reset = {
   operationId: "domain.command.CAP19.reset" as const,
-  input: legacyInput("CAPEX", "reset", CommandValues.CAP19["reset"]),
+  input: legacyInput("CAP19", "reset", CommandValues.CAP19["reset"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -470,7 +483,7 @@ export const SfDomainCommandCap19Reset = {
 /** domain.command.CAP19.import-workbook — SfDomainCommandCap19ImportWorkbook, decodeCommand + domain.execute(page="CAPEX",action="import-workbook"). */
 export const SfDomainCommandCap19ImportWorkbook = {
   operationId: "domain.command.CAP19.import-workbook" as const,
-  input: legacyInput("CAPEX", "import-workbook", CommandValues.CAP19["import-workbook"]),
+  input: legacyInput("CAP19", "import-workbook", CommandValues.CAP19["import-workbook"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -495,7 +508,7 @@ export const SfDomainPageCap20 = {
 /** domain.command.CAP20.save — SfDomainCommandCap20Save, decodeCommand + domain.execute(page="Headcount",action="save"). */
 export const SfDomainCommandCap20Save = {
   operationId: "domain.command.CAP20.save" as const,
-  input: legacyInput("Headcount", "save", CommandValues.CAP20["save"]),
+  input: legacyInput("CAP20", "save", CommandValues.CAP20["save"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -509,7 +522,7 @@ export const SfDomainCommandCap20Save = {
 /** domain.command.CAP20.delete — SfDomainCommandCap20Delete, decodeCommand + domain.execute(page="Headcount",action="delete"). */
 export const SfDomainCommandCap20Delete = {
   operationId: "domain.command.CAP20.delete" as const,
-  input: legacyInput("Headcount", "delete", CommandValues.CAP20["delete"]),
+  input: legacyInput("CAP20", "delete", CommandValues.CAP20["delete"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -523,7 +536,7 @@ export const SfDomainCommandCap20Delete = {
 /** domain.command.CAP20.sync — SfDomainCommandCap20Sync, decodeCommand + domain.execute(page="Headcount",action="sync"). */
 export const SfDomainCommandCap20Sync = {
   operationId: "domain.command.CAP20.sync" as const,
-  input: legacyInput("Headcount", "sync", CommandValues.CAP20["sync"]),
+  input: legacyInput("CAP20", "sync", CommandValues.CAP20["sync"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -537,7 +550,7 @@ export const SfDomainCommandCap20Sync = {
 /** domain.command.CAP20.import-workbook — SfDomainCommandCap20ImportWorkbook, decodeCommand + domain.execute(page="Headcount",action="import-workbook"). */
 export const SfDomainCommandCap20ImportWorkbook = {
   operationId: "domain.command.CAP20.import-workbook" as const,
-  input: legacyInput("Headcount", "import-workbook", CommandValues.CAP20["import-workbook"]),
+  input: legacyInput("CAP20", "import-workbook", CommandValues.CAP20["import-workbook"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -562,7 +575,7 @@ export const SfDomainPageCap21 = {
 /** domain.command.CAP21.save — SfDomainCommandCap21Save, decodeCommand + domain.execute(page="Entities & allocations",action="save"). */
 export const SfDomainCommandCap21Save = {
   operationId: "domain.command.CAP21.save" as const,
-  input: legacyInput("Entities & allocations", "save", CommandValues.CAP21["save"]),
+  input: legacyInput("CAP21", "save", CommandValues.CAP21["save"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -576,7 +589,7 @@ export const SfDomainCommandCap21Save = {
 /** domain.command.CAP21.delete — SfDomainCommandCap21Delete, decodeCommand + domain.execute(page="Entities & allocations",action="delete"). */
 export const SfDomainCommandCap21Delete = {
   operationId: "domain.command.CAP21.delete" as const,
-  input: legacyInput("Entities & allocations", "delete", CommandValues.CAP21["delete"]),
+  input: legacyInput("CAP21", "delete", CommandValues.CAP21["delete"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -590,7 +603,7 @@ export const SfDomainCommandCap21Delete = {
 /** domain.command.CAP21.common — SfDomainCommandCap21Common, decodeCommand + domain.execute(page="Entities & allocations",action="common"). */
 export const SfDomainCommandCap21Common = {
   operationId: "domain.command.CAP21.common" as const,
-  input: legacyInput("Entities & allocations", "common", CommandValues.CAP21["common"]),
+  input: legacyInput("CAP21", "common", CommandValues.CAP21["common"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -604,7 +617,7 @@ export const SfDomainCommandCap21Common = {
 /** domain.command.CAP21.import-workbook — SfDomainCommandCap21ImportWorkbook, decodeCommand + domain.execute(page="Entities & allocations",action="import-workbook"). */
 export const SfDomainCommandCap21ImportWorkbook = {
   operationId: "domain.command.CAP21.import-workbook" as const,
-  input: legacyInput("Entities & allocations", "import-workbook", CommandValues.CAP21["import-workbook"]),
+  input: legacyInput("CAP21", "import-workbook", CommandValues.CAP21["import-workbook"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -629,7 +642,7 @@ export const SfDomainPageCap22 = {
 /** domain.command.CAP22.save — SfDomainCommandCap22Save, decodeCommand + domain.execute(page="FX rates",action="save"). */
 export const SfDomainCommandCap22Save = {
   operationId: "domain.command.CAP22.save" as const,
-  input: legacyInput("FX rates", "save", CommandValues.CAP22["save"]),
+  input: legacyInput("CAP22", "save", CommandValues.CAP22["save"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -643,7 +656,7 @@ export const SfDomainCommandCap22Save = {
 /** domain.command.CAP22.delete — SfDomainCommandCap22Delete, decodeCommand + domain.execute(page="FX rates",action="delete"). */
 export const SfDomainCommandCap22Delete = {
   operationId: "domain.command.CAP22.delete" as const,
-  input: legacyInput("FX rates", "delete", CommandValues.CAP22["delete"]),
+  input: legacyInput("CAP22", "delete", CommandValues.CAP22["delete"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -657,7 +670,7 @@ export const SfDomainCommandCap22Delete = {
 /** domain.command.CAP22.import-workbook — SfDomainCommandCap22ImportWorkbook, decodeCommand + domain.execute(page="FX rates",action="import-workbook"). */
 export const SfDomainCommandCap22ImportWorkbook = {
   operationId: "domain.command.CAP22.import-workbook" as const,
-  input: legacyInput("FX rates", "import-workbook", CommandValues.CAP22["import-workbook"]),
+  input: legacyInput("CAP22", "import-workbook", CommandValues.CAP22["import-workbook"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -682,7 +695,7 @@ export const SfDomainPageCap23 = {
 /** domain.command.CAP23.save — SfDomainCommandCap23Save, decodeCommand + domain.execute(page="Versions",action="save"). */
 export const SfDomainCommandCap23Save = {
   operationId: "domain.command.CAP23.save" as const,
-  input: legacyInput("Versions", "save", CommandValues.CAP23["save"]),
+  input: legacyInput("CAP23", "save", CommandValues.CAP23["save"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -696,7 +709,7 @@ export const SfDomainCommandCap23Save = {
 /** domain.command.CAP23.copy — SfDomainCommandCap23Copy, decodeCommand + domain.execute(page="Versions",action="copy"). */
 export const SfDomainCommandCap23Copy = {
   operationId: "domain.command.CAP23.copy" as const,
-  input: legacyInput("Versions", "copy", CommandValues.CAP23["copy"]),
+  input: legacyInput("CAP23", "copy", CommandValues.CAP23["copy"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -710,7 +723,7 @@ export const SfDomainCommandCap23Copy = {
 /** domain.command.CAP23.official — SfDomainCommandCap23Official, decodeCommand + domain.execute(page="Versions",action="official"). */
 export const SfDomainCommandCap23Official = {
   operationId: "domain.command.CAP23.official" as const,
-  input: legacyInput("Versions", "official", CommandValues.CAP23["official"]),
+  input: legacyInput("CAP23", "official", CommandValues.CAP23["official"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -724,7 +737,7 @@ export const SfDomainCommandCap23Official = {
 /** domain.command.CAP23.lock — SfDomainCommandCap23Lock, decodeCommand + domain.execute(page="Versions",action="lock"). */
 export const SfDomainCommandCap23Lock = {
   operationId: "domain.command.CAP23.lock" as const,
-  input: legacyInput("Versions", "lock", CommandValues.CAP23["lock"]),
+  input: legacyInput("CAP23", "lock", CommandValues.CAP23["lock"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -738,7 +751,7 @@ export const SfDomainCommandCap23Lock = {
 /** domain.command.CAP23.unlock — SfDomainCommandCap23Unlock, decodeCommand + domain.execute(page="Versions",action="unlock"). */
 export const SfDomainCommandCap23Unlock = {
   operationId: "domain.command.CAP23.unlock" as const,
-  input: legacyInput("Versions", "unlock", CommandValues.CAP23["unlock"]),
+  input: legacyInput("CAP23", "unlock", CommandValues.CAP23["unlock"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -752,7 +765,7 @@ export const SfDomainCommandCap23Unlock = {
 /** domain.command.CAP23.delete — SfDomainCommandCap23Delete, decodeCommand + domain.execute(page="Versions",action="delete"). */
 export const SfDomainCommandCap23Delete = {
   operationId: "domain.command.CAP23.delete" as const,
-  input: legacyInput("Versions", "delete", CommandValues.CAP23["delete"]),
+  input: legacyInput("CAP23", "delete", CommandValues.CAP23["delete"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
@@ -766,7 +779,7 @@ export const SfDomainCommandCap23Delete = {
 /** domain.command.CAP23.import-workbook — SfDomainCommandCap23ImportWorkbook, decodeCommand + domain.execute(page="Versions",action="import-workbook"). */
 export const SfDomainCommandCap23ImportWorkbook = {
   operationId: "domain.command.CAP23.import-workbook" as const,
-  input: legacyInput("Versions", "import-workbook", CommandValues.CAP23["import-workbook"]),
+  input: legacyInput("CAP23", "import-workbook", CommandValues.CAP23["import-workbook"]),
   output: LegacyResult,
   method: "POST" as const,
   pathTemplate: "{mount}/planner",
