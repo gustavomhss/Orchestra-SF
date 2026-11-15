@@ -1,0 +1,35 @@
+{
+  "schema": "sf2h.native-ui.test-request.v1",
+  "target": "120",
+  "slot": "N16",
+  "state": "NOT_RUN_REQUESTED",
+  "sourceHead": "7ac5d020914ddeb73b6c3071f79b792490616ae9",
+  "requires": [
+    "125 same-C integrated F01/F02/F03/S01/S03/I00/A01 and N16",
+    "hosted installed F04 real private manifest"
+  ],
+  "paths": [
+    "packages/app-shell/e2e/sucafina/native/journeys/u28.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u30.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u31.spec.ts"
+  ],
+  "criteria": [
+    "U28-AC01",
+    "U28-AC02",
+    "U28-AC03",
+    "U30-AC01",
+    "U30-AC02",
+    "U30-AC03",
+    "U31-AC01",
+    "U31-AC02",
+    "U31-AC03"
+  ],
+  "neverClaimed": [
+    "NOT_RUN",
+    "authentication success",
+    "typecheck",
+    "reflow",
+    "desktop",
+    "CI passed"
+  ]
+}
