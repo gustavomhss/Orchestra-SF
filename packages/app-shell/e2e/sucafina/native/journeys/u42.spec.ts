@@ -6,7 +6,10 @@ import { expect } from "@playwright/test"
 import { nativeInstalledFixture as test } from "../fixture"
 
 test("UI31 search stays in memory, filters only returned authorized evidence", async ({ page, nativeHarness }) => {
-  const destination = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  const installed = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  await page.goto(installed.toString())
+  await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
+  const destination = new URL(installed)
   destination.pathname = "/orchestra/sf-home/search"
   await page.goto(destination.toString())
   await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
@@ -16,7 +19,8 @@ test("UI31 search stays in memory, filters only returned authorized evidence", a
   const before = page.url()
   await page.getByRole("button", { name: /^(Search|Buscar)$/ }).click()
   // A real authorized source must respond; partial/failed read is a failed gate.
-  await expect(page.locator('[data-sf-state="loading"]')).toHaveCount(0)
+  await expect(page.locator('section[aria-labelledby="sf-u42-results"] [data-sf-state="loading"]')).toHaveCount(0)
+  await expect(page.locator('section[aria-labelledby="sf-u42-results"] [data-sf-state="unavailable"]')).toHaveCount(0)
   await expect(page.getByRole("heading", { name: /Results|Resultados/ })).toBeVisible()
   expect(page.url(), "Private query must never be written to the URL").toBe(before)
   await page.getByRole("combobox", { name: /Result type|Tipo de resultado/ }).selectOption("document")

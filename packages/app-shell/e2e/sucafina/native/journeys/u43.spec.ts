@@ -6,7 +6,10 @@ import { expect } from "@playwright/test"
 import { nativeInstalledFixture as test } from "../fixture"
 
 test("UI32 reads legacy personal views and explicitly blocks uninstalled native V2", async ({ page, nativeHarness }) => {
-  const destination = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  const installed = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  await page.goto(installed.toString())
+  await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
+  const destination = new URL(installed)
   destination.pathname = "/orchestra/sf-work/views"
   await page.goto(destination.toString())
   await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
@@ -20,7 +23,10 @@ test("UI32 reads legacy personal views and explicitly blocks uninstalled native 
 })
 
 test("UI32 never treats a missing native producer as saved preferences", async ({ page, nativeHarness }) => {
-  const destination = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  const installed = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  await page.goto(installed.toString())
+  await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
+  const destination = new URL(installed)
   destination.pathname = "/orchestra/sf-work/views/new"
   await page.goto(destination.toString())
   await expect(page.getByRole("heading", { name: /Saved views|Vistas salvas/ })).toBeVisible()

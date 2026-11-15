@@ -230,6 +230,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
   const source = () => screen.detail
   const reviewKind = (): "save" | "remove" | null => {
     if (screen.mutation === "review-remove") return "remove"
+    if (screen.mutation !== "idle") return null
     return activeDraft()?.phase === "reviewing" ? "save" : null
   }
 
@@ -238,12 +239,14 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     const record = source()
     const state = activeDraft()
     const mutationName = kind === "save" ? "views.save" : "views.remove"
-    if (!ready || !record || !operationReady(mutationName) || !state || screen.mutation === "submitting" ||
-        screen.mutation === "outcome-unknown" || screen.mutation === "conflict") return
+    if (!ready || !record || !operationReady(mutationName) || !state ||
+        (screen.mutation !== "idle" && screen.mutation !== "review-remove")) return
     if (kind === "save" && (!state.value.title.trim() || state.value.title.length > 120 || state.conflict)) {
       setScreen("error", "invalid")
       return
     }
+    // Fence repeated confirmations synchronously, before the async digest.
+    setScreen({ mutation: "submitting", error: null })
     const request = new AbortController()
     mutationRequest = request
     const options: SfCallOptions = { signal: request.signal, idempotencyKey: crypto.randomUUID() }
