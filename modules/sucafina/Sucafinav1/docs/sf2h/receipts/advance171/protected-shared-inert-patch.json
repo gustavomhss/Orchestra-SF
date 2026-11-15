@@ -1,0 +1,125 @@
+{
+  "schema": "sf2h.advance171.inert-shared-patch.v1",
+  "mission": 171,
+  "owner": "162/S0-C-e20/PR65",
+  "status": "INERT_NOT_APPLIED",
+  "target_ref": "sf2-stack",
+  "source_integrator_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "source_integrator_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+  "author_branch": "sf-ux-a12",
+  "author_head": "a21244975aa5efd804016648fa1245884945fa5e",
+  "operation_contract_delta": {
+    "id": "NAV-01",
+    "operationId": "projection.search",
+    "before": "GET? q",
+    "after": "POST JSON body {q}",
+    "maxRequestBytes": 4096,
+    "idempotency": "automatic random read key from existing F02; not mutation intent",
+    "no_query_fields": true,
+    "source_catalog_immutable_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "requires_contract_overlay_ack": true
+  },
+  "invariants": [
+    "Do not apply any shared patch before S0-C confirms owner release and CAS-matched preimages",
+    "Exactly one SfHostServices.workDestinations.read delegates to createSfWorkDestinations.read; original Request is never recreated",
+    "Keep UI.admit+validate and post-read verify exactly as original HTML producer",
+    "Browser F02 and main IPC both reject stale GET search before URL construction",
+    "Router enforces POST maxRequestBytes; server A12 also reads at most 4096 bytes and rejects URI q",
+    "No grant, authority, model, Session, retry, alternative server, or new goal"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "preimage_git_blob_sha": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+      "postimage_git_blob_sha": "d5096c5eee28d23faa96c240b62422adf8b274dd",
+      "postimage_git_blob_api": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d5096c5eee28d23faa96c240b62422adf8b274dd",
+      "mode": "100644",
+      "replacements": [
+        {
+          "before": "import type { createCollaborationWorkPort } from \"../collaboration/work-port.ts\"",
+          "after": "import type { createCollaborationWorkPort, WorkPresentationItem } from \"../collaboration/work-port.ts\""
+        },
+        {
+          "before": "import type { ForecastCompareRequest } from \"./operations.ts\"",
+          "after": "import type { ForecastCompareRequest, WorkListRequest } from \"./operations.ts\""
+        },
+        {
+          "before": "  work?: Pick<ReturnType<typeof createCollaborationWorkPort>, \"listPresentation\">",
+          "after": "  work?: Pick<ReturnType<typeof createCollaborationWorkPort>, \"listPresentation\">\n  /** Exact C58 human-authorized destination reader and its terminal witness.\n   * Never expose producer authority, a grant factory or its resolver to UI. */\n  workDestinations?: Readonly<{\n    read: (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext) =>\n      Promise<PortResult<{\n        view: Readonly<{\n          item: WorkPresentationItem\n          details: readonly Readonly<{ label: string; value: string }>[]\n          links: readonly Readonly<{ label: string; url: string }>[]\n        }>\n        verify: () => Promise<boolean>\n      }>>\n  }>"
+        }
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "preimage_git_blob_sha": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+      "postimage_git_blob_sha": "44f6e065a358c0e2a0d407183ff232fe74b104a1",
+      "postimage_git_blob_api": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/44f6e065a358c0e2a0d407183ff232fe74b104a1",
+      "mode": "100644",
+      "replacements": [
+        {
+          "before": "sourcingInputs, work: business.collaboration.work,",
+          "after": "sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },"
+        }
+      ]
+    },
+    {
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "preimage_git_blob_sha": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+      "postimage_git_blob_sha": "b853b38ebc3a0538aaba963c6422d749febde544",
+      "postimage_git_blob_api": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b853b38ebc3a0538aaba963c6422d749febde544",
+      "mode": "100644",
+      "replacements": [
+        {
+          "before": "  \"projection.search\": {\"method\":\"GET\",\"pathTemplate\":\"{mount}/api/ui/projections/search\",\"effect\":\"read\",\"responseMode\":\"json\"},",
+          "after": "  \"projection.search\": {\"method\":\"POST\",\"pathTemplate\":\"{mount}/api/ui/projections/search\",\"effect\":\"read\",\"responseMode\":\"json\",\"maxRequestBytes\":4096},"
+        }
+      ]
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "preimage_git_blob_sha": "ff509a7b742b81939a15f0439ca7f4a3d4b858e9",
+      "postimage_git_blob_sha": "c9fc831156c94f062f0493a14458f84f61f7dff3",
+      "postimage_git_blob_api": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c9fc831156c94f062f0493a14458f84f61f7dff3",
+      "mode": "100644",
+      "replacements": [
+        {
+          "before": "      const codec = options.operations[operation.operationId]",
+          "after": "      // A stale GET registry must never serialize private search text as URL q,\n      // even when a caller bypasses createSfWorkClient.\n      if (operation.operationId === \"projection.search\" &&\n          (metadata.method !== \"POST\" || metadata.effect !== \"read\" ||\n           metadata.responseMode !== \"json\" ||\n           metadata.pathTemplate !== \"{mount}/api/ui/projections/search\" ||\n           !(\"maxRequestBytes\" in metadata) || metadata.maxRequestBytes !== 4096 ||\n           \"fixedQuery\" in metadata || \"fixedBodyDiscriminator\" in metadata)) {\n        return failure(\"contract-unavailable\")\n      }\n      const codec = options.operations[operation.operationId]"
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/protocol.ts",
+      "preimage_git_blob_sha": "a4e8a3bf5a8b55f14ca6457bb767f83fe6d3070a",
+      "postimage_git_blob_sha": "0b2152a22811d19a3b04ab1e4ebf5218c564b2eb",
+      "postimage_git_blob_api": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/0b2152a22811d19a3b04ab1e4ebf5218c564b2eb",
+      "mode": "100644",
+      "replacements": [
+        {
+          "before": "  let decoded\n  try { decoded = codec.decodeInput(input.request.input) }",
+          "after": "  // IPC callers are not trusted to use the browser work-client wrapper.\n  // Do not construct a URI until the private bounded POST-read is installed.\n  if (operationId === \"projection.search\" &&\n      (meta.method !== \"POST\" || meta.effect !== \"read\" ||\n       meta.responseMode !== \"json\" ||\n       meta.pathTemplate !== \"{mount}/api/ui/projections/search\" ||\n       meta.maxRequestBytes !== 4096 || meta.fixedQuery !== undefined ||\n       meta.fixedBodyDiscriminator !== undefined)) {\n    return { status: \"contract-unavailable\" }\n  }\n  let decoded\n  try { decoded = codec.decodeInput(input.request.input) }"
+        }
+      ]
+    }
+  ],
+  "inspected_no_change": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "blob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "reason": "already requires positive maxRequestBytes on every POST, retains same Request"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+      "reason": "already mounts createSfWorkProjectionHandlers through nativeDependencies runtime()"
+    },
+    {
+      "path": "apps/desktop/src/main/sucafina/network.ts",
+      "blob": "912cade1f8213c0014f27ed75adb85b2b64f33c2",
+      "reason": "already sends planned body, exact method, and main-owned Origin; no change required"
+    }
+  ],
+  "tests": "NOT_RUN; owner 164 only after integrator merges same candidate",
+  "compiler": "163/PR107",
+  "integration": "162/PR65"
+}
