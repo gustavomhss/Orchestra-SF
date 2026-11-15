@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "mission_id": "UX-A08",
+  "order": "A08",
+  "branch": "sf-ux-a08",
+  "lease_epoch": "ux-native-a08-e1",
+  "actor": "ChatGPT (GitHub connector)",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_reason": "Not exposed by connected runtime",
+  "state": "AUTHORING",
+  "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "observed_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "source_binding": {
+    "id": "extended",
+    "path": "apps/cli/src/sucafina-product/extended-http.ts",
+    "observed_blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+    "pinned_blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+    "semantic_delta": "SAME_BLOB"
+  },
+  "contract_blobs": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "operations": [
+    "bi.bi-data",
+    "bi.bi-source",
+    "bi.bi-decision",
+    "bi.bi-options"
+  ],
+  "exclusive_paths": [
+    "packages/schema/src/sucafina/bi.ts",
+    "packages/client/src/sucafina/bi.ts",
+    "apps/cli/src/sucafina-product/native-ui/bi.ts",
+    "packages/schema/src/sucafina/bi/**",
+    "packages/client/src/sucafina/bi/**",
+    "apps/cli/src/sucafina-product/native-ui/bi/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A08/",
+  "outside_scope": [
+    "shared registries, package.json exports and i18n (114)",
+    "CI (120)",
+    "compiler/guards (119)",
+    "producer or auth changes",
+    "local tests",
+    "merge/deploy/native Goal"
+  ],
+  "preimages": {
+    "packages/schema/src/sucafina/bi.ts": null,
+    "packages/client/src/sucafina/bi.ts": null,
+    "apps/cli/src/sucafina-product/native-ui/bi.ts": null,
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts": null
+  },
+  "pending": "Implement typed schemas and source-preserving wrappers; no integration/qualification claim"
+}
