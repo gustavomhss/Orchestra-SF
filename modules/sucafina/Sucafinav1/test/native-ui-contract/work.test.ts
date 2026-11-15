@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import { Schema } from "effect"
 import {
-  SfWork, SfProjectionWork, SfViewsList, SfViewsOpen, SfViewsSave, SfViewsRemove,
+  SfWork, SfProjectionWork, SfProjectionWorkItem, SfProjectionSearch, SfViewsList, SfViewsOpen, SfViewsSave, SfViewsRemove,
 } from "../../../../../packages/schema/src/sucafina/work"
 import { createSfWorkClient } from "../../../../../packages/client/src/sucafina/work"
+import { SfOperationRegistry } from "../../../../../packages/schema/src/sucafina/operation-registry"
 import { createSfWorkProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/work"
 
 const view = {
@@ -175,7 +176,13 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
   test("routes typed calls through the injected transport without changing IDs, values or options", async () => {
     const { client, calls } = recordingClient()
     const options = { signal, idempotencyKey: "intent-once-a12" }
-    await client["projection.search"]({ q: "documents" }, options)
+    const searchOptions = { signal }
+    const searchResult = await client["projection.search"]({ q: "documents" }, searchOptions)
+    const postReadInstalled = (SfOperationRegistry["projection.search"] as { readonly method: string }).method === "POST"
+    if (!postReadInstalled) {
+      expect(searchResult).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
+      expect(calls).toHaveLength(0)
+    }
     await client["projection.work"]({
       selectionRef: "selection-1", start: "2026-01-01", end: "2026-12-31",
     }, options)
@@ -183,7 +190,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
       view, expectedVersion: 3,
     } }, options)
     expect(calls).toEqual([
-      { operationId: "projection.search", input: { q: "documents" }, options },
+      ...(postReadInstalled ? [{ operationId: "projection.search", input: { q: "documents" }, options: searchOptions }] : []),
       { operationId: "projection.work", input: {
         selectionRef: "selection-1", start: "2026-01-01", end: "2026-12-31",
       }, options },
@@ -211,29 +218,117 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
     expect(calls).toHaveLength(0)
   })
 
-  test("new GETs reject unexpected, repeated, malformed and cross-origin queries before accessing a host", async () => {
+  test("work-item uses a closed redacted source shape without losing null/zero/version", () => {
+    const item = {
+      kind: "signal" as const, actionRef: "sf-signal:one",
+      title: null, ownerRef: "owner-a", state: "stale",
+      sourceVersion: 0, observedVersion: 0,
+      destination: { kind: "signal" as const, ref: "sf-signal:one" },
+    }
+    const output = { status: "ok", value: {
+      item, details: [{ label: "Current validity", value: "stale" }],
+      links: [{ label: "Open decision", url: "/sf/dashboard?sf=case" }],
+    } }
+    const input = { selectionRef: "selection-1", actionRef: "sf-signal:one", start: "2026-01-01", end: "2026-12-31" }
+    expect(Schema.decodeUnknownSync(SfProjectionWorkItem.Input)(input)).toEqual(input)
+    expect(Schema.decodeUnknownSync(SfProjectionWorkItem.Output)(output)).toEqual(output)
+    for (const invalid of [
+      { ...output, value: { ...output.value, item: { ...item, sourceRefs: ["private"] } } },
+      { ...output, value: { ...output.value, item: { ...item, destination: { ...item.destination, grant: "false" } } } },
+      { ...output, value: { ...output.value, details: [{ label: "X", value: "Y", privateSnapshot: true }] } },
+      { ...output, value: { ...output.value, links: [{ label: "X", url: "/sf", authorization: "secret" }] } },
+      { ...output, value: { ...output.value, authority: {} } },
+    ]) {
+      expect(() => Schema.decodeUnknownSync(SfProjectionWorkItem.Output)(invalid)).toThrow()
+    }
+    expect(() => Schema.decodeUnknownSync(SfProjectionWorkItem.Input)({
+      ...input, principalRef: "admin",
+    })).toThrow()
+  })
+
+  test("private search input is closed and bounded independently of the legacy V1 codec", () => {
+    expect(Schema.decodeUnknownSync(SfProjectionSearch.Input)({ q: "an internal document" }))
+      .toEqual({ q: "an internal document" })
+    expect(() => Schema.decodeUnknownSync(SfProjectionSearch.Input)({
+      q: "an internal document", grant: "admin",
+    })).toThrow()
+    expect(() => Schema.decodeUnknownSync(SfProjectionSearch.Input)({ q: "a".repeat(3801) })).toThrow()
+    expect(Schema.decodeUnknownSync(SfViewsSave.Input)({
+      action: "save", input: { view, expectedVersion: null },
+    })).toEqual({ surface: "dashboard", action: "save", input: { view, expectedVersion: null } })
+  })
+
+  test("NAV-01 integration requires an exact bounded POST-read registry route without query", () => {
+    const route = SfOperationRegistry["projection.search"]
+    expect(route.method).toBe("POST")
+    expect(route.pathTemplate).toBe("{mount}/api/ui/projections/search")
+    expect(route.effect).toBe("read")
+    expect(route.responseMode).toBe("json")
+    expect("maxRequestBytes" in route ? route.maxRequestBytes : undefined).toBe(4096)
+    expect("fixedQuery" in route).toBe(false)
+  })
+
+  test("new projections reject unsafe methods, query strings, extra selectors and invalid periods before host access", async () => {
     const handlers = createSfWorkProjectionHandlers({
-      mount: "/sf",
-      origin: "https://sf.example",
+      mount: "/sf", origin: "https://sf.example",
       runtime: () => { throw new Error("host must not be accessed") },
     } as never)
     const byId = Object.fromEntries(handlers.map((handler) => [handler.operationId, handler]))
     expect(Object.keys(byId)).toEqual([
-      "projection.home", "projection.search", "projection.work", "projection.work-selection",
+      "projection.home", "projection.search", "projection.work", "projection.work-item", "projection.work-selection",
     ])
-    // work-item requires the original private destinations.read + verify port:
-    // no weaker substitute is admitted by A12 before I00 releases that seam.
-    expect(byId["projection.work-item"]).toBeUndefined()
+    const workItem = "https://sf.example/sf/api/ui/projections/work-item"
+    const search = "https://sf.example/sf/api/ui/projections/search"
     for (const [operationId, url, expected] of [
       ["projection.home", "https://sf.example/sf/api/ui/projections/home?owner=other", 400],
-      ["projection.search", "https://sf.example/sf/api/ui/projections/search?q=a&q=b", 400],
-      ["projection.search", "https://sf.example/sf/api/ui/projections/search?q=", 400],
+      ["projection.search", search + "?q=private", 400],
+      ["projection.search", search, 400], // GET fallback is never allowed
       ["projection.work", "https://sf.example/sf/api/ui/projections/work?selectionRef=a&start=2026-02-30&end=2026-12-31", 400],
+      ["projection.work-item", workItem + "?selectionRef=a&actionRef=b&start=2026-02-30&end=2026-12-31", 400],
+      ["projection.work-item", workItem + "?selectionRef=a&actionRef=b&actionRef=c&start=2026-01-01&end=2026-12-31", 400],
+      ["projection.work-item", workItem + "?selectionRef=a&actionRef=b&start=2026-01-01&end=2026-12-31&principalRef=other", 400],
       ["projection.work-selection", "https://other.example/sf/api/ui/projections/work-selection?start=2026-01-01&end=2026-12-31", 403],
     ] as const) {
       const response = await byId[operationId]!.handle(new Request(url))
       expect(response.status).toBe(expected)
       expect(response.headers.get("cache-control")).toBe("no-store")
     }
+  })
+
+  test("private POST search rejects q in URI, wrong content-type, extras, oversized chunks and malformed JSON before host access", async () => {
+    const handlers = createSfWorkProjectionHandlers({
+      mount: "/sf", origin: "https://sf.example",
+      runtime: () => { throw new Error("host must not be accessed") },
+    } as never)
+    const search = handlers.find((entry) => entry.operationId === "projection.search")!
+    const url = "https://sf.example/sf/api/ui/projections/search"
+    const headers = { "Content-Type": "application/json", "Idempotency-Key": "private-search-01" }
+    const requests = [
+      new Request(url + "?q=leak", { method: "POST", headers, body: JSON.stringify({ q: "private" }) }),
+      new Request(url, { method: "POST", headers: { ...headers, "Content-Type": "text/plain" }, body: JSON.stringify({ q: "private" }) }),
+      new Request(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ q: "private" }) }),
+      new Request(url, { method: "POST", headers, body: JSON.stringify({ q: "private", owner: "admin" }) }),
+      new Request(url, { method: "POST", headers, body: JSON.stringify({ q: " " }) }),
+      new Request(url, { method: "POST", headers, body: "{" }),
+      new Request(url, { method: "POST", headers, body: JSON.stringify({ q: "a".repeat(5000) }) }),
+    ]
+    for (const request of requests) {
+      const output = await search.handle(request)
+      expect(output.status).toBe(400)
+      expect(output.headers.get("cache-control")).toBe("no-store")
+    }
+  })
+
+  test("work-item is fail-closed without I00's real installed read+verify host port", async () => {
+    const handlers = createSfWorkProjectionHandlers({
+      mount: "/sf", origin: "https://sf.example", runtime: () => ({}) as never,
+    } as never)
+    const item = handlers.find((entry) => entry.operationId === "projection.work-item")!
+    const result = await item.handle(new Request(
+      "https://sf.example/sf/api/ui/projections/work-item?selectionRef=selection-1&actionRef=sf-signal%3Aone&start=2026-01-01&end=2026-12-31",
+    ))
+    expect(result.status).toBe(503)
+    expect(await result.json()).toEqual({ status: "unavailable" })
+    // This negative is structural. It is not a runtime authorization/verify proof.
   })
 })
