@@ -1,0 +1,245 @@
+{
+  "schema": "sf2-mission52-microsoft60-preservation-pointer-map-v1",
+  "state": "STATIC_COMPLETE_POINTER_MAP_NOT_EXECUTED_NOT_APPLIED",
+  "source_proposal": {
+    "commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/proposals/",
+    "manifest_blob": "d0b727ee6a7d26ab72c882c7f1d84eddbf04d51f",
+    "patch_blob": "e5185e7522f3e9cf07c7bf4183ce94f5b92fe2a0",
+    "review_blob": "1bf19d5174bffcf0f47c55c30e126c219c304083",
+    "state": "INERT_NOT_APPLIED_NOT_A_RELEASE",
+    "review_status": "STATIC_PRESERVATION_REVIEW_ACCEPTABLE_AS_INERT_FEEDBACK_ONLY",
+    "declared_original_base": {
+      "name": "C27",
+      "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+    },
+    "declared52pin": "fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1"
+  },
+  "current_target": {
+    "commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "material_candidate": "C28",
+    "material_sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "material_tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "delta_from_C28": "30 receipts/docs only; no new product candidate",
+    "authority60": "HANDOFF_TERMINAL_LEASE_ENDED; no new target writer inferred"
+  },
+  "atomic_bundle_on_actual_base": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "operation": "MODIFY",
+      "preimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+      "mode": "100644",
+      "sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
+      "bytes": 6258,
+      "provided_by": "Existing complete52 shared transport patch; not included inside the two-file60 preservation patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+      "operation": "ADD",
+      "preimage": null,
+      "postimage": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+      "mode": "100644",
+      "sha256": "432a4db46c1a2bb0bd71f52a5adfa58bcd7358d9ca8f31e44977527482537357",
+      "bytes": 2411,
+      "provided_by": "Exact proposed60 map archive; byte-identical to W09 b572 companion"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "operation": "MODIFY",
+      "preimage": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "postimage": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1",
+      "mode": "100644",
+      "sha256": "8866895b5f51b5be71659e030eafa60361f56525f6477fd6b12a290f4ddb97c7",
+      "bytes": 3608,
+      "provided_by": "Exact proposed60 fixture postimage and patch"
+    }
+  ],
+  "historical_map": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "disposition": "KEEP_BYTE_IDENTICAL_TO_CURRENT_TARGET",
+    "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+    "W09_override_to_remove": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+    "if_building_from_W09": "Restore this one historical file from exact current302334c0 bytes; add new map and change fixture lookup. This is not a source tree reset."
+  },
+  "W09_to_preserving_overlay": {
+    "basis_W": "0917b48676b2828b94ec85a9926f79db49e6076e",
+    "delta": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+        "preimage": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+        "postimage": "302334c0e5a50c681005d6c6463132abce84d8b1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+        "preimage": null,
+        "postimage": "b572fbf4525e2d5015a1e8d4245c96085703e1c1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "preimage": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "postimage": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1"
+      }
+    ],
+    "installation52": "Already5d9fe7ec in W09; remains exact",
+    "path_count_note": "Replace one historical-map overlay entry with two new-map/fixture entries: original30-path overlay becomes31 before any independentP7 changes. No new W/S has been created by this audit."
+  },
+  "map_semantics": {
+    "differences_from_historical_map": [
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "field": "bytes",
+        "old": 5315,
+        "new": 6258
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "field": "postimage_blob",
+        "old": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "new": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "field": "postimage_sha256",
+        "old": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "new": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2"
+      }
+    ],
+    "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+    "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+    "coverage_paths": 3,
+    "canonical_bundle": [
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
+        "bytes": 25080,
+        "mode": "100644",
+        "disposition": "KEEP_CURRENT_BYTES"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+        "sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
+        "bytes": 6258,
+        "mode": "100644",
+        "disposition": "MODIFY_TO52_POSTIMAGE"
+      },
+      {
+        "path": "apps/cli/src/commands/handlers/serve.ts",
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "bytes": 8960,
+        "mode": "100644",
+        "disposition": "KEEP_CURRENT_BYTES"
+      }
+    ],
+    "inherited_provenance_warning": "Map target_base3f35d8ee and target_preimage fields describe historical49/55 composition. They are deliberately unchanged provenance, not current52/60 CAS preimages; bind actual C28/current preimages in enclosing manifest."
+  },
+  "fixture_static_review": {
+    "change": "Exactly one readFile path argument; path.join(intake,historical-map) becomes path.resolve(import.meta.dir,new-map-path).",
+    "type_surface": "readFile still receives a string filename and utf8 encoding; JSON parse and typed composition shape are unchanged. Existing path import and path.resolve use already present. No new import/package/type/callback/return signature.",
+    "preserved": [
+      "Original49 manifest blob check",
+      "All archived source pre/post SHA256 and Git blob fences",
+      "Schema/source release/source-manifest identity",
+      "Exact filecount, uniqueness and source postimage pairing",
+      "Installed canonical blob and SHA256",
+      "Canonical repository import through pathToFileURL",
+      "Lifecycle export and no temporary modules",
+      "CurrentChoice/Microsoft auth/origin/privacy code unchanged"
+    ],
+    "relative_path_resolution": "From Sucafinav1/test/microsoft-login, ../../docs resolves to Sucafinav1/docs; repository root path remains ../../../../..",
+    "typing_status": "STATIC_NO_NEW_TYPE_SURFACE; no compiler or product execution performed"
+  },
+  "archive_closure": {
+    "manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/mission49-installation-manifest.json",
+      "blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+      "sha256": "84c3f5b103c40804e183e9acdfabf253ea1e1535a79560cd5a3172ac4a95056c",
+      "bytes": 3002
+    },
+    "original49_artifacts": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.preimage.txt",
+        "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "sha256": "8803349c063a93cb03a805c9833ff612bec158e832f4ef05a1ef3cc5b7d7324b",
+        "bytes": 22887,
+        "role": "preimage",
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.postimage.txt",
+        "blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde",
+        "bytes": 24423,
+        "role": "postimage",
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.preimage.txt",
+        "blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "sha256": "26c989c2ab37d87363e77a06b96ed55eaccb97f9c4f586879bd4539de869f93d",
+        "bytes": 2476,
+        "role": "preimage",
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.postimage.txt",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "bytes": 5315,
+        "role": "postimage",
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.preimage.txt",
+        "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "sha256": "eb8991f30d7d4003bedddd92c82af6a726c0508d7c4284cf51a02e726a2f4db8",
+        "bytes": 8708,
+        "role": "preimage",
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.postimage.txt",
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "bytes": 8960,
+        "role": "postimage",
+        "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+      }
+    ],
+    "verification": "Every one of three archived preimages and three archived postimages matches manifest Git blob and SHA256; all three proposed canonical files match new map Git blob/SHA256/bytes. Entry and serve remain current installed bytes. Source archive unchanged."
+  },
+  "explicit_holds": {
+    "manifest_state": "INERT_NOT_APPLIED_NOT_A_RELEASE",
+    "manifest_reason": "Preserve historical final-intake-55 map while accurately describing future installation52. Do not apply until explicit qualified release52.",
+    "atomicity": "New map + fixture lookup + released installation52 and remaining released dependencies must enter one future material candidate; not applicable standalone to C27.",
+    "review_authorization": "No release52 has been established. This review authorizes no integration, fixture mutation, product mutation or execution.",
+    "runtime_result": "NOT_RUN",
+    "microsoft_journeys": "NOT_RUN_BY_REVIEWER",
+    "GLOBAL_RELEASE": false,
+    "interpretation": "This immutable60 publication is a complete inert proposal, not runtime-qualified release or integration authority. A52 isolated qualification must be recorded under52 own scope with this exact proposed bundle; terminal consumption remains for authorized integrator after complete52 release and fresh authority/HEAD reconciliation."
+  },
+  "local_files": {
+    "pointer_map": "/workspace/scratch/fec39c0682b3/m52-audit/microsoft60-map-preservation/pointer-map.json",
+    "proposal_patch": "/workspace/scratch/fec39c0682b3/m52-audit/microsoft60-map-preservation/microsoft-map-preservation.patch.txt",
+    "new_map_postimage": "/workspace/scratch/fec39c0682b3/m52-audit/microsoft60-map-preservation/microsoft49-composition-52.json.txt",
+    "fixture_preimage": "/workspace/scratch/fec39c0682b3/m52-audit/microsoft60-map-preservation/integration-fixture.ts.preimage.txt",
+    "fixture_postimage": "/workspace/scratch/fec39c0682b3/m52-audit/microsoft60-map-preservation/integration-fixture.ts.postimage.txt",
+    "current_historical_map": "/workspace/scratch/fec39c0682b3/m52-audit/microsoft60-map-preservation/microsoft49-composition-historical55.json.txt"
+  },
+  "verification": {
+    "product_execution": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "CI_dispatches": 0,
+    "remote_writes": 0,
+    "live_file_mutations": 0,
+    "method": "Read-only GitHub MCP immutable bytes and deterministic scratch hashing/JSON/text comparison only"
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "sf2-mission52-p7-ui-request-identity-v1",
+  "verdict": "EXACT_W_PLUS_ORIGINAL_REQUEST_ONLY",
+  "W": {
+    "sha": "812d6bd9de70890775708533a7b05687c2d4d93d",
+    "tree": "619c998f3afac37f09f500ae32c3bcbf96a4514e"
+  },
+  "S": {
+    "sha": "e5e0d9ea5d1cf017c02fcce38b40e1812dfe1f55",
+    "node_id": "C_kwDOVsSYptoAKGU1ZTBkOWVhNWQxY2YwMTdjMDJmY2NlMzhiNDBlMTgxMmRmZTFmNTU",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/e5e0d9ea5d1cf017c02fcce38b40e1812dfe1f55",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/e5e0d9ea5d1cf017c02fcce38b40e1812dfe1f55",
+    "author": {
+      "name": "gustavomhss",
+      "email": "gmhelmold@gmail.com",
+      "date": "2026-11-15T03:03:38Z"
+    },
+    "committer": {
+      "name": "gustavomhss",
+      "email": "gmhelmold@gmail.com",
+      "date": "2026-11-15T03:03:38Z"
+    },
+    "tree": {
+      "sha": "a90f8a5c2ab37c3c02f2c4d81661417e23fea7af",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a90f8a5c2ab37c3c02f2c4d81661417e23fea7af"
+    },
+    "message": "test(sucafina): qualify five original Decisions52 journeys after metric repair",
+    "parents": [
+      {
+        "sha": "812d6bd9de70890775708533a7b05687c2d4d93d",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/812d6bd9de70890775708533a7b05687c2d4d93d",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/812d6bd9de70890775708533a7b05687c2d4d93d"
+      }
+    ],
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  },
+  "root_validation": {
+    "w_entries": 43,
+    "s_entries": 44,
+    "mismatches": [],
+    "extras": [
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+        "size": 229,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+      }
+    ]
+  },
+  "request": {
+    "content": "{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"packageSelector\":\"packages/app\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/decisions.spec.ts\"],\"env\":{\"ORCHESTRA_CHANNEL\":\"prod\"},\"config\":\"e2e/playwright.production.config.ts\"}",
+    "encoding": "utf-8",
+    "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e5e0d9ea5d1cf017c02fcce38b40e1812dfe1f55/.ci-run.json",
+    "display_title": ".ci-run.json"
+  },
+  "dispatch_observation": "Prepared commit supplied by root; this audit performs no dispatch and does not infer run lifecycle.",
+  "original_five": "Exact original request3619 and unchanged decisions.spec.ts b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf retained; component tests do not replace journeys.",
+  "execution": {
+    "product": 0,
+    "CI_dispatches": 0,
+    "remote_writes": 0
+  },
+  "GLOBAL_RELEASE": false
+}

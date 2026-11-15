@@ -1,0 +1,472 @@
+{
+  "schema": "sf2h.mission52.p7.unit-envelope.v1",
+  "mission": 52,
+  "ordinal": "unit-01",
+  "purpose": "Qualify new independent known-subtotal metric before five original UI journeys",
+  "state": "FAIL_TEST_COUNTER_INSTRUMENTATION_NOT_QUALIFIED",
+  "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "base_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+  "material_base": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "source_at_dispatch": "07c430c23d5ae301050cfcde9daddae1b3fc2efc",
+  "owned_product": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
+  "W": "493fe3ca38775b9769a061a19d9e7b2fc0887910",
+  "W_tree": "a896827fe4d33658c45ea5d4172b676369c2cb5c",
+  "S": "227d9903de0b8a21df17abbb4073360b039e4785",
+  "S_tree": "d6cd38a85abe4d537f11d3dc40f0d308017de9e0",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts"
+    ],
+    "env": {}
+  },
+  "request_blob": "5cd26d75c4cf3bd07de35c8ef4400434fccc5626",
+  "branch": "ci-run-linux-astra-wp11-493fe3ca-5cd26d75-m52-u1",
+  "dispatch": "2026-11-15 02:57:14 UTC",
+  "dedup": {
+    "at": "2026-11-15 02:57:11 UTC",
+    "latest_runs": 100,
+    "WP11_active": 0,
+    "exact_S_runs": 0,
+    "W": "493fe3ca38775b9769a061a19d9e7b2fc0887910",
+    "S": "227d9903de0b8a21df17abbb4073360b039e4785",
+    "request_blob": "5cd26d75c4cf3bd07de35c8ef4400434fccc5626"
+  },
+  "overlay": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0832650685246e386f0270533bb58ed840effd65"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9fe64294027cf6805ff8e7ba4b7cfac83455de85"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "903b48594ff95e0d1f78539982adcf75eb3b9272"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de8671b4482339791b8f03bd5616c13d50dc4a87"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10b59adfce7d8fb5143f49c9df9a0d7321425018"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a77da76589ece60a6925bdd20731efbc8f19b597"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36ad71ccbeacc42382dcc2d0f35ee7f707981790"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e91191ec5fa37da12db4d92e973e9105c00be4e5"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "feae4846feb657924d9229193eeeded58b378851"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1761a5d2558c9091d1c02730774751ace44e9131"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30e67e56d5b78ebb2adebbec10194f19d725b570"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "844edd2860e11d5de165c09c7863f4cc6ef5ad67"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "632a47e792502d7476149d2b790ad447cbd96649"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d17760c418ee9b48b97443d90a994c31cc415f5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8be1156b64e957eae4670f7ad1bb6cd51e61e649"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a36440a750d5671a34c3ab41b2af48093af9f7ee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0e812842ad0d534998c182100a8466548d70e915"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3cf82bd82b2716ee689b4c48bd9551540b058287"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "35741770154ccea55944674239e5b29cadc3abb6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1d0ca64fb5c181e4a08321758871c0d0b874802d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14ad0af44fc6c4af8c33d1af1130e82220b822b3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0dac654465c7ad43e025d10f660ecad297cc5c1c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6b0e7ae0e7dea667570ccee65175b8a9089a171e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b572fbf4525e2d5015a1e8d4245c96085703e1c1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/known-subtotal-metric.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0fbe3adf8280621b93972385e3af36dfa833c831"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c9b769dbe97bfb13a16b5781f417f1215b63190"
+    }
+  ],
+  "counts": {
+    "owned_live": 9,
+    "shared52_and_map60": 14,
+    "owner59": 9,
+    "unit52_proposed": 1,
+    "total": 33
+  },
+  "test_cases_planned": 35,
+  "timeout_override": null,
+  "local_product_execution": 0,
+  "epic": 0,
+  "original_five_UI_tests_changed_in_P7": false,
+  "original_five_UI_qualification": "PENDING_same_W",
+  "runtime59_release": {
+    "source": "608763f1765e0eac34565a3668d330bb1cdbd140",
+    "release_blob": "6ab5c38380cb9ad81123022af416d18e55798000",
+    "product": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "qualification": "R2_SELECTED_PASS_P03_FAIL_GATES45_PENDING"
+  },
+  "target_authority": {
+    "current_head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "last_60": "ENDED",
+    "control": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "successor_71": "PREPARED_NOT_STARTED_NO_ACK_OBSERVED",
+    "source_52": "ACTIVE_BOUNDED_EPOCH_decisions-installed-browser52",
+    "no_target_write": true
+  },
+  "GLOBAL_RELEASE": false,
+  "run_id": 43670124299,
+  "job_id": 132678103941,
+  "cleanup_job_id": 132678490627,
+  "attempt": 1,
+  "run_conclusion": "failure",
+  "job_conclusion": "failure",
+  "cleanup": "success",
+  "runtime": {
+    "pass": 32,
+    "fail": 3,
+    "skipped": 0,
+    "tests": 35,
+    "files": 1,
+    "expect_calls": 143,
+    "elapsed_ms": 336
+  },
+  "cases": [
+    {
+      "status": "fail",
+      "name": "known subtotal metric preserves USD 1200, pending coverage and null totals through two independent observations",
+      "duration_ms": 22.42
+    },
+    {
+      "status": "pass",
+      "name": "only actual canonical complete coverage yields a confirmed metric",
+      "duration_ms": 7.69
+    },
+    {
+      "status": "pass",
+      "name": "zero is a real amount while all absent components cannot manufacture zero",
+      "duration_ms": 20.86
+    },
+    {
+      "status": "pass",
+      "name": "canonical component order retains IEEE-754 known-subtotal rounding",
+      "duration_ms": 7.59
+    },
+    {
+      "status": "fail",
+      "name": "reused port result objects retain baseline-candidate order and detached output",
+      "duration_ms": 12.64
+    },
+    {
+      "status": "pass",
+      "name": "metric refuses source incarnation/version drift between proof phases",
+      "duration_ms": 4.04
+    },
+    {
+      "status": "pass",
+      "name": "metric refuses coverage assessment drift between proof phases",
+      "duration_ms": 4.81
+    },
+    {
+      "status": "pass",
+      "name": "metric refuses current projection engine drift between proof phases",
+      "duration_ms": 5.16
+    },
+    {
+      "status": "pass",
+      "name": "final historical metadata and whole-case content are independently fenced",
+      "duration_ms": 11.83
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects historical reader replacement even when the new method delegates the same value",
+      "duration_ms": 2.5
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects general result reader replacement even when the new method delegates the same value",
+      "duration_ms": 2.42
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects whole-case reader replacement even when the new method delegates the same value",
+      "duration_ms": 3.58
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects projection producer replacement even when the new method delegates the same value",
+      "duration_ms": 2.07
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects source resolver replacement even when the new method delegates the same value",
+      "duration_ms": 2.06
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects coverage resolver replacement even when the new method delegates the same value",
+      "duration_ms": 2.01
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects requestFor replacement even when the new method delegates the same value",
+      "duration_ms": 1.99
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects revalidation replacement even when the new method delegates the same value",
+      "duration_ms": 1.82
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects authentication replacement even when the new method delegates the same value",
+      "duration_ms": 1.84
+    },
+    {
+      "status": "pass",
+      "name": "metric rejects environment replacement even when the new method delegates the same value",
+      "duration_ms": 1.74
+    },
+    {
+      "status": "pass",
+      "name": "metric cannot publish after Request identity changes",
+      "duration_ms": 1.89
+    },
+    {
+      "status": "pass",
+      "name": "metric cannot publish after Request headers changes",
+      "duration_ms": 1.81
+    },
+    {
+      "status": "pass",
+      "name": "metric cannot publish after authority revision changes",
+      "duration_ms": 4.24
+    },
+    {
+      "status": "pass",
+      "name": "metric cannot publish after aborted Request changes",
+      "duration_ms": 2.03
+    },
+    {
+      "status": "pass",
+      "name": "metric cannot publish after input payload changes",
+      "duration_ms": 2.07
+    },
+    {
+      "status": "pass",
+      "name": "serialized UI binding cannot recover its private lease",
+      "duration_ms": 0.92
+    },
+    {
+      "status": "pass",
+      "name": "mutable callback arguments are isolated and rejected instead of changing the captured source",
+      "duration_ms": 1.96
+    },
+    {
+      "status": "pass",
+      "name": "historical batch order and result-to-case scope cannot be substituted",
+      "duration_ms": 2.4
+    },
+    {
+      "status": "pass",
+      "name": "current projection must prove stored arithmetic; valid hashes alone do not authenticate money",
+      "duration_ms": 2.5
+    },
+    {
+      "status": "pass",
+      "name": "current projection must prove component amount; valid hashes alone do not authenticate money",
+      "duration_ms": 2.3
+    },
+    {
+      "status": "pass",
+      "name": "current projection must prove duplicate component identity; valid hashes alone do not authenticate money",
+      "duration_ms": 2.7
+    },
+    {
+      "status": "pass",
+      "name": "unsupported operation selects the real legacy wiring exactly through the sentinel",
+      "duration_ms": 6.21
+    },
+    {
+      "status": "pass",
+      "name": "unsupported assumption selects the real legacy wiring exactly through the sentinel",
+      "duration_ms": 5.41
+    },
+    {
+      "status": "pass",
+      "name": "eligible proof failure never falls back to an otherwise successful legacy metric",
+      "duration_ms": 2.77
+    },
+    {
+      "status": "fail",
+      "name": "a successful eligible metric uses its independent proof without entering legacy comparison",
+      "duration_ms": 5.38
+    },
+    {
+      "status": "pass",
+      "name": "an eligible coverage denial is propagated without retrying through legacy",
+      "duration_ms": 2.08
+    }
+  ],
+  "causal_finding": {
+    "location": "known-subtotal-metric.test.ts emit",
+    "code": "await state.hook?.({ stage, count: ++state.counts[stage], key, args, value })",
+    "cause": "Optional chaining does not evaluate arguments when hook is undefined, so counters stay zero despite observed calls and correct numeric output.",
+    "fix": "Increment count before invoking optional hook; preserve all assertions, values, cases, and budgets.",
+    "product_change_required": false,
+    "qualification": "No acceptance of entire unit candidate; retain observed32 passes and3 failures."
+  },
+  "log_excerpt": "2026-11-15T02:59:04.0318364Z bun test v1.3.14 (0d9b296a)\n2026-11-15T02:59:04.0629754Z \n2026-11-15T02:59:04.0630662Z Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts:\n2026-11-15T02:59:04.1005413Z 225 |       evidenceRefs: f.records, state: \"conditioned\", engineVersion: \"planner-contract-v1\" })\n2026-11-15T02:59:04.1006157Z 226 |     expect(f.data.decision.alternatives.map((value) => value.result.total)).toEqual([null, null])\n2026-11-15T02:59:04.1006944Z 227 |     expect(f.data.decision.alternatives.every((value) => value.result.costCoverage.coverageState === \"pending\")).toBe(true)\n2026-11-15T02:59:04.1007758Z 228 |     expect(f.state.events.filter((event) => event.stage === \"history\").map((event) => event.key)).toEqual([...references, ...references])\n2026-11-15T02:59:04.1008518Z 229 |     expect(f.state.events.filter((event) => event.stage === \"projection\").map((event) => event.key)).toEqual([\"v0\", \"v1\", \"v0\", \"v1\"])\n2026-11-15T02:59:04.1009192Z 230 |     expect(f.state.counts).toEqual({ history: 4, case: 2, projection: 4, source: 4, coverage: 4 })\n2026-11-15T02:59:04.1009785Z                                  ^\n2026-11-15T02:59:04.1010055Z error: expect(received).toEqual(expected)\n2026-11-15T02:59:04.1010227Z \n2026-11-15T02:59:04.1010301Z   {\n2026-11-15T02:59:04.1010457Z -   \"case\": 2,\n2026-11-15T02:59:04.1010667Z -   \"coverage\": 4,\n2026-11-15T02:59:04.1010845Z -   \"history\": 4,\n2026-11-15T02:59:04.1011029Z -   \"projection\": 4,\n2026-11-15T02:59:04.1011204Z -   \"source\": 4,\n2026-11-15T02:59:04.1011380Z +   \"case\": 0,\n2026-11-15T02:59:04.1011644Z +   \"coverage\": 0,\n2026-11-15T02:59:04.1011903Z +   \"history\": 0,\n2026-11-15T02:59:04.1012145Z +   \"projection\": 0,\n2026-11-15T02:59:04.1012394Z +   \"source\": 0,\n2026-11-15T02:59:04.1012626Z   }\n2026-11-15T02:59:04.1012751Z \n2026-11-15T02:59:04.1012858Z - Expected  - 5\n2026-11-15T02:59:04.1013097Z + Received  + 5\n2026-11-15T02:59:04.1013241Z \n2026-11-15T02:59:04.1014131Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts:230:28)\n2026-11-15T02:59:04.1086140Z (fail) known subtotal metric preserves USD 1200, pending coverage and null totals through two independent observations [22.42ms]\n2026-11-15T02:59:04.1162750Z (pass) only actual canonical complete coverage yields a confirmed metric [7.69ms]\n2026-11-15T02:59:04.1371572Z (pass) zero is a real amount while all absent components cannot manufacture zero [20.86ms]\n2026-11-15T02:59:04.1447650Z (pass) canonical component order retains IEEE-754 known-subtotal rounding [7.59ms]\n2026-11-15T02:59:04.1573569Z 279 |     first.period.start = \"1900-01-01\"\n2026-11-15T02:59:04.1573972Z 280 |     const second = metric(await f.read(f.request, f.context))\n2026-11-15T02:59:04.1574324Z 281 |     expect(second.value).toBe(1200)\n2026-11-15T02:59:04.1574653Z 282 |     expect(second.evidenceRefs).toEqual(f.records)\n2026-11-15T02:59:04.1575137Z 283 |     expect(second.period).toEqual(period)\n2026-11-15T02:59:04.1575451Z 284 |     expect(f.state.counts.history).toBe(8)\n2026-11-15T02:59:04.1575713Z                                          ^\n2026-11-15T02:59:04.1575984Z error: expect(received).toBe(expected)\n2026-11-15T02:59:04.1576140Z \n2026-11-15T02:59:04.1576218Z Expected: 8\n2026-11-15T02:59:04.1576464Z Received: 0\n2026-11-15T02:59:04.1576614Z \n2026-11-15T02:59:04.1577339Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts:284:36)\n2026-11-15T02:59:04.1578168Z (fail) reused port result objects retain baseline-candidate order and detached output [12.64ms]\n2026-11-15T02:59:04.1614641Z (pass) metric refuses source incarnation/version drift between proof phases [4.04ms]\n2026-11-15T02:59:04.1662706Z (pass) metric refuses coverage assessment drift between proof phases [4.81ms]\n2026-11-15T02:59:04.1714699Z (pass) metric refuses current projection engine drift between proof phases [5.16ms]\n2026-11-15T02:59:04.1833079Z (pass) final historical metadata and whole-case content are independently fenced [11.83ms]\n2026-11-15T02:59:04.1858218Z (pass) metric rejects historical reader replacement even when the new method delegates the same value [2.50ms]\n2026-11-15T02:59:04.1882508Z (pass) metric rejects general result reader replacement even when the new method delegates the same value [2.42ms]\n2026-11-15T02:59:04.1918404Z (pass) metric rejects whole-case reader replacement even when the new method delegates the same value [3.58ms]\n2026-11-15T02:59:04.1939125Z (pass) metric rejects projection producer replacement even when the new method delegates the same value [2.07ms]\n2026-11-15T02:59:04.1959907Z (pass) metric rejects source resolver replacement even when the new method delegates the same value [2.06ms]\n2026-11-15T02:59:04.1980158Z (pass) metric rejects coverage resolver replacement even when the new method delegates the same value [2.01ms]\n2026-11-15T02:59:04.2000048Z (pass) metric rejects requestFor replacement even when the new method delegates the same value [1.99ms]\n2026-11-15T02:59:04.2018290Z (pass) metric rejects revalidation replacement even when the new method delegates the same value [1.82ms]\n2026-11-15T02:59:04.2036684Z (pass) metric rejects authentication replacement even when the new method delegates the same value [1.84ms]\n2026-11-15T02:59:04.2054166Z (pass) metric rejects environment replacement even when the new method delegates the same value [1.74ms]\n2026-11-15T02:59:04.2072936Z (pass) metric cannot publish after Request identity changes [1.89ms]\n2026-11-15T02:59:04.2091290Z (pass) metric cannot publish after Request headers changes [1.81ms]\n2026-11-15T02:59:04.2133897Z (pass) metric cannot publish after authority revision changes [4.24ms]\n2026-11-15T02:59:04.2154123Z (pass) metric cannot publish after aborted Request changes [2.03ms]\n2026-11-15T02:59:04.2174991Z (pass) metric cannot publish after input payload changes [2.07ms]\n2026-11-15T02:59:04.2184185Z (pass) serialized UI binding cannot recover its private lease [0.92ms]\n2026-11-15T02:59:04.2204194Z (pass) mutable callback arguments are isolated and rejected instead of changing the captured source [1.96ms]\n2026-11-15T02:59:04.2228158Z (pass) historical batch order and result-to-case scope cannot be substituted [2.40ms]\n2026-11-15T02:59:04.2253370Z (pass) current projection must prove stored arithmetic; valid hashes alone do not authenticate money [2.50ms]\n2026-11-15T02:59:04.2276592Z (pass) current projection must prove component amount; valid hashes alone do not authenticate money [2.30ms]\n2026-11-15T02:59:04.2304064Z (pass) current projection must prove duplicate component identity; valid hashes alone do not authenticate money [2.70ms]\n2026-11-15T02:59:04.2365707Z (pass) unsupported operation selects the real legacy wiring exactly through the sentinel [6.21ms]\n2026-11-15T02:59:04.2419969Z (pass) unsupported assumption selects the real legacy wiring exactly through the sentinel [5.41ms]\n2026-11-15T02:59:04.2447716Z (pass) eligible proof failure never falls back to an otherwise successful legacy metric [2.77ms]\n2026-11-15T02:59:04.2500968Z 427 |   const f = await fixture()\n2026-11-15T02:59:04.2501470Z 428 |   try {\n2026-11-15T02:59:04.2501732Z 429 |     const readMetric = wired(f)\n2026-11-15T02:59:04.2502299Z 430 |     expect(metric(await readMetric(f.request, f.context))).toMatchObject({ value: 1200, state: \"conditioned\", unit: \"USD\" })\n2026-11-15T02:59:04.2502805Z 431 |     expect(f.state.legacyBatches).toEqual([])\n2026-11-15T02:59:04.2503123Z 432 |     expect(f.state.counts.projection).toBe(4)\n2026-11-15T02:59:04.2503414Z                                             ^\n2026-11-15T02:59:04.2503694Z error: expect(received).toBe(expected)\n2026-11-15T02:59:04.2503852Z \n2026-11-15T02:59:04.2503934Z Expected: 4\n2026-11-15T02:59:04.2504104Z Received: 0\n2026-11-15T02:59:04.2504196Z \n2026-11-15T02:59:04.2504730Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts:432:39)\n2026-11-15T02:59:04.2505828Z (fail) a successful eligible metric uses its independent proof without entering legacy comparison [5.38ms]\n2026-11-15T02:59:04.2522758Z (pass) an eligible coverage denial is propagated without retrying through legacy [2.08ms]\n2026-11-15T02:59:04.3677272Z \n2026-11-15T02:59:04.3679611Z 3 tests failed:\n2026-11-15T02:59:04.3680218Z (fail) known subtotal metric preserves USD 1200, pending coverage and null totals through two independent observations [22.42ms]\n2026-11-15T02:59:04.3680905Z (fail) reused port result objects retain baseline-candidate order and detached output [12.64ms]\n2026-11-15T02:59:04.3681531Z (fail) a successful eligible metric uses its independent proof without entering legacy comparison [5.38ms]\n2026-11-15T02:59:04.3681859Z \n2026-11-15T02:59:04.3681933Z  32 pass\n2026-11-15T02:59:04.3682086Z  3 fail\n2026-11-15T02:59:04.3682258Z  143 expect() calls\n2026-11-15T02:59:04.3682489Z Ran 35 tests across 1 file. [336.00ms]\n2026-11-15T02:59:04.3822644Z ##[error]Process completed with exit code 1.\n2026-11-15T02:59:04.4392889Z ",
+  "artifacts": {
+    "artifacts": []
+  },
+  "next": "One causal run after fixture counter fix, before original five UI cases"
+}

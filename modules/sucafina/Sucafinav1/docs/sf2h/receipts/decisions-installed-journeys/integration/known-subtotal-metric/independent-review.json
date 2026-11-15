@@ -1,0 +1,173 @@
+{
+  "schema": "sf2-mission52-private-known-subtotal-metric-static-review-v2",
+  "reviewer": "composition_audit",
+  "verdict": "PASS_STATIC_NO_OBJECTIVE_BLOCKER_FOUND",
+  "status": "STATIC_ONLY_NOT_COMPILED_NOT_EXECUTED_NOT_ACCEPTANCE",
+  "reviewed_material": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p7-metric-material-v2.json",
+    "sha256": "6302975fc3bf0446f38dc9bdd7e9158197da3875288fc572e95b334c6ba3558f",
+    "basis_W": "0917b48676b2828b94ec85a9926f79db49e6076e",
+    "basis_W_tree": "d307c5e9ac2946265c4f1f54d27b2082058d620a",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/known-subtotal-metric.ts",
+        "preimage": null,
+        "postimage": "0fbe3adf8280621b93972385e3af36dfa833c831",
+        "sha256": "3b4e478ef86ddbb19d42135d20ea740612e098002a27a8e893a84a3a738d42d8",
+        "bytes": 18168
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "preimage": "cb89ba0139a7cf3965e0bb2898ab13f3015d7837",
+        "postimage": "632a47e792502d7476149d2b790ad447cbd96649",
+        "sha256": "d9f81108c849f0b3d9a1e8f3b3ad8051d76d09cb009f38eade828c342eaab557",
+        "bytes": 12939
+      }
+    ],
+    "bytes": 46308
+  },
+  "blockers": [],
+  "findings": [
+    {
+      "id": "P7-CA-01",
+      "topic": "Applicability and failure routing",
+      "status": "PASS_STATIC",
+      "evidence": "Only requested known-subtotal metric with two distinct scenarios enters the proof. Unsupported shapes are classified after successful history/current-case reads, before narrow projection proof. No operations/assumptions, USD, a non-null stored known subtotal and Planner-record-only result evidence are required. Exactly one base Planner-version ref must bind the alternative. The sentinel is not returned after any eligible projection/source/coverage/freshness failure. Catch returns unavailable. portfolio-authority falls through only for the exact unique symbol.",
+      "limit": "This is an intentional private producer with a restricted domain; general mixed, document, operation and unsupported shapes retain existing producer behavior."
+    },
+    {
+      "id": "P7-CA-02",
+      "topic": "Canonical financial calculation",
+      "status": "PASS_STATIC",
+      "evidence": "Both current canonical projections must match stored scenario component digests. The known subtotal is recomputed by the existing plannerKnownSubtotal in original component order and checked against the stored result; a wholly absent projection is null, explicit zero is accepted, and non-finite component/subtotal values fail. Final comparison delegates to comparePlannerScenarios with genuine result/coverage/basis/source/projection proof objects. Both independent observations are compared again before publication.",
+      "limit": "No handwritten difference formula replaces the canonical comparator. Comparison status can remain conditioned; the metric does not invent complete coverage or approval."
+    },
+    {
+      "id": "P7-CA-03",
+      "topic": "Authorization and request integrity",
+      "status": "PASS_STATIC",
+      "evidence": "The helper captures host/business/persistence/authenticate/environment/requestFor/revalidate identities, trusted binding identity and digest, lease identity, Request object/header/method/URL fingerprint, input clone/digest and all delegated business reader identities. current() checks after every awaited proof and before egress; aborted or changed requests fail. Initial/final host revalidation remains, as do canonical cases.read, result-store, Planner evidence and coverage authorizers."
+    },
+    {
+      "id": "P7-CA-04",
+      "topic": "Freshness and independent phases",
+      "status": "PASS_STATIC",
+      "evidence": "Initial historical batch and exact current whole-case observation bind id/incarnation/current version. Historical case versions may precede but never exceed current version; each alternative must be a unique digest match. Each of two proof phases freshly invokes the real projector, source reader and coverage reader for each scenario. Projection/source arguments are cloned and fingerprinted. Phase observations are retained independently and compared using the canonical projection digest. Final history and whole-case reads follow all proof callbacks; no external awaited work occurs inside work() after final case verification."
+    },
+    {
+      "id": "P7-CA-05",
+      "topic": "Canonical snapshot and guarded producer closure",
+      "status": "PASS_STATIC",
+      "evidence": "readPortfolioSnapshot remains the canonical helper from exact source59 blob3cf82bd. It preserves Dashboard transaction admission, Source/CurrentChoice wrappers, root method/request/authority/payload fences, poison behavior and final egress. The Planner projector30e67 reads the actual authorized Planner projection twice and verifies source envelopes and period. Coverage25e605 independently reauthorizes case and evidence twice. No direct store bypass, fabricated projection, reusable result cache or cross-invocation scenario cache is introduced.",
+      "limit": "Source59 remains an isolated proposal dependency; this review grants no release or integration authority."
+    },
+    {
+      "id": "P7-CA-06",
+      "topic": "P6 general path preserved",
+      "status": "PASS_STATIC",
+      "evidence": "Deterministic text comparison proves portfolio-authority's entire legacy readMetric body from const captured = structuredClone(request) to const rules is byte-identical to cb89ba0139a7cf3965e0bb2898ab13f3015d7837. The registry and remainder are byte-identical too. The real resolveMany batch wrapper, per-invocation observation map and all fallback final checks therefore remain unchanged. Only one import, factory construction and exact-sentinel dispatch precede that body."
+    },
+    {
+      "id": "P7-CA-07",
+      "topic": "Type and API surface",
+      "status": "PASS_STATIC_NO_NEW_INCOMPATIBILITY_IDENTIFIED",
+      "evidence": "Request and metric types derive from the canonical registry; PortResult non-ok variants are reused. DomainPortHost and PlannerSourceHost match exact imported interfaces. business-services returns the already existing projectPlannerEvidence function with compatible selected-period/USD arguments. ResolvedScenario/ScenarioResult components match existing comparator signatures. Type-only factory imports are used only for Parameters/ReturnType. readPortfolioSnapshot generic permits the status-discriminated InternalResult. All new canonical import targets were read from immutable W09.",
+      "limit": "This is source inspection, not a TypeScript result. A45/compiler and surgical hosted qualification remain separate."
+    },
+    {
+      "id": "P7-CA-08",
+      "topic": "Protected ownership and policy",
+      "status": "PASS_STATIC",
+      "evidence": "Only new private host helper and portfolio-authority proposal change. Criterion rule authority/verifyMetric/verifyEvidence/verifySnapshot code remains exact. There are no new grants, writes, seeds, mutation calls, policy/approval transitions, C12 changes or CurrentChoice edits. confirmed is the existing metric evidence state produced only from canonical complete comparison; it grants no formal financial approval."
+    },
+    {
+      "id": "P7-CA-09",
+      "topic": "Initial Request denial classification",
+      "status": "FIXED_STATIC_IN_V2",
+      "evidence": "The exact sole functional delta adds if (!request || request.signal.aborted) return { status: denied, reason: criterion-metric-access-unavailable } immediately after requestFor. Missing or already-aborted initial Request now returns before fingerprint, snapshot work, delegated readers or final stale guard. Assertion remains denied; later in-flight changes still follow the existing stale/failure fences. No policy/grant or successful path changes.",
+      "verification": "Compared full v1/v2 contents and recomputed Git blob/SHA256/byte identities. Wrapper byte-identical. No tests/tsc executed."
+    }
+  ],
+  "canonical_sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "blob": "c357c6c66aac544394ab355306e1f6f7195395f7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "blob": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "blob": "30e67e56d5b78ebb2adebbec10194f19d725b570"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "844edd2860e11d5de165c09c7863f4cc6ef5ad67"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "1761a5d2558c9091d1c02730774751ace44e9131"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "blob": "25e6056021a20cbdd1a3608fda515d77e052327f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    }
+  ],
+  "verification": {
+    "inputs_read": "Both complete scratch proposal sources and material JSON; complete comparator, scenario comparator, snapshot helper, stored scenario producer, Planner evidence and coverage access; targeted immutable contracts/result-store/criterion-rules/business wiring/subtotal sections.",
+    "metadata_checks": "Git blob/SHA256/bytes of both files match material; scratch content equals material; cb89 preimage independently recomputed; full legacy-body and registry-tail comparisons are exact. V2 delta was independently confirmed to be exactly one added early-denial line; updated scratch source matches v2 material and wrapper remains unchanged.",
+    "remote_operations": "GitHub MCP immutable reads only",
+    "product_execution": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "remote_writes": 0,
+    "product_mutations": 0
+  },
+  "qualification_limits": [
+    "No installed journey PASS, numeric-rule acceptance or latency improvement follows from this static review.",
+    "Nominal09 remains3PASS/2FAIL: J1 third comparison after rule save aborted; financial Requests503 unchanged.",
+    "Exact complete candidate needs its own unchanged five-journey qualification and any required owner checks. Source59 R2 and P03 outcomes do not transfer.",
+    "This verdict binds only the exact material SHA256 and two postimages above; later changes require delta review."
+  ],
+  "GLOBAL_RELEASE": false,
+  "supersedes": {
+    "review": "review.json",
+    "review_sha256": "57547f6af333bce1166d5b52922bf3e85b44bbeafd68477019c35a6fc549412b",
+    "material_sha256": "d6197a60332081e6a4df924de63949dbfe463c1a195d9c19cf97cd828f1a9b59",
+    "reason": "Peer review identified initial missing/aborted Request denied result being overwritten by the later current() stale guard. V1 was not executed. This additive v2 review includes the correction; previous review remains an immutable historical observation, not acceptance of an executed candidate."
+  },
+  "control_observation": {
+    "sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "material": "C28 unchanged",
+    "prepared_71_74_76": true,
+    "limit": "No ACK71 or newly integrated material observed; no authority or release granted by prepared packets.74 reads52 transport proposals;76 protected canonical producer paths are unchanged by P7."
+  }
+}

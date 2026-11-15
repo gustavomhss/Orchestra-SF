@@ -1,0 +1,49 @@
+{
+  "schema": "sf2-mission52-p7-test-static-review-v1",
+  "status": "STATIC_PASS_NOT_RUN",
+  "reviewer": "pack_criteria",
+  "scope": "Complementary read-only review of independent P7 metric unit fixtures after producer admission correction v2. No product or test execution.",
+  "test_source": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p7-tests/known-subtotal-metric.test.ts.txt",
+    "bytes": 31413,
+    "sha256": "12c6691353c83e372d3eab18f74eddc05f69d48db10ad9f0fcbde0d0ec372da9",
+    "git_blob": "0c9b769dbe97bfb13a16b5781f417f1215b63190"
+  },
+  "producer_material": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p7-metric-material-v2.json",
+    "sha256": "6302975fc3bf0446f38dc9bdd7e9158197da3875288fc572e95b334c6ba3558f",
+    "producer_postimage": "0fbe3adf8280621b93972385e3af36dfa833c831",
+    "authority_postimage": "632a47e792502d7476149d2b790ad447cbd96649"
+  },
+  "resolved_finding": {
+    "kind": "ADMISSION_FAILURE_CLASSIFICATION",
+    "detail": "A forged serialized UI binding has no privately admitted Request. Producer v1 initially returned denied but relabeled it stale at its final current guard. Producer v2 rejects missing/aborted Request before any reader. Test denied assertion and zero-history requirement are retained.",
+    "ui_authority_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+  },
+  "reviewed": {
+    "complete_coverage_fixture": "Canonical inventory renewal-transition-v1; all nine categories; two fresh basis evidence refs; included service component and eight supported inapplicable entries; finite confirmed component, matching horizon/currency/source; plannerCoverageComplete and purecompare complete predicates are satisfied.",
+    "imports": "Six parent segments from test/product/decisions-installed-journeys reach repo root apps/cli; three parent segments reach Sucafinav1 product/src.",
+    "factory_wiring": "Inspected createSfPortfolioAuthority dependencies: intent fences, rules, comparison/scenario lookup, comparison scope, selection and result bindings, candidate resolver initialize closures/registries without eagerly consuming unrelated fixture services. Exercised readMetric path has its dependencies.",
+    "failure_and_fallback": "Unsupported operation/assumption/null cases select sentinel and run actual legacy wrapper; eligible producer and coverage failures remain non-sentinel and do not reach legacy scenarios.",
+    "freshness_and_math": "Fixture observations cover repeated source/coverage/projector phases, final history/case drift, method/request/binding changes, ordinal cloning, IEEE-754 component order, explicit zero versus absent amounts and modified digest-consistent financial data."
+  },
+  "canonical_sources": {
+    "coverage_inventory": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8",
+    "assess_cost_coverage": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+    "planner_coverage_complete": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+    "planner_comparison": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+    "planner_known_subtotal": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea"
+  },
+  "limits": [
+    "Static reading only: not compiled, transpiled, imported or executed.",
+    "Port fixtures without persistence do not prove C08/readSnapshotRoot integration or durability; owner59 hosted conformance and exact five UI journeys remain separate.",
+    "No runtime PASS, per-patch performance claim, full criterion promotion, native acceptance or GLOBAL_RELEASE."
+  ],
+  "execution": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "remote_mutations": 0,
+    "dispatches": 0,
+    "local_processing": "JSON and hashes only"
+  }
+}

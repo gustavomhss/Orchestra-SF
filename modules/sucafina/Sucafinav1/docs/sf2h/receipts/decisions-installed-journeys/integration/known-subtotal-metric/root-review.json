@@ -1,0 +1,44 @@
+{
+  "schema": "sf2h.mission52.p7.root-review.v1",
+  "state": "STATIC_REVIEW_NO_BLOCKER_RUNTIME_PENDING",
+  "reviewer": "root52; not author of P7 implementation",
+  "implementation": [
+    {
+      "path": "apps/cli/src/sucafina-product/known-subtotal-metric.ts",
+      "preimage": null,
+      "postimage": "0fbe3adf8280621b93972385e3af36dfa833c831"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "preimage": "cb89ba0139a7cf3965e0bb2898ab13f3015d7837",
+      "postimage": "632a47e792502d7476149d2b790ad447cbd96649"
+    }
+  ],
+  "checks": {
+    "legacy_from_capture_byte_identical": true,
+    "actual_projection_required_before_canonical_comparison": true,
+    "known_subtotal_reconciled_with_canonical_ordered_sum": true,
+    "two_fresh_projection_source_coverage_phases": true,
+    "initial_final_history_and_full_case": true,
+    "extra_planner_result_refs_retained_in_historical_verification": true,
+    "all_coverage_refs_validated_by_real_coverage_reader": true,
+    "request_binding_lease_method_argument_mutation_fences": true,
+    "fallback_only_exclusive_structural_sentinel": true,
+    "eligible_failure_never_retries_general_producer": true,
+    "no_result_cache_no_http_mutation": true,
+    "new_test_is_additional_not_nominal_replacement": true,
+    "missing_request_denied_before_readers": true
+  },
+  "limits": [
+    "No product execution or TypeScript compilation occurred locally.",
+    "Unit fixture uses actual UI authority and canonical calculations, with explicit read-port observations; it does not qualify SQLite or the installed five UI journeys.",
+    "Latency improvement is a structural hypothesis until hosted execution.",
+    "Runtime59/P03 and gates45 limits remain independent."
+  ],
+  "pending": [
+    "Surgical hosted test default budget",
+    "Five original installed UI tests same W"
+  ],
+  "GLOBAL_RELEASE": false,
+  "pre_run_correction": "Missing/aborted private Request refused as denied before any reader; test assertion unchanged. V1 never dispatched."
+}

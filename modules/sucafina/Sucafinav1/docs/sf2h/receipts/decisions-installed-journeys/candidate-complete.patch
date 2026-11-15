@@ -1,6 +1,6 @@
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65 100644
+index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65
 --- /dev/null
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
 @@ -0,0 +1,84 @@
@@ -462,26 +462,9 @@ index 21236af83e4de879242fd298d9e15a9923f3bf41..5d9fe7ec2f070dbbedc2bdbfff4c8458
    // The listener must install privacy before HttpRouter.serve, outside the request route.
    // Effect registers a trailing wildcard at both the subtree and its base path.
    return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
-diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
-index 302334c0e5a50c681005d6c6463132abce84d8b1..b572fbf4525e2d5015a1e8d4245c96085703e1c1 100644
---- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
-+++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
-@@ -22,9 +22,9 @@
-       "path": "apps/cli/src/sucafina-product/installation.ts",
-       "mode": "100644",
-       "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
--      "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
--      "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
--      "bytes": 5315,
-+      "postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
-+      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
-+      "bytes": 6258,
-       "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
-       "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
-       "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
 diff --git a/apps/cli/src/sucafina-product/decision-case-http.ts b/apps/cli/src/sucafina-product/decision-case-http.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..1c0fabda68c92b3d7a14b569c2c3e960ff39476c 100644
+index 0000000000000000000000000000000000000000..1c0fabda68c92b3d7a14b569c2c3e960ff39476c
 --- /dev/null
 +++ b/apps/cli/src/sucafina-product/decision-case-http.ts
 @@ -0,0 +1,84 @@
@@ -803,10 +786,10 @@ index 0181267b67b74a8df338999ddb7745cfee42bb29..844edd2860e11d5de165c09c7863f4cc
    const planner = procurementComposite.planner
    const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
 diff --git a/apps/cli/src/sucafina-product/portfolio-authority.ts b/apps/cli/src/sucafina-product/portfolio-authority.ts
-index 138238ca9273e84f39f8e1db484378a3e62d41d4..cb89ba0139a7cf3965e0bb2898ab13f3015d7837 100644
+index 138238ca9273e84f39f8e1db484378a3e62d41d4..632a47e792502d7476149d2b790ad447cbd96649 100644
 --- a/apps/cli/src/sucafina-product/portfolio-authority.ts
 +++ b/apps/cli/src/sucafina-product/portfolio-authority.ts
-@@ -10,7 +10,7 @@
+@@ -10,10 +10,11 @@
  import { createDecisionIntentFences } from "../../../../modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts"
  import { createDecisionCandidateResolver } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
  import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
@@ -815,7 +798,24 @@ index 138238ca9273e84f39f8e1db484378a3e62d41d4..cb89ba0139a7cf3965e0bb2898ab13f3
  import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
  import type { createSfBusinessServices } from "./business-services.ts"
  import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
-@@ -50,11 +50,36 @@
++import { createSfKnownSubtotalMetric, knownSubtotalMetricNotApplicable } from "./known-subtotal-metric.ts"
+ 
+ /** Private host callbacks supplement, never replace, the producer's C08 and C17 checks. */
+ export function createSfPortfolioAuthority(input: {
+@@ -36,9 +37,12 @@
+     return results.length === refs.length && results.every((result, index) => result.state === "fresh" && !!result.authorizedProjection &&
+       !!result.currentRef && digestSfValue(result.ref) === digestSfValue(refs[index]) && digestSfValue(result.currentRef) === digestSfValue(result.ref)) && await host.revalidate(call)
+   }
++  const knownSubtotalMetric = createSfKnownSubtotalMetric({ host, business })
+   const readMetric: Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"] = async (request, call) => {
+     if (!scenarios || request.metricRef !== "planner:known-subtotal-difference" || !request.baselineRef)
+       return { status: "unavailable", reason: "criterion-metric-producer-unavailable" }
++    const narrow = await knownSubtotalMetric(request, call)
++    if (narrow !== knownSubtotalMetricNotApplicable) return narrow
+     const captured = structuredClone(request)
+     const source = host.requestFor(call)
+     const binding = digestSfValue([call.kind, call.binding])
+@@ -50,11 +54,36 @@
      // reopens both scenarios and validates these final snapshots before return.
      // No observation serves a resolve call or survives this metric invocation.
      const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
@@ -894,3 +894,740 @@ index 881ce4672d9d0e641d1cc849663c0980c118774d..9d17760c418ee9b48b97443d90a994c3
      prepareDomainCommands: preparation.prepareDomainCommands,
      readScenarioResult: (resultRef, call) => business.results.readHistoricalScenario({ resultRef }, call),
      createId: input.preparation ? randomUUID : composed.createMutationId, now: () => new Date().toISOString(),
+diff --git a/apps/cli/src/sucafina-product/known-subtotal-metric.ts b/apps/cli/src/sucafina-product/known-subtotal-metric.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fbe3adf8280621b93972385e3af36dfa833c831
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/known-subtotal-metric.ts
+@@ -0,0 +1,214 @@
++import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
++import type { CostCoverageBasis, DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
++import type { DecisionCasePort, DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
++import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
++import type { createCriterionRuleRegistry, CriterionMetric } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
++import { readHistoricalScenarios } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
++import type { createSfDecisionResultStore, StoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
++import { comparePlannerScenarios, plannerComponentDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/comparison.ts"
++import { projectionDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
++import type { ResolvedScenario } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
++import { readPortfolioSnapshot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
++import { plannerKnownSubtotal } from "../../../../modules/sucafina/Sucafinav1/src/planner-accounts.ts"
++
++type ReadMetric = Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"]
++export type KnownSubtotalMetricRequest = Parameters<ReadMetric>[0]
++export const knownSubtotalMetricNotApplicable = Symbol("sf-known-subtotal-metric-not-applicable")
++type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
++type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
++type Alternative = DecisionCase["alternatives"][number]
++type Prepared = { reference: string; stored: StoredScenario; alternative: Alternative; basis: CostCoverageBasis; source: PlannerRecord; coverageRef: string }
++type Observation = [ResolvedScenario, ResolvedScenario]
++type InternalResult = PortResult<CriterionMetric> | { status: "not-applicable" }
++
++export type KnownSubtotalMetricDependencies = {
++  host: DomainPortHost
++  business: {
++    results: Pick<ReturnType<typeof createSfDecisionResultStore>, "read" | "readHistoricalScenario">
++    cases: Pick<DecisionCasePort, "read">
++    plannerSources: PlannerSourceHost
++    projectPlannerEvidence: (source: PlannerRecord, call: TrustedDomainContext,
++      selected: { period: DomainProjection["context"]["period"]; currency: "USD" }) => Promise<PortResult<DomainProjection>>
++  }
++}
++
++/** A private, independently reauthorized metric for unmodified Planner source alternatives.
++ * Every call observes both phases again. It neither consumes a previous comparison nor
++ * supplies cached scenario reads to another producer. Unsupported shapes retain the
++ * general metric path; a failed eligible proof can never select that fallback. */
++export function createSfKnownSubtotalMetric(input: KnownSubtotalMetricDependencies) {
++  return async (incoming: KnownSubtotalMetricRequest, call: TrustedDomainContext): Promise<PortResult<CriterionMetric> | typeof knownSubtotalMetricNotApplicable> => {
++    if (incoming.metricRef !== "planner:known-subtotal-difference" || !incoming.baselineRef) return knownSubtotalMetricNotApplicable
++    try {
++      const captured = structuredClone(incoming)
++      const host = input.host, business = input.business
++      const requestFor = host.requestFor, revalidate = host.revalidate
++      const persistence = host.persistence, authenticate = host.authenticate, environment = host.environment
++      const request = requestFor.call(host, call)
++      if (!request || request.signal.aborted) return { status: "denied", reason: "criterion-metric-access-unavailable" }
++      const binding = call.binding, lease = call.lease
++      const authority = digestSfValue([call.kind, call.binding]), payload = digestSfValue(captured)
++      const requestFingerprint = () => {
++        const headers: [string, string][] = []
++        request?.headers.forEach((value, name) => headers.push([name, value]))
++        return digestSfValue({ method: request?.method, url: request?.url, headers: headers.sort(([left], [right]) => left.localeCompare(right)) })
++      }
++      const requestDigest = requestFingerprint()
++      const store = business.results, cases = business.cases, sources = business.plannerSources
++      const historical = store.readHistoricalScenario, readResult = store.read, readCase = cases.read
++      const project = business.projectPlannerEvidence, resolveSource = sources.resolveForecastSource, resolveCoverage = sources.resolveForecastCoverage
++      const current = () => !!request && !request.signal.aborted && input.host === host && input.business === business &&
++        host.requestFor === requestFor && host.revalidate === revalidate && requestFor.call(host, call) === request &&
++        host.persistence === persistence && host.authenticate === authenticate && host.environment === environment && requestFingerprint() === requestDigest &&
++        call.binding === binding && call.lease === lease && digestSfValue([call.kind, call.binding]) === authority &&
++        digestSfValue(incoming) === payload && digestSfValue(captured) === payload &&
++        business.results === store && store.readHistoricalScenario === historical && store.read === readResult &&
++        business.cases === cases && cases.read === readCase && business.plannerSources === sources &&
++        sources.resolveForecastSource === resolveSource && sources.resolveForecastCoverage === resolveCoverage && business.projectPlannerEvidence === project
++      const changed = () => ({ status: "stale" as const, reason: "criterion-metric-changed" })
++      const unavailable = (reason: string) => ({ status: "unavailable" as const, reason })
++      const references = [captured.baselineRef!, captured.scenarioRef] as const
++      if (!references.every((reference) => reference.trim()) || references[0] === references[1])
++        return { status: "needs-input", reason: "two-distinct-scenarios-required" }
++
++      const work = async (): Promise<InternalResult> => {
++        if (!current() || !await revalidate.call(host, call) || !current()) return { status: "denied", reason: "criterion-metric-access-unavailable" }
++        const observeHistory = async (): Promise<PortResult<[StoredScenario, StoredScenario]>> => {
++          const selectors = [...references]
++          const selectorDigest = digestSfValue(selectors)
++          const values = structuredClone(await readHistoricalScenarios(store, selectors, call))
++          if (!current() || digestSfValue(selectors) !== selectorDigest) return changed()
++          if (values.length !== 2 || !(0 in values) || !(1 in values)) return unavailable("scenario-batch-invalid")
++          const result: StoredScenario[] = []
++          for (const [index, value] of values.entries()) {
++            if (value.status !== "ok") return value
++            const stored = value.value
++            if (stored.kind !== "scenario" || stored.resultRef !== references[index] || stored.caseRef.id !== captured.caseRef.id ||
++              stored.caseRef.incarnation !== captured.caseRef.incarnation || stored.caseRef.version > captured.caseRef.version)
++              return { status: "denied", reason: "criterion-scenario-scope-mismatch" }
++            if (digestSfValue(stored.result) !== stored.resultDigest) return unavailable("criterion-scenario-proof-unavailable")
++            result.push(stored)
++          }
++          return { status: "ok", value: [result[0]!, result[1]!] }
++        }
++        const observeCase = async () => {
++          const selector = { caseRef: encodeCaseRef(captured.caseRef) }
++          const selectorDigest = digestSfValue(selector)
++          const value = structuredClone(await readCase.call(cases, selector, call))
++          if (!current() || digestSfValue(selector) !== selectorDigest) return changed()
++          if (value.status !== "ok") return value
++          if (value.value.case.id !== captured.caseRef.id || value.value.case.incarnation !== captured.caseRef.incarnation ||
++            value.value.case.version !== captured.caseRef.version) return changed()
++          return value
++        }
++        const initialHistory = await observeHistory()
++        if (initialHistory.status !== "ok") return initialHistory
++        const initialCase = await observeCase()
++        if (initialCase.status !== "ok") return initialCase
++        const decision = initialCase.value.case
++        const caseDigest = digestSfValue(decision)
++        const matched: { stored: StoredScenario; alternative: Alternative; reference: string }[] = []
++        for (const [index, stored] of initialHistory.value.entries()) {
++          const alternatives = decision.alternatives.filter((alternative) => digestSfValue(alternative.scenario) === stored.requestDigest && digestSfValue(alternative.result) === stored.resultDigest)
++          if (alternatives.length !== 1) return unavailable("scenario-not-current-case-alternative")
++          matched.push({ stored, alternative: alternatives[0]!, reference: references[index]! })
++        }
++        // Classification precedes the narrow projection/coverage proof. Non-Planner
++        // evidence remains with its existing producer, including mixed operations.
++        if (matched.some(({ alternative }) => alternative.scenario.operations.length !== 0 || alternative.scenario.assumptions.length !== 0 ||
++          alternative.result.currency !== "USD" || alternative.result.knownSubtotal === null ||
++          alternative.result.sourceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "planner"))) return { status: "not-applicable" }
++        const prepared: Prepared[] = []
++        for (const item of matched) {
++          const { alternative } = item, result = alternative.result
++          const refs = result.sourceRefs.filter((ref): ref is PlannerRecord => ref.kind === "record" && ref.refId === alternative.scenario.baseRef &&
++            ref.target.surface === "planner" && ref.target.recordType === "planner-version")
++          if (refs.length !== 1) return unavailable("scenario-proof-unavailable")
++          const source = refs[0]!
++          if (source.refDigest !== digestSfEvidenceRef(source) || source.installationId !== call.binding.installationId || source.projectId !== call.binding.projectId)
++            return { status: "denied", reason: "criterion-source-scope-mismatch" }
++          if (result.currency !== decision.currency || digestSfValue(result.horizon) !== digestSfValue(decision.horizon) ||
++            result.costCoverage.currency !== result.currency || digestSfValue(result.costCoverage.horizon) !== digestSfValue(result.horizon) ||
++            result.costCoverage.alternativeId !== alternative.id || result.costCoverage.alternativeVersion !== alternative.version ||
++            !result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && digestSfValue(ref) === digestSfValue(source)))
++            return unavailable("criterion-scenario-proof-unavailable")
++          const bases = decision.costCoverageBases.filter((basis) => basis.id === result.costCoverage.basisId && basis.version === result.costCoverage.basisVersion)
++          if (bases.length !== 1) return unavailable("scenario-proof-unavailable")
++          prepared.push({ ...item, basis: bases[0]!, source, coverageRef: decisionCoverageRef(captured.caseRef, alternative.id, alternative.version) })
++        }
++        const observeProofs = async (): Promise<PortResult<Observation>> => {
++          const values: ResolvedScenario[] = []
++          for (const item of prepared) {
++            const sourceArgument = structuredClone(item.source)
++            const selection = { period: structuredClone(item.alternative.result.horizon), currency: "USD" as const }
++            const argumentsDigest = digestSfValue([sourceArgument, selection])
++            const projection = structuredClone(await project.call(business, sourceArgument, call, selection))
++            if (!current() || digestSfValue([sourceArgument, selection]) !== argumentsDigest) return changed()
++            if (projection.status !== "ok") return projection
++            const value = projection.value, result = item.alternative.result
++            if (value.context.installationId !== call.binding.installationId || value.context.projectId !== call.binding.projectId ||
++              value.context.principalRef !== call.binding.principalRef || value.context.accessRevision !== call.binding.accessRevision ||
++              value.context.policyVersion !== call.binding.policyVersion || value.context.surface !== "planner" || value.context.currency !== result.currency ||
++              digestSfValue(value.context.period) !== digestSfValue(result.horizon) || !value.engineVersion.trim() ||
++              new Set(value.components.map((component) => component.id)).size !== value.components.length ||
++              value.components.some((component) => component.amount !== null && !Number.isFinite(component.amount)) ||
++              plannerComponentDigest(result.components) !== plannerComponentDigest(value.components))
++              return unavailable("criterion-planner-projection-unproven")
++            // A null cell remains unknown. The ordered canonical sum preserves zero
++            // and IEEE-754 rounding; a wholly absent projection never becomes zero.
++            const subtotal = value.components.some((component) => component.amount !== null)
++              ? plannerKnownSubtotal(value.components.map((component) => component.amount)) : null
++            if (subtotal === null || !Number.isFinite(subtotal) || result.knownSubtotal !== subtotal)
++              return unavailable("criterion-planner-subtotal-unproven")
++            const source = structuredClone(await resolveSource.call(sources, item.source.refId, call))
++            if (!current()) return changed()
++            if (source.status !== "ok") return source
++            if (source.value.versionId !== item.source.target.recordId || digestSfValue(source.value.evidence) !== digestSfValue(item.source)) return changed()
++            const coverage = structuredClone(await resolveCoverage.call(sources, item.coverageRef, call))
++            if (!current()) return changed()
++            if (coverage.status !== "ok") return coverage
++            if (coverage.value.coverageRef !== item.coverageRef || digestSfValue(coverage.value.basis) !== digestSfValue(item.basis) ||
++              digestSfValue(coverage.value.assessment) !== digestSfValue(result.costCoverage)) return changed()
++            values.push(structuredClone({ result, coverageRef: item.coverageRef, basis: item.basis, source: item.source, projection: value }))
++          }
++          return { status: "ok", value: [values[0]!, values[1]!] }
++        }
++        const first = await observeProofs()
++        if (first.status !== "ok") return first
++        const compare = (values: Observation) => comparePlannerScenarios({ baselineRef: references[0], alternativeRef: references[1],
++          baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef,
++          baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
++        const comparison = compare(first.value)
++        // The second phase invokes the same real producers again, before the final
++        // historical and whole-case fences. No projection or authorization is cached.
++        const second = await observeProofs()
++        if (second.status !== "ok") return second
++        if (second.value.some((value, index) => digestSfValue({ ...value, projection: undefined }) !== digestSfValue({ ...first.value[index]!, projection: undefined }) ||
++          projectionDigest(value.projection) !== projectionDigest(first.value[index]!.projection))) return changed()
++        const finalComparison = compare(second.value)
++        if (digestSfValue(finalComparison) !== digestSfValue(comparison)) return changed()
++        const finalHistory = await observeHistory()
++        if (finalHistory.status !== "ok") return finalHistory
++        if (digestSfValue(finalHistory.value) !== digestSfValue(initialHistory.value) || !current() || !await revalidate.call(host, call) || !current()) return changed()
++        const finalCase = await observeCase()
++        if (finalCase.status !== "ok") return finalCase
++        if (digestSfValue(finalCase.value.case) !== caseDigest || digestSfValue(decision) !== caseDigest || !current()) return changed()
++        const evidenceRefs = [...second.value[0].result.sourceRefs, ...second.value[1].result.sourceRefs]
++          .filter((ref, index, all) => all.findIndex((entry) => entry.refDigest === ref.refDigest) === index)
++        return { status: "ok", value: structuredClone({ ...captured, value: finalComparison.knownDifference, unit: second.value[1].result.currency,
++          period: second.value[1].result.horizon, evidenceRefs, state: finalComparison.comparisonStatus === "complete" ? "confirmed" : "conditioned",
++          engineVersion: second.value[1].projection.engineVersion }) }
++      }
++      const result = await readPortfolioSnapshot<InternalResult>(host, call, captured, work,
++        { status: "unavailable", reason: "criterion-metric-snapshot-unavailable" })
++      if (!current()) return changed()
++      return result.status === "not-applicable" ? knownSubtotalMetricNotApplicable : structuredClone(result)
++    } catch {
++      return { status: "unavailable", reason: "criterion-metric-unavailable" }
++    }
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..b572fbf4525e2d5015a1e8d4245c96085703e1c1
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json
+@@ -0,0 +1,44 @@
++{
++  "schema": "sf2h.microsoft49-composition.v1",
++  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
++  "source_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
++  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
++  "target_base": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
++  "source_tests_do_not_qualify_composition": true,
++  "validation": "NOT_RUN. Mission45 owns compiler/generation/spawn/guards; product CI/AM remain with S0 or explicitly authorized qualifiers. This file and the original archived source artifacts are material test inputs.",
++  "files": [
++    {
++      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
++      "mode": "100644",
++      "target_preimage_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
++      "postimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
++      "postimage_sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
++      "bytes": 25080,
++      "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
++      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
++      "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
++    },
++    {
++      "path": "apps/cli/src/sucafina-product/installation.ts",
++      "mode": "100644",
++      "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
++      "postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
++      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
++      "bytes": 6258,
++      "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
++      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
++      "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
++    },
++    {
++      "path": "apps/cli/src/commands/handlers/serve.ts",
++      "mode": "100644",
++      "target_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
++      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
++      "bytes": 8960,
++      "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
++      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
++    }
++  ]
++}
+diff --git a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
+index bf99964856dca491e5ccf922f76a5e3e1fb6b22b..bc427a51fe2f0d86d791fc9010cdbad9524ea5a1 100644
+--- a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
+@@ -20,7 +20,7 @@
+   const postimage = await readFile(path.join(receipts, entry.postimage))
+   const canonical = await readFile(path.join(repository, target))
+   if (sha256(preimage) !== entry.preimage_sha256 || blob(preimage) !== entry.source_blob || sha256(postimage) !== entry.postimage_sha256 || blob(postimage) !== entry.postimage_blob) throw new Error("Integration artifact drift")
+-  const composition = JSON.parse(await readFile(path.join(intake, "microsoft49-composition.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
++  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
+   if (composition.schema !== "sf2h.microsoft49-composition.v1" || composition.source_release !== "74ba5b7f71182e531049b8c56fe304c3bec4c3db" || composition.source_manifest_blob !== blob(manifestBytes) || !Array.isArray(composition.files) || composition.files.length !== manifest.files.length || new Set(composition.files.map((file) => file.path)).size !== manifest.files.length || composition.files.some((file) => !manifest.files.some((source) => source.path === file.path && source.postimage_blob === file.source_postimage_blob && source.postimage_sha256 === file.source_postimage_sha256))) throw new Error("Integration composition mapping drift")
+   const installed = composition.files.find((file) => file.path === target)
+   if (!installed || blob(canonical) !== installed.postimage_blob || sha256(canonical) !== installed.postimage_sha256) throw new Error("Integration installed source drift requires owner reconciliation")
+diff --git a/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts b/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..6dc37ec8d08fb4c0c0274ffa7d25ad951a7cd388
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts
+@@ -0,0 +1,448 @@
++import { expect, test } from "bun:test"
++import { createSfKnownSubtotalMetric, knownSubtotalMetricNotApplicable } from "../../../../../../apps/cli/src/sucafina-product/known-subtotal-metric.ts"
++import type { KnownSubtotalMetricDependencies, KnownSubtotalMetricRequest } from "../../../../../../apps/cli/src/sucafina-product/known-subtotal-metric.ts"
++import { createSfPortfolioAuthority } from "../../../../../../apps/cli/src/sucafina-product/portfolio-authority.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { DomainProjection, SourceRef } from "../../../product/contracts/context.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageBasis, CostCoverageEntry, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
++import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../product/contracts/ports.ts"
++import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
++import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
++import type { CriterionMetric } from "../../../product/decisions/criterion-rules.ts"
++import type { StoredDecisionResult } from "../../../product/decisions/result-store.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { comparePlannerScenarios } from "../../../product/planner/comparison.ts"
++import { plannerCoverageComplete } from "../../../product/planner/coverage.ts"
++import type { PlannerScenarioHost, ResolvedScenario } from "../../../product/planner/scenario-comparison-port.ts"
++import { plannerKnownSubtotal } from "../../../src/planner-accounts.ts"
++
++// Surgical adapter contracts: real UI leases, canonical coverage and comparison math.
++// Data/read-port fixtures below are explicit unit observations, not an installed
++// journey, a C08 durability claim, seeds for E2E, or a substitute for the five UI cases.
++type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
++type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
++type MetricResult = Awaited<ReturnType<ReturnType<typeof createSfKnownSubtotalMetric>>>
++type Stage = "history" | "case" | "projection" | "source" | "coverage"
++type Boundary = { stage: Stage; count: number; key: string; args: unknown[]; value: unknown }
++type Hook = (point: Boundary) => void | Promise<void>
++const at = "2026-11-15T03:00:00.000Z"
++const period = { start: "2027-01-01", end: "2027-12-31" }
++const caseRef = { id: "metric-case", incarnation: "metric-case-inc", version: 4 }
++const references = ["stored:baseline", "stored:candidate"] as const
++
++async function fixture(options: { complete?: boolean; amounts?: readonly [readonly (number | null)[], readonly (number | null)[]]; reuseReplies?: boolean } = {}) {
++  const identity = { installationId: "metric-install", projectId: "metric-project", principalRef: "metric-reader", accessRevision: "access-1", policyVersion: "policy-1" }
++  const abort = new AbortController()
++  const transport = new Request("https://example.test/sucafina/planner?sf=decision-compare", {
++    method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, signal: abort.signal,
++  })
++  const state = { allowed: true, identity: { ...identity }, now: Date.parse(at), serial: 0, hook: undefined as Hook | undefined,
++    requestOverride: undefined as Request | undefined, counts: { history: 0, case: 0, projection: 0, source: 0, coverage: 0 },
++    events: [] as { stage: Stage; key: string }[], reuseReplies: options.reuseReplies === true, replies: new Map<Stage, object>(),
++    legacyBatches: [] as string[][], legacyScalar: [] as string[], writes: 0 }
++  const ui = createSfUiAuthority({ authorize: async (request) => request === transport && state.allowed ? { ...state.identity } : undefined,
++    commandIdentity: async () => "metric-contract", createId: () => `metric-admission-${++state.serial}`, now: () => state.now })
++  const request: KnownSubtotalMetricRequest = { caseRef: { ...caseRef }, criterionId: "cost", ruleRef: "rule:cost", ruleVersion: 1,
++    metricRef: "planner:known-subtotal-difference", baselineRef: references[0], scenarioRef: references[1] }
++  const digest = digestSfValue(request)
++  const admitted = await ui.admit(transport, "sf_scenario_compare", digest)
++  if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_scenario_compare", digest)) throw new Error("Real UI admission failed")
++  const context = admitted.value
++  // The canonical helper explicitly retains independent-port behavior when no
++  // persistence adapter is supplied. SQLite/root semantics have separate59 tests.
++  const host: DomainPortHost = { persistence: undefined as unknown as DomainPortHost["persistence"],
++    authenticate: async () => undefined,
++    environment: async () => { throw new Error("Environment is not consumed by this metric fixture") },
++    requestFor: (call) => state.requestOverride ?? (call.kind === "ui" ? ui.requestFor(call) : undefined),
++    revalidate: (call) => call.kind === "ui" ? ui.revalidate(call) : Promise.resolve(false) }
++  const records: PlannerRecord[] = ["v0", "v1"].map((id) => {
++    const value: PlannerRecord = { schema: "sf-evidence-v1", kind: "record", refId: `planner-source:${id}`,
++      installationId: identity.installationId, projectId: identity.projectId, refDigest: "", evidenceLevel: "observed",
++      target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `${id}-inc`, version: 1,
++        fields: ["lines"], period, projectionDigest: digestSfValue({ versionId: id, fixture: "authorized projection" }) } }
++    return { ...value, refDigest: digestSfEvidenceRef(value) }
++  })
++  const basis: CostCoverageBasis = { id: "metric-coverage", version: 1, decisionType: "renewal-transition-v1",
++    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: records }
++  const projections: Record<string, DomainProjection> = {}
++  const alternatives: DecisionCase["alternatives"][number][] = []
++  for (const [index, source] of records.entries()) {
++    const record: SourceRef = { surface: "planner", type: "planner-version", id: source.target.recordId,
++      incarnation: source.target.incarnation, version: source.target.version, fields: source.target.fields, period, observedAt: at }
++    const amounts = options.amounts?.[index] ?? [index === 0 ? 1200 : 2400]
++    const projection: DomainProjection = { context: { ...identity, surface: "planner", period, currency: "USD", sourceRefs: [record], capabilities: [] },
++      version: 1, engineVersion: "planner-contract-v1", values: [],
++      components: amounts.map((amount, component) => ({ id: `service-${component}`, amount, currency: "USD", period,
++        sourceRefs: [record], evidenceState: amount === null ? "absent" : "confirmed" })),
++      missing: amounts.some((amount) => amount === null) ? [{ field: "service", reason: "missing" }] : [] }
++    projections[source.target.recordId] = projection
++    const id = index === 0 ? "baseline" : "candidate"
++    const entries: CostCoverageEntry[] = RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service"
++      ? { categoryId, status: "included", componentRefs: projection.components.map((component) => component.id), evidenceRefs: [source], scopeNote: "Authorized fixture service amounts" }
++      : categoryId === "training" && !options.complete
++        ? { categoryId, status: "pending", reason: "Authorized training source is still absent" }
++        : { categoryId, status: "not-applicable", justification: `Explicit unit fixture scope excludes ${categoryId}`, evidenceRefs: [source] })
++    // Coverage authorization is the explicit port fixture; the inventory,
++    // monetary separation, pending classification and completeness checks are real.
++    const assessment = assessCostCoverage({ basis, alternativeId: id, alternativeVersion: 1, currency: "USD", horizon: period,
++      entries, components: projection.components,
++      evidence: records.map((ref) => ({ ref, state: "fresh", accessRevision: identity.accessRevision, checkedAt: at })), supports: () => true })
++    const subtotal = projection.components.some((component) => component.amount !== null)
++      ? plannerKnownSubtotal(projection.components.map((component) => component.amount)) : null
++    const common = { id: `source-scenario:${id}`, version: 1, components: structuredClone(projection.components), currency: "USD", horizon: period,
++      sourceRefs: [source], restrictions: [] }
++    const complete = assessment.coverageState === "complete" && subtotal !== null && plannerCoverageComplete(basis, assessment, projection, source)
++    const result: ScenarioResult = complete && assessment.coverageState === "complete" && subtotal !== null
++      ? { ...common, comparisonStatus: "complete", knownSubtotal: subtotal, total: subtotal, costCoverage: assessment, unresolvedConditions: [] }
++      : { ...common, comparisonStatus: "conditioned", knownSubtotal: subtotal, total: null, costCoverage: assessment,
++        unresolvedConditions: assessment.entries.flatMap((entry) => entry.status === "pending" ? [`coverage:${entry.categoryId}:${entry.reason}`] : []) }
++    alternatives.push({ id, version: 1, title: id, scenario: { baseRef: source.refId, operations: [], assumptions: [] }, result })
++  }
++  const data = { decision: { ...caseRef, state: "comparing", objective: "Contract fixture for two current Planner alternatives", currency: "USD", horizon: period,
++    criteria: [{ id: "cost", description: "Known subtotal difference", required: true }], participants: [identity.principalRef], sourceRefs: records,
++    alternatives, costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as DecisionCase,
++    stored: {} as Record<string, StoredScenario>, projections,
++    sources: Object.fromEntries(records.map((source) => [source.refId, { versionId: source.target.recordId, evidence: structuredClone(source) }])) as Record<string, { versionId: string; evidence: PlannerRecord }>,
++    coverage: {} as Record<string, Extract<Awaited<ReturnType<PlannerSourceHost["resolveForecastCoverage"]>>, { status: "ok" }>["value"]> }
++  for (const [index, alternative] of alternatives.entries()) {
++    data.stored[references[index]!] = { schema: "sf-decision-result-v1", kind: "scenario", resultRef: references[index]!,
++      caseRef: { ...caseRef, version: index === 0 ? 3 : 4 }, principalRef: identity.principalRef, accessRevision: identity.accessRevision,
++      policyVersion: identity.policyVersion, requestDigest: digestSfValue(alternative.scenario), resultDigest: digestSfValue(alternative.result),
++      sourceRefs: structuredClone(alternative.result.sourceRefs), result: structuredClone(alternative.result), createdAt: at }
++    const coverageRef = decisionCoverageRef(caseRef, alternative.id, alternative.version)
++    data.coverage[coverageRef] = { coverageRef, basis: structuredClone(basis), assessment: structuredClone(alternative.result.costCoverage) }
++  }
++  const emit = async <T extends object>(stage: Stage, key: string, args: unknown[], incoming: T): Promise<T> => {
++    let value = incoming
++    if (state.reuseReplies) {
++      const prior = state.replies.get(stage)
++      if (prior) { for (const name of Object.keys(prior)) delete (prior as Record<string, unknown>)[name]; Object.assign(prior, incoming); value = prior as T }
++      else state.replies.set(stage, value)
++    }
++    state.events.push({ stage, key })
++    const count = ++state.counts[stage]
++    await state.hook?.({ stage, count, key, args, value })
++    return value
++  }
++  const business: KnownSubtotalMetricDependencies["business"] = {
++    results: {
++      read: async () => { throw new Error("Historical scenario reads must retain their canonical reader") },
++      readHistoricalScenario: async (selector, call) => {
++        if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
++        const value = data.stored[selector.resultRef]
++        return emit("history", selector.resultRef, [selector, call], value
++          ? { status: "ok" as const, value: structuredClone(value) }
++          : { status: "unavailable" as const, reason: "fixture-result-missing" })
++      },
++    },
++    cases: { read: async (selector, call) => {
++      if (call !== context || selector.caseRef !== encodeCaseRef(caseRef)) return { status: "denied", reason: "fixture-case-scope-mismatch" }
++      const value: AuthorizedCaseProjection = { context: { ...identity, kind: "ui" },
++        case: { ...structuredClone(data.decision), preparedChanges: [], receipts: [] }, events: [], evidenceRefs: records, checkedAt: at }
++      return emit("case", selector.caseRef, [selector, call], { status: "ok" as const, value })
++    } },
++    plannerSources: {
++      resolveForecastSource: async (reference, call) => {
++        if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
++        const value = data.sources[reference]
++        return emit("source", reference, [reference, call], value
++          ? { status: "ok" as const, value: structuredClone(value) }
++          : { status: "unavailable" as const, reason: "fixture-source-missing" })
++      },
++      resolveForecastCoverage: async (reference, call) => {
++        if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
++        const value = data.coverage[reference]
++        return emit("coverage", reference, [reference, call], value
++          ? { status: "ok" as const, value: structuredClone(value) }
++          : { status: "unavailable" as const, reason: "fixture-coverage-missing" })
++      },
++    },
++    projectPlannerEvidence: async (source, call, selected) => {
++      if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
++      const value = data.projections[source.target.recordId]
++      return emit("projection", source.target.recordId, [source, call, selected], value
++        ? { status: "ok" as const, value: structuredClone(value) }
++        : { status: "unavailable" as const, reason: "fixture-projection-missing" })
++    },
++  }
++  const input: KnownSubtotalMetricDependencies = { host, business }
++  const changeAlternative = (index: number, change: (value: DecisionCase["alternatives"][number]) => DecisionCase["alternatives"][number]) => {
++    const alternative = change(structuredClone(data.decision.alternatives[index]!))
++    data.decision.alternatives = data.decision.alternatives.map((value, selected) => selected === index ? alternative : value)
++    const previous = data.stored[references[index]!]!
++    data.stored[references[index]!] = { ...previous, requestDigest: digestSfValue(alternative.scenario), resultDigest: digestSfValue(alternative.result),
++      result: structuredClone(alternative.result), sourceRefs: structuredClone(alternative.result.sourceRefs) }
++  }
++  const resolved = (reference: string): PortResult<ResolvedScenario> => {
++    const index = references.indexOf(reference as typeof references[number])
++    if (index < 0) return { status: "unavailable", reason: "fixture-result-missing" }
++    const alternative = data.decision.alternatives[index]!, source = records[index]!
++    return { status: "ok", value: structuredClone({ result: alternative.result, source, basis,
++      coverageRef: decisionCoverageRef(caseRef, alternative.id, alternative.version), projection: data.projections[source.target.recordId]! }) }
++  }
++  return { input, host, business, context, ui, request, transport, abort, state, data, records, basis, resolved, changeAlternative,
++    read: createSfKnownSubtotalMetric(input), close: () => ui.finish(context) }
++}
++type Fixture = Awaited<ReturnType<typeof fixture>>
++
++function metric(result: MetricResult): CriterionMetric {
++  expect(result).not.toBe(knownSubtotalMetricNotApplicable)
++  if (typeof result === "symbol" || result.status !== "ok") throw new Error("Expected a proved metric")
++  return result.value
++}
++function refused(result: MetricResult, status?: Exclude<PortResult<unknown>["status"], "ok">) {
++  expect(result).not.toBe(knownSubtotalMetricNotApplicable)
++  if (typeof result === "symbol") throw new Error("A failed eligible proof must not select legacy fallback")
++  expect(result.status).not.toBe("ok")
++  if (status) expect(result.status).toBe(status)
++}
++function afterFirstProjection(f: Fixture, mutate: (value: Fixture) => void) {
++  f.state.hook = ({ stage, count }) => { if (stage === "projection" && count === 1) mutate(f) }
++}
++
++function wired(f: Fixture) {
++  const scenarios: PlannerScenarioHost = {
++    resolve: async (reference, call) => { expect(call).toBe(f.context); f.state.legacyScalar.push(reference); return f.resolved(reference) },
++    resolveMany: async (incoming, call) => { expect(call).toBe(f.context); f.state.legacyBatches.push([...incoming]); return incoming.map(f.resolved) },
++  }
++  const unexpected = () => { f.state.writes++; throw new Error("Unrelated Portfolio operation entered by metric contract") }
++  // Only the readMetric dependency path is exercised. All unrelated services
++  // fail explicitly; this is not a fake complete installed Portfolio host.
++  const services = { ...f.business, plannerProduct: { scenarios }, planner: {}, operationIdentity: () => "metric-contract",
++    readSourceFences: unexpected, lockedSourceFences: unexpected, context: { context: unexpected }, selectedCase: unexpected, resolveCase: unexpected }
++  const authority = { host: f.host, ui: f.ui, human: { authorize: unexpected }, state: { read: unexpected, transaction: unexpected } }
++  return createSfPortfolioAuthority({ authority, business: services, proposalCoverageWrites: new WeakSet<object>(), proof: () => undefined } as unknown as Parameters<typeof createSfPortfolioAuthority>[0]).readMetric
++}
++
++test("known subtotal metric preserves USD 1200, pending coverage and null totals through two independent observations", async () => {
++  const f = await fixture()
++  try {
++    const before = structuredClone(f.data)
++    expect(metric(await f.read(f.request, f.context))).toEqual({ ...f.request, value: 1200, unit: "USD", period,
++      evidenceRefs: f.records, state: "conditioned", engineVersion: "planner-contract-v1" })
++    expect(f.data.decision.alternatives.map((value) => value.result.total)).toEqual([null, null])
++    expect(f.data.decision.alternatives.every((value) => value.result.costCoverage.coverageState === "pending")).toBe(true)
++    expect(f.state.events.filter((event) => event.stage === "history").map((event) => event.key)).toEqual([...references, ...references])
++    expect(f.state.events.filter((event) => event.stage === "projection").map((event) => event.key)).toEqual(["v0", "v1", "v0", "v1"])
++    expect(f.state.counts).toEqual({ history: 4, case: 2, projection: 4, source: 4, coverage: 4 })
++    expect(f.data).toEqual(before)
++  } finally { f.close() }
++})
++
++test("only actual canonical complete coverage yields a confirmed metric", async () => {
++  const f = await fixture({ complete: true })
++  try {
++    const baseline = f.resolved(references[0]), candidate = f.resolved(references[1])
++    if (baseline.status !== "ok" || candidate.status !== "ok") throw new Error("Fixture observations unavailable")
++    const oracle = comparePlannerScenarios({ baselineRef: references[0], alternativeRef: references[1],
++      baselineCoverageRef: baseline.value.coverageRef, alternativeCoverageRef: candidate.value.coverageRef,
++      baseline: baseline.value.result, alternative: candidate.value.result, baselineProof: baseline.value, alternativeProof: candidate.value })
++    expect(oracle.comparisonStatus).toBe("complete")
++    expect(oracle.completeDifference).toBe(1200)
++    expect(metric(await f.read(f.request, f.context))).toMatchObject({ value: 1200, state: "confirmed", unit: "USD" })
++  } finally { f.close() }
++})
++
++test("zero is a real amount while all absent components cannot manufacture zero", async () => {
++  const zero = await fixture({ amounts: [[0], [0]] })
++  try {
++    expect(metric(await zero.read(zero.request, zero.context))).toMatchObject({ value: 0, state: "conditioned" })
++    expect(zero.data.decision.alternatives.every((value) => value.result.total === null)).toBe(true)
++  } finally { zero.close() }
++  const absent = await fixture({ amounts: [[null], [null]] })
++  try {
++    expect(await absent.read(absent.request, absent.context)).toBe(knownSubtotalMetricNotApplicable)
++    expect(absent.state.counts.projection).toBe(0)
++    expect(metric(await wired(absent)(absent.request, absent.context))).toMatchObject({ value: null, state: "conditioned" })
++    expect(absent.state.legacyBatches).toEqual([[...references], [...references]])
++    for (const index of [0, 1]) absent.changeAlternative(index, (value) => ({ ...value, result: { ...value.result, knownSubtotal: 0 } as ScenarioResult }))
++    refused(await absent.read(absent.request, absent.context), "unavailable")
++  } finally { absent.close() }
++})
++
++test("canonical component order retains IEEE-754 known-subtotal rounding", async () => {
++  const f = await fixture({ amounts: [[1e16, 1, -1e16], [1e16, -1e16, 1]] })
++  try { expect(metric(await f.read(f.request, f.context))).toMatchObject({ value: 1, state: "conditioned" }) }
++  finally { f.close() }
++})
++
++test("reused port result objects retain baseline-candidate order and detached output", async () => {
++  const f = await fixture({ reuseReplies: true })
++  try {
++    const first = metric(await f.read(f.request, f.context))
++    expect(first.value).toBe(1200)
++    expect(first.evidenceRefs.map((ref) => ref.refId)).toEqual(f.records.map((ref) => ref.refId))
++    first.evidenceRefs[0]!.refDigest = "0".repeat(64)
++    first.period.start = "1900-01-01"
++    const second = metric(await f.read(f.request, f.context))
++    expect(second.value).toBe(1200)
++    expect(second.evidenceRefs).toEqual(f.records)
++    expect(second.period).toEqual(period)
++    expect(f.state.counts.history).toBe(8)
++  } finally { f.close() }
++})
++
++for (const [name, mutate] of [
++  ["source incarnation/version", (f: Fixture) => {
++    const source = f.data.sources[f.records[0]!.refId]!.evidence
++    source.target.version++; source.refDigest = digestSfEvidenceRef(source)
++  }],
++  ["coverage assessment", (f: Fixture) => {
++    const ref = decisionCoverageRef(caseRef, "baseline", 1), value = f.data.coverage[ref]!
++    value.assessment = { ...value.assessment, issues: ["source-proof-changed"] }
++  }],
++  ["current projection engine", (f: Fixture) => { f.data.projections.v0!.engineVersion = "changed-engine" }],
++] as const) test(`metric refuses ${name} drift between proof phases`, async () => {
++  const f = await fixture()
++  try {
++    f.state.hook = ({ stage, count }) => { if (stage === "coverage" && count === 2) mutate(f) }
++    refused(await f.read(f.request, f.context), "stale")
++  } finally { f.close() }
++})
++
++test("final historical metadata and whole-case content are independently fenced", async () => {
++  const history = await fixture()
++  try {
++    afterFirstProjection(history, (f) => { f.data.stored[references[0]]!.createdAt = "2026-11-15T03:00:01.000Z" })
++    refused(await history.read(history.request, history.context), "stale")
++  } finally { history.close() }
++  const wholeCase = await fixture()
++  try {
++    wholeCase.state.hook = ({ stage, count }) => { if (stage === "history" && count === 4) wholeCase.data.decision.objective = "Changed without advancing the declared version" }
++    refused(await wholeCase.read(wholeCase.request, wholeCase.context), "stale")
++  } finally { wholeCase.close() }
++})
++
++for (const [name, mutate] of [
++  ["historical reader", (f: Fixture) => { const old = f.business.results.readHistoricalScenario; f.business.results.readHistoricalScenario = (...args) => old(...args) }],
++  ["general result reader", (f: Fixture) => { const old = f.business.results.read; f.business.results.read = (...args) => old(...args) }],
++  ["whole-case reader", (f: Fixture) => { const old = f.business.cases.read; f.business.cases.read = (...args) => old(...args) }],
++  ["projection producer", (f: Fixture) => { const old = f.business.projectPlannerEvidence; f.business.projectPlannerEvidence = (...args) => old(...args) }],
++  ["source resolver", (f: Fixture) => { const old = f.business.plannerSources.resolveForecastSource; f.business.plannerSources.resolveForecastSource = (...args) => old(...args) }],
++  ["coverage resolver", (f: Fixture) => { const old = f.business.plannerSources.resolveForecastCoverage; f.business.plannerSources.resolveForecastCoverage = (...args) => old(...args) }],
++  ["requestFor", (f: Fixture) => { const old = f.host.requestFor; f.host.requestFor = (...args) => old(...args) }],
++  ["revalidation", (f: Fixture) => { const old = f.host.revalidate; f.host.revalidate = (...args) => old(...args) }],
++  ["authentication", (f: Fixture) => { const old = f.host.authenticate; f.host.authenticate = (...args) => old(...args) }],
++  ["environment", (f: Fixture) => { const old = f.host.environment; f.host.environment = (...args) => old(...args) }],
++] as const) test(`metric rejects ${name} replacement even when the new method delegates the same value`, async () => {
++  const f = await fixture()
++  try { afterFirstProjection(f, mutate); refused(await f.read(f.request, f.context), "stale") }
++  finally { f.close() }
++})
++
++for (const [name, mutate] of [
++  ["Request identity", (f: Fixture) => { f.state.requestOverride = new Request(f.transport.url, { method: "POST", headers: f.transport.headers }) }],
++  ["Request headers", (f: Fixture) => { f.transport.headers.set("x-metric-source", "changed") }],
++  ["authority revision", (f: Fixture) => { f.state.identity.accessRevision = "access-2" }],
++  ["aborted Request", (f: Fixture) => { f.abort.abort() }],
++  ["input payload", (f: Fixture) => { f.request.ruleVersion = 2 }],
++] as const) test(`metric cannot publish after ${name} changes`, async () => {
++  const f = await fixture()
++  try { afterFirstProjection(f, mutate); refused(await f.read(f.request, f.context)) }
++  finally { f.close() }
++})
++
++test("serialized UI binding cannot recover its private lease", async () => {
++  const f = await fixture()
++  try {
++    const forged = { ...f.context, binding: { ...f.context.binding }, lease: {} } as unknown as TrustedUiContext
++    refused(await f.read(f.request, forged), "denied")
++    expect(f.state.counts.history).toBe(0)
++  } finally { f.close() }
++})
++
++test("mutable callback arguments are isolated and rejected instead of changing the captured source", async () => {
++  const f = await fixture()
++  try {
++    const before = structuredClone(f.records)
++    f.state.hook = ({ stage, count, args }) => { if (stage === "projection" && count === 1) (args[0] as PlannerRecord).target.version++ }
++    refused(await f.read(f.request, f.context), "stale")
++    expect(f.records).toEqual(before)
++    expect(f.data.decision.alternatives[0]!.result.sourceRefs).toEqual([before[0]!])
++  } finally { f.close() }
++})
++
++test("historical batch order and result-to-case scope cannot be substituted", async () => {
++  const reversed = await fixture()
++  try {
++    const original = reversed.business.results.readHistoricalScenario
++    reversed.business.results.readHistoricalScenario = (selector, call) => original({ resultRef: selector.resultRef === references[0] ? references[1] : references[0] }, call)
++    refused(await reversed.read(reversed.request, reversed.context), "denied")
++  } finally { reversed.close() }
++  const replaced = await fixture()
++  try {
++    replaced.data.stored[references[1]]!.caseRef = { ...caseRef, incarnation: "other-case-inc" }
++    refused(await replaced.read(replaced.request, replaced.context), "denied")
++  } finally { replaced.close() }
++})
++
++for (const [name, mutate] of [
++  ["stored arithmetic", (f: Fixture) => f.changeAlternative(1, (value) => ({ ...value, result: { ...value.result, knownSubtotal: 999 } as ScenarioResult }))],
++  ["component amount", (f: Fixture) => { const p = f.data.projections.v1!; p.components = p.components.map((value) => ({ ...value, amount: 2500 })) }],
++  ["duplicate component identity", (f: Fixture) => {
++    const p = f.data.projections.v1!, component = { ...structuredClone(p.components[0]!), amount: 1200 }
++    p.components = [component, structuredClone(component)]
++    f.changeAlternative(1, (value) => ({ ...value, result: { ...value.result, components: structuredClone(p.components) } as ScenarioResult }))
++  }],
++] as const) test(`current projection must prove ${name}; valid hashes alone do not authenticate money`, async () => {
++  const f = await fixture()
++  try { mutate(f); refused(await f.read(f.request, f.context), "unavailable") }
++  finally { f.close() }
++})
++
++for (const [name, alter] of [
++  ["operation", (value: DecisionCase["alternatives"][number]) => ({ ...value, scenario: { ...value.scenario, operations: [{ kind: "exclude" as const, targetRef: "service:1" }] } })],
++  ["assumption", (value: DecisionCase["alternatives"][number]) => ({ ...value, scenario: { ...value.scenario, assumptions: [{ id: "assumption", value: 1, state: "hypothetical" as const, evidenceRefs: [] }] } })],
++] as const) test(`unsupported ${name} selects the real legacy wiring exactly through the sentinel`, async () => {
++  const f = await fixture()
++  try {
++    f.changeAlternative(1, alter)
++    expect(await f.read(f.request, f.context)).toBe(knownSubtotalMetricNotApplicable)
++    expect(f.state.counts.projection).toBe(0)
++    const readMetric = wired(f)
++    const result = await readMetric(f.request, f.context)
++    expect(result.status).toBe("ok")
++    expect(f.state.legacyBatches).toEqual([[...references], [...references]])
++    expect(f.state.legacyScalar).toEqual([])
++    expect(f.state.writes).toBe(0)
++  } finally { f.close() }
++})
++
++test("eligible proof failure never falls back to an otherwise successful legacy metric", async () => {
++  const f = await fixture()
++  try {
++    f.data.projections.v1!.engineVersion = ""
++    const readMetric = wired(f)
++    refused(await readMetric(f.request, f.context), "unavailable")
++    expect(f.state.legacyBatches).toEqual([])
++    expect(f.state.legacyScalar).toEqual([])
++    expect(f.state.writes).toBe(0)
++  } finally { f.close() }
++})
++
++test("a successful eligible metric uses its independent proof without entering legacy comparison", async () => {
++  const f = await fixture()
++  try {
++    const readMetric = wired(f)
++    expect(metric(await readMetric(f.request, f.context))).toMatchObject({ value: 1200, state: "conditioned", unit: "USD" })
++    expect(f.state.legacyBatches).toEqual([])
++    expect(f.state.counts.projection).toBe(4)
++    expect(f.state.writes).toBe(0)
++  } finally { f.close() }
++})
++
++test("an eligible coverage denial is propagated without retrying through legacy", async () => {
++  const f = await fixture()
++  try {
++    f.business.plannerSources.resolveForecastCoverage = async () => ({ status: "denied", reason: "fixture-coverage-access-revoked" })
++    const readMetric = wired(f)
++    expect(await readMetric(f.request, f.context)).toEqual({ status: "denied", reason: "fixture-coverage-access-revoked" })
++    expect(f.state.legacyBatches).toEqual([])
++    expect(f.state.legacyScalar).toEqual([])
++    expect(f.state.writes).toBe(0)
++  } finally { f.close() }
++})

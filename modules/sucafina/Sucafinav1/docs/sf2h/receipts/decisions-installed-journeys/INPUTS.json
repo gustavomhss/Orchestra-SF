@@ -1430,16 +1430,26 @@
     "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
     "diagnostics_removed": true,
     "foreign_proposal_only": true,
-    "GLOBAL_RELEASE": false
+    "GLOBAL_RELEASE": false,
+    "state": "COMPLETED_3_PASS_2_FAIL",
+    "receipt": "nominal-09.json",
+    "J1": "Reached two successful comparisons, catalog and saved numeric rule; third compare aborted; choice/history not reached",
+    "J2": "Requests503/form0; no financial mutation",
+    "J3": "PASS",
+    "J4": "PASS",
+    "J5": "PASS"
   },
   "current_target_authority": {
-    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "sha": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "tree": "8962e2dce1cad73b93dcd75a4a5bce5807eb3de4",
     "material": "C28",
-    "integrator": "60",
-    "ACK60": "95a0a793cce1c5c0e03942306189cd518afbe1ce",
-    "epoch": "S0-C-e12-browser60",
-    "requested_terminal_owner": "47",
-    "root52_does_not_integrate": true
+    "integrator": 71,
+    "ACK71": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+    "epoch": "S0-C-e13-browser71",
+    "requested_terminal_owner": 47,
+    "root52_does_not_integrate": true,
+    "predecessor60": "ENDED",
+    "audit": "audits/target71-before-nominal10.json"
   },
   "foreign59_proposal": {
     "source_publication": "f1796aaa74ed0095f64e1f33ef45261f338edd4b",
@@ -1456,6 +1466,560 @@
     },
     "source_lease": "ACTIVE",
     "integration_and_release": "HOLD",
-    "isolated_W52": "Allowed by execution[3] of pinned package52; no PASS transfer"
+    "isolated_W52": "Allowed by execution[3] of pinned package52; no PASS transfer",
+    "current_source": "608763f1765e0eac34565a3668d330bb1cdbd140",
+    "state": "EXPLICIT_BOUNDED_SOURCE_RELEASE_P03_HELD",
+    "lease": "ENDED",
+    "release_blob": "6ab5c38380cb9ad81123022af416d18e55798000",
+    "qualification": "130PASS selected R2; originalP03FAIL;45gatesPENDING",
+    "exact_nine_blobs_preserved": true,
+    "audit": "dependencies/runtime59/terminal-release-observed.json"
+  },
+  "tenth_qualification": {
+    "mission": 52,
+    "nominal": "10",
+    "purpose": "P7 independent metric qualification on current C28 material after Unit02 PASS",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "base_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "base_symbol": "C28+terminal60 documents",
+    "owned_source": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
+    "owned_source_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
+    "receipt_source": "07c430c23d5ae301050cfcde9daddae1b3fc2efc",
+    "W": "812d6bd9de70890775708533a7b05687c2d4d93d",
+    "W_tree": "619c998f3afac37f09f500ae32c3bcbf96a4514e",
+    "S": "e5e0d9ea5d1cf017c02fcce38b40e1812dfe1f55",
+    "S_tree": "a90f8a5c2ab37c3c02f2c4d81661417e23fea7af",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "branch": "ci-run-linux-astra-wp11-812d6bd9-3619f1fd-m52-10",
+    "overlay": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0832650685246e386f0270533bb58ed840effd65"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9fe64294027cf6805ff8e7ba4b7cfac83455de85"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "903b48594ff95e0d1f78539982adcf75eb3b9272"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "de8671b4482339791b8f03bd5616c13d50dc4a87"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "10b59adfce7d8fb5143f49c9df9a0d7321425018"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a77da76589ece60a6925bdd20731efbc8f19b597"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "36ad71ccbeacc42382dcc2d0f35ee7f707981790"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e91191ec5fa37da12db4d92e973e9105c00be4e5"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "feae4846feb657924d9229193eeeded58b378851"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1761a5d2558c9091d1c02730774751ace44e9131"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "30e67e56d5b78ebb2adebbec10194f19d725b570"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "844edd2860e11d5de165c09c7863f4cc6ef5ad67"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "632a47e792502d7476149d2b790ad447cbd96649"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9d17760c418ee9b48b97443d90a994c31cc415f5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8be1156b64e957eae4670f7ad1bb6cd51e61e649"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a36440a750d5671a34c3ab41b2af48093af9f7ee"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0e812842ad0d534998c182100a8466548d70e915"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3cf82bd82b2716ee689b4c48bd9551540b058287"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "35741770154ccea55944674239e5b29cadc3abb6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1d0ca64fb5c181e4a08321758871c0d0b874802d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "14ad0af44fc6c4af8c33d1af1130e82220b822b3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0dac654465c7ad43e025d10f660ecad297cc5c1c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6b0e7ae0e7dea667570ccee65175b8a9089a171e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b572fbf4525e2d5015a1e8d4245c96085703e1c1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/known-subtotal-metric.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0fbe3adf8280621b93972385e3af36dfa833c831"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6dc37ec8d08fb4c0c0274ffa7d25ad951a7cd388"
+      }
+    ],
+    "selected": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0832650685246e386f0270533bb58ed840effd65"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9fe64294027cf6805ff8e7ba4b7cfac83455de85"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "903b48594ff95e0d1f78539982adcf75eb3b9272"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "de8671b4482339791b8f03bd5616c13d50dc4a87"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "10b59adfce7d8fb5143f49c9df9a0d7321425018"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a77da76589ece60a6925bdd20731efbc8f19b597"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "36ad71ccbeacc42382dcc2d0f35ee7f707981790"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e91191ec5fa37da12db4d92e973e9105c00be4e5"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "feae4846feb657924d9229193eeeded58b378851"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1761a5d2558c9091d1c02730774751ace44e9131"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "30e67e56d5b78ebb2adebbec10194f19d725b570"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "844edd2860e11d5de165c09c7863f4cc6ef5ad67"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "632a47e792502d7476149d2b790ad447cbd96649"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9d17760c418ee9b48b97443d90a994c31cc415f5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8be1156b64e957eae4670f7ad1bb6cd51e61e649"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a36440a750d5671a34c3ab41b2af48093af9f7ee"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0e812842ad0d534998c182100a8466548d70e915"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3cf82bd82b2716ee689b4c48bd9551540b058287"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "35741770154ccea55944674239e5b29cadc3abb6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1d0ca64fb5c181e4a08321758871c0d0b874802d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "14ad0af44fc6c4af8c33d1af1130e82220b822b3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0dac654465c7ad43e025d10f660ecad297cc5c1c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6b0e7ae0e7dea667570ccee65175b8a9089a171e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b572fbf4525e2d5015a1e8d4245c96085703e1c1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/known-subtotal-metric.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0fbe3adf8280621b93972385e3af36dfa833c831"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6dc37ec8d08fb4c0c0274ffa7d25ad951a7cd388"
+      }
+    ],
+    "count": 5,
+    "timeout_ms": 180000,
+    "ui_deadline_ms": 10000,
+    "retries": 0,
+    "repeatEach": 1,
+    "workers": 1,
+    "change": "P7v2 private metric uses independent actual projection/source/coverage and current case/history checks; original five UI identities/assertions/budgets unchanged; Microsoft60 map relocation preserves historical55.",
+    "foreign_proposal": {
+      "mission": 59,
+      "product_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "release_blob": "6ab5c38380cb9ad81123022af416d18e55798000",
+      "state": "EXPLICIT_BOUNDED_SOURCE_RELEASE_P03_HELD",
+      "paths": 9,
+      "R2": {
+        "run": 43665988509,
+        "pass": 130,
+        "fail": 0
+      },
+      "P03": {
+        "run": 43666746009,
+        "status": "FAIL"
+      },
+      "checks45": "PENDING",
+      "no_target_integration_claim": true
+    },
+    "diagnostics": {
+      "D7_and_D8_removed": true,
+      "no_profile_code_in_candidate": true,
+      "checked_product_blobs": [
+        {
+          "sha": "cb89ba0139a7cf3965e0bb2898ab13f3015d7837",
+          "profile_code": false
+        },
+        {
+          "sha": "a77da76589ece60a6925bdd20731efbc8f19b597",
+          "profile_code": false
+        },
+        {
+          "sha": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+          "profile_code": false
+        },
+        {
+          "sha": "1761a5d2558c9091d1c02730774751ace44e9131",
+          "profile_code": false
+        }
+      ]
+    },
+    "authority": {
+      "requested_handoff": "47",
+      "source52": "ACTIVE",
+      "current_target": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "target_material": "C28",
+      "integrator71_ACK": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+      "epoch": "S0-C-e13-browser71",
+      "observed_docs_only_advance": true,
+      "target_writes52": 0
+    },
+    "causal_limit": "Multiple necessary producer/wiring corrections and the exact owner59 primitive are composed; this run does not isolate per-patch speedups.",
+    "acceptance_limit": "Original installed UI outcomes pending. Source unit PASS does not establish whole criteria, integrated C, financial approval, native restart or GLOBAL acceptance.",
+    "GLOBAL_RELEASE": false,
+    "sentinel": {
+      "root_entries_unchanged": 43,
+      "only_extra": {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+        "size": 229,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+      },
+      "overlay_files_verified": 30
+    },
+    "run_id": 43670807969,
+    "state": "RUNNING",
+    "unit_gate": {
+      "run": 43670461431,
+      "S": "d042864cd26e70fc551eb17f1bbdcf064897c21c",
+      "W": "812d6bd9de70890775708533a7b05687c2d4d93d",
+      "pass": 35,
+      "fail": 0,
+      "expect_calls": 145,
+      "elapsed_ms": 310,
+      "scope": "additional metric contract only"
+    },
+    "dedup": {
+      "at": "2026-11-15 03:06:07 UTC",
+      "latest_runs": 100,
+      "WP11_active": 0,
+      "exact_S_runs": 0,
+      "W": "812d6bd9de70890775708533a7b05687c2d4d93d",
+      "S": "e5e0d9ea5d1cf017c02fcce38b40e1812dfe1f55",
+      "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "unit_run": 43670461431,
+      "unit_gate": "PASS35",
+      "target_at_last_reconcile": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "target_material": "C28",
+      "authority71": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+      "docs_only_advance_verified": true
+    },
+    "dispatched_at": "2026-11-15 03:06:07 UTC"
+  },
+  "P7_units": {
+    "unit01": {
+      "run": 43670124299,
+      "W": "493fe3ca38775b9769a061a19d9e7b2fc0887910",
+      "S": "227d9903de0b8a21df17abbb4073360b039e4785",
+      "pass": 32,
+      "fail": 3,
+      "reason": "fixture counter optional-call short circuit",
+      "receipt": "unit-01.json"
+    },
+    "unit02": {
+      "run": 43670461431,
+      "W": "812d6bd9de70890775708533a7b05687c2d4d93d",
+      "S": "d042864cd26e70fc551eb17f1bbdcf064897c21c",
+      "pass": 35,
+      "fail": 0,
+      "expect_calls": 145,
+      "elapsed_ms": 310,
+      "receipt": "unit-02.json",
+      "scope": "Additional metric contract, no installed UI or financial proof"
+    }
+  },
+  "current_control": {
+    "sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "mission52_unchanged": true,
+    "transport74": "PREPARED corrective owner M70-HTTP-01; installation proposal readonly for52",
+    "canonical_cost76": "PREPARED own producer hotpaths; no52authority grant",
+    "audit": "audits/control-delta-before-p7.json"
   }
 }
