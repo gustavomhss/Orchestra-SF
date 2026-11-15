@@ -1,0 +1,74 @@
+{
+  "schema": "sf2h.am04-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 168,
+  "proof": "AM04",
+  "actor": "GPT-6 via ChatGPT/GitHub MCP",
+  "effective_model": "GPT-6",
+  "native_session_id": null,
+  "native_session_id_observation": "not exposed by this environment; Astra session was not asserted",
+  "branch": "sf-am04-proof",
+  "epoch": "proof-am04-e1-browser168",
+  "prepared_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "pre_tree_sha": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "packet": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/168.json",
+    "ref": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "blob": "3939156ae3b5d8ff2d4c0cf690b8baad90006d9e"
+  },
+  "canonical_plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "manifest_blob": "f54cabaea6d2702642654d3a14ff4e24190686fb",
+    "actor_pack_path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+    "actor_pack_blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+    "actor_pack_sha256": "f5ecbabbfba0a4c997341f0c6a7b8d58acdc1f056768dd078ca1fc277aed2c99"
+  },
+  "read_rules": [
+    {
+      "path": "AGENTS.md",
+      "sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "sha": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "sha": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec"
+    }
+  ],
+  "source_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "sha": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "sha": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "sha": "5e1b9f2b9a9368e25e8ff97d647288742f3cf7eb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "sha": "084f7050ca7f45fe22962207f706a5e0d71e3a93"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+      "sha": "438672355e67c0c4b0f445b01a993edb1b3ad7fc"
+    }
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/**",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/am04/**",
+    "script/sf2h/proofs/am04/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/**"
+  ],
+  "sole_integrator": "162/S0-C-e20-browser162/PR65",
+  "compiler": "163/PR107",
+  "hosted_ci": "164/PR106",
+  "status": "ACK_SOURCE_RECONCILED_NO_TESTS_RUN",
+  "native_goal": "paused",
+  "next": "Implement only novel executable AM04 evidence/correlation within allowlist; handoff to integrator and hosted dispatcher"
+}
