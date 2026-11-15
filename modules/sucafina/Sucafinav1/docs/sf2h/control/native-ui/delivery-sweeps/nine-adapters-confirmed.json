@@ -1,0 +1,111 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "rows": [
+    {
+      "slot": "N01",
+      "order": "A07",
+      "branch": "sf-ux-a07",
+      "head": "7c48277a3ac60ff455049493f7fd28f7b1c22869",
+      "pr": 141,
+      "status": "ARTIFACT_READY_PENDING_I00_INTEGRATION_AND_119_120_QUALIFICATION",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N02",
+      "order": "A08",
+      "branch": "sf-ux-a08",
+      "head": "e822e1cf4bf4167a3190b87c8be29dd9ffe992a0",
+      "pr": 142,
+      "status": "ARTIFACT_READY",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N03",
+      "order": "A09",
+      "branch": "sf-ux-a09",
+      "head": "8d78462a7fc8e11646ae1fb96e7dc4cee24f7bf5",
+      "pr": 140,
+      "status": "ARTIFACT_READY",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N04",
+      "order": "A10",
+      "branch": "sf-ux-a10",
+      "head": "c8f373871f8cca77ff6f870d6ed31bfb68968604",
+      "pr": 138,
+      "status": {
+        "schema": "AUTHORED_NOT_TYPECHECKED",
+        "client": "AUTHORED_NOT_TYPECHECKED",
+        "cli": "AUTHORED_NOT_TYPECHECKED",
+        "specs": "WRITTEN_NOT_RUN",
+        "unit_tests": "NOT_RUN_BY_ORDER",
+        "package_typecheck": "NOT_RUN_RESERVED_TO_119",
+        "ci": "NOT_RUN_RESERVED_TO_120",
+        "integration": "NOT_RUN_RESERVED_TO_114",
+        "desktop_auth": "NOT_RUN",
+        "source_authority_live": "NOT_PROVEN",
+        "product_qualification": "NOT_CLAIMED"
+      },
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N05",
+      "order": "A11",
+      "branch": "sf-ux-a11",
+      "head": "c235e1baee4d62ddae0c64f85f7c8b159df599fb",
+      "pr": 143,
+      "status": "IMPLEMENTED_COMMITTED_PR_OPEN__NOT_QUALIFIED",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N06",
+      "order": "A12",
+      "branch": "sf-ux-a12",
+      "head": "8c5afc0ef87b8217f4c5230f1e031d9c90a95c58",
+      "pr": 144,
+      "status": "ARTIFACT_READY_PARTIAL_HANDOFF_TO_114; NO GLOBAL_RELEASE",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N07",
+      "order": "A13",
+      "branch": "sf-ux-a13",
+      "head": "3f3adbbc1e8fa57ff4e6c67b5c7daa97458c9b8f",
+      "pr": 139,
+      "status": "ARTIFACT_READY",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N08",
+      "order": "A14",
+      "branch": "sf-ux-a14",
+      "head": "3ff8f4096f7da7ee19a483f1668cfc5d4b76d946",
+      "pr": 136,
+      "status": "ARTIFACT_READY",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    },
+    {
+      "slot": "N09",
+      "order": "A15",
+      "branch": "sf-ux-a15",
+      "head": "03f40d478a886cb90b82862d670ba3a197438c31",
+      "pr": 137,
+      "status": "ARTIFACT_READY",
+      "redeploy_for_initial_implementation": false,
+      "qualified": false
+    }
+  ],
+  "reason": "Correct ambiguous30prompt presentation: first9were existing adapter references;21actual new launches.",
+  "runtime_liveness": "not exposed; GitHub handoffs prove delivered source, not current live chat",
+  "remaining_causal_gap": "A12 work-item destination reader and viewsV2 producer release require actual owners, no blind re-dispatch",
+  "global_release": false
+}
