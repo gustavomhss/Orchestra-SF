@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
-import { nativeDashboardCommandTarget, nativeInstalledFixture, nativeJourneyEntryHref, observeNativeBinding } from "../fixture.ts"
+import { nativeDashboardCommandTarget, nativeInstalledFixture, nativeJourneyEntryHref, observeNativeBinding, requireNativeJourney } from "../fixture.ts"
 import type { InstalledNativeHarness } from "../fixture.ts"
 
 /**
@@ -44,8 +44,8 @@ async function requireAdmittedSurface(
     (candidate) => manifest.actors[candidate] === current.stamp.principalRef,
   )
   if (!actor) throw new Error("F04_" + surfaceId + "_REAL_DASHBOARD_ACTOR_REQUIRED")
-  const admitted = await nativeHarness.requireJourney({
-    actor, capabilityId: surfaceId, intent, year: 2026,
+  const admitted = await requireNativeJourney({
+    page, manifest, actor, capabilityId: surfaceId, intent, year: 2026,
   })
   if (admitted.proofClass !== "INSTALLED_CURRENT_CONTEXT_PRECONDITION_ONLY" ||
       admitted.href !== href || admitted.candidateSha !== manifest.candidateSha ||
