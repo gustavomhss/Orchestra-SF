@@ -19,7 +19,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
     <SfChartFrame
       titleKey={sfBiKey(props.copy + ".title")}
       questionKey={sfBiKey(props.copy + ".question." + props.viewId)}
-      context={[
+      context={model().state === "unavailable" ? [] : [
         { label: { key: sfBiKey(props.copy + ".context.period") },
           value: { kind: "data", text: props.projection.projection.context.period.start + " – " + props.projection.projection.context.period.end } },
         { label: { key: sfBiKey(props.copy + ".context.currency") },

@@ -7,10 +7,10 @@ import type {
   SfBiBiOptionsOutput, SfBiBiSourceOutput, SfBiBiDataOutput,
 } from "@orchestra/schema/sucafina/bi"
 import { createSfBiClient } from "@orchestra/client/sucafina/bi"
-import { SfPageFrame, sfCommonKey } from "../../shared/frame"
+import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import type { SfUiState } from "../../shared/frame"
-import { useSfPresentation } from "../../shared/frame/presentation"
+import { useSfPresentation, sfCommonKey } from "../../shared/frame/presentation"
 import { SfFinancialFigure } from "../finance"
 import { SfOperationalFigure } from "../operations"
 import type { SfBiFinancialView, SfBiOperationalView, SfBiSnapshot } from "../finance/model"
@@ -71,7 +71,7 @@ function isOperational(id: ViewId): id is SfBiOperationalView {
 }
 
 /** U21 UI45 entry: only real A08 reads, from the current F01 owner and generation. */
-export function SfBiCatalog(props: SfSurfaceProps<"UI45">) {
+export function SfBiCatalog(_props: SfSurfaceProps<"UI45">) {
   const context = useSfContext()
   const { t } = useSfPresentation()
   const [store, setStore] = createStore<CatalogStore>({
@@ -214,7 +214,9 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45">) {
     const result = store.data
     if (!result || !allowedData()) return
     const matched = result.projection.values.flatMap((value) =>
-      value.sourceRefs.filter((source) => source.refId === reference).map((source) => ({ value, source })))
+      [value.drilldown, ...value.sourceRefs].filter((source) => source?.refId === reference)
+        .filter((source, index, all) => source && all.findIndex((item) => item?.refDigest === source.refDigest) === index)
+        .map((source) => ({ value, source: source! })))
     if (matched.length !== 1) {
       setStore({ selectedSource: reference, links: undefined, sourceState: "invalid" })
       return
