@@ -1,0 +1,130 @@
+{
+  "schema": "sf2h.native-ui.author-receipt.v1",
+  "order": "A10",
+  "title": "Pessoas e Talent",
+  "branch": "sf-ux-a10",
+  "lease": "ux-native-a10-e1",
+  "actor": "ChatGPT / GPT-6 (GitHub connector)",
+  "status": {
+    "schema": "AUTHORED_NOT_TYPECHECKED",
+    "client": "AUTHORED_NOT_TYPECHECKED",
+    "cli": "AUTHORED_NOT_TYPECHECKED",
+    "specs": "WRITTEN_NOT_RUN",
+    "unit_tests": "NOT_RUN_BY_ORDER",
+    "package_typecheck": "NOT_RUN_RESERVED_TO_119",
+    "ci": "NOT_RUN_RESERVED_TO_120",
+    "integration": "NOT_RUN_RESERVED_TO_114",
+    "desktop_auth": "NOT_RUN",
+    "source_authority_live": "NOT_PROVEN",
+    "product_qualification": "NOT_CLAIMED"
+  },
+  "not_integrated": true,
+  "base_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "material_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "code_head": "936afcfbaea05238fe273e0a64240c0b0354ee0e",
+  "code_tree": "335c6f5f1e4031c6d3adea827f0207e21e22919f",
+  "source_pins": {
+    "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+    "modules/sucafina/Sucafinav1/runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "execution/contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "execution/CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "execution/host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "source_drift": {
+    "runtime/dashboard-people.ts": "same exact pinned producer blob",
+    "runtime/application.ts": "C58 changed original application.ts blob; scrutinized retained people execute/view/decodeCommand/safeFailure paths; no A10 edits to producer"
+  },
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/people.ts",
+      "preimage": null,
+      "postimage": "6e462e00f39d7ca866ca76fd88582b98a2415f92",
+      "purpose": "SfPeople closed operation set and DTOs"
+    },
+    {
+      "path": "packages/client/src/sucafina/people.ts",
+      "preimage": null,
+      "postimage": "57278f55bb2b36a69c93653c54bb7b8129b1e41f",
+      "purpose": "createSfPeopleClient; typed dispatch, strict excess-property rejection, no retry"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/people.ts",
+      "preimage": null,
+      "postimage": "6b76597dadb57f5530348059ef79b04e324712dc",
+      "purpose": "four GET handlers, producer view, authority checks, redaction, source/version fence"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+      "preimage": null,
+      "postimage": "7df1e268540e6f3ab1c79b2961fcb7def12966a8",
+      "purpose": "11 not-run unit/contract tests of roles, source equivalence, redaction, CAS, unknown actions"
+    }
+  ],
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A10/ack-e1.json",
+    "blob": "b2af75bfa8800b2a02a3f5bc674635bf4e6f3e45",
+    "commit": "6e6e2a12bbaae1e31b5ac8e6987d1dc9b69fc28e"
+  },
+  "operation_equivalence": {
+    "domain.page.CAP02": "GET {mount}/api/ui/pages/CAP02 -> dashboard-people.ts Domain.view hotTopicView -> hotTopics {id, action,owner,due,status,priority,notes}; year,month,topicStatus",
+    "domain.page.CAP06": "GET {mount}/api/ui/pages/CAP06 -> dashboard-people.ts Domain.view readMembers + rendered Headcount Overview formulas -> metrics/byLeader; admin-only talent counts; never whole member rows",
+    "domain.page.CAP07": "GET {mount}/api/ui/pages/CAP07 -> dashboard-people.ts Domain.view -> CIO/leader/member fieldsets, role-filtered private member attrs; CAS on visible rows",
+    "domain.page.CAP08": "GET {mount}/api/ui/pages/CAP08 -> dashboard-people.ts Domain.view -> members, role-filtered private fields; all authorized member CAS retained for replace/import; memberStatus for UI filter",
+    "domain.command.CAP02.save": "POST {mount}/dashboard?page=Hot Topics & Actions -> decodeCommand, domain.execute(action=save), safeFailure",
+    "domain.command.CAP02.delete": "POST {mount}/dashboard?page=Hot Topics & Actions -> decodeCommand, domain.execute(action=delete), safeFailure",
+    "domain.command.CAP07.saveCio": "POST {mount}/dashboard?page=Team Structure -> domain.execute(action=saveCio), CIO version CAS",
+    "domain.command.CAP07.saveLeader": "POST {mount}/dashboard?page=Team Structure -> domain.execute(action=saveLeader), leaders CAS",
+    "domain.command.CAP07.deleteLeader": "POST {mount}/dashboard?page=Team Structure -> domain.execute(action=deleteLeader), affected members: versions map",
+    "domain.command.CAP07.saveMember": "POST {mount}/dashboard?page=Team Structure -> domain.execute(action=saveMember), members CAS",
+    "domain.command.CAP07.deleteMember": "POST {mount}/dashboard?page=Team Structure -> domain.execute(action=deleteMember), members CAS",
+    "domain.command.CAP08.save": "POST {mount}/dashboard?page=Talent Review -> domain.execute(action=save), admin-only",
+    "domain.command.CAP08.delete": "POST {mount}/dashboard?page=Talent Review -> domain.execute(action=delete), admin-only",
+    "domain.command.CAP08.import": "POST {mount}/dashboard?page=Talent Review -> domain.execute(action=import), rows/replace/versions + required top-level confirmed for replace",
+    "domain.command.CAP08.exportAllMembers": "POST {mount}/dashboard?page=Talent Review -> domain.execute(action=exportAllMembers); canonical application response discards internal result file; no fabricated download/receipt"
+  },
+  "privacy_and_access": [
+    "No raw Snapshot, private roleMap, grant, token, principal directory, audit or actor returned",
+    "GET source roleMap+actor+page admission inside transaction, same original Request, context recheck, CAS version fence, role change fence",
+    "Whitelist records, omit cls/outlook/notes for nonadmin without inventing zeros/nulls; headcount admin-only Talent metrics",
+    "CAP07/CAP08 mutations only admin; CAP02 mutations only admin/domain leader, and canWrite; action IDs intersect current context",
+    "Only visible entity version integers; never version.by, entire version registry or privileged snapshots",
+    "Unknown input object fields rejected by typed client with exact decode before transport; 114 must install equally strict code paths for IPC binding"
+  ],
+  "integration_handoff": {
+    "owner": "114 / I00",
+    "include_exact_leaves": [
+      "packages/schema/src/sucafina/people.ts",
+      "packages/client/src/sucafina/people.ts",
+      "apps/cli/src/sucafina-product/native-ui/people.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts"
+    ],
+    "shared_paths_not_modified": [
+      "packages/schema/src/sucafina/index.ts",
+      "packages/schema/src/sucafina/operation-registry.ts",
+      "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "modules/sucafina/Sucafinav1/local/entry.ts"
+    ],
+    "required_integrator_actions": [
+      "Export SfPeople from Schema barrel under ownership of I00",
+      "Register exactly fifteen closed operation codecs in SfNativeOperationBindings; reject unknown keys in client AND IPC decode. Do not bind a generic operation or stub",
+      "Ensure F02 canonical operation metadata remains fixed: exact GET /api/ui/pages/CAPxx and original POST /dashboard with page/action discriminators and idempotency",
+      "Mount createSfPeopleProjectionHandlers(deps) beside other native route handlers through existing ingress/identity/context, preserving the original Request",
+      "Do not treat Talent exportAllMembers legacy command as an already-existing downloadable artifact; coordinate original authorized download route through owner",
+      "119 run typecheck through authorized compiler only; 120 run focused spec and prerequisite integrated tests through Actions only",
+      "Collect consumer ACKs for U03/U38/U47 after source/head reconciliation"
+    ],
+    "consumers": [
+      "U03 Headcount/Structure",
+      "U38 Hot Topics & Actions",
+      "U47 Talent Review"
+    ],
+    "merge_policy": "Commit/blob selective integration only; branch diverged from sf2-stack as of handoff (5 newer base commits). No blind whole-branch merge/cherry-pick of inherited planning files.",
+    "expected_qualification": "ARTIFACT_READY until composer/host and real actors/services satisfy tests; no assertion of approval"
+  },
+  "allowlist_respected": true,
+  "no_local_tests": true,
+  "no_producer_modifications": true,
+  "no_merge": true,
+  "no_deploy": true,
+  "no_goal_resume": true
+}
