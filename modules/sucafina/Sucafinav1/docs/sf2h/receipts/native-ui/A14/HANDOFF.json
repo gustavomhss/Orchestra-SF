@@ -1,0 +1,215 @@
+{
+  "schema": "sf2h.native-ui.author-handoff.v1",
+  "order": "A14",
+  "title": "Bindings finos: Memória e reavaliação",
+  "state": "ARTIFACT_READY",
+  "qual_status": "NOT_RUN",
+  "consumer_ack": "PENDING_114",
+  "lease_state": "TERMINAL_HANDOFF_PENDING_CONSUMER_ACK",
+  "actor": {
+    "description": "ChatGPT via connected GitHub",
+    "model": "GPT-6",
+    "session_id": null,
+    "lease_epoch": "ux-native-a14-e1"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-a14",
+  "target": "sf2-stack",
+  "material_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "ack_commit": "b799592f83f46e133e74a510d23a5a33c4638a36",
+  "implementation_commit": "2702cfc24db283c6e29272bda41f464ca7bed78f",
+  "implementation_tree": "81def4d131fccc711df2cecea74baf41a5ad7c28",
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/memory.ts",
+      "preimage": null,
+      "postimage": "ae874477e8c1ae476dd4fdc2e75604b9e6a3bce5",
+      "action": "add",
+      "owner": "A14"
+    },
+    {
+      "path": "packages/client/src/sucafina/memory.ts",
+      "preimage": null,
+      "postimage": "cddd7ceccc66bc5faf38d169bede03efa31440db",
+      "action": "add",
+      "owner": "A14"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts",
+      "preimage": null,
+      "postimage": "b658352fdbdb336ef1eb57815ce2b457e6654dcb",
+      "action": "add",
+      "owner": "A14"
+    }
+  ],
+  "operations": [
+    {
+      "id": "intelligence.memory-catalog",
+      "schemaExport": "SfIntelligenceMemoryCatalog",
+      "method": "GET",
+      "path": "{mount}/dashboard",
+      "sf": "memory-catalog",
+      "input": "undefined",
+      "output": "ok/value capability array or failure"
+    },
+    {
+      "id": "intelligence.memory-conditions",
+      "schemaExport": "SfIntelligenceMemoryConditions",
+      "method": "GET",
+      "path": "{mount}/dashboard",
+      "sf": "memory-conditions",
+      "input": "caseId,incarnation,version",
+      "output": "conditionId/revision/choiceId/criterionId/label/period or failure"
+    },
+    {
+      "id": "intelligence.memory-signals",
+      "schemaExport": "SfIntelligenceMemorySignals",
+      "method": "GET",
+      "path": "{mount}/dashboard",
+      "sf": "memory-signals",
+      "input": "caseId,incarnation,version",
+      "output": "label/impact/action or failure"
+    },
+    {
+      "id": "intelligence.memory-materiality",
+      "schemaExport": "SfIntelligenceMemoryMateriality",
+      "method": "GET",
+      "path": "{mount}/dashboard",
+      "sf": "memory-materiality",
+      "input": "caseId,incarnation,version,conditionId",
+      "output": "impact,signal?,snapshot,scope or failure"
+    },
+    {
+      "id": "intelligence.memory-outcome",
+      "schemaExport": "SfIntelligenceMemoryOutcome",
+      "method": "GET",
+      "path": "{mount}/dashboard",
+      "sf": "memory-outcome",
+      "input": "caseId,incarnation,version,choiceId",
+      "output": "comparable/outcome or unavailable, zero/null,cutoff,sourceRefs,not-attributed"
+    },
+    {
+      "id": "intelligence.memory-condition",
+      "schemaExport": "SfIntelligenceMemoryCondition",
+      "method": "POST",
+      "path": "{mount}/dashboard",
+      "sf": "memory-condition",
+      "input": "exact memorySignalSelection",
+      "output": "ok only or refusal"
+    },
+    {
+      "id": "intelligence.memory-outcome-selection",
+      "schemaExport": "SfIntelligenceMemoryOutcomeSelection",
+      "method": "POST",
+      "path": "{mount}/dashboard",
+      "sf": "memory-outcome-selection",
+      "input": "exact memoryOutcomeSelection",
+      "output": "ok only or refusal"
+    }
+  ],
+  "implementation": {
+    "schema_namespace": "SfMemory",
+    "factory": "createSfMemoryClient(transport: SfTransport)",
+    "operation_count": 7,
+    "base_transport": "F02 SfTransport.execute, no separate backend or raw dispatch",
+    "client_policy": "No auto retry, no cache, no invented receipts; server performs digest equality, current access, source fences, admission and transactions",
+    "strict_io": "Closed selectors and output envelopes; absent/null/zero and source version preserved",
+    "server_projection": "NONE_REQUIRED: existing JSON handlers in memory-http.ts",
+    "shared_files_changed": false,
+    "producer_changed": false,
+    "generated_files_changed": false
+  },
+  "source": {
+    "path": "apps/cli/src/sucafina-product/memory-http.ts",
+    "pinned_blob": "f727d5250024df7338491321c36e7055d7c18f74",
+    "observed_blob": "f727d5250024df7338491321c36e7055d7c18f74",
+    "read_admission": "ui.admit/validate; withCase; host.revalidate",
+    "mutation_admission": "human.admit/authorize; withCase; current source",
+    "producer_owners": [
+      "apps/cli/src/sucafina-product/memory-selection.ts",
+      "apps/cli/src/sucafina-product/memory-services.ts",
+      "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts"
+    ]
+  },
+  "frozen_contracts": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "work-orders/A14.json": "fa129ade1b3d7343568a334400dcd5dd5024e7bb"
+  },
+  "acceptance": {
+    "A14-AC01": "IMPLEMENTED_NOT_QUALIFIED; nested fields, absent/null/zero/version/references encoded",
+    "A14-AC02": "IMPLEMENTED_NOT_QUALIFIED; closed actions/DTOs, statuses and no generic dispatch",
+    "A14-AC03": "IMPLEMENTED_NOT_QUALIFIED; literal operation IDs/case versions; host source-change tests pending"
+  },
+  "criteria_coverage": {
+    "WP14.T01": "materiality impact/scope typed, engine remains canonical",
+    "WP14.T02": "similar-case recall not one of seven catalog operations; separate owner/producer required",
+    "WP14.T03": "expected/observed/cutoff/source refs with explicit not-attributed causality",
+    "WP14.T04": "signals/condition revision exposed; real dedupe remains server",
+    "WP14.T05": "no invented Atlas/persistence, remains admitted producer"
+  },
+  "qualification": {
+    "specs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts",
+        "state": "WRITTEN_NOT_RUN"
+      }
+    ],
+    "ci": {
+      "owner": "120",
+      "state": "NOT_RUN"
+    },
+    "compiler": {
+      "owner": "119",
+      "state": "NOT_RUN"
+    },
+    "runtime": {
+      "owner": "114",
+      "state": "NOT_INTEGRATED"
+    },
+    "authenticated_access_redaction": {
+      "state": "NOT_RUN",
+      "owner": "120"
+    },
+    "obligations": [
+      "F01/F02 context/transport",
+      "I00 Schema/Client export maps + central registry/codecs",
+      "Desktop broker D01 for installed qualification"
+    ]
+  },
+  "integration": {
+    "owner": "114",
+    "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A14/SHARED-114.md",
+    "consumer_ack": "PENDING",
+    "instructions": "Import only exact code files/blobs. Register seven closed bindings when F02 real; preserve original Request/origin/admission and status union."
+  },
+  "blockers": [
+    {
+      "kind": "BLOCKED_INTEGRATION",
+      "owner": "114",
+      "detail": "Shared registry and package exports cannot be modified by A14"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "owner": "120/119",
+      "detail": "No local tests/typecheck permitted; specs are written only"
+    },
+    {
+      "kind": "BLOCKED_CONTRACT_ADJACENT",
+      "owner": "114/producer",
+      "detail": "Similar-case recall UI62 is absent from assigned seven memory-http operations; no fabrication"
+    }
+  ],
+  "forbidden": {
+    "local_tests": true,
+    "local_typecheck": true,
+    "merge": true,
+    "deploy": true,
+    "goal_resume": true,
+    "producer_edits": true
+  }
+}
