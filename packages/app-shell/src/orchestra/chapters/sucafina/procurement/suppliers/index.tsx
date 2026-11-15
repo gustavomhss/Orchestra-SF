@@ -259,7 +259,8 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     if (ui.state !== "ready") return ui.state
     if (ui.phase === "outcome-unknown") return "outcome-unknown"
     if (ui.phase === "conflict") return "conflict"
-    if (ui.phase === "failed") return ui.error ?? "unavailable"
+    if (ui.phase === "failed") return ui.error === "denied" || ui.error === "session-expired" || ui.error === "not-found"
+      ? ui.error : "ready"
     if (routeRef() && !supplier()) return "not-found"
     if (ui.mode !== "new" && !routeRef() && page()?.value.data.suppliers.length === 0) return "empty"
     if (ui.mode !== "new" && !routeRef() && rows().length === 0) return "filtered-empty"
@@ -424,6 +425,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         controllerDraft?.setPhase("outcome-unknown")
         setUi("phase", "outcome-unknown")
         setUi("unknownOperation", opRef)
+        setUi("review", null)
         return
       }
       if (response.status !== 200 || !response.body.ok) {
@@ -454,6 +456,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         controllerDraft?.setPhase("outcome-unknown")
         setUi("phase", "outcome-unknown")
         setUi("unknownOperation", opRef)
+        setUi("review", null)
       }
     } finally {
       sending = false
@@ -627,7 +630,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       reasonKey:k("sf.u14.csvUnavailable"),busy:false,onInvoke:()=>{}}]}
   >
     <div class="sf-u14-layout">
-      <Show when={state() === "ready" || state() === "empty" || state() === "filtered-empty"}
+      <Show when={state() === "ready" || state() === "empty" || state() === "filtered-empty" || state() === "outcome-unknown"}
         fallback={<SfStatePanel state={state()} messageKey={k(stateKey())} onRetryRead={() => {
           const token = authority()
           if (token) void refresh(token,ref() ?? undefined)
@@ -644,6 +647,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           {t("sf.u14.confirmed")} {ui.confirmedMessage ?? ""}
         </p></Show>
         <Show when={ui.error && ui.phase === "failed"}><p role="alert">{t("sf.u14.failure")}</p></Show>
+        <Show when={ui.phase !== "outcome-unknown"}>
         <Show when={!ui.review} fallback={<SfChangeReview
           operation={{ref:(ui.review?.intentRef ?? "CAP27:unknown") as SfOperationRef,
             label:m("sf.u14.review"),scope:data(ui.review?.ref ?? t("sf.u14.create"))}}
@@ -710,6 +714,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
             fallback={<Show when={supplier()}>{currentDetail()}</Show>}>
             {editor()}
           </Show>
+        </Show>
         </Show>
       </Show>
     </div>

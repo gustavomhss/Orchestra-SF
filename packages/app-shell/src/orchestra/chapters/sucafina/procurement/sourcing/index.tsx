@@ -235,7 +235,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(ui.state!=="ready")return ui.state
     if(ui.phase==="outcome-unknown")return "outcome-unknown"
     if(ui.phase==="conflict")return "conflict"
-    if(ui.phase==="failed")return ui.lastError??"unavailable"
+    if(ui.phase==="failed")return ui.lastError==="denied"||ui.lastError==="session-expired"||ui.lastError==="not-found"
+      ? ui.lastError : "ready"
     if(ref()&&!request())return "not-found"
     if(!ref()&&requestRows().length===0)return "empty"
     return "ready"
@@ -354,7 +355,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       if(controller.signal.aborted||authority()!==token)return
       if(response.kind==="transport-error"){
         controllerDraft?.setPhase("outcome-unknown")
-        setUi("phase","outcome-unknown");setUi("unknownOperation",intentRef);return
+        setUi("phase","outcome-unknown");setUi("unknownOperation",intentRef)
+        setUi("review",null);return
       }
       if(response.status!==200||!response.body.ok){
         const code=response.body.ok?response.status:response.body.status
@@ -379,6 +381,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       if(!controller.signal.aborted&&authority()===token){
         controllerDraft?.setPhase("outcome-unknown")
         setUi("phase","outcome-unknown");setUi("unknownOperation",intentRef)
+        setUi("review",null)
       }
     }finally{sending=false}
   }
@@ -575,7 +578,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       onInvoke:()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}]}
   >
     <div class="sf-u12-root">
-      <Show when={state()==="ready"||state()==="empty"||state()==="filtered-empty"}
+      <Show when={state()==="ready"||state()==="empty"||state()==="filtered-empty"||state()==="outcome-unknown"}
         fallback={<SfStatePanel state={state()} messageKey={k(message())}
           onRetryRead={()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}/>}>
         <Show when={ui.phase==="outcome-unknown"}>
@@ -585,7 +588,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           }}>{t("sf.u12.refresh")}</button>
         </Show>
         <Show when={ui.phase==="producer-confirmed"}><p role="status">{t("sf.u12.confirmed")}</p></Show>
+        <Show when={ui.phase==="failed"}><p role="alert">{t("sf.u12.failed")}</p></Show>
         <For each={ui.sourceWarnings}>{(message)=><p role="alert">{message}</p>}</For>
+        <Show when={ui.phase!=="outcome-unknown"}>
         <Show when={!ref()}>
           <section><h3>{t("sf.u12.request")}</h3>
             <ul><For each={requestRows()}>{(row)=>
@@ -626,6 +631,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             <Show when={ui.stage==="quotes"} fallback={editor()}>{comparison()}</Show>
             <Show when={!can("save")}><p role="status">{t("sf.u12.notEditable")}</p></Show>
           </Show>
+        </Show>
         </Show>
       </Show>
     </div>

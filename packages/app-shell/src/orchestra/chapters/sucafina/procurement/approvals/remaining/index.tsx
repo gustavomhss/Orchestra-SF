@@ -210,7 +210,8 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     if(ui.state!=="ready")return ui.state
     if(ui.phase==="outcome-unknown"||ui.phase==="source-changed")return "outcome-unknown"
     if(ui.phase==="conflict")return "conflict"
-    if(ui.phase==="failed")return ui.failure??"unavailable"
+    if(ui.phase==="failed")return ui.failure==="denied"||ui.failure==="session-expired"||ui.failure==="not-found"
+      ?ui.failure:"ready"
     if(ref()&&selected()?.kind==="not-found")return "not-found"
     if(ref()&&selected()?.kind==="not-pending")return "invalid"
     if(ref()&&selected()?.kind==="source-unavailable")return "invalid"
@@ -457,7 +458,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
       }}]}
   >
     <div class="sf-u13-remaining-root">
-      <Show when={currentState()==="ready"||currentState()==="empty"||currentState()==="filtered-empty"}
+      <Show when={currentState()==="ready"||currentState()==="empty"||currentState()==="filtered-empty"||currentState()==="outcome-unknown"}
         fallback={<SfStatePanel state={currentState()} messageKey={k(stateKey())}
           onRetryRead={()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}/>}>
         <Show when={ui.phase==="outcome-unknown"||ui.phase==="source-changed"}>
@@ -474,6 +475,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
           {t("sf.u13.remaining.confirmed")} {t("sf.u13.remaining.noReceipt")}
         </p></Show>
         <Show when={ui.phase==="failed"}><p role="alert">{t("sf.u13.remaining.failed")}</p></Show>
+        <Show when={ui.phase!=="outcome-unknown"&&ui.phase!=="source-changed"}>
         <Show when={!ui.review} fallback={<SfChangeReview
           operation={{ref:(ui.review?.intentRef??"CAP26:unknown") as SfOperationRef,
             label:m("sf.u13.remaining.review"),scope:d(ui.review?.source.requestRef??"")}}
@@ -546,6 +548,7 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
           />
           <Show when={approval()}>{detail()}</Show>
           <Show when={selected()?.kind==="not-pending"}><p role="status">{t("sf.u13.remaining.reopened")}</p></Show>
+        </Show>
         </Show>
       </Show>
     </div>
