@@ -59,7 +59,8 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
     if (!ready() || source.context?.kind !== "ui" || source.request?.method !== "POST" ||
       !Schema.is(SessionSchema.ID)(source.authoritySessionID) || source.request.signal.aborted ||
       source.signal.aborted || source.nativePolicy.signal.aborted || input.requestFor(source.context) !== source.request ||
-      !validIntent(source.intent) || entries.has(source.authoritySessionID) || acquiring.has(source.authoritySessionID))
+      !validIntent(source.intent) || entries.has(source.authoritySessionID) || acquiring.has(source.authoritySessionID) ||
+      entries.size + acquiring.size >= 100)
       return undefined
     const started = now()
     const expires = Date.parse(source.context.binding.expiresAt)

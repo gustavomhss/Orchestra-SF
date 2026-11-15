@@ -58,9 +58,9 @@ test("component: original admission binds the exact Task intent and reference-st
     expect(Object.isFrozen(first?.intent.caseRef)).toBe(true)
     expect(yield* Effect.promise(() => x.bridge.origin.resolve(f.invocation))).toBe(first)
     expect(yield* Effect.promise(() => x.bridge.origin.resolve({ ...f.invocation,
-      args: { ...f.invocation.args, authorizationID: "authorization-forged" } }))).toBeUndefined()
+      args: { ...(f.invocation.args as Record<string, unknown>), authorizationID: "authorization-forged" } }))).toBeUndefined()
     expect(yield* Effect.promise(() => x.bridge.origin.resolve({ ...f.invocation,
-      args: { ...f.invocation.args, workflow: { planRevisionID: "revision-forged" } } }))).toBeUndefined()
+      args: { ...(f.invocation.args as Record<string, unknown>), workflow: { planRevisionID: "revision-forged" } } }))).toBeUndefined()
     expect(yield* Effect.promise(() => x.bridge.admit(x.source))).toBeUndefined()
     expect(f.registry.owners.available()).toBe(false)
     release?.()
