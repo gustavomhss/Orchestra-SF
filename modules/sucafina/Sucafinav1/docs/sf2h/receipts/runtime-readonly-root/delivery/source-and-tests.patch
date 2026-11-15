@@ -1,0 +1,1265 @@
+diff --git a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+index d43a630..0e81284 100644
+--- a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+@@ -20,12 +20,12 @@ export type SfSourceIdentityInput = { recordType: string; recordId: string; inpu
+ 
+ /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
+ export function createSfSourcePersistence(input: {
+-  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots">
++  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot">
+   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
+   createId: () => string
+   purpose?: "business-restore"
+   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
+-}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
++}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+     requireSourceIdentities(snapshot)
+     const scope = structuredClone(requested)
+@@ -74,8 +74,12 @@ export function createSfSourcePersistence(input: {
+       requireSourceIdentities(snapshot)
+     }
+   }
+-  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
++  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+     ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
++    // Scope forwarding does not admit a source. Callers still enter transaction
++    // below, preserving source guards and any underlying CurrentChoice fence.
++    ...(input.persistence.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, options?: TransactionOptions) =>
++      input.persistence.readSnapshotRoot!(work, options) } : {}),
+     resolveScopedSource: async (surface, incarnation, authorize) => {
+       const scope = await input.persistence.transaction(surface, async (snapshot) => {
+         requireSourceIdentities(snapshot)
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts b/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts
+index 095a0e5..3cf82bd 100644
+--- a/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts
+@@ -1,4 +1,5 @@
+ import { AsyncLocalStorage } from "node:async_hooks"
++import type { TransactionOptions } from "../../runtime/contract.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { DomainPortHost } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+@@ -18,6 +19,7 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+     const persistence = host.persistence
+     const transaction = persistence.transaction
+     const currentSnapshots = persistence.currentSnapshots
++    const readSnapshotRoot = persistence.readSnapshotRoot
+     const requestFor = host.requestFor
+     const revalidate = host.revalidate
+     const request = requestFor.call(host, context)
+@@ -31,7 +33,7 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+     }
+     const source = fingerprint()
+     const unchanged = () => !request.signal.aborted && host.persistence === persistence && host.requestFor === requestFor && host.revalidate === revalidate &&
+-      persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots && requestFor.call(host, context) === request && fingerprint() === source &&
++      persistence.transaction === transaction && persistence.currentSnapshots === currentSnapshots && persistence.readSnapshotRoot === readSnapshotRoot && requestFor.call(host, context) === request && fingerprint() === source &&
+       digestSfValue({ kind: context.kind, binding: context.binding }) === authority && digestSfValue(incoming) === payload
+     const inherited = reads.getStore()
+     if (currentSnapshots.call(persistence)) {
+@@ -44,7 +46,9 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+     let invocations = 0
+     let accepted = false
+     try {
+-      const result = await persistence.transaction<{ valid: true; value: T } | { valid: false }>("dashboard", async () => reads.run(scope, async () => {
++      // Keep canonical Dashboard admission inside the optional root. Calling
++      // work directly would bypass SourcePersistence and CurrentChoice guards.
++      const run = () => persistence.transaction<{ valid: true; value: T } | { valid: false }>("dashboard", async () => reads.run(scope, async () => {
+         invocations++
+         if (invocations !== 1 || !currentSnapshots.call(persistence) || !unchanged()) return { commit: false, value: { valid: false as const } }
+         const value = await work()
+@@ -52,6 +56,8 @@ export async function readPortfolioSnapshot<T extends boolean | { status: string
+         accepted = unchanged() && (rejected || await revalidate.call(host, context)) && unchanged() && !!currentSnapshots.call(persistence)
+         return { commit: false, value: accepted ? { valid: true as const, value } : { valid: false as const } }
+       }), { signal: request.signal })
++      const root: ((work: typeof run, options?: TransactionOptions) => ReturnType<typeof run>) | undefined = readSnapshotRoot
++      const result = root ? await root.call(persistence, run, { signal: request.signal }) : await run()
+       // No external awaited callback may follow this point. LocalStore already
+       // rejected poisoned/unjoined reads before returning this captured value.
+       return accepted && invocations === 1 && unchanged() && result.valid ? result.value : refused
+diff --git a/modules/sucafina/Sucafinav1/runtime/contract.ts b/modules/sucafina/Sucafinav1/runtime/contract.ts
+index 9e9bac9..8be1156 100644
+--- a/modules/sucafina/Sucafinav1/runtime/contract.ts
++++ b/modules/sucafina/Sucafinav1/runtime/contract.ts
+@@ -79,6 +79,13 @@ export type Persistence = {
+   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
++  // Internal root-only scope, not source admission or business authorization.
++  // Consumers must still use their canonical transaction(surface, work) inside it
++  // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
++  // Fresh SQL, independent copies, abort/lifetime fences and joined readers are
++  // required. Any attempted write poisons the root even when its error is caught.
++  // Older adapters omit this capability and retain their existing transaction path.
++  readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>
+ }
+ 
+ export function object(value: unknown): Record<string, unknown> {
+diff --git a/modules/sucafina/Sucafinav1/runtime/local-store.ts b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+index 6662595..a36440a 100644
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -111,7 +111,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
+ 
+   type ReadScope = {
+-    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number }
++    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number; readOnly?: true }
+     parent?: ReadScope
+     open: boolean
+     signal?: AbortSignal
+@@ -129,7 +129,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+   const active = new Set<Promise<unknown>>()
+   const queue = { tail: undefined as Promise<void> | undefined }
+   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
+-    if (lifecycle.closed) return Promise.reject(new Error("Local store is disposed"))
++    if (lifecycle.closed) {
++      const scope = context.getStore()
++      // An admitted readonly root may drain during disposal, but a rejected
++      // write must not disappear when its caller catches the disposed error.
++      if (write && scope?.root.readOnly) scope.root.poisoned = true
++      return Promise.reject(new Error("Local store is disposed"))
++    }
+     const inherited = context.getStore()
+     if (inherited) {
+       try {
+@@ -183,6 +189,45 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+   }
+ 
+   return {
++    readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
++      operation(true, async (db) => {
++        const copies: Partial<Record<Surface, () => Snapshot>> = {}
++        const read = (surface: Surface) => {
++          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++          // Keep the same SQL order and changed-payload admission as mutable
++          // roots. No target escapes here, so every initial memo hit can copy.
++          const source = observeSnapshot(surface, row?.payload)
++          if (source.copy) copies[surface] = source.copy
++          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
++          return () => {
++            if (observed.value) return observed.value
++            observed.value = observed.materialize!()
++            observed.materialize = undefined
++            return observed.value
++          }
++        }
++        const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
++        const snapshots = {
++          get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
++          get procurement() { return observed.procurement() },
++        }
++        const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
++        try {
++          const value = await context.run(scope, work)
++          requireScope(scope)
++          if (scope.root.poisoned) throw new Error("Nested local write attempted")
++          if (scope.root.readers) throw new Error("Nested local read still active")
++          return value
++        } finally {
++          scope.open = false
++          // This root never exposes its private observations. Closed descendants
++          // need neither their graphs/getters nor the initial memo's copy plans.
++          scope.root.snapshots = {}
++          delete copies.dashboard
++          delete copies.planner
++          delete copies.procurement
++        }
++      }, transactionOptions?.signal),
+     currentSnapshots: () => {
+       const scope = context.getStore()
+       if (!scope) return undefined
+@@ -199,7 +244,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
+     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+       const parent = context.getStore()
+       if (parent) return (async () => {
+-        if (lifecycle.closed) throw new Error("Local store is disposed")
++        if (lifecycle.closed) {
++          // No callback can be admitted after disposal to establish read-only
++          // intent. Invalidate only the new readonly root, not mutable roots.
++          if (parent.root.readOnly) parent.root.poisoned = true
++          throw new Error("Local store is disposed")
++        }
+         requireScope(parent)
+         transactionOptions?.signal?.throwIfAborted()
+         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts
+new file mode 100644
+index 0000000..3574177
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts
+@@ -0,0 +1,154 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { AssetPersistence, BlobTransaction } from "../../../runtime/assets.ts"
++import type { Persistence, Snapshot, TransactionOptions } from "../../../runtime/contract.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import type { Surface } from "../../../src/identity.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createCurrentChoiceFence } from "../../../product/decisions/current-choice-preview.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++
++const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
++type ReadPersistence = AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot">
++
++/** Real SQLite, UI lease and canonical wrappers. Fixture rows make no financial
++ * claim. The enumerator identifies this fixture's one record on each surface;
++ * source admission, identity validation and fence publication are production code. */
++export async function createCanonicalReadFixture(options: {
++  wrapper?: "source" | "fence"
++  legacy?: boolean
++  initialized?: readonly Surface[]
++  rows?: number
++} = {}) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-readonly-root-canonical-"))
++  await chmod(directory, 0o700)
++  const driver = await openLocalStore(directory)
++  const abort = new AbortController()
++  const request = new Request("https://example.test/readonly-root", {
++    headers: { authorization: "readonly-root-fixture" }, signal: abort.signal,
++  })
++  const identity = {
++    installationId: "readonly-installation", projectId: "readonly-project", principalRef: "readonly-principal",
++    policyVersion: "readonly-policy", accessRevision: "readonly-access",
++  }
++  const metrics = {
++    roots: 0, snapshots: 0, authorizations: 0, revalidations: 0,
++    transactions: { dashboard: 0, planner: 0, procurement: 0 },
++    callbacks: { dashboard: 0, planner: 0, procurement: 0 },
++    events: [] as string[],
++  }
++  const controls: {
++    enabled: boolean
++    requestOverride?: Request
++    identityOverride?: { installationId: string; projectId: string }
++    onRevalidate?: (index: number) => void | Promise<void>
++  } = { enabled: true }
++  const ui = createSfUiAuthority({
++    authorize: async (incoming) => {
++      metrics.authorizations++
++      metrics.events.push("authorize")
++      return controls.enabled && incoming === request && incoming.headers.get("authorization") === "readonly-root-fixture" ? identity : undefined
++    },
++    commandIdentity: async () => "readonly-root-operation",
++    createId: () => "readonly-root-ui-request", now: () => Date.parse("2026-11-15T00:00:00Z"),
++  })
++  const intent = digestSfValue({ fixture: "readonly-root" })
++  const admitted = await ui.admit(request, "sf_case_read", intent)
++  if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_case_read", intent)) {
++    await driver.dispose()
++    await rm(directory, { recursive: true, force: true })
++    throw new Error("Readonly root fixture UI admission unavailable")
++  }
++  const context = admitted.value
++  const host = {
++    persistence: driver as Persistence,
++    requestFor: (trusted: TrustedDomainContext) => trusted.kind === "ui" ? controls.requestOverride ?? ui.requestFor(trusted) : undefined,
++    revalidate: async (trusted: TrustedDomainContext) => {
++      metrics.revalidations++
++      metrics.events.push("revalidate")
++      await controls.onRevalidate?.(metrics.revalidations)
++      return trusted.kind === "ui" && await ui.revalidate(trusted)
++    },
++  }
++  const fence = createCurrentChoiceFence({
++    persistence: driver, host: () => host, identity: () => controls.identityOverride ?? identity,
++    operationIdentity: (trusted) => trusted.kind === "ui" ? ui.operationIdentity(trusted) : undefined,
++  })
++  let sourceId = 0
++  const sources = createSfSourcePersistence({
++    persistence: fence.persistence,
++    enumerate: (surface, snapshot) => [{ recordType: "readonly-fixture", recordId: surface, inputDigest: digestSfValue(snapshot.data) }],
++    createId: () => `readonly-source-${++sourceId}`,
++  })
++  try {
++    for (const surface of surfaces) {
++      await driver.transaction(surface, async (snapshot) => {
++        snapshot.data.marker = surface
++        snapshot.data.readonlyRootRows = Array.from({ length: options.rows ?? 4 }, (_, index) => ({
++          __readonlyRootSurface: surface, index, amount: 1000 + index,
++          detail: { label: `${surface}-row-${index}`, active: index % 2 === 0, values: [index, index + 1] },
++        }))
++        return { commit: true, value: undefined }
++      })
++    }
++    for (const surface of options.initialized ?? surfaces) await sources.initializeSources(surface)
++  } catch (error) {
++    ui.finish(context)
++    await driver.dispose()
++    await rm(directory, { recursive: true, force: true })
++    throw error
++  }
++  const canonical: ReadPersistence = options.wrapper === "fence" ? fence.persistence : sources
++  const capablePersistence: ReadPersistence = {
++    ...canonical,
++    transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
++      metrics.transactions[surface]++
++      metrics.events.push(`transaction:${surface}`)
++      return canonical.transaction(surface, async (snapshot, blobs) => {
++        metrics.callbacks[surface]++
++        metrics.events.push(`callback:${surface}`)
++        return work(snapshot, blobs)
++      }, transactionOptions)
++    },
++    ...(canonical.currentSnapshots ? { currentSnapshots: () => {
++      metrics.snapshots++
++      metrics.events.push("currentSnapshots")
++      return canonical.currentSnapshots!()
++    } } : {}),
++    ...(canonical.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) => {
++      metrics.roots++
++      return canonical.readSnapshotRoot!(work, transactionOptions)
++    } } : {}),
++  }
++  const legacyPersistence = { ...capablePersistence }
++  delete legacyPersistence.readSnapshotRoot
++  const persistence = options.legacy ? legacyPersistence : capablePersistence
++  host.persistence = persistence
++  const resetMetrics = () => {
++    metrics.roots = 0
++    metrics.snapshots = 0
++    metrics.authorizations = 0
++    metrics.revalidations = 0
++    for (const surface of surfaces) {
++      metrics.transactions[surface] = 0
++      metrics.callbacks[surface] = 0
++    }
++    metrics.events.length = 0
++  }
++  resetMetrics()
++  return {
++    directory, driver, persistence, capablePersistence, legacyPersistence, host, fence, sources,
++    ui, context, request, abort, identity, controls, metrics, resetMetrics,
++    read: (work: () => Promise<boolean>, refused = false, incoming: unknown = {}) => readPortfolioSnapshot(host, context, incoming, work, refused),
++    withinFence: <T>(work: () => Promise<T>) => fence.run(context, work),
++    close: async () => {
++      ui.finish(context)
++      await driver.dispose()
++      await rm(directory, { recursive: true, force: true })
++    },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts
+new file mode 100644
+index 0000000..6b0e7ae
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts
+@@ -0,0 +1,171 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { createHash } from "node:crypto"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { Surface } from "../../../src/identity.ts"
++import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
++import { createCanonicalReadFixture } from "./canonical-fixture.ts"
++
++type Fixture = Awaited<ReturnType<typeof createCanonicalReadFixture>>
++type Row = { __readonlyRootSurface: Surface; index: number; amount: number; detail: { label: string; active: boolean; values: number[] } }
++const surfaces = ["dashboard", "planner", "procurement"] as const
++const rowCount = 160
++const observations = 6
++const hash = (value: string) => createHash("sha256").update(value).digest("hex")
++const counts = () => ({ dashboard: 0, planner: 0, procurement: 0 })
++
++function consume(snapshot: Snapshot, surface: Surface) {
++  const rows = snapshot.data.readonlyRootRows as Row[]
++  if (snapshot.data.marker !== surface || !Array.isArray(rows) || rows.length !== rowCount) throw new Error("Readonly cost fixture shape changed")
++  let digest = 0
++  for (let index = 0; index < rows.length; index++) {
++    const row = rows[index]!
++    if (row.__readonlyRootSurface !== surface || row.index !== index || row.amount !== 1000 + index ||
++      row.detail.label !== `${surface}-row-${index}` || row.detail.active !== (index % 2 === 0) ||
++      row.detail.values.length !== 2 || row.detail.values[0] !== index || row.detail.values[1] !== index + 1)
++      throw new Error("Readonly cost fixture lost data or copy isolation")
++    digest += row.amount + row.detail.values[0]! + row.detail.values[1]!
++  }
++  // Every following observation must still consume the original value.
++  rows[0]!.amount = -1
++  rows[0]!.detail.values[0] = -1
++  return digest
++}
++
++async function workload(fixture: Fixture, variant: "legacy" | "capability", probe: { active: boolean }) {
++  const persistence = variant === "legacy" ? fixture.legacyPersistence : fixture.capablePersistence
++  const host = { ...fixture.host, persistence }
++  const work = { callbacks: 0, nested: counts(), observations: 0, consumedRows: counts(), digest: 0, order: [] as string[] }
++  const retained: Partial<Record<Surface, Snapshot>> = {}
++  fixture.resetMetrics()
++  const started = performance.now()
++  const accepted = await fixture.withinFence(() => readPortfolioSnapshot(host, fixture.context, {}, async () => {
++    work.callbacks++
++    probe.active = true
++    try {
++      for (let observation = 0; observation < observations; observation++) {
++        for (const surface of ["dashboard", "planner", "dashboard", "procurement"] as const) {
++          await persistence.transaction(surface, async (snapshot) => {
++            work.callbacks++
++            work.nested[surface]++
++            work.order.push(surface)
++            if (retained[surface] === snapshot || retained[surface]?.data === snapshot.data) throw new Error("Readonly observation shared a mutable graph")
++            work.digest += consume(snapshot, surface)
++            work.consumedRows[surface] += rowCount
++            retained[surface] = snapshot
++            return { commit: false, value: undefined }
++          })
++        }
++        const current = persistence.currentSnapshots!()
++        if (!current) throw new Error("Readonly observation disappeared")
++        work.observations++
++        work.order.push("current:all")
++        for (const surface of surfaces) {
++          if (retained[surface] === current[surface] || retained[surface]?.data === current[surface].data)
++            throw new Error("Readonly currentSnapshots shared a mutable graph")
++          work.digest += consume(current[surface], surface)
++          work.consumedRows[surface] += rowCount
++          retained[surface] = current[surface]
++        }
++      }
++      return true
++    } finally { probe.active = false }
++  }, false))
++  const elapsedMs = performance.now() - started
++  if (!accepted) throw new Error("Canonical readonly cost workload was refused")
++  expect(fixture.metrics.roots).toBe(variant === "capability" ? 1 : 0)
++  const { roots: _roots, ...metrics } = structuredClone(fixture.metrics)
++  return { variant, elapsedMs, summary: { ...work, order: hash(work.order.join("\n")), metrics } }
++}
++
++function countWork(probe: { active: boolean }) {
++  const descriptors = Object.getOwnPropertyDescriptors
++  const parse = JSON.parse
++  const result = { descriptors: 0, markedObjects: counts(), parseCalls: 0, parseCharacters: 0, wireParses: 0 }
++  Object.getOwnPropertyDescriptors = ((value: object) => {
++    const observed = descriptors(value)
++    if (probe.active) {
++      result.descriptors++
++      const surface: unknown = observed.__readonlyRootSurface?.value
++      if (surface === "dashboard" || surface === "planner" || surface === "procurement") result.markedObjects[surface]++
++    }
++    return observed
++  }) as typeof Object.getOwnPropertyDescriptors
++  JSON.parse = (...args: Parameters<typeof JSON.parse>) => {
++    if (probe.active) {
++      result.parseCalls++
++      result.parseCharacters += args[0].length
++      if (args[0].startsWith('["sucafina-snapshot",1,')) result.wireParses++
++    }
++    return parse(...args)
++  }
++  return { result, restore: () => { Object.getOwnPropertyDescriptors = descriptors; JSON.parse = parse } }
++}
++
++function distribution(samples: number[]) {
++  const ordered = [...samples].sort((left, right) => left - right)
++  return { samples, min: ordered[0], median: (ordered[1]! + ordered[2]!) / 2, max: ordered.at(-1) }
++}
++
++// One serial test, same driver/SQLite/guards, alternating AB/BA order. Timed
++// samples use native functions. Pass-through probes run separately and only
++// attribute synchronous descriptor/parsing work inside the unchanged workload.
++test("readonly root removes defensive Dashboard traversal with equivalent real SQLite Source and CurrentChoice work", async () => {
++  const fixture = await createCanonicalReadFixture({ rows: rowCount })
++  try {
++    const persisted = () => {
++      const db = new Database(join(fixture.directory, "installation.sqlite"), { strict: true })
++      try {
++        return surfaces.map((surface) => {
++          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++          if (!row) throw new Error("Readonly cost fixture SQL row missing")
++          return { surface, characters: row.payload.length, sha256: hash(row.payload) }
++        })
++      } finally { db.close() }
++    }
++    const before = persisted()
++    const probe = { active: false }
++    const expected = (await workload(fixture, "legacy", probe)).summary
++    expect((await workload(fixture, "capability", probe)).summary).toEqual(expected)
++    expect(expected.callbacks).toBe(25)
++    expect(expected.nested).toEqual({ dashboard: 12, planner: 6, procurement: 6 })
++    expect(expected.observations).toBe(6)
++    expect(expected.consumedRows).toEqual({ dashboard: 2880, planner: 1920, procurement: 1920 })
++    expect(expected.metrics.transactions).toEqual({ dashboard: 13, planner: 6, procurement: 6 })
++    expect(expected.metrics.callbacks).toEqual(expected.metrics.transactions)
++    const samples: { variant: "legacy" | "capability"; elapsedMs: number }[] = []
++    for (let pair = 0; pair < 4; pair++) {
++      const order = pair % 2 === 0 ? ["legacy", "capability"] as const : ["capability", "legacy"] as const
++      for (const variant of order) {
++        const observed = await workload(fixture, variant, probe)
++        expect(observed.summary).toEqual(expected)
++        samples.push({ variant, elapsedMs: observed.elapsedMs })
++      }
++    }
++    const structural: Partial<Record<"legacy" | "capability", ReturnType<typeof countWork>["result"]>> = {}
++    for (const variant of ["legacy", "capability"] as const) {
++      const counter = countWork(probe)
++      try {
++        expect((await workload(fixture, variant, probe)).summary).toEqual(expected)
++        structural[variant] = counter.result
++      } finally { counter.restore() }
++    }
++    expect(structural.legacy!.markedObjects.dashboard).toBeGreaterThan(0)
++    expect(structural.capability!.markedObjects.dashboard).toBe(0)
++    expect(structural.legacy!.markedObjects.planner).toBe(0)
++    expect(structural.legacy!.markedObjects.procurement).toBe(0)
++    expect(structural.capability!.markedObjects.planner).toBe(0)
++    expect(structural.capability!.markedObjects.procurement).toBe(0)
++    expect(structural.capability!.wireParses).toBe(0)
++    expect(persisted()).toEqual(before)
++    const metrics = { ...expected.metrics, events: hash(expected.metrics.events.join("\n")) }
++    console.log("RUNTIME59_COST " + JSON.stringify({
++      schema: "sf2h.runtime-readonly-root.cost.v1", rowsPerSurface: rowCount, observations, persisted: before,
++      work: { ...expected, metrics }, samples, structural,
++      legacy: distribution(samples.filter((sample) => sample.variant === "legacy").map((sample) => sample.elapsedMs)),
++      capability: distribution(samples.filter((sample) => sample.variant === "capability").map((sample) => sample.elapsedMs)),
++      limitations: "One hosted runner, four AB/BA pairs, descriptive timing only; no elapsed-time/ratio assertion, heap estimate, P03 result or clone-only CPU claim. Structural probe excludes root admission and final publication, keeps real wrappers, and is restored before reporting.",
++    }))
++  } finally { await fixture.close() }
++}, 120000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts
+new file mode 100644
+index 0000000..0dac654
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts
+@@ -0,0 +1,133 @@
++import { Database } from "bun:sqlite"
++import { expect, test } from "bun:test"
++import { join } from "node:path"
++import { decodeSnapshot, encodeSnapshot } from "../../../runtime/local-store.ts"
++import { current, read, record, seed, surfaces, warm, withStores } from "../runtime-fresh-copy-cost/fixture.ts"
++
++test("each readonly root reads fresh SQL while retained observations remain detached across connections and reopen", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    const writer = await open()
++    await seed(store)
++    await warm(store)
++    const first = await store.readSnapshotRoot!(async () => current(store))
++    const pending: { write?: Promise<void> } = {}
++    try {
++      await store.readSnapshotRoot!(async () => {
++        pending.write = writer.transaction("planner", async (snapshot) => {
++          record(snapshot.data.left).count = 9
++          return { commit: true, value: undefined }
++        })
++        void pending.write.catch(() => undefined)
++        expect(current(store)).toEqual(first)
++      })
++      await pending.write
++      const next = await store.readSnapshotRoot!(async () => current(store))
++      expect(record(next.planner.data.left).count).toBe(9)
++      expect(record(first.planner.data.left).count).toBe(1)
++      record(next.planner.data.left).count = 80
++      await store.dispose()
++      const reopened = await open()
++      expect(await reopened.readSnapshotRoot!(async () => record(current(reopened).planner.data.left).count)).toBe(9)
++    } finally {
++      await pending.write?.catch(() => undefined)
++    }
++  })
++})
++
++test("readonly admission observes changed equal-length payloads and deleted rows on every surface", async () => {
++  await withStores(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const db = new Database(join(directory, "installation.sqlite"), { strict: true })
++    try {
++      for (const surface of surfaces) {
++        const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++        if (!row) throw new Error("SQL fixture row missing")
++        const changed = decodeSnapshot(row.payload)
++        record(changed.data.left).count = 9
++        const payload = encodeSnapshot(changed)
++        expect(payload.length).toBe(row.payload.length)
++        db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(payload, surface)
++        const observed = await store.readSnapshotRoot!(async () => current(store)[surface])
++        expect(record(observed.data.left).count).toBe(9)
++        expect(observed.versions).toEqual(changed.versions)
++        db.query("DELETE FROM snapshots WHERE surface = ?").run(surface)
++        expect(await store.readSnapshotRoot!(async () => current(store)[surface])).toEqual({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
++        db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?)").run(surface, row.payload)
++        expect(await store.readSnapshotRoot!(async () => record(current(store)[surface].data.left).count)).toBe(1)
++        expect(record(observed.data.left).count).toBe(9)
++      }
++    } finally {
++      db.close()
++    }
++  })
++})
++
++for (const temperature of ["cold", "warm"] as const) {
++  test(`${temperature} readonly root rejects corrupt unrequested SQL before invoking its callback`, async () => {
++    await withStores(async (directory, open) => {
++      const writer = await open()
++      await seed(writer)
++      const db = new Database(join(directory, "installation.sqlite"), { strict: true })
++      const calls = { root: 0 }
++      try {
++        for (const surface of surfaces) {
++          const store = await open()
++          if (temperature === "warm") await warm(store)
++          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++          if (!row) throw new Error("SQL fixture row missing")
++          const invalid = decodeSnapshot(row.payload)
++          invalid.versions.seed = { version: -1, by: "fixture" }
++          for (const corrupt of ["not-json", encodeSnapshot(invalid)]) {
++            db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(corrupt, surface)
++            await expect(store.readSnapshotRoot!(async () => { calls.root++; return "no-reads-requested" })).rejects.toThrow()
++            expect(calls.root).toBe(0)
++          }
++          db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(row.payload, surface)
++        }
++        const recovered = await open()
++        expect(await recovered.readSnapshotRoot!(async () => current(recovered).dashboard.data.surface)).toBe("dashboard")
++      } finally {
++        db.close()
++      }
++    })
++  })
++}
++
++test("readonly copies remain independent when depth and undefined counts require the original decoder fallback", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await store.transaction("planner", async (snapshot) => {
++      const deep: Record<string, unknown> = {}
++      let cursor = deep
++      for (let index = 0; index < 140; index++) {
++        const child = { next: {} }
++        cursor.next = child
++        cursor = child.next
++      }
++      cursor.leaf = "preserved"
++      snapshot.data.deep = deep
++      snapshot.data.missing = Object.fromEntries(Array.from({ length: 4100 }, (_, index) => [`field${index}`, undefined]))
++      return { commit: true, value: undefined }
++    })
++    await warm(store)
++    const before = (await read(store, "planner")).snapshot
++    await store.readSnapshotRoot!(async () => {
++      const first = current(store).planner
++      record(first.data.deep).next = "discarded"
++      record(first.data.missing).field0 = "discarded"
++      await store.transaction("planner", async (snapshot) => {
++        expect(snapshot).toEqual(before)
++        snapshot.data.deep = "discarded"
++        expect(Object.hasOwn(record(snapshot.data.missing), "field4099")).toBe(true)
++        expect(record(snapshot.data.missing).field4099).toBeUndefined()
++        return { commit: false, value: undefined }
++      })
++      expect(current(store).planner).toEqual(before)
++    })
++    expect((await read(store, "planner")).snapshot).toEqual(before)
++  })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts
+new file mode 100644
+index 0000000..14ad0af
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts
+@@ -0,0 +1,355 @@
++import { expect, test } from "bun:test"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { bytes, current, read, record, seed, surfaces, warm, withStores } from "../runtime-fresh-copy-cost/fixture.ts"
++
++for (const temperature of ["cold", "warm"] as const) {
++  test(`${temperature} readonly root supplies no mutable target and detaches every surface observation`, async () => {
++    await withStores(async (_directory, open) => {
++      const writer = await open()
++      await seed(writer)
++      const before = await Promise.all(surfaces.map((surface) => read(writer, surface)))
++      const store = await open()
++      if (temperature === "warm") await warm(store)
++      const calls = { root: 0, nested: 0, getters: 0 }
++      expect(typeof store.readSnapshotRoot).toBe("function")
++      expect(await store.readSnapshotRoot!(async (...args: unknown[]) => {
++        calls.root++
++        expect(args).toEqual([])
++        const first = current(store)
++        for (const [index, surface] of surfaces.entries()) {
++          expect(first[surface]).toEqual(before[index]!.snapshot)
++          expect(first[surface].data.left).not.toBe(first[surface].data.right)
++          record(first[surface].data.left).count = 90
++          first[surface].data.invalid = Object.defineProperty({}, "value", {
++            get() { calls.getters++; throw new Error("detached getter must not run") }, enumerable: true,
++          })
++          await store.transaction(surface, async (snapshot) => {
++            calls.nested++
++            expect(snapshot).toEqual(before[index]!.snapshot)
++            expect(snapshot).not.toBe(first[surface])
++            record(snapshot.data.left).count = 70
++            const cycle: Record<string, unknown> = {}
++            cycle.self = cycle
++            snapshot.data.discarded = cycle
++            await store.transaction(surface, async (again) => {
++              calls.nested++
++              expect(again).toEqual(before[index]!.snapshot)
++              expect(again).not.toBe(snapshot)
++              record(again.data.right).count = 80
++              return { commit: false, value: undefined }
++            })
++            expect(current(store)[surface]).toEqual(before[index]!.snapshot)
++            return { commit: false, value: undefined }
++          })
++        }
++        const second = current(store)
++        for (const [index, surface] of surfaces.entries()) {
++          expect(second[surface]).toEqual(before[index]!.snapshot)
++          expect(second[surface]).not.toBe(first[surface])
++          expect(Object.is(second[surface].data.minusZero, -0)).toBe(true)
++          expect(Object.hasOwn(second[surface].data, "optional")).toBe(true)
++        }
++        return "read-complete"
++      })).toBe("read-complete")
++      expect(calls).toEqual({ root: 1, nested: 6, getters: 0 })
++      expect(store.currentSnapshots?.()).toBeUndefined()
++      expect(await Promise.all(surfaces.map((surface) => read(store, surface)))).toEqual(before)
++    })
++  })
++}
++
++for (const effect of ["commit", "transaction-all", "nested-root", "blob-put", "blob-remove", "secret-put", "secret-take", "secret-remove"] as const) {
++  test(`readonly root refuses a swallowed ${effect} and leaves snapshots, blobs and secrets unchanged`, async () => {
++    await withStores(async (_directory, open) => {
++      const store = await open()
++      await seed(store)
++      await store.transaction("procurement", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++        await blobs.put("document", bytes, "binary")
++        return { commit: true, value: undefined }
++      })
++      await store.secrets.put("session", bytes, 1000)
++      await warm(store)
++      const before = await Promise.all(surfaces.map((surface) => read(store, surface)))
++      const calls = { root: 0, nested: 0, forbidden: 0, caught: 0 }
++      await expect(store.readSnapshotRoot!(async () => {
++        calls.root++
++        current(store)
++        const attempt = effect === "commit" ? store.transaction("planner", async (snapshot) => {
++          calls.nested++
++          snapshot.data.attempt = "must not survive"
++          return { commit: true, value: undefined }
++        }) : effect === "transaction-all" ? store.transactionAll!(async () => {
++          calls.forbidden++
++          return { commit: true, value: undefined }
++        }) : effect === "nested-root" ? store.readSnapshotRoot!(async () => {
++          calls.forbidden++
++          return undefined
++        }) : effect === "blob-put" || effect === "blob-remove" ? store.transaction("procurement", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++          calls.nested++
++          await (effect === "blob-put" ? blobs.put("document", new Uint8Array([4]), "changed") : blobs.remove("document"))
++            .catch(() => { calls.caught++ })
++          return { commit: false, value: undefined }
++        }) : effect === "secret-put" ? store.secrets.put("session", new Uint8Array([4]), 2000)
++          : effect === "secret-take" ? store.secrets.take("session", 0)
++            : store.secrets.remove("session")
++        await attempt.catch(() => { calls.caught++ })
++        expect(await store.secrets.get("session", 0)).toEqual(bytes)
++        return "must-not-escape"
++      })).rejects.toThrow("Nested local write attempted")
++      expect(calls).toEqual({
++        root: 1, nested: ["commit", "blob-put", "blob-remove"].includes(effect) ? 1 : 0,
++        forbidden: 0, caught: effect === "blob-put" || effect === "blob-remove" ? 2 : 1,
++      })
++      expect(await Promise.all(surfaces.map((surface) => read(store, surface)))).toEqual(before)
++      expect(await store.secrets.get("session", 0)).toEqual(bytes)
++      await store.dispose()
++      const reopened = await open()
++      expect(await Promise.all(surfaces.map((surface) => read(reopened, surface)))).toEqual(before)
++      expect(await reopened.secrets.get("session", 0)).toEqual(bytes)
++    })
++  })
++}
++
++test("a readonly root attempted inside a mutable transaction poisons the original writer even when caught", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const before = await read(store)
++    const calls = { forbidden: 0, caught: 0 }
++    await expect(store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.changed = "must roll back"
++      await store.readSnapshotRoot!(async () => { calls.forbidden++ }).catch(() => { calls.caught++ })
++      return { commit: true, value: undefined }
++    })).rejects.toThrow("Nested local write attempted")
++    expect(calls).toEqual({ forbidden: 0, caught: 1 })
++    expect(await read(store)).toEqual(before)
++  })
++})
++
++test("readonly roots reject pre-aborted work and a swallowed parent abort at the final fence", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const controller = new AbortController()
++    const calls = { root: 0, nested: 0, preaborted: 0 }
++    await expect(store.readSnapshotRoot!(async () => {
++      calls.root++
++      await expect(store.transaction("planner", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++        calls.nested++
++        controller.abort(new Error("readonly request revoked"))
++        expect(() => current(store)).toThrow("readonly request revoked")
++        await expect(blobs.get("document")).rejects.toThrow("readonly request revoked")
++        return { commit: false, value: undefined }
++      })).rejects.toThrow("readonly request revoked")
++      return "must-not-escape"
++    }, { signal: controller.signal })).rejects.toThrow("readonly request revoked")
++    await expect(store.readSnapshotRoot!(async () => {
++      calls.preaborted++
++    }, { signal: controller.signal })).rejects.toThrow("readonly request revoked")
++    expect(calls).toEqual({ root: 1, nested: 1, preaborted: 0 })
++    expect(await store.readSnapshotRoot!(async () => record(current(store).planner.data.left).count)).toBe(1)
++  })
++})
++
++test("a nested read abort does not revoke the still-open readonly parent", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const controller = new AbortController()
++    expect(await store.readSnapshotRoot!(async () => {
++      const before = current(store)
++      await expect(store.transaction("planner", async (snapshot) => {
++        record(snapshot.data.left).count = 9
++        controller.abort(new Error("child revoked"))
++        expect(() => current(store)).toThrow("child revoked")
++        return { commit: false, value: undefined }
++      }, { signal: controller.signal })).rejects.toThrow("child revoked")
++      expect(current(store)).toEqual(before)
++      return "parent-valid"
++    })).toBe("parent-valid")
++  })
++})
++
++test("a thrown readonly callback closes descendants and releases the store for a fresh root", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const before = await read(store)
++    const release = Promise.withResolvers<void>()
++    const retained: { observation?: Promise<unknown> } = {}
++    await expect(store.readSnapshotRoot!(async () => {
++      retained.observation = release.promise.then(() => current(store))
++      void retained.observation.catch(() => undefined)
++      record(current(store).dashboard.data.left).count = 90
++      throw new Error("readonly callback failed")
++    })).rejects.toThrow("readonly callback failed")
++    await store.readSnapshotRoot!(async () => {
++      release.resolve()
++      await expect(retained.observation).rejects.toThrow("scope has ended")
++      expect(current(store).dashboard).toEqual(before.snapshot)
++    })
++    expect(await read(store)).toEqual(before)
++  })
++})
++
++test("an unjoined reader prevents readonly success and cannot observe a closed root", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const started = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const child: { pending?: Promise<void> } = {}
++    try {
++      await expect(store.readSnapshotRoot!(async () => {
++        child.pending = store.transaction("planner", async () => {
++          started.resolve()
++          await release.promise
++          expect(() => current(store)).toThrow("scope has ended")
++          return { commit: false, value: undefined }
++        })
++        void child.pending.catch(() => undefined)
++        await started.promise
++        return "must-not-escape"
++      })).rejects.toThrow("Nested local read still active")
++      release.resolve()
++      await expect(child.pending).rejects.toThrow("scope has ended")
++      expect(await store.readSnapshotRoot!(async () => record(current(store).planner.data.left).count)).toBe(1)
++    } finally {
++      release.resolve()
++      await child.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("captured readonly descendants and blob capabilities expire without borrowing a later root", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const release = Promise.withResolvers<void>()
++    const retained: { observations?: Promise<unknown>; blobs?: BlobTransaction } = {}
++    await store.readSnapshotRoot!(async () => {
++      retained.observations = release.promise.then(() => current(store))
++      void retained.observations.catch(() => undefined)
++      await store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++        retained.blobs = blobs
++        return { commit: false, value: undefined }
++      })
++      await expect(retained.blobs!.get("document")).rejects.toThrow("scope has ended")
++    })
++    expect(await store.readSnapshotRoot!(async () => {
++      const fresh = current(store)
++      release.resolve()
++      await expect(retained.observations).rejects.toThrow("scope has ended")
++      await expect(retained.blobs!.get("document")).rejects.toThrow("scope has ended")
++      await expect(retained.blobs!.put("document", bytes, "binary")).rejects.toThrow("scope has ended")
++      await expect(retained.blobs!.remove("document")).rejects.toThrow("scope has ended")
++      expect(current(store)).toEqual(fresh)
++      return "new-root-valid"
++    })).toBe("new-root-valid")
++    expect((await read(store)).blob).toBeUndefined()
++  })
++})
++
++test("dispose drains an admitted readonly root and refuses subsequent admissions", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    const started = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const calls: string[] = []
++    const running = store.readSnapshotRoot!(async () => {
++      calls.push("admitted")
++      const before = current(store)
++      started.resolve()
++      await release.promise
++      expect(current(store)).toEqual(before)
++      return "drained"
++    })
++    await started.promise
++    const completions: string[] = []
++    const disposing = store.dispose().then(() => { completions.push("disposed") })
++    try {
++      await expect(store.readSnapshotRoot!(async () => { calls.push("late") })).rejects.toThrow("disposed")
++      expect(completions).toEqual([])
++    } finally {
++      release.resolve()
++      expect(await running).toBe("drained")
++      await disposing
++    }
++    expect(calls).toEqual(["admitted"])
++    expect(completions).toEqual(["disposed"])
++    expect(record((await read(await open())).snapshot.data.left).count).toBe(1)
++  })
++})
++
++for (const effect of ["transaction", "transaction-all", "secret-put", "secret-take", "secret-remove"] as const) {
++  test(`a ${effect} refused after concurrent dispose still poisons its admitted readonly root when caught`, async () => {
++    await withStores(async (_directory, open) => {
++      const store = await open()
++      await seed(store)
++      await store.secrets.put("session", bytes, 1000)
++      const before = await read(store)
++      const started = Promise.withResolvers<void>()
++      const release = Promise.withResolvers<void>()
++      const calls = { forbidden: 0, caught: 0 }
++      const running = store.readSnapshotRoot!(async () => {
++        started.resolve()
++        await release.promise
++        const attempt = effect === "transaction" ? store.transaction("dashboard", async (snapshot) => {
++          calls.forbidden++
++          snapshot.data.attempt = "must not survive"
++          return { commit: true, value: undefined }
++        }) : effect === "transaction-all" ? store.transactionAll!(async () => {
++          calls.forbidden++
++          return { commit: true, value: undefined }
++        }) : effect === "secret-put" ? store.secrets.put("session", new Uint8Array([4]), 2000)
++          : effect === "secret-take" ? store.secrets.take("session", 0)
++            : store.secrets.remove("session")
++        await attempt.catch(() => { calls.caught++ })
++        return "must-not-escape"
++      })
++      void running.catch(() => undefined)
++      await started.promise
++      const disposing = store.dispose()
++      try {
++        release.resolve()
++        await expect(running).rejects.toThrow("Nested local write attempted")
++      } finally {
++        release.resolve()
++        await disposing
++      }
++      expect(calls).toEqual({ forbidden: 0, caught: 1 })
++      const reopened = await open()
++      expect(await read(reopened)).toEqual(before)
++      expect(await reopened.secrets.get("session", 0)).toEqual(bytes)
++    })
++  })
++}
++
++test("readonly materialization never sanitizes invalid values inserted into a later mutable target", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await store.readSnapshotRoot!(async () => current(store))
++    const before = await read(store)
++    const calls = { getters: 0, nested: 0 }
++    const cycle: Record<string, unknown> = {}
++    cycle.self = cycle
++    const accessor = Object.defineProperty({}, "hidden", { get() { calls.getters++; return 1 }, enumerable: true })
++    for (const invalid of [Object.create({ inherited: true }), accessor, cycle, { fn: () => undefined }, { value: Symbol("invalid") }, { value: Infinity }]) {
++      await store.transaction("dashboard", async (snapshot) => {
++        snapshot.data.invalid = invalid
++        expect(() => current(store)).toThrow()
++        await expect(store.transaction("dashboard", async () => {
++          calls.nested++
++          return { commit: false, value: undefined }
++        })).rejects.toThrow()
++        return { commit: false, value: undefined }
++      })
++      expect(await read(store)).toEqual(before)
++      expect(await store.readSnapshotRoot!(async () => current(store).dashboard)).toEqual(before.snapshot)
++    }
++    expect(calls).toEqual({ getters: 0, nested: 0 })
++  })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts
+new file mode 100644
+index 0000000..1d0ca64
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts
+@@ -0,0 +1,236 @@
++import { expect, test } from "bun:test"
++import type { Surface } from "../../../src/identity.ts"
++import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
++import { createCanonicalReadFixture } from "./canonical-fixture.ts"
++
++const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
++
++for (const wrapper of ["source", "fence"] as const) test(`readonly root preserves canonical ${wrapper} callbacks, observations and authorizations against legacy on the same SQLite`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper })
++  try {
++    expect(typeof fixture.capablePersistence.readSnapshotRoot).toBe("function")
++    expect(Object.hasOwn(fixture.legacyPersistence, "readSnapshotRoot")).toBe(false)
++    const records: unknown[] = []
++    for (const persistence of [fixture.legacyPersistence, fixture.capablePersistence]) {
++      fixture.resetMetrics()
++      const host = { ...fixture.host, persistence }
++      let work = 0
++      let joined = 0
++      let observers = 0
++      const accepted = await fixture.withinFence(async () => {
++        fixture.fence.observe(fixture.context, (snapshots) => {
++          observers++
++          return surfaces.every((surface) => snapshots[surface].data.marker === surface)
++        })
++        return readPortfolioSnapshot(host, fixture.context, {}, async () => {
++          work++
++          for (const surface of surfaces) {
++            const marker = await persistence.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot.data.marker }))
++            if (marker !== surface) return false
++          }
++          return readPortfolioSnapshot(host, fixture.context, {}, async () => { joined++; return true }, false)
++        }, false)
++      })
++      expect(accepted).toBe(true)
++      expect(work).toBe(1)
++      expect(joined).toBe(1)
++      expect(observers).toBeGreaterThan(0)
++      expect(fixture.metrics.transactions).toEqual({ dashboard: 2, planner: 1, procurement: 1 })
++      expect(fixture.metrics.callbacks).toEqual({ dashboard: 2, planner: 1, procurement: 1 })
++      records.push({ observers, ...structuredClone(fixture.metrics), roots: 0 })
++      expect(fixture.metrics.roots).toBe(persistence === fixture.capablePersistence ? 1 : 0)
++    }
++    expect(records[1]).toEqual(records[0])
++  } finally { await fixture.close() }
++})
++
++for (const legacy of [true, false]) test(`readonly root keeps the Dashboard source anchor with partial metadata (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ legacy, initialized: ["procurement"] })
++  try {
++    let work = 0
++    expect(await fixture.read(async () => { work++; return true })).toBe(false)
++    expect(work).toBe(0)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(0)
++    expect(fixture.metrics.transactions.procurement).toBe(0)
++  } finally { await fixture.close() }
++})
++
++for (const legacy of [true, false]) test(`readonly root admits unobserved partial source metadata without inventing new guards (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ legacy, initialized: ["dashboard"] })
++  try {
++    expect(await fixture.read(async () => true)).toBe(true)
++    expect(fixture.metrics.callbacks).toEqual({ dashboard: 1, planner: 0, procurement: 0 })
++    expect(fixture.metrics.revalidations).toBe(1)
++    const snapshots = await fixture.driver.transaction("dashboard", async () => ({ commit: false, value: fixture.driver.currentSnapshots!() }))
++    expect(snapshots?.dashboard.sfSources?.schemaVersion).toBe(1)
++    expect(snapshots?.planner.sfSources).toBeUndefined()
++    expect(snapshots?.procurement.sfSources).toBeUndefined()
++  } finally { await fixture.close() }
++})
++
++for (const surface of surfaces) for (const damage of ["missing", "record", "scope"] as const) test(`readonly root preserves the ${surface} source guard for ${damage} metadata`, async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    await fixture.driver.transaction(surface, async (snapshot) => {
++      if (damage === "missing") delete snapshot.sfSources
++      if (damage === "record") snapshot.sfSources!.records[JSON.stringify(["readonly-fixture", surface])]!.version = 0
++      if (damage === "scope") Reflect.set(snapshot.sfSources!, "scopes", { corrupt: { version: 1 } })
++      return { commit: true, value: undefined }
++    })
++    const observations: unknown[] = []
++    for (const persistence of [fixture.legacyPersistence, fixture.capablePersistence]) {
++      fixture.resetMetrics()
++      let work = 0
++      let target = 0
++      const accepted = await readPortfolioSnapshot({ ...fixture.host, persistence }, fixture.context, {}, async () => {
++        work++
++        return persistence.transaction(surface, async () => { target++; return { commit: false, value: true } })
++      }, false)
++      expect(accepted).toBe(false)
++      expect(work).toBe(surface === "dashboard" ? 0 : 1)
++      expect(target).toBe(0)
++      expect(fixture.metrics.callbacks[surface]).toBe(0)
++      observations.push({ ...structuredClone(fixture.metrics), roots: 0 })
++    }
++    expect(observations[1]).toEqual(observations[0])
++  } finally { await fixture.close() }
++})
++
++for (const wrapper of ["source", "fence"] as const) test(`readonly root cannot return success before the canonical ${wrapper} publication guard`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper })
++  try {
++    let result: boolean | undefined
++    let observers = 0
++    await expect(fixture.withinFence(async () => {
++      fixture.fence.observe(fixture.context, () => { observers++; return false })
++      result = await fixture.read(async () => true)
++      return result
++    })).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
++    expect(result).toBe(false)
++    expect(observers).toBeGreaterThan(0)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++  } finally { await fixture.close() }
++})
++
++for (const drift of ["installation", "project", "request", "authorization", "lease"] as const) test(`readonly root refuses ${drift} drift across a canonical read`, async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    let work = 0
++    const accepted = await fixture.read(async () => {
++      work++
++      if (drift === "installation") fixture.identity.installationId = "different-installation"
++      if (drift === "project") fixture.identity.projectId = "different-project"
++      if (drift === "request") fixture.controls.requestOverride = new Request(fixture.request.url, { headers: fixture.request.headers })
++      if (drift === "authorization") fixture.controls.enabled = false
++      if (drift === "lease") fixture.ui.finish(fixture.context)
++      return true
++    })
++    expect(work).toBe(1)
++    expect(accepted).toBe(false)
++    expect(fixture.request.signal.aborted).toBe(false)
++  } finally { await fixture.close() }
++})
++
++for (const field of ["installationId", "projectId"] as const) for (const wrapper of ["source", "fence"] as const) test(`readonly root preserves ${wrapper} installation fencing when ${field} changes but UI authority stays valid`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper })
++  try {
++    let result: boolean | undefined
++    await expect(fixture.withinFence(async () => {
++      result = await fixture.read(async () => {
++        fixture.controls.identityOverride = {
++          installationId: fixture.identity.installationId, projectId: fixture.identity.projectId, [field]: "other-installation-context",
++        }
++        return true
++      })
++      return result
++    })).rejects.toThrow("SF_CURRENT_CHOICE_FENCE_CHANGED")
++    expect(result).toBe(false)
++    expect(await fixture.ui.revalidate(fixture.context)).toBe(true)
++    expect(fixture.ui.requestFor(fixture.context)).toBe(fixture.request)
++  } finally { await fixture.close() }
++})
++
++for (const wrapper of ["source", "fence"] as const) for (const legacy of [true, false]) test(`readonly root preserves caught-write poison through ${wrapper} (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ wrapper, legacy })
++  try {
++    let caught = 0
++    expect(await fixture.read(async () => {
++      await fixture.persistence.transaction("procurement", async (snapshot) => {
++        snapshot.data.marker = "attempted-write"
++        return { commit: true, value: true }
++      }).catch(() => { caught++; return false })
++      return true
++    })).toBe(false)
++    expect(caught).toBe(1)
++    expect(fixture.metrics.callbacks.procurement).toBe(1)
++    expect(await fixture.driver.transaction("procurement", async (snapshot) => ({ commit: false, value: snapshot.data.marker }))).toBe("procurement")
++  } finally { await fixture.close() }
++})
++
++test("readonly root keeps the final host revalidation after the work callback", async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    let workFinished = false
++    fixture.controls.onRevalidate = () => {
++      expect(workFinished).toBe(true)
++      fixture.controls.enabled = false
++    }
++    expect(await fixture.read(async () => { workFinished = true; return true })).toBe(false)
++    expect(fixture.metrics.revalidations).toBe(1)
++    expect(fixture.metrics.authorizations).toBe(1)
++  } finally { await fixture.close() }
++})
++
++test("readonly root joins only the helper's matching own scope and keeps the nested authorization", async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    let foreign = 0
++    const refused = await fixture.persistence.transaction("dashboard", async () => ({
++      commit: false, value: await fixture.read(async () => { foreign++; return true }),
++    }))
++    expect(refused).toBe(false)
++    expect(foreign).toBe(0)
++    fixture.resetMetrics()
++    let nested = 0
++    expect(await fixture.read(async () => fixture.read(async () => { nested++; return true }))).toBe(true)
++    expect(nested).toBe(1)
++    expect(fixture.metrics.roots).toBe(1)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++    expect(fixture.metrics.revalidations).toBe(2)
++  } finally { await fixture.close() }
++})
++
++for (const legacy of [true, false]) test(`readonly root pins capability identity during the read (${legacy ? "legacy" : "capability"})`, async () => {
++  const fixture = await createCanonicalReadFixture({ legacy })
++  try {
++    const original = fixture.persistence.readSnapshotRoot
++    const capability = fixture.capablePersistence.readSnapshotRoot
++    if (!capability) throw new Error("Readonly fixture capability unavailable")
++    const accepted = await fixture.read(async () => {
++      if (legacy) fixture.persistence.readSnapshotRoot = capability
++      if (!legacy) delete fixture.persistence.readSnapshotRoot
++      return true
++    })
++    expect(accepted).toBe(false)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++    if (original) fixture.persistence.readSnapshotRoot = original
++    if (!original) delete fixture.persistence.readSnapshotRoot
++  } finally { await fixture.close() }
++})
++
++test("legacy persistence remains usable after unrelated capability-backed reads", async () => {
++  const fixture = await createCanonicalReadFixture()
++  try {
++    expect(await fixture.read(async () => true)).toBe(true)
++    fixture.resetMetrics()
++    expect(await readPortfolioSnapshot({ ...fixture.host, persistence: fixture.legacyPersistence }, fixture.context, {}, async () => true, false)).toBe(true)
++    expect(fixture.metrics.roots).toBe(0)
++    expect(fixture.metrics.transactions.dashboard).toBe(1)
++    expect(fixture.metrics.callbacks.dashboard).toBe(1)
++    expect(fixture.metrics.revalidations).toBe(1)
++    expect(fixture.driver.currentSnapshots!()).toBeUndefined()
++  } finally { await fixture.close() }
++})
