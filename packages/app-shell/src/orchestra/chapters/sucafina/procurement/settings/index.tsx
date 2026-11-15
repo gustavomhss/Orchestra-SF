@@ -10,7 +10,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewConfirmation } from "../../shared/change-review"
 import { SfProcurementSettingsFields } from "./fields"
-import { SETTINGS_REF, SETTINGS_INTENT, changedSettings, settingsReview } from "./model"
+import { SETTINGS_REF, changedSettings, settingsReview } from "./model"
 import type { Settings, SettingsProjection } from "./model"
 import "./settings.css"
 
@@ -44,10 +44,15 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     reviewRef?: SfOperationRef
     errorLines: readonly string[]
     confirmed: boolean
+    unknownOutcome: boolean
+    confirmDiscard: boolean
   }>({
     state: "loading", refresh: 0, busy: false, review: null,
-    errorLines: [], confirmed: false,
+    errorLines: [], confirmed: false, unknownOutcome: false, confirmDiscard: false,
   })
+  let commandAbort: AbortController | undefined
+  let disposed = false
+  onCleanup(() => { disposed = true; commandAbort?.abort() })
   const selection = () => ({
     ...(props.route.query.year !== undefined ? { year: props.route.query.year } : {}),
     ...(props.route.query.month !== undefined ? { month: props.route.query.month } : {}),
@@ -67,7 +72,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     if (current.status !== "ready" || !ready) {
       setView({
         projection: undefined, review: null, reviewRef: undefined, errorLines: [],
-        busy: false,
+        busy: false, confirmed: false, confirmDiscard: false, unknownOutcome: false,
         state: current.status === "resolving" ? "loading"
           : current.status === "unauthenticated" ? "session-expired"
           : current.status === "denied" ? "denied"
@@ -83,7 +88,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       return
     }
     const abort = new AbortController()
-    setView({ projection: undefined, state: "loading", review: null, errorLines: [] })
+    setView({ projection: undefined, state: "loading", review: null, errorLines: [], confirmed: false })
     void createSfProcurementClient(ready.transport)["domain.page.CAP28"](selection(), {
       signal: abort.signal,
     }).then((response) => {
@@ -115,7 +120,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
         setView({ projection: undefined, state: "denied" })
         return
       }
-      setView({ projection: body, state: "ready" })
+      setView({ projection: body, state: view.unknownOutcome ? "outcome-unknown" : "ready" })
     }).catch((error: unknown) => {
       if (abort.signal.aborted || owner.generation() !== generation) return
       console.error("Procurement settings read failed", error instanceof Error ? error.name : "unknown")
@@ -152,6 +157,13 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       },
     })
   })
+  createEffect(() => {
+    const projection = view.projection
+    const controller = draft()
+    const currentVersion = projection?.value.versions.settings?.version
+    if (projection && controller && currentVersion !== undefined)
+      controller.receiveRemote({ baseVersion: currentVersion, value: projection.value.data.settings })
+  })
   const snapshot = () => draft()?.snapshot()
   const active = () => {
     const state = snapshot()
@@ -179,16 +191,19 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     draft()?.setPhase("reviewing")
   }
   const closeReview = () => {
-    setView({ review: null, reviewRef: undefined })
+    setView({ review: null, reviewRef: undefined, confirmDiscard: false })
     if (active()?.dirty) draft()?.setPhase("dirty")
     else draft()?.setPhase("clean")
   }
   const discard = () => {
     if (!active() || active()?.pendingOperation !== null || view.busy) return
-    // The discard is a local draft-only operation. It NEVER calls reset/delete.
-    if (active()?.dirty && !window.confirm(t(sfCommonKey("sf.common.navigationDiscard")))) return
+    if (active()?.dirty && !view.confirmDiscard) {
+      setView("confirmDiscard", true)
+      return
+    }
+    // Explicit two-step local draft confirmation, never the producer reset.
     draft()?.discard()
-    setView({ review: null, errorLines: [] })
+    setView({ review: null, errorLines: [], confirmDiscard: false, confirmed: false })
   }
   const save = async (confirmation: Extract<SfReviewConfirmation, { kind: "admitted" }>) => {
     const current = owner.state()
@@ -204,6 +219,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
         confirmation.binding.version.kind !== "record" ||
         confirmation.binding.version.expectedVersion !== state.baseVersion) return
     const opRef = view.reviewRef
+    const generationAtReview = owner.generation()
     const command = {
       page: "Settings" as const, action: "save" as const,
       version: page.value.versions.settings!.version, values: { settings: structuredClone(state.value) },
@@ -214,23 +230,24 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const bytes = new TextEncoder().encode(JSON.stringify(command))
     const hash = await crypto.subtle.digest("SHA-256", bytes)
     const digest = Array.from(new Uint8Array(hash)).map((byte) => byte.toString(16).padStart(2, "0")).join("")
-    if (view.busy || owner.ready() !== ready || owner.state().status !== "ready" ||
-        active()?.baseVersion !== command.version) return
+    if (disposed || view.busy || owner.generation() !== generationAtReview ||
+        owner.state().status !== "ready" || active()?.baseVersion !== command.version) return
     draft()?.setPending({
       operationRef: opRef, idempotencyKey, payloadDigest: digest, expectedVersion: command.version,
     })
     draft()?.setPhase("submitting")
     setView({ busy: true, errorLines: [], review: null })
     const abort = new AbortController()
-    const generation = owner.generation()
+    commandAbort = abort
+    const generation = generationAtReview
     try {
       const reply = await createSfProcurementClient(ready.transport)["domain.command.CAP28.save"](
         command, { signal: abort.signal, idempotencyKey },
       )
-      if (owner.generation() !== generation || owner.state().status !== "ready") return
+      if (disposed || owner.generation() !== generation || owner.state().status !== "ready") return
       if (reply.kind !== "response") {
         draft()?.setPhase("outcome-unknown")
-        setView({ busy: false, state: "outcome-unknown" })
+        setView({ busy: false, state: "outcome-unknown", unknownOutcome: true })
         return
       }
       if (!reply.body.ok) {
@@ -251,7 +268,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       const refreshed = await createSfProcurementClient(ready.transport)["domain.page.CAP28"](
         selection(), { signal: abort.signal },
       )
-      if (owner.generation() !== generation || owner.state().status !== "ready") return
+      if (disposed || owner.generation() !== generation || owner.state().status !== "ready") return
       if (refreshed.kind === "response" && refreshed.body.status === "ok" &&
           refreshed.body.value.capabilityId === "CAP28" &&
           refreshed.body.context.installationId === ready.context.stamp.installationId &&
@@ -265,18 +282,20 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           baseVersion: refreshed.body.value.versions.settings.version,
           value: refreshed.body.value.data.settings,
         })
-        setView({ projection: refreshed.body, state: "ready", busy: false, confirmed: true })
+        setView({ projection: refreshed.body, state: "ready", busy: false, confirmed: true, unknownOutcome: false })
       } else {
         draft()?.confirmSave({
           kind: "confirmed-without-projection", operationRef: opRef, resultVersion: null,
         })
-        setView({ projection: undefined, state: "unavailable", busy: false, confirmed: true })
+        setView({ projection: undefined, state: "unavailable", busy: false, confirmed: true, unknownOutcome: false })
       }
     } catch (error) {
-      if (owner.generation() !== generation || owner.state().status !== "ready") return
+      if (disposed || owner.generation() !== generation || owner.state().status !== "ready") return
       console.error("Procurement settings command outcome uncertain", error instanceof Error ? error.name : "unknown")
       draft()?.setPhase("outcome-unknown")
-      setView({ busy: false, state: "outcome-unknown" })
+      setView({ busy: false, state: "outcome-unknown", unknownOutcome: true })
+    } finally {
+      if (commandAbort === abort) commandAbort = undefined
     }
   }
   const reviewProps = () => review()
@@ -328,7 +347,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           onLogin={() => { void owner.reload() }}
         >
           <Show when={view.projection && active()}>
-            {(current) => (
+            {() => (
               <>
                 <Show when={!pageAllowed() || !actionAllowed("save")}>
                   <p role="status">{t(sfCommonKey("sf.common.readOnly"))}</p>
@@ -343,14 +362,21 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                   }}>
                     <SfProcurementSettingsFields
                       settings={active()!.value}
-                      directory={current().value.data.directory}
+                      directory={view.projection!.value.data.directory}
                       disabled={readOnly()}
-                      onEdit={(next) => { if (!readOnly()) draft()?.edit(next) }}
+                      onEdit={(next) => { if (!readOnly()) { draft()?.edit(next); setView("confirmed", false) } }}
                     />
                     <div class="sf-n21-settings-footer">
                       <p role="status">{active()?.dirty
                         ? t(sfCommonKey("sf.common.changesPending"))
                         : t(sfCommonKey("sf.common.currentSource"))}</p>
+                      <Show when={view.confirmDiscard}>
+                        <p role="alert">{t(sfCommonKey("sf.common.navigationDiscard"))}</p>
+                        <button class="mx-btn" type="button"
+                          onClick={() => setView("confirmDiscard", false)}>
+                          {t(sfCommonKey("sf.common.keepEditing"))}
+                        </button>
+                      </Show>
                       <button class="mx-btn" type="button" disabled={!active()?.dirty || view.busy}
                         onClick={discard}>{t(sfCommonKey("sf.common.discard"))}</button>
                       <button class="mx-btn primary" type="submit" disabled={!canReview()}>
