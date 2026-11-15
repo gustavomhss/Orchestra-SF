@@ -121,6 +121,24 @@ test.describe("Q01 legacy routes remain distinct from the installed native shell
     })
   }
 
+  test("Q01-COMPAT-DOWNLOAD native export is a real same-origin download, never a forged receipt", async ({ page, nativeHarness }) => {
+    const { target } = nativeHarness.manifest
+    await installedNative(page, nativeHarness)
+    await page.goto(nativeUrl(target, "/orchestra/sf-imports/exports"))
+    await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
+    const exportAction = page.locator('[data-sf-frame="page"]')
+      .getByRole("button", { name: /^(Export|Exportar)$/, exact: true })
+    await expect(exportAction, "UI68 real export must be authorized, not a staged preview").toBeEnabled()
+    // Register BEFORE the single user action. The browser must receive the
+    // genuine producer response; attachment metadata alone is not a download.
+    const downloaded = page.waitForEvent("download")
+    await exportAction.click()
+    const asset = await downloaded
+    expect(new URL(asset.url()).origin).toBe(target.publicOrigin)
+    expect(asset.suggestedFilename()).toMatch(/^[^/\\\r\n]+\.(csv|json|xlsx|pdf)$/i)
+    expect(await asset.failure()).toBeNull()
+  })
+
   test("Q01-COMPAT-REFLOW native context remains visible at 200% text size in 320 CSS px", async ({ page, nativeHarness }) => {
     await page.setViewportSize({ width: 320, height: 900 })
     await installedNative(page, nativeHarness)
