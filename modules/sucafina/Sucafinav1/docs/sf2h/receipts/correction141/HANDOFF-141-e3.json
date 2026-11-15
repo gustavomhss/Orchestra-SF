@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h.correction-author-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 141,
+  "order": "S02",
+  "actor": "new ChatGPT GPT-6 session using GitHub MCP",
+  "model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed",
+  "epoch": "ux-native-w07-e3",
+  "branch": "sf-ux-w07",
+  "pr": 124,
+  "base": "sf2-stack",
+  "fence": {
+    "initial_head": "91308a048fa29749130f7f19e65a2ec1f65a7a50",
+    "blob": "9746c314f48421f060866bd23a31941ce09eb1fc",
+    "prior_epoch": "ux-native-w07-e2",
+    "prior_writes": "REVOKED"
+  },
+  "commits": {
+    "ack": "0be96c5b40920951b267f5ae2e11342fef330f97",
+    "code": "7f6983701cd7cd2159f3bde0cf330f792b34953a",
+    "code_tree": "0952455165d16b22dc7e5c47ccf3357d9fe9c19f"
+  },
+  "defect": {
+    "evidence": "C64 run43738907064 job132887516559 s02.test.ts:202 expected row-r1 / received row-r2",
+    "cause": "Borrowed reactive Solid owner coordinates in selected range and navigation callbacks; synchronous owner store writes mutate anchor/origin.",
+    "fix": "Pre-event snapshot for from, copied anchor/extent, extend only when existing extent equals current and anchor is valid; non-Shift clears selection."
+  },
+  "pre_post": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+      "pre": "8da2af9dd881d5879eb89b6bd83e073697fe4a10",
+      "post": "dc4410482ac81171d2c779c2a93240c236a42dc2",
+      "C64_consumer_pre": "8da2af9dd881d5879eb89b6bd83e073697fe4a10"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+      "pre": "a32178e91f85119c8d111c169899b0e2303c529b",
+      "post": "ea1a18fe9c5b39d6ed7c719fe8cf3f2916ab1d5e",
+      "C64_consumer_pre": "a32178e91f85119c8d111c169899b0e2303c529b"
+    }
+  ],
+  "full_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction141/PATCH-141-e3.diff",
+  "current_consumer": {
+    "branch": "sf2-stack",
+    "observed_head": "fc8840207377a363d4e6844aab496b4f1521f83c",
+    "source_pre": "8da2af9dd881d5879eb89b6bd83e073697fe4a10",
+    "test_pre": "a32178e91f85119c8d111c169899b0e2303c529b",
+    "C64": "8f933d3249f49e1234b745036672d7c7a6aabcd4"
+  },
+  "contract_pins": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "components": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component_locks": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "domain": "94553a3119826ef1c44271966233dd58042ddd70",
+    "surface": "d62847af81dffdc129312e71e69692081fd74b75",
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "source_baseline": "9f766b89b341851ab0693dde515f60554d025125",
+    "criteria_trace": "1dba83d77882073af587c031d63299ed472905e8",
+    "locks": [
+      "ui-frame",
+      "ui-grid"
+    ]
+  },
+  "scope": {
+    "allowed": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+      "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction141/**"
+    ],
+    "modified": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+      "packages/app-shell/test-browser/sucafina-native/s02.test.ts"
+    ],
+    "protected_modified": [],
+    "shared_modified": [],
+    "protocol_changed": false,
+    "generated_changed": false,
+    "auth_or_finance_changed": false
+  },
+  "regressions": {
+    "existing": "Kept C64 failing row-r1/Shift+ArrowDown assertion and December non-wrap; added month0 and from coordinate checks",
+    "added": "Repeated Shift+Right, Left, Down, bottom clamp, plain arrow clears, new Shift resets anchor; immutable origin",
+    "assertions_weakened": 0,
+    "fixtures_weakened": 0,
+    "timeouts_changed": false,
+    "test_file": "packages/app-shell/test-browser/sucafina-native/s02.test.ts"
+  },
+  "criteria": {
+    "tasks": [
+      "WP01.T02",
+      "WP03.T02"
+    ],
+    "cases": [
+      "S02-AC01",
+      "S02-AC02",
+      "S02-AC03"
+    ],
+    "status": "source corrected, no new qualification"
+  },
+  "evidence": {
+    "historical": {
+      "run": 43738907064,
+      "job": 132887516559,
+      "result": "FAIL",
+      "s02_nested": "9 PASS / 1 FAIL",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43738907064/job/132887516559"
+    },
+    "compiler_prior": {
+      "run": 43738074189,
+      "job": 132884987559,
+      "status": "PRIOR_ONLY"
+    },
+    "native_prior": {
+      "run": 43738115971,
+      "job": 132885115197,
+      "status": "PRIOR_ONLY"
+    },
+    "corrected_hosted_s02": "NOT_RUN",
+    "corrected_typecheck": "NOT_RUN",
+    "corrected_guards": "NOT_RUN",
+    "installed_consumer": "NOT_PROVEN"
+  },
+  "handoff": {
+    "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+    "integration": {
+      "owner": 132,
+      "pr": 65,
+      "action": "Surgical 2-file postblob intake; confirm C and real consumer ACK. No whole-branch merge."
+    },
+    "compiler": {
+      "owner": 128,
+      "pr": 107,
+      "action": "After coherent integration run app-shell typecheck/guards using authorized compiler; generate only if real Protocol/Server HttpApi changed."
+    },
+    "ci": {
+      "owner": 129,
+      "pr": 106,
+      "action": "After coherent integration dedup surgical hosted S02 test through existing dispatcher; record C/run/job/results."
+    },
+    "dependencies": [
+      "F03 real frame",
+      "A02 real monthly owner/preview/apply for E2E qualification"
+    ],
+    "consumer_ack": "PENDING",
+    "global_release": false,
+    "goal": "paused",
+    "lease_terminal": "ARTIFACT_READY_HANDOFF_TO_132",
+    "new_writer_rule": "new S0 fence and epoch required"
+  }
+}

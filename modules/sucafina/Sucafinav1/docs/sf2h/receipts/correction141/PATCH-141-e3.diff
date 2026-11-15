@@ -1,0 +1,100 @@
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx
+index 8da2af9dd881d5879eb89b6bd83e073697fe4a10..dc4410482ac81171d2c779c2a93240c236a42dc2 100644
+--- a/packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx
+@@ -182,9 +182,16 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element
+   }
+   const handleGridKeys: JSX.EventHandler<HTMLDivElement, KeyboardEvent> = (event) => {
+     if (local.editing || !readable()) return
+-    const current = props.activeCell ?? props.selectedRange?.extent
++    const projected = props.activeCell ?? props.selectedRange?.extent
+       ?? props.cells.find((cell) => rowIndex(cell.coordinate.rowRef) >= 0)?.coordinate
+-    if (!current) return
++    if (!projected) return
++    // Owner coordinates may be Solid store proxies. Both callbacks can synchronously
++    // update activeCell, so retain the pre-event navigation origin by value.
++    const current: SfCellCoordinate = {
++      rowRef: projected.rowRef,
++      month: projected.month,
++      measure: projected.measure,
++    }
+     if (event.key === "Enter" || event.key === "F2") {
+       event.preventDefault()
+       const cell = props.cells.find((item) => SAME_CELL(item.coordinate, current))
+@@ -203,10 +210,15 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element
+     const visibleRowCount = Math.max(1, Math.floor((scroller?.clientHeight || 352) / 44))
+     const target = nextCell(current, key, visibleRowCount)
+     if (event.shiftKey) {
+-      props.onSelectRange({
+-        anchor: props.selectedRange?.anchor ?? current,
+-        extent: target,
+-      })
++      const range = props.selectedRange
++      // Continue a range only while its extent is the active coordinate.
++      // Copy both endpoints: never borrow the owner's reactive activeCell or
++      // range anchor into a store that may merge objects in place.
++      const anchor = range && SAME_CELL(range.extent, current)
++        && range.anchor.measure === current.measure
++        && rowIndex(range.anchor.rowRef) >= 0 && monthIndex(range.anchor.month) >= 0
++        ? { ...range.anchor } : { ...current }
++      props.onSelectRange({ anchor, extent: { ...target } })
+     } else props.onSelectRange(null)
+     props.onNavigate({ from: current, key, visibleRowCount })
+   }
+diff --git a/packages/app-shell/test-browser/sucafina-native/s02.test.ts b/packages/app-shell/test-browser/sucafina-native/s02.test.ts
+index a32178e91f85119c8d111c169899b0e2303c529b..ea1a18fe9c5b39d6ed7c719fe8cf3f2916ab1d5e 100644
+--- a/packages/app-shell/test-browser/sucafina-native/s02.test.ts
++++ b/packages/app-shell/test-browser/sucafina-native/s02.test.ts
+@@ -200,12 +200,52 @@ if (process.env.SF_S02_DOM !== "1") {
+       keydown(page.grid(), "ArrowDown", true)
+       expect(page.ui.selectedRange?.extent.rowRef).toBe(rows[1]!.id)
+       expect(page.ui.selectedRange?.anchor.rowRef).toBe(rows[0]!.id)
++      expect(page.ui.selectedRange?.anchor.month).toBe(0)
++      expect(page.events.navigate.at(-1)?.from).toEqual(coordinate(0, 0))
+       keydown(page.grid(), "Home", false, true)
+       expect(page.events.navigate.at(-1)?.key).toBe("Control+Home")
+       expect(page.events.navigate.at(-1)?.visibleRowCount).toBeGreaterThan(0)
+     } finally { page.close() }
+   })
+ 
++  test("Shift selection owns stable range endpoints and navigation origin across repeated arrows", () => {
++    const page = mount()
++    try {
++      keydown(page.grid(), "ArrowRight", true)
++      expect(page.ui.selectedRange).toEqual({
++        anchor: coordinate(0, 0), extent: coordinate(0, 1),
++      })
++      const firstNavigation = page.events.navigate.at(-1)
++      expect(firstNavigation?.from).toEqual(coordinate(0, 0))
++      keydown(page.grid(), "ArrowRight", true)
++      expect(page.ui.selectedRange).toEqual({
++        anchor: coordinate(0, 0), extent: coordinate(0, 2),
++      })
++      expect(firstNavigation?.from).toEqual(coordinate(0, 0))
++      expect(page.events.navigate.at(-1)?.from).toEqual(coordinate(0, 1))
++      keydown(page.grid(), "ArrowLeft", true)
++      expect(page.ui.selectedRange).toEqual({
++        anchor: coordinate(0, 0), extent: coordinate(0, 1),
++      })
++      keydown(page.grid(), "ArrowDown", true)
++      expect(page.ui.selectedRange).toEqual({
++        anchor: coordinate(0, 0), extent: coordinate(1, 1),
++      })
++      keydown(page.grid(), "ArrowDown", true)
++      expect(page.ui.selectedRange?.extent).toEqual(coordinate(1, 1))
++      expect(page.ui.selectedRange?.anchor).toEqual(coordinate(0, 0))
++
++      keydown(page.grid(), "ArrowUp")
++      expect(page.ui.selectedRange).toBeNull()
++      expect(page.ui.activeCell).toEqual(coordinate(0, 1))
++      keydown(page.grid(), "ArrowDown", true)
++      expect(page.ui.selectedRange).toEqual({
++        anchor: coordinate(0, 1), extent: coordinate(1, 1),
++      })
++      expect(page.events.navigate.at(-1)?.from).toEqual(coordinate(0, 1))
++    } finally { page.close() }
++  })
++
+   test("Enter/F2 edit only permitted open month; Enter commits exactly original local characters, not domain", () => {
+     const page = mount()
+     try {
