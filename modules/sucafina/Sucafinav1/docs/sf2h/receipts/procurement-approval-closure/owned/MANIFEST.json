@@ -1,0 +1,100 @@
+{
+  "schema": "sf2h.mission53.owned-patch.v1",
+  "status": "APPLIED_SOURCE_GREEN_NOT_STACK_QUALIFICATION",
+  "source_base": "ab2a967125b3c767067797a27b919466020fbd82",
+  "source_product": "179a766bb1e3b6b15523ba6c2be8553207d543fd",
+  "target_observed": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "preimage_rule": "All update pre_blobs must match the current authorized target and all create paths must be absent. Reconcile again before intake.",
+  "patch_file": "mission53-owned.patch",
+  "patch_sha256": "cdee5e1aa03098dfe6789fc4f7dcfb83c2b53b9bedf3d085efe7e2f11653f2e6",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "action": "update",
+      "pre_blob": "454524fc49ec61c1b8984e7bfe8c1e0a765a242b",
+      "post_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "pre_file": "pre/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts.txt",
+      "post_file": "post/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts.txt",
+      "post_sha256": "010ca5481305d2ab3db069814682a69c5d23f00e6cbe8bed8b0bb1ac5ec66795",
+      "post_bytes": 20166
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "action": "update",
+      "pre_blob": "7fce64e7e213693d505f9bc6e08835468b7ead41",
+      "post_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+      "pre_file": "pre/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.txt",
+      "post_file": "post/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts.txt",
+      "post_sha256": "b6363178c119a5fbb7bfce66142e50ed74663e47c47c9244ccdf2c4074702930",
+      "post_bytes": 8361
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "action": "create",
+      "pre_blob": null,
+      "post_blob": "7239db74d724e95f007f9815f5e88b5199dd62df",
+      "pre_file": null,
+      "post_file": "post/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts.txt",
+      "post_sha256": "4cce5aafa1747ba6d5987da48000a0342af9365bcd30923d4e9aaf594a00d98f",
+      "post_bytes": 8952
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts",
+      "action": "create",
+      "pre_blob": null,
+      "post_blob": "567fae18d564cbc2c428dd6c86437c5f72941087",
+      "pre_file": null,
+      "post_file": "post/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts.txt",
+      "post_sha256": "d4ff55d78c0c451fda1f4c6e112c1be7668e65a3e9088b66b3753dc7d903b2f4",
+      "post_bytes": 5128
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts",
+      "action": "create",
+      "pre_blob": null,
+      "post_blob": "3c55e90d911872591160db83d96dbe93200a617a",
+      "pre_file": null,
+      "post_file": "post/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts.txt",
+      "post_sha256": "8141fa9d9c5e1004a412e63626ccd0f11ba0a2df5b2f89c4782618edc3b5c2cd",
+      "post_bytes": 4536
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+      "action": "create",
+      "pre_blob": null,
+      "post_blob": "1818c0f20b6121a810d09094dba41f62c46b76ac",
+      "pre_file": null,
+      "post_file": "post/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts.txt",
+      "post_sha256": "647ba9ab615cbfd488a629ed8c99ca0e511628f96737209802ff6ee18ccf83a6",
+      "post_bytes": 14840
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts",
+      "action": "create",
+      "pre_blob": null,
+      "post_blob": "d71a7b8003071bcbc0f144f682cc34920cd00d0a",
+      "pre_file": null,
+      "post_file": "post/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts.txt",
+      "post_sha256": "49cc23d9cd5c5ad3b1883d9e79dbcbfa75698d52955904520ab46c8bc814542b",
+      "post_bytes": 11145
+    }
+  ],
+  "tests": {
+    "run": 43656852980,
+    "pass": 20,
+    "fail": 0,
+    "skip": 0,
+    "assertions": 336,
+    "scope": "14 mission53 tests plus 6 unchanged mission37 regressions; excludes shared patches"
+  },
+  "packaging": "Full source bytes are stored as .ts.txt, inert under docs; patch headers retain actual .ts target paths.",
+  "final_target_reconciliation": {
+    "target": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "candidate": "C23",
+    "materialized_at": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "complete_compare_paths": 93,
+    "patch_path_overlap": [],
+    "preimages_unchanged": true,
+    "reference": "FINAL-RECONCILIATION.json at receipt root"
+  }
+}

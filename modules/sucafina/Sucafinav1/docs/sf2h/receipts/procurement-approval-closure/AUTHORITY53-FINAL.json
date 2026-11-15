@@ -1,0 +1,107 @@
+{
+  "schema": "sf2h.procurement-approval-closure.terminal-authority.v1",
+  "mission": 53,
+  "actor": "S2-A",
+  "epoch": "procurement-approval-browser53",
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "recorded_at": "2026-11-15T00:34:01Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "terminal_identity": "The containing commit, whose sole parent is product179a766bb1e3b6b15523ba6c2be8553207d543fd. Its SHA/tree are read back and linked in PR23 after publication, avoiding self-reference.",
+  "lease_end": "On successful CAS publication of this terminal receipt, mission53 source editing authority is explicitly ENDED. No implied continuation; a later source writer must reconcile this terminal and obtain current authorization.",
+  "source": {
+    "predecessor37": "ab2a967125b3c767067797a27b919466020fbd82",
+    "predecessor37_lease": "ENDED",
+    "ack53": "7c2e2fa6c3ed7cada52570c95a54e46420d601a3",
+    "product": "179a766bb1e3b6b15523ba6c2be8553207d543fd",
+    "tree": "7c93fb5495e89055e4a9f2a0363d9cfc97702cf6"
+  },
+  "authority_source": {
+    "pinned_control": "dc7851be1714471543466f23bad47584bb97b389",
+    "current_control": "3796e60a25c6478a38f0fc98997a8582d1356b37",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/procurement-approval-closure.json",
+    "blob": "9717864fe2afca5cb289a7717c413bf2df420157",
+    "unchanged": true
+  },
+  "planning": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "actor_criteria": 111,
+    "pinned_acceptance_changed": false
+  },
+  "release": {
+    "explicit_source_release": true,
+    "allowed_implementation": "owned/MANIFEST.json",
+    "product_and_tests_released_for_selective_intake": true,
+    "source_proof": "CI-RESULTS.json",
+    "shared_proposals_released_for_owner_review_and_intake": true,
+    "shared_proposals": [
+      "shared/admission/manifest.json",
+      "shared/composite/MANIFEST.json"
+    ],
+    "shared_proposals_applied": false,
+    "shared_proposals_tested": false,
+    "full_pre_post_and_patch_materialized": true,
+    "no_policy_expansion": true
+  },
+  "recipient": {
+    "requested_integrator": 47,
+    "predecessor_terminal": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "predecessor_lease": "ENDED",
+    "current_successor": 55,
+    "current_epoch": "S0-C-e10-browser55",
+    "ack_commit": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+    "ack_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "state": "ACCEPTED_SUCCESSION_SOLE_STACK_WRITER",
+    "target_observed": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "target_tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+    "handoff_medium": "This repository receipt; no person-directed message sent",
+    "consumer_acceptance": "NOT_OBSERVED; publication is not consumer ACK"
+  },
+  "boundaries": {
+    "stack_writes_by53": 0,
+    "consumer51_files_changed": 0,
+    "consumer52_files_changed": 0,
+    "financial_commands_changed": 0,
+    "policies_thresholds_roles_stages_changed": 0,
+    "workflow_changes": 0,
+    "local_product_execution": 0,
+    "local_tests_typechecks_guards": 0,
+    "epic_dispatches": 0,
+    "force_push": false,
+    "merge": false,
+    "deploy": false,
+    "credentials": false,
+    "external_messages": false
+  },
+  "gates": {
+    "M31_FINANCIAL_APPROVAL": "OPEN_S0_NEW_CONTRACT",
+    "MI07": "OPEN_BEFORE_ORIGINAL_CAPTURE",
+    "shared_host_activation": "OPEN_OWNER_INTEGRATION",
+    "shared_patch_qualification": "NOT_RUN",
+    "C_G7": "OPEN",
+    "D_G8": "OPEN",
+    "AM01_AM06": "OPEN",
+    "three_FINAL_reviews": "OPEN",
+    "GLOBAL_RELEASE": false
+  },
+  "final_files": [
+    "HANDOFF53.md",
+    "CONTRACT53.md",
+    "EFFECTS-MATRIX.md",
+    "CRITERIA53.json",
+    "CONSUMERS.md",
+    "S0-PROPOSAL.md",
+    "CI-RESULTS.json",
+    "REVIEW53.json",
+    "STATIC-PATCH-VERIFICATION.json",
+    "FILES-MANIFEST.json",
+    "FINAL-RECONCILIATION.json"
+  ]
+}

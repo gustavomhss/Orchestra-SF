@@ -1,0 +1,108 @@
+{
+  "schema": "orchestra-sf-mission53-consumer-reconciliation-v1",
+  "child_actions": "Read only GitHub MCP; no consumer edits, runs or reruns",
+  "decisions52": {
+    "source_head": "1b6a68647000422f7922d396a3f40bda471eff8a",
+    "branch": "astra-wp11",
+    "pr": 40,
+    "terminal_observed": false,
+    "source_files": {
+      "spec": {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "original_blob": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+        "current_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+        "observed_diff": "Only the lost-creation response test Promise.all now includes the Create decision click concurrently with completed/requestfailed; financial fifth unchanged."
+      },
+      "financial_helpers": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts",
+          "blob": "5784a995ba25d042101fe2eed63ce96957b711b1",
+          "unchanged": true
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+          "blob": "7a7553b89af8f90592603f7d454ba164cbb81afd",
+          "unchanged": true
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts",
+          "blob": "cb70480c28e9382629d289c1c954e88379e173d3",
+          "unchanged": true
+        }
+      ]
+    },
+    "nominal01": {
+      "receipt_blob": "08c28b0819b2cee9698cce06fe80d099369ebebe",
+      "run_id": 43654219902,
+      "candidate": "C18",
+      "W": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "S": "fbc76905438455be37aeda813b380924d594de8f",
+      "selected": 5,
+      "executed": 5,
+      "passed": 0,
+      "failed": 5,
+      "skipped": 0,
+      "retries": 0,
+      "financial_first_observed_failure": "procurement-source.ts:7: expected exactly one Requests/create form; zero forms. Body reason procurement-queue-unavailable.",
+      "financial_duration_ms": 14623,
+      "financial_contract_gate_reached": false,
+      "other_four": "180000ms timeout while initial Planner/Workbench commands remain unconfirmed",
+      "limit": "Composition/approval mismatches remain static findings; this run does not prove their runtime failure because earlier prerequisites failed."
+    },
+    "nominal02": {
+      "run_id": 43656679164,
+      "status_when_read": "in_progress",
+      "conclusion_when_read": null,
+      "W": "7493ea6500c113ee83f785244ab6a9c2b5bc7f6b",
+      "S": "70dfa38e6ae258e1b9a3001db5f6d24b1a7cdaf5",
+      "branch": "ci-run-linux-astra-wp11-7493ea65-3619f1fd-m52-02",
+      "product_manifest_blob": "08e7a1fa4a9543e7c293ba3ae19b696f914e91f3",
+      "published_state": "ACTIVE_PROPOSAL_PENDING_NOMINAL",
+      "shared_proposal": "apps/cli/src/sucafina-product/installation.ts (non-overlap with this patch)",
+      "reported_preservation": "Five original titles, 180000ms budgets, retries0, expect counts and UI commands unchanged; no skip or direct mutation added.",
+      "limit": "Active proposal and running job are not terminal release or pass evidence."
+    },
+    "static_contract": {
+      "prefix": "Planner baseRef + replace120/140 Procurement + assumptions[]; subtotal2400/diff1200/conditioned external-operation",
+      "remaining": "prepare replacement not yet saved, then exact approval, then separate post-approval Requests/save with retained original expectedVersion is not supported by current canonical commands"
+    },
+    "changes_by53": false
+  },
+  "memory51": {
+    "source_head": "51de99e5c663dc31ce1bcf4b1f694399a0cf33c9",
+    "branch": "astra-wp10",
+    "pr": 29,
+    "terminal": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+    "changes_by53": false,
+    "run_id": 43654082252,
+    "observed_result": "0 pass / 1 fail; capture-original825ms; financial-approval-command-unavailable",
+    "original_order": "draft100 -> recorded replace150 choice/event -> human decisions.prepare-changes -> prepareDomainCommands expected ok/one command -> archive capture -> actual Requests/save150 -> Memory historical/revoke checks",
+    "limit": "No archived-source/Memory tail success can be inferred from a failure before original capture. This shared patch makes no financial preparation command.",
+    "prior_source_head": "326f4eaf6aa4e2a65b53df69e0afee5e7775e970",
+    "current_head_change": "Receipt-only follow-up reconciles mission53 dependency; commit message explicitly preserves mission51 terminal, failed MI07 evidence and original assertions/budgets; no runtime/test/policy/stack edit or unchanged rerun."
+  },
+  "integrator": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "latest_base": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "authority_status_reported_by_root": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "authority_blob_reported_by_root": "076d2b0c277c7101b387e3d76ff80d3423d85c8a",
+    "patch_requires": "Mission55 authorized selective intake, explicit source53 release, current HEAD/lease reconciliation, exact preimages and real scoped Actions; prior47 terminal preserved.",
+    "previous_base": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "current_candidate": "C21",
+    "current_authority": {
+      "mission": 55,
+      "ack_commit": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+      "ack_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+      "state": "ACCEPTED_SUCCESSION_SOLE_STACK_WRITER",
+      "epoch": "S0-C-e10-browser55",
+      "writer": "Root55 only",
+      "control": "c1df70b2fedd2183d243a523fbfef9c7c6ddff35",
+      "control_blob": "b97e6d28f9d69da3f2737b31739bb69e2318d356",
+      "requires_explicit_53_release": true
+    },
+    "predecessor47_terminal": "12b459f6997298f79e3360c4aaeb8ffc0a106a50"
+  }
+}

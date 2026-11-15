@@ -1,0 +1,157 @@
+2026-11-15T00:12:18.3706286Z ##[group]Run nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+2026-11-15T00:12:18.3706785Z [36;1mnonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")[0m
+2026-11-15T00:12:18.3707202Z [36;1mecho "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"[0m
+2026-11-15T00:12:18.3707480Z [36;1mecho "omni control nonce: $nonce"[0m
+2026-11-15T00:12:18.3728029Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T00:12:18.3728291Z env:
+2026-11-15T00:12:18.3728462Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T00:12:18.3728843Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-15T00:12:18.3729394Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-15T00:12:18.3729771Z ##[endgroup]
+2026-11-15T00:12:18.4029567Z omni control nonce: 5f7cb9139cc8ac0a404ce9fcb2881847
+2026-11-15T00:12:18.4055056Z ##[group]Run if [ "$RUNNER" = playwright ]; then
+2026-11-15T00:12:18.4055535Z [36;1mif [ "$RUNNER" = playwright ]; then[0m
+2026-11-15T00:12:18.4055909Z [36;1m  node --input-type=module <<'NODE'[0m
+2026-11-15T00:12:18.4056418Z [36;1mimport { readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-15T00:12:18.4056909Z [36;1mimport path from 'node:path'[0m
+2026-11-15T00:12:18.4057264Z [36;1mimport { spawnSync } from 'node:child_process'[0m
+2026-11-15T00:12:18.4057978Z [36;1mimport { benchmarkEnvironment, playwrightArgs, validateRequest, validateSelection } from './script/test-ci-request.ts'[0m
+2026-11-15T00:12:18.4058691Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-15T00:12:18.4059296Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-15T00:12:18.4059938Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-15T00:12:18.4060551Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-15T00:12:18.4061036Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-15T00:12:18.4061444Z [36;1mconst cwd = path.resolve(request.directory)[0m
+2026-11-15T00:12:18.4062282Z [36;1mconst benchmark = benchmarkEnvironment(request.benchmarkRenderer, process.env.GITHUB_SHA)[0m
+2026-11-15T00:12:18.4062985Z [36;1mwriteFileSync('test-ci-evidence/benchmark-runtime.json', JSON.stringify(benchmark))[0m
+2026-11-15T00:12:18.4063555Z [36;1mconst env = { ...process.env, ...benchmark }[0m
+2026-11-15T00:12:18.4064137Z [36;1mconst args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure'][0m
+2026-11-15T00:12:18.4064895Z [36;1mconst listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })[0m
+2026-11-15T00:12:18.4065634Z [36;1mif (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)[0m
+2026-11-15T00:12:18.4066357Z [36;1mwriteFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)[0m
+2026-11-15T00:12:18.4066834Z [36;1mconst report = JSON.parse(listed.stdout)[0m
+2026-11-15T00:12:18.4067391Z [36;1mconst hasTests = (suite) => suite.specs?.some((spec) => spec.tests?.length > 0) || (suite.suites ?? []).some(hasTests)[0m
+2026-11-15T00:12:18.4068090Z [36;1mvalidateSelection(request.args.map((file) => path.resolve(cwd, file)),[0m
+2026-11-15T00:12:18.4068961Z [36;1m  report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))[0m
+2026-11-15T00:12:18.4069695Z [36;1m// The flaky reporter lists tests that passed only on a retry in the log and the job summary.[0m
+2026-11-15T00:12:18.4070289Z [36;1mconst flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')[0m
+2026-11-15T00:12:18.4070961Z [36;1mconst reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'[0m
+2026-11-15T00:12:18.4072006Z [36;1mconst run = spawnSync('bun', [...args, `--reporter=${reporters}`], { cwd, stdio: 'inherit',[0m
+2026-11-15T00:12:18.4072731Z [36;1m  env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),[0m
+2026-11-15T00:12:18.4073418Z [36;1m    PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })[0m
+2026-11-15T00:12:18.4074160Z [36;1mif (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)[0m
+2026-11-15T00:12:18.4074694Z [36;1mprocess.exit(run.status)[0m
+2026-11-15T00:12:18.4074959Z [36;1mNODE[0m
+2026-11-15T00:12:18.4075165Z [36;1m  exit $?[0m
+2026-11-15T00:12:18.4075384Z [36;1mfi[0m
+2026-11-15T00:12:18.4075590Z [36;1margs=()[0m
+2026-11-15T00:12:18.4075987Z [36;1mwhile IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.args[]' .ci-run.json | tr -d '\r')[0m
+2026-11-15T00:12:18.4076465Z [36;1mcd "$DIRECTORY"[0m
+2026-11-15T00:12:18.4076934Z [36;1mcase "$RUNNER" in[0m
+2026-11-15T00:12:18.4077302Z [36;1m  pytest) python -m pytest -p no:cacheprovider "${args[@]}" ;;[0m
+2026-11-15T00:12:18.4077687Z [36;1m  bun)[0m
+2026-11-15T00:12:18.4078051Z [36;1m    # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a[0m
+2026-11-15T00:12:18.4078619Z [36;1m    # browser-only export that fails under bun's default (`node`) conditions.[0m
+2026-11-15T00:12:18.4079227Z [36;1m    # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx[0m
+2026-11-15T00:12:18.4079825Z [36;1m    # source, which does not make that import. test-ci bypasses the package's own[0m
+2026-11-15T00:12:18.4080444Z [36;1m    # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.[0m
+2026-11-15T00:12:18.4081084Z [36;1m    # test-browser/ files follow `test:browser` instead: solid-js has no `solid`[0m
+2026-11-15T00:12:18.4082099Z [36;1m    # export, so under `solid` it falls through to `node` and loads its server build,[0m
+2026-11-15T00:12:18.4082751Z [36;1m    # where memos never recompute and onMount never runs. They also preload happydom.[0m
+2026-11-15T00:12:18.4083335Z [36;1m    if [ "$DIRECTORY" = "packages/app-shell" ]; then[0m
+2026-11-15T00:12:18.4083687Z [36;1m      unit=()[0m
+2026-11-15T00:12:18.4083949Z [36;1m      browser=()[0m
+2026-11-15T00:12:18.4084204Z [36;1m      common=()[0m
+2026-11-15T00:12:18.4084609Z [36;1m      # Only generated --timeout, -t and --test-name-pattern consume the next[0m
+2026-11-15T00:12:18.4085194Z [36;1m      # entry, including an empty name pattern. Other dash-prefixed tokens are[0m
+2026-11-15T00:12:18.4085720Z [36;1m      # one common token each; this is not a Bun CLI parser.[0m
+2026-11-15T00:12:18.4086189Z [36;1m      for ((index=0; index<${#args[@]}; index=index+1)); do[0m
+2026-11-15T00:12:18.4086560Z [36;1m        arg="${args[$index]}"[0m
+2026-11-15T00:12:18.4086836Z [36;1m        case "$arg" in[0m
+2026-11-15T00:12:18.4087152Z [36;1m          --timeout|-t|--test-name-pattern)[0m
+2026-11-15T00:12:18.4087487Z [36;1m            index=$((index+1))[0m
+2026-11-15T00:12:18.4087812Z [36;1m            if [ "$index" -ge "${#args[@]}" ]; then[0m
+2026-11-15T00:12:18.4088165Z [36;1m              echo "::error::$arg needs a following value"[0m
+2026-11-15T00:12:18.4088511Z [36;1m              exit 2[0m
+2026-11-15T00:12:18.4088745Z [36;1m            fi[0m
+2026-11-15T00:12:18.4089018Z [36;1m            common+=("$arg" "${args[$index]}")[0m
+2026-11-15T00:12:18.4089521Z [36;1m            ;;[0m
+2026-11-15T00:12:18.4089731Z [36;1m          -*)[0m
+2026-11-15T00:12:18.4089965Z [36;1m            common+=("$arg")[0m
+2026-11-15T00:12:18.4090214Z [36;1m            ;;[0m
+2026-11-15T00:12:18.4090552Z [36;1m          test-browser|test-browser/*|./test-browser/*) browser+=("$arg") ;;[0m
+2026-11-15T00:12:18.4090946Z [36;1m          *) unit+=("$arg") ;;[0m
+2026-11-15T00:12:18.4091204Z [36;1m        esac[0m
+2026-11-15T00:12:18.4091422Z [36;1m      done[0m
+2026-11-15T00:12:18.4091903Z [36;1m      status=0[0m
+2026-11-15T00:12:18.4092202Z [36;1m      if [ ${#unit[@]} -gt 0 ] || [ ${#browser[@]} -eq 0 ]; then[0m
+2026-11-15T00:12:18.4092728Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=solid "${unit[@]}" "${common[@]}" || status=$?[0m
+2026-11-15T00:12:18.4093179Z [36;1m      fi[0m
+2026-11-15T00:12:18.4093407Z [36;1m      if [ ${#browser[@]} -gt 0 ]; then[0m
+2026-11-15T00:12:18.4094141Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?[0m
+2026-11-15T00:12:18.4094846Z [36;1m      fi[0m
+2026-11-15T00:12:18.4095054Z [36;1m      exit $status[0m
+2026-11-15T00:12:18.4095289Z [36;1m    fi[0m
+2026-11-15T00:12:18.4095546Z [36;1m    GITHUB_ACTIONS=false bun test "${args[@]}"[0m
+2026-11-15T00:12:18.4095855Z [36;1m    ;;[0m
+2026-11-15T00:12:18.4096075Z [36;1m  node)[0m
+2026-11-15T00:12:18.4096523Z [36;1m    for file in "${args[@]}"; do[0m
+2026-11-15T00:12:18.4096812Z [36;1m      case "$file" in[0m
+2026-11-15T00:12:18.4097073Z [36;1m        *.node-smoke.mjs) ;;[0m
+2026-11-15T00:12:18.4097542Z [36;1m        *) echo "::error::the node runner runs only *.node-smoke.mjs files, not $file"; exit 2 ;;[0m
+2026-11-15T00:12:18.4098051Z [36;1m      esac[0m
+2026-11-15T00:12:18.4098263Z [36;1m    done[0m
+2026-11-15T00:12:18.4098561Z [36;1m    node --experimental-strip-types --test "${args[@]}"[0m
+2026-11-15T00:12:18.4098908Z [36;1m    ;;[0m
+2026-11-15T00:12:18.4099109Z [36;1mesac[0m
+2026-11-15T00:12:18.4120952Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T00:12:18.4121213Z env:
+2026-11-15T00:12:18.4121384Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T00:12:18.4121940Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-15T00:12:18.4122509Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-15T00:12:18.4122951Z   ORCHESTRA_OMNI_CONTROL_NONCE: 5f7cb9139cc8ac0a404ce9fcb2881847
+2026-11-15T00:12:18.4123243Z   ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: false
+2026-11-15T00:12:18.4123483Z   ORCHESTRA_OMNI_CONTROL: declared
+2026-11-15T00:12:18.4123679Z   PACKAGE: sucafina
+2026-11-15T00:12:18.4123850Z   DIRECTORY: modules/sucafina
+2026-11-15T00:12:18.4124036Z   RUNNER: bun
+2026-11-15T00:12:18.4124187Z ##[endgroup]
+2026-11-15T00:12:18.4194104Z bun test v1.3.14 (0d9b296a)
+2026-11-15T00:12:18.4276477Z 
+2026-11-15T00:12:18.4277059Z Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts:
+2026-11-15T00:12:18.5403212Z (pass) a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry [79.47ms]
+2026-11-15T00:12:18.5729543Z (pass) a legacy-shaped financial command cannot bypass the low-level preparation or review boundary [32.67ms]
+2026-11-15T00:12:18.5730014Z 
+2026-11-15T00:12:18.5730431Z Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts:
+2026-11-15T00:12:18.5766407Z (pass) canonical approval reviews the exact proposed amount and ends outside the prepared PR-save stage [2.78ms]
+2026-11-15T00:12:18.5784626Z (pass) approval rejects stale CAS, another holder and admin override and applies one approval once [1.78ms]
+2026-11-15T00:12:18.5793529Z (pass) approving a pending old amount with a new amount in the payload does not approve the proposal [0.92ms]
+2026-11-15T00:12:18.5815383Z (pass) rejected proposal requires a new submission and review version for its changed amount [2.19ms]
+2026-11-15T00:12:18.5815794Z 
+2026-11-15T00:12:18.5816094Z Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts:
+2026-11-15T00:12:18.7581538Z (pass) explicit canonical save, submit and approve bind 140 to its frozen holder and retained CAS survives SQLite reopen [169.41ms]
+2026-11-15T00:12:18.9020043Z (pass) reject and resubmit require a fresh review of 140; the retained approval of 100 cannot approve it [143.80ms]
+2026-11-15T00:12:18.9902461Z (pass) amount, holder and admin cannot authorize a replacement of the submitted snapshot [88.20ms]
+2026-11-15T00:12:18.9902857Z 
+2026-11-15T00:12:18.9903156Z Sucafinav1/test/product/procurement-approval-closure/admission.test.ts:
+2026-11-15T00:12:19.0483264Z (pass) the synchronous admission permits exactly the reviewed command before the canonical HTTP effect [56.81ms]
+2026-11-15T00:12:19.0990663Z (pass) transaction admission refuses policy drift while the request CAS is unchanged [50.72ms]
+2026-11-15T00:12:19.1505429Z (pass) transaction admission refuses currency drift while the request CAS is unchanged [51.47ms]
+2026-11-15T00:12:19.1918185Z (pass) transaction admission refuses roles drift while the request CAS is unchanged [41.26ms]
+2026-11-15T00:12:19.2323441Z (pass) transaction admission refuses finished-gate without executing the domain [40.50ms]
+2026-11-15T00:12:19.2727732Z (pass) transaction admission refuses finished-ui without executing the domain [40.48ms]
+2026-11-15T00:12:19.3133357Z (pass) transaction admission refuses replaced-request without executing the domain [40.54ms]
+2026-11-15T00:12:19.3584293Z (pass) malformed prepare payloads fail closed without throwing or writing [45.10ms]
+2026-11-15T00:12:19.3584783Z 
+2026-11-15T00:12:19.3585656Z Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts:
+2026-11-15T00:12:19.5775223Z (pass) a persisted C08 choice supplies the exact draft value while remaining distinct from approval and C12 Apply [216.95ms]
+2026-11-15T00:12:19.5775635Z 
+2026-11-15T00:12:19.6517438Z Sucafinav1/test/product/procurement-approval-closure/authority.test.ts:
+2026-11-15T00:12:19.6518054Z (pass) preparation requires the live UI admission, the same Request and current write authority [73.37ms]
+2026-11-15T00:12:19.7093021Z (pass) a changed requisition invalidates source and review without silently refreshing the retained command CAS [57.58ms]
+2026-11-15T00:12:19.8112467Z 
+2026-11-15T00:12:19.8113674Z omni positive control [5f7cb9139cc8ac0a404ce9fcb2881847]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T00:12:19.8114918Z  20 pass
+2026-11-15T00:12:19.8115179Z  0 fail
+2026-11-15T00:12:19.8115432Z  336 expect() calls
+2026-11-15T00:12:19.8115726Z Ran 20 tests across 6 files. [1392.00ms]

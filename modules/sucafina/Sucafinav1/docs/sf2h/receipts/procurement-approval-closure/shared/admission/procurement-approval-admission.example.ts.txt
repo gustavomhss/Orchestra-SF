@@ -1,0 +1,113 @@
+import {
+  APPLICATION_COMMAND_REVIEW_HEADER,
+} from "../../runtime/application.ts"
+import type {
+  Application,
+  ApplicationCommandAdmissionDecision,
+} from "../../runtime/application.ts"
+import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+import type { DomainPortHost } from "../contracts/ports.ts"
+import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type {
+  createProcurementApprovalLifecycle,
+  ProcurementApprovalPlan,
+} from "../procurement/decision-preparation.ts"
+
+// Proposed composition helper for47. No caller or installation is activated by this file.
+type Lifecycle = ReturnType<typeof createProcurementApprovalLifecycle>
+type ExistingUiContext = {
+  binding: TrustedDomainContext
+  // Releases only this HTTP request's retention. It must not revoke another request's context.
+  finish: () => void
+}
+
+export function createProcurementApprovalAdmissionHook(input: {
+  lifecycle: Lifecycle
+  requestFor: DomainPortHost["requestFor"]
+  // The host owns authentication, binding, scope and the actual Request object.
+  // This callback must resolve its existing UI context, never build identity from the header.
+  existingUiContextFor: (request: Request) => Promise<ExistingUiContext | undefined>
+}): NonNullable<Application["prepareCommandAdmission"]> {
+  return async (request, surface, command) => {
+    const encoded = request.headers.get(APPLICATION_COMMAND_REVIEW_HEADER)
+    if (encoded === null) return undefined
+    if (request.signal.aborted) return refusal(403)
+    if (request.method !== "POST" || surface !== "procurement" || command.page !== "Requests" ||
+        !["save", "submit_pr", "approve", "reject"].includes(command.action))
+      return refusal(422)
+    // The header contains bounded, untrusted intent. It is not a grant, receipt or signed approval.
+    if (!encoded || encoded.length > 16_384) return refusal(422)
+    let plan: ProcurementApprovalPlan
+    try {
+      const decoded = decodeURIComponent(encoded)
+      if (encodeURIComponent(decoded) !== encoded) return refusal(422)
+      plan = JSON.parse(decoded) as ProcurementApprovalPlan
+    } catch { return refusal(422) }
+
+    let context: ExistingUiContext | undefined
+    let admission: Awaited<ReturnType<Lifecycle["admission"]>> | undefined
+    let closed = false
+    const finish = () => {
+      if (closed) return
+      closed = true
+      try { if (admission?.status === "ok") admission.value.finish() } finally { context?.finish() }
+    }
+    try {
+      context = await input.existingUiContextFor(request)
+      if (!context) return refusal(503)
+      const binding = context.binding
+      if (binding.kind !== "ui" || request.signal.aborted || input.requestFor(binding) !== request) {
+        finish()
+        return refusal(403)
+      }
+      // The lifecycle validates the full shape and reconstructs current authorized review material.
+      admission = await input.lifecycle.admission(plan, binding)
+      if (request.signal.aborted || input.requestFor(binding) !== request) {
+        finish()
+        return refusal(403)
+      }
+      if (admission.status !== "ok") {
+        const status = admissionStatus(admission.status)
+        finish()
+        return refusal(status)
+      }
+      if (digestSfValue(command) !== digestSfValue(plan.command)) {
+        finish()
+        return refusal(422)
+      }
+      const retained = admission.value
+      return {
+        current(snapshot: Snapshot, actor: Actor, actualCommand: Command, environment: Environment): ApplicationCommandAdmissionDecision {
+          if (closed || request.signal.aborted || input.requestFor(binding) !== request) return { allowed: false, status: 403 }
+          const result = retained.current(snapshot, actor, actualCommand, environment)
+          return result.status === "ok"
+            ? { allowed: true }
+            : { allowed: false, status: admissionStatus(result.status) }
+        },
+        finish,
+      }
+    } catch {
+      finish()
+      return refusal(503)
+    }
+  }
+}
+
+function admissionStatus(status: string): 403 | 409 | 422 | 503 {
+  if (status === "denied") return 403
+  if (status === "stale" || status === "conflict") return 409
+  if (status === "needs-input") return 422
+  return 503
+}
+
+function refusal(status: 403 | 409 | 422 | 503) {
+  return new Response(JSON.stringify({
+    ok: false,
+    status,
+    errors: ["Reviewed Procurement command is unavailable or no longer current"],
+  }), {
+    status,
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+  })
+}

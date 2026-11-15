@@ -1,0 +1,83 @@
+{
+  "status": "PROPOSED_NOT_APPLIED_NOT_RUN",
+  "baseCommit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+  "currentTarget": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "preimageBlob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+  "postimageBlob": "d544e79d40f05cb8fa048b21d1a815e512184b6a",
+  "files": [
+    {
+      "path": "application-command-admission.patch",
+      "bytes": 6067,
+      "sha256": "edc4fd6eba567e9af90ae6a41302f888c2011f33777159c56df9bb312afb0327"
+    },
+    {
+      "path": "procurement-approval-admission.example.ts.txt",
+      "bytes": 4605,
+      "sha256": "338dc5fe5bc5d4b6db5ff475d55345b06c439d13738b09cce65f901b83d22cce"
+    },
+    {
+      "path": "CONTRACT.md",
+      "bytes": 12701,
+      "sha256": "85d3b285e4c58a6722ac85d74496974ccdf545ff75c7f90f202cce855df92d64"
+    }
+  ],
+  "adversarialCorrections": [
+    "exact-http-request-binding-before-after-admission-and-current",
+    "cleanup-on-synchronous-transaction-adapter-throw"
+  ],
+  "previousTarget": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+  "authorityReconciliation": {
+    "controlHead": "c1df70b2fedd2183d243a523fbfef9c7c6ddff35",
+    "mission53Blob": "9717864fe2afca5cb289a7717c413bf2df420157",
+    "mission53Status": "ACTIVE_SOURCE_UNREVOKED_EXPLICIT_RELEASE_REQUIRED",
+    "currentIntake": 55,
+    "actor": "S0-C",
+    "epoch": "S0-C-e10-browser55",
+    "state": "ACCEPTED_SUCCESSION_SOLE_STACK_WRITER",
+    "authorityPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/ACK55.json",
+    "authorityBlob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "predecessorMission": 47,
+    "predecessorTerminal": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "checksOwner": 45,
+    "preimageVerifiedAtCurrentTarget": true,
+    "patchAndHelperBytesUnchanged": true
+  },
+  "target_path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+  "pre_file": "pre/modules/sucafina/Sucafinav1/runtime/application.ts.txt",
+  "post_file": "post/modules/sucafina/Sucafinav1/runtime/application.ts.txt",
+  "helper_target_path": "modules/sucafina/Sucafinav1/product/integration/procurement-approval-admission.ts",
+  "installation_patch": "application-and-helper.patch",
+  "installation_patch_sha256": "4c5bd2d6f14f02a6b8d649ff729c0c44f28099ad7324278baf0f5cd94196d6f7",
+  "installation_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "action": "update",
+      "pre_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "post_blob": "d544e79d40f05cb8fa048b21d1a815e512184b6a",
+      "pre_file": "pre/modules/sucafina/Sucafinav1/runtime/application.ts.txt",
+      "post_file": "post/modules/sucafina/Sucafinav1/runtime/application.ts.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/procurement-approval-admission.ts",
+      "action": "create",
+      "pre_blob": null,
+      "post_blob": "20b7bef8b868a65183ee8a327906bf0e25efc518",
+      "pre_file": null,
+      "post_file": "post/modules/sucafina/Sucafinav1/product/integration/procurement-approval-admission.ts.txt",
+      "post_sha256": "338dc5fe5bc5d4b6db5ff475d55345b06c439d13738b09cce65f901b83d22cce",
+      "preimage_status": "MCP404 at C21 3f35d8ee987cdeaafd3341c2fde13c4125a1f69e"
+    }
+  ],
+  "installation_contract": "The combined patch materializes the existing Application extension and complete helper module. Mounting the exported helper requires the host-owned existingUiContextFor/requestFor inputs specified in CONTRACT.md; no provider or identity is fabricated.",
+  "helper_mount_status": "Complete unmounted composition example; requires actual existing UI context provider and owner integration.",
+  "packaging": "Stored source copies use .ts.txt, with unchanged bytes. CONTRACT.md uses the intended TypeScript helper name; the shipped copy appends .txt.",
+  "final_target_reconciliation": {
+    "target": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "candidate": "C23",
+    "materialized_at": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "complete_compare_paths": 93,
+    "patch_path_overlap": [],
+    "preimages_unchanged": true,
+    "reference": "FINAL-RECONCILIATION.json at receipt root"
+  }
+}

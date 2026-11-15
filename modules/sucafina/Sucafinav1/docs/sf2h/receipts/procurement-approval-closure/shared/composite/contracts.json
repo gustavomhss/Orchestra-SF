@@ -1,0 +1,236 @@
+{
+  "schema": "orchestra-sf-mission53-shared-composition-contract-v1",
+  "state": "IMPLEMENTED_IN_INERT_PATCH_NOT_APPLIED_OR_TESTED",
+  "base_commit": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "integrator": "Mission55, explicit successor of terminal47, Root55 sole stack writer under epoch S0-C-e10-browser55; requires explicit source53 release before intake.",
+  "scope": "Adapt Planner plus explicit Procurement hypothetical replacement through existing producers, case promotion, readonly authorization and UI.",
+  "input": {
+    "case": {
+      "identity": [
+        "id",
+        "incarnation",
+        "version"
+      ],
+      "authority": [
+        "installationId",
+        "projectId",
+        "principalRef",
+        "accessRevision",
+        "policyVersion"
+      ],
+      "requires": "Exact currently selected C08 case and membership; source references attached to that case."
+    },
+    "human_authoring": {
+      "form": "form[data-decision-alternatives]",
+      "planner_control": "Source for alternative",
+      "request_control": "Procurement request",
+      "amount_control": "Proposed estimated amount",
+      "no_default_request_or_amount": true
+    },
+    "scenario": {
+      "baseRef": "attached Planner forecast refId",
+      "operations": [
+        {
+          "kind": "replace",
+          "targetRef": "attached Procurement request refId",
+          "amount": "explicit finite nonnegative operator value",
+          "currency": "exact case currency",
+          "period": "exact case horizon"
+        }
+      ],
+      "assumptions": []
+    },
+    "promotion": {
+      "action": "decision-promote",
+      "body": {
+        "caseRef": "unchanged expected C08 identity/version",
+        "title": "explicit human title",
+        "scenario": "exact scenario above",
+        "coverageRef": "existing inspected Planner coverage reference"
+      },
+      "idempotency": "existing retained freezeIntention key/body; uncertain retry sends same bytes"
+    },
+    "controls": {
+      "action": "decision-controls",
+      "query": {
+        "case": "encoded current case",
+        "source": "optional attached Planner source digest",
+        "procurement": "attached",
+        "format": "json"
+      },
+      "meaning": "Alternative inspection uses already-issued attached Procurement sources via readonly resolver; it does not invoke collection capture/issuance."
+    }
+  },
+  "outputs": {
+    "preview": {
+      "status": "ok only with stable current authority, exact attached sources, case version and source fences",
+      "scenario": "Existing composite wraps canonical Planner result; no independent monetary calculation",
+      "preserved": [
+        "Planner components",
+        "Planner knownSubtotal",
+        "Planner baseline coverage inputs",
+        "exact typed operation request"
+      ],
+      "added": [
+        "exact Procurement BusinessEvidenceRef",
+        "external-operation:<operationDigest>:procurement-replacement-cost-unresolved"
+      ],
+      "comparisonStatus": "conditioned",
+      "total": null,
+      "financial_command": null,
+      "financial_approval_grant": null,
+      "persistence": "No C08 result persistence from sf_scenario_simulate; no Requests/save, submit or approve invocation."
+    },
+    "numeric_original52_prefix": {
+      "baseline_knownSubtotal": 1200,
+      "alternative_knownSubtotal": 2400,
+      "canonical_knownDifference": 1200,
+      "candidateProcurementAmounts": [
+        120,
+        140
+      ],
+      "procurement_amount_not_added_to_planner_subtotal": true,
+      "proof_status": "NOT_RUN; values are requirements asserted by the complementary inert test, not observed pass results."
+    },
+    "promotion": {
+      "caseRef": "existing C08 CAS result at expected version + 1",
+      "resultRef": "existing decision-result reference",
+      "effect": "one alternative and its existing C08 evidence/ledger transaction",
+      "procurement_effect": "none; requisition amount/stage/version unchanged by this patch"
+    },
+    "read": {
+      "current": "Real C17 resolutions prove every external selector separately from Planner components; both pre/post reads must agree.",
+      "historical": "Existing recorded Planner original verification remains in place; the exact external Procurement original must independently reauthorize via C17 with original projection/version, same physical record lineage and current authority.",
+      "stored_result": "No resimulation can replace a stored choice or rewrite its original bytes.",
+      "historical_scope_identity": "C17 owns physical continuity. issueForActor may renew the scoped source incarnation for the current actor; historical resolution does not require scoped incarnation equality. Fresh resolution still requires exact full-reference digest equality."
+    },
+    "rules": {
+      "metric": "planner:known-subtotal-difference",
+      "unit": "case currency",
+      "period": "case horizon",
+      "new_acceptance": "Exact attached Procurement references present in a saved conditioned mixed alternative with the exact external operation digest.",
+      "existing_fences": "Current readonly source, raw case digest, holder/intent, source fences and locked snapshot isCurrent remain mandatory.",
+      "financial_authority": "No policy, approval grant or sensitivity rule is created."
+    }
+  },
+  "files": {
+    "apps/cli/src/sucafina-product/procurement-composite-planner.ts": "New case-bound readonly adapter for existing createCompositeDecisionPlanner and readonly Procurement sources.",
+    "apps/cli/src/sucafina-product/business-services.ts": "Installs adapter for Planner, portfolio and replay consumers; mixed preview is readOnlyScenario and cannot persist as a calculation.",
+    "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts": "Uses existing canonical plannerScenarioDigest for ID so an observation timestamp does not change replay identity.",
+    "apps/cli/src/sucafina-product/scenario-operation-access.ts": "Authorizes explicit mixed Procurement selectors with fresh/historical C17 evidence, leaving Planner component selectors to the existing verifier.",
+    "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts": "Reuses external authorization before checking historical Planner originals; keeps case/state/authority rechecks.",
+    "apps/cli/src/sucafina-product/decision-controls.ts": "Adds attached-only readonly controls; reads actual Procurement source projections for mixed evidence choices. Preserves C20 current Planner continuity/deduplication.",
+    "apps/cli/src/sucafina-product/decision-domain-services.ts": "Allows only proved mixed Procurement evidence through existing known-subtotal-rule fences.",
+    "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts": "Adds explicit optional controls to original Planner form; preserves exact original52 request shape and retained idempotency.",
+    "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts": "Four complementary tests, new file only; real SQLite and producers with documented synthetic case/source boundary. Not a replacement for original52 or51."
+  },
+  "effects_requirements": [
+    {
+      "requirement": "Read/inspect attached sources",
+      "effect": "none",
+      "authorized_by": "current read authority plus exact attached case version",
+      "binding": "source refDigest, physical identity/version, period/currency, principal/policy/access",
+      "idempotence": "readonly; no source issuance in new attached mode",
+      "evidence": "IMPLEMENTED_NOT_RUN"
+    },
+    {
+      "requirement": "Author PR140 with Planner candidate",
+      "effect": "explicit hypothetical ScenarioOperation",
+      "authorized_by": "human target and amount entry",
+      "binding": "targetRef + amount140 + currency + period",
+      "idempotence": "frozen request on explicit promotion",
+      "evidence": "IMPLEMENTED_NOT_RUN"
+    },
+    {
+      "requirement": "Keep subtotal2400/diff1200/conditioned external effect",
+      "effect": "canonical analysis only",
+      "authorized_by": "existing Planner and readonly Procurement sources",
+      "binding": "original Planner values and Procurement evidence; operation digest",
+      "idempotence": "canonical digest ignores only observation time",
+      "evidence": "IMPLEMENTED_NOT_RUN"
+    },
+    {
+      "requirement": "Create alternative",
+      "effect": "existing C08 alternative/result publication",
+      "authorized_by": "decision-promote human intent",
+      "binding": "case expectedVersion and current fences",
+      "idempotence": "existing operation identity and exact retry",
+      "evidence": "SHARED_OWNER_ACTIONS_PENDING"
+    },
+    {
+      "requirement": "Choice prepares an unrecorded approved replacement then Apply after approval",
+      "effect": "unsupported financial contract",
+      "authorized_by": "not present",
+      "binding": "current canonical approve covers submitted snapshot only",
+      "idempotence": "cannot save after approved state to duplicate or invent effect",
+      "evidence": "OPEN_S0"
+    },
+    {
+      "requirement": "Original51 historical Memory journey",
+      "effect": "original capture currently reached through failed financial preparation",
+      "authorized_by": "original archived-evidence contract unchanged",
+      "binding": "original150 operation before save",
+      "idempotence": "original proof preserved",
+      "evidence": "OPEN_DOWNSTREAM"
+    }
+  ],
+  "verification": {
+    "performed": [
+      "Read AGENTS",
+      "Read original52 helper/spec and original51 journey without editing",
+      "Read C19 sources and C20 changed preimage via GitHub MCP",
+      "Static source review",
+      "Full Git blob hash equality for all seven updated preimages",
+      "Creation absence confirmed via GitHub MCP for both new target paths",
+      "Inert unified patch materialized with complete pre/post files"
+    ],
+    "not_performed": [
+      "local test",
+      "local typecheck",
+      "product execution",
+      "GitHub Actions dispatch by child",
+      "browser test",
+      "remote write"
+    ],
+    "complementary_tests": [
+      "mixed original52 shape retains Planner 2400, difference 1200 and an unresolved external Procurement operation without writes",
+      "mixed capability is transient and current case guards authorize the explicit external selector",
+      "mixed preview rejects another holder, unbound currency, duplicated targets and stale Procurement source without writes",
+      "mixed form offers explicit request and amount controls only for attached Procurement evidence"
+    ],
+    "actions_deduplication": "Integrator/successor must deduplicate by final assembled commit + exact file/test selection + OS. No epic, skip or assertion relaxation. Do not claim a pass before a real Actions result.",
+    "historical_scope_regression": {
+      "state": "NOT_RUN_HOLD_REAL_CAPTURE_PRECONDITION",
+      "static_fix": "Removed scoped incarnation equality from the common fresh/historical predicate only. The real C17 resolver, differences, original projection/version, exact stored item membership and two-observation egress remain mandatory; fresh still requires full reference equality.",
+      "real_contract": "product/procurement/decision-host.ts resolveHistoricalSource uses issueForActor and physicalContinuity over archived.physicalIncarnation; BusinessContextService.resolve invokes the real continuity proof.",
+      "reviewer": "/root/policy_ci_audit",
+      "fixture_examined": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "fixture_blob": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+      "consumer_test_examined": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "consumer_test_blob": "3bc4442bd2fdd52867ed25d4f321689c1cffe274",
+      "reason_no_new_positive_test": "The real fixture must successfully prepareDomainCommands with one financial command before its private C12 capture. That gate remains blocked. A purported positive here would require bypassing that capture, mocking historical authority, or changing the financial contract; none was done.",
+      "original51": "Unchanged. No assertion relaxation, fake archival grant, positive equivalence or new financial command."
+    }
+  },
+  "open_semantics": {
+    "original52": "After pure analysis/choice, current request remains draft100. Preparing a choice cannot silently save/submit140. Existing approve only authorizes the already-submitted frozen snapshot, and an approved request does not admit Requests/save. The original later Apply/receipt expectation remains open.",
+    "original51": "It requires prepareDomainCommands(replace150) to succeed before capturing original evidence. This patch does not turn readonly scenario composition or canonical draft edit/submit/approve into that preparation proof.",
+    "s0_minimum_decision": "Choose whether the product requirement adopts separate explicit canonical draft-save, submit exact amount and approve exact frozen snapshot, or needs a newly specified prospective approval/apply contract. No new financial contract is implemented in this patch.",
+    "evidence_preservation": "Positive edit/submit/approve evidence remains evidence only of those original effects; it does not prove a distinct later post-approval Requests/save or the unexecuted Memory tail."
+  },
+  "previous_base_commit": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+  "base_history": [
+    "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e"
+  ],
+  "target_reconciliation": {
+    "record": "reconciliation/c21-target.json",
+    "seven_preimages_unchanged": true,
+    "two_create_paths_absent": true,
+    "postimages_unchanged": true,
+    "runtime_equivalence_claimed": false,
+    "authority55_ack_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "terminal47": "12b459f6997298f79e3360c4aaeb8ffc0a106a50"
+  }
+}

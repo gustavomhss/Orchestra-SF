@@ -1,0 +1,36 @@
+2026-11-15T00:11:32.3650622Z ##[group]Run set -o pipefail
+2026-11-15T00:11:32.3650814Z [36;1mset -o pipefail[0m
+2026-11-15T00:11:32.3650998Z [36;1mbun typecheck 2>&1 | tee "$RUNNER_TEMP/wp04-checks/typecheck.log"[0m
+2026-11-15T00:11:32.3666895Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T00:11:32.3667082Z ##[endgroup]
+2026-11-15T00:11:32.3720994Z $ bun --cwd Sucafinav1 typecheck
+2026-11-15T00:11:32.3751550Z $ tsgo --noEmit
+2026-11-15T00:11:55.1350172Z ##[group]Run set -o pipefail
+2026-11-15T00:11:55.1350359Z [36;1mset -o pipefail[0m
+2026-11-15T00:11:55.1350576Z [36;1mbun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/wp04-checks/guards.log"[0m
+2026-11-15T00:11:55.1366237Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T00:11:55.1366416Z ##[endgroup]
+2026-11-15T00:11:55.1433544Z $ bun run script/guards/run.ts --base origin/dev
+2026-11-15T00:11:56.2131246Z WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2132723Z WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2133873Z WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2134745Z WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2135781Z WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2136497Z WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2137202Z WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2137917Z WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2138601Z WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2139285Z WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2140034Z WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.
+2026-11-15T00:11:56.2140551Z guards: 78 rules, 795 changed paths, 0 gate and 11 warn findings, 0 errors.
+2026-11-15T00:11:56.2161523Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2169638Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2171403Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2173078Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2175048Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2176563Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2178626Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2180286Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2181805Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2183476Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-15T00:11:56.2184998Z ##[warning]Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard.

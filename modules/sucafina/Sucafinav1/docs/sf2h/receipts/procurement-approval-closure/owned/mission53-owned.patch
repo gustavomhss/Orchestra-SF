@@ -1,0 +1,900 @@
+diff --git a/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts b/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts
+--- a/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts
++++ b/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts
+@@ -1,8 +1,17 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
++import { roleMap } from "../../runtime/admin.ts"
++import { object, rows, text } from "../../runtime/contract.ts"
++import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
++import { domain } from "../../runtime/procurement.ts"
++import { validatePR } from "../../src/form.ts"
++import { approvalDecision } from "../../src/procurement-screen.ts"
++import type { RequestView } from "../../src/procurement-screen.ts"
++import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DomainProjection } from "../contracts/context.ts"
+ import type { CommercialComparison } from "../contracts/outputs.ts"
+-import type { PortResult, ProcurementPort } from "../contracts/ports.ts"
++import type { DomainPortHost, PortResult, ProcurementPort } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
++import { createProcurementReadonlySourceResolver } from "./scenario-producer.ts"
+ 
+ /** Read-only material for the purchase dossier; it never prepares or applies a command. */
+ export function createProcurementDecisionPreparation(port: ProcurementPort) {
+@@ -22,3 +31,210 @@
+     return { status: "ok", value: { request: current.value, comparison: comparison.status === "ok" ? comparison.value : null, limitations: comparison.status === "needs-input" ? [comparison.reason] : [] } }
+   }
+ }
++
++export type ProcurementApprovalAction =
++  | { kind: "save-estimate"; amount: number }
++  | { kind: "submit-current"; amount: number }
++  | { kind: "approve-submitted"; amount: number; holderId: string | null; comment: string }
++  | { kind: "reject-submitted"; amount: number; holderId: string | null; reason: string }
++
++export type ProcurementApprovalReview = {
++  kind: "procurement-pr-review-v1"
++  source: Extract<BusinessEvidenceRef, { kind: "record" }>
++  domainVersion: number
++  stage: string
++  amount: number | null
++  currency: string
++  submittedAmount: number | null
++  submittedCurrency: string | null
++  holderId: string | null
++  allowedActions: readonly ProcurementApprovalAction["kind"][]
++  authorityDigest: string
++  recordDigest: string
++  policyDigest: string
++}
++
++export type ProcurementApprovalPlan = {
++  kind: "procurement-pr-lifecycle-v1"
++  command: Command
++  review: ProcurementApprovalReview
++  action: ProcurementApprovalAction
++  requiresExplicitAction: true
++  approvalGranted: false
++  receipt: null
++}
++
++export type ProcurementApprovalAdmission = {
++  // The host calls this synchronously inside the canonical command transaction,
++  // after fresh authentication and immediately before its single domain.execute.
++  current: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => PortResult<true>
++  finish: () => void
++}
++
++/** Read-only adaptation to the existing Requests form commands, never a C12 Apply or an approval grant. */
++export function createProcurementApprovalLifecycle(input: { host: DomainPortHost }) {
++  const sources = createProcurementReadonlySourceResolver(input)
++  const snapshotReview = (snapshot: Snapshot, actor: Actor, environment: Environment, evidence: ProcurementApprovalReview["source"], binding: TrustedDomainContext): PortResult<{ review: ProcurementApprovalReview; requisition: Record<string, unknown> }> => {
++    if (binding.kind !== "ui" || actor.id !== binding.binding.principalRef || actor.id.startsWith("local:") || !actor.canWrite || !actor.roles.some((role) => role !== "viewer") || evidence.installationId !== binding.binding.installationId || evidence.projectId !== binding.binding.projectId) return { status: "denied", reason: "current-authority-unavailable" }
++    const scopes = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === evidence.target.incarnation)
++    if (scopes.length !== 1) return { status: "stale", reason: "requisition-source-changed" }
++    const scope = scopes[0]!.scope
++    const selected = object(scope.selector)
++    const selector = { kind: "procurement-record-v1", roles: actor.roles, canWrite: actor.canWrite, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), fields: selected.fields, period: selected.period, currency: selected.currency }
++    if (scope.principalRef !== binding.binding.principalRef || scope.accessRevision !== binding.binding.accessRevision || scope.policyVersion !== binding.binding.policyVersion || scope.recordType !== "procurement-request" || scope.recordId !== evidence.target.recordId || digestSfValue(selector) !== digestSfValue(scope.selector)) return { status: "denied", reason: "current-authority-unavailable" }
++    if (!sources.isCurrent(snapshot, evidence)) return { status: "stale", reason: "requisition-source-changed" }
++    if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "observation-time-unavailable" }
++    const view = domain.view(snapshot, actor, environment)
++    const current = rows(view.data.requests).find((item) => item.number === evidence.target.recordId)
++    const version = snapshot.versions[`requests:${evidence.target.recordId}`]?.version
++    if (!current || !Number.isSafeInteger(version) || version === undefined || version < 0) return { status: "unavailable", reason: "requisition-unavailable" }
++    const settings = object(object(snapshot.data.store).settings)
++    const stage = text(current.status)
++    const approval = object(current.prApproval)
++    const holder = stage === "pr_pending" ? rows(approval.steps).find((step) => step.status === "pending") : undefined
++    const currency = stage === "pr_pending" ? text(current.prApprovalBaseCurrency) : text(settings.currency)
++    if (!/^[A-Z]{3}$/.test(currency)) return { status: "needs-input", reason: "requisition-currency-unavailable" }
++    const draft = stage === "draft" || stage === "pr_rejected"
++    const creator = current.createdBy === actor.id
++    const admin = actor.roles.includes("admin")
++    const decision = stage === "pr_pending" && approvalDecision(current as RequestView, actor, settings.blockSelfApproval === true).allowed
++    const allowedActions: ProcurementApprovalAction["kind"][] = [
++      ...(draft && (creator || admin) ? ["save-estimate" as const] : []),
++      ...(draft && (creator || admin || actor.roles.includes("requester")) ? ["submit-current" as const] : []),
++      ...(decision ? ["approve-submitted" as const, "reject-submitted" as const] : []),
++    ]
++    // Procurement authorization uses id/canWrite/roles. Other surfaces' assignments
++    // must not make HTTP and readonly review produce different authority digests.
++    const authorityActor: Actor = { id: actor.id, canWrite: actor.canWrite, roles: actor.roles, assigned: [], domains: [] }
++    const review: ProcurementApprovalReview = {
++      kind: "procurement-pr-review-v1", source: evidence, domainVersion: version, stage,
++      amount: finiteApprovalAmount(object(current.pr).estAmount), currency,
++      submittedAmount: finiteApprovalAmount(approval.amount), submittedCurrency: text(current.prApprovalBaseCurrency) || null,
++      holderId: typeof holder?.holderId === "string" ? holder.holderId : null, allowedActions,
++      authorityDigest: digestSfValue({ installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: actor.id, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, actor: authorityActor }),
++      recordDigest: digestSfValue(current), policyDigest: digestSfValue({ settings, roleMap: roleMap(snapshot, "procurement") }),
++    }
++    return { status: "ok", value: { review, requisition: object(current.pr) } }
++  }
++  const read = async (sourceRef: string, binding: TrustedDomainContext) => {
++    // A native/model invocation cannot turn a proposal into a human command plan.
++    const request = input.host.requestFor(binding)
++    if (binding.kind !== "ui" || !request || request.signal.aborted || !await input.host.revalidate(binding) || input.host.requestFor(binding) !== request) return { status: "denied" as const, reason: "current-authority-unavailable" }
++    const source = await sources.resolveSource(sourceRef, binding)
++    if (source.status !== "ok") return source
++    const environment = await input.host.environment(request)
++    if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable" as const, reason: "observation-time-unavailable" }
++    const snapshotRead = () => input.host.persistence.transaction<PortResult<{ review: ProcurementApprovalReview; requisition: Record<string, unknown> }>>("procurement", async (snapshot) => {
++      const principal = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
++      if (!principal || principal.id !== binding.binding.principalRef || principal.id.startsWith("local:") || !principal.canWrite || request.signal.aborted) return { commit: false, value: { status: "denied", reason: "current-authority-unavailable" } }
++      const roles = principal.roles.filter((role) => role.surface === "procurement").map((role) => role.role)
++      const actor: Actor = { id: principal.id, canWrite: roles.some((role) => role !== "viewer"), roles, assigned: [], domains: [] }
++      return { commit: false, value: snapshotReview(snapshot, actor, environment, source.value.evidence, binding) }
++    }, { signal: request.signal })
++    const before = await snapshotRead()
++    if (before.status !== "ok") return before
++    const after = await snapshotRead()
++    if (!await input.host.revalidate(binding) || request.signal.aborted || input.host.requestFor(binding) !== request || after.status === "denied") return { status: "denied" as const, reason: "current-authority-unavailable" }
++    if (after.status !== "ok" || digestSfValue(after.value) !== digestSfValue(before.value)) return { status: "stale" as const, reason: "requisition-review-changed" }
++    return before
++  }
++  const prepare = async (incoming: { review: ProcurementApprovalReview; action: ProcurementApprovalAction }, binding: TrustedDomainContext): Promise<PortResult<ProcurementApprovalPlan>> => {
++    if (!approvalValue(incoming) || !exactKeys(incoming, ["review", "action"]) || !validApprovalReview(incoming.review) || !validApprovalAction(incoming.action)) return { status: "needs-input", reason: "explicit-requisition-action-required" }
++    const selected = structuredClone(incoming)
++    const current = await read(selected.review.source.refId, binding)
++    if (current.status !== "ok") return current
++    // This compares the reviewed CAS and holder, not just the amount. Never refresh a retained command silently.
++    if (digestSfValue(current.value.review) !== digestSfValue(selected.review)) return { status: "stale", reason: "requisition-review-changed" }
++    return approvalPlan(current.value, selected.action)
++  }
++  return {
++    async review(sourceRef: string, binding: TrustedDomainContext): Promise<PortResult<ProcurementApprovalReview>> {
++      const current = await read(sourceRef, binding)
++      return current.status === "ok" ? { status: "ok", value: structuredClone(current.value.review) } : current
++    },
++    prepare,
++    async admission(incoming: ProcurementApprovalPlan, binding: TrustedDomainContext): Promise<PortResult<ProcurementApprovalAdmission>> {
++      if (!approvalValue(incoming) || !exactKeys(incoming, ["kind", "command", "review", "action", "requiresExplicitAction", "approvalGranted", "receipt"]) || incoming.kind !== "procurement-pr-lifecycle-v1" || incoming.requiresExplicitAction !== true || incoming.approvalGranted !== false || incoming.receipt !== null) return { status: "needs-input", reason: "explicit-requisition-plan-required" }
++      const selected = structuredClone(incoming)
++      const prepared = await prepare({ review: selected.review, action: selected.action }, binding)
++      if (prepared.status !== "ok") return prepared
++      if (digestSfValue(prepared.value) !== digestSfValue(selected)) return { status: "denied", reason: "requisition-command-mismatch" }
++      const request = input.host.requestFor(binding)
++      if (!request || request.method !== "POST" || request.signal.aborted || !await input.host.revalidate(binding) || input.host.requestFor(binding) !== request) return { status: "denied", reason: "current-authority-unavailable" }
++      let finished = false
++      return { status: "ok", value: {
++        current(snapshot, actor, command, environment) {
++          if (finished || request.signal.aborted || input.host.requestFor(binding) !== request) return { status: "denied", reason: "current-authority-unavailable" }
++          if (!approvalValue(command) || digestSfValue(command) !== digestSfValue(selected.command)) return { status: "denied", reason: "requisition-command-mismatch" }
++          const current = snapshotReview(snapshot, actor, environment, selected.review.source, binding)
++          if (current.status !== "ok") return current
++          if (digestSfValue(current.value.review) !== digestSfValue(selected.review)) return { status: "stale", reason: "requisition-review-changed" }
++          const plan = approvalPlan(current.value, selected.action)
++          if (plan.status !== "ok") return plan
++          if (digestSfValue(plan.value) !== digestSfValue(selected)) return { status: "stale", reason: "requisition-plan-changed" }
++          finished = true
++          return { status: "ok", value: true }
++        },
++        finish() { finished = true },
++      } }
++    },
++  }
++}
++
++function approvalPlan(current: { review: ProcurementApprovalReview; requisition: Record<string, unknown> }, action: ProcurementApprovalAction): PortResult<ProcurementApprovalPlan> {
++  const review = current.review
++  if (!review.allowedActions.includes(action.kind)) return { status: "denied", reason: "requisition-action-unavailable" }
++  if (action.kind === "save-estimate" && action.amount === review.amount) return { status: "needs-input", reason: "requisition-already-matches" }
++  if (action.kind !== "save-estimate" && action.amount !== review.amount) return { status: "needs-input", reason: "requisition-amount-mismatch" }
++  if (action.kind === "submit-current" && validatePR(current.requisition as Parameters<typeof validatePR>[0]).length) return { status: "needs-input", reason: "requisition-fields-incomplete" }
++  if ((action.kind === "approve-submitted" || action.kind === "reject-submitted") && (review.submittedAmount !== action.amount || review.submittedCurrency !== review.currency || review.holderId !== action.holderId)) return { status: "needs-input", reason: "submitted-snapshot-mismatch" }
++  const command: Command = {
++    page: "Requests", id: review.source.target.recordId, version: review.domainVersion, confirmed: false,
++    action: action.kind === "save-estimate" ? "save" : action.kind === "submit-current" ? "submit_pr" : action.kind === "approve-submitted" ? "approve" : "reject",
++    values: action.kind === "save-estimate" ? { pr: { estAmount: action.amount } } : action.kind === "submit-current" ? {} : action.kind === "approve-submitted" ? { comment: action.comment } : { reason: action.reason },
++  }
++  return { status: "ok", value: { kind: "procurement-pr-lifecycle-v1", command, review: structuredClone(review), action: structuredClone(action), requiresExplicitAction: true, approvalGranted: false, receipt: null } }
++}
++
++function finiteApprovalAmount(value: unknown) {
++  return typeof value === "number" && Number.isFinite(value) ? value : null
++}
++
++function validApprovalAction(action: ProcurementApprovalAction) {
++  if (!action || typeof action !== "object" || typeof action.amount !== "number" || !Number.isFinite(action.amount) || action.amount < 0) return false
++  const keys = Object.keys(action).sort()
++  if (action.kind === "save-estimate" || action.kind === "submit-current") return digestSfValue(keys) === digestSfValue(["amount", "kind"])
++  if (action.kind !== "approve-submitted" && action.kind !== "reject-submitted") return false
++  if (action.holderId !== null && (typeof action.holderId !== "string" || !action.holderId.trim())) return false
++  if (action.kind === "approve-submitted") return typeof action.comment === "string" && digestSfValue(keys) === digestSfValue(["amount", "comment", "holderId", "kind"])
++  return typeof action.reason === "string" && !!action.reason.trim() && digestSfValue(keys) === digestSfValue(["amount", "holderId", "kind", "reason"])
++}
++
++function exactKeys(value: unknown, keys: readonly string[]) {
++  return !!value && typeof value === "object" && !Array.isArray(value) && digestSfValue(Object.keys(value).sort()) === digestSfValue([...keys].sort())
++}
++
++function validApprovalReview(review: ProcurementApprovalReview) {
++  if (!exactKeys(review, ["kind", "source", "domainVersion", "stage", "amount", "currency", "submittedAmount", "submittedCurrency", "holderId", "allowedActions", "authorityDigest", "recordDigest", "policyDigest"])) return false
++  if (review.kind !== "procurement-pr-review-v1" || !Number.isSafeInteger(review.domainVersion) || review.domainVersion < 0 || typeof review.stage !== "string" || !/^[A-Z]{3}$/.test(review.currency)) return false
++  const source = review.source
++  if (!source || source.kind !== "record" || source.schema !== "sf-evidence-v1" || typeof source.refId !== "string" || !source.refId || !source.target || source.target.surface !== "procurement" || source.target.recordType !== "procurement-request") return false
++  if (![review.amount, review.submittedAmount].every((value) => value === null || typeof value === "number" && Number.isFinite(value))) return false
++  if (review.submittedCurrency !== null && (typeof review.submittedCurrency !== "string" || !/^[A-Z]{3}$/.test(review.submittedCurrency))) return false
++  if (review.holderId !== null && (typeof review.holderId !== "string" || !review.holderId.trim())) return false
++  return Array.isArray(review.allowedActions) && review.allowedActions.every((value) => ["save-estimate", "submit-current", "approve-submitted", "reject-submitted"].includes(value)) && [review.authorityDigest, review.recordDigest, review.policyDigest].every((value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value))
++}
++
++// A malformed transport object must be refused before cloning, hashing or reading its fields.
++function approvalValue(value: unknown, active = new WeakSet<object>(), depth = 0): boolean {
++  if (depth > 24) return false
++  if (value === null || typeof value === "string" || typeof value === "boolean") return true
++  if (typeof value === "number") return Number.isFinite(value)
++  if (!value || typeof value !== "object" || active.has(value) || (!Array.isArray(value) && ![Object.prototype, null].includes(Object.getPrototypeOf(value))) || Object.getOwnPropertySymbols(value).length) return false
++  active.add(value)
++  const descriptors = Object.getOwnPropertyDescriptors(value)
++  const valid = Object.values(descriptors).every((entry) => "value" in entry && approvalValue(entry.value, active, depth + 1))
++  active.delete(value)
++  return valid
++}
++
+diff --git a/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts b/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts
+--- a/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts
++++ b/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts
+@@ -1,4 +1,5 @@
+ import { roleMap } from "../../runtime/admin.ts"
++import { object } from "../../runtime/contract.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { PreparedCommand } from "../contracts/context.ts"
+@@ -9,6 +10,8 @@
+ import type { createProcurementSourceResolver } from "./sources.ts"
+ import { procurementPreparationIssue } from "./prepared.ts"
+ import { createProcurementReadonlySourceResolver } from "./scenario-producer.ts"
++import { createProcurementApprovalLifecycle } from "./decision-preparation.ts"
++import type { ProcurementApprovalPlan, ProcurementApprovalReview } from "./decision-preparation.ts"
+ 
+ /** A scenario choice cannot turn a draft edit into a financially approved command. */
+ export function createProcurementScenarioPreparation(input: { host: DomainPortHost; sources: ReturnType<typeof createProcurementSourceResolver> }) {
+@@ -46,3 +49,37 @@
+     return result
+   }
+ }
++
++/** Offer an explicit draft edit separately from the still unsupported post-approval C12 replacement. */
++export function createProcurementScenarioDraftPreparation(input: { host: DomainPortHost }) {
++  const lifecycle = createProcurementApprovalLifecycle(input)
++  return async (incoming: { operation: ScenarioOperation; choice: ChoiceRecord; review: ProcurementApprovalReview }, binding: TrustedDomainContext): Promise<PortResult<ProcurementApprovalPlan>> => {
++    if (!plainDraftSelection(incoming) || digestSfValue(Object.keys(object(incoming)).sort()) !== digestSfValue(["choice", "operation", "review"])) return { status: "needs-input", reason: "explicit-requisition-amount-required" }
++    const selected = structuredClone(incoming)
++    const operation = selected.operation
++    if (!operation || operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || !operation.currency || !operation.period) return { status: "needs-input", reason: "explicit-requisition-amount-required" }
++    if (!selected.choice?.scenario || !Array.isArray(selected.choice.scenario.operations) || !selected.choice.result || !Array.isArray(selected.choice.result.sourceRefs)) return { status: "needs-input", reason: "recorded-choice-required" }
++    if (!selected.choice.scenario.operations.some((candidate) => digestSfValue(candidate) === digestSfValue(operation))) return { status: "denied", reason: "operation-not-in-choice" }
++    const plan = await lifecycle.prepare({ review: selected.review, action: { kind: "save-estimate", amount: operation.amount } }, binding)
++    if (plan.status !== "ok") return plan
++    const review = plan.value.review
++    const source = review.source
++    if (operation.targetRef !== source.refId || operation.currency !== review.currency || digestSfValue(operation.period) !== digestSfValue(source.target.period) || selected.choice.result.currency !== review.currency || digestSfValue(selected.choice.result.horizon) !== digestSfValue(operation.period)) return { status: "needs-input", reason: "requisition-basis-mismatch" }
++    if (!selected.choice.result.sourceRefs.some((ref) => ref?.kind === "record" && digestSfValue(ref) === digestSfValue(source))) return { status: "denied", reason: "preview-source-unavailable" }
++    // Choice is provenance for the value, never approval or permission. The host
++    // supplies its persisted C08 choice; the lifecycle re-reads the source and actor.
++    return plan
++  }
++}
++
++function plainDraftSelection(value: unknown, active = new WeakSet<object>(), depth = 0): boolean {
++  if (depth > 24) return false
++  if (value === null || typeof value === "string" || typeof value === "boolean") return true
++  if (typeof value === "number") return Number.isFinite(value)
++  if (!value || typeof value !== "object" || active.has(value) || (!Array.isArray(value) && ![Object.prototype, null].includes(Object.getPrototypeOf(value))) || Object.getOwnPropertySymbols(value).length) return false
++  active.add(value)
++  const valid = Object.values(Object.getOwnPropertyDescriptors(value)).every((entry) => "value" in entry && plainDraftSelection(entry.value, active, depth + 1))
++  active.delete(value)
++  return valid
++}
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts
+@@ -0,0 +1,150 @@
++import { expect, test } from "bun:test"
++import { createApplication } from "../../../runtime/application.ts"
++import { object } from "../../../runtime/contract.ts"
++import type { Command } from "../../../runtime/contract.ts"
++import { domain, pages } from "../../../runtime/procurement.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { ProcurementApprovalPlan } from "../../../product/procurement/decision-preparation.ts"
++import { createApprovalFixture } from "./fixture.ts"
++
++test("the synchronous admission permits exactly the reviewed command before the canonical HTTP effect", async () => {
++  const fixture = await createApprovalFixture()
++  try {
++    const plan = await draftPlan(fixture)
++    const before = await fixture.snapshot()
++    const writes = fixture.writes.length
++    const changed = await admittedHttp(fixture, plan, { ...plan.command, values: { pr: { estAmount: 160 } } })
++    expect(await fixture.snapshot()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++    expect((await changed.post()).status).toBe(403)
++    expect(changed.calls.executed).toBe(0)
++    expect(changed.calls.statuses).toEqual(["denied"])
++    expect(await fixture.snapshot()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++
++    const exact = await admittedHttp(fixture, plan)
++    expect(await fixture.snapshot()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++    expect((await exact.post()).status).toBe(200)
++    expect(exact.calls.executed).toBe(1)
++    expect(exact.calls.statuses).toEqual(["ok"])
++    const committed = await fixture.snapshot()
++    expect(committed.versions[`requests:${fixture.requestId}`]?.version).toBe(plan.command.version + 1)
++    expect(committed.audit).toHaveLength(before.audit.length + 1)
++    expect(fixture.writes).toHaveLength(writes + 1)
++    expect(await fixture.current()).toMatchObject({ status: "draft", pr: { estAmount: 140 } })
++    expect(exact.gate.current(committed, fixture.actors.alice!, plan.command, await fixture.host.environment(exact.request))).toEqual({ status: "denied", reason: "current-authority-unavailable" })
++    expect(await fixture.snapshot()).toEqual(committed)
++    expect(fixture.writes).toHaveLength(writes + 1)
++  } finally { await fixture.dispose() }
++})
++
++test.each(["policy", "currency", "roles"] as const)("transaction admission refuses %s drift while the request CAS is unchanged", async (change) => {
++  const fixture = await createApprovalFixture()
++  try {
++    const plan = await draftPlan(fixture)
++    const admitted = await admittedHttp(fixture, plan)
++    if (change === "roles") fixture.actors.alice!.roles = ["admin"]
++    if (change !== "roles") {
++      const snapshot = await fixture.snapshot()
++      const settings = object(object(snapshot.data.store).settings)
++      const values = change === "currency" ? { currency: "EUR" } : { blockSelfApproval: settings.blockSelfApproval !== true }
++      const updated = await fixture.execute({ id: "admin", canWrite: true, roles: ["admin"] }, { page: "Settings", action: "save", version: snapshot.versions.settings!.version, values })
++      expect(updated.ok).toBe(true)
++    }
++    const changed = await fixture.snapshot()
++    expect(changed.versions[`requests:${fixture.requestId}`]?.version).toBe(plan.command.version)
++    const writes = fixture.writes.length
++    expect((await admitted.post()).status).toBe(change === "roles" ? 403 : 409)
++    expect(admitted.calls.statuses).toEqual([change === "roles" ? "denied" : "stale"])
++    expect(admitted.calls.executed).toBe(0)
++    expect(await fixture.snapshot()).toEqual(changed)
++    expect(fixture.writes).toHaveLength(writes)
++    expect(await fixture.current()).toMatchObject({ status: "draft", pr: { estAmount: 100 } })
++  } finally { await fixture.dispose() }
++})
++
++test.each(["finished-gate", "finished-ui", "replaced-request"] as const)("transaction admission refuses %s without executing the domain", async (change) => {
++  const fixture = await createApprovalFixture()
++  try {
++    const plan = await draftPlan(fixture)
++    const admitted = await admittedHttp(fixture, plan)
++    const before = await fixture.snapshot()
++    const writes = fixture.writes.length
++    if (change === "finished-gate") admitted.gate.finish()
++    if (change === "finished-ui") fixture.ui.finish(admitted.context)
++    if (change === "replaced-request") {
++      const replacement = new Request(admitted.request.url, { method: "POST", headers: admitted.request.headers, body: JSON.stringify(plan.command) })
++      fixture.host.requestFor = () => replacement
++    }
++    expect((await admitted.post()).status).toBe(403)
++    expect(admitted.calls.statuses).toEqual(["denied"])
++    expect(admitted.calls.executed).toBe(0)
++    expect(await fixture.snapshot()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++  } finally { await fixture.dispose() }
++})
++
++test("malformed prepare payloads fail closed without throwing or writing", async () => {
++  const fixture = await createApprovalFixture()
++  try {
++    const draft = await fixture.review()
++    const action = { kind: "save-estimate" as const, amount: 140 }
++    const cycle: Record<string, unknown> = { review: draft.review, action }
++    cycle.cycle = cycle
++    const malformed: unknown[] = [
++      undefined, null, [], {}, new Date(), cycle,
++      { review: null, action },
++      { review: draft.review, action: null },
++      { review: { ...draft.review, source: null }, action },
++      { review: { ...draft.review, domainVersion: "1" }, action },
++      { review: { ...draft.review, amount: Number.NaN }, action },
++      { review: draft.review, action: { ...action, amount: "140" } },
++      { review: draft.review, action: { ...action, amount: Number.POSITIVE_INFINITY } },
++      { review: draft.review, action: { ...action, confirmed: true } },
++      { review: draft.review, action, extra: true },
++      { review: draft.review, get action() { throw new Error("Transport getter must not execute") } },
++    ]
++    const before = await fixture.snapshot()
++    const writes = fixture.writes.length
++    for (const incoming of malformed) {
++      // Deliberately cross the typed boundary to exercise runtime admission of transport input.
++      expect(await fixture.lifecycle.prepare(incoming as Parameters<typeof fixture.lifecycle.prepare>[0], draft.context)).toEqual({ status: "needs-input", reason: "explicit-requisition-action-required" })
++      expect(await fixture.snapshot()).toEqual(before)
++      expect(fixture.writes).toHaveLength(writes)
++    }
++  } finally { await fixture.dispose() }
++})
++
++async function draftPlan(fixture: Awaited<ReturnType<typeof createApprovalFixture>>) {
++  const draft = await fixture.review()
++  const result = await fixture.lifecycle.prepare({ review: draft.review, action: { kind: "save-estimate", amount: 140 } }, draft.context)
++  if (result.status !== "ok") throw new Error(`Draft plan unavailable: ${result.reason}`)
++  return result.value
++}
++
++/** Composition harness only: this does not claim that the integrator's shared HTTP hook has shipped. */
++async function admittedHttp(fixture: Awaited<ReturnType<typeof createApprovalFixture>>, plan: ProcurementApprovalPlan, command: Command = plan.command) {
++  const request = new Request("https://scenario.invalid/sf/procurement", { method: "POST", headers: { authorization: "Bearer alice", origin: "https://scenario.invalid", "content-type": "application/json" }, body: JSON.stringify(command) })
++  const digest = digestSfValue({ fixture: "explicit-procurement-command", command })
++  const admitted = await fixture.ui.admit(request, "sf_scenario_simulate", digest)
++  if (admitted.status !== "ok" || !await fixture.ui.validate(admitted.value, "sf_scenario_simulate", digest)) throw new Error("HTTP UI admission unavailable")
++  const admission = await fixture.lifecycle.admission(plan, admitted.value)
++  if (admission.status !== "ok") throw new Error(`Command admission unavailable: ${admission.reason}`)
++  const calls = { executed: 0, statuses: [] as string[] }
++  const http = createApplication("/sf", { persistence: fixture.persistence, authenticate: fixture.host.authenticate, environment: fixture.host.environment, maxJsonBytes: 1024 * 1024, domains: { dashboard: [], planner: [], procurement: [{ pages, render: () => undefined, domain: {
++    view: domain.view,
++    execute(snapshot, actor, incoming, environment) {
++      const current = admission.value.current(snapshot, actor, incoming, environment)
++      calls.statuses.push(current.status)
++      if (current.status !== "ok") return { ok: false, status: current.status === "stale" ? 409 : 403, errors: [current.reason] }
++      calls.executed += 1
++      return domain.execute(snapshot, actor, incoming, environment)
++    },
++  } }] } })
++  return { request, context: admitted.value, gate: admission.value, calls, post: async () => {
++    const response = await http(request)
++    if (!response) throw new Error("Canonical HTTP route unavailable")
++    return response
++  } }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/authority.test.ts
+@@ -0,0 +1,83 @@
++import { expect, test } from "bun:test"
++import { createApprovalFixture } from "./fixture.ts"
++
++test("preparation requires the live UI admission, the same Request and current write authority", async () => {
++  const fixture = await createApprovalFixture()
++  try {
++    const draft = await fixture.review()
++    const action = { kind: "save-estimate" as const, amount: 140 }
++    const plan = await fixture.lifecycle.prepare({ review: draft.review, action }, draft.context)
++    if (plan.status !== "ok") throw new Error("Initial human draft plan unavailable")
++    const initial = await fixture.snapshot()
++    const initialWrites = fixture.writes.length
++    const forged = structuredClone(draft.context)
++    expect((await fixture.lifecycle.review(draft.sourceRef, forged)).status).toBe("denied")
++    expect((await fixture.lifecycle.prepare({ review: draft.review, action }, forged)).status).toBe("denied")
++    fixture.ui.finish(draft.context)
++    expect((await fixture.lifecycle.review(draft.sourceRef, draft.context)).status).toBe("denied")
++    expect((await fixture.lifecycle.prepare({ review: draft.review, action }, draft.context)).status).toBe("denied")
++    expect(await fixture.snapshot()).toEqual(initial)
++    expect(fixture.writes).toHaveLength(initialWrites)
++
++    const writer = await fixture.review()
++    const writable = await fixture.snapshot()
++    const writableWrites = fixture.writes.length
++    fixture.actors.alice!.canWrite = false
++    expect((await fixture.lifecycle.review(writer.sourceRef, writer.context)).status).toBe("denied")
++    expect((await fixture.lifecycle.prepare({ review: writer.review, action }, writer.context)).status).toBe("denied")
++    expect((await fixture.post("alice", plan.value.command)).status).toBe(403)
++    expect(await fixture.snapshot()).toEqual(writable)
++    expect(fixture.writes).toHaveLength(writableWrites)
++    fixture.actors.alice!.canWrite = true
++
++    const authorized = await fixture.review()
++    const accessible = await fixture.snapshot()
++    const accessibleWrites = fixture.writes.length
++    fixture.access.allowed = false
++    expect((await fixture.lifecycle.prepare({ review: authorized.review, action }, authorized.context)).status).toBe("denied")
++    expect((await fixture.post("alice", plan.value.command)).status).toBe(401)
++    expect(await fixture.snapshot()).toEqual(accessible)
++    expect(fixture.writes).toHaveLength(accessibleWrites)
++    fixture.access.allowed = true
++
++    const originalRequest = await fixture.review()
++    const current = await fixture.snapshot()
++    const writes = fixture.writes.length
++    originalRequest.request.headers.set("authorization", "Bearer bob")
++    expect((await fixture.lifecycle.review(originalRequest.sourceRef, originalRequest.context)).status).toBe("denied")
++    expect((await fixture.lifecycle.prepare({ review: originalRequest.review, action }, originalRequest.context)).status).toBe("denied")
++    expect(await fixture.snapshot()).toEqual(current)
++    expect(fixture.writes).toHaveLength(writes)
++  } finally { await fixture.dispose() }
++})
++
++test("a changed requisition invalidates source and review without silently refreshing the retained command CAS", async () => {
++  const fixture = await createApprovalFixture()
++  try {
++    const original = await fixture.review()
++    const action = { kind: "save-estimate" as const, amount: 140 }
++    const prepared = await fixture.lifecycle.prepare({ review: original.review, action }, original.context)
++    if (prepared.status !== "ok") throw new Error("Original draft plan unavailable")
++    const retained = structuredClone(prepared.value)
++    expect((await fixture.post("alice", { page: "Requests", action: "save", id: fixture.requestId, version: original.review.domainVersion, values: { pr: { title: "A separate explicit edit" } } })).status).toBe(200)
++    const changed = await fixture.snapshot()
++    const writes = fixture.writes.length
++    expect((await fixture.lifecycle.review(original.sourceRef, original.context)).status).toBe("stale")
++    expect((await fixture.lifecycle.prepare({ review: original.review, action }, original.context)).status).toBe("stale")
++    expect((await fixture.post("alice", prepared.value.command)).status).toBe(409)
++    expect(prepared.value).toEqual(retained)
++    expect(await fixture.snapshot()).toEqual(changed)
++    expect(fixture.writes).toHaveLength(writes)
++    expect(await fixture.current()).toMatchObject({ status: "draft", pr: { title: "A separate explicit edit", estAmount: 100 } })
++
++    // Only this new explicit source issuance and review may produce a new CAS plan.
++    const fresh = await fixture.review()
++    const next = await fixture.lifecycle.prepare({ review: fresh.review, action }, fresh.context)
++    if (next.status !== "ok") throw new Error("New source review unavailable")
++    expect(next.value.command.version).toBe(retained.command.version + 1)
++    expect(next.value.review.source).not.toEqual(retained.review.source)
++    expect(next.value.command.values).toEqual({ pr: { estAmount: 140 } })
++    expect(next.value.approvalGranted).toBe(false)
++    expect(next.value.receipt).toBeNull()
++  } finally { await fixture.dispose() }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/fixture.ts
+@@ -0,0 +1,63 @@
++import { object, rows } from "../../../runtime/contract.ts"
++import type { Actor, Command } from "../../../runtime/contract.ts"
++import { createApplication } from "../../../runtime/application.ts"
++import { domain, pages } from "../../../runtime/procurement.ts"
++import type { DomainPortHost } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createProcurementApprovalLifecycle } from "../../../product/procurement/decision-preparation.ts"
++import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
++import { createProcurementScenarioProducer } from "../../../product/procurement/scenario-producer.ts"
++import { createScenarioFixture, scenarioPeriod } from "../procurement-decision-producer/fixture.ts"
++
++/** Synthetic identities and data; mutations use the production HTTP/domain and SQLite adapters. */
++export async function createApprovalFixture(input: { directory?: string; requestId?: string } = {}) {
++  const base = await createScenarioFixture(input)
++  const actors: Record<string, Actor> = {
++    alice: { id: "alice", canWrite: true, roles: ["requester"] },
++    bob: { id: "bob", canWrite: true, roles: ["approver"] },
++  }
++  const host: DomainPortHost = {
++    ...base.host,
++    authenticate: async (request) => {
++      const principal = await base.host.authenticate(request)
++      const actor = principal && actors[principal.id]
++      return actor ? { id: actor.id, canWrite: actor.canWrite, roles: actor.roles.map((role) => ({ surface: "procurement" as const, role })) } : null
++    },
++  }
++  const sources = createProcurementSourceResolver({ host, scopedSources: base.persistence, contextFor: async (binding: TrustedDomainContext) => ({ status: "ok", value: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, surface: "procurement", period: scenarioPeriod, currency: "USD", sourceRefs: [], capabilities: [] } }) })
++  const lifecycle = createProcurementApprovalLifecycle({ host })
++  const http = createApplication("/sf", {
++    persistence: base.persistence, authenticate: host.authenticate, environment: host.environment, maxJsonBytes: 1024 * 1024,
++    domains: { dashboard: [], planner: [], procurement: [{ pages, domain, render: () => undefined }] },
++  })
++  const post = async (principal: string, command: Command) => {
++    const response = await http(new Request("https://scenario.invalid/sf/procurement", { method: "POST", headers: { authorization: `Bearer ${principal}`, origin: "https://scenario.invalid", "content-type": "application/json" }, body: JSON.stringify(command) }))
++    if (!response) throw new Error("Canonical Procurement command endpoint unavailable")
++    return response
++  }
++  const issue = async (principal = "alice") => {
++    const admitted = await base.admit(principal)
++    const source = await sources.issue("procurement-request", base.requestId, admitted.context)
++    if (source.status !== "ok") throw new Error(`Current source issuance unavailable: ${source.reason}`)
++    return { ...admitted, sourceRef: source.value }
++  }
++  const review = async (principal = "alice") => {
++    const admitted = await issue(principal)
++    const current = await lifecycle.review(admitted.sourceRef, admitted.context)
++    if (current.status !== "ok") throw new Error(`Canonical lifecycle review unavailable: ${current.reason}`)
++    return { ...admitted, review: current.value }
++  }
++  const configureHolder = async (holderId: string | null) => {
++    const snapshot = await base.snapshot()
++    const settings = object(object(snapshot.data.store).settings)
++    const result = await base.execute({ id: "admin", roles: ["admin"], canWrite: true }, { page: "Settings", action: "save", version: snapshot.versions.settings?.version ?? 0, values: { levels: rows(settings.levels).map((level) => ({ ...level, holderId })) } })
++    if (!result.ok) throw new Error("Synthetic directory holder setup failed")
++  }
++  // Preserve the initial thresholds, stages, mode and self-approval setting.
++  if (!input.requestId) await configureHolder("bob")
++  return {
++    ...base, actors, host, sources, lifecycle, http, post, issue, review, configureHolder,
++    producer: createProcurementScenarioProducer({ host, sources }),
++    current: async () => object(object(object(object((await base.snapshot()).data.store).requests)[base.requestId]).request),
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts
+@@ -0,0 +1,184 @@
++import { expect, test } from "bun:test"
++import { object, rows } from "../../../runtime/contract.ts"
++import type { ProcurementApprovalAction } from "../../../product/procurement/decision-preparation.ts"
++import { procurementPreparationIssue } from "../../../product/procurement/prepared.ts"
++import { createApprovalFixture } from "./fixture.ts"
++
++test("explicit canonical save, submit and approve bind 140 to its frozen holder and retained CAS survives SQLite reopen", async () => {
++  const fixture = await createApprovalFixture()
++  const lifecycle = { current: fixture, closed: false }
++  try {
++    const draft = await fixture.review()
++    expect(draft.review).toMatchObject({ stage: "draft", amount: 100, currency: "USD", submittedAmount: null, holderId: null, allowedActions: ["save-estimate", "submit-current"] })
++    const before = await fixture.snapshot()
++    const writes = fixture.writes.length
++    expect(await fixture.lifecycle.review(draft.sourceRef, draft.context)).toEqual({ status: "ok", value: draft.review })
++    const action: ProcurementApprovalAction = { kind: "save-estimate", amount: 140 }
++    const preparing = fixture.lifecycle.prepare({ review: draft.review, action }, draft.context)
++    action.amount = 900
++    const edit = await preparing
++    if (edit.status !== "ok") throw new Error(`Draft edit preparation unavailable: ${edit.reason}`)
++    expect(edit.value).toMatchObject({ kind: "procurement-pr-lifecycle-v1", action: { kind: "save-estimate", amount: 140 }, requiresExplicitAction: true, approvalGranted: false, receipt: null })
++    expect(edit.value.command).toEqual({ page: "Requests", action: "save", id: fixture.requestId, version: draft.review.domainVersion, confirmed: false, values: { pr: { estAmount: 140 } } })
++    expect(await fixture.snapshot()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++
++    // The effect is a separate, explicit POST through the production command endpoint.
++    expect((await fixture.post("alice", edit.value.command)).status).toBe(200)
++    const saved = await fixture.snapshot()
++    expect(await fixture.current()).toMatchObject({ status: "draft", pr: { estAmount: 140 } })
++    expect(saved.versions[`requests:${fixture.requestId}`]?.version).toBe(draft.review.domainVersion + 1)
++    expect(saved.audit).toHaveLength(before.audit.length + 1)
++    expect(saved.audit.at(-1)).toMatchObject({ who: "alice", name: "Alice", record: `requests:${fixture.requestId}` })
++    expect(fixture.writes).toHaveLength(writes + 1)
++    expect((await fixture.post("alice", edit.value.command)).status).toBe(409)
++    expect(await fixture.snapshot()).toEqual(saved)
++    expect(fixture.writes).toHaveLength(writes + 1)
++
++    const submission = await fixture.review()
++    const beforeSubmit = await fixture.snapshot()
++    const submitWrites = fixture.writes.length
++    expect(await fixture.lifecycle.prepare({ review: submission.review, action: { kind: "submit-current", amount: 100 } }, submission.context)).toEqual({ status: "needs-input", reason: "requisition-amount-mismatch" })
++    const submit = await fixture.lifecycle.prepare({ review: submission.review, action: { kind: "submit-current", amount: 140 } }, submission.context)
++    if (submit.status !== "ok") throw new Error(`Submission preparation unavailable: ${submit.reason}`)
++    expect(submit.value.command).toEqual({ page: "Requests", action: "submit_pr", id: fixture.requestId, version: submission.review.domainVersion, confirmed: false, values: {} })
++    expect(submit.value.approvalGranted).toBe(false)
++    expect(submit.value.receipt).toBeNull()
++    expect(await fixture.snapshot()).toEqual(beforeSubmit)
++    expect(fixture.writes).toHaveLength(submitWrites)
++    expect((await fixture.post("alice", submit.value.command)).status).toBe(200)
++    const submitted = await fixture.snapshot()
++    expect(await fixture.current()).toMatchObject({ status: "pr_pending", pr: { estAmount: 140 }, prApproval: { amount: 140 }, prApprovalBaseCurrency: "USD" })
++    expect(rows(object((await fixture.current()).prApproval).steps).filter((step) => step.status === "pending")).toMatchObject([{ holderId: "bob" }])
++    expect(submitted.audit).toHaveLength(beforeSubmit.audit.length + 1)
++    expect(fixture.writes).toHaveLength(submitWrites + 1)
++    expect((await fixture.post("alice", submit.value.command)).status).toBe(409)
++    expect(await fixture.snapshot()).toEqual(submitted)
++
++    const approval = await fixture.review("bob")
++    expect(approval.review).toMatchObject({ stage: "pr_pending", amount: 140, submittedAmount: 140, currency: "USD", submittedCurrency: "USD", holderId: "bob", allowedActions: ["approve-submitted", "reject-submitted"] })
++    const beforeApprove = await fixture.snapshot()
++    const approveWrites = fixture.writes.length
++    const approve = await fixture.lifecycle.prepare({ review: approval.review, action: { kind: "approve-submitted", amount: 140, holderId: "bob", comment: "Approve the submitted 140 USD" } }, approval.context)
++    if (approve.status !== "ok") throw new Error(`Approval preparation unavailable: ${approve.reason}`)
++    expect(approve.value.command).toEqual({ page: "Requests", action: "approve", id: fixture.requestId, version: approval.review.domainVersion, confirmed: false, values: { comment: "Approve the submitted 140 USD" } })
++    expect(approve.value.approvalGranted).toBe(false)
++    expect(approve.value.receipt).toBeNull()
++    expect(await fixture.snapshot()).toEqual(beforeApprove)
++    expect(fixture.writes).toHaveLength(approveWrites)
++    expect((await fixture.post("bob", approve.value.command)).status).toBe(200)
++    const approved = await fixture.snapshot()
++    expect(await fixture.current()).toMatchObject({ status: "sourcing", pr: { estAmount: 140 }, prApproval: { amount: 140 }, prApprovalBaseCurrency: "USD" })
++    expect(rows(object((await fixture.current()).prApproval).steps)).toMatchObject([{ status: "approved", holderId: "bob" }])
++    expect(approved.versions[`requests:${fixture.requestId}`]?.version).toBe(approval.review.domainVersion + 1)
++    expect(approved.audit).toHaveLength(beforeApprove.audit.length + 1)
++    expect(approved.audit.at(-1)).toMatchObject({ who: "bob", name: "Bob", record: `requests:${fixture.requestId}` })
++    expect(fixture.writes).toHaveLength(approveWrites + 1)
++    expect((await fixture.post("bob", approve.value.command)).status).toBe(409)
++    expect(await fixture.snapshot()).toEqual(approved)
++    expect(fixture.writes).toHaveLength(approveWrites + 1)
++
++    await fixture.close()
++    lifecycle.closed = true
++    const reopened = await createApprovalFixture({ directory: fixture.directory, requestId: fixture.requestId })
++    lifecycle.current = reopened
++    lifecycle.closed = false
++    const persisted = await reopened.snapshot()
++    expect(persisted.data).toEqual(approved.data)
++    expect(persisted.versions).toEqual(approved.versions)
++    expect(persisted.audit).toEqual(approved.audit)
++    expect(persisted.notices).toEqual(approved.notices)
++    expect(persisted.sequences).toEqual(approved.sequences)
++    const reopenWrites = reopened.writes.length
++    expect((await reopened.post("bob", approve.value.command)).status).toBe(409)
++    expect(await reopened.snapshot()).toEqual(persisted)
++    expect(reopened.writes).toHaveLength(reopenWrites)
++
++    // This cycle proves the three canonical effects. It creates no C12 receipt or post-approval save.
++    const after = await reopened.review()
++    const final = await reopened.snapshot()
++    const finalWrites = reopened.writes.length
++    expect(after.review.allowedActions).toEqual([])
++    expect(await reopened.lifecycle.prepare({ review: after.review, action: { kind: "save-estimate", amount: 160 } }, after.context)).toEqual({ status: "denied", reason: "requisition-action-unavailable" })
++    const forbidden = { page: "Requests", action: "save", id: reopened.requestId, version: after.review.domainVersion, values: { pr: { estAmount: 160 } } }
++    expect(procurementPreparationIssue(final, forbidden)).toBe("requisition-stage-not-editable")
++    expect((await reopened.post("alice", forbidden)).status).toBe(403)
++    expect(await reopened.snapshot()).toEqual(final)
++    expect(reopened.writes).toHaveLength(finalWrites)
++  } finally { if (!lifecycle.closed) await lifecycle.current.dispose() }
++})
++
++test("reject and resubmit require a fresh review of 140; the retained approval of 100 cannot approve it", async () => {
++  const fixture = await createApprovalFixture()
++  try {
++    const submitted = await prepare(fixture, "alice", { kind: "submit-current", amount: 100 })
++    expect((await fixture.post("alice", submitted.plan.command)).status).toBe(200)
++    const pending = await fixture.review("bob")
++    const oldApprove = await fixture.lifecycle.prepare({ review: pending.review, action: { kind: "approve-submitted", amount: 100, holderId: "bob", comment: "Old snapshot" } }, pending.context)
++    if (oldApprove.status !== "ok") throw new Error("Original pending approval unavailable")
++    const reject = await fixture.lifecycle.prepare({ review: pending.review, action: { kind: "reject-submitted", amount: 100, holderId: "bob", reason: "Return the submitted 100 for revision" } }, pending.context)
++    if (reject.status !== "ok") throw new Error("Rejection preparation unavailable")
++    expect(reject.value.command).toEqual({ page: "Requests", action: "reject", id: fixture.requestId, version: pending.review.domainVersion, confirmed: false, values: { reason: "Return the submitted 100 for revision" } })
++    expect((await fixture.post("bob", reject.value.command)).status).toBe(200)
++    expect(await fixture.current()).toMatchObject({ status: "pr_rejected", pr: { estAmount: 100 }, prApproval: { amount: 100 } })
++    const rejected = await fixture.snapshot()
++    expect((await fixture.post("bob", reject.value.command)).status).toBe(409)
++    expect(await fixture.snapshot()).toEqual(rejected)
++
++    const revised = await prepare(fixture, "alice", { kind: "save-estimate", amount: 140 })
++    expect(revised.review.stage).toBe("pr_rejected")
++    expect((await fixture.post("alice", revised.plan.command)).status).toBe(200)
++    const resubmit = await prepare(fixture, "alice", { kind: "submit-current", amount: 140 })
++    expect(resubmit.plan.command.values).toEqual({})
++    expect((await fixture.post("alice", resubmit.plan.command)).status).toBe(200)
++    const resubmitted = await fixture.snapshot()
++    const writes = fixture.writes.length
++    expect(await fixture.current()).toMatchObject({ status: "pr_pending", pr: { estAmount: 140 }, prApproval: { amount: 140 } })
++    expect((await fixture.lifecycle.prepare({ review: pending.review, action: { kind: "approve-submitted", amount: 100, holderId: "bob", comment: "Old snapshot" } }, pending.context)).status).toBe("stale")
++    expect((await fixture.post("bob", oldApprove.value.command)).status).toBe(409)
++    expect(await fixture.snapshot()).toEqual(resubmitted)
++    expect(fixture.writes).toHaveLength(writes)
++
++    const current = await prepare(fixture, "bob", { kind: "approve-submitted", amount: 140, holderId: "bob", comment: "New submitted snapshot" })
++    expect(current.plan.command.version).toBeGreaterThan(oldApprove.value.command.version)
++    expect((await fixture.post("bob", current.plan.command)).status).toBe(200)
++    expect(await fixture.current()).toMatchObject({ status: "sourcing", pr: { estAmount: 140 }, prApproval: { amount: 140 } })
++  } finally { await fixture.dispose() }
++})
++
++test("amount, holder and admin cannot authorize a replacement of the submitted snapshot", async () => {
++  const fixture = await createApprovalFixture()
++  try {
++    const submit = await prepare(fixture, "alice", { kind: "submit-current", amount: 100 })
++    expect((await fixture.post("alice", submit.plan.command)).status).toBe(200)
++    const pending = await fixture.review("bob")
++    const before = await fixture.snapshot()
++    const writes = fixture.writes.length
++    expect(await fixture.lifecycle.prepare({ review: pending.review, action: { kind: "approve-submitted", amount: 140, holderId: "bob", comment: "Unwritten replacement" } }, pending.context)).toEqual({ status: "needs-input", reason: "requisition-amount-mismatch" })
++    expect(await fixture.lifecycle.prepare({ review: pending.review, action: { kind: "approve-submitted", amount: 100, holderId: "alice", comment: "Wrong holder" } }, pending.context)).toEqual({ status: "needs-input", reason: "submitted-snapshot-mismatch" })
++    const injected = { kind: "approve-submitted" as const, amount: 100, holderId: "bob", comment: "Hidden replacement", pr: { estAmount: 140 } }
++    expect(await fixture.lifecycle.prepare({ review: pending.review, action: injected }, pending.context)).toEqual({ status: "needs-input", reason: "explicit-requisition-action-required" })
++    expect(await fixture.lifecycle.prepare({ review: { ...pending.review, submittedAmount: 140 }, action: { kind: "approve-submitted", amount: 140, holderId: "bob", comment: "Forged review" } }, pending.context)).toEqual({ status: "stale", reason: "requisition-review-changed" })
++    expect(await fixture.lifecycle.prepare({ review: pending.review, action: { kind: "reject-submitted", amount: 100, holderId: "bob", reason: " " } }, pending.context)).toEqual({ status: "needs-input", reason: "explicit-requisition-action-required" })
++    expect(await fixture.snapshot()).toEqual(before)
++    expect(fixture.writes).toHaveLength(writes)
++
++    fixture.actors.alice!.roles = ["admin"]
++    const admin = await fixture.review()
++    const protectedSnapshot = await fixture.snapshot()
++    const protectedWrites = fixture.writes.length
++    expect(admin.review.allowedActions).toEqual([])
++    expect(await fixture.lifecycle.prepare({ review: admin.review, action: { kind: "approve-submitted", amount: 100, holderId: "bob", comment: "No holder override" } }, admin.context)).toEqual({ status: "denied", reason: "requisition-action-unavailable" })
++    expect((await fixture.post("alice", { page: "Requests", action: "approve", id: fixture.requestId, version: admin.review.domainVersion, values: { comment: "No holder override" } })).status).toBe(403)
++    expect(await fixture.snapshot()).toEqual(protectedSnapshot)
++    expect(fixture.writes).toHaveLength(protectedWrites)
++    expect(await fixture.current()).toMatchObject({ status: "pr_pending", pr: { estAmount: 100 }, prApproval: { amount: 100 } })
++  } finally { await fixture.dispose() }
++})
++
++async function prepare(fixture: Awaited<ReturnType<typeof createApprovalFixture>>, principal: string, action: ProcurementApprovalAction) {
++  const admitted = await fixture.review(principal)
++  const prepared = await fixture.lifecycle.prepare({ review: admitted.review, action }, admitted.context)
++  if (prepared.status !== "ok") throw new Error(`Explicit ${action.kind} preparation unavailable: ${prepared.reason}`)
++  return { ...admitted, plan: prepared.value }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/scenario-composition.test.ts
+@@ -0,0 +1,111 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { object } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
++import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { comparePlannerScenarios } from "../../../product/planner/comparison.ts"
++import { createProcurementScenarioDraftPreparation, createProcurementScenarioPreparation } from "../../../product/procurement/scenario-preparation.ts"
++import { scenarioAt, scenarioPeriod } from "../procurement-decision-producer/fixture.ts"
++import { createApprovalFixture } from "./fixture.ts"
++
++test("a persisted C08 choice supplies the exact draft value while remaining distinct from approval and C12 Apply", async () => {
++  const fixture = await createApprovalFixture()
++  try {
++    const draft = await fixture.review()
++    const request: ScenarioRequest = { baseRef: draft.sourceRef, operations: [{ kind: "replace", targetRef: draft.sourceRef, amount: 140, currency: "USD", period: scenarioPeriod }], assumptions: [{ id: "procurement-cost-inventory", value: "renewal-transition-v1", evidenceRefs: [], state: "hypothetical" }] }
++    const businessBeforePreview = await fixture.snapshot()
++    const previewWrites = fixture.writes.length
++    const baseline = await fixture.producer.preview({ ...request, operations: [] }, draft.context)
++    const preview = await fixture.producer.preview(request, draft.context)
++    if (baseline.status !== "ok" || preview.status !== "ok") throw new Error("Current Procurement scenario unavailable")
++    expect(baseline.value.scenario.knownSubtotal).toBe(100)
++    expect(preview.value.scenario).toMatchObject({ knownSubtotal: 140, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending" } })
++    expect(preview.value.scenario.sourceRefs).toEqual([draft.review.source])
++    expect(await fixture.snapshot()).toEqual(businessBeforePreview)
++    expect(fixture.writes).toHaveLength(previewWrites)
++
++    const caseRef = { id: "approval-composition-case", incarnation: "approval-composition-incarnation", version: 1 }
++    const decision: DecisionCase = { ...caseRef, state: "comparing", objective: "Review an explicit draft estimate of 140 USD", currency: "USD", horizon: scenarioPeriod, criteria: [{ id: "amount", description: "Known estimate", required: true }], participants: ["alice"], sourceRefs: [draft.review.source], alternatives: [{ id: preview.value.assessment.alternativeId, version: preview.value.assessment.alternativeVersion, title: "Reviewed 140 USD proposal", scenario: request, result: preview.value.scenario }], costCoverageBases: [preview.value.basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++    const comparison = comparePlannerScenarios({ baselineRef: baseline.value.scenario.id, alternativeRef: preview.value.scenario.id, baselineCoverageRef: baseline.value.coverageRef, alternativeCoverageRef: preview.value.coverageRef, baseline: baseline.value.scenario, alternative: preview.value.scenario })
++    const chosen = createChoiceSnapshot({ case: decision, alternativeId: preview.value.assessment.alternativeId, alternativeVersion: preview.value.assessment.alternativeVersion, comparison, criteria: ["amount"], values: [{ criterionRef: "amount", value: 140, unit: "currency", currency: "USD", horizon: scenarioPeriod }], evidenceRefs: [draft.review.source], id: "human-choice-140", principalRef: "alice", reason: "Prepare this estimate for a separate draft edit", at: scenarioAt })
++    if (chosen.status !== "ok") throw new Error(`Human choice snapshot unavailable: ${chosen.reason}`)
++    expect(chosen.choice).toMatchObject({ comparisonStatus: "conditioned", costCoverage: { coverageState: "pending" }, result: { knownSubtotal: 140, total: null } })
++    const state = createSfProductState({ persistence: fixture.persistence, createId: randomUUID, resolveTarget: async (_request, _snapshot, namespace, target) => namespace === "cases" && target === caseRef.id ? { incarnation: caseRef.incarnation } : undefined, authorize: async (incoming) => {
++      const principal = await fixture.host.authenticate(incoming)
++      return principal ? { principalRef: principal.id, accessRevision: "access-1", policyVersion: "policy-1" } : undefined
++    } })
++    const seeded = await state.transaction(draft.request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "persist-fixture-choice", commandDigest: digestSfValue(chosen.choice), targetRef: caseRef.id, targetIncarnation: caseRef.incarnation }, async (current) => {
++      current.cases[caseRef.id] = { ...decision, state: "chosen", choices: [chosen.choice] }
++      return { commit: true, value: chosen.choice.id }
++    })
++    expect(seeded.status).toBe("ok")
++    const results = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && fixture.host.revalidate(context), verifySources: async (_value, refs, context) => {
++      const verified = await Promise.all(refs.map(async (ref) => {
++        const source = await fixture.sources.resolveForPreparation(ref.refId, context)
++        return source.status === "ok" && digestSfValue(source.value.evidence) === digestSfValue(ref)
++      }))
++      return refs.length > 0 && verified.every(Boolean)
++    }, createId: randomUUID, now: () => scenarioAt })
++    const write = { kind: "scenario" as const, result: preview.value.scenario, caseRef, requestDigest: digestSfValue(request), sourceRefs: preview.value.scenario.sourceRefs, idempotencyKey: "persist-approved-cycle-scenario" }
++    const stored = await results.write(write, draft.context)
++    if (stored.status !== "ok") throw new Error(`Canonical scenario persistence unavailable: ${stored.reason}`)
++    const storedWrites = fixture.writes.length
++    expect(await results.write(write, draft.context)).toEqual(stored)
++    expect(fixture.writes).toHaveLength(storedWrites)
++    expect(await results.read({ kind: "scenario", resultRef: stored.value.resultRef }, draft.context)).toEqual(stored)
++    const persisted = await state.read(draft.request, "cases", (current) => structuredClone(current))
++    if (persisted.status !== "ok") throw new Error("Persisted C08 case unavailable")
++    expect(Object.keys(object(persisted.value.decisionResults))).toHaveLength(1)
++    const choice = persisted.value.cases[caseRef.id]!.choices[0]!
++    expect(choice).toEqual(chosen.choice)
++    expect(persisted.value.cases[caseRef.id]?.receipts).toEqual([])
++    expect(persisted.value.cases[caseRef.id]?.preparedChanges).toEqual([])
++
++    const prepareDraft = createProcurementScenarioDraftPreparation({ host: fixture.host })
++    const prepareC12 = createProcurementScenarioPreparation({ host: fixture.host, sources: fixture.sources })
++    const operation = choice.scenario.operations[0]!
++    const beforePreparation = await fixture.snapshot()
++    const writes = fixture.writes.length
++    const prepared = await prepareDraft({ operation, choice, review: draft.review }, draft.context)
++    if (prepared.status !== "ok") throw new Error(`Chosen draft plan unavailable: ${prepared.reason}`)
++    expect(prepared.value).toMatchObject({ kind: "procurement-pr-lifecycle-v1", approvalGranted: false, receipt: null, requiresExplicitAction: true, command: { page: "Requests", action: "save", version: draft.review.domainVersion, values: { pr: { estAmount: 140 } } } })
++    expect(await prepareDraft({ operation: { ...operation, amount: 160 }, choice, review: draft.review }, draft.context)).toEqual({ status: "denied", reason: "operation-not-in-choice" })
++    expect(await prepareDraft({ operation, choice: { ...choice, result: { ...choice.result, currency: "EUR" } }, review: draft.review }, draft.context)).toEqual({ status: "needs-input", reason: "requisition-basis-mismatch" })
++    expect(await prepareDraft({ operation, choice: { ...choice, result: { ...choice.result, sourceRefs: [] } }, review: draft.review }, draft.context)).toEqual({ status: "denied", reason: "preview-source-unavailable" })
++    expect(await prepareC12({ operation, choice, operationId: "still-unavailable-financial-apply", idempotencyKey: "still-unavailable-financial-apply" }, draft.context)).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
++    expect(await fixture.snapshot()).toEqual(beforePreparation)
++    expect(await state.read(draft.request, "cases", (current) => structuredClone(current))).toEqual(persisted)
++    expect(fixture.writes).toHaveLength(writes)
++
++    expect((await fixture.post("alice", prepared.value.command)).status).toBe(200)
++    const saved = await fixture.snapshot()
++    const savedWrites = fixture.writes.length
++    expect(await fixture.current()).toMatchObject({ status: "draft", pr: { estAmount: 140 }, prApproval: null })
++    expect((await prepareDraft({ operation, choice, review: draft.review }, draft.context)).status).toBe("stale")
++    expect((await fixture.post("alice", prepared.value.command)).status).toBe(409)
++    expect(await fixture.snapshot()).toEqual(saved)
++    expect(fixture.writes).toHaveLength(savedWrites)
++
++    const submission = await fixture.review()
++    expect(await fixture.lifecycle.prepare({ review: submission.review, action: { kind: "save-estimate", amount: 140 } }, submission.context)).toEqual({ status: "needs-input", reason: "requisition-already-matches" })
++    const submit = await fixture.lifecycle.prepare({ review: submission.review, action: { kind: "submit-current", amount: 140 } }, submission.context)
++    if (submit.status !== "ok") throw new Error("Fresh canonical submission unavailable")
++    expect((await fixture.post("alice", submit.value.command)).status).toBe(200)
++    const approval = await fixture.review("bob")
++    const approve = await fixture.lifecycle.prepare({ review: approval.review, action: { kind: "approve-submitted", amount: 140, holderId: "bob", comment: "Approve this submitted snapshot" } }, approval.context)
++    if (approve.status !== "ok") throw new Error("Fresh canonical approval unavailable")
++    expect((await fixture.post("bob", approve.value.command)).status).toBe(200)
++    expect(await fixture.current()).toMatchObject({ status: "sourcing", pr: { estAmount: 140 }, prApproval: { amount: 140 } })
++
++    // This checks stored provenance bytes, not authorization to reuse the old source as a current preview.
++    expect(await state.read(draft.request, "cases", (current) => structuredClone(current))).toEqual(persisted)
++    expect(choice.result).toEqual(preview.value.scenario)
++    expect(choice.result.sourceRefs).toEqual([draft.review.source])
++    expect(choice.result.total).toBeNull()
++    expect(choice.costCoverage.coverageState).toBe("pending")
++  } finally { await fixture.dispose() }
++})

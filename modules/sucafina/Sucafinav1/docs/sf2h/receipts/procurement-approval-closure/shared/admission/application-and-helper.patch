@@ -1,0 +1,218 @@
+--- a/modules/sucafina/Sucafinav1/runtime/application.ts
++++ b/modules/sucafina/Sucafinav1/runtime/application.ts
+@@ -15,6 +15,20 @@
+ import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
+ import { publicSfData } from "../product/integration/public-state.ts"
+ 
++/** Transport selector for a reviewed canonical command; the payload is never authority. */
++export const APPLICATION_COMMAND_REVIEW_HEADER = "x-sf-command-review"
++
++export type ApplicationCommandAdmissionDecision =
++  | { allowed: true }
++  | { allowed: false; status: 403 | 409 | 422 | 503 }
++
++export type ApplicationCommandAdmission = {
++  // Synchronous and read-only. No I/O, nested transaction, identifier allocation or domain execution.
++  current: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => ApplicationCommandAdmissionDecision
++  // Releases only this request's retained context; must be idempotent and must not throw.
++  finish?: () => void
++}
++
+ export type Contribution = {
+   pages: readonly string[]
+   domain: Domain
+@@ -39,6 +53,9 @@
+   product?: (request: Request, surface: Surface) => Promise<Response | undefined>
+   // Prepare outside the page lock; fence the retained projection against the authenticated snapshot inside it.
+   productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
++  // Prepare the retained review outside the lock. Its current predicate runs after destination authentication.
++  // A managed review must return an admission or refusal, never undefined as an ordinary-command fallback.
++  prepareCommandAdmission?: (request: Request, surface: Surface, command: Command) => Promise<ApplicationCommandAdmission | Response | undefined>
+   // Runs within the authorized page transaction; the decorator must be synchronous and pure.
+   productHtml?: (html: string, surface: Surface, page: string) => string
+ }
+@@ -64,8 +81,14 @@
+     )
+       return reply("Access denied", 403)
+     const uploading = request.method === "POST" && url.searchParams.has("upload")
++    const reviewedCommand = request.headers.has(APPLICATION_COMMAND_REVIEW_HEADER)
++    if (reviewedCommand && (request.method !== "POST" || uploading))
++      return reply("Reviewed commands require the canonical JSON POST route", 422)
++    if (reviewedCommand && !application.prepareCommandAdmission)
++      return reply("Command review admission is unavailable", 503)
++    // A reviewed command always reaches the canonical decoder and destination transaction.
+     // Product operations own fresh authentication and transactions; never nest them in the page lock.
+-    const product = await application.product?.(request, surface)
++    const product = reviewedCommand ? undefined : await application.product?.(request, surface)
+     if (product) return product
+     const parsed =
+       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
+@@ -81,7 +104,13 @@
+     if (preparedUpload instanceof Response) return preparedUpload
+     const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
+     if (productView instanceof Response) return productView
+-    const response = await transaction(async (snapshot, blobs) => {
++    const commandAdmission = parsed
++      ? await application.prepareCommandAdmission?.(request, surface, structuredClone(parsed))
++      : undefined
++    if (commandAdmission instanceof Response) return commandAdmission
++    if (reviewedCommand && !commandAdmission)
++      return reply("Command review admission is unavailable", 503)
++    const response = await Promise.resolve().then(() => transaction(async (snapshot, blobs) => {
+       // Resolve current roles INSIDE the same transaction that rereads records and locks.
+       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+       if (!principal || !principal.id || principal.id.startsWith("local:"))
+@@ -228,6 +257,25 @@
+         }
+       }
+       if (parsed) {
++        if (commandAdmission) {
++          let admission: ApplicationCommandAdmissionDecision | undefined
++          try {
++            // Isolate all mutable inputs. A predicate cannot alter the snapshot, actor or command to be executed.
++            admission = commandAdmission.current(structuredClone(snapshot), structuredClone(actor), structuredClone(parsed), {
++              ...environment,
++              directory: structuredClone(environment.directory),
++              bankKey: environment.bankKey?.slice(),
++              id: () => { throw new Error("Command admission cannot allocate identifiers") },
++            })
++          } catch {
++            return { commit: false, value: json({ ok: false, status: 503, errors: ["Command review admission is unavailable"] }, 503) }
++          }
++          if (!admission || admission.allowed !== true) {
++            const status = admission?.allowed === false && [403, 409, 422, 503].includes(admission.status) ? admission.status : 503
++            return { commit: false, value: json({ ok: false, status, errors: ["Command review is no longer current"] }, status) }
++          }
++        }
++        // The managed Procurement save/submit_pr/approve/reject path contains no await from this fence to execute.
+         if (surface === "dashboard") {
+           const preview = handleDashboardPreview(snapshot, actor, parsed, environment, decodeCommand)
+           if (preview) return { commit: preview.commit, value: json(preview.value, preview.value.ok ? 200 : preview.value.status) }
+@@ -443,7 +491,9 @@
+           "Content-Security-Policy": htmlPolicy(finalHtml),
+         }),
+       }
+-    }).finally(() => productView?.finish())
++    })).finally(() => {
++      try { commandAdmission?.finish?.() } finally { productView?.finish() }
++    })
+     return request.method === "HEAD"
+       ? new Response(null, {
+           status: response.status,
+diff --git a/modules/sucafina/Sucafinav1/product/integration/procurement-approval-admission.ts b/modules/sucafina/Sucafinav1/product/integration/procurement-approval-admission.ts
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/product/integration/procurement-approval-admission.ts
+@@ -0,0 +1,113 @@
++import {
++  APPLICATION_COMMAND_REVIEW_HEADER,
++} from "../../runtime/application.ts"
++import type {
++  Application,
++  ApplicationCommandAdmissionDecision,
++} from "../../runtime/application.ts"
++import type { Actor, Command, Environment, Snapshot } from "../../runtime/contract.ts"
++import { digestSfValue } from "../contracts/canonical.ts"
++import type { DomainPortHost } from "../contracts/ports.ts"
++import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
++import type {
++  createProcurementApprovalLifecycle,
++  ProcurementApprovalPlan,
++} from "../procurement/decision-preparation.ts"
++
++// Proposed composition helper for47. No caller or installation is activated by this file.
++type Lifecycle = ReturnType<typeof createProcurementApprovalLifecycle>
++type ExistingUiContext = {
++  binding: TrustedDomainContext
++  // Releases only this HTTP request's retention. It must not revoke another request's context.
++  finish: () => void
++}
++
++export function createProcurementApprovalAdmissionHook(input: {
++  lifecycle: Lifecycle
++  requestFor: DomainPortHost["requestFor"]
++  // The host owns authentication, binding, scope and the actual Request object.
++  // This callback must resolve its existing UI context, never build identity from the header.
++  existingUiContextFor: (request: Request) => Promise<ExistingUiContext | undefined>
++}): NonNullable<Application["prepareCommandAdmission"]> {
++  return async (request, surface, command) => {
++    const encoded = request.headers.get(APPLICATION_COMMAND_REVIEW_HEADER)
++    if (encoded === null) return undefined
++    if (request.signal.aborted) return refusal(403)
++    if (request.method !== "POST" || surface !== "procurement" || command.page !== "Requests" ||
++        !["save", "submit_pr", "approve", "reject"].includes(command.action))
++      return refusal(422)
++    // The header contains bounded, untrusted intent. It is not a grant, receipt or signed approval.
++    if (!encoded || encoded.length > 16_384) return refusal(422)
++    let plan: ProcurementApprovalPlan
++    try {
++      const decoded = decodeURIComponent(encoded)
++      if (encodeURIComponent(decoded) !== encoded) return refusal(422)
++      plan = JSON.parse(decoded) as ProcurementApprovalPlan
++    } catch { return refusal(422) }
++
++    let context: ExistingUiContext | undefined
++    let admission: Awaited<ReturnType<Lifecycle["admission"]>> | undefined
++    let closed = false
++    const finish = () => {
++      if (closed) return
++      closed = true
++      try { if (admission?.status === "ok") admission.value.finish() } finally { context?.finish() }
++    }
++    try {
++      context = await input.existingUiContextFor(request)
++      if (!context) return refusal(503)
++      const binding = context.binding
++      if (binding.kind !== "ui" || request.signal.aborted || input.requestFor(binding) !== request) {
++        finish()
++        return refusal(403)
++      }
++      // The lifecycle validates the full shape and reconstructs current authorized review material.
++      admission = await input.lifecycle.admission(plan, binding)
++      if (request.signal.aborted || input.requestFor(binding) !== request) {
++        finish()
++        return refusal(403)
++      }
++      if (admission.status !== "ok") {
++        const status = admissionStatus(admission.status)
++        finish()
++        return refusal(status)
++      }
++      if (digestSfValue(command) !== digestSfValue(plan.command)) {
++        finish()
++        return refusal(422)
++      }
++      const retained = admission.value
++      return {
++        current(snapshot: Snapshot, actor: Actor, actualCommand: Command, environment: Environment): ApplicationCommandAdmissionDecision {
++          if (closed || request.signal.aborted || input.requestFor(binding) !== request) return { allowed: false, status: 403 }
++          const result = retained.current(snapshot, actor, actualCommand, environment)
++          return result.status === "ok"
++            ? { allowed: true }
++            : { allowed: false, status: admissionStatus(result.status) }
++        },
++        finish,
++      }
++    } catch {
++      finish()
++      return refusal(503)
++    }
++  }
++}
++
++function admissionStatus(status: string): 403 | 409 | 422 | 503 {
++  if (status === "denied") return 403
++  if (status === "stale" || status === "conflict") return 409
++  if (status === "needs-input") return 422
++  return 503
++}
++
++function refusal(status: 403 | 409 | 422 | 503) {
++  return new Response(JSON.stringify({
++    ok: false,
++    status,
++    errors: ["Reviewed Procurement command is unavailable or no longer current"],
++  }), {
++    status,
++    headers: { "Content-Type": "application/json; charset=utf-8" },
++  })
++}
