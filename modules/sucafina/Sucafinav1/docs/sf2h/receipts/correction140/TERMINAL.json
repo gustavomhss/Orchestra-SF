@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.correction140.terminal.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 140,
+  "branch": "sf-ux-w04",
+  "pr": 129,
+  "lease_epoch": "native-platform-fixture-e1-browser140",
+  "ack_commit": "0d012288c625238bb1016895128e41a16f7f81ba",
+  "code_commit": "2f9308228277f48b42c6ff8cb1a968f9bff81b02",
+  "code_tree": "227a94021c0aa105b1158993d2b7c17433314ba9",
+  "source_fence_head": "326a6162a6b6b555b64bbeee0d4d79057cff37ec",
+  "source_material_C64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+  "source_material_C64_test_failure": {
+    "run": 43738907064,
+    "job": 132887516559
+  },
+  "actors": {
+    "integrator": 132,
+    "compiler": 128,
+    "ci": 129,
+    "s01_owner": 139
+  },
+  "state": "ARTIFACT_READY",
+  "commits": {
+    "ack": "0d012288c625238bb1016895128e41a16f7f81ba",
+    "code": "2f9308228277f48b42c6ff8cb1a968f9bff81b02"
+  },
+  "receipt_commit": "SELF_REFERENTIAL_COMMIT_RESOLVES_FROM_BRANCH_HEAD",
+  "artifacts": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/ACK.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/MANIFEST.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/CORRECTION-140.patch",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S05-CONSUMER-C64.patch",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S01-FOLLOWUP-139.patch",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/HANDOFF.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/CHECKPOINT.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/TERMINAL.json"
+  ],
+  "postimages": {
+    "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts": "aa17ece934eb35f54602b6de99bcc39da39d1fed",
+    "packages/app-shell/test-browser/sucafina-native/s05.test.ts": "f7d032d5fdded022f40270727035577ae08228db",
+    "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15"
+  },
+  "original_tests_preserved": true,
+  "provider_regression_added": true,
+  "locally_executed": false,
+  "postimage_compiler": "NOT_RUN",
+  "postimage_surgical_ci": "NOT_RUN",
+  "consumer_ACK": "PENDING_132",
+  "status_source": "ARTIFACT_READY_ONLY_NOT_INTEGRATED_NOT_QUALIFIED_NOT_DONE",
+  "native_goal": "paused",
+  "global_release": false
+}

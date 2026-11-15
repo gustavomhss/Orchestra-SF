@@ -1,0 +1,26 @@
+diff --git a/packages/app-shell/test-browser/sucafina-native/s01.test.ts b/packages/app-shell/test-browser/sucafina-native/s01.test.ts
+# Conditional patch against PR125 W06 blob 65c74a68a7658706b18e70c5f98e52a419910fb3; postblob intentionally not published
+index 65c74a6..0000000 100644
+--- a/packages/app-shell/test-browser/sucafina-native/s01.test.ts
++++ b/packages/app-shell/test-browser/sucafina-native/s01.test.ts
+@@ -28,6 +28,7 @@
+ } else {
+   const { createComponent, createStore, render } = await import("../lean-dom.test-helper")
+   const { solidDom } = await import("../solid-dom")
++  const { withBrowserPlatform } = await import("./platform-fixture")
+   const { LanguageProvider }: typeof import("@/context/language") = await import(
+     solidDom("@/context/language", import.meta.dir),
+   )
+@@ -117,10 +118,10 @@
+           onOpenPage() { events.push("open-page") },
+         })
+       : list()
+-    const dispose = render(() => createComponent(LanguageProvider, {
++    const dispose = render(() => withBrowserPlatform(() => createComponent(LanguageProvider, {
+       locale: "en",
+       get children() { return component() },
+-    }), host)
++    })), host)
+     return { host, events, state, update, done: () => (dispose(), host.remove()) }
+   }
+ 

@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.correction140.manifest.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 140,
+  "branch": "sf-ux-w04",
+  "pr": 129,
+  "lease_epoch": "native-platform-fixture-e1-browser140",
+  "ack_commit": "0d012288c625238bb1016895128e41a16f7f81ba",
+  "code_commit": "2f9308228277f48b42c6ff8cb1a968f9bff81b02",
+  "code_tree": "227a94021c0aa105b1158993d2b7c17433314ba9",
+  "source_fence_head": "326a6162a6b6b555b64bbeee0d4d79057cff37ec",
+  "source_material_C64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+  "source_material_C64_test_failure": {
+    "run": 43738907064,
+    "job": 132887516559
+  },
+  "actors": {
+    "integrator": 132,
+    "compiler": 128,
+    "ci": 129,
+    "s01_owner": 139
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+      "role": "F03 existing source test",
+      "source_preimage": "0d0cd166eda9c2f81d2a77e034c89c0206c78c0f",
+      "consumer_C64_preimage": "0d0cd166eda9c2f81d2a77e034c89c0206c78c0f",
+      "postimage": "aa17ece934eb35f54602b6de99bcc39da39d1fed",
+      "change": "wrap real PlatformProvider before LanguageProvider; provider regression assertion; no original assertion removed"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "role": "S05 exact C64 test materialized",
+      "source_preimage": "ABSENT",
+      "consumer_C64_preimage": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+      "postimage": "f7d032d5fdded022f40270727035577ae08228db",
+      "change": "only real PlatformProvider wrapper; five original test cases and assertions preserved",
+      "consumer_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S05-CONSUMER-C64.patch"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+      "role": "shared typed browser-only Platform fixture",
+      "source_preimage": "ABSENT",
+      "consumer_C64_preimage": "ABSENT",
+      "postimage": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+      "change": "real PlatformProvider API; outer context; unexpected external calls throw; no SF auth or grant"
+    }
+  ],
+  "tests": {
+    "source_C64": "FAIL",
+    "f03": "1 PASS / 7 FAIL (C64 context)",
+    "s05": "5 FAIL (C64 context)",
+    "new_140_code": "NOT_RUN_BY_POLICY",
+    "new_140_compiler": "NOT_RUN",
+    "new_140_surgical_CI": "NOT_RUN",
+    "requested_selection": [
+      "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts"
+    ]
+  },
+  "scope_outside_owner": {
+    "s01_139": {
+      "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "observed_branch": "sf-ux-w06",
+      "observed_PR": 125,
+      "observed_branch_head": "b694342c38a9877619f4cd5a4fab97106a0d14c0",
+      "observed_blob": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+      "actual_file_edited": false,
+      "conditional_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S01-FOLLOWUP-139.patch"
+    }
+  },
+  "status": "ARTIFACT_READY_NOT_QUALIFIED",
+  "native_goal": "paused",
+  "global_release": false
+}

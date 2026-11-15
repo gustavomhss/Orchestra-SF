@@ -1,0 +1,27 @@
+diff --git a/packages/app-shell/test-browser/sucafina-native/s05.test.ts b/packages/app-shell/test-browser/sucafina-native/s05.test.ts
+index 912d5f7..f7d032d 100644
+--- a/packages/app-shell/test-browser/sucafina-native/s05.test.ts
++++ b/packages/app-shell/test-browser/sucafina-native/s05.test.ts
+@@ -11,6 +11,7 @@
+ const { createComponent }: typeof import("solid-js") = await import("solid-js")
+ const { createStore }: typeof import("solid-js/store") = await import("solid-js/store")
+ const { render }: typeof import("solid-js/web") = await import("solid-js/web")
++const { withBrowserPlatform } = await import("./platform-fixture")
+ const { LanguageProvider }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
+ const {
+   SfRelations, SfThread, SfQuestion, SfConfirmation,
+@@ -25,12 +26,12 @@
+   const [props, set] = createStore(initial)
+   const host = document.createElement("div")
+   document.body.append(host)
+-  const dispose = render(() => createComponent(LanguageProvider, {
++  const dispose = render(() => withBrowserPlatform(() => createComponent(LanguageProvider, {
+     locale: "en",
+     get children() {
+       return createComponent(Component, props as Props)
+     },
+-  }), host)
++  })), host)
+   const button = (label: string) => [...host.querySelectorAll<HTMLButtonElement>("button")].find(
+     (item) => item.textContent?.trim() === label,
+   )!
