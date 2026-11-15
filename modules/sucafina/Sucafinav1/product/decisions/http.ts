@@ -169,6 +169,55 @@ export function createDecisionHttp(input: {
   }
 }
 
+/** Installed case routes share the canonical validators without rebuilding the other Decision services. */
+export function createDecisionCaseHttp(input: Pick<Parameters<typeof createDecisionHttp>[0],
+  "origin" | "mount" | "human" | "withCase" | "admitList" | "admitComparison" | "management" | "compare"> & {
+  finishList: (context: TrustedUiContext) => void
+  catalog: Parameters<typeof createDecisionHttp>[0]["portfolio"]["catalog"]
+}) {
+  return async (request: Request): Promise<Response | undefined> => {
+    const url = new URL(request.url)
+    if (url.origin !== input.origin || url.pathname !== input.mount) return undefined
+    const action = url.searchParams.get("sf")
+    if (!action || !["decision-list", "decision-edit", "decision-compare", "decision-portfolio-catalog"].includes(action)) return undefined
+    if (request.signal.aborted || request.headers.get("sec-fetch-site") === "cross-site")
+      return response({ status: "denied", reason: "decision-origin-unavailable" })
+    if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf"))
+      return response({ status: "needs-input", reason: "invalid-decision-request" })
+    try {
+      if (action === "decision-list") {
+        if (request.method !== "GET") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
+        const admitted = await input.admitList(request)
+        if (admitted.status !== "ok") return response(admitted)
+        try { return response(await input.management.list(admitted.value)) }
+        finally { input.finishList(admitted.value) }
+      }
+      if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
+      if (request.headers.get("origin") !== input.origin) return response({ status: "denied", reason: "decision-origin-unavailable" })
+      if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json"))
+        return response({ status: "needs-input", reason: "invalid-content-type" }, 415)
+      const body = await request.text()
+      if (body.length > 1_000_000) return response({ status: "needs-input", reason: "request-too-large" }, 413)
+      const payload: unknown = JSON.parse(body)
+      if (!valid(action, payload)) return response({ status: "needs-input", reason: "invalid-decision-input" })
+      const admitted = action === "decision-compare"
+        ? await input.admitComparison(request, payload as Compare)
+        : await input.human.admit(request, action === "decision-edit" ? "decisions.edit" : "decisions.portfolio.read", payload)
+      if (admitted.status !== "ok") return response(admitted)
+      try {
+        const context = admitted.value
+        if (action === "decision-portfolio-catalog")
+          return response(await input.catalog((payload as { caseRefs: CaseRef[] }).caseRefs, context))
+        const caseRef = (payload as { caseRef: CaseRef }).caseRef
+        return response(await input.withCase<unknown>(context, caseRef, { allowHistoricalRetry: action === "decision-edit" }, () =>
+          action === "decision-edit" ? input.management.edit(payload as Edit, context) : input.compare(payload as Compare, context)))
+      } finally { input.human.finish(admitted.value) }
+    } catch {
+      return response({ status: "unavailable", reason: "decision-request-unavailable" })
+    }
+  }
+}
+
 function response(result: PortResult<unknown>, status?: number) {
   return Response.json(result, { status: status ?? (result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : 503), headers: { "cache-control": "no-store" } })
 }
