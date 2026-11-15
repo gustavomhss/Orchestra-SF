@@ -1,0 +1,84 @@
+{
+  "schema": "sf2h-compiler-tooling-ack-v1",
+  "mission": 119,
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_status": "CONTINUING_LATE",
+  "actor": "S0-C compiler/tooling successor108",
+  "requested_preset": "Astra",
+  "effective_model": "GPT-6",
+  "session": "new independent ChatGPT conversation; opaque session id unavailable",
+  "authenticated_login": "gustavomhss",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "lease_epoch": "gate-tooling-browser119",
+  "observed_head": "59490441e732c025933484a0c4907c353c1e2874",
+  "observed_tree": "640f9b0ea01ac0118808e3305299f9d99aff96bc",
+  "prior_108_result": {
+    "source": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "run": 43708496555,
+    "job": 132794704289,
+    "artifact": 14158854987,
+    "commands": 17,
+    "pass": 11,
+    "fail": 6
+  },
+  "source_inputs": [
+    {
+      "ref": "111c29106bf02ddf38cc425826b764f8c5452ae6",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/119.json",
+      "blob": "3c388b013251c10327514e65dcb1be975c46ddea"
+    },
+    {
+      "ref": "59490441e732c025933484a0c4907c353c1e2874",
+      "path": "script/sf2h/final-bundle/build-artifact.py",
+      "blob": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2"
+    },
+    {
+      "ref": "59490441e732c025933484a0c4907c353c1e2874",
+      "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+      "blob": "9f8ce79ce8a8611451ad550f8807b4fa2a33ea30"
+    },
+    {
+      "ref": "59490441e732c025933484a0c4907c353c1e2874",
+      "path": ".github/workflows/sf-compiler-c53.yml",
+      "blob": "fd693619f25cdd6ae462376c781d1346baa5221b"
+    },
+    {
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+      "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b"
+    },
+    {
+      "ref": "59490441e732c025933484a0c4907c353c1e2874",
+      "path": "script/guards/rules/agent-scratch.toml",
+      "blob": "71ce321c30465faaf957a08256bd6b7d007d4173"
+    }
+  ],
+  "write_paths": [
+    "script/sf2h/final-bundle/build-artifact.py",
+    "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+    ".github/workflows/sf-compiler-c53.yml (existing owned wrapper)",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/gate-tooling-repair/"
+  ],
+  "ownership": {
+    "integrator": "114 sole writer of sf2-stack",
+    "product_ci": "120 (not 119)",
+    "source_product_fixes": [
+      "115",
+      "116",
+      "117",
+      "118"
+    ],
+    "historical_dispatcher": "45 paths unclaimed"
+  },
+  "reconciliation": {
+    "pr107_head_matches_expected": true,
+    "previous_owner108_terminal": "documented in RESULTS-108 and PR107; no newer writer observed on sf-compiler-checks",
+    "historical_55_gate_exception": "reviewer decision required; no self-approval or deletion/ignore/rule modification",
+    "run_after_typefix": "PENDING_COMPOSED_SHA_114"
+  },
+  "state": "ACKED_PRE_EDIT_NO_DISPATCH",
+  "acceptance": "No product test or epic, remote CAS only, historical FAIL/NOT_RUN preserved"
+}
