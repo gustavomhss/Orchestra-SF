@@ -1,0 +1,38 @@
+{
+  "schema": "sf88.export-reader.ack.v1",
+  "mission": 88,
+  "state": "ACK_PUBLISHED_IMPLEMENTATION_ACTIVE",
+  "lease_epoch": "export-reader-browser88",
+  "model_label": "GPT-6",
+  "backend_session_id": null,
+  "github_login": "gustavomhss",
+  "pr": 93,
+  "branch": "export-visual-proof",
+  "observed_branch_head": "5f5a76b8369b4f375e5f8bf24deae1c1cbef5cd5",
+  "workflow_preimage_blob": "0b6cf888faa82d3be7b2c683f4bff3b17a6e53e3",
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/88.json@b9935108fccc20776c60e5536a9eeddcbbaa3c83",
+  "status83_blob": "7b0fc65c25cb18875b570adcffaf982e8a6fa2ef",
+  "source66": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+  "github_ack_comment_id": 6889108211,
+  "write_paths": [
+    ".github/workflows/test-ci.yml: bounded SF66 reader only",
+    "script/sf2h/export-visual/",
+    "modules/sucafina/Sucafinav1/test/product/export-visual-proof/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-reader-finish/"
+  ],
+  "review_separation": "Evidence author; cannot sign S3-R3 or independent FINAL review",
+  "excluded": [
+    "dispatcher45",
+    "scanner75",
+    "exporters",
+    "layouts48",
+    "runtime/application86",
+    "sf2-stack",
+    "GLOBAL_RELEASE"
+  ],
+  "notes": [
+    "Historical runs have zero Actions artifacts; new CI outputs will be clearly newly generated.",
+    "14 historical observations across R1/R2/R3 include a repeated composed-docx; new unique case count is not forced to 14."
+  ]
+}
