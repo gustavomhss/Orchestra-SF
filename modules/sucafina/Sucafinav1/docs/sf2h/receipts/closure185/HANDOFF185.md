@@ -9,7 +9,7 @@
 - O seam de perda de resposta mantém POST original `{mount}/dashboard` e só aborta entrega; exige observação de status 200 e leitura autorizada após refresh, sem claim de receipt/commit C12.
 
 ## Dependência real (owner 187, PR120)
-O pacote F04 atualmente está **somente** em `sf-ux-w05` (1720fadc93ba64f3a2058eee3802f285c26ed5ca); `fixture.ts` blob `d699d74f092a8211fde2611c827ed4ebd83a9274`. Não existe no tree N22 autor. Antes de CI, 162 deve compor o F04 real no mesmo C. Import não resolve isoladamente nesta branch: **dependência explícita, não verde**.
+F04 **já está integrado** no consumidor `sf2-stack` observado em `8a81e11df2bf78a55de3166e07a53ee366aad2ab` / tree `5cee64807f55d0ec169801795712844051c47e16`: `fixture.ts` blob `d699d74f092a8211fde2611c827ed4ebd83a9274` e configuração de seleção nativa `e2b615a50c3907bbe21fd6158be47fcebf477679`. O consumidor mantém `u15.spec.ts` **anterior** blob `f849819ecc16cb8b45fe6a7657cad8f36e0764d2`, portanto ainda precisa integrar somente o novo blob `1d59507133649d2ca57c0c30e2507193f35181fd`. F04 não está na branch de autoria N22, mas a dependência já existe no candidato integrador; **não repetir a importação de F04 nem alegar que o host/identidade está provado**.
 
 A 187 deve entregar a instalação privada autenticada `SF_NATIVE_INSTALLED_MANIFEST`, o vínculo `SF_NATIVE_CANDIDATE_SHA`, as cinco URLs `SF_NATIVE_U15_LIST_URL`, `SF_NATIVE_U15_EDIT_URL`, `SF_NATIVE_U15_DENIED_URL`, `SF_NATIVE_U15_STALE_URL`, `SF_NATIVE_U15_LOST_RESPONSE_URL`, e provisionar atores de requester/denied reais com isolation por teste. Todos devem apontar para o CAP14 da mesma shell/owner do manifesto F04, não URL/hardcoded credential/browser storage fabricado. Os casos edit/stale/lost exigem registros/versionamento e injeção de falha por produtor/seam genuíno. O manifesto F04 atual não provisiona ainda por si só todas essas jornadas.
 
@@ -21,6 +21,6 @@ A 187 deve entregar a instalação privada autenticada `SF_NATIVE_INSTALLED_MANI
 
 ## Destinatários e ação exata
 1. **187 / PR120:** dar ao integrador as instâncias reais CAP14 e os inputs listados no JSON `VALIDATION-REQUEST185.json`, com vínculo de identidade de cada jornada; não usar grants, result 409, storageState ou receipts falsos.
-2. **162 / PR65 (único integrador):** confirmar release/leases e SHA dos dois consumidores, compor apenas o blob U15 e F04 no C atual, incluindo o patch inerte de seleção/host já ownership 162; não mesclar a branch inteira nem alterar os engines.
+2. **162 / PR65 (único integrador):** confirmar release/leases e SHA dos dois consumidores, compor somente o novo blob U15 no C atual; F04 fixture e seleção já estão no tree do integrador, não reimportar. O host privado/manifest/atores e os cenários CAP14 seguem sem prova; não mesclar a branch inteira nem alterar os engines.
 3. **162/S0:** tratar 163/PR107 e 164/PR106 como *terminal handoffs*. Nomear autoridade sucessora ou workflow de CI **já existente** de modo explícito; criar/atender pedido de validação real de spec exata, com C/tree, runtime, manifest e result para dedup. Comentário não reinicia sessões.
 4. Reconciliar falhas pelo owner e fechar apenas após RUN/ACK em candidato idêntico. Goal continua pausada; sem full suite/epic, release, deploy, merge ou force nesta missão.

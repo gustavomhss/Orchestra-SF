@@ -53,10 +53,14 @@
       "Isolate original domain state per journey, including stale CAS fixture and one-effect lost response",
       "Prove selected native specs are collected by installed host and stage ready; UI/product proof is separate from domain seed",
       "Do not promote F04 domain fixture or browser locator alone to positive auth/installed proof"
-    ]
+    ],
+    "consumer_already_contains_fixture": true,
+    "consumer_observed_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "consumer_fixture_blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+    "consumer_config_blob": "e2b615a50c3907bbe21fd6158be47fcebf477679"
   },
   "qualification": {
-    "after": "162 composes exact U15 blob and accepted F04 owner artifact onto same C; 162/S0 routes to currently authorized sole dispatcher",
+    "after": "162 CAS-integrates only U15 spec blob 1d5950 onto sf2-stack (F04 fixture + Playwright config already present at matching blobs), then authorized existing host supplies manifest, actors and case URLs, same-C hosted checks by S0 authorized successors.",
     "selection": [
       "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts"
     ],
@@ -71,5 +75,5 @@
     "no_global_release": true,
     "unscheduled_due_to_missing_inputs": true
   },
-  "exact_next_action": "162/S0: reconcile F04 owner187 PR120 source with U15 commit a273a18 into same authorized candidate after F04 manifest/actor/URLs, authorize hosted compiler/product CI successor and produce a RUN/ACK explicitly; otherwise retain BLOCKED_INTEGRATION and NOT_RUN."
+  "exact_next_action": "162/S0: on sf2-stack HEAD 8a81e11 tree 5cee648, consume only U15 spec blob 1d59507133649d2ca57c0c30e2507193f35181fd from author commit a273a18 (consumer preimage f849819...) with CAS, keep F04 fixture blob d699d74 and Playwright config blob e2b615 intact. Have 187 supply real CAP14 identities/5 URLs and host manifest. Then explicitly authorize existing hosted compiler/CI successor to collect and execute six tests; publish exact C receipt/ACK, otherwise NOT_RUN."
 }

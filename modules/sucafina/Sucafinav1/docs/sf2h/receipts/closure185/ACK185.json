@@ -53,7 +53,11 @@
       "pr": 65,
       "branch": "sf2-stack",
       "observed_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
-      "consumer_ack": "PENDING_NOT_APPLIED"
+      "consumer_ack": "PENDING_N22_U15_BLOB_NOT_APPLIED",
+      "observed_tree": "5cee64807f55d0ec169801795712844051c47e16",
+      "u15_consumer_preimage": "f849819ecc16cb8b45fe6a7657cad8f36e0764d2",
+      "f04_fixture_blob_already_integrated": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "f04_selection_config_blob_already_integrated": "e2b615a50c3907bbe21fd6158be47fcebf477679"
     },
     "fixture": {
       "mission": 187,
@@ -62,7 +66,7 @@
       "observed_head": "1720fadc93ba64f3a2058eee3802f285c26ed5ca",
       "source_module": "packages/app-shell/e2e/sucafina/native/fixture.ts",
       "module_blob_at_observed_head": "d699d74f092a8211fde2611c827ed4ebd83a9274",
-      "integration": "NOT_IN_N22_CODE_TREE"
+      "integration": "PRESENT_IN_162_CANDIDATE_SF2_STACK_BUT_NOT_IN_N22_WRITER_TREE"
     }
   },
   "implementation": {
@@ -114,7 +118,7 @@
   "blockers": [
     {
       "kind": "BLOCKED_INTEGRATION",
-      "cause": "N22 tree has no packages/app-shell/e2e/sucafina/native/fixture.ts; F04 source is on W05/PR120, must be composed by 162, not copied by this author"
+      "cause": "Current integrator sf2-stack 8a81e11 already includes F04 fixture.ts matching W05 blob d699d74 and native selection config blob e2b615a, but its u15.spec.ts is still old f849819; 162 must consume only the changed U15 spec blob 1d5950 with CAS, then arrange genuine F04 installed host/manifest/actor fixture readiness. The author N22 branch itself does not carry F04."
     },
     {
       "kind": "BLOCKED_QUALIFICATION",
@@ -126,11 +130,20 @@
     }
   ],
   "lease": {
-    "product_write": "ARTIFACT_READY",
+    "product_write": "ARTIFACT_READY_WITH_CONSUMER_PREIMAGE_RECONCILED",
     "tests_unqualified": true,
     "consumer_ack": "PENDING",
     "fix_authority_transfer": "ONLY_AFTER_162_ACCEPTANCE_OR_NEW_EXPLICIT_LEASE",
     "native_goal": "PAUSED",
     "global_release": false
+  },
+  "reconciliation": {
+    "kind": "READ_ONLY_CONSUMER_OBSERVATION",
+    "consumer_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "consumer_tree": "5cee64807f55d0ec169801795712844051c47e16",
+    "consumer_u15_pre_blob": "f849819ecc16cb8b45fe6a7657cad8f36e0764d2",
+    "consumer_f04_fixture_blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+    "consumer_config_blob": "e2b615a50c3907bbe21fd6158be47fcebf477679",
+    "meaning": "F04 already composed at identical blob; no F04 merge needed. Integrate new U15 blob and obtain real hosted fixtures, not green."
   }
 }
