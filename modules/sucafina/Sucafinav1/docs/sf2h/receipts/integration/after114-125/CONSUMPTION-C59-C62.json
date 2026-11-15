@@ -1,0 +1,554 @@
+{
+  "schema": "sf2h.integration125.consumption.v1",
+  "candidate": "C62",
+  "material_sha": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+  "material_tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+  "source_pins": {
+    "121": "PR117@1091aa090f9e401ece1b52b2aa74138560d04c88",
+    "122": "PR126@4ab69f8ae6b7d734f6b96002e3937f2ba32b0f7",
+    "W02/F01": "sf-ux-w02, handoff PATCHES-SHARED-F01.json",
+    "W03/F02": "sf-ux-w03@7c1a365c01d5e9cc72554f3258117a33db9f59fe",
+    "W04/F03": "sf-ux-w04@4b1de4f6108a02cdef8e633309b4b2f0378e76ae",
+    "W07/S02": "sf-ux-w07@58554e019479eac01a5bd5c5c42127d88b886e2b",
+    "W08/S03": "sf-ux-w08@85391432a6a8d9ac17d285f665d6b364b44b72db",
+    "W06/S01": "sf-ux-w06@940a29a51215ab9914392952c57e6b60c07f6e4f",
+    "W09/S04": "sf-ux-w09@28bb783ae0568148217286be6130d9ff49b6cf0b",
+    "W10/S05": "sf-ux-w10, ARTIFACT.json exact 5 leaves",
+    "W05/F04": "sf-ux-w05@664ce4330211a2dcd6d59e5884df0b305a8524d5",
+    "I00": "S0-C-e18-browser125 7 shared C61,2 shared C62"
+  },
+  "commits": [
+    {
+      "candidate": "C59",
+      "commit": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+      "tree": "5739761dca6948484851820ccb23d4f7230f8165",
+      "parent": "22a9d20dddbdbc2f8d9dbd426bd3720a4b6e0a85",
+      "source_count": 3,
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+          "blob": "c09dcbaf40a92ae15a96dd7046e1eebc7d7cc58c",
+          "status": "modified",
+          "source": "121/PR117"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+          "blob": "b55071dcdc67e28d139d8ecc25a433371e03c8ba",
+          "status": "modified",
+          "source": "121/PR117"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+          "blob": "8057df81b00d687ff99ec0417bba15814ffe5cd3",
+          "status": "modified",
+          "source": "121/PR117"
+        }
+      ]
+    },
+    {
+      "candidate": "C60",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "tree": "667e4245b01875e6c3df83afae7630303ed146af",
+      "parent": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+      "source_count": 6,
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "blob": "e818019f23e449468577175d5c78e53dbf0fb9b2",
+          "status": "modified",
+          "source": "122/PR126"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "blob": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+          "status": "modified",
+          "source": "122/PR126"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+          "blob": "37f0705ae3e26354846b53bfb3891185aa8ec96f",
+          "status": "modified",
+          "source": "122/PR126"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+          "blob": "c31bbd1d6964eb70a72fc6633a7ef9b969dead92",
+          "status": "modified",
+          "source": "122/PR126"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+          "blob": "93bf104ddcb5810efef3edb6648fdf26627fa979",
+          "status": "modified",
+          "source": "122/PR126"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+          "blob": "d7983764984d04dba911819b004701866810e179",
+          "status": "modified",
+          "source": "122/PR126 shared owner patch"
+        }
+      ]
+    },
+    {
+      "candidate": "C61",
+      "commit": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+      "tree": "60bc1f0d8a795f8f83a86636e9a30c9021b97ab7",
+      "parent": "45edb28515f5a337e37c550b376941c6f9e4f1ce",
+      "source_count": 42,
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+          "blob": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+          "blob": "860d44eb7c215aafe05eba0df265a721c563c148",
+          "status": "added",
+          "source": "W03/F02"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+          "blob": "7fe06cad2bff509039e1a093bbd6224d2fd2c262",
+          "status": "added",
+          "source": "W03/F02"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+          "blob": "9195c2c91f8c69af2b6f7c0761800f720c24bdd8",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+          "blob": "f2d2af69c10120ffe71ce9cd2c4bdad445229326",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+          "blob": "2ce5a8747c99df7aff33bce7b0a41172664bd498",
+          "status": "added",
+          "source": "W07/S02"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+          "blob": "776a4726a0ffb9222998cdfb28f0f0631ff85f82",
+          "status": "added",
+          "source": "W08/S03"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra.ts",
+          "blob": "ef6684c8f9cc3b29d60b7cfb43ebe97b9cf2ed43",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "blob": "592eef8206c665a1fc908934e258b286fe85609e",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/drafts.ts",
+          "blob": "aee71e7b1aa922dc24d74e771d8e6f24880f371f",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "blob": "8b949f966725f8a7d22a486e3391f79deecce258",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+          "blob": "dc264d8c97163922134d09285e1c8d3a38027760",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "blob": "25cc846b83a3c89cc1b1f90aeb2daff5d82865ee",
+          "status": "added",
+          "source": "W08/S03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/s03.css",
+          "blob": "c824658aefddab52631c09209bc48183c6e8c3f0",
+          "status": "added",
+          "source": "W08/S03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.ts",
+          "blob": "be374a69825b2f1bae7589ba5b46cb633371b1eb",
+          "status": "added",
+          "source": "W08/S03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css",
+          "blob": "5cfa5f50569586c940ae19ac75ec93c67f89ee24",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "blob": "06165f1ac7c6b9918a712570caa6a076559f2ec7",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/presentation.tsx",
+          "blob": "d868f673d1bec44a24b7bd83c0163784e04a695d",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/types.ts",
+          "blob": "d1eb054cca2f41dfd99c41bcfbd761410ee74da8",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+          "blob": "8da2af9dd881d5879eb89b6bd83e073697fe4a10",
+          "status": "added",
+          "source": "W07/S02"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/monthly-grid.css",
+          "blob": "81849360c8972c68edf5c1e5e8d00a903257f084",
+          "status": "added",
+          "source": "W07/S02"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/types.ts",
+          "blob": "c6764437b9021c4eccae91329df7f4710409eefe",
+          "status": "added",
+          "source": "W07/S02"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/index.tsx",
+          "blob": "e8ac63822a4de506b4453121b363c5e4b30e8f65",
+          "status": "added",
+          "source": "W08/S03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "blob": "7084c442f96e3b7d0f91b66027118df6eb003ebc",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/states.css",
+          "blob": "1bc1027f8888e2937f4a486ecedd883803e3f0c6",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+          "blob": "5e8b1ba9ac50e15773cd48ce0e6dd00860bb931f",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+          "blob": "0d0cd166eda9c2f81d2a77e034c89c0206c78c0f",
+          "status": "added",
+          "source": "W04/F03"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+          "blob": "a32178e91f85119c8d111c169899b0e2303c529b",
+          "status": "added",
+          "source": "W07/S02"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/s03.test.ts",
+          "blob": "fbc5e62bf762f92433536ede01e6ab2e67408f00",
+          "status": "added",
+          "source": "W08/S03"
+        },
+        {
+          "path": "packages/client/package.json",
+          "blob": "d3c9a133dfbfee03b6fbccc6ad4636fef0751d8c",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/client/src/sucafina/context.ts",
+          "blob": "a08206d7aa17379520f2372fd14e9e4e9d7916c3",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "blob": "ff509a7b742b81939a15f0439ca7f4a3d4b858e9",
+          "status": "added",
+          "source": "W03/F02"
+        },
+        {
+          "path": "packages/protocol/src/api.ts",
+          "blob": "e6d64297b2a0c9071387442d47790429502e8540",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/protocol/src/groups/sucafina.ts",
+          "blob": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/schema/package.json",
+          "blob": "488ca9ba2b2251017b5103775a13846b87b09644",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/schema/src/sucafina/common.ts",
+          "blob": "f486d0bdb266935791059514c11c34372204623f",
+          "status": "added",
+          "source": "W03/F02"
+        },
+        {
+          "path": "packages/schema/src/sucafina/context.ts",
+          "blob": "423050658692902ddb94358574762906fc06ccff",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "blob": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+          "status": "added",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/server/src/handlers.ts",
+          "blob": "eae8708c64008621aa51bda3ba4d3a89d48d1e5a",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/server/src/handlers/sucafina.ts",
+          "blob": "edeea7a32a187c489163d2bde67260702b301284",
+          "status": "added",
+          "source": "W02/F01"
+        },
+        {
+          "path": "packages/server/src/routes.ts",
+          "blob": "1916317ecd81507c5ac0a667cc83ae15557861bf",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/server/src/sucafina-installations.ts",
+          "blob": "c98f835588546c7fbbbc36c36f73742010b820b5",
+          "status": "added",
+          "source": "W02/F01"
+        }
+      ]
+    },
+    {
+      "candidate": "C62",
+      "commit": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+      "tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+      "parent": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+      "source_count": 30,
+      "paths": [
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "blob": "e2b615a50c3907bbe21fd6158be47fcebf477679",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+          "blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+          "status": "added",
+          "source": "W05/F04"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/corpus.ts",
+          "blob": "44826d9003eb1f1c1f5cfa12c8d4da73f74d4c07",
+          "status": "added",
+          "source": "W05/F04"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+          "blob": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+          "status": "added",
+          "source": "W05/F04"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+          "blob": "abfa55b1e87622ecee4fdbb1ca962b35039dd326",
+          "status": "added",
+          "source": "W05/F04"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+          "blob": "75181ca2d425dd71b9fb032773be16e48883c775",
+          "status": "added",
+          "source": "W05/F04"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+          "blob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+          "status": "added",
+          "source": "W05/F04"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s01.ts",
+          "blob": "bdf1e1da1daadac5af24bb0ecbe0ca2dc20dc9b2",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+          "blob": "9d3a0fd17c12714d1413da9e0c51041659c31263",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+          "blob": "286b5a63e9955d55c06795de6c686a95bb1790cc",
+          "status": "added",
+          "source": "W10/S05"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra.ts",
+          "blob": "91e526cd53e2c020f36efacb60ecad250a4da11b",
+          "status": "modified",
+          "source": "125/I00"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/collaboration.css",
+          "blob": "5ee1fb851fe913c4663ecbdba02037af640b3f9c",
+          "status": "added",
+          "source": "W10/S05"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "blob": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+          "status": "added",
+          "source": "W10/S05"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/types.ts",
+          "blob": "6651d1c4e79e21b9acf2f2782d0f3347de88c0b0",
+          "status": "added",
+          "source": "W10/S05"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/guards.ts",
+          "blob": "457510b12ec9adadbc6bf52de6a5bed1569b8d5b",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx",
+          "blob": "f5c96fdf8afb023db967e63ad4cbf48f50f33466",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "blob": "514648f9fb4b96e303abac9f462ea7962829e472",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "blob": "bdaeafeeac3e828a22ccbd45c1c5c8239f292a7c",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/guards.ts",
+          "blob": "31981656aaa3d1593fa17ca7382c605f6407ca9c",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx",
+          "blob": "1a50288033aea376e557f0f12ad3e2529e8b7667",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/s04.css",
+          "blob": "e0edcd2415e3ce4812586bb9b999ae6c4b444ff1",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/types.ts",
+          "blob": "e9b8bdb24a002a28cf7a9d9abd4824d81ec034e1",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/contracts.ts",
+          "blob": "10d2521c5de75f48bf88774e0ba7d38a6b5d7fce",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/copy.ts",
+          "blob": "c67f9985621e7797530f9c6d866835f5d08a4e06",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "blob": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "blob": "df4531f104d3ad0d0ea4ca58b276d4fc242d0d84",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+          "blob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+          "status": "added",
+          "source": "W05/F04"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+          "blob": "f0323b6b0711f7b034686214b1371747351a492d",
+          "status": "added",
+          "source": "W06/S01"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/s04.test.ts",
+          "blob": "f62bf03c887b83cd1b10573d65589f01c023c2e7",
+          "status": "added",
+          "source": "W09/S04"
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+          "blob": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+          "status": "added",
+          "source": "W10/S05"
+        }
+      ]
+    }
+  ],
+  "proofs": {
+    "source_blob_exact": true,
+    "consumer_blob_remote_readback": true,
+    "github_ancestry": true,
+    "cas_force_false": true,
+    "local_tests": false,
+    "hosted_quality": false
+  },
+  "no_whole_branch_merge": true,
+  "global_release": false
+}
