@@ -24,6 +24,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
   const [view, setView] = createStore<{
     state: SfUiState
     projection?: Projection
+    readGeneration?: number
     statusFilter: string
     refresh: number
   }>({ state: "loading", statusFilter: "", refresh: 0 })
@@ -35,7 +36,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
     const _refresh = view.refresh
     if (!ready || contextState.status !== "ready") {
       setView({
-        projection: undefined,
+        projection: undefined, readGeneration: undefined, statusFilter: "",
         state: contextState.status === "resolving" ? "loading"
           : contextState.status === "unauthenticated" ? "session-expired"
           : contextState.status === "denied" ? "denied"
@@ -47,11 +48,11 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
       destination.capabilityId === "CAP24" && destination.surface === "procurement" &&
       destination.page === "Dashboard" && destination.canRead)
     if (!allowed) {
-      setView({ projection: undefined, state: "denied" })
+      setView({ projection: undefined, readGeneration: undefined, state: "denied" })
       return
     }
     const abort = new AbortController()
-    setView({ projection: undefined, state: "loading" })
+    setView({ projection: undefined, readGeneration: undefined, state: "loading" })
     const input = {
       ...(props.route.query.year !== undefined ? { year: props.route.query.year } : {}),
       ...(props.route.query.month !== undefined ? { month: props.route.query.month } : {}),
@@ -82,12 +83,13 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
           body.context.installationId !== stamp.installationId ||
           body.context.hostId !== stamp.hostId ||
           body.context.principalRef !== stamp.principalRef ||
-          body.context.accessRevision !== stamp.accessRevision) {
+          body.context.accessRevision !== stamp.accessRevision ||
+          body.context.policyVersion !== stamp.policyVersion) {
         setView({ projection: undefined, state: "denied" })
         return
       }
       setView({
-        projection: body,
+        projection: body, readGeneration: generation,
         state: body.value.data.metrics.unavailable.length ? "partial"
           : body.value.data.requests.length ? "ready" : "empty",
       })
@@ -99,13 +101,26 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
     onCleanup(() => abort.abort())
   })
 
-  const requests = createMemo(() => view.projection?.value.data.requests ?? [])
+  const currentProjection = () => {
+    const current = owner.ready()
+    const projection = view.projection
+    if (owner.state().status !== "ready" || !current || !projection ||
+        view.readGeneration !== owner.generation()) return undefined
+    const stamp = current.context.stamp
+    return projection.context.projectId === stamp.projectId &&
+      projection.context.installationId === stamp.installationId &&
+      projection.context.hostId === stamp.hostId &&
+      projection.context.principalRef === stamp.principalRef &&
+      projection.context.policyVersion === stamp.policyVersion &&
+      projection.context.accessRevision === stamp.accessRevision ? projection : undefined
+  }
+  const requests = createMemo(() => currentProjection()?.value.data.requests ?? [])
   const statuses = createMemo(() => [...new Set(requests().map((row) => row.status))])
   const filtered = createMemo(() => requests().filter((row) =>
     !view.statusFilter || row.status === view.statusFilter))
   const state = (): SfUiState =>
-    view.projection && view.statusFilter && filtered().length === 0 ? "filtered-empty" : view.state
-  const currency = () => view.projection?.value.data.formSettings.currency ?? ""
+    currentProjection() && view.statusFilter && filtered().length === 0 ? "filtered-empty" : view.state
+  const currency = () => currentProjection()?.value.data.formSettings.currency ?? ""
   const money = (value: number | null | undefined): JSX.Element =>
     value === null || value === undefined || !Number.isFinite(value)
       ? <span class="sf-n21-unknown">{t(sfCommonKey("sf.common.unknown"))}</span>
@@ -155,7 +170,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
           )}
           onRetryRead={() => setView("refresh", (value) => value + 1)}
         >
-          <Show when={view.projection}>
+          <Show when={currentProjection()}>
             {(projection) => (
               <>
                 <section class="sf-n21-filter" aria-label={t(key("sf.n21.filter"))}>
