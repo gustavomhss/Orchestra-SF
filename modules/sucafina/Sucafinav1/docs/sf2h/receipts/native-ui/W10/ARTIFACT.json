@@ -35,8 +35,8 @@
     {
       "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/HANDOFF.md",
       "preimage": null,
-      "blob": "3afaa6ab402da54e4dc98f02b3e3b71bf2f0d89c",
-      "chars": 7103,
+      "blob": "63ae0f9dc08b8d706767eb81aa5d44c48489f4e4",
+      "chars": 7575,
       "kind": "receipt"
     },
     {
@@ -155,5 +155,19 @@
     "PRODUCTION_PROOF_claim": false
   },
   "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/HANDOFF.md",
-  "inventory_excludes_this_receipt": true
+  "inventory_excludes_this_receipt": true,
+  "pr": {
+    "number": 119,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/119",
+    "draft": true,
+    "base": "sf2-stack",
+    "head": "sf-ux-w10",
+    "base_comparison": {
+      "state": "diverged",
+      "file_count": 164,
+      "w10_owned_count": 8,
+      "inherited_out_of_scope_count": 156
+    },
+    "safety": "NEVER_MERGE_ENTIRE_BRANCH; integrate only owned blobs via explicit 114 per-output admission"
+  }
 }
