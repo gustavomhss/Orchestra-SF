@@ -1,0 +1,100 @@
+{
+  "schema": "sf2h.native-ui.W09.ack.v1",
+  "mission": "UX20-W09",
+  "order": "S04",
+  "seat": "W09",
+  "request": "User started new S04 author session on existing sf-ux-w09 branch",
+  "actor": {
+    "effective_model": "GPT-6",
+    "requested_label": "Astra",
+    "runtime_session_id": null,
+    "runtime_session_id_reason": "not exposed to this ChatGPT session",
+    "github_identity": "gustavomhss"
+  },
+  "branch": {
+    "name": "sf-ux-w09",
+    "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+    "material_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "material_tree": "647b024075265fc76d6253c99bec00a82618f816"
+  },
+  "authority": {
+    "user_session_start": "AUTHORIZED",
+    "output_admission": "REQUESTED_NOT_VERIFIED",
+    "lease_epoch": "ux-native-w09-e1",
+    "lease_state": "RESERVED_NOT_ACTIVE",
+    "integrator": "same S0-C-e17-browser114",
+    "integrator_pr": 65,
+    "integrator_ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after106-114/ACK-114.json",
+    "intake": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/INTAKE-20261115.json",
+    "no_writer_collision_observed": true
+  },
+  "allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+    "packages/app-shell/test-browser/sucafina-native/s04.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/"
+  ],
+  "observed_entrypoint_preimages": {
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx": null,
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx": null,
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts": null,
+    "packages/app-shell/test-browser/sucafina-native/s04.test.ts": null
+  },
+  "source": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux_normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "order_blob": "be403965717e79dd84d7ecbffcce2808bb77cbbc",
+    "packet_blob": "fce5b46700b432aaa93181f9b214e475bb5e9846",
+    "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+    "instructions": {
+      "AGENTS.md": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "packages/app-shell/AGENTS.md": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+    },
+    "producers": {
+      "modules/sucafina/Sucafinav1/runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "modules/sucafina/Sucafinav1/product/interface/document-http.ts": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+      "apps/desktop/src/main/response-download.ts": "cd869d37c96453d7692c83be51386bd559314449"
+    },
+    "contracts": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    "protocol": {
+      "normative_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "branch_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+      "delta": "only historical CI/coordinator name text; COMMON overlay routes 114/120/119; no component contract drift observed"
+    }
+  },
+  "owns": [
+    "SfEvidencePanel",
+    "SfAttachmentField"
+  ],
+  "dependencies": {
+    "integration": [
+      "F03",
+      "A06"
+    ],
+    "qualification": [
+      "F03",
+      "A06"
+    ]
+  },
+  "execution": {
+    "product_mutations": "NOT_STARTED_WAITING_FOR_PER_OUTPUT_ADMISSION",
+    "local_tests": "NOT_RUN_PROHIBITED",
+    "actions_tests": "NOT_REQUESTED_BEFORE_INTEGRATION",
+    "compiler": "NOT_REQUESTED_BEFORE_INTEGRATION",
+    "merge": false,
+    "deploy": false,
+    "Azure": false,
+    "global_release": false
+  }
+}
