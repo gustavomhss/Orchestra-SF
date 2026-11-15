@@ -48,4 +48,13 @@ test.describe("N24 U16 – authorized decision cases and intent", () => {
       expect(overflow).toBeLessThanOrEqual(1)
     })
   }
+  test("preserves case actions at 200% root text resize @sf-u16", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.goto("/orchestra/sf-decisions")
+    await page.evaluate(() => { document.documentElement.style.fontSize = "200%" })
+    await expect(page.getByRole("button", { name: /New case|Novo caso/ })).toBeVisible()
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+    expect(overflow).toBeLessThanOrEqual(1)
+  })
+
 })
