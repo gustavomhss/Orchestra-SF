@@ -25,6 +25,7 @@ for (const expected of cases) test(`C10 numeric ${expected.training} training ke
       currency: "USD", horizon: wp05Horizon, costCoverage: { coverageState: expected.coverage, alternativeId: "selected", alternativeVersion: 1,
         basisId: fixture.basis.id, basisVersion: fixture.basis.version } })
     expect(fixture.baselineResult.knownSubtotal).toBe(240000)
+    expect(scenario.costCoverage.issues).toEqual([])
     expect(fixture.comparison.knownDifference).toBe(expected.direct)
     expect(new Set(scenario.components.map((item) => item.id)).size).toBe(scenario.components.length)
     expect(scenario.components.filter((item) => item.id === "implementation:11")).toMatchObject([{ amount: 45000, evidenceState: "confirmed" }])
@@ -71,6 +72,17 @@ for (const expected of cases) test(`C10 numeric ${expected.training} training ke
     const changedVersion = structuredClone(scenario)
     changedVersion.costCoverage.alternativeVersion = 2
     expect(validateScenarioCoverage(changedVersion, fixture.basis, scenario.costCoverage)).toBe("alternative-basis-mismatch")
+    if (expected.training === "confirmed") {
+      expect(validateScenarioCoverage(changedVersion, fixture.basis, changedVersion.costCoverage)).toBeUndefined()
+      const revised = await reassessScenarioCoverage({ scenario: changedVersion, basis: fixture.basis, baseline: scenario.costCoverage,
+        entries: scenario.costCoverage.entries, resolveEvidence, supports: coverage.supports })
+      expect(revised?.costCoverage.alternativeVersion).toBe(2)
+      for (const version of [0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1]) {
+        const invalid = structuredClone(scenario)
+        invalid.costCoverage.alternativeVersion = version
+        expect(validateScenarioCoverage(invalid, fixture.basis, invalid.costCoverage)).toBe("alternative-basis-mismatch")
+      }
+    }
     expect(digestSfValue({ scenario, entries: coverage.entries, assessment: coverage.assessment })).toBe(before)
     const persisted = await fixture.results.read({ kind: "scenario", resultRef: fixture.selectedRef }, fixture.context)
     if (persisted.status !== "ok" || persisted.value.kind !== "scenario") throw new Error("Original C08 scenario unavailable")
