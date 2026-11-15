@@ -32,7 +32,6 @@
     "selector": [
       "./test-browser/sucafina-native/page-frame.test.ts"
     ],
-    "recommended_invocation": "bun run test:ci app ./test-browser/sucafina-native/page-frame.test.ts --os linux",
     "previous_run": 43766970018,
     "previous_job": 132974180913,
     "previous_W": "6d42d6752497fc37be59c64a72b272a3d0860961",
@@ -44,7 +43,17 @@
       "extra dispatcher",
       "local tests",
       "relax browser assertions, timeout or Platform140 fixture"
-    ]
+    ],
+    "actual_previous_workflow": ".github/workflows/test-ci.yml",
+    "actual_previous_workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "args": [
+      "--timeout",
+      "120000",
+      "./test-browser/sucafina-native/page-frame.test.ts"
+    ],
+    "env": {},
+    "previous_request_blob": "5458c45b1c44dd9ef43ce5aa9c2fd06f8c77658e",
+    "note": "Preserve existing Bun timeout and exact path prefix; these are request args for 164's existing workflow, not a new local command"
   },
   "outcomes": {
     "local_tests": "NOT_RUN_BY_POLICY",
