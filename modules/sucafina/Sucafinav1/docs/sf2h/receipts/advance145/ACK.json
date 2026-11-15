@@ -1,0 +1,38 @@
+{
+  "schema": "sf2h.advance-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 145,
+  "slot": "N23",
+  "branch": "sf-ux-n23",
+  "epoch": "ux-native-n23-e2",
+  "state": "ACKNOWLEDGED",
+  "fence_sha": "3c92bcdd3e223d9e28f87000a6fd3539ac9a8c18",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance145/S0-FENCE.json",
+  "github_actor": "gustavomhss",
+  "effective_model": null,
+  "model_disclosure": "Runtime effective model/version not exposed; no unsupported Astra session claim",
+  "session_id": null,
+  "session_disclosure": "Not exposed",
+  "work_orders": [
+    "U12",
+    "U13.complete",
+    "U14"
+  ],
+  "protected_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/index.tsx"
+  ],
+  "source_preflight": {
+    "application": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "procurement_renderer": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "sourcing_http": "de85660b664826163c2e157ec382b97a425bb10d"
+  },
+  "authority": {
+    "integrator": 132,
+    "compiler": 149,
+    "ci": 150,
+    "goal": "paused"
+  },
+  "checks": "NOT_RUN",
+  "intent": "Continue pre-existing implementation on this branch; no protected, generated, engine or controller writes"
+}
