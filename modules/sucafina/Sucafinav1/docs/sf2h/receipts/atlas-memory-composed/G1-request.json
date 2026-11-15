@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.atlas-memory-composed.selection.v1",
+  "mission": 69,
+  "phase": "G1_RANK_COMPLETION",
+  "state": "PREPARED_NOT_RUN",
+  "productW": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "productTree": "f7ddae5cfd84866517ce88cacf09b5b245854954",
+  "productBlobs": {
+    "atlasMemory": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+    "businessContext": "2e7b312561f3f027ab070c61e15ecb6886fa169c"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "tests": 3,
+  "purpose": [
+    "Two actual committed events in the same case: mutate an older returned object after the last real read, require intact final output",
+    "Change features at last real authorization, deny and restore positive",
+    "Change runtimeVersions at last real authorization, deny and restore positive"
+  ],
+  "premises": {
+    "documentClassification": "Explicit synthetic current metadata; features derived by real deriveAuthorizedRecallFeatures from actual authorized case",
+    "acceptedLedgerB": "Explicit accepted-ledger premise, followed by actual C08/outbox and real Atlas/Gitleaks publication",
+    "financialCapture": false,
+    "historicalArchiveFabricated": false,
+    "nativeSessionWitness": false
+  },
+  "controls": [
+    "Real authority decisions never replaced by permissive mocks",
+    "No generic exception accepted as negative",
+    "Durable audit/receipts/event/scanner counts unchanged by read faults",
+    "All three original 180000ms test ceilings retained"
+  ],
+  "dedup": "Dispatch only after F1 reaches terminal; one mission69 test run at a time.",
+  "notes": [
+    "No automatic B0 differential claim for G1; it verifies new rank completion risks identified by cold review.",
+    "F1's nine selected files and product bytes remain unchanged by this supplement."
+  ],
+  "results": null
+}
