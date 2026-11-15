@@ -72,7 +72,7 @@ test("public SF tool registration executes the real loaded forecast skill route 
         expect(loaded[0]).toMatchObject({ id: receipt.loadedMessageId, type: "synthetic" })
         expect(receipt).toMatchObject({ nativeSessionId: created.id, profileId: selected.profile.id,
           sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, manifestDigest: host.bundle.manifestDigest })
-        expect((yield* host.session.context(created.id)).map((message) => message.id)).toContain(receipt.loadedMessageId)
+        expect((yield* host.session.context(created.id)).map<string>((message) => message.id)).toContain(receipt.loadedMessageId)
         const binding = yield* Effect.promise(() => fixture.registry.bind({
           request: new Request("https://example.test/component-public-forecast", { headers: { authorization: principals[index]! } }),
           selected, sessionID: created.id, runId: receipt.runId, caseRef: { id: `component-case-${index}`, incarnation: `component-inc-${index}`, version: 1 },
@@ -94,7 +94,7 @@ test("public SF tool registration executes the real loaded forecast skill route 
           principalRef: principals[index], operation: forecast.id, handlerExport: "compareForecast", inputDigest: digestSfValue(payloads[index]!), resultDigest: digestSfValue(human[index]!.result) } })
         const decoded = decodeSfOperationOutput("sf_forecast_compare", result.result)
         if (!decoded.ok) throw new Error("The public tool did not return a schema-valid FinancialAnalysis")
-        expect(decoded.value).toEqual(human[index]!.result)
+        expect(human[index]!.result).toEqual(decoded.value)
         expect(decoded.value.knownDifference).toBe(index === 0 ? 12000 : 6000)
         expect(decoded.value).toMatchObject({ baseline: { context: { principalRef: principals[index] } }, candidate: { context: { principalRef: principals[index] } } })
         expect(decoded.value.sourceRefs.map((ref) => ref.refId)).toEqual([payloads[index]!.baseRef, payloads[index]!.candidateRef])

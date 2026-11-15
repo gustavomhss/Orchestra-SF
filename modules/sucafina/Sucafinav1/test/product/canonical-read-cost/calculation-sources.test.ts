@@ -8,7 +8,7 @@ test("C08 private observations keep callback order and independently mutable sca
   try {
     const context = setup.fixture.context
     const request = { kind: "scenario" as const, resultRef: setup.original.resultRef }
-    const expected = { status: "ok", value: setup.original }
+    const expected: { status: "ok"; value: typeof setup.original } = { status: "ok", value: setup.original }
     const wire = canonicalSfValue(setup.original)
     const caseWire = canonicalSfValue(setup.fixture.decision)
     const hashes = { count: 0, cases: 0 }

@@ -15,8 +15,11 @@ test("C12 first case save reopens the original C08 creation after its committed 
     const lost = await fixture.draftCase(caseInput, key)
     expect(lost).toEqual({ status: "unavailable", reason: "product-state-unavailable" })
     expect(fixture.acknowledgements).toHaveLength(1)
-    const original = fixture.acknowledgements[0]!.value
+    const acknowledged = fixture.acknowledgements[0]!.value
     const persisted = await fixture.state()
+    const original = Object.values(persisted.cases)[0]
+    if (!original) throw new Error("First committed case missing from durable state")
+    expect(acknowledged).toEqual(original)
     expect(Object.values(persisted.cases)).toEqual([original])
     expect(Object.keys(persisted.transactions)).toHaveLength(1)
     expect(Object.values(persisted.receipts)).toHaveLength(0)
