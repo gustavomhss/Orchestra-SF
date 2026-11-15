@@ -1,0 +1,226 @@
+{
+  "schema": "sf2h.native-ui.w05.successor-artifact.v1",
+  "mission_id": "UX20-W05-R2",
+  "seat": "W05",
+  "order": "F04",
+  "output": "F04",
+  "state": "ARTIFACT_READY",
+  "integration_state": "BLOCKED_INTEGRATION",
+  "qualification_state": "NOT_RUN_NOT_QUALIFIED",
+  "github_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_reason": "not exposed",
+  "branch": "sf-ux-w05",
+  "pr": 120,
+  "lease_epoch": "ux-native-w05-e2",
+  "fence_head": "a55c868cb3fce003ed7ea285c58a6712d3cd7301",
+  "ack_commit": "c22b3e2bb3b13773c9645526f978641c9c26da68",
+  "product_code_head": "664ce4330211a2dcd6d59e5884df0b305a8524d5",
+  "product_code_tree": "dceffb1a30d7808b1f8c812eb465061adfe0b800",
+  "product_paths": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "preimage_at_fence": null,
+      "proposal_blob": "aae1c5ba49c5d961559445e2568c5fa0a529ca02",
+      "postimage_blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "authored_on_branch": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/corpus.ts",
+      "preimage_at_fence": null,
+      "proposal_blob": "8172d10aceea355e2e130df770def7d5423246fc",
+      "postimage_blob": "44826d9003eb1f1c1f5cfa12c8d4da73f74d4c07",
+      "authored_on_branch": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+      "preimage_at_fence": null,
+      "proposal_blob": "06fd59cc31d733f1a2ee3353a649d5a1091e3d68",
+      "postimage_blob": "75181ca2d425dd71b9fb032773be16e48883c775",
+      "authored_on_branch": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+      "preimage_at_fence": null,
+      "proposal_blob": "cad872b4b35be634ea166c4370ad5502d10da8c7",
+      "postimage_blob": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+      "authored_on_branch": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+      "preimage_at_fence": null,
+      "proposal_blob": "4aa2598afc9ebd25da4c4002231da5ce6602a7c0",
+      "postimage_blob": "abfa55b1e87622ecee4fdbb1ca962b35039dd326",
+      "authored_on_branch": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+      "preimage_at_fence": null,
+      "proposal_blob": "54d2091f82f18ff671c49eedd79a604be407eed4",
+      "postimage_blob": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+      "authored_on_branch": true
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+      "preimage_at_fence": null,
+      "proposal_blob": null,
+      "postimage_blob": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+      "authored_on_branch": true
+    }
+  ],
+  "contracts": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "F04_order": "1b25898e583e1eb247a3eec889d0da4e6bb61ab3",
+    "common": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "source_pins": {
+    "runtime/procurement.ts": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "runtime/local-store.ts": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+    "runtime/local-configuration.ts": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+    "local/enroll.ts": "6c1728044af046bf2472144f4d8ecfef58ce982c",
+    "local/entry.ts": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+    "src/initial-settings.ts": "7682bb517a77ef812dbd4626790f1453cc5c0100"
+  },
+  "coverage": {
+    "exports": [
+      "nativeInstalledFixture",
+      "nativeCorpus",
+      "sourceNativeVolume",
+      "seedNativeProcurementCorpus",
+      "createNativeScratch",
+      "readNativeManifest",
+      "proveNativeWebReadiness",
+      "armLostResponse",
+      "armHeldResponse",
+      "requestRealRevocation",
+      "nativeSpecSelected"
+    ],
+    "scope": [
+      "WP00.T03 isolated corpus",
+      "WP10.T01 real-domain fixture",
+      "WP10.T04 installed-host readiness seam"
+    ],
+    "pilot": {
+      "P0": "real producer creates draft with title+requests:id CAS; DOES_NOT_APPROVE",
+      "P1": "real producer creates and submits pending PR under holder; DOES_NOT_APPROVE",
+      "denied": "domain execute rollback 403; NOT_AUTHENTICATED_INSTALLATION_ACL_PROOF"
+    },
+    "numeric": {
+      "prEstimateUSD": 32000,
+      "volume": {
+        "financial": 1000,
+        "purchaseOrders": 200,
+        "projects": 100
+      },
+      "planner": {
+        "baseOutlookUSD": 590000,
+        "alternative84000USD": 602000,
+        "alternative78000USD": 596000
+      }
+    }
+  },
+  "shared_patch": {
+    "owner": 114,
+    "path": "packages/app-shell/e2e/playwright.production.config.ts",
+    "preimage_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+    "proposed_fullfile_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/proposed/shared/playwright.production.config.ts",
+    "proposed_postimage_blob": "e2b615a50c3907bbe21fd6158be47fcebf477679",
+    "applied": false,
+    "scope": "strict native selection/manifest guard only; actual host launch/composition belongs 114"
+  },
+  "manifest_private_contract": {
+    "schema": "sf2h.native-installed-manifest.v1",
+    "required_env": [
+      "GITHUB_ACTIONS=true",
+      "SF_NATIVE_INSTALLED_MANIFEST=/absolute/private/file",
+      "SF_NATIVE_CANDIDATE_SHA=<same material C commit>"
+    ],
+    "target_fields": [
+      "serverKey",
+      "discoveryOrigin",
+      "shellOrigin",
+      "publicOrigin",
+      "installationId",
+      "projectId",
+      "hostId",
+      "mount",
+      "chapterHref"
+    ],
+    "required_targets": [
+      "target",
+      "wrongServer",
+      "wrongProject",
+      "wrongInstallation"
+    ],
+    "actors": [
+      "requester",
+      "holder",
+      "denied"
+    ],
+    "file_mode": "0600",
+    "scratch_dir_mode": "0700",
+    "auth": "real owner-bound host session, not roles from fixture args"
+  },
+  "blocked_dependencies": [
+    {
+      "owner": 114,
+      "ids": [
+        "F01",
+        "F02",
+        "D01 for desktop",
+        "real SDK/discovery and host CLI composition"
+      ],
+      "reason": "no installed host/manifest and authenticated three-principal setup on same isolation available from this author allowlist"
+    },
+    {
+      "owner": 114,
+      "ids": [
+        "shared playwright config"
+      ],
+      "reason": "exclusive ownership; full proposed patch only, no shared edit"
+    },
+    {
+      "owner": 120,
+      "ids": [
+        "surgical Actions proof"
+      ],
+      "reason": "not dispatched, no same-C host"
+    },
+    {
+      "owner": 119,
+      "ids": [
+        "app-shell compiler/guards"
+      ],
+      "reason": "not dispatched"
+    }
+  ],
+  "acceptance": {
+    "F04_AC01": "NOT_RUN_NOT_COLLECTED_REAL_HOST_MISSING",
+    "F04_AC02": "CORPUS_AND_SQLITE_CODE_READY_NOT_RUN",
+    "F04_AC03": "NOT_RUN_D01_PACKAGED_ELECTRON_REQUIRED",
+    "web_installation": "NOT_PROVEN",
+    "desktop": "NOT_PROVEN",
+    "multi_actor_authenticated_negative": "NOT_PROVEN",
+    "typed_code": "NOT_TYPECHECKED"
+  },
+  "evidence": {
+    "tests": "NOT_RUN",
+    "test_collection": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "playwright": "NOT_RUN",
+    "desktop": "NOT_RUN",
+    "no_green_inherited": true,
+    "no_mocks_authorization": true,
+    "producer_clone": false
+  },
+  "consumer_handoff": "114 pick exact paths/blobs, never merge native UX cohort branch whole; 120/119 validate after same-C installation",
+  "lease_terminal": "ARTIFACT_READY_TRANSFERRED_PENDING_CONSUMER_ACK",
+  "global_release": false
+}

@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.native-ui.w05.ci-selection-request.v2",
+  "seat": "W05",
+  "epoch": "ux-native-w05-e2",
+  "producer_commit": "664ce4330211a2dcd6d59e5884df0b305a8524d5",
+  "state": "REQUESTED_NOT_DISPATCHED",
+  "dispatcher": 120,
+  "compiler": 119,
+  "integrator": 114,
+  "run_ids": [],
+  "job_ids": [],
+  "component": {
+    "files": [
+      "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts"
+    ],
+    "semantics": "pure selection only; does not qualify installed UI",
+    "gate": "compose exact leaf on same material C"
+  },
+  "installed": {
+    "files": [
+      "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts"
+    ],
+    "status": "OWNER_SPECS_NOT_YET_COLLECTED_IN_W05",
+    "gate": "114 real host+F01/F02/F03/A03/U10/U11/U13/Q01/Q02; genuine three principals, same C, private manifest; no WP04 legacy"
+  },
+  "desktop": {
+    "files": [
+      "apps/desktop/src/main/sucafina/broker.test.ts"
+    ],
+    "status": "NOT_RUN_D01_REQUIRED",
+    "gate": "packaged Electron, main/preload renderer, Microsoft origin/partition proof independently"
+  },
+  "compiler_request": {
+    "package_dir": "packages/app-shell",
+    "command": "bun typecheck",
+    "owner": 119,
+    "guards": "119 dedicated runner only"
+  },
+  "dedupe": {
+    "key_material": [
+      "candidate commit and tree",
+      "normalized exact selection",
+      "workflow/config/runtime",
+      "manifest+fixture",
+      "existing in-flight run"
+    ],
+    "policy": "120 deduplicates; no failed rerun unless causal change or established transient"
+  },
+  "evidence": {
+    "component": "NOT_RUN",
+    "browser": "NOT_RUN",
+    "desktop": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "no_local_execution": true,
+  "no_full_suite": true
+}
