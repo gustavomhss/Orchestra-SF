@@ -1,0 +1,56 @@
+{
+  "mission": 117,
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S2-A / new Astra-designated browser session",
+  "identity": {
+    "effective_model": "GPT-6",
+    "runtime": "ChatGPT connected GitHub MCP",
+    "session_id": null,
+    "session_id_note": "Not exposed by this runtime; no invented identifier"
+  },
+  "status": "ACK_IN_PROGRESS",
+  "lease_epoch": "matcher-types-browser117",
+  "source": {
+    "branch": "matcher-type-repair",
+    "head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "mission_ref": "111c29106bf02ddf38cc425826b764f8c5452ae6",
+    "mission_blob": "ffdef5a773f068482c0e58706ffbe4d919771f95",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "common_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "actor_pack_blob": "7327be5449328c356a0f5b242ddc9d2014175e41"
+  },
+  "authority": {
+    "status": "OBSERVED_NO_PREEXISTING_PR",
+    "branch_matched_prepared_head": true,
+    "writer_policy": "Only write_paths of mission117; all 18 test files plus receipt directory",
+    "integrator": 114,
+    "compiler": 119,
+    "ci": 120,
+    "disjoint_with": 118,
+    "ack_before_edits": true
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/{fixture-assertions,rank-tail.test,recall-groups.test}.ts",
+    "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/{calculation-sources,diagnostic-cost}.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/{composed-storage,preserved-source-drift}.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/{canonical-presentation,temporal-contract}.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/{authority-egress,recorded-fallback}.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/{catalog-contract,public-tools,skill-admission-fences,skill-loading}.test.ts"
+  ],
+  "restrictions": [
+    "No local tests; CI owned by120 and compiler by119",
+    "No product/fixtures/permissions changes",
+    "No any, casts, suppressions, JSON serialization or weaker comparison",
+    "GitHub remote MCP with CAS"
+  ],
+  "evidence": {
+    "typecheck": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "patch": "PENDING",
+    "integrator_handoff": "PENDING"
+  }
+}
