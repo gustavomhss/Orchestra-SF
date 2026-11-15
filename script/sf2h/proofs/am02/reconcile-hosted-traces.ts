@@ -21,8 +21,6 @@ type Run = { id: number; url: string; headSha: string; candidateSha: string; suc
 type Input = { schema: string; candidateSha: string; candidateTreeSha: string; sucafinaSubtreeSha: string; runs: Run[] }
 const sha40 = /^[a-f0-9]{40}$/
 const sha64 = /^[a-f0-9]{64}$/
-const wp12 = "Sucafinav1/test/product/wp12/"
-const integrated = "Sucafinav1/test/product/integrated-proofs/"
 const knownSource = /^(Sucafinav1\/test\/product\/(wp12|integrated-proofs\/(am01|am02))\/)[\w.-]+\.test\.ts$/
 
 function insist(condition: unknown, detail: string): asserts condition {
@@ -39,10 +37,6 @@ function extract(log: string, tag: string): Json[] {
     if (offset < 0) return []
     return [record(JSON.parse(line.slice(offset + tag.length).trim()))]
   })
-}
-function sameCase(a: unknown, b: unknown) {
-  const left = record(a), right = record(b)
-  return left.id === right.id && left.incarnation === right.incarnation && left.version === right.version
 }
 
 async function reconcile(input: Input) {
