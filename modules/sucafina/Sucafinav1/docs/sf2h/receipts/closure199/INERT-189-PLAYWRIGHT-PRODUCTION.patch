@@ -1,0 +1,32 @@
+# INERT ONLY — mission 199, deliver to sole integrator 189 (PR #65).
+# DO NOT execute/apply as part of this branch. No shared config was edited here.
+# Preconditions: base path at blob e2b615a50c3907bbe21fd6158be47fcebf477679
+# Original integrated candidate: 6607c60d2a2be183d59c2e929b3ff06633e1cb54.
+# Why: Native F04 and packaged D01 MUST NOT spawn apps/web or produce
+# cookie-bearing trace/video/screenshot artifacts. This is not a PASS of tests.
+diff --git a/packages/app-shell/e2e/playwright.production.config.ts b/packages/app-shell/e2e/playwright.production.config.ts
+--- a/packages/app-shell/e2e/playwright.production.config.ts
++++ b/packages/app-shell/e2e/playwright.production.config.ts
+@@ -23,9 +23,11 @@ export default defineConfig({
+   // Specs read this to prove dev-only marks and controls are absent from the built bundle.
+   metadata: { ...config.metadata, bundle: "production" },
+   outputDir: "./test-results",
++  // F04/D01 attach an existing approved installation or packaged Electron.
++  workers: sfNative ? 1 : config.workers,
++  fullyParallel: sfNative ? false : config.fullyParallel,
+   reporter: [["html", { outputFolder: "./playwright-report", open: "never" }], ["line"], ["./utils/flaky-reporter.ts"]],
+-  webServer: [{
++  webServer: sfNative ? [] : [{
+     ...config.webServer,
+     cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
+     command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
+@@ -41,6 +43,8 @@ export default defineConfig({
+   }] : [])],
+   use: {
+     ...config.use,
+-    trace: "retain-on-failure",
++    // Browser/Electron Microsoft sessions can contain secrets in raw traces.
++    trace: sfNative ? "off" : "retain-on-failure",
++    ...(sfNative ? { screenshot: "off" as const, video: "off" as const } : {}),
+   },
+ })
