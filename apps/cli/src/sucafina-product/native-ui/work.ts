@@ -71,7 +71,7 @@ function query(
   // The original Request (including abort signal and headers) is preserved.
   if (mode === "search") {
     if (request.method !== "POST" || url.search || !request.body ||
-      !/^application\\/json(?:;\\s*charset=utf-8)?$/i.test(request.headers.get("content-type") ?? "") ||
+      !/^application\/json(?:;\s*charset=utf-8)?$/i.test(request.headers.get("content-type") ?? "") ||
       !/^[A-Za-z0-9._:-]{8,128}$/.test(request.headers.get("Idempotency-Key") ?? "") ||
       request.headers.get("origin") && request.headers.get("origin") !== deps.origin) return failure(request, "invalid")
     return url.searchParams
