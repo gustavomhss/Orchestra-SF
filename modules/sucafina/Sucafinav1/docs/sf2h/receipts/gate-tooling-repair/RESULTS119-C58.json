@@ -1,0 +1,420 @@
+{
+  "schema": "sf2h-compiler-119-composed-c58-v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 119,
+  "status": "RECHECK_EXECUTED_OPEN_GATES",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "product": {
+    "kind": "composed-material-C58",
+    "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816",
+    "ref": "sf2-stack",
+    "producer": "114 sole integrator",
+    "composition": [
+      "115",
+      "116",
+      "117",
+      "118"
+    ],
+    "source_workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "committed_epic_blob": "b332d777e4465469e9e4869e29f4339a95853d21"
+  },
+  "tooling": {
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "runner_sha": "a6c2fd320dd0f8a64e1d3f6af2c574ff28b32854",
+    "source_patch": "TOOLING-PATCH119-v2.patch",
+    "prepost": "SOURCE-PREPOST119-v2.json",
+    "builder_git_blob": "9d495d8ebbe127d664120abcfd0188d6c40da28d",
+    "verifier_git_blob": "ef96a75e4e8e16b048740cba02539ae45a70c580",
+    "import_method": "git show W:path into isolated runner TEMP after exact C58 checkout",
+    "product_tree_unchanged": true
+  },
+  "execution": {
+    "platform": "GitHub Actions ubuntu-24.04",
+    "run_id": 43726143757,
+    "job_id": 132848377567,
+    "artifact_id": 14166956181,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726143757",
+    "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726143757/artifacts/14166956181",
+    "artifact_name": "sf-compiler-119",
+    "runtime": {
+      "bun": "1.3.14",
+      "node": "v24.22.2",
+      "git": "2.56.1"
+    },
+    "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "status_before": "clean",
+    "status_after_setup": "M bun.lock",
+    "count": {
+      "total": 17,
+      "pass": 13,
+      "fail": 4
+    },
+    "commands": [
+      {
+        "command": "bundle-build",
+        "cwd": ".",
+        "exit_code": 1,
+        "result": "FAIL"
+      },
+      {
+        "command": "bundle-requests",
+        "cwd": ".",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "e2e-inventory",
+        "cwd": ".",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "typecheck-atlas",
+        "cwd": "modules/atlas/boundary",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "typecheck-sucafina",
+        "cwd": "modules/sucafina",
+        "exit_code": 2,
+        "result": "FAIL"
+      },
+      {
+        "command": "typecheck-core",
+        "cwd": "packages/core",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "typecheck-cli",
+        "cwd": "apps/cli",
+        "exit_code": 2,
+        "result": "FAIL"
+      },
+      {
+        "command": "typecheck-app",
+        "cwd": "packages/app-shell",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "sf-e2e-showConfig",
+        "cwd": "packages/app-shell",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "sf-e2e-listFiles",
+        "cwd": "packages/app-shell",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "sf-e2e-verify",
+        "cwd": ".",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "atlas-generated-before",
+        "cwd": "modules/atlas/boundary",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "atlas-generate",
+        "cwd": "modules/atlas/boundary",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "atlas-generated-after",
+        "cwd": "modules/atlas/boundary",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "atlas-generated-diff",
+        "cwd": ".",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "spawn-imports",
+        "cwd": ".",
+        "exit_code": 0,
+        "result": "PASS"
+      },
+      {
+        "command": "guards",
+        "cwd": ".",
+        "exit_code": 1,
+        "result": "FAIL"
+      }
+    ]
+  },
+  "e2e": {
+    "status": "PASS",
+    "compiler_status": "PASS",
+    "effective_schema": "native-tsgo-flat",
+    "program_files": 3691,
+    "roots": 72,
+    "nominal_specs": 3,
+    "runtime_roots": 4,
+    "diagnostics": 0,
+    "failures": []
+  },
+  "generated_epic": {
+    "generation": "PASS_GENERATED_ONLY",
+    "committed_check": "FAIL_BUNDLE_DRIFT",
+    "reason": "C58 .github/workflows/sf2-epic.yml is old; content already generated with fixed tool and all SF66 stages",
+    "file_in_artifact": "sf2-epic.generated.yml",
+    "bytes": 57314,
+    "sha256": "c6c0e2583a5be2bb393d3db832232c6625ceb28370bf1f7f815eb3a661b77394",
+    "git_blob_sha": "96284df0722b32bddd9281d974a3d34a3ec3a82d",
+    "required_reader_stages": [
+      "Install SF66 export readers",
+      "Render SF66 generated exports",
+      "Upload SF66 generated exports and reader evidence"
+    ],
+    "test_ci_source_git_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "action_required_by": "114 composition, regenerate and compare actual bytes on new candidate; do not execute epic from 119"
+  },
+  "typecheck": {
+    "sucafina": {
+      "exit": 2,
+      "diagnostic_count": 22
+    },
+    "cli": {
+      "exit": 2,
+      "diagnostic_count": 2,
+      "duplicates_sucafina": true
+    },
+    "unique_count": 22,
+    "diagnostics": [
+      {
+        "path": "../../../apps/cli/src/sucafina-product/bi-services.ts",
+        "line": 228,
+        "column": 27,
+        "code": "TS2322",
+        "summary": "string not assignable to BiViewId"
+      },
+      {
+        "path": "product/interface/http.ts",
+        "line": 111,
+        "column": 141,
+        "code": "TS2367",
+        "summary": "comparison to conflict not in failed | needs-input | provider-conflict | unavailable union"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-browser.test.ts",
+        "line": 62,
+        "column": 36,
+        "code": "TS2322",
+        "summary": "TrustedUiContext function not assignable to TrustedDomainContext function"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-browser.test.ts",
+        "line": 62,
+        "column": 63,
+        "code": "TS2322",
+        "summary": "TrustedUiContext authorization callback not assignable to TrustedDomainContext callback"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-browser.test.ts",
+        "line": 64,
+        "column": 7,
+        "code": "TS2322",
+        "summary": "session key callback expects TrustedDomainContext"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-browser.test.ts",
+        "line": 65,
+        "column": 129,
+        "code": "TS2345",
+        "summary": "TrustedDomainContext argument not assignable to TrustedUiContext"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-browser.test.ts",
+        "line": 66,
+        "column": 74,
+        "code": "TS2345",
+        "summary": "TrustedDomainContext argument not assignable to TrustedUiContext"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-http.test.ts",
+        "line": 60,
+        "column": 22,
+        "code": "TS2322",
+        "summary": "TrustedUiContext function not assignable to TrustedDomainContext function"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-http.test.ts",
+        "line": 60,
+        "column": 49,
+        "code": "TS2322",
+        "summary": "TrustedUiContext authorization callback not assignable to TrustedDomainContext callback"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-http.test.ts",
+        "line": 62,
+        "column": 7,
+        "code": "TS2322",
+        "summary": "session key callback expects TrustedDomainContext"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-http.test.ts",
+        "line": 63,
+        "column": 129,
+        "code": "TS2345",
+        "summary": "TrustedDomainContext argument not assignable to TrustedUiContext"
+      },
+      {
+        "path": "test/product/creation-recovery-link/recovery-http.test.ts",
+        "line": 64,
+        "column": 74,
+        "code": "TS2345",
+        "summary": "TrustedDomainContext argument not assignable to TrustedUiContext"
+      },
+      {
+        "path": "test/product/creation-reload-fix/creation-browser.test.ts",
+        "line": 52,
+        "column": 59,
+        "code": "TS2322",
+        "summary": "TrustedUiContext function not assignable to TrustedDomainContext function"
+      },
+      {
+        "path": "test/product/creation-reload-fix/creation-browser.test.ts",
+        "line": 52,
+        "column": 86,
+        "code": "TS2322",
+        "summary": "TrustedUiContext authorization callback not assignable to TrustedDomainContext callback"
+      },
+      {
+        "path": "test/product/creation-reload-fix/creation-browser.test.ts",
+        "line": 54,
+        "column": 7,
+        "code": "TS2322",
+        "summary": "session key callback expects TrustedDomainContext"
+      },
+      {
+        "path": "test/product/creation-reload-fix/creation-browser.test.ts",
+        "line": 55,
+        "column": 123,
+        "code": "TS2345",
+        "summary": "TrustedDomainContext argument not assignable to TrustedUiContext"
+      },
+      {
+        "path": "test/product/creation-reload-fix/creation-browser.test.ts",
+        "line": 56,
+        "column": 71,
+        "code": "TS2345",
+        "summary": "TrustedDomainContext argument not assignable to TrustedUiContext"
+      },
+      {
+        "path": "test/product/creation-reload-fix/creation-browser.test.ts",
+        "line": 127,
+        "column": 84,
+        "code": "TS18048",
+        "summary": "runtime possibly undefined"
+      },
+      {
+        "path": "test/product/export-artifact-closure/fixture.ts",
+        "line": 80,
+        "column": 141,
+        "code": "TS2345",
+        "summary": "export66-project not assignable to required UUID template literal"
+      },
+      {
+        "path": "test/product/export-artifact-closure/fixture.ts",
+        "line": 82,
+        "column": 200,
+        "code": "TS2345",
+        "summary": "export66-private not assignable to required UUID template literal"
+      },
+      {
+        "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+        "line": 50,
+        "column": 83,
+        "code": "TS2322",
+        "summary": "ref string not assignable to sf-workspace template literal"
+      },
+      {
+        "path": "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+        "line": 31,
+        "column": 82,
+        "code": "TS2322",
+        "summary": "ref string not assignable to sf-workspace template literal"
+      }
+    ],
+    "groups": [
+      {
+        "kind": "TrustedUiContext vs TrustedDomainContext creation recovery tests",
+        "count": 16,
+        "paths": 3,
+        "owner": "114 to route to 96/111 or current owner; no takeover by119"
+      },
+      {
+        "kind": "ExportArtifact UUID + report workspace ref fixtures",
+        "count": 4,
+        "paths": 3,
+        "owner": "114 to route to 102/98/actual owners"
+      },
+      {
+        "kind": "BiViewId CLI",
+        "count": 1,
+        "paths": 1,
+        "owner": "116 or current owner"
+      },
+      {
+        "kind": "HTTP result status union",
+        "count": 1,
+        "paths": 1,
+        "owner": "111 / interface owner designated by 114"
+      }
+    ]
+  },
+  "guards": {
+    "exit": 1,
+    "gates": 55,
+    "gate_rule": "agent-scratch",
+    "warnings": 115,
+    "errors": 0,
+    "evidence_files": 55,
+    "bytes": 875238,
+    "source_group_trees_equal_c53_c58": true,
+    "manifest": "GUARD55-MANIFEST.json",
+    "decision": "GUARD55-DECISION.md",
+    "reviewer_approval_status": "NOT_GRANTED",
+    "bypass_or_ignore": false,
+    "action_required_by": "Independent authorized PR65 reviewer/Maestro"
+  },
+  "other_positive": {
+    "atlas_typecheck": true,
+    "core_typecheck": true,
+    "app_typecheck": true,
+    "atlas_generate_before": true,
+    "atlas_generate": true,
+    "atlas_generate_after": true,
+    "atlas_generated_diff": true,
+    "spawn_imports": true,
+    "spawn_imports_files_checked": 4751,
+    "allowlisted_sites": 66
+  },
+  "outside_scope": {
+    "product_tests": "NOT_RUN_BY_119_OWNER_120",
+    "epic": "NOT_RUN",
+    "AM01_AM06": "NOT_RUN_BY_119",
+    "G7_C": "NOT_RUN_BY_119",
+    "G8_D": "NOT_RUN_BY_119",
+    "global_release": false
+  },
+  "handoff": {
+    "consumer": "114",
+    "next": "Consume patch v2 and generated sf2-epic YAML from artifact; remediate 22 unique TS errors in actual owners; obtain independent guard decision, then verify new composed C by hosted checks. Preserve C58 original evidence, never infer PASS."
+  }
+}
