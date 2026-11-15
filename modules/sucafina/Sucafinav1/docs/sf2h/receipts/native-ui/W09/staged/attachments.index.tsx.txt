@@ -1,0 +1,195 @@
+// STAGED ONLY: proposed product path
+// packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx
+// Selection is NOT upload; callbacks do not supply file bytes, URLs, tokens or links.
+// Only the admitted producer can change admissionState/attachments/recordVersion.
+import { createEffect, createSignal, createUniqueId, For, Match, Show, Switch, type JSX } from "solid-js"
+import { useLanguage } from "@/context/language"
+import type { SfAttachmentFieldProps, SfFileAdmission, SfFileSelectionRef, SfMessage } from "./types"
+import {
+  canAdmitSelected,
+  canRequestDownload,
+  canRequestReferenceRemoval,
+} from "./guards"
+import "../evidence/s04.css"
+
+export type { SfAttachment, SfFileAdmission, SfAttachmentFieldProps } from "../evidence/types"
+
+const statusKeys = {
+  admitted: "orchestra.sf.s04.attachments.admitted",
+  blocked: "orchestra.sf.s04.attachments.blocked",
+  "scanner-unavailable": "orchestra.sf.s04.attachments.scanner-unavailable",
+  replaced: "orchestra.sf.s04.attachments.replaced",
+  revoked: "orchestra.sf.s04.attachments.revoked",
+} as const
+
+export function SfAttachmentField(props: SfAttachmentFieldProps): JSX.Element {
+  const language = useLanguage()
+  const id = createUniqueId()
+  const [dispatched, setDispatched] = createSignal<SfFileSelectionRef | null>(null)
+  const msg = (value: SfMessage) =>
+    language.t(value.key as Parameters<typeof language.t>[0], value.params)
+  const admittedCount = () => props.attachments.filter((item) => item.status === "admitted").length
+  const canSelect = () =>
+    props.admissionState.kind !== "admitting" &&
+    Number.isSafeInteger(props.limit.maxFiles) &&
+    props.limit.maxFiles > admittedCount() &&
+    Number.isSafeInteger(props.limit.maxBytes) &&
+    props.limit.maxBytes > 0 &&
+    props.acceptedFormats.length > 0
+  const canAdmit = () =>
+    dispatched() === null &&
+    canAdmitSelected(props.admissionState, props.acceptedFormats, props.limit, props.attachments)
+
+  // Lock the same opaque selected ref after an explicit click until parent advances
+  // state or supplies a new selection. No automatic retry if response is lost.
+  createEffect(() => {
+    const state = props.admissionState
+    if (state.kind !== "selected" || (dispatched() !== null && state.selectionRef !== dispatched()))
+      setDispatched(null)
+  })
+
+  const admit = () => {
+    if (!canAdmit()) return
+    const current = props.admissionState
+    if (current.kind !== "selected") return
+    setDispatched(current.selectionRef)
+    props.onAdmit({
+      selectionRef: current.selectionRef,
+      recordRef: props.recordRef,
+      recordVersion: props.recordVersion,
+    })
+  }
+  const admittedStatus = (item: SfAttachmentFieldProps["attachments"][number]) =>
+    language.t(statusKeys[item.status])
+
+  return (
+    <section class="sf-s04 mx-card" aria-labelledby={id + "-title"}
+      aria-busy={props.admissionState.kind === "admitting"}>
+      <header class="sf-s04-head">
+        <h2 id={id + "-title"}>{language.t("orchestra.sf.s04.attachments.title")}</h2>
+        <button type="button" class="mx-btn" disabled={!canSelect()}
+          onClick={() => { if (canSelect()) props.onSelectFile() }}>
+          {language.t("orchestra.sf.s04.attachments.select")}
+        </button>
+      </header>
+
+      <p class="sf-s04-muted">
+        {language.t("orchestra.sf.s04.attachments.maxBytes")}: {props.limit.maxBytes}
+        {" · "}
+        {language.t("orchestra.sf.s04.attachments.maxFiles")}: {props.limit.maxFiles}
+      </p>
+
+      <section aria-label={language.t("orchestra.sf.s04.attachments.formats")}>
+        <h3>{language.t("orchestra.sf.s04.attachments.formats")}</h3>
+        <ul>
+          <For each={props.acceptedFormats}>{(format) => (
+            <li>
+              {msg(format.label)} — <bdi>{format.mediaType}</bdi>
+              {" ("}<bdi>{format.extensions.join(", ")}</bdi>{")"}
+            </li>
+          )}</For>
+        </ul>
+      </section>
+
+      <Switch>
+        <Match when={props.admissionState.kind === "selected"}>
+          <Show when={props.admissionState.kind === "selected"}>
+            {(phase) => (
+              <div class="sf-s04-row" role="group" aria-label={language.t("orchestra.sf.s04.attachments.selected")}>
+                <p role="status">{language.t("orchestra.sf.s04.attachments.selected")}</p>
+                <p class="sf-s04-file-name">
+                  <bdi>{phase().fileName}</bdi>
+                </p>
+                <p class="sf-s04-muted">
+                  {language.t("orchestra.sf.s04.attachments.fileCount")}: {phase().bytes}
+                  {" · "}
+                  {language.t("orchestra.sf.s04.attachments.mediaType")}: <bdi>{phase().mediaType}</bdi>
+                </p>
+                <Show when={!canAdmit()}>
+                  <p class="mx-note" role="status">{language.t("orchestra.sf.s04.attachments.notEligible")}</p>
+                </Show>
+                <button type="button" class="mx-btn primary" disabled={!canAdmit()} onClick={admit}>
+                  {language.t("orchestra.sf.s04.attachments.admit")}
+                </button>
+              </div>
+            )}
+          </Show>
+        </Match>
+        <Match when={props.admissionState.kind === "admitting"}>
+          <p role="status" aria-live="polite">{language.t("orchestra.sf.s04.attachments.admitting")}</p>
+        </Match>
+        <Match when={props.admissionState.kind === "admitted"}>
+          <p role="status" aria-live="polite">{language.t("orchestra.sf.s04.attachments.admitted")}</p>
+        </Match>
+        <Match when={props.admissionState.kind === "blocked" || props.admissionState.kind === "scanner-unavailable" || props.admissionState.kind === "failed"}>
+          <Show when={props.admissionState.kind === "blocked" || props.admissionState.kind === "scanner-unavailable" || props.admissionState.kind === "failed"}>
+            {(phase) => (
+              <div role="alert">
+                <p>{phase().kind === "scanner-unavailable"
+                  ? language.t("orchestra.sf.s04.attachments.scanner-unavailable")
+                  : phase().kind === "blocked"
+                    ? language.t("orchestra.sf.s04.attachments.blocked")
+                    : language.t("orchestra.sf.s04.attachments.failed")}</p>
+                <p>{msg(phase().reason)}</p>
+              </div>
+            )}
+          </Show>
+        </Match>
+      </Switch>
+
+      <Show when={props.attachments.length === 0}>
+        <p class="mx-note" role="status">{language.t("orchestra.sf.s04.attachments.empty")}</p>
+      </Show>
+      <ul class="sf-s04-list" aria-label={language.t("orchestra.sf.s04.attachments.title")}>
+        <For each={props.attachments}>{(item) => (
+          <li class="sf-s04-row sf-s04-file">
+            <div class="sf-s04-file-name">
+              <strong>
+                <Show when={item.status !== "revoked"} fallback={language.t("orchestra.sf.s04.attachments.revoked")}>
+                  <bdi>{item.fileName}</bdi>
+                </Show>
+              </strong>
+              <p class="sf-s04-muted sf-s04-status" role="status">{admittedStatus(item)}</p>
+              <Show when={item.status === "admitted"}>
+                <p class="sf-s04-muted">
+                  {language.t("orchestra.sf.s04.attachments.fileCount")}: {item.bytes}
+                  {" · "}<bdi>{item.mediaType}</bdi>
+                  {" · "}<bdi>{String(item.version)}</bdi>
+                </p>
+              </Show>
+              <Show when={item.reason}>
+                {(reason) => <p class="mx-note" role="status">{msg(reason())}</p>}
+              </Show>
+            </div>
+            <div class="sf-s04-actions">
+              <Show when={canRequestDownload(item)}>
+                <button type="button" class="mx-btn" onClick={() => {
+                  if (!canRequestDownload(item)) return
+                  props.onDownload({
+                    attachmentRef: item.ref,
+                    recordRef: props.recordRef,
+                    recordVersion: props.recordVersion,
+                  })
+                }}>
+                  {language.t("orchestra.sf.s04.attachments.download")}
+                </button>
+              </Show>
+              <Show when={canRequestReferenceRemoval(item)}>
+                <button type="button" class="mx-btn" onClick={() => {
+                  if (!canRequestReferenceRemoval(item)) return
+                  props.onRemoveReference({
+                    attachmentRef: item.ref,
+                    recordRef: props.recordRef,
+                    recordVersion: props.recordVersion,
+                  })
+                }}>
+                  {language.t("orchestra.sf.s04.attachments.remove")}
+                </button>
+              </Show>
+            </div>
+          </li>
+        )}</For>
+      </ul>
+    </section>
+  )
+}
