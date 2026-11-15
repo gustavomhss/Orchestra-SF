@@ -63,12 +63,12 @@ export function unresolvedSfPlannerMonthlyRows(
   reply: Awaited<ReturnType<ReturnType<typeof import("../planner").createSfPlannerClient>["planner.monthly.apply"]>>,
 ): Readonly<{
   status: "known" | "outcome-unknown" | "unavailable"
-  rows: readonly SfPlannerMonthlyDraftInput["drafts"][number][]
+  rows: SfPlannerMonthlyDraftInput["drafts"]
 }> {
   if (reply.kind === "transport-error") {
-    return { status: reply.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable", rows: sent.drafts }
+    return { status: reply.reason === "contract-unavailable" ? "unavailable" : "outcome-unknown", rows: sent.drafts }
   }
-  if (reply.status !== 200 || reply.body.status !== "ok") return { status: "unavailable", rows: sent.drafts }
+  if (reply.status !== 200 || reply.body.status !== "ok") return { status: "known", rows: sent.drafts }
   const applied = new Set(
     reply.body.value.rows.filter((row) => row.result?.ok === true).map((row) => row.draft.rowId),
   )

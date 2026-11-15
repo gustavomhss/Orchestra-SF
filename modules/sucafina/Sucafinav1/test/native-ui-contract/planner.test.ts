@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { Schema } from "effect"
 import { SfPlanner } from "../../../../../packages/schema/src/sucafina/planner.ts"
 import { prepareSfPlannerMonthlyRange, unresolvedSfPlannerMonthlyRows } from "../../../../../packages/client/src/sucafina/planner/monthly.ts"
 import { domain } from "../../runtime/planner.ts"
@@ -129,4 +130,31 @@ test("unknown outcome is retained verbatim; partial known success retains only n
   })
   expect(known.status).toBe("known")
   expect(known.rows).toEqual([sent.drafts[1]])
+})
+
+test("closed source command schema refuses extra fields and preserves CAS", () => {
+  const input = SfPlanner.operations["domain.command.CAP18.save"].input
+  const command = { page: "OPEX", action: "save", version: 7, id: "line", values: { versionId: "plan", closed: 4 } }
+  expect(Schema.decodeUnknownSync(input, { onExcessProperty: "error" })(command)).toEqual(command)
+  expect(() => Schema.decodeUnknownSync(input, { onExcessProperty: "error" })({
+    ...command, values: { ...command.values, shouldNeverPass: true },
+  })).toThrow()
+  expect(() => Schema.decodeUnknownSync(input, { onExcessProperty: "error" })({
+    ...command, principalRef: "caller-selected-identity",
+  })).toThrow()
+  expect(() => Schema.decodeUnknownSync(SfPlanner.operations["planner.monthly.apply"].input)({
+    action: "apply", input: { page: "OPEX", versionId: "plan", drafts: [
+      { rowId: "line", revision: 7, cells: [{ measure: "budget", month: 0, text: "0" }] },
+    ] },
+  })).toThrow()
+})
+test("an explicit HTTP conflict is known; a transport readback loss is never retried automatically", () => {
+  const request = { page: "OPEX" as const, versionId: "plan",
+    drafts: [{ rowId: "line", revision: 0, cells: [{ month: 1, measure: "budget" as const, text: "0" }] }] }
+  expect(unresolvedSfPlannerMonthlyRows(request, {
+    kind: "response", status: 409, headers: {}, body: { status: "stale", reason: "row-changed" },
+  })).toEqual({ status: "known", rows: request.drafts })
+  expect(unresolvedSfPlannerMonthlyRows(request, {
+    kind: "transport-error", reason: "invalid-response",
+  })).toEqual({ status: "outcome-unknown", rows: request.drafts })
 })
