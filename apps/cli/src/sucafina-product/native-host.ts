@@ -14,7 +14,7 @@ import type { SessionScope } from "@orchestra/core/session/scope"
 import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
 import { SessionStore } from "@orchestra/core/session/store"
 import { SkillV2 } from "@orchestra/core/skill"
-import { Context, Effect, Layer } from "effect"
+import { Context, Effect, Exit, Layer } from "effect"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { SfBindingRegistry, SfNativeAdmission, SfSelectedRuntime, SfSourceCapability } from "../../../../modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
@@ -109,6 +109,10 @@ export type SfNativeHostPolicy = {
     gate: Pick<ReturnType<typeof createSfTokenGate>, "reserveSession" | "register" | "revokeSession" | "revoke" | "valid">
     reserveSession: (input: SfNativeBudgetReservation) => Effect.Effect<void, unknown>
     persistReceipt: (binding: TrustedExecutionBinding, receipt: SfTokenCountReceipt) => Effect.Effect<void, unknown>
+    /** Optional until the C08 root-private terminal seam is installed by the owning integrator.
+     * Only closes a previously attempted reservation; never renews Request or admission.
+     */
+    settlePreparation?: (input: SfNativeBudgetReservation, outcome: "failed" | "cancelled") => Effect.Effect<void, unknown>
   }
   admit: (input: SfNativePrepareInput) => Effect.Effect<boolean, unknown>
   authorize: (admission: SfNativeAdmission, binding: TrustedExecutionBinding) => Effect.Effect<boolean, unknown>
@@ -327,80 +331,150 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             if (!placed.success.sourceCapability || !placed.success.model) return { status: "unavailable", reason: "resident-source-or-model-unavailable" } as const
             const reservedID = SessionSchema.ID.create()
             if (yield* store.get(reservedID)) return { status: "unavailable", reason: "native-session-id-conflict" } as const
-            const reserved = yield* Effect.result(budget.reserveSession({ sessionID: reservedID, runId: args.runId, caseRef: args.caseRef,
-              manifestDigest: selected.manifestDigest, profileId: selected.profile.id }))
-            if (reserved._tag === "Failure") return { status: "unavailable", reason: "native-session-reservation-failed" } as const
-            budget.gate.reserveSession(reservedID)
-            const created = yield* Effect.result(session.create({ id: reservedID, location: args.location, agent: AgentV2.ID.make(selected.profile.id), model: args.model }))
-            if (created._tag === "Failure") return { status: "unavailable", reason: "native-session-create-failed" } as const
-            const sessionID = created.success.id
-            if (sessionID !== reservedID || created.success.agent !== selected.profile.id ||
-              !created.success.model || digestSfValue(created.success.model) !== digestSfValue(args.model) ||
-              digestSfValue(created.success.location) !== digestSfValue(args.location))
-              return { status: "denied", reason: "native-session-conflict" } as const
-            const loaded = yield* Effect.result(loadSfSkill({ session, skills: placed.success.skills, sourceCapability: placed.success.sourceCapability,
-              selected, sessionID, profile: selected.profile, skill: selectedSkill, runId: args.runId, manifestDigest: selected.manifestDigest }))
-            if (loaded._tag === "Failure") {
-              return { status: "unavailable", reason: "native-skill-load-failed" } as const
+            // Register the request abort BEFORE the first durable C08 effect; the previous
+            // finalizer started only after create/skill/narrow and leaked those early paths.
+            const acquired: {
+              binding?: TrustedExecutionBinding; ticket?: SfTokenGateTicket
+              retained: boolean; closed: boolean; reserveAttempted: boolean; createAttempted: boolean
+              identityMismatch: boolean; sessionVerified: boolean
+            } = { retained: false, closed: false, reserveAttempted: false, createAttempted: false, identityMismatch: false, sessionVerified: false }
+            const onAbort = () => {
+              acquired.closed = true
+              budget.gate.revokeSession(reservedID)
+              if (acquired.ticket) budget.gate.revoke(acquired.ticket)
+              if (acquired.binding) {
+                runs.get(acquired.binding)?.release()
+                input.registry.revoke(acquired.binding)
+              }
+              if (acquired.sessionVerified)
+                void Effect.runPromise(session.interrupt(reservedID)).catch(() => undefined)
             }
-            const narrowed = yield* Effect.result(store.narrow(sessionID, { skills: { entry: selectedSkill.id, allow: selected.skills.map((skill) => skill.id) },
-              tools: [...selected.operationIds], budgets: { loads: args.skillLoadBudget, toolCalls: args.toolCallBudget } }))
-            if (narrowed._tag === "Failure") {
-              return { status: "unavailable", reason: "native-session-scope-failed" } as const
-            }
-            const admission: SfNativeAdmission = { request: args.request, selected, sessionID, runId: args.runId,
-              caseRef: args.caseRef, profile: selected.profile, manifestDigest: selected.manifestDigest,
-              skillReceipts: Object.freeze([Object.freeze(loaded.success)]), entryMode: args.entryMode }
-            const acquired: { binding?: TrustedExecutionBinding; ticket?: SfTokenGateTicket; retained: boolean; closed: boolean } = { retained: false, closed: false }
             return yield* Effect.acquireUseRelease(
               Effect.sync(() => {
-                if (!lifetime.open) throw new Error("native-host-disposed")
-                return input.onSkillLoaded?.({ session: created.success, admission, skills: placed.success.skills,
-                  sourceCapability: placed.success.sourceCapability! })
+                args.request.signal.addEventListener("abort", onAbort, { once: true })
+                if (args.request.signal.aborted) onAbort()
               }),
-              (release) => Effect.gen(function* () {
-                const attempted = yield* Effect.result(Effect.tryPromise({ try: () => input.registry.bind(admission).then((result) => {
-                  if (result.status === "ok") {
-                    if (acquired.closed) input.registry.revoke(result.value)
-                    else acquired.binding = result.value
-                  }
-                  return result
-                }), catch: () => "binding-unavailable" }))
-                if (attempted._tag === "Failure") return { status: "unavailable", reason: "native-binding-unavailable" } as const
-                const bound = attempted.success
-                if (bound.status !== "ok") return bound
-                if (!sameNativeProject(created.success, bound.value)) return { status: "denied", reason: "native-project-mismatch" } as const
-                const ticket = yield* budget.gate.register({ admission, binding: bound.value, model: args.model, location: args.location,
-                  revalidate: () => input.authorize(admission, bound.value),
-                  persistReceipt: (receipt) => budget.persistReceipt(bound.value, receipt),
-                }).pipe(Effect.provideService(SessionStore.Service, store))
-                if (!ticket) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
-                acquired.ticket = ticket
-                if (!lifetime.open) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
-                const discard = () => {
-                  if (observations.get(sessionID) !== discard) return
-                  observations.delete(sessionID)
-                  budget.gate.revoke(ticket)
-                  input.registry.revoke(bound.value)
-                  runs.delete(bound.value)
-                  release?.()
+              () => Effect.gen(function* () {
+                acquired.reserveAttempted = true
+                const reserved = yield* Effect.result(budget.reserveSession({ sessionID: reservedID, runId: args.runId, caseRef: args.caseRef,
+                  manifestDigest: selected.manifestDigest, profileId: selected.profile.id }))
+                if (reserved._tag === "Failure") return { status: "unavailable", reason: "native-session-reservation-failed" } as const
+                // C15 ownership is monotonic. Revoke any live ticket on failure, never this owned marker.
+                budget.gate.reserveSession(reservedID)
+                if (acquired.closed || args.request.signal.aborted || !lifetime.open)
+                  return { status: "denied", reason: "native-preparation-aborted" } as const
+                acquired.createAttempted = true
+                const created = yield* Effect.result(session.create({ id: reservedID, location: args.location, agent: AgentV2.ID.make(selected.profile.id), model: args.model }))
+                if (created._tag === "Failure") return { status: "unavailable", reason: "native-session-create-failed" } as const
+                const sessionID = created.success.id
+                if (sessionID !== reservedID || created.success.parentID || created.success.agent !== selected.profile.id ||
+                  !created.success.model || digestSfValue(created.success.model) !== digestSfValue(args.model) ||
+                  digestSfValue(created.success.location) !== digestSfValue(args.location)) {
+                  // An existing/foreign Session returned by create is never ours to delete.
+                  acquired.identityMismatch = true
+                  return { status: "denied", reason: "native-session-conflict" } as const
                 }
-                observations.set(sessionID, discard)
-                runs.set(bound.value, { admission, ticket, prompt: args.prompt, used: false, release: discard })
-                acquired.retained = true
-                return { status: "ok", value: { binding: bound.value, sessionID, skillReceipt: loaded.success } } as const
+                acquired.sessionVerified = true
+                if (acquired.closed || args.request.signal.aborted || !lifetime.open)
+                  return { status: "denied", reason: "native-preparation-aborted" } as const
+                const loaded = yield* Effect.result(loadSfSkill({ session, skills: placed.success.skills, sourceCapability: placed.success.sourceCapability,
+                  selected, sessionID, profile: selected.profile, skill: selectedSkill, runId: args.runId, manifestDigest: selected.manifestDigest }))
+                if (loaded._tag === "Failure") {
+                  return { status: "unavailable", reason: "native-skill-load-failed" } as const
+                }
+                const narrowed = yield* Effect.result(store.narrow(sessionID, { skills: { entry: selectedSkill.id, allow: selected.skills.map((skill) => skill.id) },
+                  tools: [...selected.operationIds], budgets: { loads: args.skillLoadBudget, toolCalls: args.toolCallBudget } }))
+                if (narrowed._tag === "Failure") {
+                  return { status: "unavailable", reason: "native-session-scope-failed" } as const
+                }
+                if (acquired.closed || args.request.signal.aborted || !lifetime.open)
+                  return { status: "denied", reason: "native-preparation-aborted" } as const
+                const admission: SfNativeAdmission = { request: args.request, selected, sessionID, runId: args.runId,
+                  caseRef: args.caseRef, profile: selected.profile, manifestDigest: selected.manifestDigest,
+                  skillReceipts: Object.freeze([Object.freeze(loaded.success)]), entryMode: args.entryMode }
+                return yield* Effect.acquireUseRelease(
+                  Effect.sync(() => {
+                    if (!lifetime.open || acquired.closed || args.request.signal.aborted) throw new Error("native-host-disposed")
+                    return input.onSkillLoaded?.({ session: created.success, admission, skills: placed.success.skills,
+                      sourceCapability: placed.success.sourceCapability! })
+                  }),
+                  (release) => Effect.gen(function* () {
+                    const attempted = yield* Effect.result(Effect.tryPromise({ try: () => input.registry.bind(admission).then((result) => {
+                      if (result.status === "ok") {
+                        if (acquired.closed) input.registry.revoke(result.value)
+                        else acquired.binding = result.value
+                      }
+                      return result
+                    }), catch: () => "binding-unavailable" }))
+                    if (attempted._tag === "Failure") return { status: "unavailable", reason: "native-binding-unavailable" } as const
+                    const bound = attempted.success
+                    if (bound.status !== "ok") return bound
+                    if (acquired.closed || args.request.signal.aborted) return { status: "denied", reason: "native-preparation-aborted" } as const
+                    if (!sameNativeProject(created.success, bound.value)) return { status: "denied", reason: "native-project-mismatch" } as const
+                    const ticket = yield* budget.gate.register({ admission, binding: bound.value, model: args.model, location: args.location,
+                      revalidate: () => input.authorize(admission, bound.value),
+                      persistReceipt: (receipt) => budget.persistReceipt(bound.value, receipt),
+                    }).pipe(Effect.provideService(SessionStore.Service, store))
+                    if (!ticket) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
+                    acquired.ticket = ticket
+                    if (!lifetime.open || acquired.closed || args.request.signal.aborted)
+                      return { status: "denied", reason: "native-preparation-aborted" } as const
+                    const discard = () => {
+                      if (observations.get(sessionID) !== discard) return
+                      observations.delete(sessionID)
+                      acquired.closed = true
+                      args.request.signal.removeEventListener("abort", onAbort)
+                      budget.gate.revoke(ticket)
+                      input.registry.revoke(bound.value)
+                      runs.delete(bound.value)
+                      release?.()
+                    }
+                    observations.set(sessionID, discard)
+                    runs.set(bound.value, { admission, ticket, prompt: args.prompt, used: false, release: discard })
+                    acquired.retained = true
+                    return { status: "ok", value: { binding: bound.value, sessionID, skillReceipt: loaded.success } } as const
+                  }),
+                  (release) => Effect.sync(() => {
+                    if (acquired.retained) return
+                    acquired.closed = true
+                    budget.gate.revokeSession(sessionID)
+                    if (acquired.ticket) budget.gate.revoke(acquired.ticket)
+                    if (acquired.binding) input.registry.revoke(acquired.binding)
+                    release?.()
+                  }),
+                ).pipe(Effect.onInterrupt(() => Effect.sync(() => {
+                  if (acquired.binding) runs.get(acquired.binding)?.release()
+                })))
               }),
-              (release) => Effect.sync(() => {
-                if (acquired.retained) return
+              (_, outcome) => Effect.gen(function* () {
+                if (Exit.isSuccess(outcome) && outcome.value.status === "ok" &&
+                  acquired.retained && !acquired.closed && !args.request.signal.aborted && lifetime.open) return
+                args.request.signal.removeEventListener("abort", onAbort)
                 acquired.closed = true
-                budget.gate.revokeSession(sessionID)
+                // C15 tombstone/owned survives revokeSession; C08 reserveSession is NEVER undone.
+                budget.gate.revokeSession(reservedID)
                 if (acquired.ticket) budget.gate.revoke(acquired.ticket)
                 if (acquired.binding) input.registry.revoke(acquired.binding)
-                release?.()
+                const result = yield* reclaimSfPreparedSession({
+                  sessionID: reservedID, agent: selected.profile.id, model: args.model,
+                  location: args.location, createAttempted: acquired.createAttempted,
+                  identityMismatch: acquired.identityMismatch,
+                  get: () => store.get(reservedID), remove: () => session.remove(reservedID),
+                })
+                if (result === "cleanup-failed")
+                  yield* Effect.logWarning("SF native preparation cleanup failed; C08/C15 ownership remains denied")
+                // Root-owned C08 terminal reporting is best effort until 132 wires its durable
+                // no-Request capability. It must never erase a reservation or permit retry.
+                if (acquired.reserveAttempted && budget.settlePreparation) {
+                  const terminal = yield* Effect.exit(budget.settlePreparation({
+                    sessionID: reservedID, runId: args.runId, caseRef: args.caseRef,
+                    manifestDigest: selected.manifestDigest, profileId: selected.profile.id,
+                  }, args.request.signal.aborted ? "cancelled" : "failed"))
+                  if (Exit.isFailure(terminal))
+                    yield* Effect.logWarning("SF native preparation terminal state unconfirmed; admission stays denied")
+                }
               }),
-            ).pipe(Effect.onInterrupt(() => Effect.sync(() => {
-              if (acquired.binding) runs.get(acquired.binding)?.release()
-            })))
+            )
           }),
           collect: (binding) => Effect.gen(function* () {
             if (!(yield* authorized(binding))) return { status: "denied", reason: "native-authority-unavailable" } as const
@@ -465,4 +539,33 @@ function freezeHostInput<T>(value: T): T {
 /** Project identity is resolved by Core; an installation ID is not a substitute. */
 export function sameNativeProject(session: SessionSchema.Info, binding: TrustedExecutionBinding) {
   return session.projectID === binding.projectId
+}
+
+/** Reclaim ONLY a Session whose entire native identity still matches this preparation.
+ * The C08 persisted reservation and C15 owned tombstone deliberately outlive removal.
+ * `create` may adopt an existing ID, or fail after its durable event was published.
+ * A mismatched Session is never removed, even when the requested ID was reserved.
+ */
+export function reclaimSfPreparedSession(input: {
+  sessionID: SessionSchema.ID
+  agent: string
+  model: ModelV2.Ref
+  location: Location.Ref
+  createAttempted: boolean
+  identityMismatch: boolean
+  get: () => Effect.Effect<Pick<SessionSchema.Info, "id" | "parentID" | "agent" | "model" | "location"> | undefined, unknown>
+  remove: () => Effect.Effect<void, unknown>
+}) {
+  return Effect.gen(function* () {
+    if (!input.createAttempted || input.identityMismatch) return "not-owned" as const
+    const found = yield* Effect.exit(input.get())
+    if (Exit.isFailure(found)) return "cleanup-failed" as const
+    const current = found.value
+    if (!current || current.id !== input.sessionID || current.parentID || current.agent !== input.agent ||
+      !current.model || digestSfValue(current.model) !== digestSfValue(input.model) ||
+      digestSfValue(current.location) !== digestSfValue(input.location))
+      return "not-owned" as const
+    const removed = yield* Effect.exit(input.remove())
+    return Exit.isSuccess(removed) ? "removed" as const : "cleanup-failed" as const
+  })
 }

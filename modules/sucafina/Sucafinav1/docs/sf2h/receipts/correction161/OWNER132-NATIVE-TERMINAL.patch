@@ -1,0 +1,86 @@
+diff --git a/modules/sucafina/Sucafinav1/product/integration/native-evidence.ts b/modules/sucafina/Sucafinav1/product/integration/native-evidence.ts
+index 0502f30e054e40049df1283c00d4f5af1545f7c2..0000000000000000000000000000000000000000 100644
+--- a/modules/sucafina/Sucafinav1/product/integration/native-evidence.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/native-evidence.ts
+@@ -90,11 +90,61 @@
+         const record = object(state.preferences[keyFor(binding.nativeSessionId)])
+         const reservation = object(record.reservation)
+         const current = state.cases[binding.caseId]
+-        if (record.schema !== "sf-native-session-v1" || reservation.sessionID !== binding.nativeSessionId || reservation.runId !== binding.runId || reservation.profileId !== binding.profileId || reservation.manifestDigest !== binding.manifestDigest || digestSfValue(reservation.caseRef) !== digestSfValue({ id: binding.caseId, incarnation: binding.caseIncarnation, version: binding.caseVersion }) || record.principalRef !== authority.principalRef || record.accessRevision !== authority.accessRevision || record.policyVersion !== authority.policyVersion || authority.principalRef !== binding.principalRef || authority.accessRevision !== binding.accessRevision || authority.policyVersion !== binding.policyVersion || !current || current.incarnation !== binding.caseIncarnation || current.version !== binding.caseVersion || !current.participants.includes(authority.principalRef) || !Array.isArray(record.tokenReceipts)) throw new Error("SF_NATIVE_BINDING_CHANGED")
+-        record.tokenReceipts.push({ attemptId, providerGeneration: binding.providerGeneration, receipt })
+-        return { commit: true, value: true }
+-      })
+-      if (saved.status !== "ok" || saved.value !== true || request.signal.aborted || !await input.authorizeBinding(binding)) throw new Error("SF_NATIVE_TOKEN_RECEIPT_NOT_DURABLE")
++        if (record.terminal !== undefined) throw new Error("SF_NATIVE_SESSION_TERMINAL")
++        if (record.schema !== "sf-native-session-v1" || reservation.sessionID !== binding.nativeSessionId || reservation.runId !== binding.runId || reservation.profileId !== binding.profileId || reservation.manifestDigest !== binding.manifestDigest || digestSfValue(reservation.caseRef) !== digestSfValue({ id: binding.caseId, incarnation: binding.caseIncarnation, version: binding.caseVersion }) || record.principalRef !== authority.principalRef || record.accessRevision !== authority.accessRevision || record.policyVersion !== authority.policyVersion || authority.principalRef !== binding.principalRef || authority.accessRevision !== binding.accessRevision || authority.policyVersion !== binding.policyVersion || !current || current.incarnation !== binding.caseIncarnation || current.version !== binding.caseVersion || !current.participants.includes(authority.principalRef) || !Array.isArray(record.tokenReceipts)) throw new Error("SF_NATIVE_BINDING_CHANGED")
++        record.tokenReceipts.push({ attemptId, providerGeneration: binding.providerGeneration, receipt })
++        return { commit: true, value: true }
++      })
++      if (saved.status !== "ok" || saved.value !== true || request.signal.aborted || !await input.authorizeBinding(binding)) throw new Error("SF_NATIVE_TOKEN_RECEIPT_NOT_DURABLE")
++    },
++    settlePreparation: async (requested: SfNativeReservation, outcome: "failed" | "cancelled") => {
++      // This root-private reducer is deny-only; it can never mint a Request, grant or ticket.
++      // Persistence is serializable, so the terminal transition is monotonic across reload.
++      const reservation = structuredClone(requested)
++      if (outcome !== "failed" && outcome !== "cancelled") throw new Error("SF_NATIVE_TERMINAL_INVALID")
++      if (![reservation.sessionID, reservation.runId, reservation.caseRef.id, reservation.caseRef.incarnation].every((value) =>
++        typeof value === "string" && value.trim()) || !Number.isSafeInteger(reservation.caseRef.version) ||
++        reservation.caseRef.version < 1 || !/^[a-f0-9]{64}$/.test(reservation.manifestDigest) ||
++        typeof reservation.profileId !== "string" || !reservation.profileId.trim())
++        throw new Error("SF_NATIVE_TERMINAL_RESERVATION_INVALID")
++      const terminal = await input.persistence.transaction("dashboard", async (snapshot) => {
++        const state = object(snapshot.data.__sfProductV1)
++        const versions = object(state.versions)
++        const preferences = object(state.preferences)
++        const revision = state.revision
++        const prefVersion = versions.preferences
++        if (state.schemaVersion !== 1 || typeof revision !== "number" || !Number.isSafeInteger(revision) ||
++          revision < 0 || revision === Number.MAX_SAFE_INTEGER ||
++          typeof prefVersion !== "number" || !Number.isSafeInteger(prefVersion) ||
++          prefVersion < 0 || prefVersion === Number.MAX_SAFE_INTEGER ||
++          typeof state.incarnation !== "string" || !state.incarnation ||
++          state.preferences === undefined || state.versions === undefined || !state.transactions)
++          throw new Error("SF_NATIVE_TERMINAL_STORAGE_INVALID")
++        const key = keyFor(reservation.sessionID)
++        const marker = object(preferences[key])
++        if (marker.schema !== "sf-native-session-v1" ||
++          digestSfValue(marker.reservation) !== digestSfValue(reservation) ||
++          typeof marker.principalRef !== "string" || typeof marker.accessRevision !== "string" ||
++          typeof marker.policyVersion !== "string" || !Array.isArray(marker.tokenReceipts))
++          throw new Error("SF_NATIVE_TERMINAL_ORIGIN_UNAVAILABLE")
++        if (marker.terminal !== undefined) {
++          const previous = object(marker.terminal)
++          if (previous.schema !== "sf-native-session-terminal-v1" || previous.state !== outcome)
++            throw new Error("SF_NATIVE_TERMINAL_CONFLICT")
++          return { commit: false, value: true }
++        }
++        const staged = structuredClone(state)
++        object(staged.preferences)[key] = {
++          ...marker,
++          terminal: { schema: "sf-native-session-terminal-v1", state: outcome,
++            reason: "preparation-unavailable", settledAt: new Date().toISOString() },
++        }
++        staged.revision = revision + 1
++        object(staged.versions).preferences = prefVersion + 1
++        snapshot.data.__sfProductV1 = staged
++        return { commit: true, value: true }
++      })
++      if (terminal !== true) throw new Error("SF_NATIVE_TERMINAL_NOT_DURABLE")
+     },
+   }
+ }
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index 297a4050323d80648684725f9c7e9a8680aa318f..0000000000000000000000000000000000000000 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -221,7 +221,9 @@
+     authorize: (admission, binding) => Effect.tryPromise(() => authority.authorizeNative(admission, binding)),
+     authorizeInterrupt: (admission, binding, request) => Effect.tryPromise(() => authority.authorizeInterrupt(admission, binding, request)),
+     budget: { gate, reserveSession: (reservation) => Effect.tryPromise(() => evidence.reserveSession(reservation)),
+-      persistReceipt: (binding, receipt) => Effect.tryPromise(() => evidence.persistTokenReceipt(binding, receipt)) },
++      persistReceipt: (binding, receipt) => Effect.tryPromise(() => evidence.persistTokenReceipt(binding, receipt)),
++      // Root-private, deny-only terminal transition. Never accepts a caller-supplied Request.
++      settlePreparation: (reservation, outcome) => Effect.tryPromise(() => evidence.settlePreparation(reservation, outcome)) },
+   })
+   const roster = createSfRosterSources({ host: authority.host, scopedSources: input.persistence, plannerSources: createSfPlannerSourceHost({ host: authority.host, scopedSources: input.persistence, coverageFor: async () => ({ status: "unavailable", reason: "roster-coverage-unavailable" }) }) })
+   const imports = createSfImportServices({ runtime: input, authority, roster })

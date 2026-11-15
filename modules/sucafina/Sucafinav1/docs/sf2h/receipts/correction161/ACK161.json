@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.native-authority-correction-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 161,
+  "actor": "S0-B/native-authority-producer",
+  "branch": "native-host-provider",
+  "pr": 104,
+  "epoch": "native-producer-e2-browser161",
+  "status": "ACK_SOURCE_DELTA_PREPARED",
+  "previous_epoch": "native-producer-browser95",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+  "runtime_termination_claimed": false,
+  "identity": {
+    "effective_model": "GPT-6",
+    "astra_requested": true,
+    "astra_exposed_as_effective": false,
+    "client": "ChatGPT web",
+    "session_id": null,
+    "session_id_reason": "No session ID exposed; never fabricated"
+  },
+  "observed_parent": "f1d68585ee081b8cf7a9c9a692c7784dee6591b0",
+  "observed_tree": "cf51b0dbb3175b8a837d41f1dc69dc436c357c3c",
+  "observed_fence_blob": "e6d5d9c0499d6746f2bc49e283efdb2ab2a0fa6e",
+  "mission_pack_blob": "1743b8428d3d2ac4d0d3b47992ea9ba35f1c814e",
+  "actor_pack_blob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+  "source_preimages": {
+    "apps/cli/src/sucafina-product/native-host.ts": "345468efaa797288d83ec0e0ca60350c6ddd55db",
+    "apps/cli/src/sucafina-product/token-gate.ts": "5a3e39ff379d51a15f5f601ed9739191ff7071c4",
+    "apps/cli/src/sucafina-product/native-authority-provider.ts": "637c6694b059f2bcb1501a8017bd92a21bfd530e",
+    "apps/cli/src/sucafina-product/host-context.ts": "297a4050323d80648684725f9c7e9a8680aa318f",
+    "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts": "0502f30e054e40049df1283c00d4f5af1545f7c2"
+  },
+  "validation": "NOT_RUN",
+  "reason": "Local tests/typecheck/parser/build prohibited; compiler149 and CI150 own hosted validation",
+  "native_goal": "PAUSED",
+  "global_release": false,
+  "acks_on_pr": [
+    6901323729
+  ],
+  "next": "Publish source/test/owner patch in same PR; 132 consumes only exact blobs, 149/150 validate."
+}

@@ -1,0 +1,133 @@
+{
+  "schema": "sf2h.native-authority-correction-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 161,
+  "epoch": "native-producer-e2-browser161",
+  "actor": "S0-B/native-authority-producer",
+  "branch": "native-host-provider",
+  "pr": 104,
+  "base_branch": "sf2-stack",
+  "parent": "f1d68585ee081b8cf7a9c9a692c7784dee6591b0",
+  "parent_tree": "cf51b0dbb3175b8a837d41f1dc69dc436c357c3c",
+  "finding": {
+    "id": "R148-NATIVE-01",
+    "classification": "independent-causal-source-review-not-runtime-proof",
+    "status": "SOURCE_CORRECTED_PENDING_OWNER_SEAM_AND_INTEGRATED_REVIEW",
+    "pre_source": {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "blob": "345468efaa797288d83ec0e0ca60350c6ddd55db",
+      "lines": "328-404"
+    },
+    "mechanism": "C08 reserveSession and C15 reserveSession, SessionV2.create, identity validation, loadSfSkill and Store.narrow were before the previous acquireUseRelease; early returns/interrupts leaked partially created Session and live resources.",
+    "correction": "Outer acquireUseRelease begins before C08; on abort deny/revoke; cleanup via SessionV2.remove only when store row id/parent/agent/model/location matches; C08 marker and C15 owned tombstone never deleted. Inner registration revokes late binding and ticket; successful retained session preserves existing APIs."
+  },
+  "outputs": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "blob": "0c11d6ede57c9d40bf6b1a1a5480d1efa3e7e48d",
+      "preimage": "345468efaa797288d83ec0e0ca60350c6ddd55db",
+      "status": "SOURCE_PATCHED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-host-provider/lifecycle.test.ts",
+      "blob": "89f6bbe2fa429be861eab0bb27777ae947f533c2",
+      "preimage": null,
+      "coverage": "partial component-only fault-injection of canonical public Session.remove cleanup; no installed runtime claim"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/OWNER132-NATIVE-TERMINAL.patch",
+      "blob": "34644970e6dfdf70ca5550f104326ae2d7eab346",
+      "scope": "INERT_OWNER_ONLY",
+      "owner": 132,
+      "consumer_paths": [
+        "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "source_preimages": [
+        "0502f30e054e40049df1283c00d4f5af1545f7c2",
+        "297a4050323d80648684725f9c7e9a8680aa318f"
+      ]
+    }
+  ],
+  "preservation": {
+    "token_gate_blob_unchanged": "5a3e39ff379d51a15f5f601ed9739191ff7071c4",
+    "maestro_rebind_preserved": true,
+    "child110_preserved": true,
+    "forbidden_files_unchanged": [
+      "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+      "apps/cli/src/sucafina-product/host-context.ts"
+    ],
+    "durable_tombstone": "sf:native-session:<sessionID> retained; no retry by same runId",
+    "cold_reload": "isSfOwned remains deny-only; root-private terminal label awaits owner seam"
+  },
+  "criteria": [
+    {
+      "id": "R148-NATIVE-01",
+      "source": "patched",
+      "integrated": "PENDING"
+    },
+    {
+      "id": "C08",
+      "source": "reservation preserved",
+      "terminal": "OWNER132_PATCH_INERT"
+    },
+    {
+      "id": "C15",
+      "source": "owned/revocation preserved",
+      "terminal": "OWNER132_PATCH_INERT"
+    },
+    {
+      "id": "WP10.T06.CHK.03",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP10.T06.CHK.04",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "WP00.T04.CHK.04",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "AM01-AM06",
+      "status": "NOT_RUN"
+    }
+  ],
+  "evidence": {
+    "source_read": "STATIC_SOURCE_VERIFIED",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "sdk": "NOT_RUN",
+    "hosted_ci": "NOT_RUN",
+    "integrated_runtime": "NOT_RUN",
+    "adversarial_review": "PENDING",
+    "limitation": "The optional root-private durable settlePreparation hook is not composed until owner132 accepts the inert patch. Source-ready is not release."
+  },
+  "consumer_pre_post": {
+    "producer": {
+      "pre": "f1d68585ee081b8cf7a9c9a692c7784dee6591b0",
+      "post": "THIS_COMMIT_TBD_AT_CAS",
+      "source_blob": "0c11d6ede57c9d40bf6b1a1a5480d1efa3e7e48d"
+    },
+    "owner132": {
+      "native_evidence_pre": "0502f30e054e40049df1283c00d4f5af1545f7c2",
+      "host_context_pre": "297a4050323d80648684725f9c7e9a8680aa318f",
+      "post": "INERT_NOT_APPLIED"
+    },
+    "compiler149": {
+      "state": "PENDING_INPUT_COMPOSED_C",
+      "validation": "NOT_RUN"
+    },
+    "ci150": {
+      "state": "PENDING_INPUT_COMPOSED_C",
+      "validation": "NOT_RUN"
+    }
+  },
+  "next_actions": [
+    "132 cherry-pick exact source/test blobs without replacing concurrent sources, review/apply OWNER132-NATIVE-TERMINAL.patch only under its owned paths and state-provider authority, reconcile exact preimages, then integrate to sf2-stack.",
+    "149 compile/SDK/guards only for new composed input and report actual runs; do not reuse unchanged C64 fail.",
+    "150 execute justified hosted CI selection only after 132 composition; preserve request/run/findings identity.",
+    "Independent runtime reviewer recheck integrated correction and child110 after validation; keep Goal paused, no GLOBAL_RELEASE."
+  ]
+}
