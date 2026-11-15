@@ -1,4 +1,5 @@
 import { roleMap } from "../../runtime/admin.ts"
+import { object } from "../../runtime/contract.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PreparedCommand } from "../contracts/context.ts"
@@ -9,6 +10,8 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createProcurementSourceResolver } from "./sources.ts"
 import { procurementPreparationIssue } from "./prepared.ts"
 import { createProcurementReadonlySourceResolver } from "./scenario-producer.ts"
+import { createProcurementApprovalLifecycle } from "./decision-preparation.ts"
+import type { ProcurementApprovalPlan, ProcurementApprovalReview } from "./decision-preparation.ts"
 
 /** A scenario choice cannot turn a draft edit into a financially approved command. */
 export function createProcurementScenarioPreparation(input: { host: DomainPortHost; sources: ReturnType<typeof createProcurementSourceResolver> }) {
@@ -46,3 +49,37 @@ export function createProcurementScenarioPreparation(input: { host: DomainPortHo
     return result
   }
 }
+
+/** Offer an explicit draft edit separately from the still unsupported post-approval C12 replacement. */
+export function createProcurementScenarioDraftPreparation(input: { host: DomainPortHost }) {
+  const lifecycle = createProcurementApprovalLifecycle(input)
+  return async (incoming: { operation: ScenarioOperation; choice: ChoiceRecord; review: ProcurementApprovalReview }, binding: TrustedDomainContext): Promise<PortResult<ProcurementApprovalPlan>> => {
+    if (!plainDraftSelection(incoming) || digestSfValue(Object.keys(object(incoming)).sort()) !== digestSfValue(["choice", "operation", "review"])) return { status: "needs-input", reason: "explicit-requisition-amount-required" }
+    const selected = structuredClone(incoming)
+    const operation = selected.operation
+    if (!operation || operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || !operation.currency || !operation.period) return { status: "needs-input", reason: "explicit-requisition-amount-required" }
+    if (!selected.choice?.scenario || !Array.isArray(selected.choice.scenario.operations) || !selected.choice.result || !Array.isArray(selected.choice.result.sourceRefs)) return { status: "needs-input", reason: "recorded-choice-required" }
+    if (!selected.choice.scenario.operations.some((candidate) => digestSfValue(candidate) === digestSfValue(operation))) return { status: "denied", reason: "operation-not-in-choice" }
+    const plan = await lifecycle.prepare({ review: selected.review, action: { kind: "save-estimate", amount: operation.amount } }, binding)
+    if (plan.status !== "ok") return plan
+    const review = plan.value.review
+    const source = review.source
+    if (operation.targetRef !== source.refId || operation.currency !== review.currency || digestSfValue(operation.period) !== digestSfValue(source.target.period) || selected.choice.result.currency !== review.currency || digestSfValue(selected.choice.result.horizon) !== digestSfValue(operation.period)) return { status: "needs-input", reason: "requisition-basis-mismatch" }
+    if (!selected.choice.result.sourceRefs.some((ref) => ref?.kind === "record" && digestSfValue(ref) === digestSfValue(source))) return { status: "denied", reason: "preview-source-unavailable" }
+    // Choice is provenance for the value, never approval or permission. The host
+    // supplies its persisted C08 choice; the lifecycle re-reads the source and actor.
+    return plan
+  }
+}
+
+function plainDraftSelection(value: unknown, active = new WeakSet<object>(), depth = 0): boolean {
+  if (depth > 24) return false
+  if (value === null || typeof value === "string" || typeof value === "boolean") return true
+  if (typeof value === "number") return Number.isFinite(value)
+  if (!value || typeof value !== "object" || active.has(value) || (!Array.isArray(value) && ![Object.prototype, null].includes(Object.getPrototypeOf(value))) || Object.getOwnPropertySymbols(value).length) return false
+  active.add(value)
+  const valid = Object.values(Object.getOwnPropertyDescriptors(value)).every((entry) => "value" in entry && plainDraftSelection(entry.value, active, depth + 1))
+  active.delete(value)
+  return valid
+}
+
