@@ -1,0 +1,90 @@
+{
+  "schema": "sf2h.release-wave-71.initial-census.v1",
+  "observed_at": "2026-11-15 03:04:13 UTC",
+  "authority": {
+    "branch": "sf2-control",
+    "head": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/integration-release-wave.json",
+    "mission_blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+    "later_authority_observed": false
+  },
+  "stack": {
+    "head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d"
+  },
+  "sources": [
+    {
+      "mission": 59,
+      "branch": "runtime-read-scope",
+      "pin": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "state": "EXPLICIT_TERMINAL_RELEASE_REVIEW"
+    },
+    {
+      "mission": 63,
+      "branch": "operations-scanner-proof",
+      "pin": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "state": "EXPLICIT_TERMINAL_RELEASE_REVIEW"
+    },
+    {
+      "mission": 64,
+      "branch": "native-admission-proof",
+      "pin": "4d0421669054a131de0df0c95994b45229ab354e",
+      "state": "EXPLICIT_TERMINAL_RELEASE_REVIEW"
+    },
+    {
+      "mission": 65,
+      "branch": "c12-recovery-proof",
+      "pin": "165da54e7320605092eede58a7dfc1ff706b13c1",
+      "state": "EXPLICIT_TERMINAL_RELEASE_QUEUED"
+    },
+    {
+      "mission": 66,
+      "branch": "export-artifact-proof",
+      "pin": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+      "state": "TERMINAL_DELIVERY_REVIEW_REQUIRED"
+    },
+    {
+      "mission": 61,
+      "branch": "mixed-source-proof",
+      "pin": "600602f18e4ad95bd66e4d41f5a51211d19f92aa",
+      "state": "SOURCE_RELEASE_FILES_DISCOVERED_REVIEW_REQUIRED"
+    },
+    {
+      "mission": 52,
+      "branch": "astra-wp11",
+      "pin": "07c430c23d5ae301050cfcde9daddae1b3fc2efc",
+      "state": "PROPOSAL_NOMINAL09_NO_RELEASE_OBSERVED"
+    },
+    {
+      "mission": 62,
+      "branch": "installed-bi-proof",
+      "pin": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+      "state": "IN_PROGRESS_NO_RELEASE_OBSERVED"
+    },
+    {
+      "mission": 67,
+      "branch": "dashboard-installed-proof",
+      "pin": "8ed803706d5585dba1724f3df7b3f920a45e78ec",
+      "state": "IN_PROGRESS_NO_RELEASE_OBSERVED"
+    },
+    {
+      "mission": 68,
+      "branch": "workbench-mcp-proof",
+      "pin": "d5a297ca260b929335da4517f9c4432eaa92f856",
+      "state": "IN_PROGRESS_NO_RELEASE_OBSERVED"
+    },
+    {
+      "mission": 69,
+      "branch": "atlas-memory-proof",
+      "pin": "2443a01973a5dcbdb3fdee59d868385f5ff54a85",
+      "state": "F2_IN_PROGRESS_NO_TERMINAL_RELEASE_OBSERVED"
+    },
+    {
+      "mission": 70,
+      "branch": "cold-auth-review",
+      "pin": "9c6946c31887ca1899a99ce120921c8bf937e721",
+      "state": "TERMINAL_DOCUMENTAL_FIX_FIRST"
+    }
+  ],
+  "rule": "Bounded observations, not inferred liveness. 72/73/74/76 still at terminal60 base in observed refs; no release inferred."
+}
