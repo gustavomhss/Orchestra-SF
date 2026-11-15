@@ -1,0 +1,231 @@
+{
+  "schema": "sf2h.correction154.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 154,
+  "order": "A13",
+  "branch": "sf-ux-a13",
+  "pr": 139,
+  "epoch": "ux-native-a13-e2-browser154",
+  "actor": "ChatGPT",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "state": "ARTIFACT_READY",
+  "qualification": "NOT_RUN",
+  "global_release": false,
+  "native_goal": "paused",
+  "user_authority": "Current mission154 replaces only previous A13 future-write authority; no claim predecessor process termination",
+  "ack_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/139#issuecomment-6901163035",
+  "source_artifact": {
+    "pre": {
+      "commit": "6c72b5d8e7cbaddf39a14f1640057488e53fe79d",
+      "tree": "a11971f849cc8d8cfcdbbd5e60948844529b84cb"
+    },
+    "post": {
+      "commit": "6bc352f8b04f575fa30f256217e92f9bd4f64862",
+      "tree": "c8b129402e7c2574976cc4fc01c23f6f47f7698b"
+    },
+    "paths": [
+      {
+        "path": "packages/schema/src/sucafina/collaboration/operations.ts",
+        "preimage_blob": "a37dc39b600740af0a78345dfa3d4565256c791a",
+        "postimage_blob": "0a03ee66a13c9a2f9ab9b0569fdf0a64a6ded13e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+        "preimage_blob": "1cf009887afbe56f8191dd32dd9da64e9a06682b",
+        "postimage_blob": "c9b26645df1e36d2104b22cb333ce4a467454e49",
+        "mode": "100644"
+      }
+    ],
+    "commit_url": "https://github.com/gustavomhss/Orchestra-SF/commit/6bc352f8b04f575fa30f256217e92f9bd4f64862"
+  },
+  "consumer": {
+    "owner": "132/PR65",
+    "branch": "sf2-stack",
+    "preimage_observed": {
+      "head": "8094e599e3d18609e269548d24619a3246fbc735",
+      "tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+      "paths": [
+        {
+          "path": "packages/schema/src/sucafina/collaboration/operations.ts",
+          "blob": "a37dc39b600740af0a78345dfa3d4565256c791a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+          "blob": "1cf009887afbe56f8191dd32dd9da64e9a06682b"
+        }
+      ]
+    },
+    "proposed_postimage": {
+      "tree_on_observed_preimage_only": "f5f5f8a424027c94bb9389659d2e4d106f2bb4a0",
+      "unreferenced_tree_object": true,
+      "paths": [
+        {
+          "path": "packages/schema/src/sucafina/collaboration/operations.ts",
+          "blob": "0a03ee66a13c9a2f9ab9b0569fdf0a64a6ded13e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+          "blob": "c9b26645df1e36d2104b22cb333ce4a467454e49"
+        }
+      ]
+    },
+    "actual_post": {
+      "head": null,
+      "tree": null,
+      "state": "NOT_CONSUMED"
+    },
+    "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/A13-selective.patch",
+    "integration_rule": "Apply only exact two leaf diffs to current consumer if preimage blobs still match; if not, reconcile source and consumer changes. Do not merge historical branch, reset or force. A detached proposed tree is not integration."
+  },
+  "finding": {
+    "comment_id": 6901001279,
+    "comment_url": "https://github.com/gustavomhss/Orchestra-SF/pull/139#issuecomment-6901001279",
+    "hosted_run": 43758731378,
+    "job": 132948475697,
+    "attempt": 1,
+    "source_W": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "source_W_tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+    "snapshot_S": "b9e68821206cdd9510b1faa5d07f98140b1df581",
+    "prior_result": "FAIL; 48 pass, 7 fail incl 2 import errors, 338 expects, 8 test files; failure A13 at collaboration.test.ts:241-246",
+    "observed": "Empty Schema.Struct({}) decoded extra operation=grant and principalRef=anyone, instead of rejecting",
+    "accepted_fix": "The two public empty inputs use Schema.Record(Schema.String,Schema.Never).check(Schema.isMaxProperties(0)), no per-call parseOptions dependency"
+  },
+  "contracts": {
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "producer_path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+    "producer_blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+    "producer_selection_version_route": "routes.get('selection-version'): keys=[]; admitted read",
+    "producer_recipients_route": "routes.get('recipients'): keys=[]; admitted read",
+    "transported_decode_path": "packages/client/src/sucafina/transport.ts",
+    "transported_decode_consumer_blob": "ff509a7b742b81939a15f0439ca7f4a3d4b858e9",
+    "transport_decoding": "createSfTransport.execute calls Schema.decodeUnknownOption(operation.input) before codec.decodeInput, URL, or request",
+    "effect_version_verified": "effect@4.0.0-beta.83 includes Schema.Record(String,Never), .check(), and Schema.isMaxProperties",
+    "operation_count_preserved": 29,
+    "operation_ids_changed": [],
+    "fixed_inputs": [
+      "collaboration.recipients",
+      "collaboration.selection-version"
+    ],
+    "added_operations": [],
+    "removed_operations": [],
+    "new_grants": [],
+    "new_dispatchers": [],
+    "other_inputs_outputs": "UNMODIFIED",
+    "output_export": "SfCollaboration",
+    "client_export": "createSfCollaborationClient"
+  },
+  "delta": {
+    "schema": "Single shared closed empty input for two catalogued reads. No new effect, route, action, input field, output field, registry or server projection.",
+    "test": "Existing rejected grant assertion retained, plus Option decoder (real F02 call form) accepts {} and rejects injected action/permission/principalRef/expectedStorageVersion per operation.",
+    "preservation": [
+      "all 29 exact operation IDs",
+      "all other legitimate payload fields",
+      "null and zero fields in other schemas",
+      "source envelopes/denial/revocation",
+      "CAS and idempotency",
+      "source versions",
+      "no retries",
+      "same Request and owner admission"
+    ],
+    "paths_changed": [
+      "packages/schema/src/sucafina/collaboration/operations.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts"
+    ]
+  },
+  "criteria": [
+    {
+      "id": "A13-AC01",
+      "result": "UNCHANGED_SOURCE_SEMANTICS",
+      "validation": "NOT_RUN",
+      "evidence": "No DTO output/field change; existing null/zero/version assertions retained"
+    },
+    {
+      "id": "A13-AC02",
+      "result": "SOURCE_CORRECTION_PRESENT",
+      "validation": "NOT_RUN",
+      "evidence": "Exact empty input schema rejects arbitrary keys; regression explicitly retains original grant negative test"
+    },
+    {
+      "id": "A13-AC03",
+      "result": "UNCHANGED_SOURCE_SEMANTICS",
+      "validation": "NOT_RUN",
+      "evidence": "29 operation IDs, client delegation, CAS/idempotency preserved"
+    },
+    {
+      "id": "WP08.T01/T02/T03/T06",
+      "result": "ORIGINAL_CRITERIA_RETAINED_NOT_REQUALIFIED",
+      "validation": "NOT_RUN"
+    }
+  ],
+  "validation": {
+    "local_tests": "NOT_RUN",
+    "local_typecheck": "NOT_RUN",
+    "local_parser": "NOT_RUN",
+    "local_guards": "NOT_RUN",
+    "new_hosted_tests": "NOT_RUN",
+    "new_hosted_typecheck": "NOT_RUN",
+    "sdk_generation": "NOT_RUN",
+    "guard_run": "NOT_RUN",
+    "prior_hosted_failure": "run 43758731378/job 132948475697: FAIL, attributable source preimage only",
+    "qualifying_evidence_sha": null,
+    "request_ci_150": {
+      "owner": "150/PR106",
+      "condition": "After 132 selectively integrates source blobs onto new coherent W candidate",
+      "selection": [
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+        "transitive F02 transport contract tests if invalidation matrix requires"
+      ],
+      "must_not_repeat_original_W": true
+    },
+    "request_compiler_149": {
+      "owner": "149/PR107",
+      "condition": "After 132 selectively integrates and SDK build inputs are ready",
+      "packages": [
+        "packages/schema",
+        "packages/client",
+        "apps/cli"
+      ],
+      "generation_policy": "Only 149 handles SDK/guards, no worker generation"
+    }
+  },
+  "constraints": {
+    "protected_paths_untouched": true,
+    "producer_engine_untouched": true,
+    "shared_registry_untouched": true,
+    "generated_untouched": true,
+    "no_local_execution": true,
+    "no_own_CI_dispatch": true,
+    "no_merge": true,
+    "no_deploy": true,
+    "no_secrets": true,
+    "no_native_controller": true
+  },
+  "blockers": [
+    {
+      "code": "BLOCKED_INTEGRATION",
+      "owner": "132/PR65",
+      "reason": "Current consumer is still at exact preimage; pending selective application and ACK"
+    },
+    {
+      "code": "BLOCKED_QUALIFICATION",
+      "owner": "149/PR107;150/PR106",
+      "reason": "No new hosted tests/typecheck/SDK/guards on integrated coherent material"
+    }
+  ],
+  "handoff": {
+    "audience": [
+      "132/PR65",
+      "149/PR107",
+      "150/PR106"
+    ],
+    "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/A13-selective.patch",
+    "next_action": "132 compare current consumer blobs, apply two-file patch, publish consumer ACK/new W. 149 run relevant compiler/typecheck/SDK/guards. 150 run causal scoped hosted checks only after new W ready. Return concrete run/job evidence to A13.",
+    "author_state": "DELIVERED_FOR_132",
+    "slot": "RELEASE_REQUESTED_AFTER_HANDOFF",
+    "no_inferred_ack": true
+  }
+}

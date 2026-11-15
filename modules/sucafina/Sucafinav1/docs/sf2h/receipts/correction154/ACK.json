@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h.correction154.ack.v1",
+  "mission": 154,
+  "order": "A13",
+  "campaign": "sf2h-integral-20261112",
+  "actor": "ChatGPT",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "github_user_session_id": null,
+  "epoch": "ux-native-a13-e2-browser154",
+  "branch": "sf-ux-a13",
+  "pr": 139,
+  "ack_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/139#issuecomment-6901163035",
+  "preflight": {
+    "head": "6c72b5d8e7cbaddf39a14f1640057488e53fe79d",
+    "tree": "a11971f849cc8d8cfcdbbd5e60948844529b84cb",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/S0-FENCE.json",
+    "previous_epoch": "ux-native-a13-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH"
+  },
+  "source": {
+    "producer_path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+    "producer_blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "source_semantic_delta": "SAME_BLOB"
+  },
+  "write_policy": {
+    "exclusive": [
+      "packages/schema/src/sucafina/collaboration/operations.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/**"
+    ],
+    "shared": "PROTECTED",
+    "integrator": 132,
+    "compiler": 149,
+    "ci": 150
+  },
+  "status": "ARTIFACT_READY_PENDING_CONSUMER_ACK",
+  "goal": "paused",
+  "new_validation": "NOT_RUN",
+  "global_release": false
+}

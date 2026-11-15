@@ -1,0 +1,74 @@
+diff --git a/packages/schema/src/sucafina/collaboration/operations.ts b/packages/schema/src/sucafina/collaboration/operations.ts
+index a37dc39b600740af0a78345dfa3d4565256c791a..0a03ee66a13c9a2f9ab9b0569fdf0a64a6ded13e 100644
+--- a/packages/schema/src/sucafina/collaboration/operations.ts
++++ b/packages/schema/src/sucafina/collaboration/operations.ts
+@@ -9,6 +9,12 @@ import {
+   SfThreadEditResult, SfThreadHistory, SfThreadReadResult, SfWorkPresentation,
+ } from "./contracts"
+ 
++/** Empty collaboration reads have NO admitted fields. Effect 4's empty Struct
++ * does not reject excess keys on its own; the record's Never value rejects
++ * any injected field during decodeUnknownSync / transport decodeUnknownOption.
++ */
++const SfClosedEmptyInput = Schema.Record(Schema.String, Schema.Never).check(Schema.isMaxProperties(0))
++
+ /** A13 fixed allowlist of 29 existing admitted collaboration HTTP operations.
+  *  No dynamic dispatch, permission inference, server proxy or browser-side state.
+  *  Registry bindings/fixed query are composed only by integrator 114.
+@@ -153,7 +159,7 @@ export const SfCollaborationSelectionList = {
+ 
+ export const SfCollaborationSelectionVersion = {
+   operationId: "collaboration.selection-version",
+-  input: Schema.Struct({  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
++  input: SfClosedEmptyInput,
+   output: sfPortResult(SfNonNegative),
+ } as const
+ 
+@@ -177,7 +183,7 @@ export const SfCollaborationWorkDestination = {
+ 
+ export const SfCollaborationRecipients = {
+   operationId: "collaboration.recipients",
+-  input: Schema.Struct({  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
++  input: SfClosedEmptyInput,
+   output: sfPortResult(SfRecipientList),
+ } as const
+ 
+
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts
+index 1cf009887afbe56f8191dd32dd9da64e9a06682b..c9b26645df1e36d2104b22cb333ce4a467454e49 100644
+--- a/modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, test } from "bun:test"
+-import { Schema } from "effect"
++import { Option, Schema } from "effect"
+ import { SfCollaboration } from "../../../../../packages/schema/src/sucafina/collaboration.ts"
+ import { createSfCollaborationClient } from "../../../../../packages/client/src/sucafina/collaboration.ts"
+ import type { SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
+@@ -240,10 +240,24 @@ describe("A13 fixed source collaboration contracts", () => {
+ 
+   test("empty reads cannot smuggle a permission grant or generic dispatch name", () => {
+     for (const id of ["collaboration.recipients", "collaboration.selection-version"] as const) {
+-      expect(Schema.decodeUnknownSync(SfCollaboration.operations[id].input)({})).toEqual({})
+-      expect(() => Schema.decodeUnknownSync(SfCollaboration.operations[id].input)({
++      const input = SfCollaboration.operations[id].input
++      expect(Schema.decodeUnknownSync(input)({})).toEqual({})
++      expect(Option.isSome(Schema.decodeUnknownOption(input)({}))).toBe(true)
++      // F02 calls decodeUnknownOption before choosing the route or sending IO.
++      // Both its decoder and direct consumers must reject extras rather than strip them.
++      expect(() => Schema.decodeUnknownSync(input)({
+         operation: "grant", principalRef: "anyone",
+       })).toThrow()
++      for (const extra of [
++        { operation: "grant" },
++        { principalRef: "anyone" },
++        { action: "dispatch" },
++        { permission: "admin" },
++        { operation: "grant", principalRef: "anyone", expectedStorageVersion: 0 },
++      ]) {
++        expect(() => Schema.decodeUnknownSync(input)(extra)).toThrow()
++        expect(Option.isNone(Schema.decodeUnknownOption(input)(extra))).toBe(true)
++      }
+     }
+     const names = Schema.decodeUnknownSync(SfCollaboration.operations["collaboration.recipients"].output)({
+       status: "ok", value: [{ id: "recipient-1", name: "Permitted recipient" }],
