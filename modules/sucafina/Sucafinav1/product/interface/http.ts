@@ -108,7 +108,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
           return reply({ status: "denied", reason: "creation-scope-changed" }, 403)
         const result = await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined)
         if (!result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
-        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "provider-conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
         const output = decodeSfOperationOutput(operation, result.result)
         if (!output.ok || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
         return reply({ status: "ok", value: output.value, outputRef: result.outputRef }, 200)
