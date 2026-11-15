@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.96.owner-handoff.current.v2",
+  "finding": "R1-91-001",
+  "state": "PROPOSED_NOT_COMPOSED_RECONCILED_TO_C_CURRENT",
+  "owner": "52 + active stack integrator100 (former 71 ended)",
+  "planned_base": "C45:5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "patch": {
+    "sha": "64de6285477b5373eef9caa248f50b95d6e77b7d",
+    "format": "unified-diff"
+  },
+  "proposed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+      "postimage": "1776ccbd83a9dbb49d2f4926e0de1152db7fb847",
+      "charsDiff": 2942
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+      "preimage": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+      "postimage": "c00afe5f9bec072c6236441e1b650327d26853ea",
+      "charsDiff": 120
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "preimage": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "postimage": "5431ad92cde1e1e2454b46380ae54b8a1e38ec40",
+      "charsDiff": 262
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "preimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+      "postimage": "f5b74dda1cd7893226e8de928000891b55d87747",
+      "charsDiff": 54
+    }
+  ],
+  "adoption": [
+    "Check exact preimages against current owner and C candidate before applying",
+    "Integrate product/UI96 from PR",
+    "Apply HTTP+contextual+host port+composition changes only through their owners",
+    "Dispatch only selected narrow tests via45; request independent recheck by91",
+    "Check sf2-stack/PR65 latest head since observed 529142; 100 is now live writer, 71 ended; do not replace active writer"
+  ],
+  "not_run": [
+    "Typecheck",
+    "unit test",
+    "Playwright",
+    "installed HTTP",
+    "Actions"
+  ],
+  "observed_sf2_stack_head": "529142f63683de8e4b1f7d4232f88faf8ffcef6c"
+}

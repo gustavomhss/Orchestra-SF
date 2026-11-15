@@ -1,0 +1,132 @@
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -9,7 +9,7 @@
+ import { encodeCaseRef } from "../decisions/case-port.ts"
+ import { handleSfAnalysis } from "./analysis-http.ts"
+ import { isSfPeriod } from "../contracts/validation.ts"
+-import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
++import { decisionCreateForm, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../ui/decision-create.ts"
+ import { handleSfPlannerMonthly } from "./planner-http.ts"
+ import { handleSfForecastInput } from "./forecast-http.ts"
+ import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm, intentAnalysisForm } from "../ui/forecast-analysis.ts"
+@@ -31,7 +31,7 @@
+ 
+ /** Mount in the existing authenticated application; authority remains private to the host. */
+ export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
+-  const modes = ["workbench", "workbench-case", "workbench-context", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-sourcing-input", "workbench-views"] as const
++  const modes = ["workbench", "workbench-case", "workbench-context", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-create-recover", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-sourcing-input", "workbench-views"] as const
+   return async (request: Request, surface: string): Promise<Response | undefined> => {
+     const url = new URL(request.url)
+     const mode = url.searchParams.get("sf")
+@@ -88,6 +88,35 @@
+         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
+       } finally { runtime.ui.finish(access.value) }
+     }
++    if (mode === "workbench-create-recover") {
++      if (request.method !== "GET" || request.headers.get("sec-fetch-site") === "cross-site")
++        return reply({ status: "denied", reason: "creation-recovery-method-unavailable" }, request.method === "GET" ? 403 : 405)
++      if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1)
++        return reply({ status: "needs-input", reason: "invalid-creation-recovery-query" }, 400)
++      // GET is a read of the original C08 correlation, never a new mutation.
++      const key = request.headers.get("Idempotency-Key") ?? ""
++      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(key))
++        return reply({ status: "needs-input", reason: "invalid-creation-key" }, 400)
++      if (!runtime.caseCreationRecovery) return reply({ status: "unavailable", reason: "creation-recovery-not-mounted" }, 503)
++      const digest = digestSfValue({ purpose: "case-creation-recovery", key })
++      const admitted = await runtime.ui.admit(request, "sf_case_read", digest)
++      if (admitted.status !== "ok") return reply({ status: "denied", reason: "creation-recovery-access-unavailable" }, 403)
++      try {
++        if (!await runtime.ui.validate(admitted.value, "sf_case_read", digest) ||
++          request.headers.get("X-SF-Creation-Scope") !== decisionCreationScope(admitted.value.binding))
++          return reply({ status: "denied", reason: "creation-recovery-access-unavailable" }, 403)
++        const recovered = await runtime.caseCreationRecovery(key, admitted.value).catch(() => undefined)
++        if (!recovered) return reply({ status: "unavailable", reason: "creation-recovery-read-unavailable" }, 503)
++        if (recovered.status !== "ok")
++          return reply({ status: recovered.status, reason: "creation-recovery-unavailable" },
++            recovered.status === "denied" ? 403 : recovered.status === "conflict" || recovered.status === "stale" ? 409 :
++            recovered.status === "needs-input" ? 400 : 503)
++        if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
++        return recovered.value.state === "committed"
++          ? reply({ status: "ok", state: "committed", outputRef: recovered.value.caseRef, receipt: recovered.value.receipt }, 200)
++          : reply({ status: "ok", state: "not-found" }, 200)
++      } finally { runtime.ui.finish(admitted.value) }
++    }
+     if (mode === "workbench-command") {
+       if (request.method !== "POST") return reply({ status: "denied" }, 405)
+       if (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+@@ -103,6 +132,9 @@
+       const admitted = await runtime.ui.admit(request, operation, digestSfValue(decoded.value))
+       if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+       try {
++        if (operation === "sf_case_draft" && request.headers.has("X-SF-Creation-Scope") &&
++          request.headers.get("X-SF-Creation-Scope") !== decisionCreationScope(admitted.value.binding))
++          return reply({ status: "denied", reason: "creation-scope-changed" }, 403)
+         const result = await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined)
+         if (!result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+-        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
++        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+@@ -171,7 +203,7 @@
+         } finally { runtime.ui.finish(access.value) }
+       })() : undefined
+       const routines = runs ? `<h2>Routines</h2>${runs.length ? `<ul>${runs.map((run, index) => `<li>${run.runRef ? `<a href="?${esc(new URLSearchParams({ sf: "workbench-routine", runRef: run.runRef }).toString())}">Routine ${index + 1}</a>` : `Routine ${index + 1}`} · ${esc(run.admission)}</li>`).join("")}</ul>` : "<p>No accessible routine runs.</p>"}` : "<p>Routine list is currently unavailable.</p>"
+-      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${decisionCreateForm}${portfolioWidget}${recordSearchWidget(surface)}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
++      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${scopeDecisionCreateForm(decisionCreateForm, decisionCreationScope(admitted.value.binding))}${portfolioWidget}${recordSearchWidget(surface)}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
+       const result = decoded?.ok ? await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined) : undefined
+       if (decoded?.ok && !result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+       if (result && result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
+
+diff --git a/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts b/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts
+--- a/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts
+@@ -7,7 +7,7 @@
+ import { createDashboardRecordSourceIssuer } from "../integration/dashboard-sources.ts"
+ import { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
+ import { sfViewSelectionKeys } from "./personal-views.ts"
+-import { decisionCreateFromContext, decisionCreateScript } from "../ui/decision-create.ts"
++import { decisionCreateFromContext, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../ui/decision-create.ts"
+ import { documentHtml, esc, pageMain } from "../../src/screen-shell.ts"
+ import { htmlPolicy } from "../../runtime/application.ts"
+ 
+@@ -72,6 +72,6 @@
+     if (!projection || projection.status !== "ok") return render(`<h2>Source unavailable</h2><p>The contract changed while its evidence was read. Return to the contract and try again.</p>${back}`, 409)
+     const vendor = projection.value.values.find((value) => value.id === `contracts:${encodeURIComponent(recordId)}:vendor`)?.value
+     const label = typeof vendor === "string" && vendor.trim() ? vendor : "Selected contract"
+-    return render(`<section data-decision-context><h2>Create a decision from ${esc(label)}</h2><p>Contract evidence for ${esc(period.start)} – ${esc(period.end)} will be revalidated when you create the decision. Enter the decision currency explicitly.</p>${back}${decisionCreateFromContext({ sourceRefs: [issued.value], period, returnTo })}</section>`, 200, admitted.value.binding.accessRevision)
++    return render(`<section data-decision-context><h2>Create a decision from ${esc(label)}</h2><p>Contract evidence for ${esc(period.start)} – ${esc(period.end)} will be revalidated when you create the decision. Enter the decision currency explicitly.</p>${back}${scopeDecisionCreateForm(decisionCreateFromContext({ sourceRefs: [issued.value], period, returnTo }), decisionCreationScope(admitted.value.binding))}</section>`, 200, admitted.value.binding.accessRevision)
+   } finally { runtime.ui.finish(admitted.value) }
+ }
+
+diff --git a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+--- a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+@@ -5,6 +5,7 @@
+ import type { Application } from "../../runtime/application.ts"
+ import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
+ import type { CurrentChoiceFence } from "../decisions/current-choice-preview.ts"
++import type { CaseCreationRecovery } from "../decisions/case-port.ts"
+ import type { createSfProductAuthority, SfProductGrant } from "../integration/product-authority.ts"
+ import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
+ import type { BusinessPorts, PortResult } from "./ports.ts"
+@@ -46,6 +47,8 @@
+ }
+ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
+   dispatch: BusinessPorts["dispatch"]
++  /** Authenticated key-only C08 creation recovery; never exposed to a model. */
++  caseCreationRecovery?: (key: string, context: TrustedUiContext) => Promise<PortResult<CaseCreationRecovery>>
+   /** Private HTTP adapters mounted in the existing local application. */
+   productHttp?: NonNullable<Application["product"]>
+   /** Private page projection prepared before the page lock and fenced inside it. */
+
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -880,7 +880,7 @@
+   const analysisHttp = createSfAnalysisHttp({ origin: input.origin, mount: input.mount,
+     runtime: () => identity() ? { human: authority.human, selected, models: async () => state.models ? state.models() : [], inputs: analysisInputs, start: analyses.start,
+       choices: (request) => readSfImportAnalysisChoices(request, services) } : undefined })
+-  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
++  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
+     routineRuns: { discoverRuns: async (context) =>

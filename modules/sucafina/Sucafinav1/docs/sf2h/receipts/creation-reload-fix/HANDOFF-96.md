@@ -42,3 +42,11 @@ Mesmo texto em duas decisões deliberadas recebe **dois IDs** e deve produzir do
 - **71/S0:** preservar os 15 WPs, 74 tasks, 17 contratos e 1610 critérios imutáveis; manter GLOBAL_RELEASE falso e todos os HOLDs externos.
 
 Não houve merge em dev, force, deploy, alteração Azure, engine, workflow, credenciais, restart, testes locais ou nova PR para HotTopic.
+
+## Reconciliação da autoridade de integração posterior a C45
+
+Na leitura adicional da PR65, o histórico de autoridade informou **71 encerrada** em `modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/AUTHORITY.json`, e **100 ativo** sob lease `S0-C-e14-browser100` em `modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/continuation-100/ACK100.json`. O ACK100 identificava missão96 como ACK-only, anterior aos commits-fonte desta entrega.
+
+O branch `sf2-stack` avançou além de C45; o HEAD observado na reconciliação foi `38124138d21289a3bd20c86cd8d4e9c78c157417` (o próprio writer100 pode avançar depois). Das quatro dependências externas, `apps/cli/src/sucafina-product/host-context.ts` mudou por trabalho legítimo de integração100, enquanto as outras três permaneciam com preimages C45. Portanto o patch C45 `OWNER-52-71.patch` permanece somente como registro histórico. **Preferir `OWNER-52-100-CURRENT.patch` e seu manifesto exato, sem sobrescrever código novo do host.** O patch V2 foi reconstruído sobre preimage do host `f03ab621e96cfda23456be73bba2d24f24754d36`, preservando linhas e estrutura nativas atuais, e sua aplicação estática 4/4 foi validada contra postimages GitHub. Essa validação não é execução compilada.
+
+**Destino de handoff ativo: integrador100 + owner52 + dispatcher45, com comentário documental também na PR65/71 e recheck independente91**. Não dirigir write ao lease71 já encerrado nem transferir autoridade por silêncio; revalidar live HEAD antes de aplicar. Não usar este ACK como autorização de merge, teste pesado ou release.

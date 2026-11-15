@@ -42,6 +42,7 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
   const scope = form.dataset.creationScope
   const prefix = /^[a-f0-9]{64}$/.test(scope || '') ? 'sf:case-create:pending:v1:' + scope + ':' : undefined
   const validKey = (key) => /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(key)
+  const validCaseRef = (ref) => typeof ref === 'string' && /^case:[^:]+:[^:]+$/.test(ref)
   const storedKeys = () => {
     if (!prefix) return undefined
     try {
@@ -81,7 +82,7 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
     button.textContent = pendingKey ? 'Check original creation' : intention?.uncertain ? 'Retry same creation' : completed ? 'Open created decision' : 'Create decision'
     if (pendingKey || intention?.uncertain || submitting) lockFields()
     else restoreFields()
-    if (newButton) newButton.hidden = !pendingKey
+    if (newButton) newButton.hidden = !(pendingKey || intention?.uncertain)
   }
   const accessChanged = () => {
     // Keep only the opaque correlation identifier, for the original principal
@@ -136,7 +137,7 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
         if (denied || !form.isConnected) return
         if (response.status === 401 || response.status === 403) { accessChanged(); return }
         if (response.ok && result?.status === 'ok' && result.state === 'committed' &&
-          typeof result.outputRef === 'string' && result.outputRef.startsWith('case:')) {
+          validCaseRef(result.outputRef)) {
           discard(key)
           completed = { ref: result.outputRef }
           pendingKey = undefined
@@ -163,7 +164,7 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
     button.textContent = 'Create decision'; form.dataset.dirty = 'true'
   })
   if (newButton) newButton.addEventListener('click', () => {
-    if (!pendingKey || submitting || denied) return
+    if ((!pendingKey && !intention?.uncertain) || submitting || denied) return
     if (!confirm('An earlier creation remains unconfirmed. Start a separate creation with a new identity? The original receipt remains recoverable.')) return
     pendingKey = undefined; intention = undefined; completed = undefined
     status.textContent = 'Separate creation selected. The previous attempt is still pending and will be checked after reload.'
@@ -211,13 +212,14 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
       const result = await response.json()
       if (denied || !form.isConnected || intention !== attempt) return
       if (!response.ok && response.status < 500 && response.status !== 408 &&
-        ['invalid', 'needs-input', 'conflict'].includes(result?.status) && !attempt.uncertain) {
-        discard(attempt.key); intention = undefined
-        status.textContent = response.status === 409 ? 'Creation was rejected because the context changed. Review your entries.' :
-          'Creation was rejected. Review the required fields.'
+        ['invalid', 'needs-input', 'conflict'].includes(result?.status)) {
+        // Even a 409 can race a prior commit. Retain correlation until the
+        // original C08 transaction is authoritatively reconciled.
+        attempt.uncertain = true
+        status.textContent = 'Creation was rejected or is uncertain. Check the original key after reload, or explicitly start a separate intention.'
         return
       }
-      if (!response.ok || result.status !== 'ok' || typeof result.outputRef !== 'string' || !result.outputRef) throw new Error('unconfirmed')
+      if (!response.ok || result.status !== 'ok' || !validCaseRef(result.outputRef)) throw new Error('unconfirmed')
       completed = { ref: result.outputRef, returnTo: attempt.returnTo }
       discard(attempt.key)
       intention = undefined; delete form.dataset.dirty
