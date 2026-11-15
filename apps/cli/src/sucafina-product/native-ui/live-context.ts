@@ -11,6 +11,7 @@ import { Schema } from "effect"
 import {
   SfContext as SfContextSchema,
   SfOperationAvailability as SfOperationAvailabilitySchema,
+  SfResourceAvailability,
   type SfContext,
   type SfContextResult,
   type SfContextStamp,
@@ -96,7 +97,7 @@ function approvedDestinations(input: readonly Destination[]): readonly Destinati
     if (!source || !item.canRead || item.surface !== source.surface || item.page !== source.page ||
       found.has(item.capabilityId) || !Array.isArray(item.allowedActionIds) ||
       new Set(item.allowedActionIds).size !== item.allowedActionIds.length ||
-      item.allowedActionIds.some((action) => !source.actions.some((allowed) => allowed === action)))
+      item.allowedActionIds.some((action: string) => !source.actions.some((allowed) => allowed === action)))
       return undefined
     found.add(item.capabilityId)
     output.push(Object.freeze({
@@ -148,15 +149,21 @@ function operational(
   return admitted
 }
 
-function availability(admitted: ReadonlyMap<string, SfOperationAvailability>): SfContext["availability"] {
-  return RESOURCES.map((resource) => {
+function availability(admitted: ReadonlyMap<string, SfOperationAvailability>): SfContext["availability"] | undefined {
+  const correlated: SfContext["availability"][number][] = []
+  for (const resource of RESOURCES) {
     const operations = resource.operations.map((id) => admitted.get(id) ?? notReady(id))
     const ready = operations.filter((item) => item.state === "ready").length
     const denied = operations.filter((item) => item.state === "denied").length
     const state = ready === operations.length ? "ready" :
       ready > 0 ? "partial" : denied === operations.length ? "denied" : "unavailable"
-    return { family: resource.family, resource: resource.resource, state, operations }
-  })
+    // Each frozen catalog tuple must satisfy one closed discriminated union arm.
+    // Never widen family/resource independently or turn catalog membership into readiness.
+    const entry = { family: resource.family, resource: resource.resource, state, operations }
+    if (!Schema.is(SfResourceAvailability)(entry)) return undefined
+    correlated.push(entry)
+  }
+  return Object.freeze(correlated)
 }
 
 function equalObservations(a: ReadonlyMap<string, SfOperationAvailability>, b: ReadonlyMap<string, SfOperationAvailability>) {
@@ -240,12 +247,14 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     const finalDestinations = approvedDestinations(final.destinations)
     if (!finalDestinations || !equalDestinations(destinations, finalDestinations)) return mismatch()
 
+    const currentAvailability = availability(after)
+    if (!currentAvailability) return mismatch()
     const value = {
       stamp: admittedStamp,
       contractRevision: "sf-native-ui/1" as const,
       authMode: admittedMode,
       destinations,
-      availability: availability(after),
+      availability: currentAvailability,
     }
     if (!Schema.is(SfContextSchema)(value)) return mismatch()
     return { status: "ok", value }
