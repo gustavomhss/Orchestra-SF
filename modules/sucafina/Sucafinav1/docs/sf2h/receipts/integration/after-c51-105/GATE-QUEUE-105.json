@@ -1,0 +1,125 @@
+{
+  "schema": "sf2h.integration105.gate-queue.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "actor": "S0-C-e15-browser105",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "last_material": {
+    "name": "C53",
+    "commit": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "state": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED"
+  },
+  "provider": "GitHub Actions via 101 product CI (45 compiler/guards only)",
+  "historical_C51": {
+    "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+    "results": [
+      {
+        "lane": "94 HTTP",
+        "run": 43682386656,
+        "status": "PASS_SCOPED",
+        "passed": 7
+      },
+      {
+        "lane": "87 first save",
+        "run": 43682448571,
+        "job": 132715780313,
+        "status": "FAIL",
+        "passed": 12,
+        "failed": 1,
+        "expected_missing_key": 403,
+        "observed_missing_key": 503
+      },
+      {
+        "lane": "97 denied read",
+        "run": 43682451927,
+        "status": "PASS_SCOPED",
+        "passed": 5,
+        "expects": 944
+      },
+      {
+        "lane": "98 DOCX title",
+        "run": 43682453714,
+        "status": "PASS_SCOPED",
+        "passed": 8
+      },
+      {
+        "lane": "88 reader/render",
+        "run": 43682455278,
+        "status": "PASS_TECHNICAL_ONLY",
+        "passed": 14,
+        "artifact": 14148499941,
+        "pngs": 139,
+        "pdfs": 12,
+        "visual": "NOT_SIGNED"
+      },
+      {
+        "lane": "90 native",
+        "run": 43682450677,
+        "job": 132715786509,
+        "status": "FAIL_IMPORT",
+        "import_errors": 5,
+        "behavior_cases_pass": 0
+      }
+    ]
+  },
+  "current_C53": {
+    "sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "owner103_product": "REQUESTED_101_NOT_RUN",
+    "owner104_product": "REQUESTED_101_NOT_RUN",
+    "compiler": "REQUESTED_45_NOT_RUN",
+    "guards": "REQUESTED_45_NOT_RUN"
+  },
+  "P03_original": {
+    "source99": "54cff4caf3cbd1d94751009bcfa9564622e926b3",
+    "run": 43682515795,
+    "job": 132715983023,
+    "snapshot": "78b361a2c101c11937a341f30c493cfbc1ef1bc5",
+    "status": "FAIL_180000MS",
+    "observed_revalidation_calls": 139454,
+    "read_cases": 11452,
+    "verifyOperation_calls": 4454,
+    "reason": "portfolio-selection-changed",
+    "needs": "NEW_CAUSAL_PATCH_KEEP_ORIGINAL72_ASSERTIONS_180000MS"
+  },
+  "XLSX102": {
+    "pr": 105,
+    "source": "104bf61f67da9740024f38427c1580ba29f36e99",
+    "status": "CI_NOT_RUN_AND_VISUAL_NOT_SIGNED",
+    "baseline_reader_C51_run": 43682455278
+  },
+  "natives": {
+    "producer95": "NOT_COMPOSED",
+    "readiness": "OFF",
+    "C15_original": "NOT_VERIFIED",
+    "AM01_06": "NOT_PROVEN"
+  },
+  "acceptance": {
+    "candidateFrozen": false,
+    "eight_final_selections": "NOT_RUN",
+    "full_epic_and_suites": "NOT_RUN",
+    "typechecks": "NOT_RUN_ON_C53",
+    "AM01_06": "NOT_PROVEN",
+    "R1_R2_R3": "PRELIMINARY_NOT_FINAL",
+    "G7_C": "OPEN",
+    "G8_D": "OPEN",
+    "global": "OPEN",
+    "GLOBAL_RELEASE": false
+  },
+  "no_duplicate_dispatch": true,
+  "CI101_request_comment": 6890198472,
+  "guards45_comment": 6890198921
+}
