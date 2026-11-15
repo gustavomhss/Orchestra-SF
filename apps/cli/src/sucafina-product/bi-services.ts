@@ -210,7 +210,7 @@ function createPortfolioCostProjection(input: {
       digestSfValue(combination.components) !== digestSfValue(analysis.scenario.components)) return { status: "stale", reason: "portfolio-waterfall-analysis-mismatch" }
     const scenario = createScenarioCostBiHost({ host: input.host, results: input.results, scenarios: input.scenarios, scenario: {
       revalidate: (_request, call) => input.host.revalidate(call),
-      readView: async (forwarded, call) => {
+      readView: async (forwarded, call): Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>> => {
         if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "portfolio-waterfall-request-changed" }
         const portfolio = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selected.portfolioResultRef }, call)
         if (portfolio.status !== "ok") return portfolio

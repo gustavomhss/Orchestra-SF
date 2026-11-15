@@ -23,7 +23,7 @@ export function createCompositeDecisionPlanner(input: {
         const resolve = () => Promise.all(request.operations.map((operation) => input.resolveOperation(operation, context)))
         const proofs = await resolve()
         const failure = proofs.find((item) => item.status !== "ok")
-        if (failure && failure.status !== "ok") return failure
+        if (failure) return failure
         if (proofs.some((item, index) => item.status !== "ok" || item.value.operationDigest !== digestSfValue(request.operations[index]) || item.value.kind === "external" && (!item.value.sourceRefs.length || !item.value.condition.trim()))) return { status: "unavailable", reason: "scenario-operation-proof-unavailable" }
         const plannerOperations = request.operations.filter((_operation, index) => { const proof = proofs[index]; return proof?.status === "ok" && proof.value.kind === "planner" })
         const external = proofs.flatMap((item) => item.status === "ok" && item.value.kind === "external" ? [item.value] : [])
