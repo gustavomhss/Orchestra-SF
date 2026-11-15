@@ -1,0 +1,566 @@
+{
+  "schema": "mission52.installed-nominal-route-inventory.v1",
+  "snapshot": {
+    "W": "68c3d09188bd71b5a02edca3416de2d051025fe4",
+    "tree": "4701bb5275224f34b0c3eae9ac8389340a229d54",
+    "materialC23": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "parent": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "run": 43660121173
+  },
+  "scope": "All five original spec identities, full relevant helpers, generated UI callbacks and every installed host productHttp branch were read; no local execution.",
+  "required_missing_for_J1_J3_J4": [
+    "decision-list",
+    "decision-edit",
+    "decision-compare",
+    "decision-portfolio-catalog"
+  ],
+  "routes": [
+    {
+      "mode": "workbench",
+      "method": "GET",
+      "journeys": "J1/J3/J4/J5; J2 after requisition",
+      "purpose": "Enter Workbench and enumerate accessible cases",
+      "handler": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "state": "WIRED_OBSERVED_200",
+      "payload": null
+    },
+    {
+      "mode": "workbench-views",
+      "method": "POST",
+      "journeys": "all",
+      "purpose": "Background installed view context",
+      "handler": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "state": "WIRED_OBSERVED_200",
+      "payload": null
+    },
+    {
+      "mode": "workbench-command",
+      "method": "POST",
+      "journeys": "all",
+      "purpose": "One explicit sf_case_draft intention; lost response preserves payload/key",
+      "handler": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "state": "WIRED_OBSERVED_200_OK",
+      "payload": "{operation:'sf_case_draft',input:draft}"
+    },
+    {
+      "mode": "workbench-case",
+      "method": "GET",
+      "journeys": "J1/J3/J4/J5; J2 after requisition",
+      "purpose": "Render/reload/reopen same durable case",
+      "handler": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "state": "WIRED_OBSERVED_200",
+      "payload": "query caseRef"
+    },
+    {
+      "mode": "workbench-analysis",
+      "method": "POST",
+      "journeys": "background on case open",
+      "purpose": "Background analysis controls",
+      "handler": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "state": "WIRED_OBSERVED_200",
+      "payload": null,
+      "handler_blob": "06522fa4a2eaa0841af8aabead799d9d56a8ada7"
+    },
+    {
+      "mode": "bi-options",
+      "method": "GET",
+      "journeys": "J1; J2 later",
+      "purpose": "Discover real Planner sources",
+      "handler": "apps/cli/src/sucafina-product/extended-http.ts",
+      "state": "WIRED_OBSERVED_200",
+      "payload": null,
+      "handler_blob": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09"
+    },
+    {
+      "mode": "bi-data",
+      "method": "GET",
+      "journeys": "J1; J2 later",
+      "purpose": "Inspect two actual Planner projections",
+      "handler": "apps/cli/src/sucafina-product/extended-http.ts",
+      "state": "WIRED_OBSERVED_200",
+      "payload": null,
+      "handler_blob": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09"
+    },
+    {
+      "mode": "decision-edit",
+      "method": "POST",
+      "journeys": "J1/J3; J2 later",
+      "purpose": "Persist revision and attached source refs",
+      "handler": null,
+      "state": "UNMOUNTED_OBSERVED_405_READ_METHOD_REQUIRED",
+      "payload": "{caseRef,objective,horizon,currency,criteria,sourceRefs}"
+    },
+    {
+      "mode": "decision-controls",
+      "method": "GET",
+      "journeys": "J1; J2 later",
+      "purpose": "Inspect attached scenarios and numeric-rule revision/evidence",
+      "handler": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "state": "WIRED_NOT_REACHED_NOMINAL04",
+      "payload": "query case/source/format=json",
+      "handler_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "mode": "decision-coverage",
+      "method": "POST",
+      "journeys": "J1; J2 later",
+      "purpose": "Save exact nine-category pending coverage",
+      "handler": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "state": "WIRED_NOT_REACHED_NOMINAL04",
+      "payload": "{caseRef,source,basis,entries,expectedVersion}",
+      "handler_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "mode": "decision-promote",
+      "method": "POST",
+      "journeys": "J1; J2 later",
+      "purpose": "Persist alternatives; lose/retry second response identically",
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "state": "WIRED_NOT_REACHED_NOMINAL04",
+      "payload": "{caseRef,title,scenario,coverageRef,alternativeRef?}",
+      "handler_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+    },
+    {
+      "mode": "decision-compare",
+      "method": "POST",
+      "journeys": "J1; J2 later",
+      "purpose": "Compare exact alternatives with preserved criteria",
+      "handler": null,
+      "state": "UNMOUNTED_STATIC",
+      "payload": "{caseRef,baselineAlternativeId,alternativeId,criteria}"
+    },
+    {
+      "mode": "decision-list",
+      "method": "GET",
+      "journeys": "J1/J4; J2 via shared initial alternatives",
+      "purpose": "Find exact accessible cases",
+      "handler": null,
+      "state": "UNMOUNTED_OBSERVED_404_ROUTE_UNAVAILABLE",
+      "payload": null
+    },
+    {
+      "mode": "decision-portfolio-catalog",
+      "method": "POST",
+      "journeys": "J1/J4; J2 via shared initial alternatives",
+      "purpose": "Discover exact alternatives or empty case",
+      "handler": null,
+      "state": "UNMOUNTED_STATIC",
+      "payload": "{purpose:'catalog',caseRefs}"
+    },
+    {
+      "mode": "decision-criteria",
+      "method": "POST",
+      "journeys": "J1; J2 later",
+      "purpose": "Register known-subtotal-difference lte2000 USD with current evidence",
+      "handler": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "state": "WIRED_NOT_REACHED_NOMINAL04",
+      "payload": "{caseRef,criterionId,metricRef,operator,value,unit,period,evidenceRefs,expectedRuleVersion}",
+      "handler_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "mode": "decision-choose",
+      "method": "POST",
+      "journeys": "J1; J2 later",
+      "purpose": "Record human choice; lose/retry original response after reload",
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "state": "WIRED_NOT_REACHED_NOMINAL04",
+      "payload": "{caseRef,alternativeId,alternativeVersion,comparison,criteria,reason}",
+      "handler_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+    },
+    {
+      "mode": "decision-portfolio-results",
+      "method": "POST",
+      "journeys": "background on every saved case page",
+      "purpose": "Read saved portfolio evaluation history",
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "state": "WIRED_PAYLOAD_MISMATCH_OBSERVED_400",
+      "payload": "UI sends {purpose:'results',caseRef}; installed validator permits only {caseRef}",
+      "handler_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+    },
+    {
+      "mode": "decision-prepare-changes",
+      "method": "POST",
+      "journeys": "J2 later only",
+      "purpose": "Prepare genuine domain operation from choice",
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "state": "WIRED_NOT_REACHED_FINANCIAL_BLOCKED",
+      "payload": "{caseRef,choiceId,operations}",
+      "handler_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+    },
+    {
+      "mode": "decision-review",
+      "method": "POST",
+      "journeys": "J2 later only",
+      "purpose": "Read prepared change and current financial approval",
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "state": "WIRED_NOT_REACHED_FINANCIAL_BLOCKED",
+      "payload": "{caseRef,choiceId,changeId}",
+      "handler_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+    },
+    {
+      "mode": "decision-apply",
+      "method": "POST",
+      "journeys": "J2 later only",
+      "purpose": "Apply genuine reviewed C12 operation once",
+      "handler": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "state": "WIRED_NOT_REACHED_FINANCIAL_BLOCKED",
+      "payload": "canonical admitted Apply payload"
+    },
+    {
+      "mode": "decision-recover",
+      "method": "POST",
+      "journeys": "J2 later only",
+      "purpose": "Recover unique receipt without a second financial application",
+      "handler": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "state": "WIRED_NOT_REACHED_FINANCIAL_BLOCKED",
+      "payload": "canonical recovery payload"
+    }
+  ],
+  "optional_routes": [
+    {
+      "mode": "decision-portfolio-selection",
+      "method": "POST",
+      "wired": false,
+      "trigger": "Portfolio evaluation submission or selection save in choice form",
+      "not_in_original_journeys": "J1/J4 stop after catalog discovery; no evaluation or portfolio selection save",
+      "payload": "{caseRef}"
+    },
+    {
+      "mode": "decision-choice-catalog",
+      "method": "POST",
+      "wired": false,
+      "trigger": "Portfolio preparation loads choices",
+      "not_in_original_journeys": "No portfolio preparation",
+      "payload": "{purpose:'choice-catalog',caseRef}"
+    },
+    {
+      "mode": "decision-coverage-catalog",
+      "method": "POST",
+      "wired": false,
+      "trigger": "Portfolio promotion loads coverage",
+      "not_in_original_journeys": "No portfolio promotion",
+      "payload": "{purpose:'coverage-catalog',caseRef}"
+    },
+    {
+      "mode": "decision-criterion-read",
+      "method": "POST",
+      "wired": false,
+      "trigger": "Separate sensitivity-rule load",
+      "not_in_original_journeys": "J1 numeric rule loads decision-controls instead",
+      "payload": "{purpose:'criterion',caseRef,criterionId}"
+    },
+    {
+      "mode": "decision-select-portfolio",
+      "method": "POST",
+      "wired": true,
+      "handler": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "trigger": "Save portfolio baseline/alternative/criteria",
+      "not_in_original_journeys": "Separate optional control"
+    },
+    {
+      "mode": "decision-portfolio-preview",
+      "method": "POST",
+      "wired": true,
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "trigger": "Evaluate portfolio scope",
+      "payload_mismatch": "UI sends purpose:'preview'; installed validator permits only caseRef/request"
+    },
+    {
+      "mode": "decision-sensitivity-units",
+      "method": "POST",
+      "wired": true,
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "trigger": "Separate sensitivity-rule load",
+      "payload_mismatch": "UI sends purpose:'sensitivity-units'; installed validator excludes purpose"
+    },
+    {
+      "mode": "decision-sensitivity-read",
+      "method": "POST",
+      "wired": true,
+      "handler": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "trigger": "Read saved sensitivity result",
+      "payload": "{caseRef,resultRef}; no purpose mismatch in this UI call"
+    }
+  ],
+  "assembly": {
+    "host": "apps/cli/src/sucafina-product/host-context.ts",
+    "line": 839,
+    "order": [
+      "currentChoiceHttp",
+      "analysisHttp",
+      "decisionDomainHttp",
+      "procurementScenarioHttp",
+      "portfolioHttp",
+      "baselineServices.productHttp",
+      "memoryHttp",
+      "workHttp",
+      "extended.productHttp",
+      "dashboardHttp",
+      "procurementDecisionHttp",
+      "collaborationHttp.get(surface)",
+      "documentHttp",
+      "importHttp",
+      "dossier.http",
+      "documentScenarioHttp"
+    ],
+    "outer_fallback": {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "line": 141,
+      "order": [
+        "runtime.services().productHttp",
+        "createSfWorkbenchHttp",
+        "createSfBiHttp"
+      ]
+    },
+    "fallback_error_origin": {
+      "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
+      "lines": [
+        92,
+        93
+      ],
+      "behavior": "Unclaimed sf POST returns405/read-method-required; unclaimed non-BI sf GET returns404/route-unavailable"
+    },
+    "generic_factory": {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "blob": "596512b4e12c094fd178ea845f4b560bbf23a348",
+      "mounted_in_current_host": false
+    },
+    "existing_handler_precedence": "portfolioHttp claims prepare-changes/review before Procurement's duplicate routes, using the authentic Procurement producers; apply/recover reach Procurement directly."
+  },
+  "service_assembly": {
+    "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+    "return_lines": [
+      84,
+      89
+    ],
+    "existing_handles": [
+      "extended.portfolioServices.mutations",
+      "extended.portfolioServices.compare",
+      "extended.portfolioServices.selection",
+      "extended.portfolioServices.rules",
+      "extended.portfolioServices.intent",
+      "extended.portfolioServices.product?.http.catalog",
+      "business.cases",
+      "business.authorizeCase",
+      "business.context",
+      "business.withCase",
+      "authority.state",
+      "authority.host",
+      "authority.human",
+      "authority.ui"
+    ],
+    "management": "Canonical createDecisionCaseManagement exists, but no current host instance/exposure was found; pack_criteria is tracing the safe exact binding.",
+    "catalogs": "Canonical choice/coverage reader factories exist but are not instantiated/exposed in this host; they are outside original nominal UI interactions.",
+    "constraint": "Reuse actual installed shared registries, mutation fencing and domain producers. Do not silently create duplicate registry instances or replace financial semantics."
+  },
+  "source_evidence": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/alternative-response.ts",
+      "blob": "7e7122698568a4ced5aed789a4d2ac743cd6db2c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts",
+      "blob": "cb70480c28e9382629d289c1c954e88379e173d3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "blob": "de8671b4482339791b8f03bd5616c13d50dc4a87"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "blob": "fa509e9d7a7da9d0024c9487975f7b26b3b29146"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "blob": "0832650685246e386f0270533bb58ed840effd65"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "blob": "10b59adfce7d8fb5143f49c9df9a0d7321425018"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "blob": "903b48594ff95e0d1f78539982adcf75eb3b9272"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "blob": "3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "blob": "9fe64294027cf6805ff8e7ba4b7cfac83455de85"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "blob": "81a6863f68fc2b83c4b331c19920c59267b5d060"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "blob": "ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts",
+      "blob": "5784a995ba25d042101fe2eed63ce96957b711b1"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+      "blob": "7a7553b89af8f90592603f7d454ba164cbb81afd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+      "blob": "cc0bfcdbd7b31d1aa31d65300251b574aaad4fb9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "blob": "8de96e7fef8b1db5f174baaff47864b68f8d2fca"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contextual-decision.ts",
+      "blob": "fb509c9af5051aa0344f84c15214ad9c3d10e5ab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "blob": "42878a8eb5eb6e33c0140559e6390d537c3000f0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "blob": "0a330a1377326e3ea919b4714cada83a208efc39"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+      "blob": "1c3bf805fed4d0cf186964b4631def5b0161d9ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "blob": "1c4bd231075bf149a31924cf651063bf1c3ef6d3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/dispatch.ts",
+      "blob": "6b1b5b30ffcb734e34b78c56cc12d71f63fd12bd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/document-evidence.ts",
+      "blob": "ecc57129d8e4830726d198402d6dcec553a218b5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/document-search.ts",
+      "blob": "39fbe05f2acd621a4d7031d012524cacdc4ecc92"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+      "blob": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/import-preview.ts",
+      "blob": "68977bdab68ac575be7cd1fb345c80d70ea0069e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+      "blob": "86337cafa1648b8be51c564e5b5ed61042a1c2ae"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+      "blob": "3adef2d68f54f2e04f9532751f5ddc9bed7e4b60"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+      "blob": "823b5f4eedf0db9d9c5e8ac87a6d91493d45ced2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts",
+      "blob": "6b60d7536aed70f515e9f41311de606ed7915168"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/record-search.ts",
+      "blob": "95864fedf3146ca71d4a9e3443879f1668f986d1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-command.ts",
+      "blob": "0b139ed2c8bc2371c7a5933e00eaa970876d55b8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-preview.ts",
+      "blob": "73c2ce48454e4291fcc4d6c9e2b554317d820f2a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+      "blob": "74ccb3c50dcadd85878987870f0e388926898d53"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+      "blob": "a13f85982fa441086971d2b86af355f96c854bbd"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "blob": "ff43e324d280498e629f867d0ac93714bdf608cc"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "blob": "881ce4672d9d0e641d1cc849663c0980c118774d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+      "blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/choice-catalog.ts",
+      "blob": "c5266d4c91ac06e083df196baff60c1cc86651b5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+      "blob": "8d86bc416c711169fdc678635cc5eed12481fdea"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-catalog.ts",
+      "blob": "429cb3b578b4b294fb550e332da6786bc30d0867"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "blob": "596512b4e12c094fd178ea845f4b560bbf23a348"
+    }
+  ],
+  "execution": {
+    "remote_reads": "GitHub MCP only",
+    "local_product_tests": 0,
+    "remote_mutations": 0,
+    "workflow_dispatches": 0
+  },
+  "limits": [
+    "Downstream route wiring is static evidence, not a runtime PASS.",
+    "Original J1/J3/J4 need the four missing routes; financial positive remains mandatory and blocked.",
+    "Background portfolio-results failure is real but does not prove financial or saved-evaluation failure.",
+    "Optional portfolio/sensitivity gaps are recorded without adding unrelated journeys or altering assertions/budgets."
+  ]
+}
