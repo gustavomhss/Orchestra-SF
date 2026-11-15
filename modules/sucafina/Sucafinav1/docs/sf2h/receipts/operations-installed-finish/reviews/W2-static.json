@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.operations75.static-review.v1",
+  "scope": [
+    ".github/workflows/sf-operations-scanner.yml",
+    "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+    "script/sf2h/operations-scanner/README.md",
+    "script/sf2h/operations-scanner/request.mjs",
+    "script/sf2h/operations-scanner/service.mjs",
+    "script/sf2h/operations-scanner/setup.sh",
+    "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+    "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts"
+  ],
+  "reviewers": [
+    "root",
+    "normative_review"
+  ],
+  "blockers": [],
+  "corrected_before_publication": [
+    "Exact ./ prefixes for three .check.ts files",
+    "Journey envelope requires sf2-stack composed candidate"
+  ],
+  "claims": [
+    "No original five journey/action/assertion/budget changes",
+    "No numeric runtime write by75",
+    "No global scanner or Azure change",
+    "No local product tests; no runtime PASS from static review"
+  ],
+  "limits": [
+    "sourceBranch label is verified by script; root must reconcile remote W ownership before snapshot",
+    "Private component controls do not constitute installed listener/native parity",
+    "Real setup, signatures, memory, controls and cleanup await hosted execution"
+  ],
+  "status": "NO_STATIC_BLOCKER_NOT_RUNTIME_PASS"
+}

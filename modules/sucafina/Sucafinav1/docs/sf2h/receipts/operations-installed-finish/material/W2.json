@@ -1,0 +1,147 @@
+{
+  "schema": "sf2h.operations75.material-increment.v1",
+  "increment": "W2",
+  "parent": "f04b8567ade1ec12ad30bbdc1ffe1947940ff7e5",
+  "source63": "f0682b3ca9a792dcef2166a867aa06974e242874",
+  "lease_epoch": "operations-finish-browser75",
+  "delta": [
+    {
+      "path": ".github/workflows/sf-operations-scanner.yml",
+      "pre": null,
+      "post": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+      "sha256": "91adf931b72c3a88a0252b9010c835fceeec1abcb609cfce26c9a414da9c1189",
+      "bytes": 5045
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+      "pre": null,
+      "post": "d44a80b24c4c098c0dbbc2c466e7d3e091961980",
+      "sha256": "d5ae0a60f974828d7c4f455cccb37eb674e28d6ae42546a0012a0a1d62f1a59e",
+      "bytes": 2882
+    },
+    {
+      "path": "script/sf2h/operations-scanner/README.md",
+      "pre": "1cca813f15c94cd397825a42c28ac9b9020212df",
+      "post": "83f0cb7243387ca045e5a7db6367f5a579f01d2f",
+      "sha256": "e9a8e5050afbd42c395e0c05d21daf2c36e025a0bd30fe219e14637ed8204371",
+      "bytes": 7725
+    },
+    {
+      "path": "script/sf2h/operations-scanner/request.mjs",
+      "pre": null,
+      "post": "f9c4284774bec233a4ea92e70f1646709a234e16",
+      "sha256": "d6cea591f1045391d9b15bc514d6c3b60e69294f9a8d8bc8ea2a4d94f5ed870e",
+      "bytes": 7363
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "pre": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+      "post": "f7618e0097b78679f8c34749e93474c8dc93641b",
+      "sha256": "3f907fd08f4afdb059b125a451f6b6ca473a326bb41cbbbbba53a7de1c855eaa",
+      "bytes": 13979
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "pre": "66bd6df24499027328f22b598e50268023287071",
+      "post": "9cc19ef13e43c4086d981582eccc97011282797f",
+      "sha256": "12b35d80518cda96d504d15076d797705e6cc4fe963a3627eb5fb6c77cc69203",
+      "bytes": 4047
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "pre": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "post": "5cac657f5f9de9b6de9a9c63dc45c67886724b84",
+      "sha256": "f218b696dcc011d8c06f278708677944c43bf17fe970c9bec1873283b6d7f21e",
+      "bytes": 10232
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+      "pre": null,
+      "post": "b241896293521d42c1b86d82d193328d48f0bcd7",
+      "sha256": "d39b94eb2f0c95e3bc45963d0be85e7684012c04fb085576a822d05abfe31e95",
+      "bytes": 14948
+    }
+  ],
+  "ci_decision": {
+    "existing_lane": ".github/workflows/test-ci.yml",
+    "insufficiency": "Existing request allows only ORCHESTRA_CHANNEL/OMNI; its existing steps do not provision an owned real ClamD resource. Editing the generic workflow is outside75 and source63's generic patch remained inert.",
+    "authorized_minimal_extension": ".github/workflows/sf-operations-scanner.yml",
+    "reuse": [
+      "validateRequest",
+      "locateTestPackage",
+      "playwrightArgs",
+      "validateSelection",
+      "omniControlScope",
+      "controlVerdict",
+      "setup-bun",
+      "ripgrep",
+      "omni-binaries",
+      "Playwright production config",
+      "source63 setup/service/cleanup/lock"
+    ],
+    "permissions": "contents: read",
+    "branch_prefix": "sf-ops75-",
+    "concurrency": "sf2h-operations75",
+    "inputs": "Exact two selections; request-only child S of product W; canonical request SHA256; sourceBranch controls=operations-scanner-proof, journeys=sf2-stack",
+    "trusted_environment": "Setup writes loopback ports through GITHUB_ENV only after actual readiness and controls; generic request env validator unchanged",
+    "scanner": "Pinned official ClamAV1.5.4 deb extracted under RUNNER_TEMP; FreshClam official databases; two owned loopback daemons; no global install",
+    "cleanup": "always() plus setup failure trap, executable/config/start identity before signalling, bounded job-local removal"
+  },
+  "controls": {
+    "selection": [
+      "./Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "./Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+      "./Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+      "--timeout",
+      "120000"
+    ],
+    "expected_tests": 7,
+    "executed": 0,
+    "covers": [
+      "real clean/EICAR/clean-after",
+      "real size ERROR",
+      "actual stopped owned daemon unavailable",
+      "real malformed/unknown command refusal with continued liveness",
+      "private clean import persists bytes/catalog/proof",
+      "private clean supplier upload persists bytes/version",
+      "EICAR/down import/upload deny with all durable snapshots/blobs unchanged"
+    ],
+    "scanner_stub": false,
+    "native_parity": false
+  },
+  "originals": {
+    "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+    "changed": false,
+    "ids": [
+      "OP-PROC-01",
+      "OP-PROC-02",
+      "OP-PROC-03",
+      "OP-IMPORT-01",
+      "OP-DOC-01"
+    ],
+    "budgets_changed": false,
+    "qualification": "NOT_RUN_75; source63 R4=1PASS/4FAIL preserved"
+  },
+  "external73": {
+    "branch": "procurement-privacy-fix",
+    "pr": 86,
+    "state": "ACKED_PATCH_RECEIVED_NOT_RELEASED",
+    "observed_head": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "numeric_patch": "external/procurement-money73.patch",
+    "exclusive_runtime_writer": 73
+  },
+  "consumer71": {
+    "stack_observed": "947a4add941893c8247b95a5ce6386468313838b",
+    "candidate": "C30 includes released63 unit",
+    "composition_required_before_journeys": true
+  },
+  "review": {
+    "mode": "static read/hash/diff only",
+    "ci": "Reviewed by root and normative_review; exact ./ Bun file paths corrected before publication",
+    "private": "Cold review normative_review completed: no concrete blocker; calls once preserve Request/context/results/finish, no auth/scan/grants bypass; independent readonly snapshots+blobs observations. Runtime verification remains Actions-only NOT_RUN."
+  },
+  "checks45": "NOT_RUN; compiler/guards remain45-owned",
+  "source_release": false,
+  "GLOBAL_RELEASE": false
+}

@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url"
 const [action, directory, detail] = process.argv.slice(2)
 const root = realpathSync(directory)
 const temporary = realpathSync(process.env.RUNNER_TEMP)
-if (path.dirname(root) !== temporary || !/^sf-operations63-\d+-\d+\.[A-Za-z0-9]+$/.test(path.basename(root)))
+if (path.dirname(root) !== temporary || !/^sf-operations(?:63|75)-\d+-\d+\.[A-Za-z0-9]+$/.test(path.basename(root)))
   throw new Error("OPERATIONS_SCANNER_STATE_OUTSIDE_JOB")
 const lock = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "tools.lock.json"), "utf8"))
 const evidence = path.join(root, "evidence")
