@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.compiler190.owner-notice.v1",
+  "mission": 190,
+  "epoch": "compiler-e5-browser190",
+  "source_W": "77e58de895b5157b2a32e3427483bd12f40a7525",
+  "source_tree": "28feb531911172b68a5615e81510a00fda9cb1b8",
+  "result_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation190/RESULTS-190-W77e.json",
+  "findings_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation190/FINDINGS-190-W77e.md",
+  "run": 43772959867,
+  "job": 132992733158,
+  "artifact": 14185067705,
+  "notices": [
+    {
+      "owner": "189 sole integrator",
+      "pr": 65,
+      "comment_id": 6902997615,
+      "kind": "ALL_W77e_FAILS_AND_CAS_ROUTE"
+    },
+    {
+      "owner": "171/A12 schema/work",
+      "pr": 144,
+      "comment_id": 6902998045,
+      "kind": "TS2345 closedStruct/StructWithRest Effect API"
+    },
+    {
+      "owner": "172/F01 live context",
+      "pr": 131,
+      "comment_id": 6902998464,
+      "kind": "TS7006/TS2322 live context and test errors"
+    },
+    {
+      "owner": "177/W14 domain projection",
+      "pr": 133,
+      "comment_id": 6902998852,
+      "kind": "TS2307 missing projection and TS2322 operation union"
+    },
+    {
+      "owner": "F02 client transport",
+      "pr": 122,
+      "comment_id": 6902999257,
+      "kind": "22 transport TS errors, NAV-01 189 mediation"
+    },
+    {
+      "owner": "191 product test dispatch",
+      "pr": 106,
+      "comment_id": 6902999713,
+      "kind": "Compiler E2E not browser PASS, no product test dispatch"
+    }
+  ],
+  "unresolved_legacy_owner": {
+    "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts:384",
+    "error": "TS2322 8|9 vs ExcelJS PaperSize",
+    "route": "189 review original runtime ownership; not attributed to 173-181",
+    "full_artifact": 14185067705
+  },
+  "comments_do_not_wake_sessions": true,
+  "source_edit_permission": false,
+  "guard_approval": false,
+  "GLOBAL_RELEASE": false
+}

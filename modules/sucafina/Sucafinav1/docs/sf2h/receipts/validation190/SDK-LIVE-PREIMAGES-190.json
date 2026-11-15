@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.compiler190.sdk-consumer-preimages.v1",
+  "mission": 190,
+  "epoch": "compiler-e5-browser190",
+  "integrator": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "snapshot_head": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+    "snapshot_tree": "7b4dc2d6f2d2dc28bf4f2cd9b54ffd2d5440bc8a",
+    "snapshot_commit_subject": "fix(sf2h): consume F03/S05 privacy state and browser fixes 182,184 [skip ci]"
+  },
+  "historic_sdk": {
+    "source_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "artifact_id": 14182790522,
+    "patch_member": "sdk-generated.patch",
+    "patch_bytes": 92878,
+    "patch_sha256": "1e17bfa2e631a6c59a3662a33161549001689c95ae7e88ad009bf3eca9b31e0d",
+    "manifest_member": "sdk-generated-manifest.json",
+    "generated_by": "cd packages/client && bun run generate",
+    "generation_exit": 0,
+    "manual_edits": false
+  },
+  "readback": {
+    "paths": [
+      {
+        "path": "packages/client/src/generated-effect/client.ts",
+        "expected_preblob": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+        "observed_preblob": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+        "generated_postblob": "5874204ef97d36f5c2fd14aac5e13ee21ca74d53",
+        "preimage_match": true
+      },
+      {
+        "path": "packages/client/src/generated/client.ts",
+        "expected_preblob": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+        "observed_preblob": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+        "generated_postblob": "b59815718bd6755c12761d1102a3149fbc390844",
+        "preimage_match": true
+      },
+      {
+        "path": "packages/client/src/generated/types.ts",
+        "expected_preblob": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+        "observed_preblob": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+        "generated_postblob": "2f5ca3d1d2b24a0b33a9e41c9cf4aaf8c6c6f1c8",
+        "preimage_match": true
+      }
+    ],
+    "result": "3_OF_3_MATCH_ON_SNAPSHOT_NOT_APPLIED",
+    "api_input_blobs": {
+      "packages/schema/src/sucafina/context.ts": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+      "packages/protocol/src/groups/sucafina.ts": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+      "packages/client/src/contract.ts": "94f1ddd42964636fbc4b1908c47c51f24dcce226",
+      "packages/client/script/build.ts": "99ae2184b9c13f6175d7ba8e3025068bee07ee4f",
+      "tooling/httpapi-codegen/src/index.ts": "78a9b9e0521c8128d0896af8bba15ad318e30edf"
+    },
+    "epic_preimage": ".github/workflows/sf2-epic.yml b332d777e4465469e9e4869e29f4339a95853d21"
+  },
+  "caveat": "GitHub MCP read-only snapshot, no permissions to write sf2-stack; integrator189 must recheck exact current HEAD/preimages and producer inputs before CAS, force=false. Changing native operation-registry NAV-01 does not by itself change ClientApi HttpApi generator observed direct inputs. Real generated patch still unconsumed at this snapshot; new public HttpApi inputs require new hosted generator.",
+  "statuses": {
+    "sdk_consumed_by_189": false,
+    "latest_W_qualified": false,
+    "run_W77e": "FAIL_6_OF_9",
+    "guard66": "PENDING",
+    "goal": "paused",
+    "GLOBAL_RELEASE": false
+  }
+}
