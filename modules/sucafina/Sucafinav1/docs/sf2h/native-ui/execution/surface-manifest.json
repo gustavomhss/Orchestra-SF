@@ -3125,12 +3125,14 @@
         "owner-context",
         "capability-selection",
         "typed-fieldset-from-source",
-        "source-version-for-edit"
+        "source-version-for-edit",
+        "rectangular TSV range with original text, per-row CAS and current permission"
       ],
       "acceptedOutputs": [
         "authorized-projection",
         "producer-result",
-        "authorized-refetch-after-write"
+        "authorized-refetch-after-write",
+        "producer preview, per-row partial results and explicit retry of failed rows"
       ],
       "primaryActionPolicy": "One emphasized action for current state; direct effect only after original server admission. Read-only role gets contextual read/navigation action.",
       "navigationPolicy": "NAV-01",
@@ -3181,6 +3183,20 @@
         "key": "sf.cap18.title",
         "en": "OPEX",
         "pt-BR": "OPEX"
+      },
+      "rangeTsv": {
+        "required": true,
+        "adapter": "A02",
+        "component": "S02",
+        "source": "product/planner/monthly-edit.ts + monthly-host.ts",
+        "operations": [
+          "planner.monthly.preview",
+          "planner.monthly.apply"
+        ],
+        "zeroBasedToOneBasedMonth": 1,
+        "partialRowsAndCAS": true,
+        "uiMobileMultiLine": true,
+        "noClientArithmetic": true
       }
     },
     {
@@ -3321,12 +3337,14 @@
         "owner-context",
         "capability-selection",
         "typed-fieldset-from-source",
-        "source-version-for-edit"
+        "source-version-for-edit",
+        "rectangular TSV range with original text, per-row CAS and current permission"
       ],
       "acceptedOutputs": [
         "authorized-projection",
         "producer-result",
-        "authorized-refetch-after-write"
+        "authorized-refetch-after-write",
+        "producer preview, per-row partial results and explicit retry of failed rows"
       ],
       "primaryActionPolicy": "One emphasized action for current state; direct effect only after original server admission. Read-only role gets contextual read/navigation action.",
       "navigationPolicy": "NAV-01",
@@ -3351,6 +3369,20 @@
         "key": "sf.cap19.title",
         "en": "CAPEX",
         "pt-BR": "CAPEX"
+      },
+      "rangeTsv": {
+        "required": true,
+        "adapter": "A02",
+        "component": "S02",
+        "source": "product/planner/monthly-edit.ts + monthly-host.ts",
+        "operations": [
+          "planner.monthly.preview",
+          "planner.monthly.apply"
+        ],
+        "zeroBasedToOneBasedMonth": 1,
+        "partialRowsAndCAS": true,
+        "uiMobileMultiLine": true,
+        "noClientArithmetic": true
       }
     },
     {
@@ -4398,6 +4430,16 @@
         "key": "sf.cap25.title",
         "en": "Requests",
         "pt-BR": "Pedidos"
+      },
+      "pilotTitleSave": {
+        "phase": "P0",
+        "workOutput": "U11.title-save",
+        "field": "pr.title",
+        "action": "save",
+        "cas": "versions['requests:'+id].version",
+        "status": "PLANNED_NOT_RUN",
+        "notApproval": true,
+        "noSyntheticReceipt": true
       }
     },
     {
@@ -4589,6 +4631,13 @@
         "key": "sf.cap26.title",
         "en": "My approvals",
         "pt-BR": "Minhas aprovações"
+      },
+      "pilotApproval": {
+        "phase": "P1",
+        "workOutput": "U13.pr-approval",
+        "onlyPersistedSubmittedPR": true,
+        "mustCheckHolderStageVersion": true,
+        "requiresOriginalM31MI07": true
       }
     },
     {
@@ -5192,10 +5241,12 @@
         "view-ref",
         "filters",
         "density",
-        "landing-preference"
+        "landing-preference",
+        "schemaVersion:2 native chapter/route and landing preference under own CAS"
       ],
       "acceptedOutputs": [
-        "personal-view-version"
+        "personal-view-version",
+        "versioned v2 list/open/save/remove plus per-principal landing; legacy bytes and responses unchanged"
       ],
       "fixedSectionOrder": [
         "name",
@@ -5264,6 +5315,20 @@
         "key": "sf.ui32.title",
         "en": "Saved views",
         "pt-BR": "Vistas salvas"
+      },
+      "nativeViewV2": {
+        "source": "CONTRACTS.md#56-views-pessoais-v2-e-entrada-preferida--r77-f06",
+        "owner": "U43",
+        "adapter": "A12",
+        "producerExtension": "product/interface/personal-views.ts after owner ACK",
+        "status": "NOT_ADMITTED_UNTIL_PRODUCER_AND_CI",
+        "variants": [
+          "legacy",
+          "native",
+          "unavailable"
+        ],
+        "personalLanding": "separate per-principal/installation/project CAS",
+        "noLegacyViewCasting": true
       }
     },
     {
@@ -10318,5 +10383,5 @@
       "methodLimit": "Bounded textual inventory, not TypeScript control-flow analysis. Page applicability checked by reading execute branches; source authority remains canonical."
     }
   ],
-  "verificationStatus": "Documentary structure and action inventory checked; six Git blob pins verified identical at architecture pin faa30. No executed product, compiler, local test, hosted test or CI result."
+  "verificationStatus": "Contract source comparison remains historical. R77 F01-F08 normative deltas specified on ux-20-dispatch; not product-tested, no installed PASS, producer pins must be rechecked by I00."
 }
