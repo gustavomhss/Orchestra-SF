@@ -221,7 +221,7 @@ export function createSfTransport(options: Readonly<{
           } else if (!result.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
             response = failure("invalid-response")
           } else {
-            const wire = await result.json().catch(() => undefined)
+            const wire = await readJsonBounded(result)
             response = wire === undefined ? failure("invalid-response") : { status: result.status, headers: extracted, body: wire }
           }
         } catch { response = failure("network") }
@@ -235,7 +235,7 @@ export function createSfTransport(options: Readonly<{
         if (mutating) pending.delete(key!)
         return response
       }
-      if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 600) return failure("invalid-response")
+      if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 600) return failure(mutating ? "outcome-unknown" : "invalid-response")
       if (response.status === 401 || response.status === 403) stamp = undefined
       const wireDecoded = (() => {
         try { return codec.decodeOutput(response.body) }
@@ -429,11 +429,44 @@ function publicHeaders(source: Headers | SfPublicHeaders): SfPublicHeaders {
   const accessRevision = header("x-sf-access-revision")
   const reviewBinding = header("x-sf-review-binding")
   const contractRevision = header("x-sf-contract-revision")
+  const safeDisposition = disposition && (/^attachment;\\s*filename="[^\\/\\\\\\r\\n"]{1,160}"$/i.test(disposition)) ? disposition : undefined
   return {
     ...(contentType && /^[^\r\n]{1,256}$/.test(contentType) ? { "content-type": contentType } : {}),
-    ...(disposition && /^[^\r\n]{1,256}$/.test(disposition) ? { "content-disposition": disposition } : {}),
+    ...(safeDisposition ? { "content-disposition": safeDisposition } : {}),
     ...(accessRevision && /^[^\r\n]{1,256}$/.test(accessRevision) ? { "x-sf-access-revision": accessRevision } : {}),
     ...(reviewBinding && /^[^\r\n]{1,256}$/.test(reviewBinding) ? { "x-sf-review-binding": reviewBinding } : {}),
     ...(contractRevision && /^[^\r\n]{1,256}$/.test(contractRevision) ? { "x-sf-contract-revision": contractRevision } : {}),
   }
+}
+
+/**
+ * Bounded JSON ingestion: content-length is only a hint, so enforce the limit
+ * on actual streamed bytes. Never render or log invalid producer JSON/HTML.
+ */
+async function readJsonBounded(response: Response): Promise<unknown | undefined> {
+  const MAX_JSON_BYTES = 32 * 1024 * 1024
+  const declared = response.headers.get("content-length")
+  if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > MAX_JSON_BYTES)) return undefined
+  const reader = response.body?.getReader()
+  if (!reader) return undefined
+  const chunks: Uint8Array[] = []
+  let size = 0
+  try {
+    while (true) {
+      const chunk = await reader.read()
+      if (chunk.done) break
+      size += chunk.value.byteLength
+      if (size > MAX_JSON_BYTES) {
+        await reader.cancel().catch(() => undefined)
+        return undefined
+      }
+      chunks.push(chunk.value)
+    }
+    if (!size) return undefined
+    const all = new Uint8Array(size)
+    let offset = 0
+    for (const chunk of chunks) { all.set(chunk, offset); offset += chunk.byteLength }
+    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(all))
+  } catch { return undefined }
+  finally { reader.releaseLock() }
 }
