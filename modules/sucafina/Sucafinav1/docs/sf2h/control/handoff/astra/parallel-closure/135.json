@@ -1,0 +1,216 @@
+{
+  "schema": "sf2h.correction-author.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_status": "CONTINUING_LATE",
+  "mission": 135,
+  "title": "Portfólio — validação fechada",
+  "branch": "sf-ux-w17",
+  "pr": 134,
+  "lease_epoch": "ux-native-w17-e3",
+  "expected_head": "373fc83bd97ddade3b08c7173a062cd7208fb5cd",
+  "fence": {
+    "schema": "sf2h.correction-wave-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "authority": "S0 explicit fresh-session-only succession for confirmed source findings and integration backlog",
+    "mission": 135,
+    "branch": "sf-ux-w17",
+    "previous_epoch": "ux-native-w17-e2",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ACCEPT_OLD_DELIVERED_BLOBS_ONLY_AS_HISTORICAL_INTAKE",
+    "next_epoch": "ux-native-w17-e3",
+    "observed_head": "823f4dfacdf5cfbb1ac68576f16f1aca3d36f92e",
+    "runtime_termination_claimed": false,
+    "new_session_state": "PREPARED_NOT_STARTED",
+    "user_reports_old_sessions_stopped": "No new death inference; real control action is S0 revocation and CAS/epoch fencing, not elapsed silence.",
+    "old_writer_rule": "Cease future writes/dispatch upon observing fence. Already delivered artifacts remain available by immutable SHA; late commits quarantined/reconciled, never force-reset.",
+    "new_writer_rule": "Confirm head/fence, publish actual ACK epoch/model/session. Unexpected old actor activity pauses overlap; no blind reset/force.",
+    "integrator": 132,
+    "compiler": 128,
+    "product_ci": 129,
+    "scope": [
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "native_goal": "paused",
+    "global_release": false,
+    "fence_commit": "373fc83bd97ddade3b08c7173a062cd7208fb5cd",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/S0-FENCE.json",
+    "auxiliary": false
+  },
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "next30_source": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "material": {
+    "id": "C64",
+    "sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+    "accepted": false
+  },
+  "write_paths": [
+    "packages/schema/src/sucafina/portfolio.ts",
+    "packages/schema/src/sucafina/portfolio/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/**"
+  ],
+  "protected_paths": [
+    "All non-granted paths, active foreign source and shared/global/generated belong132"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/",
+  "original_author_packet": {
+    "schema": "sf2h.native-ui.author-packet.v1",
+    "mission_id": "UX20-W17",
+    "seat": "W17",
+    "work_order_id": "A05",
+    "output_id": null,
+    "title": "Bindings finos: Portfólio e sensibilidade",
+    "state": "PREPARED_USER_AUTHORIZED_OUTPUT_PREFLIGHT",
+    "requested_model": "Astra (user browser); record actual model when exposed",
+    "effective_model": null,
+    "actual_session_id": null,
+    "actual_actor": null,
+    "branch": "sf-ux-w17",
+    "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "cohort_base": "resolve branch initial head; same immutable shared cohort commit for all19",
+    "source": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+    },
+    "common_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/campaign-overlay/COMMON.md",
+    "work_order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A05.json",
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/schema/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/A05.json"
+      ],
+      "contracts": [
+        "ctx",
+        "portfolio",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": [
+        "contract-catalog.json#/sources/portfolio"
+      ]
+    },
+    "write_paths": [
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/client/src/sucafina/portfolio.ts",
+      "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "packages/client/src/sucafina/portfolio/**",
+      "apps/cli/src/sucafina-product/native-ui/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "test_write_grants": [],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/",
+    "lease": {
+      "reserved_epoch": "ux-native-w17-e1",
+      "state": "RESERVED_NOT_ACTIVE; publish real ACK and per-output admission",
+      "integrator": "same current114 C00, no second supervisor"
+    },
+    "frozen_contract_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    "authoring_locks": [
+      "ctx",
+      "portfolio",
+      "transport"
+    ],
+    "contract_refs": [
+      "ctx",
+      "portfolio",
+      "transport"
+    ],
+    "source_binding_pins": {
+      "portfolio": {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      }
+    },
+    "entrypoints": [
+      {
+        "path": "packages/schema/src/sucafina/portfolio.ts",
+        "symbol": "SfPortfolio",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "packages/client/src/sucafina/portfolio.ts",
+        "symbol": "createSfPortfolioClient",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      }
+    ],
+    "integration_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "qualification_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "affected_test_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "scope_clarifications": [],
+    "delivery": "Complete assigned output; one PR to sf2-stack, exactprepost/patch/tests/dependencies and ARTIFACT_READY handoff to114; do not edit sharedpaths or wait for unrelated services."
+  },
+  "original_order": "A05",
+  "original_work_order": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A05.json",
+  "finding": "C64 native5 run43738115971/job132885115197: portfolio.test37/54/68 três recusas deveriam lançar e aceitaraminputinválido; preservar oráculos/unknown-fields/authority/refusalreason/casedigest.",
+  "source_evidence": {
+    "compiler_run": 43738074189,
+    "compiler_job": 132884987559,
+    "compiler_artifact": 14171118214,
+    "native_run": 43738115971,
+    "native_job": 132885115197,
+    "app_shell_run": 43738907064,
+    "app_shell_job": 132887516559,
+    "compiler_receipt": "compiler128/RESULTS128-C64.json@f8bbf593f40c210946b75a43828f99450a3f6d25",
+    "ci_findings": "product-ci129/FINDINGS-129.json@bd2bc0f9d055d800eeeb65727d4426b88e11346d"
+  },
+  "routing": {
+    "integrator": "132 / S0-C-e19-browser132 / PR65",
+    "compiler": "128 / PR107",
+    "product_ci": "129 / PR106"
+  },
+  "requirements": [
+    "Fresh browser session only. Verify S0-FENCE/current HEAD, publish actual ACK/model/session(if exposed),epoch+inputs before writes. S0 revoked predecessor FUTURE authority explicitly; no process-kill/death claimed. Old delivered blobs remain historical eligible inputs. Unexpected old actor activity requires safe reconciliation, not force/reset.",
+    "Read applicable AGENTS, FULL packet, assigned whole original work-orders/required_reads/frozen contracts/source and criteria pointers. New explicit write_paths override broader old packs. Canonical dbf9547211d9b0fade619790de7c19c0869b7c7d and normative cbac654784714f68779ae1434d30e6ea8970c4d1 unchanged.",
+    "Read actual C64 target preimages AND predecessor branch/dependencies before edits. Preserve all existing commits. Source branch may lack later integrated dependencies: record source preimage separately from actual consumer preimage; no copying stale whole files or wholesale UX envelope merges.",
+    "S0 grants exclusive correction authoring after real ACK. Implement the cause directly in product/test paths and complete PR, not preflight-only. No any/casts/ts-ignore/exclusions, weaker assertions/fixtures, longer timeout, synthetic grants/receipts, permissive schema or alternate backend.",
+    "132 sole integrator/shared writer;128 compiler and129 productCI retain authority. No sourcewriter may edit sf2-stack/shared registries/routes/globali18n/exports/generated. Supply complete shared patches/preimages to132 and require real consumer ACK for acceptance.",
+    "At complete unit, request meaningful surgical hosted checks129 and compiler128 on newly integrated coherent material. No local test/parser/validator/typecheck, new dispatcher or prematureepic. PublicProtocol/ServerHttpApi requires real packages/client bun run generate via128, integrated by132, nevergeneratedmanual.",
+    "Remote GitHub MCP only,CASexpected-head,forcefalse. No gitpush/gh/reset/blindrebase/devmerge/deploy/Azure/engines/financialpolicy/accesspolicy/secrets/Orchestra restart/nativeGoal/controller. Goal remains paused.",
+    "Deliver commits+samePR, exact postblobs/full patches, regression specs and finding→criteria evidence, real runs orNOT_RUN, unresolvedcauses and durable terminalhandoff. Sourceartifact notQUALIFIED/DONE. Preserve15WP74tasks17contracts1610criteria+UX78/70/305+sameC8CIepicAM01–06threeFINALvalidDseparateG7/G8."
+  ],
+  "native_goal": "paused",
+  "global_release": false
+}
