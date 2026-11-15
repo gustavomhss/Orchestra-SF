@@ -361,7 +361,7 @@ export function createSfWorkProjectionHandlers(deps: SfNativeHostDependencies): 
       if (!runtime) return failure(request, "unavailable")
       try {
         if (mode === "home") return await home(request, runtime)
-        if (mode === "search") return await search(request, runtime, privatePayload!)
+        if (mode === "search") return privatePayload ? await search(request, runtime, privatePayload) : failure(request, "invalid")
         if (mode === "work") return await work(request, runtime, parsed)
         if (mode === "work-item") return await workItem(request, runtime, parsed)
         return await workSelection(request, runtime, parsed)
