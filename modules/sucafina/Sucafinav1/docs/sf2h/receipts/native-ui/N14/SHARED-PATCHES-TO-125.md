@@ -58,3 +58,9 @@ The integration must provide exact authorization, original scanner acceptance, p
 119: Compile the integrated N14 transitive code after 125 consumes these patches; report diagnostics, no speculative compile pass.
 120: Run only the two U03/U47 hosted surgical specs after integrated snapshot/isolated installed owner admission; separately prove actual 200% and 400% browser zoom, owner changes, read-only revocation and import/export positive flows when possible.
 No local test, local typecheck, reset, force, dev merge, deploy, duplicate dispatcher or Goal reactivation. Recheck 125's current shared preimages and fencing before any shared write.
+
+## P125-N14-06 · known producer rejection and F01 pending draft reconciliation (blocking)
+
+The pinned F01 SfPublicDraftController can setPending and confirmSave but does not expose a terminal known-rejection transition. Its pending-operation invariant intentionally rejects clearing a submitted operation merely by setPhase/discard. N14's review UI therefore preserves the submitted intent and blocks retries after known 400/409/422; it can show the source error text but cannot safely move a submitted F01 draft back to editable/conflict without F01-owned reconciliation.
+
+125 must coordinate a source-verified, exact-operation terminal rejection/rebase protocol with F01 (preserving key, source version and owner), rather than treating deterministic 409 as successful or silently retrying. Until then, U03/U47 mutation-error recovery is NOT acceptance-qualified. A pre-submit validation error still keeps its original draft; a response-loss error remains outcome-unknown. No N14-owned leaf overrides F01 private draft state.
