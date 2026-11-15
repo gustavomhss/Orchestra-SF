@@ -46,7 +46,7 @@ const EvidenceBase = {
   evidenceLevel: Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
 }
 const Sha256 = Schema.Struct({ algorithm: Schema.Literals(["sha256"]), value: Digest })
-const EvidenceRef: Schema.Schema<EvidenceRefType> = Schema.suspend(() => Schema.Union([
+const EvidenceRef: Schema.Decoder<EvidenceRefType> = Schema.suspend(() => Schema.Union([
   Schema.Struct({ ...EvidenceBase, kind: Schema.Literals(["record"]), target: Schema.Struct({
     surface: Surface, recordType: Text, recordId: Text, incarnation: Text, version: NonNegativeInt,
     fields: Texts, period: Period.pipe(optional), projectionDigest: Digest,
@@ -236,7 +236,7 @@ const Failure = Schema.Struct({
   status: Schema.Literals(["needs-input", "stale", "denied", "unavailable", "conflict", "provider-conflict", "failed"]),
   reason: Text,
 })
-const envelope = <S extends Schema.Top>(value: S) => Schema.Union([
+const envelope = <S extends Schema.Decoder<unknown>>(value: S) => Schema.Union([
   Schema.Struct({ status: Schema.Literals(["ok"]), value }), Failure,
 ])
 
@@ -250,7 +250,7 @@ const envelope = <S extends Schema.Top>(value: S) => Schema.Union([
  * The transformed codec retains each operation's Type and domain validation;
  * no additional field, role, approval, authority or result is introduced.
  */
-const closed = <S extends Schema.Top>(schema: S) =>
+const closed = <S extends Schema.Decoder<unknown>>(schema: S) =>
   Schema.Unknown
     .check(Schema.makeFilter((value) =>
       Option.isSome(Schema.decodeUnknownOption(schema, { onExcessProperty: "error" })(value))
@@ -261,7 +261,7 @@ const closed = <S extends Schema.Top>(schema: S) =>
       encode: SchemaGetter.passthrough(),
     }))
 
-const operation = <const Id extends string, In extends Schema.Top, Out extends Schema.Top>(
+const operation = <const Id extends string, In extends Schema.Decoder<unknown>, Out extends Schema.Decoder<unknown>>(
   operationId: Id, input: In, output: Out,
 ) => Object.freeze({ operationId, input: closed(input), output: closed(envelope(output)) })
 

@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.causal-fix175.source-patch.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 175,
+  "order": "A05",
+  "epoch": "native-fix-e1-browser175",
+  "branch": "sf-ux-w17",
+  "pr": 134,
+  "goal": "paused",
+  "global_release": false,
+  "cause": "Effect 4.0.0-beta.83 decodeUnknownOption/decodeUnknownSync accept Schema.Decoder<unknown> with RD=never; Schema.Top leaves RD=unknown. Annotated recursive EvidenceRef as Schema.Schema<T> also erased the RD=never guarantee.",
+  "changes": [
+    "Narrow recursive EvidenceRef to Schema.Decoder<EvidenceRefType> without changing AST",
+    "Narrow envelope generic to service-free Decoder",
+    "Narrow closed generic to service-free Decoder",
+    "Narrow operation input/output generics to Decoder while retaining concrete inference"
+  ],
+  "source": {
+    "pre_head": "7ece75e873ce3d3ef39182085f3ab9d5f222959f",
+    "pre_tree": "f894f20e6a988e395c5335363bf2484d1a36c023",
+    "path": "packages/schema/src/sucafina/portfolio.ts",
+    "pre_blob": "708731dbbaf1fe69664715a4f34007976a4b0476",
+    "post_blob": "5ace759126c6e810d9718df01ce22779146193ce"
+  },
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+    "pre_blob": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+    "post_blob": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+    "not_modified": true
+  },
+  "consumer": {
+    "latest_observed_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "pre_schema_blob": "708731dbbaf1fe69664715a4f34007976a4b0476",
+    "pre_test_blob": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+    "post_head": "PENDING_ONLY_162",
+    "post_tree": "PENDING_ONLY_162",
+    "post_schema_blob": "PENDING_ONLY_162"
+  },
+  "effect_source": "https://github.com/Effect-TS/effect/tree/effect@4.0.0-beta.83/packages/effect/src/Schema.ts",
+  "prior_compiler": {
+    "run": 43766055614,
+    "job": 132971280139,
+    "status": "FAIL",
+    "errors": [
+      "portfolio.ts:256 TS2345",
+      "portfolio.ts:260 TS2345"
+    ]
+  },
+  "prior_product_ci": {
+    "run": 43765725305,
+    "status": "FAIL_OTHER_CAUSES",
+    "portfolio_tests": "9 PASS"
+  },
+  "validation": {
+    "local_tests": "NOT_RUN_PROHIBITED",
+    "local_parser": "NOT_RUN_PROHIBITED",
+    "local_typecheck": "NOT_RUN_PROHIBITED",
+    "hosted_typecheck_after_fix": "NOT_RUN_PENDING_162_163",
+    "hosted_portfolio_after_fix": "NOT_RUN_TYPE_ONLY_DELTA_NO_NEW_164_RUN",
+    "guards": "NOT_RUN_PENDING_163",
+    "new_test": "NONE_REUSE_EXISTING"
+  },
+  "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/PATCH-175.patch",
+  "runtime_semantics": "UNCHANGED",
+  "integrator": 162,
+  "compiler": 163,
+  "ci": 164
+}

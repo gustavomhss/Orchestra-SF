@@ -1,0 +1,40 @@
+diff --git a/packages/schema/src/sucafina/portfolio.ts b/packages/schema/src/sucafina/portfolio.ts
+index 708731dbbaf1fe69664715a4f34007976a4b0476..5ace759126c6e810d9718df01ce22779146193ce 100644
+--- a/packages/schema/src/sucafina/portfolio.ts
++++ b/packages/schema/src/sucafina/portfolio.ts
+@@ -46,7 +46,7 @@
+   evidenceLevel: Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
+ }
+ const Sha256 = Schema.Struct({ algorithm: Schema.Literals(["sha256"]), value: Digest })
+-const EvidenceRef: Schema.Schema<EvidenceRefType> = Schema.suspend(() => Schema.Union([
++const EvidenceRef: Schema.Decoder<EvidenceRefType> = Schema.suspend(() => Schema.Union([
+   Schema.Struct({ ...EvidenceBase, kind: Schema.Literals(["record"]), target: Schema.Struct({
+     surface: Surface, recordType: Text, recordId: Text, incarnation: Text, version: NonNegativeInt,
+     fields: Texts, period: Period.pipe(optional), projectionDigest: Digest,
+@@ -236,7 +236,7 @@
+   status: Schema.Literals(["needs-input", "stale", "denied", "unavailable", "conflict", "provider-conflict", "failed"]),
+   reason: Text,
+ })
+-const envelope = <S extends Schema.Top>(value: S) => Schema.Union([
++const envelope = <S extends Schema.Decoder<unknown>>(value: S) => Schema.Union([
+   Schema.Struct({ status: Schema.Literals(["ok"]), value }), Failure,
+ ])
+ 
+@@ -250,7 +250,7 @@
+  * The transformed codec retains each operation's Type and domain validation;
+  * no additional field, role, approval, authority or result is introduced.
+  */
+-const closed = <S extends Schema.Top>(schema: S) =>
++const closed = <S extends Schema.Decoder<unknown>>(schema: S) =>
+   Schema.Unknown
+     .check(Schema.makeFilter((value) =>
+       Option.isSome(Schema.decodeUnknownOption(schema, { onExcessProperty: "error" })(value))
+@@ -261,7 +261,7 @@
+       encode: SchemaGetter.passthrough(),
+     }))
+ 
+-const operation = <const Id extends string, In extends Schema.Top, Out extends Schema.Top>(
++const operation = <const Id extends string, In extends Schema.Decoder<unknown>, Out extends Schema.Decoder<unknown>>(
+   operationId: Id, input: In, output: Out,
+ ) => Object.freeze({ operationId, input: closed(input), output: closed(envelope(output)) })
+ 
