@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.external-proposal.v1",
+  "mission": 54,
+  "status": "INERT_NOT_APPLIED_NOT_RUN",
+  "target": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+  "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+  "preblob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+  "proposed_postblob": "c283f1264f9a27072545198dc9f6d71b1de10742",
+  "patch_reconstructs_postimage": true,
+  "source_ref_modified": false,
+  "stack_ref_modified": false,
+  "W_contains_proposal": false,
+  "owner": "Canonical LocalStore/runtime owner assigned through47's accepted successor55; no54source grant",
+  "mechanism": "Retain captured immutable materialization plans for unexposed non-target surfaces in one single-surface root; emit fresh independent graphs on each requested copy. Target mutable snapshot and transactionAll retain existing clone validation. Object descriptor traversal retains all rejection checks while removing temporary entry tuples.",
+  "limits": [
+    "No demonstratedP03speedup.",
+    "Mutable target still cloned/validated each observation; may dominate.",
+    "No auth/cache/read-scope broadening,callback/check/replay removal.",
+    "Owner must reconcile memory budget for per-root plan retention and qualify before intake."
+  ],
+  "required_proofs": [
+    "target mutation visibility/previous copy isolation",
+    "target accessors/cycles/functions/nonfinite/symbol rejection",
+    "non-target/nested copy isolation includingundefined,-0,__proto__,sparsearrays",
+    "transactionAll mutable semantics",
+    "poisoned/swallowedwrites,aborts,outstandingreaders",
+    "SQL/root freshness across committed updates",
+    "synchronouscurrentSnapshotstimings at unchanged invocation counts"
+  ],
+  "next": "Wait forR2exactboundaries; append causal evidence in final finding. Proposal alone does not closeP03."
+}
