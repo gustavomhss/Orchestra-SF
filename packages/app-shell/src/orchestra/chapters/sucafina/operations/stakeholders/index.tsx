@@ -15,6 +15,7 @@ const fields: readonly Field<Stakeholder, Values>[] = [
   {name:"title",label:"sf.u30.stakeholder.title",kind:"text"},
   {name:"company",label:"sf.u30.stakeholder.company",kind:"text"},
   {name:"department",label:"sf.u30.stakeholder.department",kind:"text"},
+  {name:"role",label:"sf.u30.stakeholder.role",kind:"text"},
   {name:"email",label:"sf.u30.stakeholder.email",kind:"email"},
   {name:"biz",label:"sf.u30.stakeholder.biz",kind:"select", options: [{ value: "", label: "sf.u30.factor.choose" }, { value: "1", label: "sf.u30.number.1" }, { value: "2", label: "sf.u30.number.2" }, { value: "3", label: "sf.u30.number.3" }, { value: "4", label: "sf.u30.number.4" }, { value: "5", label: "sf.u30.number.5" }]},
   {name:"iti",label:"sf.u30.stakeholder.iti",kind:"select", options: [{ value: "", label: "sf.u30.factor.choose" }, { value: "1", label: "sf.u30.number.1" }, { value: "2", label: "sf.u30.number.2" }, { value: "3", label: "sf.u30.number.3" }, { value: "4", label: "sf.u30.number.4" }, { value: "5", label: "sf.u30.number.5" }]},
@@ -22,17 +23,20 @@ const fields: readonly Field<Stakeholder, Values>[] = [
   {name:"priority",label:"sf.u30.stakeholder.priority",kind:"select", options: [{value:"",label:"sf.u30.priority.choose"},{value:"action",label:"sf.u30.priority.action"},{value:"monitor",label:"sf.u30.priority.monitor"},{value:"low",label:"sf.u30.priority.low"} ]},
   {name:"owner",label:"sf.u30.stakeholder.owner",kind:"text"},
   {name:"action",label:"sf.u30.stakeholder.action",kind:"textarea"},
+  {name:"actions",label:"sf.u30.stakeholder.actions",kind:"textarea"},
   {name:"notes",label:"sf.u30.stakeholder.notes",kind:"textarea"},
 ]
 const initial = (row?: Stakeholder): Values => ({
   name: row ? optionalText(row.name) : "", position: row ? optionalText(row.position) : "",
   title: row ? optionalText(row.title) : "", company: row ? optionalText(row.company) : "",
-  department: row ? optionalText(row.department) : "", email: row ? optionalText(row.email) : "",
+  department: row ? optionalText(row.department) : "",
+  role: row ? optionalText(row.role) : undefined, email: row ? optionalText(row.email) : "",
   biz: row?.biz === null ? null : row?.biz === undefined ? undefined : txt(row.biz),
   iti: row?.iti === null ? null : row?.iti === undefined ? undefined : txt(row.iti),
   perc: row?.perc === null ? null : row?.perc === undefined ? undefined : txt(row.perc),
   priority: row ? optionalText(row.priority) : "",
   owner: row ? optionalText(row.owner) : "", action: row ? optionalText(row.action) : "",
+  actions: row ? optionalText(row.actions) : undefined,
   notes: row ? optionalText(row.notes) : "",
 })
 const spec: CollectionSpec<"CAP15", Stakeholder, Values> = {
