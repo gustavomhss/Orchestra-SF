@@ -1,5 +1,5 @@
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+import type { TrustedUiContext } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 
 /** The only A15 server addition. Existing analysis JSON routes keep their original
@@ -101,9 +101,7 @@ type Stamp = {
   policyVersion: string
   accessRevision: string
 }
-type Binding = NonNullable<Awaited<ReturnType<SfHostServices["ui"]["admit"]>> extends infer T
-  ? T extends { status: "ok"; value: { binding: infer B } } ? B : never
-  : never>
+type Binding = TrustedUiContext["binding"]
 
 function sameContext(binding: Binding, stamp: Stamp) {
   return binding.installationId === stamp.installationId &&
