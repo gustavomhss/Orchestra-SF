@@ -1,0 +1,35 @@
+{
+  "schema": "sf2h.causal-fix-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 174,
+  "workOrder": "A02",
+  "branch": "sf-ux-w15",
+  "pr": 116,
+  "epoch": "native-fix-e1-browser174",
+  "previousEpoch": "ux-native-w15-e3",
+  "sourceHeadAtAck": "10812b42de20a8275e82b47ca8bfccc9364af226",
+  "sourceTreeAtAck": "080a9ad3fb67961a5a627fbdd181e90d654bd034",
+  "sourcePlannerBlobAtAck": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+  "consumerHeadObserved": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "consumerPlannerBlobObserved": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+  "modelRequested": "Astra",
+  "modelEffective": "GPT-6",
+  "sessionId": null,
+  "githubActor": "gustavomhss",
+  "fenceConfirmed": true,
+  "AGENTSConfirmed": [
+    "AGENTS.md",
+    "packages/schema/AGENTS.md"
+  ],
+  "owner": "A02",
+  "writePaths": [
+    "packages/schema/src/sucafina/planner.ts",
+    "packages/schema/src/sucafina/planner/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/**"
+  ],
+  "status": "ACK_ACCEPTED",
+  "tests": "NOT_RUN",
+  "nativeGoal": "paused",
+  "globalRelease": false
+}
