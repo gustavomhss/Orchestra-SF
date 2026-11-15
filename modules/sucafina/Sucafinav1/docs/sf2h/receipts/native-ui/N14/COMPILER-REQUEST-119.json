@@ -1,0 +1,30 @@
+{
+  "schema": "sf2h.n14.compiler.request.v1",
+  "slot": "N14",
+  "epoch": "ux-native-n14-e1",
+  "owner": 119,
+  "status": "REQUESTED_NOT_RUN",
+  "branch": "sf-ux-n14",
+  "pr": 146,
+  "transitive_surfaces": [
+    "CAP06",
+    "CAP07",
+    "CAP08"
+  ],
+  "required_dependencies": [
+    "F01 context and drafts",
+    "F02 transport+schema catalog+operation bindings",
+    "F03 frame/states/copy",
+    "S03 ChangeReview",
+    "A10 people schema/client",
+    "I00 registered surface leaves/dictionaries"
+  ],
+  "source_of_truth": "sf2-stack integration candidate selected by 125",
+  "constraints": [
+    "No N14 local typecheck",
+    "Check exact TypeScript diagnostics and import/JSX constraints",
+    "Do not claim build success until compiler job has actual job ID and successful output",
+    "Report conflicting frozen signatures to 125 without edits to foreign writer paths"
+  ],
+  "on_failure": "attach exact diagnostic file/line, no speculative PASS"
+}
