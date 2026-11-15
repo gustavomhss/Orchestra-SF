@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.mission142.hosted-ci-request.v1",
+  "mission": 142,
+  "status": "REQUESTED_NOT_RUN",
+  "lease_epoch": "xlsx-layout-e2-browser142",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "xlsx-print-layout",
+    "pr": 105,
+    "source_material_commit": "d5dde5ba4f1cb98162bf99cc1391ebb328dee987",
+    "source_patch_blob": "ef79c594fb3ba1cabf114ceda1a1ae5989f93411"
+  },
+  "gate": {
+    "integrator": 132,
+    "required": "132 publishes consumer ACK, integrated C SHA/tree, actual path pre/post and coherent dependency closure; no source tests self-dispatch",
+    "compiler": 128,
+    "product_ci": 129,
+    "workflow": "existing authorized hosted surgical dispatcher only"
+  },
+  "selections": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/print-layout.test.ts",
+      "why": "production authenticated HTTP XLSX normal/empty/wide/long viewer/admin, OOXML, print titles, privacy, formula/literal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/",
+      "why": "existing reader88 selection + genuine XLSX/PDF/PNG per-sheet output only through approved harness; deduplicate selection with in-flight requests"
+    }
+  ],
+  "scenarios": [
+    "normal",
+    "empty",
+    "wide",
+    "long"
+  ],
+  "visual_oracles": [
+    {
+      "id": "VIS131-001",
+      "sheet": "OPEX and CAPEX",
+      "pages": "all horizontally continued segments in each scenario",
+      "assert": "Line ID, currency and measure repeated on all horizontal segments; numerics trace to original row and units, fonts legible and no clipped columns"
+    },
+    {
+      "id": "VIS131-002",
+      "sheet": "Info",
+      "pages": "each scenario Info page1",
+      "assert": "A22:B28 labels and values do not collide; retain values exactly, wrap as needed"
+    },
+    {
+      "id": "VIS131-003",
+      "sheet": "OPEX",
+      "pages": "page containing C2 and adversarial long literal",
+      "assert": "Full =HYPERLINK(...) displayed as text, never interpreted as formula; source XLSX type preserved"
+    }
+  ],
+  "coverage": [
+    "Planner sheets Info/OPEX/CAPEX/Headcount/Rate cards/FX rates",
+    "Members All Members/Summary by Leader",
+    "OPEX template header-only",
+    "populated CAPEX, Rate cards, multiple entities/leaders, currencies BRL/EUR/USD",
+    "empty, wide and long with paging",
+    "admin/viewer permission/PII boundaries"
+  ],
+  "required_evidence": [
+    "C SHA/tree + W/S/selection/workflow/runtime/fixture identity",
+    "actual run/job/attempt/artifact IDs and SHA256 of each original XLSX/PDF/PNG",
+    "source/snapshot/scenario/sheet/page mapping",
+    "comparison before/after per visual finding",
+    "independent office reviewer131 or fresh S0-fenced successor",
+    "Linux Carlito substitution limits recorded; native Aptos parity NOT_PROVEN absent target environment"
+  ],
+  "deduplication": "Check 129 in-flight queue by C/tree, selection, workflow, runtime, config, fixture and source; no duplicate dispatch",
+  "no_local_tests": true,
+  "observed_run": null,
+  "observed_job": null,
+  "observed_artifacts": [],
+  "result": "NOT_RUN",
+  "source_artifact_qualification": false,
+  "global_release": false
+}

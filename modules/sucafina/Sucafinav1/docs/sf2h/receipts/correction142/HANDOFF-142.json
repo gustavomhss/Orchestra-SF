@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h.mission142.handoff.v1",
+  "mission": 142,
+  "status": "ARTIFACT_READY__VALIDATION_NOT_RUN__CONSUMER_ACK_PENDING",
+  "campaign": "sf2h-integral-20261112",
+  "lease_epoch": "xlsx-layout-e2-browser142",
+  "actor": "fresh ChatGPT session mission142",
+  "model": "GPT-6",
+  "session_id": null,
+  "session_id_disclosed": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "xlsx-print-layout",
+  "pr": 105,
+  "target": "sf2-stack",
+  "pr_draft": true,
+  "fence": {
+    "expected_head": "d5330bff70504d46ba95f009b773485b768c2b55",
+    "fence_sha": "06e7a9c3d5af94901cc298be9fc163d2164ad3a8",
+    "old_epoch": "xlsx-layout-browser102",
+    "old_epoch_future_authority": "REVOKED",
+    "no_process_death_claim": true
+  },
+  "source_material": {
+    "ack_commit": "bb9eb8db77ee1fac829567164170d40b3046fe54",
+    "product_commit": "4a8cfaab6153c1154fe8b773c276d1648d39f838",
+    "test_commit": "d5dde5ba4f1cb98162bf99cc1391ebb328dee987",
+    "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/PATCH-132.diff",
+    "patch_blob_sha": "ef79c594fb3ba1cabf114ceda1a1ae5989f93411"
+  },
+  "original_source102": {
+    "handoff_commit": "e6c524ad6a6196bde1bf69e3f7cdbf049ab086c4",
+    "prior_production_blob": "567042ed8fadf2f1354947a60df8ababe332ae1d",
+    "prior_downloads_blob": "ac73b9edc44bd5c8a616ce583084969d2a69e771"
+  },
+  "consumer": {
+    "owner": 132,
+    "observed_head": "49da652cc093c6c392f43e89a58eb839640ddafd",
+    "material_baseline": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "workbooks_blob": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+    "downloads_blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+    "test_file": "ABSENT",
+    "integration_status": "NOT_COMPOSED_BY_142",
+    "consumer_ack": null,
+    "recheck_head_before_write": true
+  },
+  "prepost": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "consumer_pre": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+      "source_pre": "567042ed8fadf2f1354947a60df8ababe332ae1d",
+      "source_post": "2cae2a7f0a8b76f4759572099d8e27729c698b98",
+      "required": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "consumer_pre": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+      "source_pre": "ac73b9edc44bd5c8a616ce583084969d2a69e771",
+      "source_post": "ac73b9edc44bd5c8a616ce583084969d2a69e771",
+      "required": true,
+      "authored_by": "102 (historical), preserved by142"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/print-layout.test.ts",
+      "consumer_pre": null,
+      "source_pre": "041ed70f302f0b0f4d13c6e8bea07f19e85f4c49",
+      "source_post": "c53bdee17904f5a5e082ee9f2cae3b209c9002b5",
+      "required": true
+    }
+  ],
+  "finding_to_criteria": [
+    {
+      "id": "VIS131-001",
+      "root_cause": "no print titles columns despite horizontal split",
+      "source_change": "printTitlesColumn OPEX A:I, CAPEX A:K; A3 landscape, row1/header retained",
+      "regression": "inspect OOXML _xlnm.Print_Titles including repeat columns and row1; real HTTP data/measure/currency across scenarios",
+      "visual_qualification": "NOT_RUN"
+    },
+    {
+      "id": "VIS131-002",
+      "root_cause": "fixed 20-character Info label/value columns without wrapping row height",
+      "source_change": "Info A44/B94, wrapText and measured row height",
+      "regression": "Info A22:B28 values+style preserved",
+      "visual_qualification": "NOT_RUN"
+    },
+    {
+      "id": "VIS131-003",
+      "root_cause": "Vendor/item column width20 with no wrap and row expansion",
+      "source_change": "OPEX C/D + CAPEX F/G widths, wrapText and measured row heights",
+      "regression": "literal formula-shaped cell string and no formula property, adversarial URL string",
+      "visual_qualification": "NOT_RUN"
+    }
+  ],
+  "authoring_scope": {
+    "changed_code": [
+      "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/print-layout.test.ts"
+    ],
+    "historical_dependency_needed": [
+      "modules/sucafina/Sucafinav1/runtime/downloads.ts"
+    ],
+    "docs": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/ACK-142.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/PATCH-132.diff",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/PREPOST-142.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/REQUEST-129.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/CHECKPOINT-142.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/HANDOFF-142.json"
+    ],
+    "protected_path_edits": 0
+  },
+  "regression": {
+    "scenarios": [
+      "normal",
+      "empty",
+      "wide",
+      "long"
+    ],
+    "actual_http_fixture": true,
+    "admin_viewer": true,
+    "nonempty_capex": true,
+    "nonempty_rate_cards_in_admin": true,
+    "multiple_entities_currency": true,
+    "multiple_leaders": true,
+    "privacy_and_formula_controls": true,
+    "status": "AUTHORED_NOT_RUN"
+  },
+  "observed_ci": {
+    "compiler128": "NOT_RUN_ON_CORRECTED_C",
+    "product_ci129": "NOT_RUN_ON_CORRECTED_C",
+    "reader88_pdf_png": "NOT_RUN",
+    "independent131": "NOT_RECHECKED",
+    "runs": [],
+    "artifacts": [],
+    "source_w": null,
+    "snapshot_s": null
+  },
+  "open_risks": [
+    "A3 with repeated key columns may reflow/scale; visual evidence mandatory",
+    "native Aptos/Office parity not evidenced by Linux Carlito rendering",
+    "long row height capped 408pt; any overflow in PDF must be independently flagged",
+    "C64 old compiler failure cannot be inherited as new PASS",
+    "consumer head moving; require exact preimage, avoid stale whole-file copying"
+  ],
+  "next_steps": [
+    "132 apply only exact three-file diff after current consumer HEAD/preimage check; publish consumer ACK/C/tree",
+    "128 compile/generate SDK only via authorized compiler gates on coherent C",
+    "129 dedup and run narrow existing hosted test + visual reader for all four real scenarios and files; publish actual W/S/run/job/artifact/hashes",
+    "131 independent PDF/PNG review; unresolved clipping back to owner142",
+    "Keep PR105 draft; no dev merge, no deploy, no native Goal reactivation"
+  ],
+  "global_release": false,
+  "native_goal": "paused",
+  "integrated_release": false
+}
