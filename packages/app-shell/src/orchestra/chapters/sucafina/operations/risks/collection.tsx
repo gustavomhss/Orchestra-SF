@@ -24,8 +24,8 @@ export type WriteResult =
   | Readonly<{ kind: "ok"; warnings: readonly string[] }>
   | Readonly<{ kind: "error"; state: SfUiState; errors: readonly string[] }>
   | Readonly<{ kind: "outcome-unknown" }>
-export type Field<Value> = Readonly<{
-  name: Extract<keyof Value, string>
+export type Field<Row, Value> = Readonly<{
+  name: Extract<keyof Row & keyof Value, string>
   label: string
   kind: "text" | "textarea" | "date" | "email" | "select"
   required?: boolean
@@ -40,7 +40,7 @@ export type CollectionSpec<Id extends Cap, Row extends Entity, Values extends ob
   collection: "risks" | "stakeholders"
   title: string
   primary: string
-  fields: readonly Field<Values>[]
+  fields: readonly Field<Row, Values>[]
   columns: readonly Column<Row>[]
   name: (record: Row) => string
   initial: (record?: Row) => Values
@@ -203,6 +203,15 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           operationRef: pending.operationRef, resultVersion: null })
         setConfirmed(null)
       }
+      // Refetch never overwrites a dirty editor. S03 carries a version conflict
+      // separately, preserving user input and the originally reviewed CAS.
+      const liveDraft = draft()
+      if (!pending && liveDraft?.entity) {
+        const row = result.rows.find((item) => String(item.id) === String(liveDraft.entity!.id))
+        const updatedVersion = row ? result.versions[spec.collection + ":" + String(row.id)] : undefined
+        if (row && updatedVersion !== undefined)
+          liveDraft.controller.receiveRemote({ baseVersion: updatedVersion, value: spec.initial(row) })
+      }
       if (admittedLink !== identity + "/" + props.route.pathname) {
         admittedLink = identity + "/" + props.route.pathname
         const wanted = spec.deepRef(props.route)
@@ -358,10 +367,13 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           disabled: store.busy || store.unknown, busy: store.busy,
           onInvoke: () => beginEdit(undefined) } : undefined}
         secondaryActions={[]}>
-        <SfStatePanel state={store.status} messageKey={k(statusCopy())} onRetryRead={refresh}
+        <SfStatePanel state={store.status === "empty" || store.status === "filtered-empty" ? "ready" : store.status} messageKey={k(statusCopy())} onRetryRead={refresh}
           onBack={() => setStore({ mode: "list", selected: null })}>
           <Show when={isCurrent()}>
             <div class="sf-u30-root">
+              <Show when={store.status === "empty" || store.status === "filtered-empty"}>
+                <p role="status">{t(statusCopy())}</p>
+              </Show>
               <Show when={store.error}>{(error) => <p role="alert" class="sf-u30-error"><bdi>{error()}</bdi></p>}</Show>
               <Show when={store.warnings.length}>
                 <ul role="status"><For each={store.warnings}>{(warning) => <li><bdi>{warning}</bdi></li>}</For></ul>
@@ -432,7 +444,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                         </div>
                       </article>}
                     </Show>
-                    <Show when={store.mode === "edit" && draft() && activeState()?.availability === "active"}>
+                    <Show when={store.mode === "edit" && activeState()?.availability === "active" ? draft() : null}>
                       {(active) => <form class="sf-u30-editor" onSubmit={(event) => {
                         event.preventDefault(); beginSaveReview()
                       }}>
@@ -481,7 +493,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                         </div>
                       </form>}
                     </Show>
-                    <Show when={store.mode === "review-save" && draft() && activeState()?.availability === "active"}>
+                    <Show when={store.mode === "review-save" && activeState()?.availability === "active" ? draft() : null}>
                       {(active) => {
                         const current = () => active().controller.snapshot()
                         const sourceVersion = () => current().availability === "active" ? current().baseVersion : null
