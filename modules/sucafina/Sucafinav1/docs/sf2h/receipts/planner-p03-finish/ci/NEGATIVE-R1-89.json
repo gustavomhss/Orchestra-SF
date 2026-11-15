@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.planner-p03-finish.negative-controls.r1.v1",
+  "mission": 89,
+  "source_sha": "900ba649088a367ca070aa6189ddcc3cf18b41c7",
+  "source_tree": "1505c76ca6b5cbc0641eadc75dc101bf0605853f",
+  "snapshot_sha": "f5bc9f431349664d2409e8f04d677d8d7910ead5",
+  "snapshot_tree": "b7e059c0070ffdf65f5aa8c45e3e1fb552fb61f8",
+  "request_blob": "b5dedccd4fbafcc6815cad6d8c662ebe8e795c59",
+  "run": 43677135575,
+  "test_job": 132699649922,
+  "cleanup_job": 132700543494,
+  "status": "FAIL",
+  "pass": 58,
+  "fail": 1,
+  "expect_calls": 589,
+  "files": 12,
+  "elapsed_seconds": 145.66,
+  "product_failures": 0,
+  "diagnostic_failure": {
+    "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-probe.ts",
+    "line": 63,
+    "reason": "diagnostic-probe retained canonical-read-cost path exclusion after relocating immutable 76 test to planner-p03-finish; stack-attribution self-frames mask source calls",
+    "expected": "digestSfValue at product/decisions/result-store.ts",
+    "observed": false
+  },
+  "negative_controls": {
+    "duplicate_retained_results": "PASS",
+    "case_drift": "PASS",
+    "source_drift": "PASS",
+    "case_version": "PASS",
+    "stored_result_drift": "PASS",
+    "request_headers": "PASS",
+    "lease": "PASS",
+    "facade_replacement": "PASS",
+    "canonical_replay": "PASS",
+    "getters_and_clone_errors": "PASS",
+    "new_detached_return": "PASS",
+    "revocation": "PASS"
+  },
+  "test_only_fix": {
+    "preimage": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+    "change": "update own fixture observer exclusion to planner-p03-finish/diagnostic-",
+    "other_test_files_unchanged": true,
+    "product_tree_unchanged": true,
+    "next_selection": "only diagnostic-cost.test.ts; do not re-run 58 passed tests"
+  },
+  "P03_original_on_candidate": "NOT_RUN_GATE_BLOCKED",
+  "GLOBAL_RELEASE": false
+}

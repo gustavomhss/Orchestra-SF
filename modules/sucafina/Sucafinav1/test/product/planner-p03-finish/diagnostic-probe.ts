@@ -73,7 +73,7 @@ export async function installCanonicalReadDiagnostic() {
     const capture = performance.now()
     const location = (new Error().stack ?? "").split("\n").map((line) =>
       line.match(/((?:product|runtime|src|test)\/[^():\n]+\.ts:\d+:\d+)/)?.[1])
-      .find((line) => line && !line.includes("canonical-read-cost/diagnostic-")) ?? "unattributed"
+      .find((line) => line && !line.includes("planner-p03-finish/diagnostic-")) ?? "unattributed"
     stackCaptureMs += performance.now() - capture
     const key = `${scope.phase}|${scope.path.at(-1) ?? "root"}|${name}|${location}`
     const row = primitives[key] ??= { ...counter(), exclusiveMeasuredMs: 0 }
