@@ -4,9 +4,9 @@ import { useLanguage } from "@/context/language"
 import { createSfOperationsClient } from "@orchestra/client/sucafina/operations"
 import { useSfContext } from "../../context"
 import type {
-  SfSurfaceProps, SfEditScopeKey, SfIntentRef, SfOperationRef, SfOwnerKey, SfRef,
-  SfPublicDraftController,
+  SfSurfaceProps, SfEditScopeKey, SfOwnerKey, SfRef, SfPublicDraftController,
 } from "../../context/contracts"
+import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
