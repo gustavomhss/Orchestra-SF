@@ -1,10 +1,10 @@
 import { createMemo, For, Show } from "solid-js"
 import type { JSX } from "solid-js"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
-import { SfPageFrame, SfStatePanel } from "../../shared/frame"
+import { SfPageFrame } from "../../shared/frame"
+import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
 import { SfListDetail, SfRecordDetail } from "../../shared/detail"
-import { SF_U10_QUEUE_COPY } from "./copy"
 import type { SfU10QueueCopyKey } from "./copy"
 import {
   sfQueueFilterOptions,
