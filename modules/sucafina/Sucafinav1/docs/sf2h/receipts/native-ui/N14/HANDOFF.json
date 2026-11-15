@@ -1,0 +1,142 @@
+{
+  "schema": "sf2h.native-ui.N14.handoff.v1",
+  "slot": "N14",
+  "actor_epoch": "ux-native-n14-e1",
+  "branch": "sf-ux-n14",
+  "base": "sf2-stack",
+  "pull_request": 146,
+  "pull_request_url": "https://github.com/gustavomhss/Orchestra-SF/pull/146",
+  "started_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "initial_base_material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "source_blobs": {
+    "dashboard-people.ts": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+    "application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370"
+  },
+  "work_orders": {
+    "U03": "ec744847f11016da6aa622a6ba8655c8d7e04724",
+    "U47": "4e099430f215cc7652e9c8c0a13e46fdd71d253b"
+  },
+  "exclusive_files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "df71763074fccb7dd6f26efba762dffc32c42c65"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/editor.tsx",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "e809ca3f7fbebe8be9c413c8bdd4c258619cbb8a"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "b67ed1ced5497218b1c2c0d0011cafafed46eb72"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/people.css",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "7c0a436d7616b995cf41bdfd5fb39042c4e72580"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/session.ts",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "5404abc6ea17e598eb571b71aaa059d7e2dea433"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "443a8e2190ed5fa3bbb7a09e27f6c79af012754c"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u03.ts",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "5ca03098197d7ca2f6fdda4f0ec9655f5127d6a2"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u47.ts",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "f7f9b9c075411eb3cafeb53784109474930becad"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "fbfba9224797efd11da3c5e752a0ee9e027b15b9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u47.spec.ts",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "7643456b4b5c669307004b03f44d46574025fba2"
+    }
+  ],
+  "shared_patches": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N14/SHARED-PATCHES-TO-125.md",
+    "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+    "postimage_sha": "04e7b25ce2545ad33bd1d97414eee78fac8aba43",
+    "owner": "125",
+    "applied": false
+  },
+  "acceptance": {
+    "U03-AC01": {
+      "authoring": "CAP06 and CAP07 source-backed read/editor/commands authored",
+      "proof": "NOT_RUN",
+      "qualification": "pending F01/F02/A10 integration and 120 hosted proof"
+    },
+    "U03-AC02": {
+      "authoring": "owner generation/stamp read fence, readonly roles, draft+CAS",
+      "proof": "NOT_RUN",
+      "qualification": "pending hosted late-response/revocation proof"
+    },
+    "U03-AC03": {
+      "authoring": "token CSS + viewport-oriented E2E",
+      "proof": "NOT_RUN",
+      "qualification": "200%/400% actual browser zoom owned 120"
+    },
+    "U47-AC01": {
+      "authoring": "CAP08 save/delete authored; import/export deliberately unavailable",
+      "proof": "NOT_RUN",
+      "qualification": "BLOCKED on typed source workbook preview/scanner and bytes/download binding"
+    },
+    "U47-AC02": {
+      "authoring": "admin-only private fields and status filter, owner fence",
+      "proof": "NOT_RUN",
+      "qualification": "pending 120 restricted actor and revocation E2E"
+    },
+    "U47-AC03": {
+      "authoring": "responsive Talent list/form and E2E case",
+      "proof": "NOT_RUN",
+      "qualification": "pending 120 device/zoom proof"
+    }
+  },
+  "known_blockers": [
+    "125 must compose the native routes, enums, F01 provider and paired i18n dictionaries",
+    "CAP06 cross-page href must be supplied by 125 validated SfHref builder; link intentionally disabled",
+    "A10 typed import lacks original workbook preview/scanner binding",
+    "A10 export returns {ok:true} without file bytes; actual download unavailable",
+    "119 compiler not invoked; no typecheck claim",
+    "120 hosted surgical E2E not run; no 200%/400% browser-zoom claim"
+  ],
+  "local_tests": "NOT_RUN_BY_INSTRUCTION",
+  "local_typecheck": "NOT_RUN_BY_INSTRUCTION",
+  "build": "NOT_RUN_BY_INSTRUCTION",
+  "preimages": "all N14 exclusive leaves absent at 526e7204",
+  "protected_paths": "unchanged by N14 direct authorship",
+  "state": "ARTIFACT_READY_BLOCKED_INTEGRATION_AND_PROOF",
+  "owners": {
+    "integration": 125,
+    "hosted_test": 120,
+    "compiler": 119
+  },
+  "next_steps": [
+    "125 consume shared patch and recheck live preimages",
+    "119 report compiler diagnostics on integrated snapshot",
+    "120 run exact U03/U47 surgical suites after builder/workbook gate"
+  ],
+  "never_claim": [
+    "CI_PASS",
+    "COMPILER_PASS",
+    "U47_IMPORT_DONE",
+    "U47_EXPORT_BYTES",
+    "DEPLOYED",
+    "MERGED"
+  ]
+}
