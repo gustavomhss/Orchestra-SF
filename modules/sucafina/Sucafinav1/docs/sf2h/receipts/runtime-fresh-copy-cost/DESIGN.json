@@ -1,0 +1,97 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.design.v1",
+  "mission": 56,
+  "proposal": {
+    "v1_manifest": "0fff9f68bc7dc1deef545b33f28866493b497ed3",
+    "v1_post": "c283f1264f9a27072545198dc9f6d71b1de10742",
+    "v2_manifest": "99a470bce86d5c718c40d03ad775e6fba2322349",
+    "v2_patch": "388f6980dd4654f85475ed08346136e092eeba96",
+    "v2_post": "72315f8947ed902993b07e94e0e050ef70fefd09",
+    "state": "ADAPTED_NOT_BLINDLY_APPLIED"
+  },
+  "causal_evidence": {
+    "A54_R2": 43657763534,
+    "original_ms": 180014.84,
+    "budget_ms": 180000,
+    "currentSnapshots": {
+      "calls": 233,
+      "synchronous_ms": 677
+    },
+    "plannerTransactions": {
+      "calls": 37120,
+      "inclusive_ms": 99590
+    },
+    "limit": "Inclusive async times overlap and include callbacks; no attribution of total to clone CPU. P03 remains HELD."
+  },
+  "mechanism": {
+    "warm_non_target": "Fresh plan materialization for every nested/current observation; no mutable graph reuse",
+    "mutable_target": "cloneSnapshot(copyValue + validateSnapshot) every observation",
+    "transactionAll": "unchanged",
+    "cold_miss": "decode + plan exactly as Finance34; new plan only shared memo; private snapshot clone fallback",
+    "empty": "new independent graph every factory call",
+    "descriptors": "Object.keys instead of Object.entries on already captured descriptors; reject accessor exactly as before"
+  },
+  "memory": {
+    "shared_max_UTF16_units": 8388608,
+    "shared_entries_max": 3,
+    "captured_max_additional_UTF16_units": 8388608,
+    "proof": "Each surface observed once synchronously under writer lock; warm-hit factories/lazy materializers are a subset of initial bounded memo. New plans are never captured by copy factories, so eviction cannot increase that captured union.",
+    "cleanup": "New copies record emptied in root finally. Unconsumed lazy materializers can still retain the same plan functions through closed ALS descendants within the original captured bound; no claim of complete release on scope close.",
+    "excludes": [
+      "decoded graphs",
+      "transient allocations",
+      "object overhead",
+      "caller-retained graphs",
+      "aggregate process heap",
+      "other store instances"
+    ],
+    "optimization_thresholds": {
+      "depth": 128,
+      "nodes": 200000,
+      "undefined_paths": 4096
+    },
+    "fallback": "Optimization thresholds never reject valid wire data."
+  },
+  "preserved": [
+    "3 SQL surface observations on single-root admission",
+    "single callback invocation and ordering",
+    "root/nested/current public invocation counts",
+    "mutable target visibility",
+    "old-copy isolation",
+    "transactionAll all surfaces mutable",
+    "nested write poisoning even when caught",
+    "captured blob capability fences",
+    "readers count and outstanding rejection",
+    "scope generation and abort before/after callback",
+    "commit/rollback and durable reopen",
+    "current SQL payload comparison per independent root",
+    "authorization and replay logic outside LocalStore unchanged"
+  ],
+  "invalid_values": "Retain baseline rejection of object accessors/cycles/functions/nonfinite/symbols/custom prototypes/malformed metadata; retain v1 undefined,-0,__proto__,sparse-array normalization. Baseline arrays use Array.from and may read indexed accessors; no new blanket accessor-array rejection claimed.",
+  "external_oracle": {
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+    "preblob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+    "old": "one private native parse plus four JS clones",
+    "new": "four independent native parses; same two nested and two current calls",
+    "required_change": "Rename the one observation test; only nativeDashboard count1->4; preserve every semantic assertion. Out-of-scope source remains unmodified; complete patch to55."
+  },
+  "tests": {
+    "source": "23 new real SQLite/runtime cases + identical workload cost discriminant, plus scoped existing Finance34/read-root regressions",
+    "baseline": "Same cost file executes before product edit and emits results before final structural oracle; baseline is expected to fail only the removed descriptor work oracle.",
+    "candidate": "Run unchanged cost load plus semantic regressions; any changed tests/fixtures invalidate affected result",
+    "no_wall_time_ratio_assertion": true,
+    "no_local_tests": true,
+    "no_P03_run": true,
+    "no_epic": true
+  },
+  "gate_requests": {
+    "compiler45": "bun typecheck cwd modules/sucafina; bun run check:guards --base origin/dev cwd repo",
+    "state": "NOT_RUN until real owner run; no foreign ref/workflow takeover"
+  },
+  "review": {
+    "author": "Root56",
+    "independent_read_only": "review_runtime_proposal",
+    "finding": "No semantic blocker found statically; aggregate retention adapted and cleanup claim narrowed. Await hosted proof."
+  },
+  "GLOBAL_RELEASE": false
+}
