@@ -1,0 +1,157 @@
+{
+  "schema": "sf2h.correction-source-manifest.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 137,
+  "order": "F02",
+  "epoch": "ux-native-w03-e3",
+  "state": "ARTIFACT_READY_CORRECTION_ONLY",
+  "scope": "Compiler128 C64 TS2339 router metadata bound; product + authored regression",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w03",
+  "pr": 122,
+  "base": "sf2-stack",
+  "global_release": false,
+  "native_goal": "paused",
+  "authority": {
+    "s0_fence": "14116c9c6d5d0b1225b9f79ad29e2c9879551015",
+    "fence_commit": "f7e11ba51a2a1d200f28cfd9e0ba3b5410d09cf5",
+    "ack_commit": "071ffb525b4b5466229b8ed44c8a9d5d1bbdc1ed",
+    "ack_blob": "74586113be1ab31eb0d949f88e7659414ff8ce4a",
+    "actor": "fresh user-invoked ChatGPT GPT-6 mission 137",
+    "session_id": null,
+    "previous_epoch": "ux-native-w03-e2",
+    "no_second_writer": true
+  },
+  "commits": {
+    "fix": "ab83adc9493bd49621889b33f52cb6a2b55b7278",
+    "fix_parent": "071ffb525b4b5466229b8ed44c8a9d5d1bbdc1ed",
+    "source_tree": "47495f27093de727b34366a6ce48cfa72272f329"
+  },
+  "finding": {
+    "owner": "W03/F02",
+    "source": "128 RESULTS128-C64.json@f8bbf593f40c210946b75a43828f99450a3f6d25",
+    "run_id": 43738074189,
+    "job_id": 132884987559,
+    "consumer_candidate": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+    "diagnostics": [
+      {
+        "line": 57,
+        "column": 16,
+        "code": "TS2339"
+      },
+      {
+        "line": 57,
+        "column": 72,
+        "code": "TS2339"
+      }
+    ],
+    "cause": "const literal union lacks maxRequestBytes on GET / other operation members"
+  },
+  "correction": {
+    "description": "Use 'maxRequestBytes' in meta for sound literal-union narrowing; require finite safe positive declared bound for every mounted POST projection, no unchecked default or unbounded POST; keep GET metadata optional and delegate streamed-body cap to original domain producer",
+    "effect_on_catalog": "none",
+    "effect_on_permissions": "none",
+    "effect_on_request_identity": "none",
+    "effect_on_network": "no preflight fetch or body consumption",
+    "catalog_observation": {
+      "eligiblePostProjections": 11,
+      "postWithExplicitLimit": 11,
+      "postLimitBytes": 65536
+    }
+  },
+  "source_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "preimage_blob": "860d44eb7c215aafe05eba0df265a721c563c148",
+      "postimage_blob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "change_commit": "ab83adc9493bd49621889b33f52cb6a2b55b7278"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "preimage_blob": "7fe06cad2bff509039e1a093bbd6224d2fd2c262",
+      "postimage_blob": "0789f34911cd97d82a870dcee2f17fa37c8b4578",
+      "change_commit": "ab83adc9493bd49621889b33f52cb6a2b55b7278"
+    }
+  ],
+  "consumer_observation": {
+    "branch": "sf2-stack",
+    "head": "fc8840207377a363d4e6844aab496b4f1521f83c",
+    "preimage_blobs": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "blob": "860d44eb7c215aafe05eba0df265a721c563c148"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+        "blob": "7fe06cad2bff509039e1a093bbd6224d2fd2c262"
+      }
+    ],
+    "both_match_expected_preimages": true,
+    "accepted": false,
+    "consumer_ack": "NOT_RECEIVED",
+    "note": "132 is sole writer; observe again before actual composition; never overwrite a newer consumer blob"
+  },
+  "contracts": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "frozen_contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "c64_registry_blob": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84"
+  },
+  "authored_regressions": [
+    {
+      "id": "F02-C137-POST-LIMIT",
+      "operation": "routines.catalog",
+      "cases": [
+        "declared 65537 -> 413 before handler",
+        "malformed 0001 -> 400 before handler",
+        "declared 65536 -> 200, exact same Request"
+      ],
+      "status": "AUTHORED_NOT_RUN"
+    },
+    {
+      "id": "F02-C137-GET-NO-CAP",
+      "operation": "projection.search",
+      "cases": [
+        "GET with no declared length -> original Request, 200",
+        "declared GET body 1 -> 400 before handler"
+      ],
+      "status": "AUTHORED_NOT_RUN"
+    }
+  ],
+  "execution_evidence": {
+    "new_source_typecheck": "NOT_RUN",
+    "new_source_test": "NOT_RUN",
+    "new_source_guards": "NOT_RUN",
+    "new_source_sdk_generation": "NOT_RUN",
+    "historic_c64_compiler": "FAIL_TS2339",
+    "historic_c64_not_transferable": true,
+    "reason": "Only compiler128 and product-CI129 permitted after integration into coherent C by132"
+  },
+  "downstream": {
+    "integrator": "132 / PR65",
+    "compiler": "128 / PR107",
+    "product_ci": "129 / PR106",
+    "requires_consumer_ack": true,
+    "compiler_request": "apps/cli bun typecheck; check affected Schema/Client SDK after F01, actual generation by128 as needed",
+    "test_request": "exact modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts on accepted C via129",
+    "gates": "no epic/final on source artifact"
+  },
+  "restrictions": {
+    "local_tests": false,
+    "generated_edits": false,
+    "shared_edits": false,
+    "force": false,
+    "reset": false,
+    "dev_merge": false,
+    "deploy": false,
+    "goal_resume": false
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/PATCH-137-e3.patch",
+    "blob": "86f69773856f2d548bc2fe8cc82c09ac3e377762",
+    "format": "unified-diff",
+    "source_commit": "ab83adc9493bd49621889b33f52cb6a2b55b7278"
+  }
+}
