@@ -82,6 +82,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     busy: false, confirmDiscard: false,
   })
   const [editing, setEditing] = createSignal<Editing>()
+  const [layoutMode, setLayoutMode] = createSignal<"single" | "split" | "split-context">("single")
   const year = () => props.route.query.year ?? 2026 // pinned application.ts defaults to 2026
   const key = (label: Label): SfCopyKey =>
     (props.capability === "CAP04" ? "sf.u39." + label : "sf.u40." + label) as SfCopyKey
@@ -135,6 +136,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     query.set("year", String(year()))
     return "/orchestra/sf-dashboard/budget?" + query.toString()
   }
+  const importHref = () => otherSourceHref().replace("/orchestra/sf-dashboard/budget", "/orchestra/sf-imports/new")
   const selectedRef = (): string | undefined => {
     const route = props.route
     if (route.kind !== "detail" && route.kind !== "edit") return undefined
@@ -277,10 +279,13 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       return
     }
     const base = formFor(owner, entry, month)
+    const sourcePresent = action === "save-entry" ? entry !== undefined :
+      action === "save-deviation" ? (owner ? deviationFor(owner, month) !== undefined : false) :
+      owner !== undefined
     // Form-specific identity lives only inside the owner-scoped draft registry.
     const intent = (props.capability + ":" + year() + ":" + action + ":" + (owner?.id ?? "new") + ":" + month) as SfIntentRef
     const recordRef = recordId ? asRef(recordId) : undefined
-    const identity = recordRef ? { kind: "record" as const, recordRef } : { kind: "new" as const, newIntentRef: intent }
+    const identity = recordRef && sourcePresent ? { kind: "record" as const, recordRef } : { kind: "new" as const, newIntentRef: intent }
     const revalidationFields = action === "year-amount" ? ["budgetYtd"] :
       action === "save-deviation" ? ["deviations"] :
       action === "save-entry" ? [entryCollection(props.capability)] : [ownerCollection(props.capability)]
@@ -289,7 +294,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       identity,
       editScopeKey: (year() + ":" + action + ":" + (owner?.id ?? "new") + ":" + month) as SfEditScopeKey,
       baseVersion: existingVersion ?? 0,
-      base: recordId ? base : null,
+      base: sourcePresent ? base : null,
       value: base,
       revalidation: {
         operationId: ("domain.page." + props.capability) as "domain.page.CAP04" | "domain.page.CAP05",
@@ -329,6 +334,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const state = editor.draft.snapshot()
     if (state.availability !== "active") return t(sfCommonKey("sf.common.unavailable"))
     if (state.conflict || state.phase === "conflict" || state.pendingOperation !== null) return t(sfCommonKey("sf.common.stale"))
+    if (state.baseVersion !== editor.version) return t(sfCommonKey("sf.common.stale"))
     const fields = state.value
     if (editor.action === "save" && (!fields.name.trim() || !numberPresent(fields.budget))) return t(sfCommonKey("sf.common.fieldErrorSummary"))
     if (editor.action === "save-entry" && ![fields.budget, fields.actual, fields.forecast].every(numberPresent)) return t(sfCommonKey("sf.common.fieldErrorSummary"))
@@ -379,8 +385,8 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     return fields.map(([label, value]) => ({
       path: label,
       label: message(label),
-      value: value.length ? { kind: "text", text: { kind: "data", text: value } } :
-        { kind: "missing", reason: { key: key("missing") } },
+      value: value.length ? ({ kind: "text", text: { kind: "data", text: value } } as SfDisplayValue) :
+        ({ kind: "missing", reason: { key: key("missing") } } as SfDisplayValue),
     }))
   }
   const reviewBase = (editor: Editing): SfReviewSnapshot | null => {
@@ -441,7 +447,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     const idempotencyKey = crypto.randomUUID()
     const bytes = new TextEncoder().encode(JSON.stringify(input))
     const fingerprint = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
-    if (!fingerprint || context.ready() !== ready || editing() !== editor) return
+    if (!fingerprint || context.ready() !== ready || editing() !== editor || validate(editor)) return
     const payloadDigest = Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
     editor.draft.setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version })
     if (editor.draft.snapshot().availability !== "active" || editor.draft.snapshot().pendingOperation?.operationRef !== operationRef) return
@@ -691,7 +697,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
   }
 
   return (
-    <div class="sf-budget-surface" data-sf-budget={props.capability}>
+    <div class="sf-budget-surface" data-sf-budget={props.capability} data-sf-layout-mode={layoutMode()}>
       <SfPageFrame
         titleKey={titleKey()}
         context={[{ id: "year", label: { key: key("year") }, value: { kind: "data", text: String(year()) } }]}
@@ -699,7 +705,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         primaryAction={pageAction()}
         secondaryActions={[]}
         density="comfortable" layout="split"
-        onLayoutMode={() => { /* Frame owns layout observation; column CSS reflows. */ }}
+        onLayoutMode={(mode) => setLayoutMode(mode)}
       >
         <SfContextBar
           state={pageState()}
@@ -739,7 +745,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                 sort={view.sort}
                 page={{ kind: "none", total: view.page?.owners?.length ?? null }}
                 onSort={(next) => setView("sort", next)}
-                onPage={() => { /* Complete authorized collection has no server pagination. */ }}
+                onPage={() => setView("reload", (value) => value + 1)}
                 onSelect={(recordRef) => navigate(listHref("detail", String(recordRef)))}
                 rowActions={(owner) => [
                   { id: "edit", labelKey: sfCommonKey("sf.common.edit"), tone: "secondary", disabled: !allowed("save"), busy: view.busy },
@@ -756,7 +762,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
                 state={pageState()}
               />
               <Show when={props.capability === "CAP04" && allowed("import")}>
-                <a class="mx-btn" href="/orchestra/sf-imports/new">{t(key("import"))}</a>
+                <a class="mx-btn" href={importHref()}>{t(key("import"))}</a>
               </Show>
             </section>
             <Show when={selected()}>
