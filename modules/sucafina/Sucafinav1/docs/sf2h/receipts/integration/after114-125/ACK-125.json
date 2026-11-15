@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.integration125.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 125,
+  "logical_actor": "S0-C / C00 / I00",
+  "effective_model": "GPT-6",
+  "requested_label": "integrator125",
+  "runtime_session_id": null,
+  "runtime_session_id_reason": "Not exposed through current ChatGPT GitHub connector",
+  "lease_epoch": "S0-C-e18-browser125",
+  "lease_state": "ACTIVE_USER_APPOINTED",
+  "predecessor": {
+    "mission": 114,
+    "lease": "S0-C-e17-browser114",
+    "authority": "REVOKED_BY_S0",
+    "runtime_termination_verified": false,
+    "last_queue": "RUNNING",
+    "unexpected_writes": "HALT_AND_RECONCILE"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "pr_state": "OPEN_DRAFT",
+  "initial_head": "9cbff3e4a111b4eaa5376c5419f5991ece67e492",
+  "initial_tree": "7fec42a7930b0bc012b0faedc50cba7b088db7c3",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/S0-FENCE-125.json",
+  "fence_blob": "9464efd84a8720a985ae656611cd74e7e568a340",
+  "mission_pack_commit": "ebd59b38f32178479f2ee4419a1165e1496c19ab",
+  "material": {
+    "id": "C58",
+    "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816",
+    "state": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED"
+  },
+  "source_intake": {
+    "119": "PR107 @ 1c5113845ad54db1f9582169d183e17d50a7b9e4; tooling v2 uncomposed",
+    "121": "PR117 @ 914b56e076ca80ea9ecbc97253486ea90ee2dedf; three tests, verified provenance",
+    "122": "PR126 @ 2b49748bc255f6a5cfa5dd71f5dad1fd348c8402; five paths+owner fixture dependency",
+    "123": "PR132; patch proposals unconsumed"
+  },
+  "execution": {
+    "one_writer": true,
+    "cas_expected_head": true,
+    "force": false,
+    "whole_branch_merge": false,
+    "dev_merge": false,
+    "local_tests": false,
+    "ci_dispatcher": 120,
+    "compiler": 119,
+    "native_goal": "PAUSED",
+    "global_release": false
+  },
+  "ack_is_documentary": true,
+  "qualification": "NOT_RUN_AT_ACK",
+  "next": "Reconcile exact per-path preimages, compose only authorized ready leaves and I00 shared code, maintain checkpoint and route CI to 119/120",
+  "limitations": [
+    "Canonical local plan and full S0-C actor pack are not available via current GitHub tree; remote desktop device is offline. No claim of full local plan read.",
+    "ACK does not prove that revoked predecessor runtime terminated or that tests/release gates passed."
+  ]
+}
