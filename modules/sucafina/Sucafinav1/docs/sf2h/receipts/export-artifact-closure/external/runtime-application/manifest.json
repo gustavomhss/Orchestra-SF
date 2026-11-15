@@ -20,7 +20,7 @@
     "sha256": "74f146417adf67fe2bb2c55090f52fbf237ddfcd3ce8b1eb7751c9fda99c874b"
   },
   "producer": "mission66",
-  "consumer": "mission60 / authorized runtime/application owner",
+  "consumer": "60 only on explicit authorized resumption, or authorized successor assigning runtime/application ownership",
   "outside_mission66_production_lease": true,
   "applied_to_product": false,
   "regression": "test/product/export-artifact-closure/legacy-egress.test.ts",
@@ -36,7 +36,18 @@
     },
     "failure_evidence": "Before asserting403, records exact actual DOCX bytes and digest if the unpatched route returns200; confirms the next request receives401 and compares persisted snapshots to prove reads did not mutate data.",
     "hosted_execution_required": true,
-    "runtime_result": null
+    "runtime_result": {
+      "state": "FAIL_REPRODUCED_ON_UNPATCHED_SOURCE",
+      "run": 43667294352,
+      "job": 132669403543,
+      "W": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+      "expectedStatus": 403,
+      "observedStatus": 200,
+      "nextRequestStatus": 401,
+      "generatedContentLeaked": true,
+      "report": "../../ci/R1-result.json",
+      "bound": "Legacy handler reproduction; installedC28 route not qualified. Proposed fix has not been executed."
+    }
   },
   "change": {
     "behavior": "After generation and before response creation, open a fresh read transaction and reauthenticate the same Request against current roles. A missing/changed actor suppresses bytes with403. Changed public source data/versions suppress bytes with409; no automatic retry.",

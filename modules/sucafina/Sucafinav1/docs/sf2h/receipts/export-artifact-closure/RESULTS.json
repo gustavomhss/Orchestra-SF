@@ -1,0 +1,997 @@
+{
+  "schema": "sf2h.export-artifact-closure.results-matrix.v1",
+  "mission": 66,
+  "state": "SOURCE_PARTIAL_MISSION_HOLD",
+  "matrix_kind": "Observed executions and generated files, not a format inventory",
+  "sources": {
+    "W1": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+    "W2": "419a00b8faf5b78bce494749d0e45570aca175d2",
+    "W3": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+    "final_receipt_commit": "CONTAINING_COMMIT (receipts only)",
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+  },
+  "formats": [
+    {
+      "format": "DOCX",
+      "case": "preserved review",
+      "status": "PASS_CONTENT_STORAGE_AUTHORITY; VISUAL_NOT_RUN",
+      "run": "R2",
+      "artifact": {
+        "case_id": "composed-docx",
+        "file_name": "composed-docx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.docx",
+        "format": "docx",
+        "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "sha256": "9cbb3fcbe9da3ae9e3e5ec7dc82c2734c9279a672f032efcfd2eb49dd02e1fd5",
+        "byte_count": 12738,
+        "observations": {
+          "implementation": "real-C08-SQLite-Request-UI-human-review-report",
+          "corpus": "synthetic",
+          "review_ref": "review:6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649",
+          "review_version": 1,
+          "review_digest": "7439574d5cdb825e8db4480dcfad9c4a9570204f7f40a9cb779f4bd05aedc234",
+          "source_refs": [
+            {
+              "surface": "dashboard",
+              "type": "dashboard-page",
+              "id": "All Projects",
+              "incarnation": "f954dc17-de24-4215-91d6-2a06b6d9e709",
+              "version": 1,
+              "fields": [
+                "milestoneDates",
+                "projects"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "observedAt": "2026-11-13T04:01:10.000Z"
+            },
+            {
+              "surface": "planner",
+              "type": "planner-version",
+              "id": "export66-v1",
+              "incarnation": "440a4ae9-9df8-4655-8634-e7070a404ced",
+              "version": 1,
+              "fields": [
+                "id",
+                "name",
+                "year",
+                "closed",
+                "lines",
+                "fx",
+                "hc",
+                "projects",
+                "lists",
+                "locked",
+                "summary",
+                "hr",
+                "restrictedHr",
+                "fteInputsKnown",
+                "hrMonthStates",
+                "sharedEntities",
+                "sharedAllocations"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "observedAt": "2026-11-13T04:01:10Z"
+            }
+          ],
+          "evidence_ref_ids": [
+            "sf-source:f954dc17-de24-4215-91d6-2a06b6d9e709:1",
+            "planner-version:export66-v1:440a4ae9-9df8-4655-8634-e7070a404ced:1"
+          ],
+          "source_version_display": "opaque-evidence-reference-only; explicit-source-version-labels-require-Reports48",
+          "record_count": 2,
+          "currencies": [
+            "USD"
+          ],
+          "horizon": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "xml_parts": [
+            "word/document.xml"
+          ],
+          "zip_entries": 22,
+          "source_note_complete": true,
+          "private_unselected_field_absent": true,
+          "exact_retry_unchanged": true,
+          "read_snapshot_unchanged": true,
+          "visible_style_markup": [
+            "Aptos",
+            "173D2C"
+          ],
+          "visual_render_qualification": "external-renderer-required"
+        }
+      },
+      "checks": [
+        "Actual ZIP CRC/XML parsed",
+        "all selected values/refIds/currency/horizon and long Unicode note",
+        "private unselected Talent sentinel absent",
+        "review v1 and captured-source bindings",
+        "same bytes after SQLite reopen/retry/current source change"
+      ],
+      "generation_after_drift": "PASS_R3: first new commands after source change retain captured110 rather than current130"
+    },
+    {
+      "format": "PPTX",
+      "case": "preserved review",
+      "status": "PASS_CONTENT_STORAGE_AUTHORITY; VISUAL_NOT_RUN",
+      "run": "R2",
+      "artifact": {
+        "case_id": "composed-pptx",
+        "file_name": "composed-pptx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.pptx",
+        "format": "pptx",
+        "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "sha256": "b9662df138d7ad48812282c7532ed95df83c9a533cf8fd1e0273025efd732cfa",
+        "byte_count": 1533773,
+        "observations": {
+          "implementation": "real-C08-SQLite-Request-UI-human-review-report",
+          "corpus": "synthetic",
+          "review_ref": "review:6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649",
+          "review_version": 1,
+          "review_digest": "7439574d5cdb825e8db4480dcfad9c4a9570204f7f40a9cb779f4bd05aedc234",
+          "source_refs": [
+            {
+              "surface": "dashboard",
+              "type": "dashboard-page",
+              "id": "All Projects",
+              "incarnation": "f954dc17-de24-4215-91d6-2a06b6d9e709",
+              "version": 1,
+              "fields": [
+                "milestoneDates",
+                "projects"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "observedAt": "2026-11-13T04:01:10.000Z"
+            },
+            {
+              "surface": "planner",
+              "type": "planner-version",
+              "id": "export66-v1",
+              "incarnation": "440a4ae9-9df8-4655-8634-e7070a404ced",
+              "version": 1,
+              "fields": [
+                "id",
+                "name",
+                "year",
+                "closed",
+                "lines",
+                "fx",
+                "hc",
+                "projects",
+                "lists",
+                "locked",
+                "summary",
+                "hr",
+                "restrictedHr",
+                "fteInputsKnown",
+                "hrMonthStates",
+                "sharedEntities",
+                "sharedAllocations"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "observedAt": "2026-11-13T04:01:10Z"
+            }
+          ],
+          "evidence_ref_ids": [
+            "sf-source:f954dc17-de24-4215-91d6-2a06b6d9e709:1",
+            "planner-version:export66-v1:440a4ae9-9df8-4655-8634-e7070a404ced:1"
+          ],
+          "source_version_display": "opaque-evidence-reference-only; explicit-source-version-labels-require-Reports48",
+          "record_count": 2,
+          "currencies": [
+            "USD"
+          ],
+          "horizon": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "xml_parts": [
+            "ppt/slides/slide1.xml",
+            "ppt/slides/slide2.xml",
+            "ppt/slides/slide3.xml",
+            "ppt/slides/slide4.xml",
+            "ppt/slides/slide5.xml",
+            "ppt/slides/slide6.xml",
+            "ppt/slides/slide7.xml",
+            "ppt/slides/slide8.xml",
+            "ppt/slides/slide9.xml",
+            "ppt/slides/slide10.xml",
+            "ppt/slides/slide11.xml",
+            "ppt/slides/slide12.xml",
+            "ppt/slides/slide13.xml",
+            "ppt/slides/slide14.xml",
+            "ppt/slides/slide15.xml",
+            "ppt/slides/slide16.xml",
+            "ppt/slides/slide17.xml",
+            "ppt/slides/slide18.xml",
+            "ppt/slides/slide19.xml",
+            "ppt/slides/slide20.xml",
+            "ppt/slides/slide21.xml",
+            "ppt/slides/slide22.xml",
+            "ppt/slides/slide23.xml",
+            "ppt/slides/slide24.xml",
+            "ppt/slides/slide25.xml",
+            "ppt/slides/slide26.xml",
+            "ppt/slides/slide27.xml",
+            "ppt/slides/slide28.xml",
+            "ppt/slides/slide29.xml"
+          ],
+          "zip_entries": 151,
+          "source_note_complete": true,
+          "private_unselected_field_absent": true,
+          "exact_retry_unchanged": true,
+          "read_snapshot_unchanged": true,
+          "visible_style_markup": [
+            "Aptos",
+            "173D2C"
+          ],
+          "visual_render_qualification": "external-renderer-required"
+        }
+      },
+      "checks": [
+        "29 actual slide XML parts parsed",
+        "same content/bindings checks asDOCX",
+        "1533773bytes at installed8MiB cap",
+        "immutable first bytes despite different ZIP timestamps on retry"
+      ],
+      "generation_after_drift": "PASS_R3: first new commands after source change retain captured110 rather than current130"
+    },
+    {
+      "format": "xlsx",
+      "case": "planner-viewer",
+      "status": "PASS_READER_CASE; VISUAL_NOT_RUN",
+      "run": "R1",
+      "artifact": {
+        "case_id": "planner-viewer",
+        "file_name": "planner-viewer-IT_Budget_Planner_2026.xlsx",
+        "format": "xlsx",
+        "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sha256": "f27135221582f89e195a006c08719581d18201ba980f640f4a76e3dbdc0578c5",
+        "byte_count": 12506,
+        "observations": {
+          "sheets": [
+            "Info",
+            "OPEX",
+            "CAPEX",
+            "Headcount",
+            "Rate cards",
+            "FX rates"
+          ],
+          "version": {
+            "IT Budget Planner — upload workbook": null,
+            "Version ID": "v66",
+            "Version": "Frozen synthetic version 66",
+            "Budget year": 2026,
+            "Currency": "USD",
+            "Actuals closed through": "Feb",
+            "Exported": "2026-11-14 12:00",
+            "How to use": null,
+            "1. Edit amounts on the OPEX, CAPEX, Headcount and Rate cards sheets. Keep the Line ID / Position ID / Rate ID columns as they are.": null,
+            "2. Each line has three rows: Budget, Actual and Forecast. Leave a Forecast month empty to use the budget for it.": null,
+            "3. To add a line, add rows with an empty Line ID and fill Cost element (OPEX) or Project + Cost element (CAPEX). A new project name creates the project.": null,
+            "4. HR Staff budget rows come from headcount and are ignored on import; their Actual, Forecast and Owner are imported.": null,
+            "5. Owner: the person accountable for the line. On CAPEX, a line with no owner of its own takes the Project owner.": null,
+            "6. Entity and Allocation (OPEX): use names from the lists below, as set up in the Entities & allocations tab.": null,
+            "7. CAPEX: Project code identifies the project. Leave it empty for a new project and the app assigns the next code.": null,
+            "8. CAPEX: Classification is CAPEX (capitalised) or OPEX (expensed). Empty means CAPEX for a new line.": null,
+            "9. Currency: amounts on each row are in that row's currency. Rates are on the FX rates sheet (USD per 1 unit); all totals in the app are in USD.": null,
+            "10. In the app, use Import Excel. You can update this version or load the file as a new version.": null,
+            "Valid OPEX cost elements": "Licenses, Services, Hardware, Depreciation, HR Staff, Facilities, Travel & Expenses, Others",
+            "Valid CAPEX project cost elements": "Licenses, Services, Hardware, HR Staff, Facilities, Travel & Expenses, Others",
+            "Valid classifications (CAPEX sheet)": "CAPEX, OPEX",
+            "Measures": "Budget, Actual, Forecast",
+            "Valid entities": "Entity 66",
+            "Valid allocations": "Allocation 66",
+            "Valid currencies": "USD, EUR, GBP"
+          },
+          "original_currency": "EUR",
+          "currency": "USD",
+          "horizon": "FY2026",
+          "literal_formula_cell": "=HYPERLINK(\"https://example.invalid\",\"literal\")",
+          "cached_total": {
+            "formula": "SUM(J2:U2)",
+            "result": 24
+          },
+          "reader": "ExcelJS + JSZip + production parseWorkbook",
+          "visual_inspection": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "format": "json",
+      "case": "dashboard-backup",
+      "status": "PASS_READER_CASE",
+      "run": "R1",
+      "artifact": {
+        "case_id": "dashboard-backup",
+        "file_name": "dashboard-backup-cio-dashboard.json",
+        "format": "json",
+        "media_type": "application/json",
+        "sha256": "b28668a0a42fb47fc46a28152bf9711d7451cedf42a39a7b25971a6bdac3c1d7",
+        "byte_count": 3116,
+        "observations": {
+          "reader": "JSON.parse",
+          "members": 1,
+          "protected_namespace_absent": true,
+          "identity_boundary": "synthetic sessions + production role resolver",
+          "source_record_id": "member-66",
+          "version_stamp_in_file": "not provided by legacy JSON producer"
+        }
+      }
+    },
+    {
+      "format": "xlsx",
+      "case": "members-admin",
+      "status": "PASS_READER_CASE; VISUAL_NOT_RUN",
+      "run": "R1",
+      "artifact": {
+        "case_id": "members-admin",
+        "file_name": "members-admin-headcount_export_2026-11-14.xlsx",
+        "format": "xlsx",
+        "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sha256": "55d1386b32a7ace51be044229c58a48e6fe188d75a4a956519af7b2177e2ab00",
+        "byte_count": 7712,
+        "observations": {
+          "sheets": [
+            "All Members",
+            "Summary by Leader"
+          ],
+          "reader": "ExcelJS + JSZip",
+          "row_count": 1,
+          "excluded_salary": true,
+          "authorized_read_audit": true,
+          "visual_inspection": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "format": "xlsx",
+      "case": "opex-template",
+      "status": "PASS_READER_CASE; VISUAL_NOT_RUN",
+      "run": "R1",
+      "artifact": {
+        "case_id": "opex-template",
+        "file_name": "opex-template-opex-template.xlsx",
+        "format": "xlsx",
+        "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sha256": "2eef885fa6459b520ccb1dec8f1101be593a1491afb8dbcfc05cd38d9a5080d8",
+        "byte_count": 6523,
+        "observations": {
+          "reader": "ExcelJS",
+          "header_only": true,
+          "columns": 14,
+          "visual_inspection": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "format": "csv",
+      "case": "procurement-register",
+      "status": "PASS_READER_CASE",
+      "run": "R1",
+      "artifact": {
+        "case_id": "procurement-register",
+        "file_name": "procurement-register-procurement-register.csv",
+        "format": "csv",
+        "media_type": "text/csv; charset=utf-8",
+        "sha256": "5c6a777f2bf17cf1c2b7015304861d8bbae589a46ad1982237147b919389ef81",
+        "byte_count": 758,
+        "observations": {
+          "reader": "RFC4180 state machine",
+          "record": {
+            "PR number": "PR-2026-0001",
+            "Title": "Sourcing snapshot regression",
+            "Type": "service",
+            "Category": "",
+            "Cost centre": "IT",
+            "Requester": "Synthetic requester",
+            "Created": "",
+            "Status": "po_pending",
+            "Recurring": "No",
+            "Frequency": "",
+            "Est. annual value": "Unavailable",
+            "Estimated amount": "100",
+            "Quotes": "3",
+            "Selected supplier": "European supplier",
+            "Selected quote total": "EUR 100.00",
+            "Contract strategy": "",
+            "PO number": "PO-2026-0001",
+            "OPEX/CAPEX": "OPEX",
+            "PO currency": "EUR",
+            "PO total": "100",
+            "PO total (base)": "200",
+            "PO base currency": "USD",
+            "PO FX rate": "2",
+            "PO FX source": "submitted",
+            "PO monetary state": "pending-approval",
+            "PO submitted amount": "200",
+            "PO submitted currency": "USD",
+            "PO submitted FX rate": "2",
+            "Payment terms": "Net 30",
+            "Delivery date": "2026-12-01",
+            "PO issued": ""
+          },
+          "source_id": "PR-2026-0001",
+          "snapshot_fx": 2,
+          "current_fx": 3,
+          "expected_frozen_base": 200
+        }
+      }
+    },
+    {
+      "format": "html",
+      "case": "purchase-order",
+      "status": "PASS_READER_CASE; VISUAL_NOT_RUN",
+      "run": "R1",
+      "artifact": {
+        "case_id": "purchase-order",
+        "file_name": "purchase-order-PO-2026-0001.html",
+        "format": "html",
+        "media_type": "text/html; charset=utf-8",
+        "sha256": "a3db32b6f749e12dc7be488ae1e623ece1123f4a5a4629061065472d92f5d24c",
+        "byte_count": 2105,
+        "observations": {
+          "reader": "Bun HTMLRewriter + UTF-8 structural/escaping assertions",
+          "source_id": "PR-2026-0001",
+          "currency": "EUR",
+          "base_currency": "USD",
+          "base_amount": 200,
+          "delivery_date": "2026-12-01",
+          "stylesheet_present": true,
+          "parsed_cells": 21,
+          "script_elements": 0,
+          "visual_inspection": "NOT_RUN"
+        }
+      }
+    },
+    {
+      "format": "csv",
+      "case": "suppliers-buyer",
+      "status": "PASS_READER_CASE",
+      "run": "R1",
+      "artifact": {
+        "case_id": "suppliers-buyer",
+        "file_name": "suppliers-buyer-suppliers.csv",
+        "format": "csv",
+        "media_type": "text/csv; charset=utf-8",
+        "sha256": "c2be0f72d297a77d6fcb278fb48f9eadbfc13f52b52b621e1f8bc6eacc160b22",
+        "byte_count": 993,
+        "observations": {
+          "reader": "RFC4180 state machine",
+          "rows": 7,
+          "formula_prefixes_guarded": [
+            "=",
+            "+",
+            "-",
+            "@",
+            "TAB",
+            "CR"
+          ],
+          "restricted_bank_fields_absent": true,
+          "unicode_quoted_multiline_preserved": true
+        }
+      }
+    },
+    {
+      "format": "DOCX/PPTX",
+      "case": "legacy topics",
+      "status": "PARTIAL_CONTENT_PASS; LEGACY_EGRESS_FAIL",
+      "run": "R1",
+      "checks": [
+        "Actual monthly/selected-year/zero/unavailable values parsed in both formats",
+        "real DOCX generated after session revocation was released200; subsequent request401",
+        "underlying runtime/application.ts outside66 lease"
+      ],
+      "negative_artifact": {
+        "case_id": "legacy-egress-revoked",
+        "file_name": "legacy-egress-revoked-Egress_report.docx",
+        "format": "docx",
+        "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "sha256": "c25ede33601188f523901488016785e1609dbc9bbc397231f7d16e182513f29a",
+        "byte_count": 8883,
+        "observations": {
+          "syntheticCorpus": true,
+          "sqlite": true,
+          "revokedAfterAuthorizedRead": true,
+          "status": 200,
+          "generatedContentLeaked": true,
+          "criterionVerdict": "FAIL"
+        }
+      }
+    }
+  ],
+  "criteria": {
+    "WP07T04": [
+      {
+        "id": "WP07.T04.CHK.01",
+        "text": "Exportar uma revisão com 25 projetos identificáveis e notas longas nos dois formatos, extrair e renderizar os arquivos: cada registro selecionado deve existir uma vez, sem truncamento na antiga barreira de 12 linhas e sem sobreposição/clipping.",
+        "status": "PARTIAL",
+        "observed": "R1 export-completeness: 25 projects and long note end-markers occur once in actual DOCX/PPTX XML; visual rendering and integrated 25-record browser journey NOT_RUN.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CHK.02",
+        "text": "Alterar dados correntes depois de preservar a revisão e exportá-la: os números dos arquivos coincidem com a revisão escolhida e com sua prévia, não com a origem já modificada.",
+        "status": "PASS_SOURCE_CASE",
+        "observed": "R2 proves existing saved files remain frozen and R3 proves first new DOCX/PPTX generated after current source110→130 keep captured110USD, all captured values/periods/refs and review digest, while current source stays130.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json",
+          "ci/R3-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CHK.03",
+        "text": "Revogar Talent Review entre prévia e exportação: a geração revalida a capacidade e não entrega o conteúdo privado num arquivo aparentemente autorizado.",
+        "status": "PARTIAL",
+        "observed": "R2 real C08 rejects revoked/expired/downgraded grants and omits unselected Talent sentinel. Exact selected-Talent preview-to-generation race not run; legacy egress race FAIL in R1.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CHK.04",
+        "text": "Exportar uma revisão com trajetória financeira e gráfico sem série disponível: valores/rótulos da figura e tabela coincidem com o snapshot; o estado indisponível continua explícito no arquivo, sem gerar uma série falsa.",
+        "status": "PARTIAL",
+        "observed": "R1 reads captured monthly values, unavailable-series text, table facts and one embedded figure. Visual chart label/data-table inspection NOT_RUN.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CHK.18",
+        "text": "Executar sf_report_prepare, sf_artifact_get pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+        "status": "NOT_RUN_NATIVE_PARITY",
+        "observed": "Real Request/UI handlers and grants exercised; no native provider or MCP execution receipt, hence no cross-surface equivalence claim.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.DOD.01",
+        "text": "PPTX e DOCX contêm todo o conteúdo autorizado selecionado, com páginas/slides adicionais quando necessários.",
+        "status": "PARTIAL",
+        "observed": "Complete selected content in actual files;25-note extraction and29 PPTX XML slides observed. No rendered clipping/page inspection.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.DOD.02",
+        "text": "A verificação inclui conteúdo extraído e inspeção de renderização dos casos extensos, não apenas a existência do arquivo.",
+        "status": "PARTIAL",
+        "observed": "Extraction performed in Actions; visual Office rendering unavailable through authorized interface.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.DOD.18",
+        "text": "Descritores C16 de sf_report_prepare, sf_artifact_get são implementados e consumidos por T06 com referências reais.",
+        "status": "NOT_RUN",
+        "observed": "No real T06 native consumer receipt.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.INV.01",
+        "text": "Exportação não recalcula o domínio com fórmula própria nem usa dados atuais para substituir uma revisão preservada.",
+        "status": "PASS_SOURCE_CASE",
+        "observed": "R2 proves existing saved files remain frozen and R3 proves first new DOCX/PPTX generated after current source110→130 keep captured110USD, all captured values/periods/refs and review digest, while current source stays130.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json",
+          "ci/R3-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.INV.02",
+        "text": "Nenhum limite fixo elimina registros silenciosamente e a permissão é rechecada na geração.",
+        "status": "PARTIAL",
+        "observed": "No12-record text cutoff in component reader; current C08 authority checked. Visual clipping and specific Talent race unqualified; legacy egress FAIL.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.INV.18",
+        "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+        "status": "PASS_SOURCE_BOUNDARY",
+        "observed": "Actual C08/Request authorization, current roles, operation keys, domain producers and explicit denials; no broader native parity claim.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.QLT.01",
+        "text": "Títulos, períodos, contagens e quebras mantêm o documento legível, sem texto cortado ou tabelas sobrepostas.",
+        "status": "NOT_RUN_VISUAL",
+        "observed": "Style XML includes Aptos/173D2C and HTML stylesheet exists. Font availability, glyph rendering, overlap and clipping not inspected.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.QLT.02",
+        "text": "Resumo executivo representa os tópicos escolhidos, distinguindo números, comentários e seções sem dados.",
+        "status": "PARTIAL_SOURCE",
+        "observed": "Selected factual values, comments, empty section and unavailable measurements survive component readers; visual summary hierarchy not qualified.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.QLT.18",
+        "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+        "status": "PARTIAL_SOURCE",
+        "observed": "Review version/digest, evidence refs and source bindings verified; cross-surface provenance comparison NOT_RUN. Explicit human-readable source-version labels remain owner48 proposal.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CMP.01",
+        "text": "Os dois formatos, listas maiores que 12 linhas, notas longas, múltiplas competências e seções vazias têm cobertura verificável.",
+        "status": "PARTIAL",
+        "observed": "Both formats, >12 long records, comments, mixed content and empty data exercised through readers; rendered coverage NOT_RUN.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CMP.02",
+        "text": "O caminho legado de seleção por tópicos e o caminho por revisão preservada possuem comportamento definido e não contornam ACL.",
+        "status": "FAIL_EXTERNAL",
+        "observed": "Preserved flow and legacy factual readers tested. Legacy authenticated egress returns200 after session revocation; application.ts owner patch required.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CMP.03",
+        "text": "Figuras selecionadas e sua tabela equivalente conservam unidade, período, moeda e seleção do snapshot; ausência ou parcialidade não desaparece ao exportar.",
+        "status": "PARTIAL",
+        "observed": "Actual extracted financial values, units, currency, periods and unavailable series tested. Rendered figure inspection NOT_RUN.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.CMP.18",
+        "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+        "status": "PARTIAL_SOURCE",
+        "observed": "Both actual exports, C08 positive/denied/corrupt/stale-key controls tested. Native equivalence and complete missing-provider matrix not claimed.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.SUC.01",
+        "text": "O usuário usa o material exportado sem editar manualmente cortes, ordem básica ou números divergentes da prévia.",
+        "status": "NOT_RUN_VISUAL_USER",
+        "observed": "No reader-rendered or user usability acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.SUC.02",
+        "text": "A contagem de registros selecionados, apresentados e exportados pode ser reconciliada para a mesma revisão.",
+        "status": "PARTIAL",
+        "observed": "Selected2 =stored2 in real composed flow; synthetic25 renderer records extracted once. Presented native/browser count belongs48 and remains NOT_RUN.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      },
+      {
+        "id": "WP07.T04.SUC.18",
+        "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+        "status": "NOT_RUN_NATIVE_PARITY",
+        "observed": "No native/LLM/provider receipt; no same-capability-across-surfaces claim.",
+        "evidence": [
+          "ci/R1-result.json",
+          "ci/R2-result.json"
+        ]
+      }
+    ],
+    "WP06": [
+      {
+        "id": "WP06.DOD.01",
+        "text": "As famílias de import/export do baseline possuem catálogo de comportamento, prévia com manifesto e recibo, ou limitação original explicitamente preservada; cada fluxo aponta a prova discriminante.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.INV.03",
+        "text": "Backup JSON comum preserva configuração confiável e referências privadas existentes e não injeta novos anexos/localizadores; um arquivo não expande acesso ou autoridade.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.CMP.01",
+        "text": "A cobertura inclui XLSX/XLS originais, abas e colunas suportadas, fórmulas com resultado zero, datas, IDs, export/import roundtrip, roster e JSON do Dashboard.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.SUC.03",
+        "text": "Exportar e reimportar o arquivo suportado sem edição não cria diferenças financeiras, novos registros por erro de identidade ou vazamento de campos privados.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T01.CHK.04",
+        "text": "JSON que altera roleMap/access/índices de instalação mantém os valores confiáveis atuais; JSON que introduz referência privada de contrato ou remove contrato com arquivo é recusado conforme a regra existente.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T01.CHK.05",
+        "text": "Exportação por usuário sem salário mantém ausentes os campos privados, inclusive resultados calculados individuais e rate cards.",
+        "status": "PASS_SOURCE_CASE",
+        "observed": "Actual HTTP viewer XLSX excludes rate-card values/label and override in XML; role checks and denied users exercised. This is the bounded export case.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T01.DOD.01",
+        "text": "O catálogo cobre todas as famílias de arquivo do inventário e descreve explicitamente campos aceitos, ignorados, rejeitados e exportados.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T01.DOD.02",
+        "text": "Parse/export e preparação de JSON têm fixtures de paridade com resultados esperados para zero, ausência, IDs e anexos.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T01.CMP.01",
+        "text": "Planner, XLS legado, roster, operações, projetos e JSON do Dashboard têm caminho de parse e executor de domínio identificados.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T01.CMP.02",
+        "text": "Exports existentes, privacidade, abas auxiliares, dados ignorados e rejeições de formato possuem casos positivos e negativos.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T04.CHK.01",
+        "text": "Exportar e reimportar sem editar mantém valores financeiros e identidades sem novos registros; flags bm ausentes do formato seguem a normalização original do importador, explicitada sem exigir preservação bit a bit que o arquivo não suporta.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T04.INV.01",
+        "text": "Nenhum roundtrip cria despesa, identidade, permissão ou referência privada apenas por exportar/importar.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP06.T04.SUC.01",
+        "text": "Um arquivo exportado do produto pode voltar sem produzir alteração financeira inesperada, e uma edição intencional gera somente seu efeito declarado.",
+        "status": "PARTIAL_EXPORT_ONLY",
+        "observed": "Actual XLSX/JSON exports and readers covered as mapped; full import/restore/roundtrip work package not executed. Existing scanner-permissive roundtrip fixture was not promoted to acceptance.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      }
+    ],
+    "WP04": [
+      {
+        "id": "WP04.INV.03",
+        "text": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
+        "status": "PARTIAL_EXPORT_SUBCLAUSE",
+        "observed": "Actual HTTP CSV register/suppliers and HTML PO preserve business identities, frozenFX2 versus currentFX3, currency/terms, visibility and restricted-bank-field omission. Creation after import/deletion, full supplier-state workflow and privileged bank export are outside this executed selection.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP04.CMP.03",
+        "text": "Cadastro/ativação/bloqueio/inativação/banco de fornecedor, configurações/reset, histórico, registros/exportações e referências existentes permanecem acessíveis.",
+        "status": "PARTIAL_EXPORT_SUBCLAUSE",
+        "observed": "Actual HTTP CSV register/suppliers and HTML PO preserve business identities, frozenFX2 versus currentFX3, currency/terms, visibility and restricted-bank-field omission. Creation after import/deletion, full supplier-state workflow and privileged bank export are outside this executed selection.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP04.T05.CHK.04",
+        "text": "Após importação representativa ou exclusão permitida, criar PR/PO/SUP não reutiliza identificador já emitido; registro/PO exportados preservam campos de negócio e omitem material restrito.",
+        "status": "PARTIAL_EXPORT_SUBCLAUSE",
+        "observed": "Actual HTTP CSV register/suppliers and HTML PO preserve business identities, frozenFX2 versus currentFX3, currency/terms, visibility and restricted-bank-field omission. Creation after import/deletion, full supplier-state workflow and privileged bank export are outside this executed selection.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      },
+      {
+        "id": "WP04.T05.CMP.01",
+        "text": "Cobrir os quatro estados de fornecedor, dados comerciais/bancários/compliance, linked requests, auditoria, busca e exportação.",
+        "status": "PARTIAL_EXPORT_SUBCLAUSE",
+        "observed": "Actual HTTP CSV register/suppliers and HTML PO preserve business identities, frozenFX2 versus currentFX3, currency/terms, visibility and restricted-bank-field omission. Creation after import/deletion, full supplier-state workflow and privileged bank export are outside this executed selection.",
+        "evidence": [
+          "ci/R1-result.json",
+          "artifacts/R1/index.json"
+        ]
+      }
+    ]
+  },
+  "integrity": {
+    "names": "PASS boundedUTF8/traversal/control/bidi/surrogate/MIME/extensions",
+    "containers": "PASS main parts and actual readers; runtime validator is envelope-only",
+    "storage": "PASS configured per-artifact cap8MiB and predecode limit; no aggregate quota claim",
+    "corruption_cases": [
+      "traversal-name",
+      "windows-path-name",
+      "header-name",
+      "untrusted-mime",
+      "false-ooxml-format",
+      "empty-bytes-valid-hash",
+      "noncanonical-base64",
+      "over-limit-base64-before-decode",
+      "non-ooxml-valid-hash",
+      "wrong-digest",
+      "wrong-review-digest",
+      "wrong-coverage",
+      "missing-evidence",
+      "foreign-principal-stamp",
+      "foreign-project-stamp",
+      "tombstoned"
+    ],
+    "exact_retry": "PASS first committed bytes/ref/no duplicate/no side effects; changed intent conflicts",
+    "authorization": {
+      "foreign": "denied",
+      "read_only_recipient": "denied",
+      "ungranted": "denied",
+      "missing_session": "denied",
+      "owner_downgraded_to_viewer": "denied-by-captured-source-scope",
+      "expired_session": "denied",
+      "expired_real_ui_lease": "denied",
+      "revoked_session": "denied",
+      "malformed_ref": "denied",
+      "read_side_effects": false
+    },
+    "read_side_effects": "No changes to complete SQLite snapshots for artifact read/negative cases. Legacy members/JSON intentionally retain existing authorized read audits."
+  },
+  "runtime": {
+    "bun": "1.3.14 (0d9b296a)",
+    "runner": "ubuntu-24.04",
+    "runner_agent": "2.338.2",
+    "libraries": {
+      "docx": "9.5.1",
+      "pptxgenjs": "4.0.1",
+      "exceljs": "4.4.0",
+      "jszip": "3.10.1",
+      "saxes": "5.0.1"
+    },
+    "local_product_tests": 0
+  },
+  "excluded_formats": {
+    "PDF": "No new product export requirement found; digital PDF is extraction input. Proposed reader-generated PDF is inspection copy.",
+    "XLS": "Legacy input/import format; actual workbook producer emitsXLSX."
+  },
+  "limits": [
+    "Synthetic corpus/identities; actual implementations, not a corporate/native provider session",
+    "Visual rendering/font resolution/clipping not run",
+    "Compiler/typecheck/guards not run; missing authorized45 interface",
+    "FullWP06 roundtrip and privileged supplier-bank export not claimed",
+    "No aggregate installation quota proof",
+    "TargetC28 contains Reports48 changes not present in source W; integration qualification not transferable",
+    "Consumer60 terminal lease ended atfaa30fdd; no assumed resumption or ACK"
+  ],
+  "release": false,
+  "GLOBAL_RELEASE": false,
+  "runs": [
+    {
+      "attempt": "R1",
+      "run": 43667294352,
+      "pass": 32,
+      "fail": 2
+    },
+    {
+      "attempt": "R2",
+      "run": 43667789028,
+      "pass": 4,
+      "fail": 0
+    },
+    {
+      "attempt": "R3",
+      "run": 43668383518,
+      "pass": 1,
+      "fail": 0
+    }
+  ],
+  "actual_files": {
+    "count": 14,
+    "total_bytes": 3157240,
+    "indexes": [
+      "artifacts/R1/index.json",
+      "artifacts/R2/index.json",
+      "artifacts/R3/index.json"
+    ]
+  }
+}

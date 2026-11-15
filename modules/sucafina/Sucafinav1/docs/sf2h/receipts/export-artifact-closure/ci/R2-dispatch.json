@@ -1,0 +1,111 @@
+{
+  "schema": "sf2h.export-artifact-closure.ci-request.v1",
+  "attempt": "R2",
+  "W": "419a00b8faf5b78bce494749d0e45570aca175d2",
+  "W_tree": "288c861ec568d19e5f65d47da985347b3dce5adb",
+  "S": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+  "S_tree": "1423438380c0617ed0dd4ce3f1775bac022c6719",
+  "S_parent": "419a00b8faf5b78bce494749d0e45570aca175d2",
+  "S_changes": [
+    ".ci-run.json"
+  ],
+  "branch": "ci-run-linux-export66-r2-419a00b8",
+  "run_id": 43667789028,
+  "job_id": 132670938330,
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts"
+    ],
+    "env": {}
+  },
+  "reason": "Resolve R1 composed PPTX rejection with exact installed8MiB limit and observe the same artifact passed through original storage. Only fixture.ts changed; corpus, oracles, existing timeout and production code unchanged.",
+  "limit_source": {
+    "path": "apps/cli/src/sucafina-product/review-services.ts",
+    "blob": "da98ee9b674a1d7b4f3ba2c8a230745c33ccdbd7",
+    "max_bytes": 8388608,
+    "caller": "apps/cli/src/sucafina-product/extended-business-services.ts",
+    "caller_blob": "ff43e324d280498e629f867d0ac93714bdf608cc",
+    "caller_override": false
+  },
+  "dedup": [
+    {
+      "id": 43667752670,
+      "branch": "ci-run-linux-operations63-e1791815-scanner-aux-r3",
+      "sha": "296b69cfe746fbac4639b9451f60563d5524fc29",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43667749802,
+      "branch": "ci-run-linux-m64-08467103-8e5e0bf8-1",
+      "sha": "e148ff33a1c3f4864d039f5d443934173b8e9030",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43667468344,
+      "branch": "ci-run-linux-astra-m69-b0-9a62c4fe-1",
+      "sha": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43667462702,
+      "branch": "ci-run-linux-astra-wp11-0917b486-3619f1fd-m52-09",
+      "sha": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43667294352,
+      "branch": "ci-run-linux-export66-r1-75e46959",
+      "sha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667290771,
+      "branch": "ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1",
+      "sha": "92ac331081a61b4724193488777599d4d8eec257",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667093423,
+      "branch": "ci-run-linux-m62-contracts-r1",
+      "sha": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43666919712,
+      "branch": "ci-run-linux-operations63-4a8906bd-nominal-r2",
+      "sha": "98522c038cba67a2552890e9daf8898caf146c41",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43666746009,
+      "branch": "ci-run-linux-m59p03",
+      "sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43666600846,
+      "branch": "ci-run-linux-operations63-4a8906bd-aux-r1",
+      "sha": "f23937f385ceab4fb0d82d786e5243f5e81f875a",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "legacy_egress": "R1 failure remains open; unrelated tests not repeated. R2 is not whole-suite acceptance.",
+  "local_product_execution": 0
+}

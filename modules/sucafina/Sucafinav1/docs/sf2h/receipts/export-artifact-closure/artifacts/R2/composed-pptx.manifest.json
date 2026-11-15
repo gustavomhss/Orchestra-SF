@@ -1,0 +1,124 @@
+{
+  "case_id": "composed-pptx",
+  "file_name": "composed-pptx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.pptx",
+  "format": "pptx",
+  "media_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "sha256": "b9662df138d7ad48812282c7532ed95df83c9a533cf8fd1e0273025efd732cfa",
+  "byte_count": 1533773,
+  "observations": {
+    "implementation": "real-C08-SQLite-Request-UI-human-review-report",
+    "corpus": "synthetic",
+    "review_ref": "review:6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649",
+    "review_version": 1,
+    "review_digest": "7439574d5cdb825e8db4480dcfad9c4a9570204f7f40a9cb779f4bd05aedc234",
+    "source_refs": [
+      {
+        "surface": "dashboard",
+        "type": "dashboard-page",
+        "id": "All Projects",
+        "incarnation": "f954dc17-de24-4215-91d6-2a06b6d9e709",
+        "version": 1,
+        "fields": [
+          "milestoneDates",
+          "projects"
+        ],
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "observedAt": "2026-11-13T04:01:10.000Z"
+      },
+      {
+        "surface": "planner",
+        "type": "planner-version",
+        "id": "export66-v1",
+        "incarnation": "440a4ae9-9df8-4655-8634-e7070a404ced",
+        "version": 1,
+        "fields": [
+          "id",
+          "name",
+          "year",
+          "closed",
+          "lines",
+          "fx",
+          "hc",
+          "projects",
+          "lists",
+          "locked",
+          "summary",
+          "hr",
+          "restrictedHr",
+          "fteInputsKnown",
+          "hrMonthStates",
+          "sharedEntities",
+          "sharedAllocations"
+        ],
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "observedAt": "2026-11-13T04:01:10Z"
+      }
+    ],
+    "evidence_ref_ids": [
+      "sf-source:f954dc17-de24-4215-91d6-2a06b6d9e709:1",
+      "planner-version:export66-v1:440a4ae9-9df8-4655-8634-e7070a404ced:1"
+    ],
+    "source_version_display": "opaque-evidence-reference-only; explicit-source-version-labels-require-Reports48",
+    "record_count": 2,
+    "currencies": [
+      "USD"
+    ],
+    "horizon": {
+      "start": "2026-01-01",
+      "end": "2026-12-31"
+    },
+    "xml_parts": [
+      "ppt/slides/slide1.xml",
+      "ppt/slides/slide2.xml",
+      "ppt/slides/slide3.xml",
+      "ppt/slides/slide4.xml",
+      "ppt/slides/slide5.xml",
+      "ppt/slides/slide6.xml",
+      "ppt/slides/slide7.xml",
+      "ppt/slides/slide8.xml",
+      "ppt/slides/slide9.xml",
+      "ppt/slides/slide10.xml",
+      "ppt/slides/slide11.xml",
+      "ppt/slides/slide12.xml",
+      "ppt/slides/slide13.xml",
+      "ppt/slides/slide14.xml",
+      "ppt/slides/slide15.xml",
+      "ppt/slides/slide16.xml",
+      "ppt/slides/slide17.xml",
+      "ppt/slides/slide18.xml",
+      "ppt/slides/slide19.xml",
+      "ppt/slides/slide20.xml",
+      "ppt/slides/slide21.xml",
+      "ppt/slides/slide22.xml",
+      "ppt/slides/slide23.xml",
+      "ppt/slides/slide24.xml",
+      "ppt/slides/slide25.xml",
+      "ppt/slides/slide26.xml",
+      "ppt/slides/slide27.xml",
+      "ppt/slides/slide28.xml",
+      "ppt/slides/slide29.xml"
+    ],
+    "zip_entries": 151,
+    "source_note_complete": true,
+    "private_unselected_field_absent": true,
+    "exact_retry_unchanged": true,
+    "read_snapshot_unchanged": true,
+    "visible_style_markup": [
+      "Aptos",
+      "173D2C"
+    ],
+    "visual_render_qualification": "external-renderer-required"
+  },
+  "run_id": 43667789028,
+  "job_id": 132670938330,
+  "source_sha": "419a00b8faf5b78bce494749d0e45570aca175d2",
+  "snapshot_sha": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+  "transport": "Exact SF66_EXPORT_BYTES chunks recovered from GitHub job logs; size and SHA256 matched",
+  "transport_verified": true
+}

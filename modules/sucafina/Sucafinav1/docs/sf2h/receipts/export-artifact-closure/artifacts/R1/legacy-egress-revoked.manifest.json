@@ -1,0 +1,22 @@
+{
+  "case_id": "legacy-egress-revoked",
+  "file_name": "legacy-egress-revoked-Egress_report.docx",
+  "format": "docx",
+  "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "sha256": "c25ede33601188f523901488016785e1609dbc9bbc397231f7d16e182513f29a",
+  "byte_count": 8883,
+  "observations": {
+    "syntheticCorpus": true,
+    "sqlite": true,
+    "revokedAfterAuthorizedRead": true,
+    "status": 200,
+    "generatedContentLeaked": true,
+    "criterionVerdict": "FAIL"
+  },
+  "run_id": 43667294352,
+  "job_id": 132669403543,
+  "source_sha": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+  "snapshot_sha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+  "transport": "Exact SF66_EXPORT_BYTES chunks recovered from GitHub job logs; size and SHA256 matched",
+  "transport_verified": true
+}

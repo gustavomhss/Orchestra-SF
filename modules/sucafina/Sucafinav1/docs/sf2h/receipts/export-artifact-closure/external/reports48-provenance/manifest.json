@@ -1,0 +1,103 @@
+{
+  "schema": "sf2h.export-artifact-closure.reports48-provenance-proposal.v1",
+  "state": "PROPOSAL_NOT_APPLIED",
+  "execution": "NOT_RUN",
+  "mission": 66,
+  "owner": "Reports48 lease ended; explicit new Reports owner required",
+  "consumer": "60 only on explicit authorized resumption, or authorized successor",
+  "target": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+  "lease_boundary": "Mission66 does not own product/reviews/**. Only inert receipt files were written; neither the renderer nor Reports48 tests/helpers were edited.",
+  "evidence_basis": {
+    "source_base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "expected_preimage_git_blob": "84d1494057e99551cc8544655f0e0468b8853428",
+    "same_blob_observed_via_github_mcp": [
+      "export-artifact-proof",
+      "sf2-stack"
+    ],
+    "observation": "Current renderer prints the preserved review ID/version/time and opaque BusinessEvidenceRef.refId strings in value tables. It does not print ordinary captured SourceRef version/incarnation or general DomainProjection.engineVersion.",
+    "observation_status": "SOURCE_READING; current66 hosted file evidence is tracked separately and does not validate this proposal.",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "requirement_source": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3.json",
+    "requirement_source_blob": "7f8e42677f3cfa0b9df7c756c8af16af843d7abe",
+    "criteria": [
+      {
+        "id": "WP07.QLT.01",
+        "text": "Pauta, tela de reunião, comparação e arquivo deixam claros período, referência, seleção e condição de comparabilidade.",
+        "relationship": "Legible captured reference and period; the criterion does not prescribe these exact labels, font or layout."
+      },
+      {
+        "id": "WP07.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+        "relationship": "Verifiable capture versions; opaque refIds currently require a separate retained manifest to interpret the source version."
+      }
+    ],
+    "user_requirement": "Qualify generated file content, sources and versions. This proposal makes already captured source stamps directly readable; it does not invent a new format or weaken any requirement."
+  },
+  "patch": {
+    "file": "render.patch",
+    "sha256": "d6916a9e6608a7bff83ad0514ebfc573d6792e7f5569394b32e6b9161daba1b7",
+    "preimage": {
+      "file": "preimage.txt",
+      "bytes": 22031,
+      "git_blob": "84d1494057e99551cc8544655f0e0468b8853428",
+      "sha256": "92d1077d76a31631a5078e6859eaa17c18f02cae88d4ae10b6640402d1f6e98d"
+    },
+    "postimage": {
+      "file": "postimage.txt",
+      "bytes": 22532,
+      "git_blob": "f468b67bab233fcd19e728134f48e3f6b11d2b9f",
+      "sha256": "ad241730b9e9a15fb08f651995c3f9fad2d391e4a2faccc56d5660d3aa2bca7b"
+    },
+    "changes": [
+      "Append a Captured source line per source of each selected section using the existing paginated section text path for both DOCX and PPTX.",
+      "Include surface, type, ID, source version, incarnation and the captured source period.",
+      "Include captured engineVersion only when it is a nonempty string already present in the selected DomainProjection.",
+      "Change the renderer intent version to wp07-paginated-v3-source-provenance because the rendered content changes."
+    ],
+    "public_fields": [
+      "section.sourceRefs[].surface",
+      "section.sourceRefs[].type",
+      "section.sourceRefs[].id",
+      "section.sourceRefs[].version",
+      "section.sourceRefs[].incarnation",
+      "section.sourceRefs[].period.start",
+      "section.sourceRefs[].period.end",
+      "projection.engineVersion"
+    ],
+    "excluded_fields": [
+      "principalRef",
+      "accessRevision",
+      "policyVersion",
+      "scope",
+      "selector",
+      "fields",
+      "tokens",
+      "session identifiers",
+      "native provider receipts"
+    ],
+    "semantics": "Use only the already authorized preserved capture. No current source lookup, recalculation, authority expansion, schema change or new UI is proposed.",
+    "renderer_intent_effect": "Existing artifact bytes remain downloadable through the existing read path. Regeneration under a pre-upgrade command key would compare a different renderDigest and fail as an intent conflict;48/60 must assess this existing compatibility behavior before adoption."
+  },
+  "validation": {
+    "static_source_review": "COMPLETE",
+    "preimage_byte_identity": "COMPLETE; local artifact hashing only, no product execution",
+    "product_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "visual_render": "NOT_RUN",
+    "native_parity": "NOT_CLAIMED",
+    "applicability": "Must be rechecked by48 against its live head and exact preimage; never apply across an unknown owner delta."
+  },
+  "stop_before_apply": {
+    "required": true,
+    "reason": "Additional provenance lines can create extra pages/slides. The existing pagination is reused, but actual layout, long source IDs and clipping have not been rendered. The proposal must stop before application until48/60 reviews and qualifies those effects.",
+    "owner_checks": [
+      "Reconcile exact live owner blob and CAS; retain the current Reports48 changes if the preimage has advanced.",
+      "Exercise DOCX and PPTX with real generated files and parse every selected source stamp plus the captured engine version.",
+      "Change current source versions after preservation; exported stamps must remain those of the chosen review.",
+      "Render the long-note/25-record cases and long source IDs using the assigned hosted renderer; inspect completeness, clipping and pagination.",
+      "Verify unselected/private source details and authority metadata remain absent.",
+      "Verify original-command behavior across the renderer intent version change and document the chosen compatibility policy.",
+      "Run the relevant surgical hosted Actions and the assigned compiler/guard interface before any acceptance claim."
+    ]
+  }
+}

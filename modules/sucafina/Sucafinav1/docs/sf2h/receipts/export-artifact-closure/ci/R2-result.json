@@ -1,0 +1,109 @@
+{
+  "schema": "sf2h.export-artifact-closure.ci-result.v1",
+  "attempt": "R2",
+  "state": "EXECUTED_PASS_BOUNDED_SOURCE",
+  "W": "419a00b8faf5b78bce494749d0e45570aca175d2",
+  "S": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+  "run_id": 43667789028,
+  "job_id": 132670938330,
+  "conclusion": "success",
+  "tests": {
+    "pass": 4,
+    "fail": 0,
+    "total": 4,
+    "files": 1,
+    "assertions": 919,
+    "duration_seconds": 61.41
+  },
+  "test_log": "R2-tests.log",
+  "artifact_directory": "../artifacts/R2",
+  "artifacts_recovered": 2,
+  "artifact_bytes": 1546511,
+  "root_cause_R1": {
+    "status": "CONFIRMED_FIXTURE_CONFIGURATION_ERROR",
+    "actual_pptx_bytes": 1533773,
+    "prior_fixture_limit": 1048576,
+    "installed_limit": 8388608,
+    "prior_validation": false,
+    "current_validation": true,
+    "metadata_valid": true,
+    "production_change_for_R2": false,
+    "assertions_relaxed": false
+  },
+  "composed": {
+    "formats": [
+      {
+        "format": "docx",
+        "artifact_ref": "report:d5349a279842a7c9d9b55f06cc123ee2fc24d4a9282955fa6c7faf999ab14347",
+        "sha256": "9cbb3fcbe9da3ae9e3e5ec7dc82c2734c9279a672f032efcfd2eb49dd02e1fd5",
+        "bytes": 12738
+      },
+      {
+        "format": "pptx",
+        "artifact_ref": "report:cdb996b3ec4a050bb981b27fcac40a0527c2f5fd71135b14eeb89bb70aa90bb4",
+        "sha256": "b9662df138d7ad48812282c7532ed95df83c9a533cf8fd1e0273025efd732cfa",
+        "bytes": 1533773
+      }
+    ],
+    "reopen_exact_bytes": true,
+    "original_retry_no_duplicate_or_effect": true,
+    "changed_source_keeps_capture": true,
+    "read_side_effects": false
+  },
+  "authority": {
+    "foreign": "denied",
+    "read_only_recipient": "denied",
+    "ungranted": "denied",
+    "missing_session": "denied",
+    "owner_downgraded_to_viewer": "denied-by-captured-source-scope",
+    "expired_session": "denied",
+    "expired_real_ui_lease": "denied",
+    "revoked_session": "denied",
+    "malformed_ref": "denied",
+    "read_side_effects": false
+  },
+  "corruption": {
+    "rejected": [
+      "traversal-name",
+      "windows-path-name",
+      "header-name",
+      "untrusted-mime",
+      "false-ooxml-format",
+      "empty-bytes-valid-hash",
+      "noncanonical-base64",
+      "over-limit-base64-before-decode",
+      "non-ooxml-valid-hash",
+      "wrong-digest",
+      "wrong-review-digest",
+      "wrong-coverage",
+      "missing-evidence",
+      "foreign-principal-stamp",
+      "foreign-project-stamp",
+      "tombstoned"
+    ],
+    "denial_body": "Access denied",
+    "read_side_effects": false
+  },
+  "seal": {
+    "real_seal_positive": true,
+    "traversal_rejected": true,
+    "same_sealed_object_cross_format_rejected": true,
+    "cloned_unsealed_object_rejected": true,
+    "invalid_put_side_effects": false
+  },
+  "omni": {
+    "nonce": "110290c81ca296bee1cf44e3adc56b1d",
+    "verdict": "not applicable",
+    "claim": "No Omni spawn or native proof"
+  },
+  "remaining_gates": [
+    "EA66-LEGACY-EGRESS FAIL from R1, same production blob still unchanged",
+    "Visual rendering/clipping/font resolution NOT_RUN",
+    "Compiler/typecheck/guards NOT_RUN",
+    "Native/LLM/provider parity NOT_RUN",
+    "C28 integration consumer qualification NOT_RUN",
+    "Full WP06 import roundtrip NOT_RUN; permissive-scanner fixture not promoted to acceptance"
+  ],
+  "release": false,
+  "GLOBAL_RELEASE": false
+}

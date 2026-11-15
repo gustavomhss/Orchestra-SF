@@ -1,0 +1,167 @@
+{
+  "schema": "sf2h.export-artifact-closure.ci-request.v1",
+  "attempt": "R1",
+  "method": "existing .ci-run.json request, GitHub MCP-only snapshot/ref creation",
+  "W": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+  "W_tree": "ded1e66c90395404dd3f7492212206c2e801bb0e",
+  "S": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+  "S_tree": "a6520b5d1ab6bd838265fa5793e7031bddf50368",
+  "S_parent": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+  "S_changes": [
+    ".ci-run.json"
+  ],
+  "branch": "ci-run-linux-export66-r1-75e46959",
+  "run_id": 43667294352,
+  "job_id": 132669403543,
+  "job": "test (ubuntu-24.04)",
+  "workflow": ".github/workflows/test-ci.yml",
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "runner": "ubuntu-24.04",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+      "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+      "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+      "Sucafinav1/test/parity-reports.test.ts",
+      "Sucafinav1/test/product/procurement-exports/export-controls.test.ts"
+    ],
+    "env": {}
+  },
+  "timeout_policy": "120000 is existing script/test-ci-request.ts default, no existing timeout raised",
+  "dedup_at_dispatch": {
+    "matching_export66_requests": 0,
+    "observed": [
+      {
+        "id": 43667093423,
+        "branch": "ci-run-linux-m62-contracts-r1",
+        "sha": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 43666919712,
+        "branch": "ci-run-linux-operations63-4a8906bd-nominal-r2",
+        "sha": "98522c038cba67a2552890e9daf8898caf146c41",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43666746009,
+        "branch": "ci-run-linux-m59p03",
+        "sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43666600846,
+        "branch": "ci-run-linux-operations63-4a8906bd-aux-r1",
+        "sha": "f23937f385ceab4fb0d82d786e5243f5e81f875a",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43665988509,
+        "branch": "ci-run-linux-m59r2",
+        "sha": "8ac14c407824626adbe53f8eeec82d6572ee1630",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43665193618,
+        "branch": "ci-run-linux-astra-wp11-a6e4102a-3619f1fd-m52-08",
+        "sha": "8392e09ae87a6df68790a69d223585e830ec82ca",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43665180272,
+        "branch": "ci-run-linux-m59r1",
+        "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 43664202278,
+        "branch": "ci-run-linux-astra-wp11-2a330245-3619f1fd-m52-07",
+        "sha": "e43c6ef8265abad48eaff7c36782d65efd7c7281",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43663977131,
+        "branch": "astra-check-wp07",
+        "sha": "9235894b095a2cf4a90184b4606949f75a70279d",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43663795167,
+        "branch": "ci-run-linux-astra-wp07-910a0a2d-cd3364e7-m48-09",
+        "sha": "c5f14d262afda882f0fd6a0878ee04a974919864",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 43663347199,
+        "branch": "ci-run-linux-astra-wp11-78f2362b-3619f1fd-m52-06",
+        "sha": "6dea9a6f9a96b0e5c9051472d1bd6513189376fc",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43663209925,
+        "branch": "ci-run-linux-astra-wp07-910a0a2d-1e6da53d-m48-08",
+        "sha": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43662417996,
+        "branch": "ci-run-linux-astra-wp07-7621664e-1e6da53d-m48-07",
+        "sha": "1a3c35839d8d5f84155f10fd4148779a0ccb6c1a",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43662317407,
+        "branch": "ci-run-linux-astra-wp11-19a48b5f-3619f1fd-m52-05",
+        "sha": "0bb51dc6f12a92f4ee590482faf70e7d842e4415",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43661892542,
+        "branch": "astra-check-wp11",
+        "sha": "14360372153592d944aa10e42bcac1b6d86680f5",
+        "status": "completed",
+        "conclusion": "failure"
+      }
+    ]
+  },
+  "expected": {
+    "selection": "Exactly eight named files, including failing expectation for outside-lease legacy egress, no bail/skip/failing inversion.",
+    "readers": [
+      "JSZip/Saxes",
+      "ExcelJS",
+      "production parseWorkbook",
+      "RFC4180 reader",
+      "JSON.parse",
+      "Bun HTMLRewriter"
+    ],
+    "evidence": "Exact synthetic output bytes in chunks SF66_EXPORT_BYTES; manifests SF66_EXPORT_EVIDENCE; test verdicts and controls remain separate.",
+    "known_gate": "Legacy egress regression requires403; current source suspected200, pending actual observation."
+  },
+  "product_local_execution": 0,
+  "compiler": "NOT_RUN: owner45 interface unavailable",
+  "rendering": "NOT_RUN: current Bun workflow has no authorized Office renderer/upload; inert owner proposal provided",
+  "authority": "source only; no integratedC/global/native release"
+}

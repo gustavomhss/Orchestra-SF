@@ -1,0 +1,102 @@
+{
+  "schema": "sf2h.export-artifact-closure.ci-request.v1",
+  "attempt": "R3",
+  "W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+  "W_tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e",
+  "S": "46fb76e4cf9bfb63799537a46c9b2dcc342f6459",
+  "S_tree": "852a1caab5f17562435f541309a2dd08248005d7",
+  "S_parent": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+  "S_changes": [
+    ".ci-run.json"
+  ],
+  "branch": "ci-run-linux-export66-r3-b371c1f9",
+  "run_id": 43668383518,
+  "job_id": 132672748814,
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts"
+    ],
+    "env": {}
+  },
+  "reason": "Close exact WP07.T04.CHK.02 generation-after-drift criterion: preserve110USD, change current source130, then generate first DOCX/PPTX using new commands. R2 already proved reopening older saved bytes.",
+  "selection": "One new test in one owned file; no repeated broad selection, no local execution, unchanged120000 default.",
+  "dedup": [
+    {
+      "id": 43668348441,
+      "branch": "ci-run-linux-m68r2",
+      "sha": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43668245381,
+      "branch": "ci-run-linux-astra-m69-f1-d962e08b-1",
+      "sha": "7823c05e28fbda36c7c0b1bd62eb5c5e64a4f537",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43668156670,
+      "branch": "ci-run-linux-operations63-83aabd95-nominal-r4",
+      "sha": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43668120365,
+      "branch": "ci-run-linux-m65-5da7aa96-recovery-r1",
+      "sha": "31c2339dd0015a9876ee27d904173cc5c901dd18",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43668099377,
+      "branch": "ci-run-linux-astra-m61-652f4d3a-eeb02ee6-2",
+      "sha": "03dc648952c9c56bc00058ce187fe7e27fe0db15",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43667860058,
+      "branch": "ci-run-linux-astra-m61-base7e1-a53cb1dd-1",
+      "sha": "449f8c51d2ee641e8d41cfa965de7c72b8443276",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667815725,
+      "branch": "ci-run-linux-m68r1",
+      "sha": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43667789028,
+      "branch": "ci-run-linux-export66-r2-419a00b8",
+      "sha": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43667752670,
+      "branch": "ci-run-linux-operations63-e1791815-scanner-aux-r3",
+      "sha": "296b69cfe746fbac4639b9451f60563d5524fc29",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43667749802,
+      "branch": "ci-run-linux-m64-08467103-8e5e0bf8-1",
+      "sha": "e148ff33a1c3f4864d039f5d443934173b8e9030",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

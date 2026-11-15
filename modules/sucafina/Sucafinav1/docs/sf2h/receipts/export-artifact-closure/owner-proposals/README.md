@@ -54,7 +54,7 @@ C05 preserva o snapshot; acesso atual continua revalidado. C06 separa a confirma
 6. Os manifests do teste continuam responsáveis pelos checks de CSV/JSON/HTML e fontes/versões. O patch não inventa um parser de produto nem fecha a prova visual de HTML. Também não prova fontes embarcadas: registra resolução efetiva de nomes de fontes no ambiente.
 7. Renderização bem-sucedida permanece `visualInspection=PENDING` até alguém inspecionar os PNGs e reconciliar texto/contagens/ordem/conteúdo contra os manifests. Não converter exit0 em aprovação de layout.
 
-O workflow só ativa os passos se **todos** os args forem nomes de testes da pasta66, sem flags adicionais. Essa restrição evita ampliar seleção; se houver necessidade de um flag já permitido pelo validator, o dono de CI deve adaptar a detecção explicitamente antes da execução.
+O workflow só ativa os passos se **todos** os arquivos selecionados forem testes da pasta66. A detecção aceita também o prefixo exato `--timeout 120000` já usado em R1, sem aumentar o timeout; qualquer outro flag impede a ativação do reader. O pedido R1 com oito testes não é elegível, pois quatro regressões estão fora da pasta66. O pedido futuro de reader conserva os cinco testes próprios e continua proposto, sem despacho.
 
 ## Interfaces existentes e limite real
 
@@ -64,6 +64,30 @@ O workflow só ativa os passos se **todos** os args forem nomes de testes da pas
 - `astra-operations-check.yml`: branches dinâmicas específicas de Operations, ancestralidade e envelope restritos, só typecheck/guards; não serve como lane66 genérica.
 
 O pacote45 precisa fornecer uma interface autorizada e fixa para `bun typecheck` em modules/sucafina e `bun run check:guards --base origin/dev` na raiz, com W/dev/config/run/jobs reais. Não enviar testes de produto pela lane compiler. A extensão textual deste diretório é encaminhada a60 para dono/lease de test-ci, separada do pedido de compiler45.
+
+Na proposta, instalação e leitura usam `always() && !cancelled()` com o gate da seleção própria. Antes de instalar os leitores, o runner exige a raiz real de artefatos e pelo menos um `*.manifest.json`; o renderer só inicia se a instalação tiver sucesso. Isso permite inspecionar arquivos já emitidos mesmo quando outro teste funcional falhar. Não há `continue-on-error`, exclusão do teste de egress, mudança de oracle ou reclassificação da conclusão do job. O manifest declara `readerVerdictOnly=true`, `functionalAcceptance=NOT_ASSERTED` e mantém `visualInspection=PENDING`.
+
+## Atualização de fonte e pedido R1
+
+Leitura em `2026-11-15 02:21:39 UTC`:
+
+- W histórico R1: `75e46959101a2ea8a225a518f1f518f4250d76bf`; tree `ded1e66c90395404dd3f7492212206c2e801bb0e`.
+- Snapshot R1: `b382a3823d1112ffba7e351c13e6f0be843332fe`, parent W; pedido blob `25d1241a413b9648b80ce9d4192b20f7e8a01d72`; run `43667294352` observado em andamento.
+- `dev` real: `a1d37698a7bb097c1578f827eba6a19b9917ef07`.
+- Target atual: `d088708276b48f896ad4e0ecd2a95cb73dc413b1`; owner45/astra-compose continua `d317873c18bf224c4c1f4d3425179d12ad53e81b`; live sf2-control continua `173c3507e40579f1a1a2dfb068bda40084a678bc`.
+- Não há `sf2-scoped-check.yml` na lista atual de workflows do target; busca de branches `sf2-scoped` retornou vazia. A lista global de workflows registrados não foi consultável pelo endpoint Fetch, portanto não se afirma ausência global além dessas superfícies observadas.
+
+`OWNER-REQUEST.json` mantém separadamente o pedido funcional R1 real com oito nomes, a proposta futura de reader com os cinco testes próprios e o slot das quatro regressões já selecionadas em R1. A proposta não pede repetição de regressões. O reader exige novo candidato fixo que contenha o workflow autorizado, sem fingir que o W original já contém essa mudança.
+
+## Resultado funcional conhecido e limites
+
+Em `2026-11-15 02:26:55 UTC`, o job `132669403543` do run `43667294352` foi relido pelo GitHub MCP como `completed/failure`; o log contém **32 pass, 2 fail**.
+
+- **Legacy egress:** falha confirmada; depois da revogação era esperado403 e retornou200. O defeito em `runtime/application.ts` está fora da lease66. A renderização não fecha esse critério nem deve ocultar essa falha.
+- **Composed PPTX:** R1 retornou `needs-input/invalid-artifact` em vez de `ok`. O root diagnosticou limite de1MiB na fixture, divergente do limite de produção de8MiB. R2 confirmou o tamanho real de 1.533.773 bytes: ultrapassa1MiB e valida no limite instalado de8MiB. R2 passou4/4; R1 permanece no histórico como FAIL. O limite de produção não foi alterado e as asserções foram preservadas.
+- **Roundtrip/scanner:** um caminho de roundtrip com scanner permissivo na fixture não conta como prova do scanner/fluxo real. Nenhum novo run desse caminho foi solicitado por esta proposta.
+
+Os cinco testes próprios continuam no pedido futuro, inclusive o egress que falha. Os readers podem produzir evidência parcial dos arquivos emitidos; os resultados funcionais e a aceitação integral permanecem separados e explícitos.
 
 ## Pedido e dedup concretos
 
@@ -90,3 +114,9 @@ Fontes complementares efetivamente consultadas: WP06/WP04/WP02/WP03 e coverage d
 A proteção de JSON deve ser testada pelo endpoint real: `download('json')` isolado serializa o snapshot recebido; `serveDownload` remove o namespace privado antes da chamada. Confundir essas fronteiras produziria achado incorreto.
 
 As versões de templates e a perda suportada do roundtrip dependem da família real. XLSX pode carregar valores calculados/fórmulas; a ausência de flags bm que o formato não representa segue normalização original WP06.T04.CHK.01, sem exigir igualdade bit a bit falsa.
+
+## Estado terminal observado
+
+O candidato de código final é `b371c1f9e7015a78d292baadef3e6cdeed781dc7`, tree `9d1b501dd6a919acf24df4a24bf69c8308d90b0e`. R2 passou4/4 e R3 passou1/1, comprovando geração nova após fonte110→130 sem mudar a captura. O pedido futuro contém cinco arquivos próprios, incluindo o teste de egress que permanece falho.
+
+Em `sf2-stack@faa30fddb7e7b61696b66fd069f51cf18c51125f`,60 encerrou sua lease e registrou Reports48 encerrado. A proposta exige retomada ou sucessão explicitamente autorizada; não presume60/48 ativos.45 e dev foram relidos em2026-11-15T02:37:37Z e permanecem nos SHAs registrados. Nenhuma aplicação da proposta ou despacho de renderização ocorreu.
