@@ -1,0 +1,70 @@
+{
+  "schema": "sf2h.source-closure193.surgical-validation-request.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 193,
+  "order": "A04",
+  "source": {
+    "branch": "sf-ux-w16",
+    "pr": 135,
+    "commit": "460ddcaf6cf013bc42a100132c5d7478df4138f0",
+    "tree": "5cfdd48f309dbdb23471bf4b3250881d32b3d24c",
+    "changed_path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "pre_blob": "6183175ebce968280b61668085d27771697a4b64",
+    "post_blob": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481"
+  },
+  "target": {
+    "owner": 191,
+    "pr": 106,
+    "branch": "sf-ci-validation",
+    "role": "SOLE_PRODUCT_CI_DISPATCHER"
+  },
+  "gate": "AFTER_189_COMPOSES_EXACT_POSTBLOB_IN_SAME_C_AND_PUBLISHES_C_TREE_ACK",
+  "integrator": {
+    "owner": 189,
+    "pr": 65,
+    "branch": "sf2-stack",
+    "last_observed_head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "candidate_sha": "RE_RESOLVE_ON_ACK"
+  },
+  "selector": {
+    "package": "sucafina",
+    "package_directory": "modules/sucafina",
+    "from_package": "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "from_repository": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "runner": "bun",
+    "os": "linux",
+    "timeout_ms": 120000,
+    "tests_expected": 11,
+    "filter": null
+  },
+  "requested_existing_wrapper": "bun run test:ci sucafina Sucafinav1/test/native-ui-contract/decisions.test.ts --os linux --timeout 120000",
+  "observed_previous_failure": {
+    "run": 43772149086,
+    "job": 132990216337,
+    "snapshot_sha": "36ba918ea9128a724754ac9bace02cef8409adbe",
+    "attempt": 1,
+    "conclusion": "failure",
+    "tests": 11,
+    "pass": 3,
+    "fail": 8,
+    "reason": "Schema.decodeUnknownEither is undefined"
+  },
+  "causal_change": "Effect 4 beta.83 Schema.decodeUnknownExit with Schema.toType validation-only structural schema and strict onExcessProperty:error; old generic Schema.Schema<A,I,R> removed; exit Success replaces Either Right",
+  "expectations": [
+    "Run exactly all 11 unchanged Decision specifications, including negatives and CAS",
+    "Do not retry the prior unmodified snapshot; this request has new source blob",
+    "Use existing dispatcher queue and dedup against W/tree/request/runner/runtime/config/fixtures",
+    "Return real candidate C/tree/S, run/job/attempt and 11 individual test results",
+    "Do not include unrelated specs, full suite, browser harness or concurrent CI",
+    "If selector is not admitted or candidate missing, return precise BLOCKED_* with no fake PASS"
+  ],
+  "environment": {
+    "effect": "4.0.0-beta.83",
+    "f04_required_for_this_schema_unit_test": false,
+    "installed_identity_required_for_separate_A04_functional_proof": true
+  },
+  "status": "REQUEST_RECORDED_NOT_DISPATCHED",
+  "post_patch_run": "NOT_RUN",
+  "consumer_ack": "PENDING",
+  "global_release": false
+}

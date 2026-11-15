@@ -1,0 +1,166 @@
+{
+  "schema": "sf2h.source-closure193.terminal-artifact.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 193,
+  "previous": 173,
+  "order": "A04",
+  "epoch": "source-closure-e1-browser193",
+  "actor": {
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_status": "NOT_EXPOSED"
+  },
+  "branch": "sf-ux-w16",
+  "pr": 135,
+  "global_release": false,
+  "goal": "paused",
+  "authority": {
+    "prepared_commit": "13c27e4bd41ad277c18c5585d941feed04727b78",
+    "prepared_tree": "b12aa2b94314b52c3e6442608634494072ede9e7",
+    "fence_blob": "b3035607202d49ec6cafd776e8df5353f5c5cebb",
+    "ack_commit": "5ea7f6a99f022d07a8c28f7418f90b367868ce24",
+    "ack_tree": "4a146c09db70c1641a6a0b091095d3e726390419",
+    "previous_writer": "REVOKED_FOR_FUTURE_WRITES",
+    "cas": "SUCCESS_FORCE_FALSE"
+  },
+  "immutable": {
+    "package_commit": "e027e7ba4141d42075714939f8d9f686b1fec157",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "prior_package_commit": "d86c642aaf3f01a10694cf8c83ee8e652cc1ac3b"
+  },
+  "code": {
+    "commit": "460ddcaf6cf013bc42a100132c5d7478df4138f0",
+    "tree": "5cfdd48f309dbdb23471bf4b3250881d32b3d24c",
+    "parent": "5ea7f6a99f022d07a8c28f7418f90b367868ce24",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "pre": "6183175ebce968280b61668085d27771697a4b64",
+        "post": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481"
+      }
+    ]
+  },
+  "preserved": {
+    "schema_decisions": {
+      "path": "packages/schema/src/sucafina/decisions.ts",
+      "blob": "6c1d974d807e84c244b601ae03a1402ecf27e405"
+    },
+    "schema_evidence": {
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "blob": "1a77ff23bee415941916467d75c81304a4aab382"
+    },
+    "original_tests": 11,
+    "assertions": "UNCHANGED",
+    "closed_object_policy": "onExcessProperty:error",
+    "CAS": "PRESERVED",
+    "no_schema173_reapply": true
+  },
+  "library": {
+    "effect": "4.0.0-beta.83",
+    "tag": "effect@4.0.0-beta.83",
+    "schema_blob": "74f338311ccd446ee12bb73941d35c04476547e7",
+    "parser_blob": "ac029e68d28640a346ba392b5c2b85f56ece17ce",
+    "decoder": "Schema.decodeUnknownExit",
+    "shape": "Exit.Success|Exit.Failure",
+    "recursive_types": "Schema.Top + Schema.toType(schema)",
+    "untyped_escape_hatches": "NONE"
+  },
+  "receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/ACK-193.json",
+      "pre": null,
+      "post": "061ad834db0c630b8179f268bbcbad6a34dd3575"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/PATCH-193.diff",
+      "pre": null,
+      "post": "a966c51022fa992b37a3690706c9c1028e1866a7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/VALIDATION-REQUEST-191.json",
+      "pre": null,
+      "post": "e40886713dc5eddfc4767065ca912bc864501cb8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/HANDOFF-193.md",
+      "pre": null,
+      "post": "760fe416d2958fab7fd9a7b7df2a391e027afe7a"
+    }
+  ],
+  "source_current_consumer": {
+    "owner": 189,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "last_observed_head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "test_preimage": "6183175ebce968280b61668085d27771697a4b64",
+    "integration_ack": "PENDING",
+    "proposed_postblob": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481"
+  },
+  "ci": {
+    "owner": 191,
+    "branch": "sf-ci-validation",
+    "pr": 106,
+    "request_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/VALIDATION-REQUEST-191.json",
+    "status": "REQUEST_RECORDED_NOT_DISPATCHED",
+    "previous": {
+      "run": 43772149086,
+      "job": 132990216337,
+      "attempt": 1,
+      "result": "FAILURE",
+      "pass": 3,
+      "fail": 8
+    },
+    "new": {
+      "run": null,
+      "job": null,
+      "real_result": "NOT_RUN"
+    },
+    "selector": {
+      "package": "sucafina",
+      "file": "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "os": "linux",
+      "runner": "bun",
+      "timeout_ms": 120000
+    }
+  },
+  "compiler": {
+    "owner": 190,
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "actual_typecheck": "NOT_RUN_BY_193"
+  },
+  "evidence": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "installed_proof": "NOT_RUN",
+    "local_execution": false,
+    "ci_dispatch_by_193": false,
+    "tooling": "GitHub MCP Git Data + expected-head CAS"
+  },
+  "dependencies": {
+    "source": "RESOLVED_173_SCHEMAS_ON_CONSUMER_C",
+    "integrate": "189_POSTBLOB_PLUS_C_ACK",
+    "surgical_test": "191_AFTER_SAME_C_ACK",
+    "installed": "F01_F02_F04_REAL_IDENTITIES_AND_REQUEST_ON_C",
+    "missing_identity_input": "SF_NATIVE_INSTALLED_MANIFEST_PRIVATE_0600_AND_SF_NATIVE_CANDIDATE_SHA_EQUAL_C_AUTHORIZED_ACTOR_CONTEXTS",
+    "unit_test_requires_identity": false
+  },
+  "acceptance": {
+    "A04_AC01": "NOT_QUALIFIED",
+    "A04_AC02": "NOT_QUALIFIED",
+    "A04_AC03": "NOT_QUALIFIED"
+  },
+  "terminal": {
+    "author": "ARTIFACT_READY_SOURCE_HANDOFF",
+    "lease": "SOURCE_AUTHOR_TERMINAL_RELEASED_AFTER_RECEIPT",
+    "integrated": false,
+    "qualified": false,
+    "consumer_ack": "PENDING",
+    "global_release": false
+  }
+}
