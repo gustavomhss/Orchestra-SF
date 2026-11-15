@@ -47,7 +47,7 @@ async function withListener<F extends Application>(make: (origin: string) => Pro
       // Close live sockets before the scoped Node server waits for its own shutdown.
       yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections?.()))
       yield* Effect.promise(() => run(f, { origin, port, incoming, web, server }))
-    })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))))
+    })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal: AbortSignal.timeout(25000) })
   } finally { server.closeAllConnections?.() }
 }
 

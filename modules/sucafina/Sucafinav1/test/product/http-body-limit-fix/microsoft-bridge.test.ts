@@ -122,7 +122,7 @@ test("The bounded Node/Effect bridge preserves Microsoft proxy, login cookies, C
         const output = logs.map((values) => values.map(String).join(" ")).join("\n")
         for (const secret of [marker, code, authorization.searchParams.get("state")!, cookie, provider.account.name, "synthetic-access-", "synthetic-refresh-"]) expect(output).not.toContain(secret)
       })
-    })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))))
+    })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal: AbortSignal.timeout(25000) })
   } finally {
     for (const spy of spies) spy.mockRestore()
     server.closeAllConnections?.()
