@@ -203,6 +203,10 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     const snapshot = decisionDraft()?.snapshot()
     return snapshot?.availability === "active" ? snapshot.value : null
   }
+  const restoredOperation = () => {
+    const state = decisionDraft()?.snapshot()
+    return state?.availability === "active" ? state.pendingOperation : null
+  }
   const orphanPending = () => {
     const state = decisionDraft()?.snapshot()
     return !ui.pending && state?.availability === "active" &&
@@ -402,7 +406,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         return
       }
       const draft = decisionDraft()
-      if (draft?.snapshot().availability === "active") draft.discard()
+      if (draft && draft.snapshot().availability === "active") draft.discard()
       setUi("pending", (pending) => pending ? { ...pending, producerAcknowledged: true } : pending)
       setUi("phase", "verifying")
       const refreshed = await sourceRead(token, intent.source.requestRef, controller.signal)
@@ -604,7 +608,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                 columns={[
                   { id: "number", labelKey: key("sf.u13.request"), align: "start", widthPolicy: { kind: "content", minPx: 92, maxPx: 180 }, render: (row) => row.number ?? t("sf.u13.unknownValue") },
                   { id: "title", labelKey: key("sf.u13.title"), align: "start", widthPolicy: { kind: "flex", minPx: 150, weight: 1 }, render: (row) => row.pr?.title || t("sf.u13.unknownValue") },
-                  { id: "status", labelKey: key("sf.u13.stage"), align: "start", widthPolicy: { kind: "content", minPx: 120, maxPx: 220 }, render: (row) => row.status },
+                  { id: "status", labelKey: key("sf.u13.stage"), align: "start", widthPolicy: { kind: "content", minPx: 120, maxPx: 220 }, render: (row) => row.status === "pr_pending" ? t("sf.u13.submitted") : t("sf.u13.unknownValue") },
                 ]}
                 selectedKey={selectedPr()?.requestRef as SfRef | undefined}
                 sort={{ kind: "none" }}
@@ -705,10 +709,10 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
               <section class="rounded-lg border border-border p-3" role="status">
                 <p>{t("sf.u13.unknown")}</p>
                 <p>{t("sf.u13.noReceipt")}</p>
-                <Show when={decisionDraft()?.snapshot()}>
-                  {(restored) => restored().availability === "active" && restored().pendingOperation ? (
+                <Show when={restoredOperation()}>
+                  {(operation) => (
                     <SfReceiptView
-                      operationRef={restored().pendingOperation!.operationRef}
+                      operationRef={operation().operationRef}
                       producerStatus={{ kind: "pending" }}
                       effects={[]}
                       receipts={[]}
