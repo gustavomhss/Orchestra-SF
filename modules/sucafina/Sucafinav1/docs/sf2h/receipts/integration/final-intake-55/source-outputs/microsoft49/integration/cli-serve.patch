@@ -1,0 +1,76 @@
+--- a/apps/cli/src/commands/handlers/serve.ts
++++ b/apps/cli/src/commands/handlers/serve.ts
+@@ -22,6 +22,9 @@
+ import { listenerHosts } from "./serve-host"
+ import { addressInUse } from "./serve-port"
+ import { ServeShutdown } from "./serve-shutdown"
++import type { loadSfInstallation } from "../../sucafina-product/installation"
++
++type LoadedSfInstallation = Awaited<ReturnType<typeof loadSfInstallation>>
+ 
+ const SHUTDOWN_GRACE_MS = 2_000
+ 
+@@ -76,6 +79,17 @@
+             process.exit()
+           }),
+         )
++        // Validate the private installation and isolation before daemon or host database effects.
++        const installationFile = input.installation && Option.isSome(input.installation) ? input.installation.value : undefined
++        const installation = installationFile
++          ? yield* Effect.tryPromise({ try: async () => {
++              const port = Option.getOrUndefined(input.port)
++              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
++              const { loadSfInstallation } = await import("../../sucafina-product/installation")
++              return loadSfInstallation(installationFile, `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
++            }, catch: (error) => error instanceof Error ? error : new Error("Installation unavailable") })
++          : undefined
++        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
+         const daemon = yield* Daemon.Service
+         // A desktop-owned child gets a per-launch password in env and never touches the daemon's password file.
+         const password = process.env.ORCHESTRA_SERVER_PASSWORD || (yield* daemon.password())
+@@ -95,17 +109,7 @@
+           Effect.catchCause((cause) => Effect.logError("legacy session import failed", cause)),
+         )
+         const allowedHosts = listenerHosts(input.hostname, input.allowedHosts)
+-        const installationFile = input.installation && Option.isSome(input.installation) ? input.installation.value : undefined
+-        const installation = installationFile
+-          ? yield* Effect.tryPromise({ try: async () => {
+-              const port = Option.getOrUndefined(input.port)
+-              if (port === undefined) throw new Error("An explicit installation requires an explicit port")
+-              const { loadSfInstallation } = await import("../../sucafina-product/installation")
+-              return loadSfInstallation(installationFile, `http://${input.hostname.includes(":") ? `[${input.hostname}]` : input.hostname}:${port}`)
+-            }, catch: (error) => error instanceof Error ? error : new Error("Installation unavailable") })
+-          : undefined
+-        if (installation) yield* Effect.addFinalizer(() => Effect.promise(async () => { await installation.dispose() }))
+-        const listening = yield* listen(input.hostname, input.port, password, [...hosts(), ...(installation?.host ?? [])], root, allowedHosts, input.cors, installation?.layer)
++        const listening = yield* listen(input.hostname, input.port, password, [...hosts(), ...(installation?.host ?? [])], root, allowedHosts, input.cors, installation)
+         const address = listening.address
+         // Closing the server waits for every open connection, and the event stream never ends on its own. Scope
+         // finalizers run in reverse, so this drops the connections before the server closes.
+@@ -133,7 +137,7 @@
+   root: string | undefined,
+   allowedHosts: ReadonlyArray<string>,
+   cors?: ReadonlyArray<string>,
+-  installation?: Layer.Layer<never, unknown, HttpRouter.HttpRouter>,
++  installation?: LoadedSfInstallation,
+ ) {
+   if (Option.isSome(port)) return bind(hostname, port.value, password, host, root, allowedHosts, cors, installation)
+   const next = (port: number): ReturnType<typeof bind> =>
+@@ -151,14 +155,15 @@
+   root: string | undefined,
+   allowedHosts: ReadonlyArray<string>,
+   cors?: ReadonlyArray<string>,
+-  installation?: Layer.Layer<never, unknown, HttpRouter.HttpRouter>,
++  installation?: LoadedSfInstallation,
+ ) {
+   const server = createServer()
+   return Layer.build(
+-    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), installation ?? Layer.empty), {
++    HttpRouter.serve(Layer.merge(createRoutes({ password, host, webRoot: root, cors, allowedHosts }), installation?.layer ?? Layer.empty), {
+       disableListenLog: true,
+       disableLogger: true,
+     }).pipe(
++      Layer.provide(installation?.privacy ?? Layer.empty),
+       Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
+       Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
+     ),

@@ -1,0 +1,191 @@
+{
+  "schema": "sf2h.final-intake-55.dependency-closure.v1",
+  "increment": 2,
+  "candidate_symbol": "C22",
+  "parent": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+  "import_closure": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-resolved-imports.json",
+    "blob": "bb45ea0ef000fe5ad5ca80f4be638af17d510cc8",
+    "sha256": "63c7c61e362cc9a6de39894a8924a5b7c174b6c169b9ce2edc5d415387948e6a",
+    "files": 20,
+    "literal_edges": 176,
+    "relative_edges": 103,
+    "relative_targets": 51,
+    "relative_to_C21": 61,
+    "relative_to_overlay": 42,
+    "external_by_status": {
+      "LOCKED_REGISTRY_PACKAGE_NOT_LOADED": 13,
+      "RESOLVED_WORKSPACE_EXPORT": 13,
+      "BUILTIN_RUNTIME_CONTRACT": 47
+    },
+    "unresolved_relative": 0,
+    "unresolved_external_static": 0,
+    "scope": "Direct literal imports in20 files only; dynamic expressions separately accounted. Transitive arbitrary expansion is outside scope.",
+    "limits": "Static repository resolution and package/lock declarations only; runtime, compiler and registry package execution are NOT_RUN."
+  },
+  "composition": {
+    "atomic_canonical_paths": 20,
+    "own_fixture": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+    "own_mapping": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "shared": [
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "mode": "100644",
+        "target_preimage_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+        "postimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "postimage_sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
+        "bytes": 25080,
+        "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "mode": "100644",
+        "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "bytes": 5315,
+        "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
+      },
+      {
+        "path": "apps/cli/src/commands/handlers/serve.ts",
+        "mode": "100644",
+        "target_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "bytes": 8960,
+        "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
+      }
+    ],
+    "preserve_C20": true,
+    "preserve_C21": true,
+    "no_partial_auth_intake": true,
+    "no_local_operator_cloud_fallback": true
+  },
+  "consumers": {
+    "installed": "CLI -> installation preflight -> configured Microsoft local entry -> existing host/product routes; finalizers and privacy passed through Node transport.",
+    "currentchoice": "CurrentChoice fence and source-lifecycle driver wrapping retained in the exact composed entry; C20 host-context and decision-controls untouched.",
+    "fixtures": "All original source artifacts checked; suite imports only pinned canonical target bytes. Original source fixture retained as inert evidence.",
+    "future52": "Decisions52 transport proposal is not released. If released later, reconcile request-body semantics against21236af... and update own mapping as part of a new material candidate; never apply old preimage blind."
+  },
+  "packages": {
+    "packages": "No package or lock changes; jose6.2.16, Effect4.0.0-beta.83 and @effect/platform-node existing at terminal47; root packageManager bun1.3.14.",
+    "package_blobs": {
+      "modules/sucafina/package.json": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "apps/cli/package.json": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "package.json": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+    },
+    "required": "All17 non-receipt source paths;3 shared composition files;23 archived receipt blobs;exact original fixture supplement;own composition manifest. Existing current-choice/local configuration/local bootstrap dependencies retained. Test fixture and source receipt graph closed."
+  },
+  "security_boundaries": {
+    "status": "Static source review; no runtime proof claimed",
+    "boundaries": [
+      "Fixed resource tenant/client confidential Web profile with PKCE/nonce/state and signed claim checks",
+      "Cloud Graph self-only User.Read; no directory enumeration",
+      "Explicit group memberships and oid-bound grants; empty mapping/grants deny; no special André authority",
+      "Private owner-only separate canonical config/credentials/workspace and immutable installation identity",
+      "Microsoft selector present means Microsoft validation or failure; no silent local operator cloud fallback",
+      "Secure HttpOnly SameSite cookie handles with encrypted private storage, absolute lifetime and durable revocation/fences",
+      "Trusted ingress origins and forwarded header stripping before request conversion; upstream TLS/log/network controls remain external owner gates",
+      "No real credentials/config were invented, read or provisioned"
+    ]
+  },
+  "external_gates": {
+    "selector": "SUCAFINA_MICROSOFT_CONFIG",
+    "mutually_exclusive": "SUCAFINA_LOCAL_CONFIG",
+    "json_fields": [
+      "version",
+      "deployment",
+      "authentication",
+      "origin",
+      "listenerOrigin",
+      "ingressOrigin",
+      "mount",
+      "tenantId",
+      "clientId",
+      "groups",
+      "grants",
+      "workspaceDirectory",
+      "scanner",
+      "sessionSeconds",
+      "loginSeconds"
+    ],
+    "redirect_uri": "${origin}${mount}/auth/callback",
+    "application_platform": "Web confidential client",
+    "scopes": [
+      "openid",
+      "profile",
+      "offline_access",
+      "User.Read"
+    ],
+    "graph_permission": "delegated User.Read; no Directory.Read.All, application permission or guest directory enumeration",
+    "private_client_credential": "client-secret.txt; never environment, CLI argument, JSON policy, tool output or model context",
+    "tls_ingress": "Azure owner enforces public HTTPS-only, private trusted backend, exact Host/ingressOrigin and excludes auth query/cookies/bodies from upstream logs",
+    "first_use": "Existing canonical bootstrap requires a configured real admin; never make André admin to bypass bootstrap. Saved explicit empty maps remain empty.",
+    "upgrade": "Prior Microsoft session format requires re-login; no automatic tenant/data migration.",
+    "live_proof": "Validate actual resource tenant Web redirect/consent/B2B oid, assigned and unassigned identities, role removal, copied-cookie logout and cross-user denials; preserve sanitized results only."
+  },
+  "checks45": {
+    "source_request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/requests/COMPILER49-02.json",
+    "target": "Exact C22 W/tree or later reconciled material candidate only",
+    "commands": [
+      {
+        "cwd": "modules/sucafina",
+        "command": "bun typecheck"
+      },
+      {
+        "cwd": "apps/cli",
+        "command": "bun typecheck"
+      },
+      {
+        "cwd": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "whole_mission45_scope_preserved": true,
+    "dispatch": "NOT_DISPATCHED;45 must use its authorized supported hosted interface. No disguised compiler-as-test request."
+  },
+  "functional_qualifier_inputs": {
+    "owner": "S0 / separately authorized qualifier, not mission55 and not compiler-only45",
+    "source_request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/requests/CI49-02.json",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/entra-client.test.ts",
+        "Sucafinav1/test/local-identity.test.ts",
+        "Sucafinav1/test/local-entry.test.ts",
+        "Sucafinav1/test/microsoft-entra-client.test.ts",
+        "Sucafinav1/test/microsoft-session.test.ts",
+        "Sucafinav1/test/microsoft-configuration.test.ts",
+        "Sucafinav1/test/microsoft-routes.test.ts",
+        "Sucafinav1/test/microsoft-composition.test.ts",
+        "Sucafinav1/test/microsoft-node.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "target": "Rebind exact W/S/tree and all fixture material inputs; source W/S is not target proof.",
+    "live_Microsoft_B2B": "NOT_RUN; external provisioning/session owner retains this proof."
+  },
+  "no_pass_transfer": true,
+  "execution": {
+    "product": false,
+    "tests": false,
+    "typechecks": false,
+    "build": false,
+    "guards": false,
+    "preflight": false,
+    "CI": false,
+    "AM": false
+  },
+  "GLOBAL_RELEASE": false
+}

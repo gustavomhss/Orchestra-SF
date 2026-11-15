@@ -1,0 +1,645 @@
+{
+  "schema": "sf2h.final-intake-55.increment.v1",
+  "mission": 55,
+  "increment": 2,
+  "candidate_symbol": "C22",
+  "parent": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "parent_tree": "644e41cfc5e8b291b4bf61bd16c8dcae41b14d1b",
+  "source": {
+    "mission": 49,
+    "branch": "microsoft-login",
+    "pr": 69,
+    "release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+    "candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+    "tree": "7af26c42a054abe09d0585567953f512c32ebf82",
+    "delivery_blob": "9408f5e7fb20dadcd9886cd2a768c044cd134093",
+    "handoff_blob": "a0b6ef8c1e71db202b859e39297830aee8688270",
+    "state": "SOURCE_RELEASED_FOR_INTEGRATION_WITH_PENDING_OWNER_GATES",
+    "source_writer_terminal": true
+  },
+  "decision": "CONSUME_ATOMIC_AUTH_ENTRY_CLI_NODE_WITH_CURRENTCHOICE_RECONCILIATION",
+  "material": [
+    {
+      "path": "docs/guides/sucafina-microsoft-login.md",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+      "postimage_blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+      "postimage_sha256": "b1747be80f9a17b202be9f9882d36e4cb90368250b5897596a9a88149c6a3488",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "mode": "100644",
+      "preimage_blob": "a1c52c91905a3dc9784af2ffc350fbd51379cbf5",
+      "source_postimage_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "postimage_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "postimage_sha256": "798b24e6f1064670e35363b1e99c55dbf05adaf51ff98bb70c471f68e9232446",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "mode": "100644",
+      "preimage_blob": "2237778e65eb987770dc1696e03fe5a25d894562",
+      "source_postimage_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "postimage_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "postimage_sha256": "d7f7fd24f13c767d9871008392d313e52c36a981160da3069ad727bf1d3fb079",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "mode": "100644",
+      "preimage_blob": "2a143af985632cd28ade0146b8149b11bae49f17",
+      "source_postimage_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "postimage_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "postimage_sha256": "f2d00caedd14b3c1f9dd25aca416a7ec02af08aaca8195fe1536d24316eb5e9b",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "postimage_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "postimage_sha256": "3f7298dcb659f5713fad61ff9fe58158ad32053f28e8fad17edd45e76347ba26",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "postimage_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "postimage_sha256": "edaab52636603c6f819743553984316b67aaa41aad6650395ce34120a9060a97",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "postimage_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "postimage_sha256": "8b751b8c44ffa3b4c4e59369d72f8967a7019d8517d86bb19b435dcfaf0993f9",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "mode": "100644",
+      "preimage_blob": "6b431573650c8336d05978abb046903333db8d56",
+      "source_postimage_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "postimage_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "postimage_sha256": "7a941c499bcd83cc6ec3dc05fa31afc47f6c1891be795934b40844a9d84d3c81",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "postimage_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "postimage_sha256": "019bc465402e0c5cfc54b1dcb76c67af16259c50be7702f500b4462bd8b8c30a",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "postimage_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "postimage_sha256": "d4a67e2707196b9f5052e884bd2645a9b4ffa233e3d5b7425530dd5841ce81c9",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "postimage_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "postimage_sha256": "8c4388b490dc73e03536b27fc6104b4ab5a26fee971d2358f3a25cddcacfaf7d",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "6aec0d65da787030ddd94fc14b474a05c865a1a3",
+      "postimage_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "postimage_sha256": "020a65af381b94ded41ad516d08c8337a4a5d62ed9676a353136172e31907c1e",
+      "decision": "RECONCILED_CANONICAL_COMPOSITION_FIXTURE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "postimage_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "postimage_sha256": "6139a134ef8e10a90222e72b3472701c8ea9a1a2b95b0d1e68db8831f1666508",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "postimage_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "postimage_sha256": "88afde145c62bd28ea29628b29c0e2961cabde01aa3a0731bca7c345d22bc0e2",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "postimage_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "postimage_sha256": "eebd6a1c39fb34a31e880ad45e511348b5b70ff1c61449148131a17ed8bcee8a",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "postimage_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "postimage_sha256": "c881b3d89fdaaee43bf55f388b77ffccba14405d002a6076d2787d0cea7ab6a8",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "source_postimage_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "postimage_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "postimage_sha256": "473519007c178826f6663380dcde7c470fe5e0d247ab123df0c68ac949addffe",
+      "decision": "EXACT_SOURCE_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "target_preimage_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+      "postimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "postimage_sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
+      "bytes": 25080,
+      "preimage_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+      "decision": "RECONCILED_CURRENTCHOICE46_AND_MICROSOFT49"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "mode": "100644",
+      "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+      "bytes": 5315,
+      "preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "decision": "EXACT_RELEASED_SHARED_POSTIMAGE"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "mode": "100644",
+      "target_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+      "bytes": 8960,
+      "preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "decision": "EXACT_RELEASED_SHARED_POSTIMAGE"
+    }
+  ],
+  "additional_material_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "role": "Exact canonical postimage/blob/SHA256 mapping required by the integrated test fixture; source manifest and pre/postimages below are also read as test inputs."
+    }
+  ],
+  "archive": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49",
+    "tree": "2474f80f89593d821bc4b71e1106becd9cdb536e",
+    "files": [
+      {
+        "path": "ACK49.json",
+        "mode": "100644",
+        "sha": "1a88688e881137f6813609666497556cca790e0d",
+        "size": 3918
+      },
+      {
+        "path": "BOUNDARY49.json",
+        "mode": "100644",
+        "sha": "20c44d069ed5dd445d6edd2b299d6226c2cf0429",
+        "size": 2125
+      },
+      {
+        "path": "DELIVERY49.json",
+        "mode": "100644",
+        "sha": "9408f5e7fb20dadcd9886cd2a768c044cd134093",
+        "size": 11945
+      },
+      {
+        "path": "HANDOFF49.json",
+        "mode": "100644",
+        "sha": "a0b6ef8c1e71db202b859e39297830aee8688270",
+        "size": 8009
+      },
+      {
+        "path": "TARGET-RECONCILIATION49.json",
+        "mode": "100644",
+        "sha": "5b8862b06ba5de06d4e710e45ab0a338008c61bb",
+        "size": 1815
+      },
+      {
+        "path": "integration/README49.md",
+        "mode": "100644",
+        "sha": "26be3cd451cb1a8f3a8e6cbd23ec8fad52b8895e",
+        "size": 7818
+      },
+      {
+        "path": "integration/cli-installation.patch",
+        "mode": "100644",
+        "sha": "e7d033ce8fa4c7ae3789cd6fb3982cf5e90247d7",
+        "size": 6052
+      },
+      {
+        "path": "integration/cli-installation.postimage.txt",
+        "mode": "100644",
+        "sha": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "size": 5315
+      },
+      {
+        "path": "integration/cli-installation.preimage.txt",
+        "mode": "100644",
+        "sha": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "size": 2476
+      },
+      {
+        "path": "integration/cli-serve.patch",
+        "mode": "100644",
+        "sha": "497b0897609c9ce3176c874496a9c3cd4a336263",
+        "size": 4835
+      },
+      {
+        "path": "integration/cli-serve.postimage.txt",
+        "mode": "100644",
+        "sha": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "size": 8960
+      },
+      {
+        "path": "integration/cli-serve.preimage.txt",
+        "mode": "100644",
+        "sha": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "size": 8708
+      },
+      {
+        "path": "integration/local-entry.patch",
+        "mode": "100644",
+        "sha": "664435acfe5fa5dd970d94606ca0b2def556b9cd",
+        "size": 7580
+      },
+      {
+        "path": "integration/local-entry.postimage.txt",
+        "mode": "100644",
+        "sha": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "size": 24423
+      },
+      {
+        "path": "integration/local-entry.preimage.txt",
+        "mode": "100644",
+        "sha": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "size": 22887
+      },
+      {
+        "path": "integration/mission49-installation-manifest.json",
+        "mode": "100644",
+        "sha": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+        "size": 3002
+      },
+      {
+        "path": "integration/mission49-installation.patch",
+        "mode": "100644",
+        "sha": "2e02069799cbba9b3036453f592c9c01e8ece0a1",
+        "size": 18467
+      },
+      {
+        "path": "requests/CI49-01.json",
+        "mode": "100644",
+        "sha": "bdafead0eda54fba7ca1e44f43c29eef4aa2e268",
+        "size": 10312
+      },
+      {
+        "path": "requests/CI49-02.json",
+        "mode": "100644",
+        "sha": "0df9ffbb95bf6fb7b2e45e8dca74b1cc505b3cc7",
+        "size": 10399
+      },
+      {
+        "path": "requests/COMPILER49-01.json",
+        "mode": "100644",
+        "sha": "7ab0ae5c2e64601f7fd3261b481bddac9cc4a732",
+        "size": 2571
+      },
+      {
+        "path": "requests/COMPILER49-02.json",
+        "mode": "100644",
+        "sha": "4b3d722db23c237cf3f666d52fecee0ddc036b31",
+        "size": 2678
+      },
+      {
+        "path": "runs/CI49-01.json",
+        "mode": "100644",
+        "sha": "f7df3f0f1de0c54335d639affd1ee32c58747cb9",
+        "size": 4392
+      },
+      {
+        "path": "runs/CI49-02.json",
+        "mode": "100644",
+        "sha": "27a160d8c376372334a0fea276e5f5e446eae131",
+        "size": 4587
+      }
+    ],
+    "original_fixture": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49-original-integration-fixture.ts.txt",
+      "blob": "6aec0d65da787030ddd94fc14b474a05c865a1a3"
+    },
+    "policy": "All23 source receipt blobs are byte-exact. Original source manifest, failed and successful runs, pre/postimages, shared patches and requests remain intact. Inert proposal artifacts are not executed."
+  },
+  "reconciliation": {
+    "entry": "Preserve all CurrentChoice46 createCurrentChoiceFence, host runtime reference, source-lifecycle wrapping, runtime fence injection and operationIdentity chain; add source49 configured Microsoft factory, selector, policy/grants/workspace and Origin fence without replacing C20.",
+    "cli": "Source49 exact postimage applies to terminal47; complete transport origin binding, forwarded-header stripping, fixed503 and trace-disabled handler composition.",
+    "node": "Source49 exact postimage applies to terminal47; installation preflight before daemon/host DB import, existing shutdown finalizer order retained, full installation and privacy passed to serving.",
+    "fixture": "Archive all source receipts byte-exact. Verify original manifest and pre/post blob/SHA256. Then require canonical files exactly match own55 composed blob/SHA256 map and import canonical paths directly. No temporary postimage substitution. All test assertions/budgets unchanged. Subsequent shared-file reconciliation must update composed pins.",
+    "shared_patch_sha256": "28f586d4d53c28397a710ec55a92aa6a1210a3dcd551c1ef37128e3fcef5b378",
+    "composition_patches": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/composition/microsoft49-entry.patch",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/composition/microsoft49-installation.patch",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/composition/microsoft49-serve.patch"
+    ],
+    "preimage_continuity": "Terminal47 preimages independently read; ACK55 only adds its receipt; C21 exact61-file diff touches none of the20 atomic paths."
+  },
+  "consumer_ACK": {
+    "by": "S0-C / mission55 sole sf2-stack writer",
+    "state": "ACCEPTED_FOR_MATERIAL_COMPOSITION_PENDING_TARGET_GATES",
+    "source_criteria": [
+      {
+        "id": "M49-CONFIG",
+        "result": "PASS_SYNTHETIC",
+        "evidence": "microsoft-configuration.test.ts (7) + microsoft-node.test.ts preflight"
+      },
+      {
+        "id": "M49-CALLBACK-CLAIMS",
+        "result": "PASS_SYNTHETIC",
+        "evidence": "entra-client.test.ts (78), microsoft-entra-client.test.ts (22), microsoft-session.test.ts signed callback negatives"
+      },
+      {
+        "id": "M49-SESSION-REVOCATION",
+        "result": "PASS_SYNTHETIC",
+        "evidence": "microsoft-session.test.ts (24): state/replay, expiry, durable revoke, callback/refresh/Graph/SQL races, key/tenant/client boundaries"
+      },
+      {
+        "id": "M49-PRODUCT-AUTHORIZATION",
+        "result": "PASS_SYNTHETIC",
+        "evidence": "microsoft-routes.test.ts (5): actual product HTTP and authority, no role/grant fallback, removal, oid isolation and real Procurement HTML/CSV/write denials"
+      },
+      {
+        "id": "M49-INSTALLATION",
+        "result": "PASS_SYNTHETIC",
+        "evidence": "microsoft-composition.test.ts (4) and microsoft-node.test.ts (2): exact full postimages, real Node ingress, secure cookie, same-origin fence, startup ordering, tracing positive/negative controls"
+      },
+      {
+        "id": "M49-LOCAL-COMPATIBILITY",
+        "result": "PASS_SCOPE",
+        "evidence": "local-identity.test.ts (11), local-entry.test.ts (9), retained public client tests"
+      },
+      {
+        "id": "M49-TYPECHECK",
+        "result": "NOT_RUN",
+        "owner": "mission45",
+        "request": "requests/COMPILER49-02.json"
+      },
+      {
+        "id": "M49-GUARDS",
+        "result": "NOT_RUN",
+        "owner": "mission45 / S0",
+        "request": "requests/COMPILER49-02.json"
+      },
+      {
+        "id": "M49-TARGET-CONSUMPTION",
+        "result": "NOT_RUN",
+        "owner": "integration47",
+        "evidence": "TARGET-RECONCILIATION49.json; no target writes"
+      },
+      {
+        "id": "M49-LIVE-MICROSOFT-B2B",
+        "result": "NOT_RUN",
+        "owner": "Azure provisioning/session owner"
+      }
+    ],
+    "meaning": "Consumption ACK and static closure only. Original source criterion results remain scoped to source W/S. Target runtime/authorization/Node behavior is NOT_RUN.",
+    "candidate_resolution": "C22 is the material commit containing this manifest; resolved SHA/tree are recorded in subsequent candidates-final.json."
+  },
+  "source_evidence": {
+    "latest": {
+      "schema": "sucafina.microsoft-login.ci-result.v1",
+      "mission": 49,
+      "state": "PASS",
+      "product_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+      "product_tree": "7af26c42a054abe09d0585567953f512c32ebf82",
+      "snapshot": "61d531f6be247e26dc66836effc427ba7403fce6",
+      "snapshot_tree": "adcc98f35895d34c18c0aa0a2d7313bb048e62cf",
+      "parent_verified": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+      "snapshot_delta": [
+        ".ci-run.json"
+      ],
+      "request_sha256": "84c2e19cc359b9d7e5e101fa10d3e1bb2a011598c6a5fcc0f3ecc70d2ace749d",
+      "request_blob": "809d91cce8eac41db2c0fdee8b3c0a80596ce16f",
+      "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "run": {
+        "id": 43655680707,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655680707",
+        "event": "push",
+        "head_sha": "61d531f6be247e26dc66836effc427ba7403fce6",
+        "head_branch": "ci-run-linux-microsoft-login-49-43bddf0a-02",
+        "attempt": 1,
+        "created_at": "2026-11-14T23:56:11Z",
+        "started_at": "2026-11-14T23:56:11Z",
+        "conclusion": "success"
+      },
+      "jobs": [
+        {
+          "id": 132633538531,
+          "name": "test (ubuntu-24.04)",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655680707/job/132633538531",
+          "head_sha": "61d531f6be247e26dc66836effc427ba7403fce6",
+          "conclusion": "success",
+          "started_at": "2026-11-14T23:56:13Z",
+          "completed_at": "2026-11-14T23:58:00Z"
+        },
+        {
+          "id": 132633972341,
+          "name": "cleanup",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655680707/job/132633972341",
+          "head_sha": "61d531f6be247e26dc66836effc427ba7403fce6",
+          "conclusion": "success",
+          "started_at": "2026-11-14T23:58:02Z",
+          "completed_at": "2026-11-14T23:58:08Z"
+        }
+      ],
+      "observed": {
+        "selected_files": [
+          "Sucafinav1/test/microsoft-configuration.test.ts",
+          "Sucafinav1/test/entra-client.test.ts",
+          "Sucafinav1/test/local-entry.test.ts",
+          "Sucafinav1/test/local-identity.test.ts",
+          "Sucafinav1/test/microsoft-routes.test.ts",
+          "Sucafinav1/test/microsoft-node.test.ts",
+          "Sucafinav1/test/microsoft-entra-client.test.ts",
+          "Sucafinav1/test/microsoft-session.test.ts",
+          "Sucafinav1/test/microsoft-composition.test.ts"
+        ],
+        "files": {
+          "Sucafinav1/test/microsoft-configuration.test.ts": {
+            "pass": 7,
+            "fail": 0
+          },
+          "Sucafinav1/test/entra-client.test.ts": {
+            "pass": 78,
+            "fail": 0
+          },
+          "Sucafinav1/test/local-entry.test.ts": {
+            "pass": 9,
+            "fail": 0
+          },
+          "Sucafinav1/test/local-identity.test.ts": {
+            "pass": 11,
+            "fail": 0
+          },
+          "Sucafinav1/test/microsoft-routes.test.ts": {
+            "pass": 5,
+            "fail": 0
+          },
+          "Sucafinav1/test/microsoft-node.test.ts": {
+            "pass": 2,
+            "fail": 0
+          },
+          "Sucafinav1/test/microsoft-entra-client.test.ts": {
+            "pass": 22,
+            "fail": 0
+          },
+          "Sucafinav1/test/microsoft-session.test.ts": {
+            "pass": 24,
+            "fail": 0
+          },
+          "Sucafinav1/test/microsoft-composition.test.ts": {
+            "pass": 4,
+            "fail": 0
+          }
+        },
+        "test_count": 162,
+        "passed": 162,
+        "failed": 0,
+        "errors": 0,
+        "expect_calls": 1216,
+        "test_seconds": 27.02,
+        "bun": "1.3.14 (0d9b296a)",
+        "omni_control": "omni positive control [verified job nonce]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "timing": {
+        "queue_to_job_start_seconds": 2,
+        "setup_seconds": 77,
+        "test_step_seconds": 27
+      },
+      "log": {
+        "job_id": 132633538531,
+        "sha256": "ee575a9d49be61859884e73212e69cf9e6ddfa4d00ffa8a1164711455e648b0a",
+        "raw_log_committed": false,
+        "source": "GitHub MCP fetch_workflow_job_logs"
+      },
+      "artifacts": [],
+      "artifact_requirement": "This Bun workflow uploads no test artifact; complete job logs and hashed exact source/request provide this gate evidence.",
+      "previous_failure": {
+        "receipt": "runs/CI49-01.json",
+        "run_id": 43655093802,
+        "preserved": true,
+        "not_relabelled_as_pass": true
+      },
+      "scope": "Nine-file deterministic Microsoft auth, private persistence, real product-route, grant and exact postimage/Node ingress selection. No full suite, native AI/model, Azure tenant or composed sf2-stack acceptance is claimed.",
+      "real_microsoft_b2b": "NOT_RUN",
+      "typecheck": "NOT_RUN",
+      "guards": "NOT_RUN"
+    },
+    "prior_failure": {
+      "run": 43655093802,
+      "preserved": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/runs/CI49-01.json",
+      "result": "159PASS/2FAIL/1ERROR"
+    },
+    "source_green_transfers": false
+  },
+  "security": {
+    "status": "Static source review; no runtime proof claimed",
+    "boundaries": [
+      "Fixed resource tenant/client confidential Web profile with PKCE/nonce/state and signed claim checks",
+      "Cloud Graph self-only User.Read; no directory enumeration",
+      "Explicit group memberships and oid-bound grants; empty mapping/grants deny; no special André authority",
+      "Private owner-only separate canonical config/credentials/workspace and immutable installation identity",
+      "Microsoft selector present means Microsoft validation or failure; no silent local operator cloud fallback",
+      "Secure HttpOnly SameSite cookie handles with encrypted private storage, absolute lifetime and durable revocation/fences",
+      "Trusted ingress origins and forwarded header stripping before request conversion; upstream TLS/log/network controls remain external owner gates",
+      "No real credentials/config were invented, read or provisioned"
+    ]
+  },
+  "external_contract": {
+    "selector": "SUCAFINA_MICROSOFT_CONFIG",
+    "mutually_exclusive": "SUCAFINA_LOCAL_CONFIG",
+    "json_fields": [
+      "version",
+      "deployment",
+      "authentication",
+      "origin",
+      "listenerOrigin",
+      "ingressOrigin",
+      "mount",
+      "tenantId",
+      "clientId",
+      "groups",
+      "grants",
+      "workspaceDirectory",
+      "scanner",
+      "sessionSeconds",
+      "loginSeconds"
+    ],
+    "redirect_uri": "${origin}${mount}/auth/callback",
+    "application_platform": "Web confidential client",
+    "scopes": [
+      "openid",
+      "profile",
+      "offline_access",
+      "User.Read"
+    ],
+    "graph_permission": "delegated User.Read; no Directory.Read.All, application permission or guest directory enumeration",
+    "private_client_credential": "client-secret.txt; never environment, CLI argument, JSON policy, tool output or model context",
+    "tls_ingress": "Azure owner enforces public HTTPS-only, private trusted backend, exact Host/ingressOrigin and excludes auth query/cookies/bodies from upstream logs",
+    "first_use": "Existing canonical bootstrap requires a configured real admin; never make André admin to bypass bootstrap. Saved explicit empty maps remain empty.",
+    "upgrade": "Prior Microsoft session format requires re-login; no automatic tenant/data migration.",
+    "live_proof": "Validate actual resource tenant Web redirect/consent/B2B oid, assigned and unassigned identities, role removal, copied-cookie logout and cross-user denials; preserve sanitized results only."
+  },
+  "preservation": {
+    "C20": true,
+    "eight_prior_intakes": true,
+    "Agenda39_C21": true,
+    "CurrentChoice46": "Retained fence, driver wrapping order, runtime reference, operationIdentity chain and navigation.",
+    "financial_approval": "No role/grant/approval inferred from CurrentChoice, a visitor name or empty configuration.",
+    "native41": "No native admission activated.",
+    "config_or_credentials_created": false,
+    "source_branches_mutated": false
+  },
+  "qualification": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_DISPATCHED",
+    "AM": "NOT_RUN",
+    "checks_owner": 45,
+    "epic_acceptance_owner": "S0",
+    "GLOBAL_RELEASE": false
+  },
+  "publication": "GitHub MCP tree+commit+CAS expected_sha force:false; no product execution or source ref change. Complete atomic envelope is one material commit."
+}

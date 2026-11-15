@@ -1,0 +1,2933 @@
+{
+  "schema": "sf2h.mission55.microsoft49.resolved-direct-imports.v1",
+  "target_base": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "overlay": "20 source/proposed code, test, guide and shared files whose exact blobs are listed below",
+  "method": "Read-only GitHub MCP Git trees and package/lock blobs plus inert text/hash inventory. No product import, test, compiler, guard, CI or AM execution.",
+  "scope": "Direct literal imports in20 files only; dynamic expressions separately accounted. Transitive arbitrary expansion is outside scope.",
+  "static_result": "ALL103_RELATIVE_AND13_WORKSPACE_EXPORT_EDGES_RESOLVED; REGISTRY_AND_BUILTINS_CONTRACT_RECORDED_WITH_RUNTIME_GATES_OPEN",
+  "runtime_package_gates": "OPEN_A45",
+  "trees": [
+    {
+      "path": "apps/cli",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "truncated": false,
+      "entries": 360
+    },
+    {
+      "path": "modules/sucafina",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "truncated": false,
+      "entries": 3346
+    },
+    {
+      "path": "modules/app-dock",
+      "tree": "19d619fb5176ad89704980654d7a6781134fabcc",
+      "truncated": false,
+      "entries": 22
+    },
+    {
+      "path": "packages/core",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da",
+      "truncated": false,
+      "entries": 1970
+    },
+    {
+      "path": "packages/server",
+      "tree": "92c6efa998cc37a7756593678522ec7f1a4afe03",
+      "truncated": false,
+      "entries": 181
+    }
+  ],
+  "root_manifest": {
+    "path": "package.json",
+    "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+    "mode": "100644",
+    "package_manager": "bun@1.3.14",
+    "catalog": {
+      "effect": "4.0.0-beta.83",
+      "@effect/platform-node": "4.0.0-beta.83"
+    }
+  },
+  "lock": {
+    "path": "bun.lock",
+    "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "mode": "100644",
+    "bytes": 504498,
+    "lockfileVersion": 1,
+    "configVersion": 1,
+    "parsed_as_data_only": true
+  },
+  "package_manifests": [
+    {
+      "path": "apps/cli/package.json",
+      "blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/app-dock/package.json",
+      "blob": "86a5b92da8a1f099308b70c2ab30b8a44069ff11",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/core/package.json",
+      "blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/server/package.json",
+      "blob": "1e2d83907eaac06d0da1571ac7ceab9f528102b7",
+      "mode": "100644"
+    }
+  ],
+  "existing_patch": {
+    "path": "patches/effect@4.0.0-beta.83.patch",
+    "blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+    "mode": "100644",
+    "root_and_lock_mapping_match": true
+  },
+  "overlay_files": [
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "mode": "100644"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/guides/sucafina-microsoft-login.md",
+      "blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "mode": "100644"
+    }
+  ],
+  "relative_edges": [
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "../../framework/runtime",
+      "resolved_path": "apps/cli/src/framework/runtime.ts",
+      "blob": "02d1d778896d87fd360a75f10d749342c0698ea1",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "../../host",
+      "resolved_path": "apps/cli/src/host.ts",
+      "blob": "cc89adc3a11e2bd3e7d779642382ed86dfceab31",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "../../services/daemon",
+      "resolved_path": "apps/cli/src/services/daemon.ts",
+      "blob": "6b383fc3e9205e8f575b7fb235c85846b8ea52d3",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "../../sucafina-product/installation",
+      "resolved_path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "../commands",
+      "resolved_path": "apps/cli/src/commands/commands.ts",
+      "blob": "ac99e56b135de1a21f57e545d91e20b4bd4ef399",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "./serve-host",
+      "resolved_path": "apps/cli/src/commands/handlers/serve-host.ts",
+      "blob": "705ff54de8d2a6a12330a356a4db0faf4695ea76",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "./serve-port",
+      "resolved_path": "apps/cli/src/commands/handlers/serve-port.ts",
+      "blob": "91e6a0d6777f87cf09c96c95f3ceb7d6f85b9647",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "./serve-shutdown",
+      "resolved_path": "apps/cli/src/commands/handlers/serve-shutdown.ts",
+      "blob": "2100f41fd55d06d3d9742be87e8a0886fcfeb25b",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "./host-context",
+      "resolved_path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "658b5b676cfa0554552ede618c4466ebef8dae33",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../index.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/index.ts",
+      "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/contracts/canonical.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/contracts/freeze-v1.json",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/contracts/host-context.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "blob": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/decisions/current-choice-preview.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "db487cd1b6263835302e9bcf80499d18531aa592",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/bi-http.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
+      "blob": "e6487e027dd56ae682c572ac52778217f7ef1627",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/decision-controls-link.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/decision-controls-link.ts",
+      "blob": "3f23b1f85a644bab57c7d7df9813794e285ef7de",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/generated/bi-entry.txt",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/generated/bi-entry.txt",
+      "blob": "a7b15ec986701b297afd9b09d6d0a012ff23c438",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/host-presentation.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/host-presentation.ts",
+      "blob": "70725d5dcd4c76893b8c8a85350bcd83ef796734",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/human-authority.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/source-inventory.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "blob": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/source-lifecycle.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/integration/source-projections.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "blob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/interface/html.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/interface/html.ts",
+      "blob": "ff0d2f99aa1b5eb92a6687194df193ec408e7e2c",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../product/interface/http.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/application.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/entra-client.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-backups.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-backups.ts",
+      "blob": "14f56cbb337471ae51395885d7cb5080dc43d8d2",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-bootstrap.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-bootstrap.ts",
+      "blob": "2a500cc44ebbc1018597172584dec146cef7fbb3",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-configuration.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+      "blob": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-jobs.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-jobs.ts",
+      "blob": "7998724814bfe2c3009da05cf9fed4c6865b147a",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-recovery.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-recovery.ts",
+      "blob": "d5ef708b8a6c56b9c7211815136c55970c15056c",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-scanner.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/local-store.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/microsoft-installation.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/operations.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/operations.ts",
+      "blob": "4bc3ee2d64608863634c8d0b48492b7c809ba6dd",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/operator-identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../runtime/ui.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+      "blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../src/identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "../src/screen-shell.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "importer_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "specifier": "../src/identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "importer_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "specifier": "./local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "importer_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "specifier": "../src/identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "importer_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "specifier": "./assets.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "importer_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "specifier": "./contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "importer_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "specifier": "./local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "importer_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "specifier": "./local-configuration.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+      "blob": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "importer_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "specifier": "./microsoft-policy.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "importer_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "specifier": "./entra-client.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "importer_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "specifier": "./local-configuration.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+      "blob": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "importer_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "specifier": "./local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "importer_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "specifier": "./local-identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "importer_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "specifier": "./microsoft-configuration.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "importer_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "specifier": "../product/contracts/freeze-v1.json",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "importer_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "specifier": "../product/contracts/state.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "importer_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "specifier": "../product/integration/human-authority.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "importer_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "specifier": "../product/integration/product-authority.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "importer_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "specifier": "../src/identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "importer_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "specifier": "../runtime/entra-client.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "importer_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "specifier": "../runtime/local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "importer_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "specifier": "../src/identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "../runtime/local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "../runtime/local-store.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "../runtime/microsoft-installation.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "./microsoft-login/integration-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "./microsoft-login/oidc-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "./microsoft-login/private-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "importer_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "specifier": "../runtime/microsoft-configuration.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "importer_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "specifier": "../runtime/microsoft-installation.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "importer_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "specifier": "./microsoft-login/oidc-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "importer_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "specifier": "./microsoft-login/private-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "importer_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "specifier": "../runtime/entra-client.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "importer_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "specifier": "../runtime/local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "importer_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "specifier": "../src/identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "importer_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "specifier": "./microsoft-login/oidc-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "importer_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "specifier": "../../runtime/entra-client.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "importer_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "specifier": "../../runtime/local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "importer_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "specifier": "../../runtime/local-configuration.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+      "blob": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "importer_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "specifier": "./oidc-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "../runtime/local-contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "../runtime/microsoft-installation.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "./microsoft-login/integration-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "./microsoft-login/oidc-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "./microsoft-login/private-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../index.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/index.ts",
+      "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../product/contracts/canonical.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../product/integration/product-authority.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../runtime/application.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../runtime/contract.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../runtime/local-store.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../runtime/microsoft-installation.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../runtime/microsoft-policy.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../src/identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "../src/initial-settings.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+      "blob": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "./microsoft-login/oidc-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "./microsoft-login/private-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "../runtime/entra-client.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "../runtime/local-identity.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "../runtime/local-store.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "bfff940e1941ee18e624b6f8df0f94344956a386",
+      "status": "RESOLVED_FILE"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "./microsoft-login/oidc-fixture.ts",
+      "resolved_path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "mode": "100644",
+      "source": "proposed-overlay",
+      "status": "RESOLVED_FILE"
+    }
+  ],
+  "external_edges": [
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@effect/platform-node",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "@effect/platform-node",
+      "subpath": ".",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "@effect/platform-node@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@effect/platform-node-shared": "^4.0.0-beta.83",
+            "mime": "^4.1.0",
+            "undici": "^8.2.0"
+          },
+          "peerDependencies": {
+            "effect": "^4.0.0-beta.83",
+            "ioredis": "^5.7.0"
+          }
+        },
+        "sha512-RmpVGu/+X/Bif3/g1Rzj8oFzTOknoVB3yHCa0b179vytPpKe+Kj9ZwKNcAnKWqHUDkbSPBq1Ca60mvOHr2/+LQ=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/app-dock/socket-transport",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/app-dock",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/app-dock@workspace:modules/app-dock"
+      ],
+      "export_manifest": "modules/app-dock/package.json",
+      "export_manifest_blob": "86a5b92da8a1f099308b70c2ab30b8a44069ff11",
+      "export_key": "./socket-transport",
+      "export_value": "./src/socket-transport.ts",
+      "resolved_path": "modules/app-dock/src/socket-transport.ts",
+      "blob": "bdb749fdb2707e486b57e85d5921faa1c122ac20",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "19d619fb5176ad89704980654d7a6781134fabcc"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/core/claude-code-account",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./claude-code-account",
+      "export_value": "./src/claude-code-account.ts",
+      "resolved_path": "packages/core/src/claude-code-account.ts",
+      "blob": "5df62945818bb1a626d4401cb577e6cccdb9a30d",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/core/credential",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./credential",
+      "export_value": "./src/credential.ts",
+      "resolved_path": "packages/core/src/credential.ts",
+      "blob": "3161ca0d7f1e4c68a372acb97234eab80a9024b2",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/core/database/database",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./database/database",
+      "export_value": "./src/database/database.ts",
+      "resolved_path": "packages/core/src/database/database.ts",
+      "blob": "aa519134efff085e960affd9be376b0dc92456e1",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/core/effect/app-node-builder",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./effect/app-node-builder",
+      "export_value": "./src/effect/app-node-builder.ts",
+      "resolved_path": "packages/core/src/effect/app-node-builder.ts",
+      "blob": "f81f07cd9f4876742c1e8039f4453bf31fd55f58",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/core/effect/layer-node",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./effect/layer-node",
+      "export_value": "./src/effect/layer-node.ts",
+      "resolved_path": "packages/core/src/effect/layer-node.ts",
+      "blob": "4d1491948140e05894193050f07b664163a69912",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/core/permission/saved",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./permission/saved",
+      "export_value": "./src/permission/saved.ts",
+      "resolved_path": "packages/core/src/permission/saved.ts",
+      "blob": "385d560b4b7658872a1639a1e5fb3252b4e52eb2",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/core/session",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./session",
+      "export_value": "./src/session.ts",
+      "resolved_path": "packages/core/src/session.ts",
+      "blob": "00b276d8f2c9e634ae55a37e800fae388eb595e6",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/server/routes",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/server",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/server@workspace:packages/server"
+      ],
+      "export_manifest": "packages/server/package.json",
+      "export_manifest_blob": "1e2d83907eaac06d0da1571ac7ceab9f528102b7",
+      "export_key": "./routes",
+      "export_value": "./src/routes.ts",
+      "resolved_path": "packages/server/src/routes.ts",
+      "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "92c6efa998cc37a7756593678522ec7f1a4afe03"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "@orchestra/server/web-ui",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/server",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/server@workspace:packages/server"
+      ],
+      "export_manifest": "packages/server/package.json",
+      "export_manifest_blob": "1e2d83907eaac06d0da1571ac7ceab9f528102b7",
+      "export_key": "./web-ui",
+      "export_value": "./src/web-ui.ts",
+      "resolved_path": "packages/server/src/web-ui.ts",
+      "blob": "bca23278a17f72c9107ca9cb3cdf9d55e5f88cd7",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "92c6efa998cc37a7756593678522ec7f1a4afe03"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "effect",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": ".",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "effect/unstable/http",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": "/unstable/http",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "effect/unstable/process/ChildProcessSpawner",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": "/unstable/process/ChildProcessSpawner",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "node:fs",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "node:http",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "apps/cli/src/commands/handlers/serve.ts",
+      "importer_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "@orchestra/core/host",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./host",
+      "export_value": "./src/host.ts",
+      "resolved_path": "packages/core/src/host.ts",
+      "blob": "a0fc5bc9a36e50315b0ddddf4de3566555711250",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "effect",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": ".",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "effect/unstable/http",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": "/unstable/http",
+      "declaring_workspace": "apps/cli",
+      "declaring_manifest_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "importer_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "specifier": "node:url",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "node:async_hooks",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "node:crypto",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "node:os",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "importer_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "importer_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "specifier": "jose",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "jose",
+      "subpath": ".",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "6.2.16",
+      "declared_version": "6.2.16",
+      "lock_entry": [
+        "jose@6.2.16",
+        "",
+        {},
+        "sha512-4LSJpbuBuPdGrONCdZUy0xnxtLf8eEz+EY0SMXdHQEBU7bgUHDVblU/JAjryv3wID9/LK7/YuwFwq+AQNfMscQ=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "importer_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "specifier": "node:crypto",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "importer_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "specifier": "node:net",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "importer_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "specifier": "node:fs",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "importer_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "importer_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "specifier": "node:net",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "importer_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "importer_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "specifier": "bun:test",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/bun@1.3.13",
+        "",
+        {
+          "dependencies": {
+            "bun-types": "1.3.13"
+          }
+        },
+        "sha512-9fqXWk5YIHGGnUau9TEi+qdlTYDAnOj+xLCmSTwXfAIqXr2x4tytJb43E9uCvt09zJURKXwAtkoH4nLQfzeTXw=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+      "importer_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+      "specifier": "jose",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "jose",
+      "subpath": ".",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "6.2.16",
+      "declared_version": "6.2.16",
+      "lock_entry": [
+        "jose@6.2.16",
+        "",
+        {},
+        "sha512-4LSJpbuBuPdGrONCdZUy0xnxtLf8eEz+EY0SMXdHQEBU7bgUHDVblU/JAjryv3wID9/LK7/YuwFwq+AQNfMscQ=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "bun:test",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/bun@1.3.13",
+        "",
+        {
+          "dependencies": {
+            "bun-types": "1.3.13"
+          }
+        },
+        "sha512-9fqXWk5YIHGGnUau9TEi+qdlTYDAnOj+xLCmSTwXfAIqXr2x4tytJb43E9uCvt09zJURKXwAtkoH4nLQfzeTXw=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "effect",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": ".",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "effect/unstable/http",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": "/unstable/http",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "importer_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "importer_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "specifier": "bun:test",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/bun@1.3.13",
+        "",
+        {
+          "dependencies": {
+            "bun-types": "1.3.13"
+          }
+        },
+        "sha512-9fqXWk5YIHGGnUau9TEi+qdlTYDAnOj+xLCmSTwXfAIqXr2x4tytJb43E9uCvt09zJURKXwAtkoH4nLQfzeTXw=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "importer_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "importer_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "importer_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "specifier": "bun:test",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/bun@1.3.13",
+        "",
+        {
+          "dependencies": {
+            "bun-types": "1.3.13"
+          }
+        },
+        "sha512-9fqXWk5YIHGGnUau9TEi+qdlTYDAnOj+xLCmSTwXfAIqXr2x4tytJb43E9uCvt09zJURKXwAtkoH4nLQfzeTXw=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "importer_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "specifier": "node:crypto",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "importer_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "specifier": "node:crypto",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "importer_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "importer_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "importer_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "specifier": "node:url",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "importer_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "specifier": "jose",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "jose",
+      "subpath": ".",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "6.2.16",
+      "declared_version": "6.2.16",
+      "lock_entry": [
+        "jose@6.2.16",
+        "",
+        {},
+        "sha512-4LSJpbuBuPdGrONCdZUy0xnxtLf8eEz+EY0SMXdHQEBU7bgUHDVblU/JAjryv3wID9/LK7/YuwFwq+AQNfMscQ=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "importer_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "specifier": "node:crypto",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "importer_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "importer_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "specifier": "node:os",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+      "importer_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "bun:test",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/bun@1.3.13",
+        "",
+        {
+          "dependencies": {
+            "bun-types": "1.3.13"
+          }
+        },
+        "sha512-9fqXWk5YIHGGnUau9TEi+qdlTYDAnOj+xLCmSTwXfAIqXr2x4tytJb43E9uCvt09zJURKXwAtkoH4nLQfzeTXw=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "effect",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": ".",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "effect/unstable/http",
+      "status": "LOCKED_REGISTRY_PACKAGE_NOT_LOADED",
+      "package": "effect",
+      "subpath": "/unstable/http",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "catalog:",
+      "declared_version": "4.0.0-beta.83",
+      "lock_entry": [
+        "effect@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@standard-schema/spec": "^1.1.0",
+            "fast-check": "^4.8.0",
+            "find-my-way-ts": "^0.1.6",
+            "ini": "^7.0.0",
+            "kubernetes-types": "^1.30.0",
+            "msgpackr": "^2.0.1",
+            "multipasta": "^0.2.7",
+            "toml": "^4.1.1",
+            "uuid": "^14.0.0",
+            "yaml": "^2.9.0"
+          }
+        },
+        "sha512-0wsak8RtgGAr9UWSbVDgJHZcUqMSvicHcvaZv1MbMM7MCGgW4Rn/137J1MHQbwYPcwYGxT/IqehFd+UbYuj78w=="
+      ],
+      "package_subpath_gate": "OPEN_A45; repository manifest/lock presence only; registry package files were not fetched or executed"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "node:http",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "node:module",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "importer_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "specifier": "node:url",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "@orchestra/core/location",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./location",
+      "export_value": "./src/location.ts",
+      "resolved_path": "packages/core/src/location.ts",
+      "blob": "af889448fe9340187266ab622cb7249751e52328",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "@orchestra/core/schema",
+      "status": "RESOLVED_WORKSPACE_EXPORT",
+      "package": "@orchestra/core",
+      "declaring_workspace": "modules/sucafina",
+      "declaring_manifest_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "declaration": "workspace:*",
+      "lock_entry": [
+        "@orchestra/core@workspace:packages/core"
+      ],
+      "export_manifest": "packages/core/package.json",
+      "export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "export_key": "./schema",
+      "export_value": "./src/schema.ts",
+      "resolved_path": "packages/core/src/schema.ts",
+      "blob": "c2dbf663b11e95b54e2ea5fd61c580d7b273bd91",
+      "mode": "100644",
+      "source": "C21",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da"
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "bun:test",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/bun@1.3.13",
+        "",
+        {
+          "dependencies": {
+            "bun-types": "1.3.13"
+          }
+        },
+        "sha512-9fqXWk5YIHGGnUau9TEi+qdlTYDAnOj+xLCmSTwXfAIqXr2x4tytJb43E9uCvt09zJURKXwAtkoH4nLQfzeTXw=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "node:crypto",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "importer_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "bun:test",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/bun@1.3.13",
+        "",
+        {
+          "dependencies": {
+            "bun-types": "1.3.13"
+          }
+        },
+        "sha512-9fqXWk5YIHGGnUau9TEi+qdlTYDAnOj+xLCmSTwXfAIqXr2x4tytJb43E9uCvt09zJURKXwAtkoH4nLQfzeTXw=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "node:crypto",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "node:fs/promises",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "node:os",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "importer_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "specifier": "node:path",
+      "status": "BUILTIN_RUNTIME_CONTRACT",
+      "runtime": "bun@1.3.14",
+      "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "types_lock_entry": [
+        "@types/node@24.12.2",
+        "",
+        {
+          "dependencies": {
+            "undici-types": "~7.16.0"
+          }
+        },
+        "sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g=="
+      ],
+      "not_executed": true
+    }
+  ],
+  "nonliteral_imports": [
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "expression": "import(pathToFileURL(path.join(repository,target)).href)",
+      "resolution": "Only source manifest and own55 composition map admitted targets; canonical exact blob/SHA256 required before import.",
+      "targets": [
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "mode": "100644",
+          "source": "proposed-overlay"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "mode": "100644",
+          "source": "proposed-overlay"
+        },
+        {
+          "path": "apps/cli/src/commands/handlers/serve.ts",
+          "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+          "mode": "100644",
+          "source": "proposed-overlay"
+        }
+      ]
+    },
+    {
+      "importer": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "expression": "import(pathToFileURL(cli.resolve('@effect/platform-node')).href)",
+      "resolver_anchor": "apps/cli/package.json",
+      "resolver_anchor_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "package": "@effect/platform-node",
+      "declaration": "catalog:",
+      "catalog": "4.0.0-beta.83",
+      "lock_entry": [
+        "@effect/platform-node@4.0.0-beta.83",
+        "",
+        {
+          "dependencies": {
+            "@effect/platform-node-shared": "^4.0.0-beta.83",
+            "mime": "^4.1.0",
+            "undici": "^8.2.0"
+          },
+          "peerDependencies": {
+            "effect": "^4.0.0-beta.83",
+            "ioredis": "^5.7.0"
+          }
+        },
+        "sha512-RmpVGu/+X/Bif3/g1Rzj8oFzTOknoVB3yHCa0b179vytPpKe+Kj9ZwKNcAnKWqHUDkbSPBq1Ca60mvOHr2/+LQ=="
+      ],
+      "runtime_resolution": "OPEN_A45; no package installed or imported by55"
+    },
+    {
+      "importer": "apps/cli/src/sucafina-product/installation.ts",
+      "expression": "import(pathToFileURL(await realpath(file)).href)",
+      "resolution": "Explicit owner-supplied absolute trusted-code installation path; runtime configuration input, not a statically fixed module. No value invented; live/runtime gate remains open.",
+      "candidate_entry": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "candidate_entry_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f"
+    }
+  ],
+  "fixture_data_inputs": {
+    "source_archive_tree": "2474f80f89593d821bc4b71e1106becd9cdb536e",
+    "source_archive_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49",
+    "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+    "composition_manifest_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "original_prepared_composition_manifest_blob": "403fba5757a5c242013879a052c8014542f8c933",
+    "final_composition_manifest_binding": "Root owns final manifest: target_base rebased to C21 and checks delegated to45, functional qualifiers toS0. Root records its new blob in atomic candidate receipt; this historical prepared hash is not the final receipt hash. The three canonical postimages and fixture remain those listed here.",
+    "original_fixture_supplement_blob": "6aec0d65da787030ddd94fc14b474a05c865a1a3",
+    "requirement": "All23 source receipt blobs archived unchanged; own composition manifest and original fixture supplement in same atomic candidate."
+  },
+  "counts": {
+    "files": 20,
+    "literal_edges": 176,
+    "relative_edges": 103,
+    "relative_targets": 51,
+    "relative_to_C21": 61,
+    "relative_to_overlay": 42,
+    "external_by_status": {
+      "LOCKED_REGISTRY_PACKAGE_NOT_LOADED": 13,
+      "RESOLVED_WORKSPACE_EXPORT": 13,
+      "BUILTIN_RUNTIME_CONTRACT": 47
+    },
+    "unresolved_relative": 0,
+    "unresolved_external_static": 0
+  }
+}

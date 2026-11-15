@@ -1,0 +1,19 @@
+{
+  "schema": "sf2h.microsoft-login.boundary.v1",
+  "mission": 49,
+  "consumer": 47,
+  "release": false,
+  "client": "Explicit web-confidential profile reuses existing jose/auth-code PKCE engine; private client credential provider. Local public profile remains separate.",
+  "identity": "Validated resource-tenant tid and guest oid. Existing UUID actor id retained only under fixed immutable tenant+client installation binding; cookies/session ciphertext additionally bind origin+mount+tenant+client.",
+  "roles": "Only canonical existing per-surface role rows with immutable group:<object-id> assignments in cloud mode. Empty/unassigned/ambiguous legacy mappings deny; no guest/default/name/email privileges.",
+  "directory": "B2B login uses /me and /me/checkMemberGroups with delegated User.Read; cloud profile does not enumerate /users. Product directory is self-only in this MVP unless a later owner supplies an independently authorized source.",
+  "session": "Same private encrypted store, HTTPS Secure HttpOnly SameSite=Lax scoped opaque cookies; browser-bound one-time login, bounded session, CSRF logout, durable revocation and post-await fences.",
+  "composition": "New owned microsoft-* config/composition and real application route tests; complete inert owner patch for installed CLI/runtime wiring with pre/post blob manifest. Fail-closed configuration; never local-operator cloud fallback.",
+  "secrets": "Only private server files/closures and encrypted auth storage. No secret values in repository/receipts/logs/model-facing tools.",
+  "owners": {
+    "integration47": "Apply shared composition patches after preimage review; acknowledge exact release.",
+    "compiler45": "Host package bun typecheck and check:guards --base origin/dev using its authorized scoped workflow.",
+    "azure_session": "Supply public origin/tenant/client/immutable assignments, private credentials/keys and registered exact Web redirect. Provision and validate actual B2B separately."
+  },
+  "live_proof": "NOT_RUN until tenant owner validates actual Microsoft/B2B. Synthetic cryptographic fixtures do not claim live acceptance."
+}

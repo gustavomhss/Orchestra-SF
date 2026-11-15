@@ -2,15 +2,17 @@ import path from "node:path"
 import { realpath } from "node:fs/promises"
 import { pathToFileURL } from "node:url"
 import type { Host } from "@orchestra/core/host"
-import { Effect } from "effect"
-import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+import { Effect, Layer } from "effect"
+import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { createSfHostRuntime } from "./host-context"
+import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
 
 export type SfInstallation = {
   mount: `/${string}`
   handler: (request: Request) => Promise<Response | undefined>
   dispose: () => void | Promise<void>
   host?: ReadonlyArray<Host.Contribution>
+  transport?: MicrosoftTransport
 }
 
 /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
@@ -19,16 +21,54 @@ export async function loadSfInstallation(file: string, origin: string) {
   const module = await import(pathToFileURL(await realpath(file)).href)
   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
   const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime })
+  return composeSfInstallation(value, origin)
+}
+
+/** The normal loader and hosted composition fixtures use the same transport and route fences. */
+export async function composeSfInstallation(value: unknown, origin: string) {
+  if (new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ORIGIN_REQUIRED")
   if (!value || typeof value !== "object" || !("mount" in value) || typeof value.mount !== "string" || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount) || !("handler" in value) || typeof value.handler !== "function" || !("dispose" in value) || typeof value.dispose !== "function" || ("host" in value && !Array.isArray(value.host))) throw new Error("SF_INSTALLATION_FACTORY_INVALID")
   const installation = value as SfInstallation
+  const transport = readTransport("transport" in value ? value.transport : undefined, origin)
+  const { microsoftRequest } = transport ? await import("../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts") : { microsoftRequest: undefined }
+  const requestOrigin = transport?.ingressOrigin ?? origin
+  // Effect starts its HTTP span before route middleware and includes the full query.
+  // Disable listener tracing for this explicit cloud installation, including malformed callbacks.
+  const privacy = transport ? Layer.succeed(HttpMiddleware.TracerDisabledWhen)(() => true) : Layer.empty
   const route = Effect.gen(function* () {
     const incoming = yield* HttpServerRequest.HttpServerRequest
-    if (incoming.headers.host?.toLowerCase() !== new URL(origin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
-    const web = yield* HttpServerRequest.toWeb(incoming)
-    if (new URL(web.url).origin !== origin) return HttpServerResponse.empty({ status: 403 })
-    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(web, { signal })), catch: () => "installation-unavailable" as const })
+    if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+    // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
+    const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+    const web = yield* HttpServerRequest.toWeb(sanitized)
+    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
+    const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+    if (!request) return HttpServerResponse.empty({ status: 403 })
+    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
-  }).pipe(Effect.catch(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
+  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
+  // The listener must install privacy before HttpRouter.serve, outside the request route.
   // Effect registers a trailing wildcard at both the subtree and its base path.
-  return { ...installation, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+  return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+}
+
+function readTransport(value: unknown, origin: string): MicrosoftTransport | undefined {
+  if (value === undefined) return undefined
+  if (!value || typeof value !== "object" || Object.keys(value).length !== 4 ||
+    !("kind" in value) || value.kind !== "explicit-https-proxy" ||
+    !("listenerOrigin" in value) || typeof value.listenerOrigin !== "string" ||
+    !("ingressOrigin" in value) || typeof value.ingressOrigin !== "string" ||
+    !("publicOrigin" in value) || typeof value.publicOrigin !== "string" ||
+    value.listenerOrigin !== origin || !exactOrigin(value.listenerOrigin, "http:") ||
+    !exactOrigin(value.ingressOrigin, "http:") || !exactOrigin(value.publicOrigin, "https:")) throw new Error("SF_INSTALLATION_TRANSPORT_INVALID")
+  return Object.freeze({ kind: "explicit-https-proxy", listenerOrigin: value.listenerOrigin, ingressOrigin: value.ingressOrigin, publicOrigin: value.publicOrigin })
+}
+
+function exactOrigin(value: string, protocol: string): boolean {
+  try {
+    const url = new URL(value)
+    return url.origin === value && url.protocol === protocol
+  } catch {
+    return false
+  }
 }

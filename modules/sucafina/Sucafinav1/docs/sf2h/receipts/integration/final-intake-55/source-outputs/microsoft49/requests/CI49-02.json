@@ -1,0 +1,221 @@
+{
+  "schema": "sucafina.microsoft-login.ci-request.v1",
+  "mission": 49,
+  "branch": "microsoft-login",
+  "pr": 69,
+  "recorded_at": "2026-11-15 00:02:07 UTC",
+  "product_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+  "product_tree": "7af26c42a054abe09d0585567953f512c32ebf82",
+  "state": "COMPLETED_SEE_RESULT",
+  "snapshot": "61d531f6be247e26dc66836effc427ba7403fce6",
+  "snapshot_tree": "adcc98f35895d34c18c0aa0a2d7313bb048e62cf",
+  "snapshot_parent": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+  "snapshot_branch": "ci-run-linux-microsoft-login-49-43bddf0a-02",
+  "only_delta": ".ci-run.json",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/entra-client.test.ts",
+      "Sucafinav1/test/local-identity.test.ts",
+      "Sucafinav1/test/local-entry.test.ts",
+      "Sucafinav1/test/microsoft-entra-client.test.ts",
+      "Sucafinav1/test/microsoft-session.test.ts",
+      "Sucafinav1/test/microsoft-configuration.test.ts",
+      "Sucafinav1/test/microsoft-routes.test.ts",
+      "Sucafinav1/test/microsoft-composition.test.ts",
+      "Sucafinav1/test/microsoft-node.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_blob": "809d91cce8eac41db2c0fdee8b3c0a80596ce16f",
+  "request_sha256": "84c2e19cc359b9d7e5e101fa10d3e1bb2a011598c6a5fcc0f3ecc70d2ace749d",
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "recipes_blob": "ae5a1949876eef23450fa51167498be8a2334d35",
+  "run_id": 43655680707,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655680707",
+  "dedup": {
+    "at": "2026-11-14 23:55:55 UTC",
+    "existing_runs_scanned": 100,
+    "inflight_seen_on_first_page": 0,
+    "matching_candidate": 0,
+    "previous_failed_run": 43655093802,
+    "reattach_run": 43655680707
+  },
+  "runtime": {
+    "os": "ubuntu-24.04",
+    "runner": "bun",
+    "omni_control": "declared",
+    "credentials": "only generated synthetic fixture material in private temporary storage",
+    "real_tenant": false
+  },
+  "selection": [
+    "Sucafinav1/test/entra-client.test.ts",
+    "Sucafinav1/test/local-identity.test.ts",
+    "Sucafinav1/test/local-entry.test.ts",
+    "Sucafinav1/test/microsoft-entra-client.test.ts",
+    "Sucafinav1/test/microsoft-session.test.ts",
+    "Sucafinav1/test/microsoft-configuration.test.ts",
+    "Sucafinav1/test/microsoft-routes.test.ts",
+    "Sucafinav1/test/microsoft-composition.test.ts",
+    "Sucafinav1/test/microsoft-node.test.ts"
+  ],
+  "source_integrity": {
+    "modified_paths": [
+      {
+        "path": "docs/guides/sucafina-microsoft-login.md",
+        "blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+        "sha256": "b1747be80f9a17b202be9f9882d36e4cb90368250b5897596a9a88149c6a3488"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/README49.md",
+        "blob": "26be3cd451cb1a8f3a8e6cbd23ec8fad52b8895e",
+        "sha256": "9128b667e4f406bad35da902cec070b43619f6c887c7a68cd163afb55570caa5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/cli-installation.patch",
+        "blob": "e7d033ce8fa4c7ae3789cd6fb3982cf5e90247d7",
+        "sha256": "4474aa45b81485a2e5b9d7490cd1d71a7ecf47b9664149168f1a773c1c3ce09b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/cli-installation.postimage.txt",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/cli-installation.preimage.txt",
+        "blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "sha256": "26c989c2ab37d87363e77a06b96ed55eaccb97f9c4f586879bd4539de869f93d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/cli-serve.patch",
+        "blob": "497b0897609c9ce3176c874496a9c3cd4a336263",
+        "sha256": "355f8981dd4eacc868d9f90e645747bea9b122337759a933923abcdb490ee630"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/cli-serve.postimage.txt",
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/cli-serve.preimage.txt",
+        "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "sha256": "eb8991f30d7d4003bedddd92c82af6a726c0508d7c4284cf51a02e726a2f4db8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/local-entry.patch",
+        "blob": "664435acfe5fa5dd970d94606ca0b2def556b9cd",
+        "sha256": "5eb55e3bf494beaf81a323e20cedb577226985380c520c9be6a941ac854d16b7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/local-entry.postimage.txt",
+        "blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/local-entry.preimage.txt",
+        "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "sha256": "8803349c063a93cb03a805c9833ff612bec158e832f4ef05a1ef3cc5b7d7324b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/mission49-installation-manifest.json",
+        "blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+        "sha256": "84c3f5b103c40804e183e9acdfabf253ea1e1535a79560cd5a3172ac4a95056c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/microsoft-login/integration/mission49-installation.patch",
+        "blob": "2e02069799cbba9b3036453f592c9c01e8ece0a1",
+        "sha256": "28f586d4d53c28397a710ec55a92aa6a1210a3dcd551c1ef37128e3fcef5b378"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+        "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+        "sha256": "798b24e6f1064670e35363b1e99c55dbf05adaf51ff98bb70c471f68e9232446"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "sha256": "d7f7fd24f13c767d9871008392d313e52c36a981160da3069ad727bf1d3fb079"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "sha256": "f2d00caedd14b3c1f9dd25aca416a7ec02af08aaca8195fe1536d24316eb5e9b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+        "blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+        "sha256": "3f7298dcb659f5713fad61ff9fe58158ad32053f28e8fad17edd45e76347ba26"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+        "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+        "sha256": "edaab52636603c6f819743553984316b67aaa41aad6650395ce34120a9060a97"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+        "blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+        "sha256": "8b751b8c44ffa3b4c4e59369d72f8967a7019d8517d86bb19b435dcfaf0993f9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+        "blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+        "sha256": "7a941c499bcd83cc6ec3dc05fa31afc47f6c1891be795934b40844a9d84d3c81"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+        "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+        "sha256": "019bc465402e0c5cfc54b1dcb76c67af16259c50be7702f500b4462bd8b8c30a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+        "blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+        "sha256": "d4a67e2707196b9f5052e884bd2645a9b4ffa233e3d5b7425530dd5841ce81c9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+        "blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+        "sha256": "8c4388b490dc73e03536b27fc6104b4ab5a26fee971d2358f3a25cddcacfaf7d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "blob": "6aec0d65da787030ddd94fc14b474a05c865a1a3",
+        "sha256": "7121246362f87a3c7795d2910e77690fa20fc9b317c19bbfaef2cee2789eb993"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+        "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+        "sha256": "6139a134ef8e10a90222e72b3472701c8ea9a1a2b95b0d1e68db8831f1666508"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+        "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+        "sha256": "88afde145c62bd28ea29628b29c0e2961cabde01aa3a0731bca7c345d22bc0e2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+        "blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+        "sha256": "eebd6a1c39fb34a31e880ad45e511348b5b70ff1c61449148131a17ed8bcee8a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+        "blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+        "sha256": "c881b3d89fdaaee43bf55f388b77ffccba14405d002a6076d2787d0cea7ab6a8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+        "blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+        "sha256": "473519007c178826f6663380dcde7c470fe5e0d247ab123df0c68ac949addffe"
+      }
+    ],
+    "shared_canonical_paths_modified": [],
+    "local_product_execution": false,
+    "epic_dispatched": false
+  },
+  "result_policy": "Read actual jobs/logs; preserve failed attempts. This running request is not PASS; result is a separate append-only receipt.",
+  "result_receipt": "runs/CI49-02.json"
+}

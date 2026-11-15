@@ -1,0 +1,88 @@
+--- a/modules/sucafina/Sucafinav1/local/entry.ts
++++ b/modules/sucafina/Sucafinav1/local/entry.ts
+@@ -18,6 +18,8 @@
+ import { createLocalIdentity } from "../runtime/local-identity.ts"
+ import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
+ import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
++import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
++import type { EntraOptions } from "../runtime/local-contract.ts"
+ import { scanLocalFile } from "../runtime/local-scanner.ts"
+ import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
+ import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
+@@ -37,7 +39,19 @@
+ 
+ /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
+ export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
++  if (process.env.SUCAFINA_MICROSOFT_CONFIG !== undefined) return createMicrosoftInstallation(context, process.env.SUCAFINA_MICROSOFT_CONFIG)
+   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
++}
++
++export async function createMicrosoftInstallation(
++  context: { origin: string; createHostRuntime?: CreateSfHostRuntime },
++  file: string | undefined,
++  environment: Readonly<Record<string, string | undefined>> = process.env,
++  overrides: { fetch?: EntraOptions["fetch"]; now?: () => Date } = {},
++) {
++  const microsoft = await prepareMicrosoftInstallation(context, file, environment, overrides)
++  const configured = await createConfiguredInstallation({ ...context, origin: microsoft.loaded.config.origin }, microsoft.loaded, microsoft)
++  return { ...configured, transport: microsoft.transport }
+ }
+ 
+ export async function createLocalInstallation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
+@@ -45,12 +59,21 @@
+   const loaded = await loadLocalConfiguration(file)
+   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
+   await requireLocalIsolation(loaded.directory, environment)
++  return createConfiguredInstallation(context, loaded)
++}
++
++export async function createConfiguredInstallation(
++  context: { origin: string; createHostRuntime?: CreateSfHostRuntime },
++  loaded: Awaited<ReturnType<typeof loadLocalConfiguration>>,
++  microsoft?: Awaited<ReturnType<typeof prepareMicrosoftInstallation>>,
++) {
+   const config = loaded.config
++  if (context.origin !== config.origin) throw new Error("Installation origin mismatch")
+   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
+-  const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
++  const client = microsoft?.client ?? (!operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined)
+   const now = () => new Date().toISOString()
+   const projectScope = createSfSourceScopeProjector(now)
+-  const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
++  const driver = await openLocalStore(path.join(loaded.directory, microsoft ? "business-microsoft" : operator ? "business-local" : "business"))
+   let runtime: SfHostRuntime | undefined
+   const currentChoiceFence = createCurrentChoiceFence({ persistence: driver,
+     host: () => {
+@@ -81,7 +104,7 @@
+     dispose: () => store.dispose(),
+   }
+   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
+-  const identity = operator
++  const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
+     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
+     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
+   const backupDirectory = path.join(loaded.directory, operator ? "backups-local" : "backups-microsoft")
+@@ -102,11 +125,11 @@
+   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
+   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
+-  runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
++  runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+     mount: config.mount, persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+-    grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
++    grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
+       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
+-      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
++      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })
+   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
+     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
+   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
+@@ -139,7 +162,7 @@
+     async handler(request: Request) {
+       const url = new URL(request.url)
+       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
+-      if (operator && request.method === "POST" && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
++      if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+       const readiness = status(request)
+       if (readiness) return readiness
+       const auth = await identity.handle(request)
