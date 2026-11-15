@@ -266,7 +266,7 @@ const MonthlyValue = Schema.Struct({
   before: Optional(MonthlyGrid), after: Optional(MonthlyGrid), rows: Schema.Array(MonthlyRow),
 })
 const HostFailure = Schema.Struct({
-  status: Schema.Literals(["denied", "stale", "conflict", "needs-input", "invalid", "unavailable"]),
+  status: Schema.Literals(["denied", "stale", "conflict", "provider-conflict", "failed", "needs-input", "invalid", "unavailable"]),
   reason: Optional(Schema.String),
 })
 const MonthlyOutput = Schema.Union([

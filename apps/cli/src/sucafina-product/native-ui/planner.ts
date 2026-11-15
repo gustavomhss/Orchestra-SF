@@ -253,17 +253,19 @@ export function createSfPlannerProjectionHandlers(deps: SfNativeHostDependencies
         request.headers.has("transfer-encoding") || Number(request.headers.get("content-length") ?? "0") > 0)
         return failure("invalid", "projection-request-invalid")
       const selection = select(request, spec)
-      if (!selection || request.signal.aborted) return failure("invalid", "projection-selection-invalid")
+      if (!selection) return failure("invalid", "projection-selection-invalid")
+      if (request.signal.aborted) return failure("unavailable", "request-aborted")
       const first = await deps.readContext(request).catch(() => undefined)
       if (!first || first.status !== "ok") {
         if (first?.status === "unauthenticated") return failure("unauthenticated")
-        return first?.status === "denied" ? failure("denied") : failure("unavailable", "context-unavailable")
+        return first?.status === "denied" ? failure("denied") :
+          failure("unavailable", first?.status === "unavailable" ? first.reason : "context-unavailable")
       }
       const admit = permitted(first.value, spec.id)
       if (!admit) return failure("denied")
       const environment = await deps.application.environment(request).catch(() => undefined)
       if (!environment) return failure("unavailable", "planner-environment-unavailable")
-      const projected = await deps.application.persistence.transaction<Projection | undefined>("planner", async (snapshot) => {
+      const result = await deps.application.persistence.transaction<Projection | undefined>("planner", async (snapshot) => {
         if (request.signal.aborted) return { commit: false, value: undefined }
         const principal = await deps.application.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") }).catch(() => null)
         if (!principal || !principal.id || principal.id.startsWith("local:") || principal.id !== first.value.stamp.principalRef)
@@ -285,12 +287,16 @@ export function createSfPlannerProjectionHandlers(deps: SfNativeHostDependencies
           selection: { ...selection, ...(current ? { versionId: id(current.id) } : {}) },
           data, versions: cas(view, spec.id, current, data),
         } }
-      }, { signal: request.signal }).catch(() => undefined)
+      }, { signal: request.signal }).then((value) => ({ state: "complete" as const, value }), () => ({ state: "unavailable" as const }))
+      if (result.state === "unavailable") return failure("unavailable", "planner-store-unavailable")
+      const projected = result.value
       if (!projected) return failure("denied")
       if ("status" in projected.data) return failure("needs-input", "version-unavailable")
       const fresh = await deps.readContext(request).catch(() => undefined)
-      if (!fresh || fresh.status !== "ok" || !sameStamp(first.value.stamp, fresh.value.stamp))
-        return failure("stale", "authority-changed")
+      if (fresh?.status === "unauthenticated") return failure("unauthenticated")
+      if (fresh?.status === "denied") return failure("denied")
+      if (!fresh || fresh.status !== "ok") return failure("unavailable", fresh?.status === "unavailable" ? fresh.reason : "context-unavailable")
+      if (!sameStamp(first.value.stamp, fresh.value.stamp)) return failure("stale", "authority-changed")
       const currentAdmit = permitted(fresh.value, spec.id)
       if (!currentAdmit || currentAdmit.allowedActionIds.join("|") !== admit.allowedActionIds.join("|")) return failure("denied")
       if (request.signal.aborted) return failure("unavailable", "request-aborted")
