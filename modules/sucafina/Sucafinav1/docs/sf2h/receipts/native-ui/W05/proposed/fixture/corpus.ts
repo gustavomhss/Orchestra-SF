@@ -43,7 +43,7 @@ export function sourceNativeVolume() {
       volume.purchaseOrders.length !== nativeCorpus.expected.purchaseOrders ||
       volume.projects.length !== nativeCorpus.expected.projects)
     throw new Error("F04_SOURCE_CORPUS_DRIFT")
-  if (planner.data.versions[0]?.id !== inputs.planner.versionId)
+  if (rows(planner.data.versions)[0]?.id !== inputs.planner.versionId)
     throw new Error("F04_PLANNER_CORPUS_DRIFT")
   return { volume, planner }
 }

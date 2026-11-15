@@ -4,6 +4,7 @@ import type { Locator } from "@playwright/test"
 import { readNativeManifest, proveNativeWebReadiness } from "./fixture/readiness.ts"
 import type { NativeManifest, NativeWebObservation } from "./fixture/readiness.ts"
 
+export { createNativeScratch } from "./fixture/scratch.ts"
 export { nativeCorpus, sourceNativeVolume, seedNativeProcurementCorpus } from "./fixture/corpus.ts"
 export { armLostResponse, armHeldResponse, requestRealRevocation } from "./fixture/response-faults.ts"
 

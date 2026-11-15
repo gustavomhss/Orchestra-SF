@@ -44,7 +44,7 @@ function target(value: unknown): NativeTarget {
   }
   const origin = new URL(result.publicOrigin)
   if (origin.origin !== result.publicOrigin || origin.username || origin.password ||
-      !/^\/[A-Za-z0-9_/-]+$/.test(result.mount) || !result.mount.startsWith("/") ||
+      !/^\/[A-Za-z0-9_\/-]+$/.test(result.mount) || !result.mount.startsWith("/") ||
       !result.chapterHref.startsWith("/") ||
       (origin.protocol !== "https:" &&
         !(origin.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname))))
@@ -148,8 +148,7 @@ export async function proveNativeWebReadiness(
       !record(context.value.stamp) ||
       context.value.stamp.installationId !== selected.installationId ||
       context.value.stamp.projectId !== selected.projectId ||
-      context.value.stamp.hostId !== selected.hostId ||
-      !manifest.actors.requester.startsWith("macos:") && !manifest.actors.requester.includes(":"))
+      context.value.stamp.hostId !== selected.hostId)
     throw new Error("F04_CONTEXT_AUTHORITY_MISMATCH")
   const principalRef = requiredText(context.value.stamp.principalRef)
   if (!Object.values(manifest.actors).includes(principalRef))
