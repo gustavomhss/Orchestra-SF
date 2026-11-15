@@ -150,7 +150,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
               const rowCount = Math.ceil(Math.max(...fragments.map((cell) => cell.length)) / linesPerRow)
               const identifier = row.value.slice(0, row.value.indexOf(": "))
               const identifierLines = fitSlideText(identifier, { fontSize: 10, boxWidthInches: widths[0] / 1440, marginInches: 0.1 })
-              const periodLines = fragments[1]
+              const periodLines = fragments[1]!
               const label = identifierLines.slice(0, 2).join(" ") + (identifierLines.length > 2 ? "…" : "")
               const periodLabel = periodLines.slice(0, 2).join(" ") + (periodLines.length > 2 ? "…" : "")
               return Array.from({ length: rowCount }, (_, part) => new TableRow({
