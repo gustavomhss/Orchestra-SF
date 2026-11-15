@@ -1,0 +1,113 @@
+{
+  "schema": "sf2h.native-closure198-ci-request.v1",
+  "mission": 198,
+  "epoch": "native-closure-e1-browser198",
+  "source_branch": "sf-proof-persistence",
+  "source_code_commit": "6d27c9578fa3387e0d81860ba4cf72a6f7fad157",
+  "product_base": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+  "dispatcher": "191/PR106",
+  "integrator": "189/PR65",
+  "run_status": "NOT_RUN",
+  "request_state": "SUBMITTED_TO_191_BY_PR_COMMENT_NOT_DISPATCHED",
+  "CI_policy": "191 only; wait for 189 accepted candidate C; do not start an independent run; no cached PASS; report run and actual consumption",
+  "suites": [
+    {
+      "proof": "AM05",
+      "type": "bun-test-exact-file-selectors",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+        "modules/atlas/boundary/test/business-memory-ports.test.ts"
+      ],
+      "expectations": [
+        "real scanner binary path and --version observed on CI host",
+        "no scanner=unavailable, timeout=unavailable, canary=blocked, clean=append",
+        "C08 commit, reopen and authenticated original read",
+        "lost-response idempotency and revocation checked",
+        "business-memory-ports native/export guard checked"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "proof": "AM06",
+      "type": "bun-test-exact-file-selectors",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/native-terminal-unavailable.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/schedule-native-retry.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/routine-native-admission/admission-records.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts"
+      ],
+      "expectations": [
+        "real C07 public reader refusal without Task settlement",
+        "original published version and native owner",
+        "same-key real Schedule admission dedupe/timezone, revoked read",
+        "routine-result prepare/run recursion refusal",
+        "product factual-result consumers reject cancellation/unverified terminal"
+      ],
+      "status": "NOT_RUN"
+    }
+  ],
+  "native_positive_AM06": {
+    "status": "BLOCKED_NOT_RUN",
+    "needed_from_fixture_199": [
+      "real installed, owner-scoped source C07 publication with document/version/planRevisionID from original public native producer",
+      "authenticated installed requester/holder/denied host identities via F04/199 (no mock or borrowed grant)",
+      "genuine human approval and native Task dispatch against pinned plan; RelayWorkflowBinding and Relay execution/settlement",
+      "real native runRef/resultRef/terminal revision, immutable artifact and original product consumer read",
+      "supported installed re-entry/cancellation/revocation/intervention mechanism and version-aware retry"
+    ],
+    "recorded_input_only": [
+      "candidate_SHA",
+      "installation_ID",
+      "project_ID",
+      "published_document_ID",
+      "published_version",
+      "plan_revision_ID",
+      "native_session_ID",
+      "runRef",
+      "resultRef",
+      "terminal_revision",
+      "output_digest",
+      "observed principalRef/policyVersion/accessRevision (redacted identities as appropriate)"
+    ],
+    "forbidden": [
+      "synthetic Task/authorization/arm as positive",
+      "correlator-only PASS",
+      "fake Relay fixture",
+      "private admission",
+      "LLM text as execution evidence",
+      "auto-dispatch CI outside 191"
+    ],
+    "needed_action": "199 provisions and exposes the installed fixture; 189 integrates; 191 dispatches authorized real C07/Relay positive journey on accepted C and attaches exact run/consumer evidence"
+  },
+  "compiler_request_190": {
+    "status": "NOT_RUN",
+    "check_c_source": [
+      "modules/atlas/boundary/package.json",
+      "modules/atlas/boundary/src/business-memory-entry.ts",
+      "modules/atlas/boundary/src/generated/business-memory-ports.js",
+      "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+      "modules/atlas/boundary/src/generated/native-memory.js",
+      "modules/atlas/boundary/src/generated/native-memory.d.ts"
+    ],
+    "checks": [
+      "check:generated business+native exact edges",
+      "AST no spawning from business-memory-ports",
+      "check:spawn-imports with guard/allowlist unchanged",
+      "generated digest parity and bound exports intact"
+    ],
+    "owner": "190; not 198"
+  },
+  "candidate_qualification": "Do not mark AM05 or AM06 PASS until live CI actual execution on the SAME accepted candidate C, originals observed, and product consumer attached; global release remains false"
+}
