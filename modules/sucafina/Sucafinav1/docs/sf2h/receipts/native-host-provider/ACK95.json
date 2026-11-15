@@ -1,0 +1,39 @@
+{
+  "mission": 95,
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S0-B/native-authority-producer",
+  "branch": "native-host-provider",
+  "lease_epoch": "native-producer-browser95",
+  "status": "ACK_ACCEPTED_WORK_IN_PROGRESS",
+  "writer_scope": "native-host.ts / token-gate.ts / new native-authority-provider.ts / own test and receipts only",
+  "observed_identity": {
+    "model": "GPT-6",
+    "client": "ChatGPT web",
+    "github_login": "gustavomhss",
+    "conversation_session_id": null,
+    "reason": "No session identifier exposed by the host; not invented"
+  },
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "568cc082eb6e7356b66dd1920d99f3b011f92849",
+  "branch_head_at_admission": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "head_tree_at_admission": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+  "source_pins": {
+    "native-host.ts": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+    "token-gate.ts": "4d7b395aa29a03a8311d8dec87cb1e69e0a4ab30",
+    "host-context.ts": "297a4050323d80648684725f9c7e9a8680aa318f",
+    "consumer64": "4d0421669054a131de0df0c95994b45229ab354e",
+    "consumer90": "f6abbcc1677be93122f19ae3c2846fececeadbf4",
+    "review93": "28e770f600b835a5f59d9e301a40f5441a76e56b"
+  },
+  "authority_reconciliation": "No newer commit on native-host-provider at admission. Integrator71 is sole sf2-stack writer; no shared host-context edits. Preserve 90 and 64 consumers; tests via dispatcher45 only.",
+  "policies": {
+    "no_fake_origin": true,
+    "no_permission_reply": true,
+    "no_new_grants": true,
+    "no_schedule_watch": true,
+    "no_global_release": true,
+    "no_local_product_tests": true,
+    "remote_git_only_mcp_cas": true
+  },
+  "next": "Implement independent legitimate authority producer or prove exact API blocker, publish own W/tree and tested/untested evidence, PR draft and handoff71/recheck93."
+}
