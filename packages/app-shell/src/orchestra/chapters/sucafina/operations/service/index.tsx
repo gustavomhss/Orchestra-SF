@@ -109,11 +109,13 @@ function isValid(action: SfServiceAction, values: DraftValues, page: SfServicePa
 
 }
 
-function serviceReadState(page: SfServicePage): "ready" | "empty" | "filtered-empty" {
-  const records = [
-    ...(page.data.opsTickets ?? []), ...(page.data.opsSLA ?? []),
-    ...(page.data.opsHeatmap ?? []),
-  ]
+function serviceReadState(page: SfServicePage): "ready" | "empty" | "filtered-empty" | "partial" | "unavailable" {
+  // The source union permits omitted/redacted collections. An absent projection
+  // is not evidence that the authorized collection is empty.
+  const collections = [page.data.opsTickets, page.data.opsSLA, page.data.opsHeatmap]
+  if (collections.every((rows) => rows == null)) return "unavailable"
+  if (collections.some((rows) => rows == null) || page.data.display == null) return "partial"
+  const records = collections.flatMap((rows) => rows ?? [])
   if (records.length === 0) return "empty"
   return records.some((row) => row.year === page.selection.year) ? "ready" : "filtered-empty"
 }
@@ -156,6 +158,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   }
   const can = (action: SfServiceAction) =>
     state.page?.allowedActionIds.includes(action) === true &&
+    ["ready", "empty", "filtered-empty"].includes(state.state) &&
     !["unknown", "conflict"].includes(state.operationState) &&
     owner.state().status === "ready" && !!owner.ready()
   const activeDraft = () => {
@@ -632,6 +635,12 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             onRetryRead={() => { setState("refresh", (value) => value + 1) }}
           />
         }>
+          <Show when={state.state === "partial"}>
+            <p role="status">{t(commonKey("partial"))}</p>
+            <button type="button" onClick={() => setState("refresh", (value) => value + 1)}>
+              {t(commonKey("retry"))}
+            </button>
+          </Show>
           <Show when={state.state === "empty" || state.state === "filtered-empty"}>
             <p role="status">{t(state.state === "empty" ? commonKey("empty") : commonKey("filterEmpty"))}</p>
           </Show>

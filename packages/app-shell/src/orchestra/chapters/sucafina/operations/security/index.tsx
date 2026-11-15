@@ -152,11 +152,14 @@ function validForm(editor: SecurityEditor, values: FormValues, page: SfSecurityP
       value === null || value === "" || nonnegative(String(value))))
 }
 
-function securityReadState(page: SfSecurityPage): "ready" | "empty" | "filtered-empty" {
-  const records = [
-    ...(page.data.secKpi ?? []), ...(page.data.secActions ?? []),
-    ...(page.data.secIncidents ?? []), ...(page.data.secPhishing ?? []),
+function securityReadState(page: SfSecurityPage): "ready" | "empty" | "filtered-empty" | "partial" | "unavailable" {
+  const collections = [
+    page.data.secKpi, page.data.secActions,
+    page.data.secIncidents, page.data.secPhishing,
   ]
+  if (collections.every((rows) => rows == null)) return "unavailable"
+  if (collections.some((rows) => rows == null) || page.data.display == null) return "partial"
+  const records = collections.flatMap((rows) => rows ?? [])
   if (records.length === 0) return "empty"
   if ((page.data.secActions ?? []).length || (page.data.secPhishing ?? []).length ||
     (page.data.secKpi ?? []).some((row) => row.year === page.selection.year) ||
@@ -210,6 +213,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   }
   const can = (command: SecurityCommand) =>
     state.page?.allowedActionIds.includes(command) === true &&
+    ["ready", "empty", "filtered-empty"].includes(state.state) &&
     !["unknown", "conflict"].includes(state.operationState) &&
     owner.state().status === "ready" && !!owner.ready()
   const activeDraft = () => {
@@ -698,6 +702,10 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
             onRetryRead={refresh}
           />
         }>
+          <Show when={state.state === "partial"}>
+            <p role="status">{t(common("partial"))}</p>
+            <button type="button" onClick={refresh}>{t(common("retry"))}</button>
+          </Show>
           <Show when={state.state === "empty" || state.state === "filtered-empty"}>
             <p role="status">{t(state.state === "empty" ? common("empty") : common("filterEmpty"))}</p>
           </Show>
