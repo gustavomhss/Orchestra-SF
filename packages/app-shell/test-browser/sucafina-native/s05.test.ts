@@ -11,6 +11,7 @@ import type {
 const { createComponent }: typeof import("solid-js") = await import("solid-js")
 const { createStore }: typeof import("solid-js/store") = await import("solid-js/store")
 const { render }: typeof import("solid-js/web") = await import("solid-js/web")
+const { withBrowserPlatform } = await import("./platform-fixture")
 const { LanguageProvider }: typeof import("@/context/language") = await import(solidDom("@/context/language", import.meta.dir))
 const {
   SfRelations, SfThread, SfQuestion, SfConfirmation,
@@ -25,12 +26,12 @@ function mount<Props extends object>(Component: (props: Props) => import("solid-
   const [props, set] = createStore(initial)
   const host = document.createElement("div")
   document.body.append(host)
-  const dispose = render(() => createComponent(LanguageProvider, {
+  const dispose = render(() => withBrowserPlatform(() => createComponent(LanguageProvider, {
     locale: "en",
     get children() {
       return createComponent(Component, props as Props)
     },
-  }), host)
+  })), host)
   const button = (label: string) => [...host.querySelectorAll<HTMLButtonElement>("button")].find(
     (item) => item.textContent?.trim() === label,
   )!

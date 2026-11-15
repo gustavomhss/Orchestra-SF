@@ -49,13 +49,20 @@ export async function download(
     if (!actor.roles.includes("admin")) return { ok: false, status: 403 }
     const { Workbook } = await import("exceljs")
     const book = new Workbook()
-    book
-      .addWorksheet("OPEX")
-      .addRow([
-        "Owner",
-        "Annual",
-        ...["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      ])
+    const sheet = book.addWorksheet("OPEX")
+    sheet.addRow([
+      "Owner",
+      "Annual",
+      ...["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    ])
+    sheet.pageSetup.paperSize = 9
+    sheet.pageSetup.orientation = "landscape"
+    sheet.pageSetup.fitToPage = true
+    sheet.pageSetup.fitToWidth = 1
+    sheet.pageSetup.fitToHeight = 0
+    sheet.pageSetup.margins = { left: 0.25, right: 0.25, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
+    sheet.pageSetup.printArea = `A1:${sheet.getColumn(sheet.columnCount).letter}${sheet.rowCount}`
+    sheet.pageSetup.printTitlesRow = "1:1"
     return {
       ok: true,
       name: "opex-template.xlsx",

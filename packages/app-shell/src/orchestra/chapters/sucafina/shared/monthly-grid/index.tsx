@@ -182,9 +182,16 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
   }
   const handleGridKeys: JSX.EventHandler<HTMLDivElement, KeyboardEvent> = (event) => {
     if (local.editing || !readable()) return
-    const current = props.activeCell ?? props.selectedRange?.extent
+    const projected = props.activeCell ?? props.selectedRange?.extent
       ?? props.cells.find((cell) => rowIndex(cell.coordinate.rowRef) >= 0)?.coordinate
-    if (!current) return
+    if (!projected) return
+    // Owner coordinates may be Solid store proxies. Both callbacks can synchronously
+    // update activeCell, so retain the pre-event navigation origin by value.
+    const current: SfCellCoordinate = {
+      rowRef: projected.rowRef,
+      month: projected.month,
+      measure: projected.measure,
+    }
     if (event.key === "Enter" || event.key === "F2") {
       event.preventDefault()
       const cell = props.cells.find((item) => SAME_CELL(item.coordinate, current))
@@ -203,10 +210,15 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
     const visibleRowCount = Math.max(1, Math.floor((scroller?.clientHeight || 352) / 44))
     const target = nextCell(current, key, visibleRowCount)
     if (event.shiftKey) {
-      props.onSelectRange({
-        anchor: props.selectedRange?.anchor ?? current,
-        extent: target,
-      })
+      const range = props.selectedRange
+      // Continue a range only while its extent is the active coordinate.
+      // Copy both endpoints: never borrow the owner's reactive activeCell or
+      // range anchor into a store that may merge objects in place.
+      const anchor = range && SAME_CELL(range.extent, current)
+        && range.anchor.measure === current.measure
+        && rowIndex(range.anchor.rowRef) >= 0 && monthIndex(range.anchor.month) >= 0
+        ? { ...range.anchor } : { ...current }
+      props.onSelectRange({ anchor, extent: { ...target } })
     } else props.onSelectRange(null)
     props.onNavigate({ from: current, key, visibleRowCount })
   }

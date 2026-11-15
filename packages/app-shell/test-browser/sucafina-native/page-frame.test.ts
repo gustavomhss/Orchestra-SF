@@ -27,6 +27,10 @@ if (process.env.SF_F03_DOM !== "1") {
 } else {
   const { createComponent, render } = await import("../lean-dom.test-helper")
   const { solidDom } = await import("../solid-dom")
+  const { withBrowserPlatform } = await import("./platform-fixture")
+  const { usePlatform }: typeof import("@/context/platform") = await import(
+    solidDom("@/context/platform", import.meta.dir)
+  )
   const { loadLocaleDict, LanguageProvider }: typeof import("@/context/language") = await import(
     solidDom("@/context/language", import.meta.dir)
   )
@@ -51,14 +55,21 @@ if (process.env.SF_F03_DOM !== "1") {
     const host = document.createElement("div")
     document.body.append(host)
     const dispose = render(
-      () => createComponent(LanguageProvider, {
+      () => withBrowserPlatform(() => createComponent(LanguageProvider, {
         locale,
         get children() { return component() },
-      }),
+      })),
       host,
     )
     return { host, close: () => { dispose(); host.remove() } }
   }
+
+  test("F03 fixture supplies the actual Orchestra Platform context before LanguageProvider", () => {
+    const screen = mount(() => document.createTextNode(usePlatform().platform))
+    try {
+      expect(screen.host.textContent).toBe("web")
+    } finally { screen.close() }
+  })
 
   test("five viewport classes map to content width, never window or guessed device", () => {
     for (const w of [320, 767, 768, 800, 1024, 1280, 1440]) {

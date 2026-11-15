@@ -200,9 +200,49 @@ if (process.env.SF_S02_DOM !== "1") {
       keydown(page.grid(), "ArrowDown", true)
       expect(page.ui.selectedRange?.extent.rowRef).toBe(rows[1]!.id)
       expect(page.ui.selectedRange?.anchor.rowRef).toBe(rows[0]!.id)
+      expect(page.ui.selectedRange?.anchor.month).toBe(0)
+      expect(page.events.navigate.at(-1)?.from).toEqual(coordinate(0, 0))
       keydown(page.grid(), "Home", false, true)
       expect(page.events.navigate.at(-1)?.key).toBe("Control+Home")
       expect(page.events.navigate.at(-1)?.visibleRowCount).toBeGreaterThan(0)
+    } finally { page.close() }
+  })
+
+  test("Shift selection owns stable range endpoints and navigation origin across repeated arrows", () => {
+    const page = mount()
+    try {
+      keydown(page.grid(), "ArrowRight", true)
+      expect(page.ui.selectedRange).toEqual({
+        anchor: coordinate(0, 0), extent: coordinate(0, 1),
+      })
+      const firstNavigation = page.events.navigate.at(-1)
+      expect(firstNavigation?.from).toEqual(coordinate(0, 0))
+      keydown(page.grid(), "ArrowRight", true)
+      expect(page.ui.selectedRange).toEqual({
+        anchor: coordinate(0, 0), extent: coordinate(0, 2),
+      })
+      expect(firstNavigation?.from).toEqual(coordinate(0, 0))
+      expect(page.events.navigate.at(-1)?.from).toEqual(coordinate(0, 1))
+      keydown(page.grid(), "ArrowLeft", true)
+      expect(page.ui.selectedRange).toEqual({
+        anchor: coordinate(0, 0), extent: coordinate(0, 1),
+      })
+      keydown(page.grid(), "ArrowDown", true)
+      expect(page.ui.selectedRange).toEqual({
+        anchor: coordinate(0, 0), extent: coordinate(1, 1),
+      })
+      keydown(page.grid(), "ArrowDown", true)
+      expect(page.ui.selectedRange?.extent).toEqual(coordinate(1, 1))
+      expect(page.ui.selectedRange?.anchor).toEqual(coordinate(0, 0))
+
+      keydown(page.grid(), "ArrowUp")
+      expect(page.ui.selectedRange).toBeNull()
+      expect(page.ui.activeCell).toEqual(coordinate(0, 1))
+      keydown(page.grid(), "ArrowDown", true)
+      expect(page.ui.selectedRange).toEqual({
+        anchor: coordinate(0, 1), extent: coordinate(1, 1),
+      })
+      expect(page.events.navigate.at(-1)?.from).toEqual(coordinate(0, 1))
     } finally { page.close() }
   })
 
