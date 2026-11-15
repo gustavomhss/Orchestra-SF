@@ -1,0 +1,1836 @@
+{
+  "schema": "sf2h.native-ui.remaining63.batch.v1",
+  "cohort": 2,
+  "batch": 2,
+  "source_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "ids": [
+    "N030",
+    "N031",
+    "N032",
+    "N033",
+    "N034",
+    "N035",
+    "N036",
+    "N037",
+    "N038",
+    "N039"
+  ],
+  "cards": [
+    {
+      "card_id": "N030",
+      "cohort": 2,
+      "sequence": 30,
+      "role": "author",
+      "work_order_id": "U10",
+      "output_id": "U10.overview",
+      "work_order_title": "Procurement overview e filas",
+      "work_order_priority": 4,
+      "work_order_blob": "37607805d0486308436dd9ab8825cd80dfc06162",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U10.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u10.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts"
+      ],
+      "partial_owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/**"
+      ],
+      "completion_residual_owns": [
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u10.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts"
+      ],
+      "authoring_locks": [
+        "bi",
+        "ctx",
+        "procurement",
+        "surface-specs",
+        "ui-bi",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "procurement",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-bi",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "U21"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "U21"
+      ],
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U10.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "procurement",
+          "surface-specs",
+          "ui-bi",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP24"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/procurement-scenario",
+          "contract-catalog.json#/sources/renderer-CAP24",
+          "contract-catalog.json#/sources/sourcing"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "symbol": "SfProcurementOverviewView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/index.tsx",
+          "symbol": "SfProcurementQueueView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfProcurementOverviewView",
+        "SfProcurementQueueView"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U10-AC01",
+          "expected": "Queues show actual holder/stage/version and measured aging; no unauthorized counts or inference from caller IDs.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U10-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U10-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP04.T01"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": "W12",
+      "independence_required": false,
+      "prompt": "CARTA N030 — U10 / U10.overview — Procurement overview e filas (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U10.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U10.overview, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u10.ts; packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: bi, ctx, procurement, surface-specs, ui-bi, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A03, S01, U21; QUALIFICAÇÃO: F01, F02, F03, A03, S01, U21, no mesmo candidato material. Fontes: contract-catalog.json#/sources/procurement-scenario, contract-catalog.json#/sources/renderer-CAP24, contract-catalog.json#/sources/sourcing. Superfícies: CAP24.\n\nCONTINUAÇÃO OBRIGATÓRIA DA PRIMEIRA ONDA W12. Só receber nova lease após handoff terminal da primeira carta e confirmação dos preimages. Para concluir a ordem completa, além do output U10.overview, esta carta também possui os paths residuais de full-order fora do partial (i18n/jornada): packages/app-shell/src/i18n/orchestra-chapters/sf-u10.ts; packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts. Para U11/U13 o prefixo pai também pode tocar o subtree da primeira onda: NUNCA editar antes de liberar a lease anterior. Preservar sem regressão o P0/P1 original.\n\nESCOPO SEM DECISÕES: Stage stock and aging graph bindings.. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U10-AC01: Queues show actual holder/stage/version and measured aging; no unauthorized counts or inference from caller IDs. | U10-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U10-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.. Tasks canônicas: WP04.T01 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N031",
+      "cohort": 2,
+      "sequence": 31,
+      "role": "author",
+      "work_order_id": "U11",
+      "output_id": "U11.complete",
+      "work_order_title": "Pedido e progressão PR/PO",
+      "work_order_priority": 4,
+      "work_order_blob": "43d6a1a62e1b45dccdfd1dc2f848cb8931df89f1",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U11.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+      ],
+      "partial_owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/**"
+      ],
+      "completion_residual_owns": [
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "files",
+        "procurement",
+        "surface-specs",
+        "ui-change-review",
+        "ui-evidence",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "files",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "procurement",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-evidence",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03",
+        "S04"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03",
+        "S04"
+      ],
+      "consumes_outputs": [
+        "U11.title-save"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U11.json"
+        ],
+        "contracts": [
+          "ctx",
+          "files",
+          "procurement",
+          "surface-specs",
+          "ui-change-review",
+          "ui-evidence",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP25"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/procurement-scenario",
+          "contract-catalog.json#/sources/renderer-CAP25",
+          "contract-catalog.json#/sources/sourcing"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/index.tsx",
+          "symbol": "SfRequestView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfRequestView"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U11-AC01",
+          "expected": "Request requisition and purchase-order fields, lines, context, attachments, submit_pr/submit_po/issue/cancel and deleteDraft preserve producer transitions. deleteDraft is distinct from cancel. U11 delegates sourcing/quote comparison to U12 and approve/reject review to U13 through frozen route/composition bindings; it does not reimplement either. Unsaved values never become approved.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U11-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U11-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U11-AC04",
+          "expected": "P0 saves ONLY pr.title for real existing draft/rejected PR using versions['requests:'+id].version from authorized server. Header X-SF-Native-Owner checked inside transaction; wrong principal/host/version produces 0 commits; second actor denied; unknown response never retried or sold as approval/receipt C12.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP04.T02",
+        "WP04.T05"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": "W19",
+      "independence_required": false,
+      "prompt": "CARTA N031 — U11 / U11.complete — Pedido e progressão PR/PO (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U11.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U11.complete, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts; packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: ctx, files, procurement, surface-specs, ui-change-review, ui-evidence, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A03, S01, S03, S04; QUALIFICAÇÃO: F01, F02, F03, A03, S01, S03, S04, no mesmo candidato material. Fontes: contract-catalog.json#/sources/application, contract-catalog.json#/sources/procurement-scenario, contract-catalog.json#/sources/renderer-CAP25, contract-catalog.json#/sources/sourcing. Superfícies: CAP25.\n\nCONTINUAÇÃO OBRIGATÓRIA DA PRIMEIRA ONDA W19. Só receber nova lease após handoff terminal da primeira carta e confirmação dos preimages. Para concluir a ordem completa, além do output U11.complete, esta carta também possui os paths residuais de full-order fora do partial (i18n/jornada): packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts; packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts. Para U11/U13 o prefixo pai também pode tocar o subtree da primeira onda: NUNCA editar antes de liberar a lease anterior. Preservar sem regressão o P0/P1 original.\n\nESCOPO SEM DECISÕES: Remaining full Requests, PR/PO/attachments/delete/cancel/issue; title save retained, and full order accepted only when all fields/commands/criteria pass.. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U11-AC01: Request requisition and purchase-order fields, lines, context, attachments, submit_pr/submit_po/issue/cancel and deleteDraft preserve producer transitions. deleteDraft is distinct from cancel. U11 delegates sourcing/quote comparison to U12 and approve/reject review to U13 through frozen route/composition bindings; it does not reimplement either. Unsaved values never become approved. | U11-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U11-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens. | U11-AC04: P0 saves ONLY pr.title for real existing draft/rejected PR using versions['requests:'+id].version from authorized server. Header X-SF-Native-Owner checked inside transaction; wrong principal/host/version produces 0 commits; second actor denied; unknown response never retried or sold as approval/receipt C12.. Tasks canônicas: WP04.T02, WP04.T05 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N032",
+      "cohort": 2,
+      "sequence": 32,
+      "role": "author",
+      "work_order_id": "U13",
+      "output_id": "U13.complete",
+      "work_order_title": "Aprovações PR, sourcing e PO",
+      "work_order_priority": 4,
+      "work_order_blob": "e1f65355726e24fdd24549b6a205ee83dedd9aab",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U13.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u13.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts"
+      ],
+      "partial_owns": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/**"
+      ],
+      "completion_residual_owns": [
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u13.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "procurement",
+        "surface-specs",
+        "ui-change-review",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "procurement",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03"
+      ],
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U13.json"
+        ],
+        "contracts": [
+          "ctx",
+          "procurement",
+          "surface-specs",
+          "ui-change-review",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP26"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/renderer-CAP26"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/index.tsx",
+          "symbol": "SfApprovalView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+          "symbol": "SfPrApprovalView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfApprovalView",
+        "SfPrApprovalView"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U13-AC01",
+          "expected": "Approval shows frozen persisted stage/version/value and current holder; reject/reopen/resubmit and uncertain receipt follow producer. M31/MI07 remain separate mandatory proof.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U13-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U13-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP04.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": "W13",
+      "independence_required": false,
+      "prompt": "CARTA N032 — U13 / U13.complete — Aprovações PR, sourcing e PO (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U13.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U13.complete, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u13.ts; packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: ctx, procurement, surface-specs, ui-change-review, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A03, S01, S03; QUALIFICAÇÃO: F01, F02, F03, A03, S01, S03, no mesmo candidato material. Fontes: contract-catalog.json#/sources/application, contract-catalog.json#/sources/renderer-CAP26. Superfícies: CAP26.\n\nCONTINUAÇÃO OBRIGATÓRIA DA PRIMEIRA ONDA W13. Só receber nova lease após handoff terminal da primeira carta e confirmação dos preimages. Para concluir a ordem completa, além do output U13.complete, esta carta também possui os paths residuais de full-order fora do partial (i18n/jornada): packages/app-shell/src/i18n/orchestra-chapters/sf-u13.ts; packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts. Para U11/U13 o prefixo pai também pode tocar o subtree da primeira onda: NUNCA editar antes de liberar a lease anterior. Preservar sem regressão o P0/P1 original.\n\nESCOPO SEM DECISÕES: All approval types, rejection/resubmission/reopen/uncertain states; contains admitted pr-approval increment unchanged unless explicit correction.. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U13-AC01: Approval shows frozen persisted stage/version/value and current holder; reject/reopen/resubmit and uncertain receipt follow producer. M31/MI07 remain separate mandatory proof. | U13-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U13-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.. Tasks canônicas: WP04.T04 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N033",
+      "cohort": 2,
+      "sequence": 33,
+      "role": "qualification-author",
+      "work_order_id": "Q01",
+      "output_id": "Q01.pilot",
+      "work_order_title": "Navegação, isolamento e compatibilidade",
+      "work_order_priority": 3,
+      "work_order_blob": "8420fe8c8d1c5c8a62f54c5f7c90a5d625d8fe6c",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/Q01.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts"
+      ],
+      "partial_owns": [
+        "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts"
+      ],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "surface-specs",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "D01",
+        "F04"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "D01",
+        "F04"
+      ],
+      "consumes_outputs": [
+        "U10.queue",
+        "U11.title-save",
+        "U13.pr-approval"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/Q01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [],
+      "exports": [],
+      "acceptance_cases": [
+        {
+          "id": "Q01-AC01",
+          "expected": "Every one of 15 chapters and every registered alias is exercised; malformed/duplicate/cross-owner params rejected.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "Q01-AC02",
+          "expected": "Two actors and contexts, late response, logout/revocation, downloads and web/desktop boundaries have positive and negative cases.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "Q01-AC03",
+          "expected": "No zero-selection success and no fake approval through seed.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "Q01-P0P1",
+          "expected": "Independent P0 title save smoke + P1 admitted PR approval on web and desktop; each proves real effect, CAS/principal/context, denied actor and response-loss without replay. P0 alone is never QUALIFIED pilot.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP01.T01",
+        "WP10.T02",
+        "WP10.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+          "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+          "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+          "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+          "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N033 — Q01 / Q01.pilot — Navegação, isolamento e compatibilidade (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/Q01.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para Q01.pilot, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: ctx, surface-specs, transport. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, D01, F04; QUALIFICAÇÃO: F01, F02, D01, F04, no mesmo candidato material. Fontes: somente missão. Superfícies: nenhuma específica.\n\nPILOTO APENAS. A autoria do teste pode ocorrer contra assinaturas FROZEN; resultado QUALIFIED só com implementação real P0+P1, actores distintos, web/desktop, CAS/negativo sem auto-retry. Q01.pilot cobre exclusivamente Pilot only: installed web/desktop queue and persisted PR review, two real actors, unauthorized transition, owner-change/late response, response-loss lookup and no write retry. The 15-chapter matrix is written separately and qualified later.; a matriz integral será outra carta (Q01.complete) e não deve ser fechada por este piloto.\n\nESCOPO SEM DECISÕES: Pilot only: installed web/desktop queue and persisted PR review, two real actors, unauthorized transition, owner-change/late response, response-loss lookup and no write retry. The 15-chapter matrix is written separately and qualified later.. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: Q01-AC01: Every one of 15 chapters and every registered alias is exercised; malformed/duplicate/cross-owner params rejected. | Q01-AC02: Two actors and contexts, late response, logout/revocation, downloads and web/desktop boundaries have positive and negative cases. | Q01-AC03: No zero-selection success and no fake approval through seed. | Q01-P0P1: Independent P0 title save smoke + P1 admitted PR approval on web and desktop; each proves real effect, CAS/principal/context, denied actor and response-loss without replay. P0 alone is never QUALIFIED pilot.. Tasks canônicas: WP01.T01, WP10.T02, WP10.T04 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N034",
+      "cohort": 2,
+      "sequence": 34,
+      "role": "qualification-author",
+      "work_order_id": "Q02",
+      "output_id": "Q02.pilot",
+      "work_order_title": "Visual, acessibilidade e tradução",
+      "work_order_priority": 3,
+      "work_order_blob": "2f7838b11f2d93ca9dff9240a9eb86a840e0b836",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/Q02.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts"
+      ],
+      "partial_owns": [
+        "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts"
+      ],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "surface-specs",
+        "ui-change-review",
+        "ui-collaboration",
+        "ui-evidence",
+        "ui-frame",
+        "ui-grid",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-collaboration",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-evidence",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-grid",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F03",
+        "F04",
+        "S01",
+        "S03"
+      ],
+      "depends_qualification": [
+        "F03",
+        "F04",
+        "S01",
+        "S03"
+      ],
+      "consumes_outputs": [
+        "U10.queue",
+        "U11.title-save",
+        "U13.pr-approval"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/Q02.json"
+        ],
+        "contracts": [
+          "surface-specs",
+          "ui-change-review",
+          "ui-collaboration",
+          "ui-evidence",
+          "ui-frame",
+          "ui-grid",
+          "ui-table"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "entrypoints": [],
+      "exports": [],
+      "acceptance_cases": [
+        {
+          "id": "Q02-AC01",
+          "expected": "All 15 chapters receive light/dark production capture; each remaining theme covers shared state/focus/contrast surfaces.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "Q02-AC02",
+          "expected": "320/768/1024/1280/1440 and 200% text resize plus 400% reflow (1280px to 320 CSS px) use frozen layout expectations; no clipping, obscured focus or lost action.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "Q02-AC03",
+          "expected": "Evidence distinguishes design fixtures from installed domain acceptance; reviewer signs initial visual baseline.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "Q02-P0P1",
+          "expected": "Independent P0 title save smoke + P1 admitted PR approval on web and desktop; each proves real effect, CAS/principal/context, denied actor and response-loss without replay. P0 alone is never QUALIFIED pilot.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP01.T02",
+        "WP10.T02",
+        "WP10.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/visual.spec.ts",
+          "packages/app-shell/e2e/sucafina/native/accessibility.spec.ts",
+          "packages/app-shell/e2e/sucafina/native/localization.spec.ts",
+          "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N034 — Q02 / Q02.pilot — Visual, acessibilidade e tradução (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/Q02.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para Q02.pilot, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: surface-specs, ui-change-review, ui-collaboration, ui-evidence, ui-frame, ui-grid, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F03, F04, S01, S03; QUALIFICAÇÃO: F03, F04, S01, S03, no mesmo candidato material. Fontes: somente missão. Superfícies: nenhuma específica.\n\nPILOTO APENAS. A autoria do teste pode ocorrer contra assinaturas FROZEN; resultado QUALIFIED só com implementação real P0+P1, actores distintos, web/desktop, CAS/negativo sem auto-retry. Q02.pilot cobre exclusivamente Pilot P0 title save with in-transaction owner fence and P1 real submitted PR approval: frozen viewport/theme cases, keyboard focus/announcements, copy keys and no private stale projection. Reuses shared fixture; excludes unrelated grid/evidence/collaboration producers.; a matriz integral será outra carta (Q02.complete) e não deve ser fechada por este piloto.\n\nESCOPO SEM DECISÕES: Pilot P0 title save with in-transaction owner fence and P1 real submitted PR approval: frozen viewport/theme cases, keyboard focus/announcements, copy keys and no private stale projection. Reuses shared fixture; excludes unrelated grid/evidence/collaboration producers.. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: Q02-AC01: All 15 chapters receive light/dark production capture; each remaining theme covers shared state/focus/contrast surfaces. | Q02-AC02: 320/768/1024/1280/1440 and 200% text resize plus 400% reflow (1280px to 320 CSS px) use frozen layout expectations; no clipping, obscured focus or lost action. | Q02-AC03: Evidence distinguishes design fixtures from installed domain acceptance; reviewer signs initial visual baseline. | Q02-P0P1: Independent P0 title save smoke + P1 admitted PR approval on web and desktop; each proves real effect, CAS/principal/context, denied actor and response-loss without replay. P0 alone is never QUALIFIED pilot.. Tasks canônicas: WP01.T02, WP10.T02, WP10.T04 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N035",
+      "cohort": 2,
+      "sequence": 35,
+      "role": "author",
+      "work_order_id": "U01",
+      "output_id": null,
+      "work_order_title": "Hoje e retomada de trabalho",
+      "work_order_priority": 6,
+      "work_order_blob": "baba0f65fe896beb033075346112266dc2721fc7",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U01.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/home/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "surface-specs",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A12",
+        "S01"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A12",
+        "S01"
+      ],
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "surface-specs",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "UI29"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+          "symbol": "SfTodayView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfTodayView"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U01-AC01",
+          "expected": "Home composes authorized attention/resume/meeting/material-change sections with independent unavailable/empty states and stable source navigation; it never fabricates work, a meeting snapshot or a successful routine.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U01-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U01-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP01.T05",
+        "WP08.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N035 — U01 — Hoje e retomada de trabalho (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U01.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U01, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/home/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts; packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: ctx, domain-read, surface-specs, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A12, S01; QUALIFICAÇÃO: F01, F02, F03, A12, S01, no mesmo candidato material. Fontes: contract-catalog.json#/sources/workbench. Superfícies: UI29.\n\nESCOPO SEM DECISÕES: Hoje e retomada de trabalho. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U01-AC01: Home composes authorized attention/resume/meeting/material-change sections with independent unavailable/empty states and stable source navigation; it never fabricates work, a meeting snapshot or a successful routine. | U01-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U01-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.. Tasks canônicas: WP01.T05, WP08.T04 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N036",
+      "cohort": 2,
+      "sequence": 36,
+      "role": "author",
+      "work_order_id": "U02",
+      "output_id": null,
+      "work_order_title": "Dashboard executivo e orçamento",
+      "work_order_priority": 6,
+      "work_order_blob": "17d8e7b9da1bb65cef53a0a96aeee20ebb6c9589",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U02.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u02.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u02.spec.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "bi",
+        "ctx",
+        "domain-read",
+        "surface-specs",
+        "ui-bi",
+        "ui-change-review",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-bi",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A01",
+        "S01",
+        "S03",
+        "U20",
+        "U21"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A01",
+        "S01",
+        "S03",
+        "U20",
+        "U21"
+      ],
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U02.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "domain-read",
+          "surface-specs",
+          "ui-bi",
+          "ui-change-review",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP01",
+          "CAP03"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/dashboard",
+          "contract-catalog.json#/sources/renderer-CAP01",
+          "contract-catalog.json#/sources/renderer-CAP03"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
+          "symbol": "SfDashboardExecutiveView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
+          "symbol": "SfDashboardBudgetView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfDashboardExecutiveView",
+        "SfDashboardBudgetView"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U02-AC01",
+          "expected": "Executive and budget context, original benchmark/user controls and canonical figures retain exact role-specific fields and periods; numbers come from authorized projections and independent Dashboard/Planner contexts remain separate.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U02-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U02-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP02.T01",
+        "WP02.T02"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u02.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N036 — U02 — Dashboard executivo e orçamento (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U02.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U02, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/**; packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u02.ts; packages/app-shell/e2e/sucafina/native/journeys/u02.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: bi, ctx, domain-read, surface-specs, ui-bi, ui-change-review, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A01, S01, S03, U20, U21; QUALIFICAÇÃO: F01, F02, F03, A01, S01, S03, U20, U21, no mesmo candidato material. Fontes: contract-catalog.json#/sources/application, contract-catalog.json#/sources/dashboard, contract-catalog.json#/sources/renderer-CAP01, contract-catalog.json#/sources/renderer-CAP03. Superfícies: CAP01, CAP03.\n\nESCOPO SEM DECISÕES: Dashboard executivo e orçamento. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U02-AC01: Executive and budget context, original benchmark/user controls and canonical figures retain exact role-specific fields and periods; numbers come from authorized projections and independent Dashboard/Planner contexts remain separate. | U02-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U02-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.. Tasks canônicas: WP02.T01, WP02.T02 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u02.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N037",
+      "cohort": 2,
+      "sequence": 37,
+      "role": "author",
+      "work_order_id": "U03",
+      "output_id": null,
+      "work_order_title": "Pessoas: overview e estrutura",
+      "work_order_priority": 6,
+      "work_order_blob": "ec744847f11016da6aa622a6ba8655c8d7e04724",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U03.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u03.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "bi",
+        "ctx",
+        "domain-read",
+        "surface-specs",
+        "ui-bi",
+        "ui-change-review",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-bi",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A10",
+        "S01",
+        "S03",
+        "U20"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A10",
+        "S01",
+        "S03",
+        "U20"
+      ],
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U03.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "domain-read",
+          "surface-specs",
+          "ui-bi",
+          "ui-change-review",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP06",
+          "CAP07"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/renderer-CAP06",
+          "contract-catalog.json#/sources/renderer-CAP07"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+          "symbol": "SfPeopleOverviewView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
+          "symbol": "SfPeopleStructureView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfPeopleOverviewView",
+        "SfPeopleStructureView"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U03-AC01",
+          "expected": "People overview and CIO/leader/member structure retain authorized headcount/source breakdown, exact member fieldsets and save/remove semantics. Talent operations belong to U47 and are linked without duplicating its page.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U03-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U03-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP02.T01",
+        "WP02.T02",
+        "WP03.T03"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N037 — U03 — Pessoas: overview e estrutura (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U03.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U03, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/people/overview/**; packages/app-shell/src/orchestra/chapters/sucafina/people/structure/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u03.ts; packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: bi, ctx, domain-read, surface-specs, ui-bi, ui-change-review, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A10, S01, S03, U20; QUALIFICAÇÃO: F01, F02, F03, A10, S01, S03, U20, no mesmo candidato material. Fontes: contract-catalog.json#/sources/application, contract-catalog.json#/sources/renderer-CAP06, contract-catalog.json#/sources/renderer-CAP07. Superfícies: CAP06, CAP07.\n\nESCOPO SEM DECISÕES: Pessoas: overview e estrutura. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U03-AC01: People overview and CIO/leader/member structure retain authorized headcount/source breakdown, exact member fieldsets and save/remove semantics. Talent operations belong to U47 and are linked without duplicating its page. | U03-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U03-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.. Tasks canônicas: WP02.T01, WP02.T02, WP03.T03 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N038",
+      "cohort": 2,
+      "sequence": 38,
+      "role": "author",
+      "work_order_id": "U12",
+      "output_id": null,
+      "work_order_title": "Sourcing e comparação de ofertas",
+      "work_order_priority": 6,
+      "work_order_blob": "c0d8892a3ec63fee6870d927a7baec9bc6ee891d",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U12.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u12.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u12.spec.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "bi",
+        "ctx",
+        "planner",
+        "procurement",
+        "surface-specs",
+        "ui-bi",
+        "ui-change-review",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "planner",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "procurement",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-bi",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03",
+        "U20"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A03",
+        "S01",
+        "S03",
+        "U20"
+      ],
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U12.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "planner",
+          "procurement",
+          "surface-specs",
+          "ui-bi",
+          "ui-change-review",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "CAP25"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/procurement-scenario",
+          "contract-catalog.json#/sources/renderer-CAP25",
+          "contract-catalog.json#/sources/sourcing"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+          "symbol": "SfSourcingView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfSourcingView"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U12-AC01",
+          "expected": "Offer eligibility, currency/FX, scores, source and quote selection preserve numeric oracle and negotiated overrides.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U12-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U12-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP04.T03"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u12.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N038 — U12 — Sourcing e comparação de ofertas (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U12.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U12, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u12.ts; packages/app-shell/e2e/sucafina/native/journeys/u12.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: bi, ctx, planner, procurement, surface-specs, ui-bi, ui-change-review, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A03, S01, S03, U20; QUALIFICAÇÃO: F01, F02, F03, A03, S01, S03, U20, no mesmo candidato material. Fontes: contract-catalog.json#/sources/application, contract-catalog.json#/sources/procurement-scenario, contract-catalog.json#/sources/renderer-CAP25, contract-catalog.json#/sources/sourcing. Superfícies: CAP25.\n\nESCOPO SEM DECISÕES: Sourcing e comparação de ofertas. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U12-AC01: Offer eligibility, currency/FX, scores, source and quote selection preserve numeric oracle and negotiated overrides. | U12-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U12-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.. Tasks canônicas: WP04.T03 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u12.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N039",
+      "cohort": 2,
+      "sequence": 39,
+      "role": "author",
+      "work_order_id": "U21",
+      "output_id": null,
+      "work_order_title": "BI operacional e catálogo",
+      "work_order_priority": 6,
+      "work_order_blob": "8619a7208c7c4ae0af23d6e15fbff648a6bd98ce",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U21.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/operations/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u21.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u21.spec.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "bi",
+        "ctx",
+        "surface-specs",
+        "ui-bi",
+        "ui-frame",
+        "ui-table"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-bi",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A08",
+        "S01"
+      ],
+      "depends_qualification": [
+        "F01",
+        "F02",
+        "F03",
+        "A08",
+        "S01"
+      ],
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U21.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "surface-specs",
+          "ui-bi",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/extended"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/operations/index.tsx",
+          "symbol": "SfOperationalFigure",
+          "signature": "COMPONENT-CONTRACTS.md §6 BI renderer signature",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+          "symbol": "SfBiCatalog",
+          "signature": "COMPONENT-CONTRACTS.md §6 BI renderer signature",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "exports": [
+        "SfOperationalFigure",
+        "SfBiCatalog"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U21-AC01",
+          "expected": "BI05–BI08 stage stock/aging/tickets/milestones and catalog distinguish missing dates/data; catalog selection never recreates data logic.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U21-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U21-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP05.T03",
+        "WP05.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "packages/app-shell/e2e/sucafina/native/journeys/u21.spec.ts"
+        ],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N039 — U21 — BI operacional e catálogo (coorte 2, reutilizar slots liberados).\n\nFonte imutável de decisões cbac654784714f68779ae1434d30e6ea8970c4d1; campanha dbf9547211d9b0fade619790de7c19c0869b7c7d; não modificar as cartas C00/W01–W19 que já estão em execução. Leia AGENTS aplicáveis, protocolo modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, manifesto modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, missão modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U21.json e required_reads exatos da ficha. Não reler corpus inteiro sem motivo: consumir os source bindings e surfaces listados abaixo.\n\nFASE PRE-GO: reconciliar HEAD vivo da PR99, stack C/árvore material, S0 e integrador material com lease REAL vigente, locks e source blobs/preimages. Sem GO escrito de S0 para U21, ator/branch/lease e owned_paths disjuntos, nenhum arquivo novo, nenhuma escrita/CI; BLOCKED_AUTHORIZATION. C00 só escreve shared paths se identidade e lease forem literalmente as mesmas do único integrador S0; caso contrário C00 é read-only. Não aceitar terminal71/100/105/106 como lease viva.\n\nOWNED PATHS EXCLUSIVOS DESTA CARTA: packages/app-shell/src/orchestra/chapters/sucafina/bi/operations/**; packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/**; packages/app-shell/src/i18n/orchestra-chapters/sf-u21.ts; packages/app-shell/e2e/sucafina/native/journeys/u21.spec.ts.\n\nLOCKS DE AUTORIA FROZEN: bi, ctx, surface-specs, ui-bi, ui-frame, ui-table. PRODUÇÃO/INTEGRAÇÃO REAIS: F01, F02, F03, A08, S01; QUALIFICAÇÃO: F01, F02, F03, A08, S01, no mesmo candidato material. Fontes: contract-catalog.json#/sources/extended. Superfícies: UI45, UI46.\n\nESCOPO SEM DECISÕES: BI operacional e catálogo. Entregue tipos, estados e ações originais, sem engine/ACL/SQL paralelo, stub, Any, nem novo registry. Fragmentos de registro/exports compartilhados como patch inerte ao I00 com pre/post blobs. Casos de aceite da ficha: U21-AC01: BI05–BI08 stage stock/aging/tickets/milestones and catalog distinguish missing dates/data; catalog selection never recreates data logic. | U21-AC02: All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner. | U21-AC03: At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.. Tasks canônicas: WP05.T03, WP05.T04 com todos os checks herdados.\n\nProponha testes packages/app-shell/e2e/sucafina/native/journeys/u21.spec.ts exclusivamente ao owner atual de CI de produto, historicamente 101; compile/guards ao owner S0 atual, historicamente 45. Nunca execute localmente nem dispare CI por conta própria. Ausência de backend e de servidor instalado dá ARTIFACT_READY + BLOCKED_INTEGRATION/QUALIFICATION, não PASS.\n\nEntrega ARTIFACT_READY/QUALIFICATION_PENDING: SHA HEAD/tree pre/post, owner/actor/lease reais, assinatura, entradas/i18n/cobertura, testes reais versus NOT_RUN, bloqueios e consumer ACK. A lease encerra por handoff explícito; só então próximo card escreve o subtree. Sem merge/dev/deploy/Azure/GLOBAL_RELEASE."
+    }
+  ],
+  "go": false
+}
