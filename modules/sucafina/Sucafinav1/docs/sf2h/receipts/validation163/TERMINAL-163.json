@@ -1,0 +1,129 @@
+{
+  "schema": "sf2h.compiler163.terminal-fence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 163,
+  "epoch": "compiler-e4-browser163",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "pre_terminal_head": "322235ba0672749d91bd4d8d9fb1ef06c3f9f56e",
+  "executed_product_W": "690a34cdd81c12d7311f3717c19679b950276161",
+  "executed_product_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "workflow_sha": "5491c9300126da663a4097a678b587a5d74dc125",
+  "run_id": 43766055614,
+  "job_id": 132971280139,
+  "run_attempt": 1,
+  "status": "COMPILER_CHECKS_COMPLETED_WITH_FAILURE",
+  "action_conclusion": "failure",
+  "selected": 16,
+  "pass_scoped": 10,
+  "failed": 6,
+  "sdk": {
+    "generation": "SUCCESS",
+    "patch_status": "AVAILABLE_NOT_CONSUMED",
+    "changed": 3,
+    "total": 56,
+    "artifact": 14182790522,
+    "patch_bytes": 92878,
+    "patch_sha256": "1e17bfa2e631a6c59a3662a33161549001689c95ae7e88ad009bf3eca9b31e0d"
+  },
+  "bundle": {
+    "status": "HISTORICAL_SOURCE_IDENTICAL_NOT_CONSUMED",
+    "artifact": 14171118214,
+    "generated_yaml_bytes": 57314,
+    "generated_yaml_sha256": "c6c0e2583a5be2bb393d3db832232c6625ceb28370bf1f7f815eb3a661b77394"
+  },
+  "guards": {
+    "gate": 66,
+    "warn": 141,
+    "status": "FAIL",
+    "approval": false
+  },
+  "follow_up_consumer_head": {
+    "sha": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb",
+    "tree": "545f3125673b04c172343be3eff1da74cc125ff8",
+    "ahead_of_executed_W_by_commits": 7,
+    "changed_files_since_W": 54,
+    "not_proven_by_run": true,
+    "checked_exact_preimages_for_generated_patch": 3,
+    "all_three_match": true,
+    "checked_exact_epic_preimage": true,
+    "epic_preimage_matches": true,
+    "checked_query_generator_and_bundle_input_blobs": 8,
+    "all_eight_match": true,
+    "scope": "read-only snapshot; 162 must redo CAS preimage check at write time"
+  },
+  "owner_routing": {
+    "integrator162": {
+      "pr": 65,
+      "id": 6902128556
+    },
+    "compiler163": {
+      "pr": 107,
+      "id": 6902136844
+    },
+    "sources": [
+      {
+        "owner": "W16/A04",
+        "pr": 135,
+        "id": 6902155891,
+        "source": "packages/schema/src/sucafina/decisions/source-contracts.ts"
+      },
+      {
+        "owner": "W15/A02",
+        "pr": 116,
+        "id": 6902156335,
+        "source": "packages/schema/src/sucafina/planner.ts"
+      },
+      {
+        "owner": "W03/F02",
+        "pr": 122,
+        "id": 6902156833,
+        "source": "packages/client/src/sucafina/transport.ts"
+      },
+      {
+        "owner": "W14/A01",
+        "pr": 133,
+        "id": 6902157359,
+        "source": "apps/cli/src/sucafina-product/native-ui/domain.ts"
+      },
+      {
+        "owner": "A10",
+        "pr": 138,
+        "id": 6902157875,
+        "source": "apps/cli/src/sucafina-product/native-ui/people.ts"
+      },
+      {
+        "owner": "N25",
+        "pr": 149,
+        "id": 6902158278,
+        "source": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx"
+      },
+      {
+        "owner": "N27",
+        "pr": 157,
+        "id": 6902158737,
+        "source": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      }
+    ]
+  },
+  "next_actions": {
+    "integrator_162": "Download patch & manifest from artifact14182790522; check 3 SDK generated preimages and actual public query/codegen producer SHA at live stack; CAS apply in PR65 only, reconcile new source additions; consume genuine historical epic YAML/patch via verified current epic preimage; route outstanding TS/guard defects; publish new material W/tree when coherent.",
+    "compiler_163": "Do not retry same fingerprint. Wait for actual corrected coherent W with changed producers/fixtures to reselect causal checks only; no product test dispatch.",
+    "product_ci_164": "Only authority for product tests in PR106; not executed by 163.",
+    "full_epic": "HOLD until accepted final coherent bundle",
+    "global_release": false,
+    "goal": "paused"
+  },
+  "authoritative_scope": {
+    "previous_149_future_dispatch_revoked": true,
+    "sole_integrator": 162,
+    "sole_compiler": 163,
+    "sole_test_dispatcher": 164,
+    "no_local_product_checks": true,
+    "no_generated_manual_changes": true,
+    "force": false,
+    "no_merge": true,
+    "no_deploy": true,
+    "global_release": false
+  }
+}

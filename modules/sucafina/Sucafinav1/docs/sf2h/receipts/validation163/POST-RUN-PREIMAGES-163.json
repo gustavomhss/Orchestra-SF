@@ -1,0 +1,82 @@
+{
+  "schema": "sf2h.compiler163.post-run-consumer-preimage-readback.v1",
+  "mission": 163,
+  "source_W": "690a34cdd81c12d7311f3717c19679b950276161",
+  "consumer_snapshot": {
+    "sha": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb",
+    "tree": "545f3125673b04c172343be3eff1da74cc125ff8",
+    "ahead_of_W": 7,
+    "changed_files": 54
+  },
+  "patch_preimages": [
+    {
+      "path": "packages/client/src/generated-effect/client.ts",
+      "expected": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+      "observed": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+      "match": true
+    },
+    {
+      "path": "packages/client/src/generated/client.ts",
+      "expected": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+      "observed": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+      "match": true
+    },
+    {
+      "path": "packages/client/src/generated/types.ts",
+      "expected": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+      "observed": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+      "match": true
+    }
+  ],
+  "workflow_yaml_preimage": {
+    "path": ".github/workflows/sf2-epic.yml",
+    "expected": "b332d777e4465469e9e4869e29f4339a95853d21",
+    "observed": "b332d777e4465469e9e4869e29f4339a95853d21",
+    "match": true
+  },
+  "causal_producer_parity": [
+    {
+      "path": "packages/schema/src/sucafina/context.ts",
+      "observed": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+      "matches_W": true
+    },
+    {
+      "path": "packages/protocol/src/groups/sucafina.ts",
+      "observed": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+      "matches_W": true
+    },
+    {
+      "path": "packages/client/src/contract.ts",
+      "observed": "94f1ddd42964636fbc4b1908c47c51f24dcce226",
+      "matches_W": true
+    },
+    {
+      "path": "packages/client/script/build.ts",
+      "observed": "99ae2184b9c13f6175d7ba8e3025068bee07ee4f",
+      "matches_W": true
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "observed": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "matches_W": true
+    },
+    {
+      "path": "script/sf2h/final-bundle/build-artifact.py",
+      "observed": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2",
+      "matches_W": true
+    },
+    {
+      "path": "script/sf2h/final-bundle/requests.json",
+      "observed": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+      "matches_W": true
+    },
+    {
+      "path": "tooling/httpapi-codegen/src/index.ts",
+      "observed": "78a9b9e0521c8128d0896af8bba15ad318e30edf",
+      "matches_W": true
+    }
+  ],
+  "meaning": "READ_ONLY_CONSUMER_SNAPSHOT_NOT_AUTHORIZATION_TO_MUTATE_SF2_STACK",
+  "next": "162 must independently reconcile actual head/parents and recheck CAS expected preimages at moment of integration",
+  "global_release": false
+}
