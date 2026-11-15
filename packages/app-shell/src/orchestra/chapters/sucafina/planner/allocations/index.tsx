@@ -9,7 +9,7 @@ import type { SF_COMMON_COPY } from "@/i18n/orchestra-chapters/sf-common"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { useSfContext } from "../../context"
-import type { SfEditScopeKey, SfIntentRef, SfRef, SfVersion, SfSurfaceProps } from "../../context/contracts"
+import type { SfEditScopeKey, SfIntentRef, SfRef, SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -34,6 +34,12 @@ const field = (label: Copy, text: string): SfReviewField => ({
   label: { key: key(label) },
   value: { kind: "text", text: { kind: "data", text } },
 })
+
+async function hashReviewedCommand(command: unknown): Promise<string> {
+  const bytes = new TextEncoder().encode(JSON.stringify(command))
+  const fingerprint = await crypto.subtle.digest("SHA-256", bytes)
+  return Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
+}
 
 /** U09/CAP21: a view over A02's exact typed page and commands. No financial
  * distribution or auth rules are implemented in this browser leaf.
@@ -255,44 +261,74 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
   const submit = async () => {
     const intent = screen.intent
     const owner = host.ready()
-    if (!intent || !owner || !can(intent.kind === "common" ? "common" : intent.kind)) return
+    if (!intent || !owner || screen.busy || !can(intent.kind === "common" ? "common" : intent.kind)) return
+    const prior = draft()?.snapshot()
+    if (intent.kind === "save" && (!prior || prior.availability !== "active" ||
+        prior.conflict !== null || prior.pendingOperation !== null ||
+        !Object.is(prior.baseVersion, intent.id === null ? null : intent.version))) {
+      setScreen({ state: "conflict", problem: language.t("sf.common.conflict") })
+      return
+    }
     const client = createSfPlannerClient(owner.transport)
     const generation = host.generation()
-    const signal = new AbortController()
-    const idempotencyKey = crypto.randomUUID()
-    const payload = currentValue()
-    setScreen({ busy: true, problem: null })
-    draft()?.setPhase("submitting")
-    const options = { signal: signal.signal, idempotencyKey }
-    const result = intent.kind === "common"
-      ? await client["domain.command.CAP21.common"]({
+    const options = { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() }
+    const value = currentValue()
+    const command = (() => {
+      if (intent.kind === "common") {
+        const input = {
           page: "Entities & allocations", action: "common", version: intent.version,
           values: { collection: "allocations" },
-        }, options)
-      : intent.kind === "delete"
-        ? await client["domain.command.CAP21.delete"]({
-            page: "Entities & allocations", action: "delete", id: intent.id ?? undefined,
-            version: intent.version, values: { collection: intent.collection },
-          }, options)
-        : await client["domain.command.CAP21.save"]({
-            page: "Entities & allocations", action: "save", id: intent.id ?? undefined,
-            version: intent.version,
-            values: {
-              collection: intent.collection, name: payload?.name,
-              ...(payload?.detail === undefined ? {}
-                : intent.collection === "entities" ? { code: payload.detail } : { desc: payload.detail }),
-            },
-          }, options).catch(() => {
-          console.error("N20 CAP21: command delivery failed; outcome unconfirmed")
-          return { kind: "transport-error", reason: "outcome-unknown" } as const
-        })
+        } as const
+        return { input, call: () => client["domain.command.CAP21.common"](input, options) }
+      }
+      if (intent.kind === "delete") {
+        const input = {
+          page: "Entities & allocations", action: "delete", id: intent.id ?? undefined,
+          version: intent.version, values: { collection: intent.collection },
+        } as const
+        return { input, call: () => client["domain.command.CAP21.delete"](input, options) }
+      }
+      const input = {
+        page: "Entities & allocations", action: "save", id: intent.id ?? undefined,
+        version: intent.version,
+        values: {
+          collection: intent.collection, name: value?.name,
+          ...(value?.detail === undefined ? {} :
+            intent.collection === "entities" ? { code: value.detail } : { desc: value.detail }),
+        },
+      } as const
+      return { input, call: () => client["domain.command.CAP21.save"](input, options) }
+    })()
+    setScreen({ busy: true, problem: null })
+    let digest: string
+    try {
+      digest = await hashReviewedCommand(command.input)
+    } catch {
+      setScreen({ busy: false, state: "unavailable", problem: language.t("sf.common.unavailable") })
+      console.error("N20 CAP21: command fingerprint unavailable; write not submitted")
+      return
+    }
+    if (host.generation() !== generation || !host.ready()) return
+    const bindPending = () => {
+      if (intent.kind !== "save") return
+      draft()?.setPending({
+        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
+        idempotencyKey: options.idempotencyKey,
+        payloadDigest: digest,
+        expectedVersion: intent.id === null ? null : intent.version,
+      })
+    }
+    const result = await command.call().catch(() => {
+      console.error("N20 CAP21: submitted command delivery failed; outcome unconfirmed")
+      return { kind: "transport-error", reason: "outcome-unknown" } as const
+    })
     if (host.generation() !== generation || !host.ready()) return
     setScreen("busy", false)
     if (result.kind !== "response") {
-      if (result.reason === "outcome-unknown" || result.reason === "network" ||
-          result.reason === "aborted") {
-        setScreen({ state: "outcome-unknown", lockedOutcome: true, problem: null })
+      if (result.reason !== "contract-unavailable" && result.reason !== "contract-mismatch") {
+        bindPending()
         draft()?.setPhase("outcome-unknown")
+        setScreen({ state: "outcome-unknown", lockedOutcome: true, problem: null })
       } else {
         setScreen({ state: "unavailable", problem: result.reason })
         draft()?.setPhase("failed")
@@ -304,23 +340,23 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       setScreen("state", status === 409 ? "conflict" : status === 403 ? "denied"
         : status === 404 ? "not-found" : status === 422 || status === 400 ? "invalid" : "unavailable")
       setScreen("problem", result.body.errors?.join("; ") ?? language.t("sf.cap21.errors"))
-      if (status === 403) setScreen({ page: null, intent: null })
+      if (status === 403) { setScreen({ page: null, intent: null }); setDraft(null) }
       if (status === 409) draft()?.setPhase("conflict")
       else draft()?.setPhase("validation-error")
       return
     }
     if (intent.kind === "save") {
+      bindPending()
       draft()?.confirmSave({
         kind: "confirmed-without-projection",
-        operationRef: intent.ref as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
         resultVersion: null,
       })
-      setDraft(null)
+      if (draft()?.snapshot().availability === "confirmed-without-projection") setDraft(null)
     }
     if (intent.kind === "delete") setScreen("selected", null)
     setScreen({ intent: null, problem: null, state: "loading" })
     await read(new AbortController().signal, generation)
-    if (screen.state === "ready" && intent.kind !== "save") setScreen("problem", null)
   }
   const selectedDraft = () => currentValue()
   const reviewFields = (value: RecordDraft): SfReviewField[] => [
