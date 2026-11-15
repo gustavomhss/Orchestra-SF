@@ -129,7 +129,7 @@ t=t.replace('GITHUB_ACTIONS=false bun test "${args[@]}"', 'if [ "$DIRECTORY" = "
 t=t.replace('GITHUB_ACTIONS=false bun test ', 'GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" ')
 # Capture and enforce the repository's nonce-bound omni verdict for every Bun recipe.
 run_start = t.index("        run: |\n", t.index("      - name: Run tests\n")) + len("        run: |\n")
-run_end = t.index("\n      - name: Upload Lean", run_start)
+run_end = t.index("\n      - name: Install SF66 export readers", run_start)
 body = t[run_start:run_end]
 
 t = t[:run_start] + "          set -o pipefail\n          {\n" + body + r'''
