@@ -1,0 +1,128 @@
+name: sf-compiler-c53
+
+# Mission 108 only: a read-only hosted compiler/generation/guard run on immutable C53.
+# This is not an epic or product-test workflow; A45's paths and dispatcher are untouched.
+on:
+  push:
+    branches: [sf-compiler-checks]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sf-compiler-c53-108
+  cancel-in-progress: false
+
+env:
+  SF_SOURCE_SHA: 180212940105e7b9ad15171b067c1c1b7841df5f
+  SF_SOURCE_TREE: c423dd1e0828242534fd45d4183104ecc1d20edd
+  SF_PLANNING_SHA: dbf9547211d9b0fade619790de7c19c0869b7c7d
+
+jobs:
+  compiler-c53:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/sf-compiler-checks' && github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact C53 source, without stored credentials
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: 180212940105e7b9ad15171b067c1c1b7841df5f
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove fixed checkout and resolve actual dev/merge-base
+        run: |
+          set -euo pipefail
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-c53-108"
+          mkdir -p "$EVIDENCE"
+          printf '%s\n' "workflow_commit=$GITHUB_SHA" "source_sha=$SF_SOURCE_SHA" "expected_tree=$SF_SOURCE_TREE" > "$EVIDENCE/identity.txt"
+          test "$(git rev-parse HEAD)" = "$SF_SOURCE_SHA"
+          test "$(git rev-parse HEAD^{tree})" = "$SF_SOURCE_TREE"
+          git rev-parse --verify refs/remotes/origin/dev
+          git merge-base HEAD origin/dev
+          git rev-parse HEAD HEAD^{tree} origin/dev > "$EVIDENCE/revisions.txt"
+          git merge-base HEAD origin/dev > "$EVIDENCE/merge-base.txt"
+          git status --porcelain=v1 > "$EVIDENCE/status-before.txt"
+          test ! -s "$EVIDENCE/status-before.txt"
+          sha256sum bun.lock package.json packages/app-shell/package.json packages/app-shell/tsconfig.json packages/app-shell/tsconfig.sf-e2e.json \
+            modules/sucafina/package.json packages/core/package.json apps/cli/package.json modules/atlas/boundary/package.json \
+            modules/atlas/boundary/script/build.ts script/check-spawn-imports.ts script/spawn-allowlist.json \
+            script/guards/run.ts script/sf2h/final-bundle/requests.json script/sf2h/final-bundle/verify-e2e-typecheck.mjs \
+            .github/workflows/sf2-epic.yml > "$EVIDENCE/input-sha256.txt"
+
+      - name: Setup pinned repository Bun and Node runtime
+        uses: ./.github/actions/setup-bun
+
+      - name: Run all static/compiler/Atlas/guard checks and preserve every exit code
+        run: |
+          set -uo pipefail
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-c53-108"
+          mkdir -p "$EVIDENCE"
+          : > "$EVIDENCE/exit-codes.tsv"
+          bun --version > "$EVIDENCE/bun-version.txt" 2>&1
+          node --version > "$EVIDENCE/node-version.txt" 2>&1
+          git --version > "$EVIDENCE/git-version.txt" 2>&1
+          record() {
+            local name="$1"
+            local directory="$2"
+            shift 2
+            printf '>>> %s | cwd=%s | argv=' "$name" "$directory"
+            printf '%q ' "$@"
+            printf '\n'
+            (cd "$directory" && "$@") > "$EVIDENCE/$name.log" 2>&1
+            local code=$?
+            printf '%s\t%s\t%s\n' "$name" "$code" "$directory" >> "$EVIDENCE/exit-codes.tsv"
+            printf '<<< %s exit=%s\n' "$name" "$code"
+            tail -n 60 "$EVIDENCE/$name.log" || true
+            return 0
+          }
+          record bundle-build . python3 script/sf2h/final-bundle/build-artifact.py --repo-root . --check
+          record bundle-requests . node script/sf2h/final-bundle/validate-requests.mjs
+          record e2e-inventory . node script/sf2h/final-bundle/verify-e2e-typecheck.mjs --inventory
+
+          record typecheck-atlas modules/atlas/boundary bun typecheck
+          record typecheck-sucafina modules/sucafina bun typecheck
+          record typecheck-core packages/core bun typecheck
+          record typecheck-cli apps/cli bun typecheck
+          record typecheck-app packages/app-shell bun typecheck
+
+          record sf-e2e-showConfig packages/app-shell bun run typecheck:sf-e2e --showConfig
+          record sf-e2e-listFiles packages/app-shell bun run typecheck:sf-e2e --listFiles --pretty false
+          config_exit="$(awk '$1 == "sf-e2e-showConfig" {print $2}' "$EVIDENCE/exit-codes.tsv")"
+          program_exit="$(awk '$1 == "sf-e2e-listFiles" {print $2}' "$EVIDENCE/exit-codes.tsv")"
+          export SF_PRODUCT_TREE="$SF_SOURCE_TREE"
+          GITHUB_SHA="$SF_SOURCE_SHA" record sf-e2e-verify . node script/sf2h/final-bundle/verify-e2e-typecheck.mjs \
+            --config "$EVIDENCE/sf-e2e-showConfig.log" --config-status "$config_exit" \
+            --log "$EVIDENCE/sf-e2e-listFiles.log" --typecheck-status "$program_exit" \
+            --output "$EVIDENCE/e2e-inclusion.json"
+
+          record atlas-generated-before modules/atlas/boundary bun run check:generated
+          record atlas-generate modules/atlas/boundary bun run generate
+          record atlas-generated-after modules/atlas/boundary bun run check:generated
+          record atlas-generated-diff . git diff --exit-code -- modules/atlas/boundary/src/generated
+          git status --porcelain=v1 > "$EVIDENCE/status-after-generation.txt"
+          record spawn-imports . bun run check:spawn-imports
+          record guards . bun run check:guards --base origin/dev
+
+          printf '%s\n' "source_sha=$SF_SOURCE_SHA" "source_tree=$SF_SOURCE_TREE" \
+            "effective_dev=$(git rev-parse origin/dev)" "merge_base=$(git merge-base HEAD origin/dev)" \
+            "workflow_commit=$GITHUB_SHA" > "$EVIDENCE/identity-final.txt"
+          if awk -F '\t' '$2 != 0 { failed++ } END { exit failed ? 0 : 1 }' "$EVIDENCE/exit-codes.tsv"; then
+            echo 'FAIL: one or more real checks failed (see per-command exit codes)'
+            exit 1
+          fi
+          test "$(wc -l < "$EVIDENCE/exit-codes.tsv")" -eq 17
+          echo 'PASS: all 17 compiler/static/Atlas/guard commands returned 0 (not product acceptance)'
+
+      - name: Upload compiler evidence, including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sf-compiler-c53-108
+          path: ${{ runner.temp }}/sf-compiler-c53-108
+          if-no-files-found: error
+          retention-days: 14
