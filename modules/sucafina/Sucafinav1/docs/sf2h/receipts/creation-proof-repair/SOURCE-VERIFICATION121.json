@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.121.source-proof.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 121,
+  "lease_epoch": "creation-proof-repair-e1-browser121",
+  "source_base": {
+    "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816",
+    "description": "C58 material"
+  },
+  "ack": {
+    "commit": "57ff988230109506ed1ddcf6fb077a0cec254b60",
+    "tree": "78d9d1082ba65b50b1bb4df98d75f91a37b18c1e"
+  },
+  "code": {
+    "commit": "1091aa090f9e401ece1b52b2aa74138560d04c88",
+    "tree": "d65bb675029dce47be41c189f69eb5c8028ad4f5",
+    "parent": "57ff988230109506ed1ddcf6fb077a0cec254b60"
+  },
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/117",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+      "pre_blob": "8cf4f844307206880abd163e4f836a582670e617",
+      "post_blob": "c09dcbaf40a92ae15a96dd7046e1eebc7d7cc58c",
+      "verified_by_remote_fetch": true,
+      "source_owner": "111/PR109"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+      "pre_blob": "46ab9222309a5856e931d033261f3438b1ce939b",
+      "post_blob": "b55071dcdc67e28d139d8ecc25a433371e03c8ba",
+      "verified_by_remote_fetch": true,
+      "source_owner": "111/PR109"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+      "pre_blob": "eda13fa8d39b6dd378849ca57ce9b710bbe40e87",
+      "post_blob": "8057df81b00d687ff99ec0417bba15814ffe5cd3",
+      "verified_by_remote_fetch": true,
+      "source_owner": "96/PR103"
+    }
+  ],
+  "scope": {
+    "source_files_modified": 3,
+    "product_files_modified": 0,
+    "assertions_removed": 0,
+    "timeout_values_modified": 0,
+    "upstream_branches_modified": 0,
+    "workflow_modified": 0,
+    "browser_lifecycle_modified": 0
+  },
+  "provenance": {
+    "producer96_head": "3ef1bbf2188275f5bc6ebaeed162a069ad3ae351",
+    "producer111_head": "bd65179c3ce1da921974c686439d3877f735f852",
+    "all_preimages_match_authored_source_heads": true
+  },
+  "controls": [
+    "UI-only domain access restricted with discriminated context.kind",
+    "No native context admitted to UI lease",
+    "Preserved original requestFor, operationIdentity, participants and revalidation",
+    "Schema decode validates case draft before business write; undefined host returns 503",
+    "No fixture assertions changed, and browser lifecycle remains untouched"
+  ],
+  "baseline": {
+    "compiler_run_id": 43726143757,
+    "compiler_job_id": 132848377567,
+    "compiler_artifact_id": 14166956181,
+    "mission_target_diagnostics": 16,
+    "log_lines_seen_by_current_reader": {
+      "recovery_browser": 0,
+      "recovery_http": 4,
+      "creation_browser": 6
+    },
+    "note": "Mission packet counts 5+5+6; the visible compiler job log exposed 10 exact scoped diagnostics. Current changes cover both callback boundaries and the runtime path; no green claim until 119 checks the new W."
+  },
+  "proof": {
+    "typecheck": "NOT_RUN_ON_POST_COMMIT",
+    "product_ci": "NOT_RUN_ON_POST_COMMIT",
+    "guards": "NOT_RUN_ON_POST_COMMIT",
+    "merge_into_stack": "NOT_RUN",
+    "global_release": false
+  },
+  "consumers": {
+    "integrator": "114/PR65",
+    "product_ci": "120/PR106",
+    "compiler": "119/PR107",
+    "independent": "112/113"
+  },
+  "handoff": "HANDOFF121.md",
+  "patch": "FULL-PATCH121.patch",
+  "ci_request": "CI-REQUEST121.json"
+}

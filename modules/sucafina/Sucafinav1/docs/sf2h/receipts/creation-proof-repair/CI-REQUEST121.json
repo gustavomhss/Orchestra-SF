@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.121.ci-selection-request.v1",
+  "source_commit": "1091aa090f9e401ece1b52b2aa74138560d04c88",
+  "source_tree": "d65bb675029dce47be41c189f69eb5c8028ad4f5",
+  "pr": 117,
+  "owner": "120/PR106",
+  "state": "REQUESTED_NO_DISPATCH_BY_121",
+  "integration_precondition": "114 must compose exact three test blobs onto a candidate W before the hosted execution is attributable to it",
+  "workflow": ".github/workflows/test-ci.yml",
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "os": "linux",
+  "env": {},
+  "selections": [
+    {
+      "id": "creation-http-c08-sqlite",
+      "args": [
+        "Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+        "Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts"
+      ],
+      "intent": "Real state, recovery and revocation without pooled browser"
+    },
+    {
+      "id": "creation-browser-wp01-ordered",
+      "args": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+        "Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "intent": "One shared pool: start first, both creation/browser consumers before finalizer"
+    }
+  ],
+  "preserve": [
+    "exact named file selection",
+    "source tree+workflow+runtime+fixture+selection dedup",
+    "one Linux Bun invocation for browser selection",
+    "original lifecycle/pool assertions and cleanup",
+    "no new dispatcher or local test"
+  ],
+  "historical_failure": {
+    "run_id": 43724652351,
+    "job_id": 132843876161,
+    "symptom": "lifecycle ran before creation browser consumers and sealed pool",
+    "classification": "SELECTION_ORDER_ONLY_NOT_PRODUCT_BUG"
+  },
+  "request_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/106#issuecomment-6896953498",
+  "observed_new_run": null,
+  "observed_new_snapshot": null,
+  "observed_new_job": null,
+  "verdict": "PENDING"
+}

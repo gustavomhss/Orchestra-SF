@@ -1,0 +1,46 @@
+{
+  "schema": "sf2h.121.checkpoint.v1",
+  "mission": 121,
+  "state": "SOURCE_READY_TESTS_PENDING",
+  "branch": "creation-proof-repair",
+  "head_code": "1091aa090f9e401ece1b52b2aa74138560d04c88",
+  "inputs": [
+    "C58 material base422f1ed7",
+    "96 source PR103",
+    "111 source PR109",
+    "C54 selection-order failure",
+    "C58 compiler119 diagnostic"
+  ],
+  "output": {
+    "pr": 117,
+    "code_commit": "1091aa090f9e401ece1b52b2aa74138560d04c88",
+    "source_tree": "d65bb675029dce47be41c189f69eb5c8028ad4f5",
+    "source_paths": 3,
+    "docs_namespace": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-proof-repair/"
+  },
+  "acceptance": [
+    {
+      "gate": "Scoped type repair",
+      "status": "CODE_PUBLISHED_REMOTE_POST_BLOBS_VERIFIED; HOSTED_TYPECHECK_PENDING"
+    },
+    {
+      "gate": "Corrected ordered consumer selection",
+      "status": "REQUESTED_120; NO_NEW_W_S_RUN_JOB"
+    },
+    {
+      "gate": "Actual product failure analysis",
+      "status": "WAIT_FOR_CORRECT_ORDER_BEFORE_ATTRIBUTING_PRODUCT_BUG"
+    },
+    {
+      "gate": "Intake/remote evidence",
+      "status": "PR117_OPEN; HANDOFF_AND_COMPLETE_PATCH_READY; 114_NOTIFIED"
+    }
+  ],
+  "next": [
+    "114 consume three exact blobs with current producer ownership/preimage check",
+    "119 typecheck composed candidate and report actual diagnostics",
+    "120 dedup and execute two surgical Actions selections, ordered browser last lifecycle",
+    "121/producer prepares actual patch only if correctly selected run reveals real product issue"
+  ],
+  "no_release": true
+}
