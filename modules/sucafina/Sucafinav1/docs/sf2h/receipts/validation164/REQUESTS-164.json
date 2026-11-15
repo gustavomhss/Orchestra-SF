@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "sf2h.product-ci164.v1",
+  "mission": 164,
+  "epoch": "product-ci-e4-browser164",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "integrator": 162,
+  "compiler": 163,
+  "ci": 164,
+  "goal": "paused",
+  "global_release": false,
+  "schema": "sf2h.product-ci164.requests.v1",
+  "predecessor": {
+    "mission": 150,
+    "requests_blob": "02f595bc84a8022bb49eb0d781452127a1cf0c22",
+    "runs_blob": "651dd81cb5e34cc85aa1d21e18c6206dd9bbb88d",
+    "findings_blob": "53222139605b828002bb2061c267be0d08ab6e27",
+    "run": 43758731378,
+    "run_conclusion": "failure",
+    "not_repeated": true
+  },
+  "candidate": {
+    "W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "composed_causal_predecessor": "b45aa6211c433c6837622617ad02fb2c0c3fe8e4",
+    "subsequent_source_adoption": "151-155,159-160 present on W, separate scope/consumer acceptance",
+    "release_accepted": false
+  },
+  "snapshot": {
+    "S": "84a4a4e0ba96abc0ba091fedffcc2a71d7fb4584",
+    "tree": "6513ff84d26f200e18a7ba15db99921fcd8d850a",
+    "branch": "ci-run-linux-sf164-nativesix-1",
+    "parent": "690a34cdd81c12d7311f3717c19679b950276161",
+    "only_diff": [
+      ".ci-run.json"
+    ],
+    "request_blob": "d66edcf7bc1fd75ebfea003195ea1ccf20e46a8d",
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "os": "ubuntu-24.04",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/native-ui-contract/planner.test.ts",
+      "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+      "Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts"
+    ],
+    "env": {},
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "package_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+    "bunfig_blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+    "lock_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "test_blobs": {
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts": "1630180b74a5775280e4c90038849f9df99b87ff",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts": "6183175ebce968280b61668085d27771697a4b64",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts": "a2554957371a7fc1dcaa63a41ad2815f95252e45",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts": "0789f34911cd97d82a870dcee2f17fa37c8b4578",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts": "d0d54dca9245feb151f9f6cf6015f344cfe741e2"
+    },
+    "producer_blobs": {
+      "packages/schema/src/sucafina/planner.ts": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+      "packages/schema/src/sucafina/decisions/source-contracts.ts": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "packages/schema/src/sucafina/portfolio.ts": "708731dbbaf1fe69664715a4f34007976a4b0476",
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts": "59013743317453a390e8092b2c8a49713eaf17cc",
+      "apps/cli/src/sucafina-product/native-ui/router.ts": "17db52d914ca49934953e1161461b03856eb29c5",
+      "packages/schema/src/sucafina/context.ts": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+      "packages/protocol/src/groups/sucafina.ts": "1fe0f77985758d0f5cee037db6a308934c85de0f"
+    }
+  },
+  "dedup": {
+    "material_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "ordered_files": [
+      "Sucafinav1/test/native-ui-contract/planner.test.ts",
+      "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+      "Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts"
+    ],
+    "runner": "bun",
+    "os": "ubuntu-24.04",
+    "timeout_ms": 120000,
+    "env": {},
+    "config": null,
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "runtime_bun": "PENDING_JOB_LOG",
+    "fixtures": {
+      "bunfig": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "lock": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "package": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+    },
+    "producer_blobs": {
+      "packages/schema/src/sucafina/planner.ts": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+      "packages/schema/src/sucafina/decisions/source-contracts.ts": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "packages/schema/src/sucafina/portfolio.ts": "708731dbbaf1fe69664715a4f34007976a4b0476",
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts": "59013743317453a390e8092b2c8a49713eaf17cc",
+      "apps/cli/src/sucafina-product/native-ui/router.ts": "17db52d914ca49934953e1161461b03856eb29c5",
+      "packages/schema/src/sucafina/context.ts": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+      "packages/protocol/src/groups/sucafina.ts": "1fe0f77985758d0f5cee037db6a308934c85de0f"
+    },
+    "test_blobs": {
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts": "1630180b74a5775280e4c90038849f9df99b87ff",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts": "6183175ebce968280b61668085d27771697a4b64",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts": "a2554957371a7fc1dcaa63a41ad2815f95252e45",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts": "0789f34911cd97d82a870dcee2f17fa37c8b4578",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts": "d0d54dca9245feb151f9f6cf6015f344cfe741e2"
+    }
+  },
+  "status": "DISPATCHED"
+}
