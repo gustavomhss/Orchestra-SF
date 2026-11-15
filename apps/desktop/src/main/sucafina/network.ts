@@ -27,7 +27,7 @@ export function publicSfHeaders(headers: Record<string, string | string[] | unde
     const raw = headers[name]
     const value = Array.isArray(raw) ? raw[0] : raw
     if (typeof value !== "string" || !value || value.length > 2048 || /[\x00-\x1f\x7f]/.test(value)) continue
-    if (name === "content-disposition" && (!/^attachment(?:;|$)/i.test(value) || /[\\/]/.test(value))) continue
+    if (name === "content-disposition" && !/^attachment;\s*filename="[^\\/\r\n"]{1,160}"$/i.test(value)) continue
     result[name] = value
   }
   return result

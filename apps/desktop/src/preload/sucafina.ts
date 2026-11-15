@@ -1,7 +1,8 @@
 import type {
   SfConnectionCandidate, SfDesktopCapability, SfDesktopInvalidation, SfDesktopInvocation,
-  SfDesktopOwnerRequest, SfResolvedRoute,
+  SfDesktopOwnerRequest,
 } from "@orchestra/client/sucafina/transport"
+import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { ipcRenderer } from "electron"
 
 /** No callbacks, AbortSignal or credentials are transported as an event payload. */

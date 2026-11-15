@@ -70,9 +70,10 @@ function validDescriptor(value: unknown, candidate: SfApprovedConnection, projec
     || !/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(value.mount)
     || !["microsoft", "local-operator"].includes(String(value.authMode))
   ) return false
+  if (value.authMode === "microsoft" && new URL(candidate.origin).protocol !== "https:") return false
   if (value.authMode === "local-operator") {
     const url = new URL(candidate.origin)
-    if (url.protocol !== "http:" || !["127.0.0.1", "localhost", "[::1]"].includes(url.hostname)) return false
+    if (url.protocol !== "http:" || !["127.0.0.1", "[::1]"].includes(url.hostname)) return false
   }
   return true
 }
@@ -207,11 +208,14 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       if (!validOwner(current) || connection !== registry.get(current, selection.serverKey, selection.projectId))
         return { status: "denied" } as const
       if (reply.kind !== "buffer" || reply.status !== 200) return { status: "unavailable", reason: "network" } as const
+      if (!/^application\/json(?:\s*;[^\r\n]*)?$/i.test(reply.headers["content-type"] ?? ""))
+        return { status: "unavailable", reason: "contract-mismatch" } as const
       let parsed: unknown
       try { parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(reply.bytes)) } catch {
         return { status: "unavailable", reason: "contract-mismatch" } as const
       }
-      const decoded = codec.decodeOutput(parsed)
+      let decoded
+      try { decoded = codec.decodeOutput(parsed) } catch { return { status: "unavailable", reason: "contract-mismatch" } as const }
       if (decoded.status !== "ok" || !isRecord(decoded.value) || !Array.isArray(decoded.value.installations))
         return { status: "unavailable", reason: "contract-mismatch" } as const
       const matches = decoded.value.installations
@@ -252,7 +256,8 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       pending.pulling = true
       try {
         const chunk = await pending.source.next()
-        if (!binding.active || !validOwner(binding.owner)) return failure("aborted")
+        if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
+          || binding.requests.get(pending.requestId) !== pending) return failure("aborted")
         if (chunk === undefined) {
           pending.source.cancel()
           binding.requests.delete(pending.requestId)
@@ -280,9 +285,10 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       const reply = await requestSfHttp({
         net: deps.electron.net, session: binding.session, origin: binding.descriptor.publicOrigin,
         url: plan.value.url, method: plan.value.method, mode: plan.value.mode, body: plan.value.body,
-        headers: plan.value.headers, signal: pending.controller.signal, maxResponseBytes: 4 * 1024 * 1024,
+        headers: plan.value.headers, signal: pending.controller.signal, maxResponseBytes: 32 * 1024 * 1024,
       })
-      if (!binding.active || !validOwner(binding.owner)) return failure("aborted")
+      if (!binding.active || !validOwner(binding.owner) || pending.controller.signal.aborted
+        || binding.requests.get(request.requestId) !== pending) return failure("aborted")
       if (reply.status === 401 || reply.status === 403) {
         await retire(binding, reply.status === 401 ? "session-expired" : "access-revoked")
         return failure("contract-unavailable")
@@ -292,7 +298,7 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
         pending.responseHandle = randomUUID()
         return { kind: "byte-response", status: reply.status, headers: reply.headers, responseHandle: pending.responseHandle }
       }
-      const decoded = decodeSfWireBody(plan.value, reply.bytes)
+      const decoded = decodeSfWireBody(plan.value, reply.bytes, reply.headers["content-type"])
       if (decoded.status !== "ok") return failure("invalid-response")
       if (request.operationId === "ctx.context" && isRecord(decoded.value) && decoded.value.status === "ok"
         && isRecord(decoded.value.value) && isRecord(decoded.value.value.stamp)) {
@@ -304,7 +310,7 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
       if (plan.value.mode === "empty") return { kind: "empty-response", status: reply.status, headers: reply.headers }
       return { kind: "json-response", status: reply.status, headers: reply.headers, body: decoded.value ?? null }
     } catch {
-      if (plan.value.effect === "mutation") return failure("outcome-unknown")
+      if (plan.value.mutating) return failure("outcome-unknown")
       return failure(pending.controller.signal.aborted ? "aborted" : "network")
     } finally {
       binding.controller.signal.removeEventListener("abort", onRetired)
@@ -329,11 +335,12 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
   async function login(event: IpcMainInvokeEvent, raw: unknown): Promise<SfDesktopLoginResult> {
     const binding = use(event, raw)
     if (!binding || !isRecord(raw) || !closed(raw, ["bindingHandle", "generation", "returnRoute"])
-      || !isRecord(raw.returnRoute) || binding.loginPending) return { status: "denied" }
+      || !isRecord(raw.returnRoute) || !isRecord(raw.returnRoute.ownerSelection) || binding.loginPending) return { status: "denied" }
     const route = raw.returnRoute as SfResolvedRoute
     if (route.ownerSelection?.serverKey !== binding.connection.candidate.serverKey
       || route.ownerSelection.projectId !== binding.descriptor.projectId
-      || route.ownerSelection.installationId !== binding.descriptor.installationId)
+      || route.ownerSelection.installationId !== undefined
+         && route.ownerSelection.installationId !== binding.descriptor.installationId)
       return { status: "denied" }
     binding.loginPending = true
     try {

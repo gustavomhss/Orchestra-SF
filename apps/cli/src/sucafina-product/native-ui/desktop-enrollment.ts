@@ -1,5 +1,4 @@
 import type { SfInstallationDescriptor } from "@orchestra/schema/sucafina/context"
-import type { AppDockSocket } from "@orchestra/app-dock/socket-transport"
 
 /** Private single-use enrollment data. This is never a public Schema or renderer DTO. */
 export type SfLocalEnrollment = Readonly<{
@@ -9,7 +8,7 @@ export type SfLocalEnrollment = Readonly<{
 export type SfNativeEnrollmentReply = SfLocalEnrollment & Readonly<{
   kind: "sf-native-local-enrollment"; launchId: string; requestId: string
 }>
-type Transport = NonNullable<ReturnType<typeof AppDockSocket.fromEnv>>
+type Transport = NonNullable<ReturnType<typeof import("@orchestra/app-dock/socket-transport").fromEnv>>
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 /** Reuse the authenticated child-to-main Dock transport. Dispose gates its permanent listener. */

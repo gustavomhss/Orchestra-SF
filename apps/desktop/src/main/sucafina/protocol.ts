@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import type { SfOperationBindings, SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfDesktopInvocation } from "@orchestra/client/sucafina/transport"
@@ -89,6 +90,7 @@ export function planSfOperation(input: Readonly<{
   const mutating = meta.method === "POST" && meta.effect !== "read" && meta.effect !== "preview"
   const headers: Record<string, string> = { Accept: meta.responseMode === "bytes" ? "application/octet-stream" : "application/json" }
   let body: Uint8Array | undefined
+  const mode: "json" | "bytes" | "empty" = meta.responseMode
   if (meta.method === "POST") {
     // F02 owns creation and lifecycle of each key; broker never silently creates a retryable mutation.
     if (!input.request.idempotencyKey || !KEY.test(input.request.idempotencyKey))
@@ -125,13 +127,14 @@ export function planSfOperation(input: Readonly<{
       if (upload.bytes.byteLength > limit) return { status: "invalid-response" }
       if (operationId === "files.import-admit") {
         const ext = upload.fileName.split(".").pop()?.toLowerCase()
+        const formFields = { ...value, surface: source?.surface }
         if (!ext || !["xlsx", "xls", "json"].includes(ext) || upload.bytes.byteLength > 16 * 1024 * 1024
-          || typeof value.surface !== "string" || !SURFACES.has(value.surface)
-          || typeof value.selectionRef !== "string" || !("options" in value))
+          || typeof formFields.surface !== "string" || !SURFACES.has(formFields.surface)
+          || typeof formFields.selectionRef !== "string" || !("options" in formFields))
           return { status: "invalid-response" }
-        const boundary = "sf-" + crypto.randomUUID().replaceAll("-", "")
+        const boundary = "sf-" + randomUUID().replaceAll("-", "")
         const pieces: Buffer[] = []
-        for (const [name, field] of Object.entries(value)) {
+        for (const [name, field] of Object.entries(formFields)) {
           if (!["surface", "selectionRef", "options"].includes(name)) return { status: "invalid-response" }
           pieces.push(Buffer.from("--" + boundary + "\r\nContent-Disposition: form-data; name=\"" + name
             + "\"\r\n\r\n" + (typeof field === "string" ? field : JSON.stringify(field)) + "\r\n"))
@@ -157,7 +160,7 @@ export function planSfOperation(input: Readonly<{
       return { status: "invalid-response" }
   } else if (input.request.upload || input.request.idempotencyKey) return { status: "invalid-response" }
   return { status: "ok", value: {
-    url: target.href, method: meta.method, mode: meta.responseMode, effect: meta.effect, mutating,
+    url: target.href, method: meta.method, mode, effect: meta.effect, mutating,
     body, headers, operationId, codec,
   } }
 }
