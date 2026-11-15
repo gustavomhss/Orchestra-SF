@@ -1,0 +1,42 @@
+{
+  "number": 112,
+  "id": "export-visual-recheck",
+  "branch": "export-visual-recheck",
+  "actor": "S1-R1 independent visual reviewer attempt112; no export authorship",
+  "actor_pack": "execution/actors/S1-R1.json",
+  "lease_epoch": "visual-review-browser112",
+  "base_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "expected_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/R1/browser-112/attempt-001/"
+  ],
+  "inputs": [
+    "CI101C51run43682455278/artifact14148499941/manifestSHAe562aeb561e48e5dd205227b44b29e3e35fbba52f8e14bdb001d9bc4cbf46fb6;12PDF139PNG",
+    "103/104onlychangesbetweenC51andC53;DOCX98sourceandrenderer stablemustverifyblobdiff;88historicalfindings",
+    "102XLSXsourcee6c524ad6a6196bde1bf69e3f7cdbf049ab086c4 requires107newgenerationbeforevisualXLSXfixapproval"
+  ],
+  "mission": "Inspecionar arquivos/imagensreais eassinarparecervisualdelimitadoDOCX98;revisarXLSX102quandooutputsreaisdisponíveis,semserautordeexport/reader.",
+  "acceptance": [
+    "FerramentaGitHubMCP download_workflow_artifactfoiverificada nesta preparação:artifact14148499941downloadsuccess(reusablefileZIP). Usar ferramenta,validarZIP/manifestos/hash,eabrirPNG/PDFreaiscomcapacidadesvisuaisexpostas;nãoalegarlimitação sembuscartool. Nunca imprimir/persistirURLtemporáriaassinada.",
+    "Inspecionar página1composed-docx/after-drift e todaspáginasrelevantes/fonts/notalongas/tabelas/continuação/fullID,semoverlap/clipping. Declararcadaimagemaberta/página/hash emvezdeaprovação porXML ougeração.",
+    "Registrarvereditosfuncional/render/visualseparados;C51baselinehistórica nãofinalC53. Validarblobdigestdosprodutoresparareusodelimitado. ParaXLSXsomenteoutputsnovos102/107,compararporworksheetnormal/empty/wide/longsemregerarsourcedeoutroSHA.",
+    "Somente receipts,no code/tests/workflow/CIrun. Findingsespecíficosà98/102/106imediatos. FINALsomenteCfreeze e recheckdeltas/criteriagates;semrevisarplan/sidebarusuário."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "execution_status": "CONTINUING_LATE",
+  "consumer": "106 integration;107productCI;108compile;S0acceptance;independentreviewers",
+  "common": [
+    "Campanha sf2h-integral-20261112; T0 2026-11-13T04:01:10Z; CONTINUING_LATE. Plano imutável dbf9547211d9b0fade619790de7c19c0869b7c7d;15WPs/74tasks/17contratos/1610critérios. Ler AGENTS,START,WORKFLOW,execution/COMMON,pack completo próprio e anexos/critérios pertinentes;não refazer planejamento.",
+    "Nova sessão browser. Antes de escrever/despachar, reconciliar HEAD, entregas, ACKs/autoridades posteriores e publicar identidade/modelo/session realmente observados, inputsSHA, paths, lease. PREPARED não é instância ativa. Silêncio não revoga writer. Autoridade duvidosa: avançar nos paths disjuntos/read-only, obter handoff suportado; não sobrescrever nem inventar fencing.",
+    "106 única integradora após terminal105 explícito;107 reserva CI produto faseC53 após reconciliação da101;108 executa somente compilação/guards com tooling próprio disjunto da45;109apoiaP03 semtomar arquivos99;110filhosnativos semtomar95;111adapterHTTP semtomar52/96;112/113reviewerssomenteleitura. Manter direitos dos demais owners e restrições de transferência.",
+    "GitHub remoto somente MCP/CAS expectedhead/forcefalse;semgh/push/devmerge/deploy/Azure/segredos/enginechanges/restart/novoGoal/controller/watchdog. Goal nativa continua pausada; estes são pacotes manuais. Sidebar/UX20 eAzureusuárioforaescopo.",
+    "Testesprodutos somente GitHubActions pela interfaceexistente test:ci/request,umdispatcher/dedup/reusar runs. Sem bun test/heavytests locais/fullEPIC antecipado/novaplataforma. bun typecheck em pacotes, geração/spawn/guards conformeAGENTS nohostautorizado;não tscdireto. Guard findings não são suprimidos.",
+    "Não reduzir fixture/assertions/seleção/oráculo/timeout/grants/política para aprovar. Component/fixture/catalogue/Tasknãoexecutante não é runtime real. Nenhum PASS sem execuções/provas. Commit OUTPUT_READY não é DONE.",
+    "Cada PR/entrega:sourceSHA/tree/prepost/dependencyclosure/patchcompleto/W-S-run-job-runtime-results/criteriagaps/consumerACKreal/nextcheckpoint. Preservar receipts append-only e source anterior. Reviews independentesnãoeditam produto. GLOBAL_RELEASE sóS0apóspredicadointegral,mesmoC8seleções+epic+AM01–06+3FINAL+G7C/G8D+Dintacto."
+  ]
+}
