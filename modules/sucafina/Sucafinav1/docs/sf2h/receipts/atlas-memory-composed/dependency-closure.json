@@ -4836,6 +4836,352 @@
     [400,"dynamic-import",53,"../packages/core/src/flag/flag","relative-workspace-boundary",369],
     [400,"dynamic-import",56,"../packages/core/src/omni","relative-workspace-boundary",374],
     [400,"dynamic-import-constant",57,"../packages/core/test/fixture/omni-expect","relative-in-scope",383]
-  ]
+  ],
+  "F2_dependency_delta": {
+    "status": "TEXTUAL_IMPORT_DELTA_COMPLETE",
+    "label": "F2 independent recall-group tests, documentary pending replay and reused G1 rank selection",
+    "observed_at": "2026-11-15T03:00:07.741Z",
+    "previous_inventory": {
+      "bytes": 391161,
+      "sha256": "ff05390cdb3a5ecbd90ae57f5b7891ceecf4b29d026b20d37a22b41362d5a8a5"
+    },
+    "source_candidate": {
+      "commit": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+      "tree": "01211640e7fa6ccc77b9ac702fde94edf9565678",
+      "role": "W2 source; source files 341/405 read back independently through GitHub MCP at this commit"
+    },
+    "actions_snapshot": {
+      "commit": "86c84a1b86de7af819f278edbd7fce5a8f4cffe7",
+      "tree": "76421e65c14f54323afd8a454b40fc9201f108f2",
+      "request_blob": "7913dcf95e9cc73c3e85d0df85e98a03734f84d7",
+      "run_id": 43670181263,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670181263",
+      "observed_status": "in_progress",
+      "started_at": "2026-11-15T02:58:07Z",
+      "functional_outcome": "No terminal outcome is claimed by this inventory"
+    },
+    "historical_manifest_preservation": {
+      "W1": "Unchanged, including file341 original 6630-byte postimage, original import edges and original test result scope",
+      "G1": "Unchanged two-file/18-edge delta; its isolated request was not dispatched and its three tests are selected once in F2",
+      "rule": "For F2 only, overlay file_overrides on the immutable W1 catalog, include G1 files/edges, add F2 files, and replace all outgoing edges of edge_override_from_files with the F2 edge rows. Historical W1/G1 data is not overwritten."
+    },
+    "file_overrides": [
+      {
+        "file": 341,
+        "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+        "previous_postimage": {
+          "sha256": "7720afa889cf75da094cdb69b7f6caa665217d6d14bf01a0de9293ddbec3fcb0",
+          "git_blob_sha": "40a2fdf9de46dbdfbec99a61173902d9a3dd8561",
+          "bytes": 6630
+        },
+        "postimage": {
+          "bytes": 8944,
+          "sha256": "d296ec62455b9f8aa38449b26e7eb5c204c3a54ea3c06973d6deeb36d88945b3",
+          "git_blob_sha": "71b947d40374176f225634cddfd4fffcd4dd7061"
+        },
+        "content_provenance": "local-owned-worktree-text; GitHub-MCP W2 readback exact",
+        "change": "One monolithic test split into four independent fixtures; same original assertions/guards and both exact replays retained."
+      }
+    ],
+    "files": [
+      {
+        "id": 405,
+        "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+        "base_blob_sha": null,
+        "roles": [
+          "owned-test-postimage",
+          "textually-expanded"
+        ],
+        "postimage": {
+          "bytes": 8761,
+          "sha256": "82cf4fe7797200f3536d06b2c13b11ed53818f1d0eaeb61b037f6428a7c35b99",
+          "git_blob_sha": "c5f9e443286e055d0d84dd734fb9b0626267b084"
+        },
+        "content_provenance": "local-owned-worktree-text; GitHub-MCP W2 readback exact"
+      }
+    ],
+    "unchanged_owned_postimages": [
+      {
+        "file": 191,
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "postimage": {
+          "sha256": "c80d441dd33160d0d3b3f782c8b00361a4a0a85658a392ed3697bf07c9d9f6de",
+          "git_blob_sha": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+          "bytes": 51194
+        }
+      },
+      {
+        "file": 195,
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "postimage": {
+          "sha256": "d3a128587a44e9d6ccc7e3144629e1dd30b1cb5c3905e7353a61b10a4a057f62",
+          "git_blob_sha": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+          "bytes": 67821
+        }
+      },
+      {
+        "file": 403,
+        "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+        "postimage": {
+          "bytes": 11039,
+          "sha256": "9f09e061ffe743b9cd29813cbd51481e3200dfa2751d58c76714cc38491202d7",
+          "git_blob_sha": "31f6297303d1dd1abc204f120a9a859134705f80"
+        }
+      },
+      {
+        "file": 404,
+        "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail-fixture.ts",
+        "postimage": {
+          "bytes": 5195,
+          "sha256": "9c5d0c5dd76801958f9858bddd25d0743db8fdc83c4a8ae8f5250b7633250bf8",
+          "git_blob_sha": "f2e9e9f9e4a54e05186151acdf811dfecac96bce"
+        }
+      }
+    ],
+    "edge_columns": [
+      "from_file_id",
+      "kind",
+      "source_line",
+      "specifier",
+      "resolution",
+      "to_file_id_or_export_targets_or_package"
+    ],
+    "edge_override_from_files": [
+      341
+    ],
+    "edges": [
+      [
+        341,
+        "import",
+        1,
+        "bun:test",
+        "runtime-builtin",
+        "bun:test"
+      ],
+      [
+        341,
+        "import",
+        2,
+        "../../../../../../packages/core/test/fixture/omni-expect.ts",
+        "relative-in-scope",
+        383
+      ],
+      [
+        341,
+        "import",
+        3,
+        "../../../product/contracts/canonical.ts",
+        "relative-in-scope",
+        103
+      ],
+      [
+        341,
+        "import",
+        4,
+        "../../../product/host-binding/atlas-memory.ts",
+        "relative-in-scope",
+        191
+      ],
+      [
+        341,
+        "import",
+        5,
+        "./composed-document-fixture.ts",
+        "relative-in-scope",
+        337
+      ],
+      [
+        341,
+        "import",
+        6,
+        "./fixture-assertions.ts",
+        "relative-in-scope",
+        339
+      ],
+      [
+        341,
+        "import",
+        7,
+        "./second-case-fixture.ts",
+        "relative-in-scope",
+        343
+      ],
+      [
+        405,
+        "import",
+        1,
+        "node:crypto",
+        "runtime-builtin",
+        "node:crypto"
+      ],
+      [
+        405,
+        "import",
+        2,
+        "bun:test",
+        "runtime-builtin",
+        "bun:test"
+      ],
+      [
+        405,
+        "import",
+        3,
+        "@orchestra/core/test/fixture/omni-expect",
+        "workspace-export",
+        [
+          {
+            "condition": "default",
+            "file": 383
+          }
+        ]
+      ],
+      [
+        405,
+        "import",
+        4,
+        "../../../product/contracts/canonical.ts",
+        "relative-in-scope",
+        103
+      ],
+      [
+        405,
+        "import-type",
+        5,
+        "../../../product/contracts/decisions.ts",
+        "relative-in-scope",
+        106
+      ],
+      [
+        405,
+        "import",
+        6,
+        "../../../product/decisions/case-port.ts",
+        "relative-in-scope",
+        152
+      ],
+      [
+        405,
+        "import",
+        7,
+        "../../../product/integration/ledger-outbox.ts",
+        "relative-in-scope",
+        223
+      ],
+      [
+        405,
+        "import",
+        8,
+        "../../../runtime/contract.ts",
+        "relative-in-scope",
+        305
+      ],
+      [
+        405,
+        "import",
+        9,
+        "../memory-original-reauthorization/document-fixture.ts",
+        "relative-in-scope",
+        344
+      ],
+      [
+        405,
+        "import",
+        10,
+        "./fixture-assertions.ts",
+        "relative-in-scope",
+        339
+      ]
+    ],
+    "new_base_dependencies": [],
+    "new_workspace_packages": [],
+    "unresolved": [],
+    "reused_workspace_exports": [
+      {
+        "specifier": "@orchestra/core/test/fixture/omni-expect",
+        "package": "@orchestra/core",
+        "kind": "workspace-export",
+        "registry_path": "packages/core",
+        "registry_alias": "core",
+        "manifest": "packages/core/package.json",
+        "manifest_blob_sha": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+        "subpath": "./test/fixture/omni-expect",
+        "targets": [
+          {
+            "condition": "default",
+            "path": "packages/core/test/fixture/omni-expect.ts",
+            "base_blob_sha": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac",
+            "file": 383
+          }
+        ]
+      }
+    ],
+    "reused_inherited_fixture": {
+      "file": 344,
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-fixture.ts",
+      "base_blob_sha": "fadeb3063fa26a586957947802781ac2b64ff546",
+      "mutation": "none"
+    },
+    "dependency_identity_rule": "Every edge target resolves to the pinned W1 file catalog or the preserved G1 file catalog. Relative closure and package export targets are already expanded or explicitly bounded there; no dependency directory is inferred merely by name.",
+    "unchanged_runtime_assets": "Pinned scanner, inherited fixture runtime dependencies, configs, workspace registry and package/lock boundaries remain those in the parent inventory. Runtime stores, captures and pending/outbox records are created only during Actions execution; no historical file is prefilled by this inventory.",
+    "selection": {
+      "tests": 8,
+      "test_files": [
+        {
+          "file": 341,
+          "tests": 4,
+          "timeout_ms_each": 180000
+        },
+        {
+          "file": 405,
+          "tests": 1,
+          "timeout_ms_each": 180000
+        },
+        {
+          "file": 403,
+          "tests": 3,
+          "timeout_ms_each": 180000
+        }
+      ],
+      "support_fixture": 404,
+      "spawn_expectation": "expectSpawn(import.meta.path) in every declared test",
+      "isolated_G1_request": "NOT_DISPATCHED; explicitly superseded by F2, no double-counted execution"
+    },
+    "assertion_preservation": {
+      "map": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-memory-composed/recall-groups-split-map.json",
+      "map_sha256": "1e20ed74ef4cb4005923de9f2488a5ffdae4ad66c9925c7913c634b08975e435",
+      "map_git_blob_sha": "43598490ac6d5c2ae2d9059f2eebb4100b6198d9",
+      "original_anchors": 43,
+      "unmapped_anchors": 0,
+      "independent_fixtures": 4,
+      "publications_per_fixture": 2,
+      "settled_replays_per_fixture": 2,
+      "original_deadline_result": "FAIL in F1 after 265303.43ms against 180000ms",
+      "split_budget": "Each independent fixture keeps 180000ms; four declared ceilings total720000ms. The partition does not show that the original whole sequence met its deadline or reduce aggregate execution time."
+    },
+    "effective_counts_after_overlay": {
+      "catalog_files": 406,
+      "edge_rows": 3087,
+      "owned_product_postimages": 2,
+      "owned_test_postimages": 10,
+      "new_F2_catalog_files": 1,
+      "replacement_F2_catalog_files": 1,
+      "new_F2_edge_rows": 10,
+      "replacement_F2_edge_rows": 7
+    },
+    "independent_source_review": {
+      "recall_groups": "atlas_review: no static blocker; assertions, positives, hooks, two real publications/replays and DocumentFixture/RecallCall types retained",
+      "pending_replay": "criteria_audit final postimage confirmed; atlas_review independent source review reported no static blocker",
+      "execution_by_reviewers": "NOT_RUN"
+    },
+    "compiler45": "NOT_RUN",
+    "functional_execution_by_this_inventory": "NOT_RUN",
+    "native_session_witness": "NOT_RUN",
+    "limits": [
+      "Textual import closure is not a TypeScript compiler proof.",
+      "F1 monolithic timeout remains a failed execution.",
+      "F1 C12 prerequisite failures are not rerun or qualified by F2.",
+      "F2 terminal runtime evidence must be recorded separately from this in-progress inventory snapshot."
+    ]
+  }
 }
 

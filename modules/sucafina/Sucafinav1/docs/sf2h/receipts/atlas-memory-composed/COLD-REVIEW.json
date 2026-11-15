@@ -36,7 +36,16 @@
   "testReview": {
     "B0": "Four tests validly exposed five escapes; early selection hook was an oracle defect and is preserved as such.",
     "F1": "Cold review includes calibrated selection, multicase locator, explicit synthetic premises and exact denial assertions.",
-    "G1": "Independent second review of 3 rank tests and real C08 fixture: no identified static blocker; no differential B0 claim."
+    "G1": "Independent second review of 3 rank tests and real C08 fixture: no identified static blocker; no differential B0 claim.",
+    "F2": {
+      "sourceW": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+      "groupsBlob": "71b947d40374176f225634cddfd4fffcd4dd7061",
+      "pendingBlob": "c5f9e443286e055d0d84dd734fb9b0626267b084",
+      "reviewer": "/root/atlas_review",
+      "result": "NO_IDENTIFIED_STATIC_BLOCKER",
+      "assertions": "All original group assertions retained across independent fixtures, exact replays/audits in each; new documentary pending event queued by real C08 producer without publication.",
+      "limits": "F1 monolithic deadline remains failed. C12 bootstrap remains blocked before Atlas. No installed C12 callback/native proof. Hosted F2 remains separately required."
+    }
   },
   "notClaimed": [
     "compiler/guards PASS",
@@ -46,5 +55,11 @@
     "external egress closure",
     "full AM05 or final global reviews"
   ],
-  "globalRelease": false
+  "globalRelease": false,
+  "functionalObserved": {
+    "F1": "12PASS/14FAIL; not a green run",
+    "rawResult": "F1-result.json",
+    "C12": "C12-preparation-blocker.json",
+    "F2": "RUNNING"
+  }
 }

@@ -872,6 +872,137 @@
 +  expect(error.message).toBe("Nested local writes are forbidden")
 +}
 --- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts
+@@ -0,0 +1,128 @@
++import { randomUUID } from "node:crypto"
++import { expect, test } from "bun:test"
++import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { CaseLedgerEvent } from "../../../product/contracts/decisions.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { enqueueSfLedgerEvent } from "../../../product/integration/ledger-outbox.ts"
++import { object } from "../../../runtime/contract.ts"
++import { withDocumentReplayFixture } from "../memory-original-reauthorization/document-fixture.ts"
++import { requireOriginalRecord } from "./fixture-assertions.ts"
++
++// The unchanged40 fixture creates and confirms real C17 document sources, then
++// publishes A through C08/Atlas/Gitleaks. The accepted ledger event is an explicit
++// synthetic premise. This independent document case does not exercise the
++// blocked financial C12 preparation or its installed initializeAtlas callback.
++test("M69 settled documentary A remains authorized while B is pending without another publication effect", async () => {
++  expectSpawn(import.meta.path)
++  const completed: unknown[] = []
++  await withDocumentReplayFixture(async (f) => {
++    await f.ui("sf_evidence_get", { evidenceRef: f.eventRef }, async (call) => {
++      const request = f.authority.host.requestFor(call)
++      if (!request || !await f.authority.host.revalidate(call)) throw new Error("Actual document replay authority unavailable")
++      const source = f.sources[0]!
++      const before = await f.audit()
++      const keyA = JSON.stringify([f.caseRef.id, f.caseRef.incarnation, f.eventRef.target.eventId])
++      const itemA = object(object(before.outbox)[keyA])
++      const receiptA = object(itemA.receipt)
++      expect(itemA.state).toBe("settled")
++      expect(receiptA).toEqual(f.receipt)
++      expect(receiptA.status).toBe("committed")
++      expect(receiptA.sourceEventId).toBe(f.eventRef.target.eventId)
++      expect(object(receiptA.scanner).status).toBe("clean")
++      expect(before.counts.scans).toBe(1)
++      const partitionA = Object.values(object(before.atlas)).map(object)
++        .find((partition) => object(partition.originals)[source.ref.refDigest])
++      if (!partitionA) throw new Error("Real committed document capture A unavailable")
++      const captureA = object(object(partitionA.originals)[source.ref.refDigest])
++      expect(captureA.ref).toEqual(source.ref)
++      expect(object(object(partitionA.captureDigests)[f.receipt.eventId!])[source.ref.refDigest]).toBe(digestSfValue(captureA))
++
++      const ready = await f.memory.recall(f.caseRef, call)
++      expect(ready.status).toBe("ok")
++      if (ready.status !== "ok") throw new Error("Whole-case recall must succeed before pending B")
++      requireOriginalRecord(f, ready.records)
++      const stored = await f.authority.state.read(request, "cases", (state) => ({
++        versions: state.versions, decision: state.cases[f.caseRef.id],
++      }))
++      if (stored.status !== "ok" || !stored.value.decision) throw new Error("Real committed case A unavailable")
++      const decision = stored.value.decision
++      const eventA = decision.ledger.find((event) => event.id === f.eventRef.target.eventId)
++      if (!eventA) throw new Error("Committed event A missing from the real C08 ledger")
++      expect(eventA.evidenceRefs).toEqual([source.ref])
++      const pending: CaseLedgerEvent = { ...structuredClone(eventA), id: randomUUID(),
++        caseRef: { ...f.caseRef, version: decision.version + 1 },
++        rationale: "Explicit later accepted document review awaiting Memory publication",
++        outputDigest: digestSfValue({ premise: "M69 accepted pending documentary review",
++          previousEvent: eventA.id, evidenceRefs: eventA.evidenceRefs }),
++      }
++      // Queue B through the real producer in one C08 case/outbox transaction.
++      // Do not emit B, seed an Atlas capture, or manufacture a settled receipt.
++      const added = await f.authority.state.transaction(request, {
++        namespace: "cases", expectedStorageVersion: stored.storageVersion,
++        additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: stored.value.versions.outbox }],
++        targetRef: encodeCaseRef(f.caseRef), targetIncarnation: f.caseRef.incarnation,
++        idempotencyKey: `m69-document-pending:${pending.id}`, commandDigest: digestSfValue(pending),
++      }, async (state, actor) => {
++        const current = state.cases[f.caseRef.id]
++        if (!current || current.incarnation !== f.caseRef.incarnation || digestSfValue(current) !== digestSfValue(decision) ||
++          !current.participants.includes(actor.principalRef) || actor.principalRef !== call.binding.principalRef ||
++          actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion)
++          throw new Error("Actual pending document premise changed before commit")
++        state.cases[current.id] = { ...current, version: pending.caseRef.version, ledger: [...current.ledger, pending] }
++        const queued = enqueueSfLedgerEvent(state, pending, {
++          installationId: call.binding.installationId, projectId: call.binding.projectId, authority: actor,
++        })
++        if (queued.status !== "ok") throw new Error(queued.reason)
++        return { commit: true, value: queued.value.eventRef }
++      })
++      expect(added.status).toBe("ok")
++      if (added.status !== "ok") throw new Error("Real C08 pending document event was not committed")
++      const pendingRef = added.value
++      const keyB = JSON.stringify([f.caseRef.id, f.caseRef.incarnation, pendingRef.target.eventId])
++      const withPending = await f.audit()
++      expect(withPending.atlas).toEqual(before.atlas)
++      expect(object(withPending.outbox)[keyA]).toEqual(itemA)
++      expect(Object.keys(object(withPending.outbox))).toHaveLength(Object.keys(object(before.outbox)).length + 1)
++      expect(object(object(withPending.outbox)[keyB]).state).toBe("pending")
++      expect(object(object(withPending.outbox)[keyB]).receipt).toBeUndefined()
++      expect(object(object(withPending.outbox)[keyB]).eventRef).toEqual(pendingRef)
++      expect(withPending.counts.events).toBe(before.counts.events)
++      expect(withPending.counts.envelopes).toBe(before.counts.envelopes)
++      expect(withPending.counts.settled).toBe(before.counts.settled)
++      expect(withPending.counts.scans).toBe(before.counts.scans)
++
++      expect((await f.memory.recall(f.caseRef, call)).status).toBe("unavailable")
++      expect(await f.atlas.memory.readOriginal(f.caseRef, source.ref.refDigest, call)).toEqual(source.ref)
++      // Real continuity uses the original40 caseForEvidence composition and the
++      // private capture lookup. Success must not depend on publishing pending B.
++      expect(await f.atlas.proveContinuity(source.ref, source.ref, call)).toBe(true)
++      const replay = await f.memory.emitFromLedger(f.eventRef, call)
++      expect(digestSfValue(replay)).toBe(digestSfValue({ ...receiptA, status: "already-committed" }))
++      expect(await f.atlas.memory.readOriginal(f.caseRef, pendingRef.refDigest, call)).toBeUndefined()
++      expect(await f.audit()).toEqual(withPending)
++
++      // A settled receipt is not authority. Remove the live Request credential;
++      // the same admitted call must lose both original access and exact replay.
++      expect(request.headers.get("cookie")).toBeTruthy()
++      request.headers.delete("cookie")
++      expect(await f.authority.host.revalidate(call)).toBe(false)
++      expect(await f.atlas.memory.readOriginal(f.caseRef, source.ref.refDigest, call)).toBeUndefined()
++      const denied = await f.memory.emitFromLedger(f.eventRef, call)
++      expect(denied.status).toBe("unavailable")
++      expect(denied.eventId).toBeUndefined()
++      expect(denied.recordDigest).toBeUndefined()
++      expect(await f.audit()).toEqual(withPending)
++      completed.push({ scenario: "documentary-A-settled-B-pending", originalA: "accepted",
++        replayA: "already-committed-same-receipt", pendingB: "no-publication-no-receipt-no-original",
++        wholeCaseRecall: "unavailable", currentCredentialRemoval: "original-and-replay-refused",
++        auditDigest: digestSfValue(withPending), originalDigest: source.ref.refDigest,
++        recordDigest: f.receipt.recordDigest, scanner: f.receipt.scanner, scans: f.counts.scans,
++        atlasUnchanged: true, outboxUnchangedAfterB: true, nativeSessionWitness: false,
++        financialC12Executed: false, installedInitializeAtlasCallbackExecuted: false })
++    }, f.replayRequest())
++  })
++  // Emit the witness only after the real fixture has completed its teardown.
++  expect(completed).toHaveLength(1)
++  console.info("SF_MEMORY_PENDING_REPLAY_M69", JSON.stringify(completed[0]))
++}, 180_000)
+--- /dev/null
 +++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail-fixture.ts
 @@ -0,0 +1,70 @@
 +import { randomUUID } from "node:crypto"
@@ -1286,23 +1417,55 @@
 +}, 180_000)
 --- /dev/null
 +++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts
-@@ -0,0 +1,116 @@
+@@ -0,0 +1,159 @@
 +import { expect, test } from "bun:test"
 +import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 +import { digestSfValue } from "../../../product/contracts/canonical.ts"
 +import { revalidateSfAtlasRecall } from "../../../product/host-binding/atlas-memory.ts"
 +import { withComposedDocumentReplayFixture } from "./composed-document-fixture.ts"
-+import { readOriginalRaw, requireOriginalRecord } from "./fixture-assertions.ts"
++import { readOriginalRaw, requireOriginalRecord, type DocumentFixture } from "./fixture-assertions.ts"
 +import { publishSecondDocumentCase } from "./second-case-fixture.ts"
 +
-+test("M69 complete recall preserves two real cases and consumes only original same-call reader observations", async () => {
-+  expectSpawn(import.meta.path)
++type SecondCase = Awaited<ReturnType<typeof publishSecondDocumentCase>>
++type RecallCall = Parameters<DocumentFixture["memory"]["recall"]>[1]
++type Audit = Awaited<ReturnType<DocumentFixture["audit"]>>
++
++/** Each split retains two real publications and both exact settled replays.
++ * Each independent test keeps the original 180000ms ceiling.
++ * F1's monolithic deadline remains failed; this split does not prove that
++ * original whole sequence completed within its deadline. */
++async function withTwoPublishedCases(marker: string, work: (
++  fixture: DocumentFixture, second: SecondCase, before: Audit,
++) => Promise<Record<string, boolean | number>>) {
 +  await withComposedDocumentReplayFixture(async (f) => {
 +    const second = await publishSecondDocumentCase(f)
 +    expect(second.caseRef).not.toEqual(f.caseRef)
 +    expect(second.receipt.eventId).not.toBe(f.receipt.eventId)
 +    const before = await f.audit()
 +    expect(before.counts).toMatchObject({ scans: 2, events: 2, envelopes: 2, outbox: 2, settled: 2 })
++    const observations = await work(f, second, before)
++    expect(await f.replay()).toEqual({ ...f.receipt, status: "already-committed" })
++    expect(await second.replay()).toEqual({ ...second.receipt, status: "already-committed" })
++    expect(await f.audit()).toEqual(before)
++    console.info(marker, JSON.stringify({
++      ...observations, sameDurableReceipts: true, counts: before.counts, nativeSessionWitness: false,
++    }))
++  })
++}
++
++async function readGroups(f: DocumentFixture, second: SecondCase, call: RecallCall) {
++  const first = await readOriginalRaw(f, call)
++  const another = await f.memory.recall(second.caseRef, call)
++  expect(another.status).toBe("ok")
++  if (another.status !== "ok") throw new Error("Second actual raw recall unavailable")
++  expect(another.records).toHaveLength(1)
++  expect(another.records[0]?.recordDigest).toBe(second.receipt.recordDigest)
++  return [first, another.records]
++}
++
++test("M69 complete public recall preserves two real cases, authenticated empty selection and one-use original groups", async () => {
++  expectSpawn(import.meta.path)
++  await withTwoPublishedCases("SF_MEMORY_M69_MULTI_CASE_PUBLIC", async (f, second, before) => {
 +    const emptySelection = { caseRefs: [], query: "supplier" }
 +    await f.ui("sf_decision_recall", emptySelection, async (call) => {
 +      expect(await f.atlas.context.recall(emptySelection, call)).toEqual([])
@@ -1322,55 +1485,73 @@
 +      expect(secondRecord.envelope.scannerReceipt.digest).toBe(second.receipt.recordDigest)
 +      expect(digestSfValue({ kind: secondRecord.envelope.kind, owner: secondRecord.envelope.owner, entry: secondRecord.entry }))
 +        .toBe(second.receipt.recordDigest)
-+
-+      const readGroups = async () => {
-+        const first = await readOriginalRaw(f, call)
-+        const another = await f.memory.recall(second.caseRef, call)
-+        expect(another.status).toBe("ok")
-+        if (another.status !== "ok") throw new Error("Second actual raw recall unavailable")
-+        expect(another.records).toHaveLength(1)
-+        expect(another.records[0]?.recordDigest).toBe(second.receipt.recordDigest)
-+        return [first, another.records]
-+      }
-+      const groups = await readGroups()
++      const groups = await readGroups(f, second, call)
 +      expect(await revalidateSfAtlasRecall(groups, call)).toBe(true)
 +      expect(await revalidateSfAtlasRecall(groups, call)).toBe(false)
++      expect(await f.audit()).toEqual(before)
++    })
++    return { publicRecords: 2, authenticatedEmptySelection: true, originalGroupsAccepted: true, replayedObservationDenied: true }
++  })
++}, 180_000)
 +
-+      for (const mutation of ["order", "membership"] as const) {
-+        const changingGroups = await readGroups()
-+        const originalGroups = [...changingGroups]
-+        const revalidate = f.authority.host.revalidate
-+        const observation = { calls: 0, changed: false }
-+        try {
-+          f.authority.host.revalidate = async (trusted) => {
-+            const permitted = await revalidate(trusted)
-+            if (trusted !== call) return permitted
-+            observation.calls += 1
-+            if (permitted && !observation.changed) {
-+              if (mutation === "order") changingGroups.reverse()
-+              else changingGroups.splice(1, 1)
-+              observation.changed = true
-+            }
-+            return permitted
++async function proveLateGroupMutation(mutation: "order" | "membership") {
++  const marker = mutation === "order" ? "SF_MEMORY_M69_GROUP_ORDER_FENCE" : "SF_MEMORY_M69_GROUP_MEMBERSHIP_FENCE"
++  await withTwoPublishedCases(marker, async (f, second, before) => {
++    const selection = { caseRefs: [{ ...f.caseRef }, { ...second.caseRef }], query: "supplier" }
++    await f.ui("sf_decision_recall", selection, async (call) => {
++      expect(await revalidateSfAtlasRecall(await readGroups(f, second, call), call)).toBe(true)
++      const changingGroups = await readGroups(f, second, call)
++      const originalGroups = [...changingGroups]
++      const revalidate = f.authority.host.revalidate
++      const observation = { calls: 0, changed: false }
++      try {
++        f.authority.host.revalidate = async (trusted) => {
++          const permitted = await revalidate(trusted)
++          if (trusted !== call) return permitted
++          observation.calls += 1
++          if (permitted && !observation.changed) {
++            if (mutation === "order") changingGroups.reverse()
++            else changingGroups.splice(1, 1)
++            observation.changed = true
 +          }
-+          const result = await revalidateSfAtlasRecall(changingGroups, call)
-+          f.authority.host.revalidate = revalidate
-+          expect(observation.calls).toBeGreaterThan(0)
-+          expect(observation.changed).toBe(true)
-+          if (mutation === "order") {
-+            expect(changingGroups).toHaveLength(2)
-+            expect(changingGroups[0]).toBe(originalGroups[1])
-+            expect(changingGroups[1]).toBe(originalGroups[0])
-+          } else {
-+            expect(changingGroups).toHaveLength(1)
-+            expect(changingGroups[0]).toBe(originalGroups[0])
-+          }
-+          expect(result).toBe(false)
-+          expect(await revalidateSfAtlasRecall(await readGroups(), call)).toBe(true)
-+          expect(await f.audit()).toEqual(before)
-+        } finally { f.authority.host.revalidate = revalidate }
-+      }
++          return permitted
++        }
++        const result = await revalidateSfAtlasRecall(changingGroups, call)
++        f.authority.host.revalidate = revalidate
++        expect(observation.calls).toBeGreaterThan(0)
++        expect(observation.changed).toBe(true)
++        if (mutation === "order") {
++          expect(changingGroups).toHaveLength(2)
++          expect(changingGroups[0]).toBe(originalGroups[1])
++          expect(changingGroups[1]).toBe(originalGroups[0])
++        } else {
++          expect(changingGroups).toHaveLength(1)
++          expect(changingGroups[0]).toBe(originalGroups[0])
++        }
++        expect(result).toBe(false)
++        expect(await revalidateSfAtlasRecall(await readGroups(f, second, call), call)).toBe(true)
++        expect(await f.audit()).toEqual(before)
++      } finally { f.authority.host.revalidate = revalidate }
++    })
++    return { originalGroupsAccepted: true, changedDuringRealRevalidation: true, changedGroupDenied: true, intactGroupsAcceptedAfter: true }
++  })
++}
 +
++test("M69 complete recall rejects group order changed during real revalidation and preserves intact groups", async () => {
++  expectSpawn(import.meta.path)
++  await proveLateGroupMutation("order")
++}, 180_000)
++
++test("M69 complete recall rejects group membership changed during real revalidation and preserves intact groups", async () => {
++  expectSpawn(import.meta.path)
++  await proveLateGroupMutation("membership")
++}, 180_000)
++
++test("M69 complete recall binds observations to their original arrays, actual call and actual reader", async () => {
++  expectSpawn(import.meta.path)
++  await withTwoPublishedCases("SF_MEMORY_M69_OBSERVATION_BINDINGS", async (f, second, before) => {
++    const selection = { caseRefs: [{ ...f.caseRef }, { ...second.caseRef }], query: "supplier" }
++    await f.ui("sf_decision_recall", selection, async (call) => {
 +      const copied = await readOriginalRaw(f, call)
 +      expect(await revalidateSfAtlasRecall([structuredClone(copied)], call)).toBe(false)
 +      expect(await revalidateSfAtlasRecall([copied], call)).toBe(true)
@@ -1392,15 +1573,8 @@
 +      expect(await revalidateSfAtlasRecall([await readOriginalRaw(f, call)], call)).toBe(true)
 +      expect(await f.audit()).toEqual(before)
 +    })
-+    expect(await f.replay()).toEqual({ ...f.receipt, status: "already-committed" })
-+    expect(await second.replay()).toEqual({ ...second.receipt, status: "already-committed" })
-+    expect(await f.audit()).toEqual(before)
-+    console.info("SF_MEMORY_M69_MULTI_CASE_COMPLETION", JSON.stringify({
-+      publicRecords: 2, authenticatedEmptySelection: true, originalGroupsAccepted: true, replayedObservationDenied: true,
-+      copiedArrayDenied: true, otherActualCallDenied: true, mixedReadersDenied: true,
-+      groupOrderChangedDuringRealRevalidationDenied: true, groupMembershipChangedDuringRealRevalidationDenied: true,
-+      sameDurableReceipts: true, counts: before.counts, nativeSessionWitness: false,
-+    }))
++    return { copiedArrayDenied: true, originalArrayAccepted: true, otherActualCallDenied: true,
++      crossCallObservationConsumed: true, mixedReadersDenied: true, intactReaderAcceptedAfter: true }
 +  })
 +}, 180_000)
 --- /dev/null

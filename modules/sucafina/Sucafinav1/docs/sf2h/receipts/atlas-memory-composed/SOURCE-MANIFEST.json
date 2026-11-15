@@ -16,9 +16,9 @@
     "tree": "dd08615710c8a4dd0e98d19cf5c3f168c859e71d"
   },
   "envelopeAtAssembly": {
-    "sha": "772d85162521c67fdf30ce2377e47f27b9b4b5df",
-    "tree": "00c6a04c51cabb093a301d79fbe0638b1f0efb17",
-    "meaning": "Receipts only since supplementaryTestW. Product/test source is pinned to the two W commits above."
+    "sha": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+    "tree": "01211640e7fa6ccc77b9ac702fde94edf9565678",
+    "meaning": "Product bytes pinned to W1; complete current owned test bytes pinned to F2W. Later commits must contain only assigned receipts."
   },
   "files": [
     {
@@ -80,6 +80,16 @@
       }
     },
     {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "c5f9e443286e055d0d84dd734fb9b0626267b084",
+        "sha256": "82cf4fe7797200f3536d06b2c13b11ed53818f1d0eaeb61b037f6428a7c35b99",
+        "bytes": 8761
+      }
+    },
+    {
       "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail-fixture.ts",
       "status": "added",
       "preimage": null,
@@ -114,9 +124,9 @@
       "status": "added",
       "preimage": null,
       "postimage": {
-        "git_blob_sha": "40a2fdf9de46dbdfbec99a61173902d9a3dd8561",
-        "sha256": "7720afa889cf75da094cdb69b7f6caa665217d6d14bf01a0de9293ddbec3fcb0",
-        "bytes": 6630
+        "git_blob_sha": "71b947d40374176f225634cddfd4fffcd4dd7061",
+        "sha256": "d296ec62455b9f8aa38449b26e7eb5c204c3a54ea3c06973d6deeb36d88945b3",
+        "bytes": 8944
       }
     },
     {
@@ -143,11 +153,11 @@
   "sourceDiff": {
     "path": "patches/source.patch",
     "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
-    "head": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
-    "gitBlob": "3e339e3751c11a32e12f1e952be0e8b3589356af",
-    "sha256": "9447034365ce63ce9a9d8c1bf96c2ef13c112637dd8990bc82cf3b406543ad5c",
-    "bytes": 115514,
-    "scope": "Complete 11 product/test files; receipt additions are intentionally separate and do not modify executable source."
+    "head": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+    "gitBlob": "33f1c0e9ad5980acea06c8732c9345b064788622",
+    "sha256": "b1b8ea0678f7b977115d2e05d202db1c89009e3a227e9d5d07e088d84c6f1574",
+    "bytes": 126884,
+    "scope": "Complete current 12 product/test files. Receipt additions are separate and do not modify executable source."
   },
   "preservation": {
     "original40": "All four selected correction40 test files and imported original fixtures remain unchanged from the source base.",
@@ -162,15 +172,18 @@
   },
   "dependencyClosure": {
     "path": "dependency-closure.json",
-    "sha256": "ff05390cdb3a5ecbd90ae57f5b7891ceecf4b29d026b20d37a22b41362d5a8a5",
-    "bytes": 391161,
-    "method": "Recursive textual imports, package export boundaries, generated Atlas assets, configs, explicit child-process executable and supplementary G1 delta; not a compiler proof."
+    "gitBlob": "f8503a521d4bb64771f27955b04d1ff1d654373e",
+    "sha256": "48f1c8ba2b7c846e4dd8199a7a6459bcda323dc45980541da830e576ef90df8e",
+    "bytes": 402708,
+    "method": "Preserves W1/G1 textual closure exactly and adds F2 override for split test plus documentary pending test. Runtime child assets and generated/config/export boundaries remain explicit; not a compiler proof."
   },
   "remoteVerification": {
-    "method": "GitHub MCP fetch_file exact content and blob equality for all 11 postimages; preimages rehashed against source base; GitHub compare confirms only assigned paths.",
+    "method": "MCP exact file content/blob equality at W1/G1, exact F2 test/request readback, and W1→F2 compare confirming unchanged products and six files containing the12 F1 passing tests.",
     "productsVerifiedAt": "d962e08b81a707f3536344614c1faa3e728917b8",
     "G1FilesVerifiedAt": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
-    "outsideAssignedPaths": []
+    "outsideAssignedPaths": [],
+    "F2FilesVerifiedAt": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+    "unchangedF1ProductAndPassingTestFiles": true
   },
   "externalProposals": {
     "state": "HELD_NOT_APPLIED_NOT_QUALIFIED",
@@ -182,6 +195,16 @@
     ],
     "rule": "Source pin is W1. The future authorized path owner must reconcile target preimages, decide consumer boundaries and qualify the applied composed candidate. Including a patch as receipt never authorizes or applies it."
   },
-  "execution": "B0/F1/G1 results and W/S/run/job lineage are recorded separately. This source manifest itself does not assert any runtime PASS.",
-  "GLOBAL_RELEASE": false
+  "execution": "Actual B0/F1/F2 outcomes and exact W/S/run/job lineage are recorded separately. G1 dispatch was superseded by F2. This manifest itself does not assert runtime PASS.",
+  "GLOBAL_RELEASE": false,
+  "qualifyingTestW": {
+    "sha": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+    "tree": "01211640e7fa6ccc77b9ac702fde94edf9565678"
+  },
+  "qualificationBoundaries": {
+    "F1": "12PASS/14FAIL, including one own monolithic timeout and13 C12 prerequisite failures; full original40 preservation is not established.",
+    "F2": "Separate8-test selection on unchanged product; no separate G1 run.",
+    "C12": "Canonical financial preparation is blocked before original capture; original assertions are untouched.",
+    "timeout": "Original monolithic180s deadline remains failed. Four independent180s tests do not prove lower total cost or the old sequence deadline."
+  }
 }
