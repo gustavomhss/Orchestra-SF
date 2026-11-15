@@ -1,0 +1,229 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.diagnosis.v1",
+  "mission": 58,
+  "state": "P03_FAIL_EXTERNAL_DEPENDENCY_HELD",
+  "executed": {
+    "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+    "run": 43661532296,
+    "job": 132651714845
+  },
+  "observed_failure": {
+    "fixture_deadline_at_ms": 180004,
+    "phase": "omitted / analysis.evaluate / previousBinding comparison.read after persist",
+    "persist_start_ms": 101476,
+    "persist_complete_ms": 171881,
+    "previous_binding_start_ms": 171909,
+    "previous_binding_end_ms": 180025,
+    "previous_binding_duration_ms": 8116,
+    "duration_censored_by_deadline": true,
+    "result": {
+      "status": "unavailable",
+      "reason": "comparison-binding-unavailable"
+    },
+    "recovery_bind": {
+      "start_ms": 180025,
+      "end_ms": 180025,
+      "reason": "read returned unavailable after deadline; recovery did not establish a binding"
+    },
+    "not_reached": [
+      "independent binding read",
+      "selectionAgain",
+      "analysis.revalidate",
+      "choose",
+      "resolve-training",
+      "compose-after",
+      "confirmed",
+      "original ChoiceRecord/history assertions",
+      "later replay and source/revocation assertions"
+    ],
+    "semantic_violation_proven": false
+  },
+  "actual_observations": {
+    "rule_evaluations": 92,
+    "planner_compares": 20,
+    "dashboard_transactions": 11660,
+    "planner_transactions": 32006,
+    "current_snapshots": 202,
+    "current_snapshots_sync_ms": 667,
+    "c08_cases": 8706,
+    "host_revalidations": 105498
+  },
+  "phase_evidence": [
+    {
+      "phase": "compose-before:start",
+      "elapsed_ms": 6330,
+      "status": null,
+      "rule_evaluations": 0
+    },
+    {
+      "phase": "compose-before:complete",
+      "elapsed_ms": 31401,
+      "status": null,
+      "rule_evaluations": 12
+    },
+    {
+      "phase": "baseline:start",
+      "elapsed_ms": 31401,
+      "status": null,
+      "rule_evaluations": 12
+    },
+    {
+      "phase": "baseline:complete",
+      "elapsed_ms": 48015,
+      "status": "ok",
+      "rule_evaluations": 20
+    },
+    {
+      "phase": "omitted:start",
+      "elapsed_ms": 48015,
+      "status": null,
+      "rule_evaluations": 20
+    },
+    {
+      "phase": "omitted:complete",
+      "elapsed_ms": 180026,
+      "status": "unavailable",
+      "rule_evaluations": 92
+    },
+    {
+      "phase": "finally",
+      "elapsed_ms": 180027,
+      "status": null,
+      "rule_evaluations": 92
+    }
+  ],
+  "before_after": {
+    "purpose": "Descriptive checkpoints, not a controlled causal speed comparison",
+    "prior54": {
+      "W": "a233ec7e4ed4c55eeca6feb0344b5ec20b4880fb",
+      "S": "ee77344f24bfc50f33bdcf86d2019e210790dce8",
+      "run": 43657763534,
+      "runtime": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "rule_evaluations": 106,
+      "persist": [
+        86980,
+        148047
+      ],
+      "previous_binding": [
+        148069,
+        167068
+      ],
+      "independent_binding": [
+        167068,
+        180008
+      ],
+      "outcome": "FAIL timeout; stale after deadline"
+    },
+    "mission58": {
+      "runtime": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "rule_evaluations": 92,
+      "persist": [
+        101476,
+        171881
+      ],
+      "previous_binding": [
+        171909,
+        180025
+      ],
+      "independent_binding": "NOT_REACHED",
+      "outcome": "FAIL timeout; unavailable after deadline"
+    },
+    "limits": [
+      "Different immutable W and hosted invocations; no randomized same-runner A/B.",
+      "Both observations are censored by the original deadline.",
+      "The newer runtime does not establish completion; no isolated end-to-end regression or speedup is inferred."
+    ]
+  },
+  "causal_code_observations": [
+    {
+      "path": "product/portfolio/analysis.ts",
+      "blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+      "finding": "Read-before-bind54 is present. Existing binding read, independent read, selectionAgain and two-sided revalidate preserve separate observations."
+    },
+    {
+      "path": "product/decisions/criterion-comparison.ts",
+      "blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "finding": "A public read validates on both sides of its fresh binding read; replay and rule evaluation are canonical producer work."
+    },
+    {
+      "path": "product/portfolio/read-snapshot.ts",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "finding": "Existing root targets dashboard; its supplied mutable snapshot is ignored by helper."
+    },
+    {
+      "path": "runtime/local-store.ts",
+      "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "finding": "56 accelerates eligible immutable non-target copy plans. Mutable root target keeps cloneSnapshot plus validation. Every fresh root still observes SQL."
+    },
+    {
+      "path": "product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "finding": "Opaque C08 readers still structuredClone the full state after authorization. Only the pre-existing closed case selector projects."
+    }
+  ],
+  "measured_vs_unmeasured": {
+    "proven": "Deadline and exact failing public read phase; volume of calls; currentSnapshots synchronous aggregate.",
+    "not_measured": [
+      "Share of synchronous cloneSnapshot cost in this P03",
+      "Share of structuredClone(state) cost in this P03",
+      "SQL/lock versus callback split per existing transaction",
+      "Safe proposed optimization gain or completion of later phases"
+    ]
+  },
+  "owned_change_decision": {
+    "new_product_patch": false,
+    "reason": "No material causal fix was identified in owned analysis/production while retaining all required observations. P03 uses one candidate, no assumptions and two policy criteria; micro-optimizing their loops does not address tens of seconds in awaited producers.",
+    "rejected_shortcuts": [
+      "Reuse previous binding as the independent read",
+      "Skip final revalidation or canonical replay",
+      "Reuse persisted return as independent proof",
+      "Parallelize authority callbacks or widen snapshot scopes across writes",
+      "Reduce data, assertions, scenario or deadline"
+    ]
+  },
+  "external_dispositions": [
+    {
+      "proposal": "C08 closed result projection",
+      "files": [
+        "product/host-binding/state-provider.ts",
+        "product/decisions/result-store.ts"
+      ],
+      "state": "HELD_STATIC_OBSERVABILITY_GAP_NOT_APPLIED_NOT_TESTED",
+      "package": "external/c08-projection-rejected/",
+      "reason": "Can omit unselected clone errors/getter effects and choose a case before clone-side effects. Not an approved integration fix."
+    },
+    {
+      "proposal": "Switch generic readPortfolioSnapshot anchor to procurement",
+      "state": "REJECTED_FOR_GENERIC_ADAPTER_EQUIVALENCE_NOT_APPLIED",
+      "reason": "SourcePersistence requires source identities and creates a guard for the target surface before work even for commit:false. Changing target changes failure/authority observations for partial or corrupt metadata. Raw LocalStore equivalence does not qualify installed adapters."
+    },
+    {
+      "proposal": "Future explicit read-only root capability",
+      "state": "OWNER_DESIGN_REQUIRED_NOT_IMPLEMENTED",
+      "reason": "Requires runtime/contract/wrapper ownership and conformance qualification. Not introduced by58 and no speedup promised."
+    },
+    {
+      "proposal": "56 legacy structural counter reconciliation",
+      "state": "RELEASED_EXTERNAL_PATCH_NOT_APPLIED_NOT_RUN_BY58",
+      "package": "external/legacy-surface-demand/",
+      "reason": "Native dashboard materializations1→4 represent two nested and two currentSnapshots demands;19 assertions/order/semantic checks otherwise preserved."
+    }
+  ],
+  "next_qualification": "C27 now contains exact54/56 already executed inW1 and the out-of-selection legacy adaptation.57 must obtain a materially changed reviewed external implementation and coordinate45 checks before another original P03. C27 publication alone is not a new causal input.",
+  "full_WP_closed": false,
+  "GLOBAL_RELEASE": false,
+  "latest_composition": {
+    "candidate": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "source_equal": 140,
+    "source_total": 142,
+    "configuration_equal": 19,
+    "configuration_total": 19,
+    "remaining_differences": "Original test without54diagnostics and absent trace helper only",
+    "runtime_and_analysis_match_W1": true,
+    "legacy_postimage_applied_by57": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+    "qualified_as_C27_by58": false
+  }
+}

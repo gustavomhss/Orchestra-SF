@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.after-c27-60.consumer-ack58.v1",
+  "mission": 60,
+  "recorded_at": "2026-11-15 01:52:42 UTC",
+  "state": "ACCEPTED_EVIDENCE_ONLY_P03_FAIL_RETAINED",
+  "source": {
+    "terminal": "00813b2ebacf5b0cd1c69d871c7a757ac323ebb4",
+    "tree": "dffd2a878b17ebea90ee351db3c6d9be4c505b62",
+    "branch": "astra-wp13",
+    "pr": 37,
+    "namespace": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-runtime-qualification/",
+    "release_blob": "767b3d2e4fadb9e3c1bc090832bf3241897683b0",
+    "manifest_blob": "719a9961cd9aa8fa62ac98359913886c6d77bf99"
+  },
+  "target_material_candidate": {
+    "name": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "material_paths": [],
+  "new_material_candidate": null,
+  "source_release": "evidence_ready_for_intake:true;qualified_new_product_release:false",
+  "source_result": {
+    "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "W_tree": "d265540ea5d410801c2d535e8c13ee3dacc9c235",
+    "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+    "S_tree": "a5654f33856eaf138d5c8107ef4e4d7c551ed895",
+    "run": 43661532296,
+    "job": 132651714845,
+    "request": "4620fe7c5235107089dc8a0ae32b6915cb46e2a9",
+    "result": "0PASS/1FAIL/1error/24expect calls",
+    "duration_ms": 180032.59,
+    "assertion_lines": 72,
+    "test_and_fixture_budget_ms": 180000
+  },
+  "dispositions": [
+    {
+      "id": "analysis54",
+      "state": "ALREADY_IN_C26_C27_NO_REAPPLY",
+      "blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8"
+    },
+    {
+      "id": "runtime56",
+      "state": "ALREADY_IN_C27_NO_REPEAT_INTAKE",
+      "blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "id": "legacy-oracle",
+      "state": "ALREADY_IN_C27_NO_REAPPLY_UNFILTERED_REGRESSION_PENDING",
+      "blob": "0ac3c01f77c013d05ee8fecb69c401acd126b942"
+    },
+    {
+      "id": "C08-projection",
+      "state": "HELD_NOT_QUALIFIED",
+      "reason": "Observable getter/clone-error/selection-order differences."
+    },
+    {
+      "id": "anchor-change",
+      "state": "REJECTED_AS_QUALIFIED_FIX",
+      "reason": "Dashboard to Procurement changes SourcePersistence metadata/admission."
+    },
+    {
+      "id": "diagnostic-probe",
+      "state": "INERT_ARCHIVE_ONLY",
+      "reason": "Not an executable new test or qualification."
+    }
+  ],
+  "equivalence": "140/142 P03 sources and19/19 configurations match W1; two diagnostic/trace differences. Exact54/56 blobs present in C27. No claim that C27 was executed.",
+  "diagnostic_limits": "Overlapping inclusive timings cannot isolate clone CPU or justify dominant-copy/speedup claim. Confirmation/history/replay/revoke not reached; all19P03criteria HELD. No identical retry.",
+  "next_owner": "A59 causal readonly runtime scope; explicit complete terminal qualified release required before intake. A59 source qualification authority does not grant A60 dispatch.",
+  "archive": {
+    "files": 38,
+    "mode": "exact existing Git blob/mode copies under source-outputs/diagnostic58; all proposals remain inert",
+    "manifest": "source-outputs/diagnostic58/FINAL-MANIFEST.json",
+    "prior_files": "Original manifest previously_published_files remains pinned to source58 terminal; no historical artifact deleted."
+  },
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "preflights": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_moves": 0,
+    "producer_branch_writes": 0,
+    "dev_merge": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "product_execution": 0
+  },
+  "GLOBAL_RELEASE": false
+}

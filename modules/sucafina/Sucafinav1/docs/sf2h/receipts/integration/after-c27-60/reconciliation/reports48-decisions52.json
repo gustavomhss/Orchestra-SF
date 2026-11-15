@@ -1,0 +1,46 @@
+{
+  "schema": "orchestra-sf.mission60.reports-decisions-cross-review.v1",
+  "reports_source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+  "reports_shared_manifest": "5fedcf4cdf88b0ddc4b179f951c985ce00d913c7",
+  "reports_shared_patch": "908c4533ed468d72329b93a3611e522065b929c3",
+  "decisions_source": "fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+  "decisions_shared_patch": "322aa703425a1690be2b09ad8e00207b46ff3759",
+  "reviewers": [
+    "/root/reports48_review",
+    "/root/decisions52_review"
+  ],
+  "target": "C27 b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+  "textual_overlap": [],
+  "boundaries": [
+    {
+      "name": "createSfProductAuthority",
+      "result": "Return shape unchanged. Reports48 adds strict exception propagation for sf_review_prepare and collaboration read aliases only; catalog does not include sf_case_read/decisions.edit/decisions.portfolio.read."
+    },
+    {
+      "name": "Node request/response bridge",
+      "result": "Decisions52 NodeV3 preserves generic headers, including X-SF-Review-Binding; it does not authorize or reinterpret that guard."
+    },
+    {
+      "name": "Reports installed route chain",
+      "result": "Reports48 changes extended-http and extended-browser; Decisions52 adds decision-case-http to host-context. Current patches do not replace each other's routes. Origin/auth/privacy and Microsoft composed map remain required."
+    }
+  ],
+  "disposition": "No static conflict identified between the inspected bundles. This is not a release or a runtime PASS. Consume each complete coherent release only with explicit source authority; combined material then requires its own exact closure and qualification.",
+  "reports_patch_reconstruction": {
+    "shared": 21,
+    "own": 24,
+    "all_preimages_exact": true,
+    "all_postimages_exact": true,
+    "all_proposed_modes": "100644",
+    "product_or_gate_execution": false
+  },
+  "cookie_dependency": {
+    "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+    "blob": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+    "already_in_C27": true
+  },
+  "remote_mutations": false,
+  "tests_dispatched": false,
+  "global_release": false
+}
+

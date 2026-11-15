@@ -1,0 +1,370 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.final-manifest.v1",
+  "mission": 58,
+  "state": "TERMINAL_EVIDENCE_P03_FAIL",
+  "terminal_commit": "CONTAINING_COMMIT",
+  "source_branch": "astra-wp13",
+  "source_PR": 37,
+  "expected_parent": "d00a74824c360fc557521ca77097e7593961909e",
+  "mutation_boundary": {
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-runtime-qualification/",
+    "new_owned_product_edits": 0,
+    "source_runtime_edits": 0,
+    "stack_writes": 0,
+    "source_tree_replaced": false,
+    "write_method": "GitHub MCP tree/commit/CAS expected_sha; force:false"
+  },
+  "identities": {
+    "release54": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+    "release56": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+    "control": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+    "ACK58": "4bbaf92e43180259262b3bde926d81bb5c82a1da",
+    "prepared_receipts": "d00a74824c360fc557521ca77097e7593961909e",
+    "base_C24": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+    "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "W_tree": "d265540ea5d410801c2d535e8c13ee3dacc9c235",
+    "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+    "S_tree": "a5654f33856eaf138d5c8107ef4e4d7c551ed895",
+    "request": "4620fe7c5235107089dc8a0ae32b6915cb46e2a9",
+    "retained_S_branch": "astra-validation58",
+    "latest_reconciled_C27": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "C27_tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "result": {
+    "run_id": 43661532296,
+    "job_id": 132651714845,
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "expect_calls_reported": 24,
+    "test_elapsed_ms": 180032.59,
+    "original_expect_lines": 72,
+    "original_test_and_fixture_deadlines_ms": 180000,
+    "omni_verdict": "not applicable; no Omni proof",
+    "later_journey_phases": "NOT_REACHED"
+  },
+  "previously_published_files": [
+    {
+      "path": "ACK58.json",
+      "git_blob": "569d5b521f6094cd2d84999be07066c7b221f8c9",
+      "characters": 4322
+    },
+    {
+      "path": "composition/W1-MANIFEST.json",
+      "git_blob": "504d7b886abc82046d44d134019aab3e1ee3ab35",
+      "characters": 22894
+    },
+    {
+      "path": "composition/W1.patch",
+      "git_blob": "f215b69bd4df90acb9d78b479079590c1a9fa723",
+      "characters": 105758
+    },
+    {
+      "path": "READ-CLOSURE.json",
+      "git_blob": "bd77c8033813a74c543d0f47ec2fa47116548942",
+      "characters": 2092
+    },
+    {
+      "path": "ci/R1-request.json",
+      "git_blob": "4620fe7c5235107089dc8a0ae32b6915cb46e2a9",
+      "characters": 259
+    }
+  ],
+  "terminal_files": [
+    {
+      "path": "AUTHORITY-FINAL.json",
+      "mode": "100644",
+      "bytes": 1982,
+      "sha256": "cbad5b2283b2f79022597a6a6bbed88064c8156562a4ed1dab7061d3068fd99e",
+      "git_blob": "e5050a0f4f30d8a21a9dbb0d47dbba9cb238366f"
+    },
+    {
+      "path": "CONSUMER-RELEASE.json",
+      "mode": "100644",
+      "bytes": 2560,
+      "sha256": "654e6072e8b933ef3b32571680b09c2f2e4f4d779eeb399b56dcac9cfb2472aa",
+      "git_blob": "767b3d2e4fadb9e3c1bc090832bf3241897683b0"
+    },
+    {
+      "path": "HANDOFF-FINAL.md",
+      "mode": "100644",
+      "bytes": 12486,
+      "sha256": "8c53fefc48934ba090b9772cf4045694841bedec2a6d8f8de754aec83e0e875f",
+      "git_blob": "621ad8c36238040bc43aaebddd364521a8c31f55"
+    },
+    {
+      "path": "checks/ORACLE-PRESERVATION.json",
+      "mode": "100644",
+      "bytes": 9875,
+      "sha256": "2a592347f3b01f42f04cd9d339e2868b6eeb60c45ff62290a31ac165a76013ef",
+      "git_blob": "d7091831952a1b1b9190cf1381f3985fabf97e6b"
+    },
+    {
+      "path": "checks/REQUEST-45.json",
+      "mode": "100644",
+      "bytes": 1539,
+      "sha256": "117540f174855e3b79c51a010b52663d84ae05f61bfc467f035cfefe8088f1ee",
+      "git_blob": "c5de814b7ef23a69898e22b650f57c67b6557536"
+    },
+    {
+      "path": "checks/original-expect-sequence.txt",
+      "mode": "100644",
+      "bytes": 7908,
+      "sha256": "f78152ede2f26602dadf8eaf461e8b2072b1e4edd360ba93811475c290993ba4",
+      "git_blob": "8ce0388a7756a2e9a4e76ae2906abbface9b17c6"
+    },
+    {
+      "path": "ci/LEDGER-FINAL.json",
+      "mode": "100644",
+      "bytes": 7715,
+      "sha256": "e5ae37cb8d2b5a1db5b82c4fe6466b62d595ff155f745336709696fd3f618196",
+      "git_blob": "471f37a9f6315d938d9397dbc7d52b96c6ddf3f4"
+    },
+    {
+      "path": "ci/R1-result.json",
+      "mode": "100644",
+      "bytes": 6077,
+      "sha256": "994648425aab890b656094bed26da613992e0c19c08dde478d110583c1883a24",
+      "git_blob": "7bd1d09facc20e05b219d24908487970f45797c8"
+    },
+    {
+      "path": "composition/PATCH-CHECK.json",
+      "mode": "100644",
+      "bytes": 3521,
+      "sha256": "9a721fb39b6d93ed69054916b42413fab187c074f5b319105eae07a0e537c5d1",
+      "git_blob": "1d99e5dba1e238f812435866ab9196e1e3be96b3"
+    },
+    {
+      "path": "composition/dependency-closure.json",
+      "mode": "100644",
+      "bytes": 304193,
+      "sha256": "b983306d004c62987dce52fb877390df232e769f8b2ea931ea6fbd26c9141f01",
+      "git_blob": "80e24f668d4fbb2a6a7b3947f4d9308e09dae4c9"
+    },
+    {
+      "path": "criteria68-addendum.json",
+      "mode": "100644",
+      "bytes": 30163,
+      "sha256": "43f38563ae607485f5adfd4a6463a6219338090984db3387b64e7dab75f13693",
+      "git_blob": "9a6ab2eb24105704ec32bf60e7b6cae067e9fbcf"
+    },
+    {
+      "path": "external/PATCH-CHECK.json",
+      "mode": "100644",
+      "bytes": 670,
+      "sha256": "ff0c8b84ca41d86ddd091c7e5eafa8b2771101a1da10df3b390cb42730435812",
+      "git_blob": "545a622963ee5122de724143b88cb935d3601c5d"
+    },
+    {
+      "path": "external/c08-projection-rejected/MANIFEST.json",
+      "mode": "100644",
+      "bytes": 2871,
+      "sha256": "81f284ea58990fcfb03fa3cc3092944ab2893cf8201b9bb352c4da4a122fae0e",
+      "git_blob": "639d4798cbf1a64902ffc214c288b84362b291ee"
+    },
+    {
+      "path": "external/c08-projection-rejected/README.md",
+      "mode": "100644",
+      "bytes": 1027,
+      "sha256": "a0ed2dfdffe8fc9c7fbb4ac97b87447fef9c59688fef467ae6388b688f31a096",
+      "git_blob": "b6ae0b7855934235a774d5d2527a0825f16f8203"
+    },
+    {
+      "path": "external/c08-projection-rejected/proposal.patch",
+      "mode": "100644",
+      "bytes": 13945,
+      "sha256": "736ab187a91dde2159c57743db1c945f1b4c190b6576a9f853de74bb7b3a03a5",
+      "git_blob": "b348dc49e361489324c5d47de77bcff1836cae11"
+    },
+    {
+      "path": "external/c08-projection-rejected/result-store.postimage.txt",
+      "mode": "100644",
+      "bytes": 28712,
+      "sha256": "2629ecd5c380edb842827b34730e9262d1ca030b013e521e6b9c88cb4dcade55",
+      "git_blob": "79d0be6681c7bc96b27a864ad026ccfc16739933"
+    },
+    {
+      "path": "external/c08-projection-rejected/result-store.preimage.txt",
+      "mode": "100644",
+      "bytes": 29250,
+      "sha256": "576dc47430a6072d094c98d4c319d6659f8b58d07a201dc1a50d47bc34679a59",
+      "git_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "path": "external/c08-projection-rejected/state-provider.postimage.txt",
+      "mode": "100644",
+      "bytes": 25852,
+      "sha256": "5ab7af435fd73445816ccdf948d05245da7d153b6099d977ebacc03bbc88698a",
+      "git_blob": "a443f98f20de6c1b815311177e7305860090986b"
+    },
+    {
+      "path": "external/c08-projection-rejected/state-provider.preimage.txt",
+      "mode": "100644",
+      "bytes": 22226,
+      "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "git_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "path": "external/diagnostic-draft/README.md",
+      "mode": "100644",
+      "bytes": 756,
+      "sha256": "658fde07aad4000fdd043fe43d79f0fff9d80a878680c65dcc7535a55723188a",
+      "git_blob": "2eb2c14df314cc48e7889de26d5ff8d5ca538553"
+    },
+    {
+      "path": "external/diagnostic-draft/c08-observation-probe.ts.txt",
+      "mode": "100644",
+      "bytes": 7273,
+      "sha256": "3df0dc9e47cc8c0c0117890c3ece47319581ca0d957f45b8c10e4583b4943a58",
+      "git_blob": "ff547ca326e6de624f5f3e607533dba042963672"
+    },
+    {
+      "path": "external/legacy-surface-demand/MANIFEST.json",
+      "mode": "100644",
+      "bytes": 1628,
+      "sha256": "6858a8bdec920bd4ec5471673a937cd905d4e5fcb0eade103db54afddb738fff",
+      "git_blob": "350e9bfa184ce402200769e6635f3be8c519d035"
+    },
+    {
+      "path": "external/legacy-surface-demand/postimage.txt",
+      "mode": "100644",
+      "bytes": 15836,
+      "sha256": "ae490f6f7a0fb47313011123c6d3dc5c5a97fbb07dec0ba43a6276ff96f1a6e5",
+      "git_blob": "0ac3c01f77c013d05ee8fecb69c401acd126b942"
+    },
+    {
+      "path": "external/legacy-surface-demand/preimage.txt",
+      "mode": "100644",
+      "bytes": 15837,
+      "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+      "git_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e"
+    },
+    {
+      "path": "external/legacy-surface-demand/proposal.patch",
+      "mode": "100644",
+      "bytes": 1393,
+      "sha256": "86886237c7fa19a5cc5f43ff5585726ad9d552036b1b91257a45006c60e81f08",
+      "git_blob": "348f22907a7f0b16c2f3a46999c2a0e6a21d2cb2"
+    },
+    {
+      "path": "external/runtime56/runtime.patch",
+      "mode": "100644",
+      "bytes": 9128,
+      "sha256": "80946f6552a2ecce1a67eb209c11cb4920e4d6ea00becfe38f74f15bf9a4f8e4",
+      "git_blob": "42fa23dbb51c5cd04b1008f27e48b6d017861d0f"
+    },
+    {
+      "path": "external/runtime56/source-and-tests.patch",
+      "mode": "100644",
+      "bytes": 69860,
+      "sha256": "0df965702e12171ebebf0a5e13daad0db93410d0059a5b7b3a1721eae79c24b5",
+      "git_blob": "6daf4f8ee57f1e18feb6f03358af3c733597196a"
+    },
+    {
+      "path": "findings/P03-DIAGNOSIS.json",
+      "mode": "100644",
+      "bytes": 8703,
+      "sha256": "490bcede7f2dcc304c0bd35d226eb1cd9f499668b32d2435e7d2d3485d2db29c",
+      "git_blob": "8c7cc0b65f7cf1397ee98c0ec558a3839326f2a7"
+    },
+    {
+      "path": "logs/R1.log.txt",
+      "mode": "100644",
+      "bytes": 98745,
+      "sha256": "2a6fa280de6b6bd45b7758ccaf6c0d6aefcb9c8d2e5975454156bf737eb14b3d",
+      "git_blob": "f52557e001d3f4dbf210a78aa7076b148b1d6b25"
+    },
+    {
+      "path": "metrics/R1-boundaries.json",
+      "mode": "100644",
+      "bytes": 28414,
+      "sha256": "d6d200d72af45d64e4ecc279c92731598a46a078a184af6596dbf6d2556e8b32",
+      "git_blob": "3728e629fde6bb1a072a541b7831d9be0028a6a8"
+    },
+    {
+      "path": "metrics/R1-fixture.json",
+      "mode": "100644",
+      "bytes": 4466,
+      "sha256": "cbbf72bf6025ee44ebab4626c04cc949fbb2e7e7c54a02d1e0eaec8a6a88fcc9",
+      "git_blob": "2cbfedca3deaf6ae08096212474b4dfa3832e35e"
+    },
+    {
+      "path": "metrics/R1-phases.json",
+      "mode": "100644",
+      "bytes": 9894,
+      "sha256": "0920282de3df3fa604e8da7f070ff6dc742e4a3f5f9a843bc5fdd5c887c51273",
+      "git_blob": "b7445027def4161024e2d2cfa853995133e7027d"
+    },
+    {
+      "path": "reconciliation/C26-closure.json",
+      "mode": "100644",
+      "bytes": 54836,
+      "sha256": "776b672402109ab7bebc91fba9bda7de544a7f4c6368d27544b553c879446239",
+      "git_blob": "bde639ec167c1edc04de2ebb21b4d239ee04066b"
+    },
+    {
+      "path": "reconciliation/C27-closure.json",
+      "mode": "100644",
+      "bytes": 6677,
+      "sha256": "35925a5a355f03ebb6c37703d00b6c59685e05b006d1564456f3ee37287cfed6",
+      "git_blob": "38c6fa57fa3f729e245b984e1256ea1440cd9728"
+    },
+    {
+      "path": "reconciliation/TERMINAL-PRECHECK.json",
+      "mode": "100644",
+      "bytes": 1747,
+      "sha256": "60121806f6210082a6ee5aa2f510670ecdcfc7838b820bb46248cd352d7173ab",
+      "git_blob": "8c950697d0e3e0aa541092e259f39ee9ce75ed15"
+    },
+    {
+      "path": "review/CAUSAL-STATIC.json",
+      "mode": "100644",
+      "bytes": 10589,
+      "sha256": "469407044530a43bdc250edad0ef7002a304c8203ae4b5d64ef04d95f7e7a42a",
+      "git_blob": "3ee5d85a1588c0affc71dfadf810d36ac2a80076"
+    },
+    {
+      "path": "review/RUNTIME-CAUSAL.json",
+      "mode": "100644",
+      "bytes": 7131,
+      "sha256": "458561cb8091ae8a4a1d7a3690b786474972022a82b663eb3452ebc94470b381",
+      "git_blob": "014334bd2210909bc3b216430a634562cdb976bf"
+    }
+  ],
+  "self_hash": "Excluded to avoid a self-referential content hash; commit/tree and readback identify this manifest.",
+  "hash_rules": {
+    "git_blob": "SHA1('blob '+UTF8_byte_length+NUL+UTF8_bytes)",
+    "sha256": "SHA256 of exact UTF8 file bytes; newline preserved",
+    "source_files_method": "Immutable GitHub blobs fetched and recomputed; no local product execution."
+  },
+  "static_checks": {
+    "all12_W_patch_postimages_reconstructed": true,
+    "external_patch_pre_post_reconstructed": true,
+    "original72_expect_lines_byte_identical": true,
+    "fixture_deadline_unchanged": true,
+    "JSON_receipts_parse": true,
+    "source_import_closure_files": 142,
+    "unresolved_relative_imports": 0,
+    "config_files": 19,
+    "C27_source_equal": 140,
+    "C27_difference": "Only P03 diagnostic wrappers and trace helper",
+    "legacy_case_assertions": 19,
+    "legacy_file_assertions": 61
+  },
+  "release_limits": [
+    "P03 FAIL remains HELD; no criterion or WP full PASS promoted",
+    "Component56 source65PASS is historical, not58 integrated evidence",
+    "C08 projection complete patch is rejected/held, not applied or qualified",
+    "Diagnostic helper is inert and not typechecked/executed",
+    "Foreign legacy adaptation was applied by57 inC27, not run by58",
+    "45 retains typecheck/guards;57 retains integration/regression; no global release"
+  ],
+  "campaign": {
+    "T0": "2026-11-13T04:01:10Z",
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "GLOBAL_RELEASE": false
+}

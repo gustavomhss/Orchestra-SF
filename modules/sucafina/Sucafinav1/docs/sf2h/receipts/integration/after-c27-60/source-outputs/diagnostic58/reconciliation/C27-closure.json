@@ -1,0 +1,165 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.c27-exact-tree-delta.v1",
+  "mission": 58,
+  "observed_at": "2026-11-15T01:20:59Z",
+  "prior_full_manifest": {
+    "path": "C26-closure.json",
+    "git_blob": "bde639ec167c1edc04de2ebb21b4d239ee04066b",
+    "sha256": "776b672402109ab7bebc91fba9bda7de544a7f4c6368d27544b553c879446239",
+    "original_review_artifact_name": "c26-p03-closure-reconciliation.json"
+  },
+  "W1": {
+    "sha": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "tree": "d265540ea5d410801c2d535e8c13ee3dacc9c235",
+    "closure_manifest_blob": "80e24f668d4fbb2a6a7b3947f4d9308e09dae4c9"
+  },
+  "C26": {
+    "sha": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+    "tree": "ab41682ea4879c5921242889dac20f4b5cec2d07"
+  },
+  "C27": {
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "sucafinav1_tree": "6a3ad31b2f723d2b245f24fde8a8b86e79feecfb"
+  },
+  "method": {
+    "comparison": "Exact Git tree entry/blob/mode lookup for all142 source paths and all19 configs from W1 manifest. No three-dot diff.",
+    "sucafinav1": {
+      "recursive": true,
+      "truncated": false,
+      "blobs": 2994
+    },
+    "root": {
+      "entries": 43,
+      "only_changed_tree_from_C26": "modules"
+    },
+    "sucafina_direct_directory": "Package manifest/bunfig/porta SHAs read at C27; unchanged. .github/script/root config entries prove identical entire subtrees to C26."
+  },
+  "summary": {
+    "source_compared": 142,
+    "source_equal_to_W1": 140,
+    "source_different_from_W1": 2,
+    "configuration_compared": 19,
+    "configuration_equal_to_W1": 19,
+    "source_changes_from_C26_within_W1_closure": 1
+  },
+  "closure_delta_from_C26": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "C26_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "C27_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "W1_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "equals_W1": true
+    }
+  ],
+  "remaining_differences_from_W1": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/trace.ts",
+      "W": "84d8b45cf88a9ac852eb09e4762932aced3c7433",
+      "C27": null,
+      "mode_equal": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "W": "6effa6053a00758e987e52f0c6fcf9baf9a7906a",
+      "C27": "47b5358c8dda3179045499388ce98871576a2aa9",
+      "mode_equal": true
+    }
+  ],
+  "configuration_delta_from_C26": [],
+  "material_paths_C26_to_C27": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "pre": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "post": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "pre": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "post": "0ac3c01f77c013d05ee8fecb69c401acd126b942"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+      "pre": null,
+      "post": "5834b18e408db1015636479f28edee21ec0c4901"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+      "pre": null,
+      "post": "0a46c9113127542c43aed60951514a7397b5fdb6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "pre": null,
+      "post": "fbf54acc8bc81a9afa27a5299bca305946597e98"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+      "pre": null,
+      "post": "a03d190f04a488ac3a7f508b7a521bcd67be63a5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+      "pre": null,
+      "post": "d2311405a63c142566fd20f0b84cd6797a60f286"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+      "pre": null,
+      "post": "d6f54942abbef1d9df3d5e73313083ab971f8347"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+      "pre": null,
+      "post": "dbca223c910c74662b4a42150146d666a42f154d"
+    }
+  ],
+  "consumer_ack56": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/consumer-ack56.json",
+    "git_blob": "c7167aa6998e519416915fc3fecb884517f6fb39",
+    "read": "Full content read",
+    "state": "CONSUMED_QUALIFIED_SOURCE_AS_COMPOSED_CANDIDATE",
+    "source_release": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+    "candidate": "C27",
+    "owned_paths": 8,
+    "source_test_results_transferred": false,
+    "remaining_composed_regression": "NOT_RUN_UNFILTERED_CASE_REQUIRED",
+    "P03_owner": 58,
+    "checks_owner": 45,
+    "GLOBAL_RELEASE": false
+  },
+  "legacy_oracle": {
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+    "in_P03_closure": false,
+    "C26_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+    "C27_blob": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+    "read_before_after": "Full contents fetched at exact C26/C27",
+    "line_count_before": 327,
+    "line_count_after": 327,
+    "exact_changes": [
+      {
+        "line": 149,
+        "before": "test(\"one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies\", async () => {",
+        "after": "test(\"one root emits fresh demanded sibling graphs while nested and current snapshots remain independent staged copies\", async () => {"
+      },
+      {
+        "line": 185,
+        "before": "    expect(observed.counts.nativeDashboard).toBe(1)",
+        "after": "    expect(observed.counts.nativeDashboard).toBe(4)"
+      }
+    ],
+    "affected_case_expect_lines_before": 19,
+    "affected_case_expect_lines_after": 19,
+    "whole_file_expect_lines_before": 61,
+    "whole_file_expect_lines_after": 61,
+    "other_lines_changed": 0,
+    "executed_by_this_audit": false
+  },
+  "assessment": "C27 now contains exact analysis54 and runtime56 already tested in W1. Its remaining differences within the P03 closure are diagnostics only (original P03 and absent trace54). C25 composition and the newly installed runtime56 component/legacy tests are outside this P03 selection. No new semantic/implementation input beyond W1 justifies another unchanged full P03 run.",
+  "actions": {
+    "remote_mutations": 0,
+    "test_runs": 0,
+    "local_product_execution": 0
+  }
+}

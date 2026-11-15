@@ -1,0 +1,64 @@
+{
+  "schema": "sf2h.after-c27-60.microsoft-map-proposal.v1",
+  "state": "INERT_NOT_APPLIED_NOT_A_RELEASE",
+  "source52": "fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+  "target_base": {
+    "name": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "reason": "Preserve historical final-intake-55 map while accurately describing future installation52. Do not apply until explicit qualified release52.",
+  "historical_map": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+    "disposition": "KEEP_BYTE_IDENTICAL"
+  },
+  "future_installation": {
+    "path": "apps/cli/src/sucafina-product/installation.ts",
+    "preimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "mode": "100644",
+    "sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
+    "bytes": 6258,
+    "state": "NOT_APPLIED_DEPENDS_ON52_RELEASE"
+  },
+  "proposed_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+      "preimage": null,
+      "postimage": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+      "sha256": "432a4db46c1a2bb0bd71f52a5adfa58bcd7358d9ca8f31e44977527482537357",
+      "bytes": 2411,
+      "mode": "100644",
+      "archive": "proposals/microsoft49-composition-52.json.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "preimage": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "postimage": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1",
+      "sha256": "8866895b5f51b5be71659e030eafa60361f56525f6477fd6b12a290f4ddb97c7",
+      "bytes": 3608,
+      "mode": "100644",
+      "archive": "proposals/integration-fixture.ts.postimage.txt"
+    }
+  ],
+  "atomicity": "New map + fixture lookup + released installation52 and remaining released dependencies must enter one future material candidate; not applicable standalone to C27.",
+  "provenance_note": "The exact proposed map preserves historical49/55 target_base and target_preimage fields. Those fields are provenance, NOT C27/mission60 preimages. The actual current composition pre/post and target base are explicitly bound above.",
+  "preserved": "Source49 manifest89d033326a26ed4c0674a85a5e2ba86a2799d36e, original pre/post archives, schema/source release/blob/SHA256/filecount/unique checks and canonical imports unchanged. Only current-map lookup changes.",
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "preflights": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_moves": 0,
+    "producer_branch_writes": 0,
+    "dev_merge": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "product_execution": 0
+  },
+  "GLOBAL_RELEASE": false
+}

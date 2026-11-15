@@ -1,0 +1,144 @@
+import { AsyncLocalStorage } from "node:async_hooks"
+import type { Persistence } from "../../../runtime/contract.ts"
+import type { SfProductStatePort } from "../../../product/contracts/state.ts"
+
+/** INERT DRAFT: not applied, typechecked or executed.
+ * Intended location, if the mission owner accepts it:
+ * test/product/portfolio-runtime-qualification/c08-observation-probe.ts
+ *
+ * Install only around one awaited observation in an exclusive diagnostic test
+ * using the real LocalStore fixture. This is not a performance assertion, a
+ * replacement for P03, or proof of which native clone callsite dominates P03.
+ */
+type Timing = { calls: number; elapsedMs: number; maximumMs: number }
+type TransactionFrame = {
+  surface: string
+  rootSurface: string
+  depth: number
+  entered: boolean
+}
+type ReadFrame = { namespace: string; ordinal: number }
+
+export function installC08ObservationProbe(persistence: Persistence, state: SfProductStatePort) {
+  const observing = new AsyncLocalStorage<boolean>()
+  const transactions = new AsyncLocalStorage<TransactionFrame>()
+  const reads = new AsyncLocalStorage<ReadFrame>()
+  const originalTransaction = persistence.transaction
+  const originalSnapshots = persistence.currentSnapshots
+  const originalRead = state.read
+  const originalClone = globalThis.structuredClone
+  const metrics: Record<string, Timing> = {}
+  const counts: Record<string, number> = {}
+  let readOrdinal = 0
+  let observations = 0
+  let observationElapsedMs = 0
+  let active = false
+  let restored = false
+
+  const count = (name: string) => { counts[name] = (counts[name] ?? 0) + 1 }
+  const record = (name: string, elapsedMs: number) => {
+    const entry = metrics[name] ??= { calls: 0, elapsedMs: 0, maximumMs: 0 }
+    entry.calls++
+    entry.elapsedMs += elapsedMs
+    entry.maximumMs = Math.max(entry.maximumMs, elapsedMs)
+  }
+  const transactionLabel = (frame: TransactionFrame) =>
+    `${frame.depth === 0 ? "root" : "nested"}.${frame.rootSurface}.${frame.surface}`
+
+  // Do not wrap or replace the state reader callback. The provider recognizes
+  // selected-case callbacks by WeakMap identity; changing that identity would
+  // change the product path being measured.
+  const wrappedRead: SfProductStatePort["read"] = function (request, namespace, reader) {
+    if (!observing.getStore()) return originalRead.call(state, request, namespace, reader)
+    const frame = { namespace, ordinal: ++readOrdinal }
+    count(`state.read.${namespace}`)
+    return reads.run(frame, () => originalRead.call(state, request, namespace, reader))
+  } as SfProductStatePort["read"]
+
+  const wrappedTransaction: Persistence["transaction"] = function (surface, work, options) {
+    if (!observing.getStore()) return originalTransaction.call(persistence, surface, work, options)
+    const parent = transactions.getStore()
+    const frame = { surface, rootSurface: parent?.rootSurface ?? surface, depth: (parent?.depth ?? -1) + 1, entered: false }
+    const label = transactionLabel(frame)
+    const started = performance.now()
+    let originalReturned = false
+    count(`transaction.invocations.${label}`)
+    try {
+      // The original Promise is returned unchanged. No then/finally is attached
+      // to production promises, and the work result is returned unchanged.
+      return transactions.run(frame, () => originalTransaction.call(persistence, surface, (snapshot) => {
+        const elapsedMs = performance.now() - started
+        frame.entered = true
+        count(`transaction.callbackInvocations.${label}`)
+        record(`transaction.callbackEntry.${originalReturned ? "async" : "sync"}.${label}`, elapsedMs)
+        return work(snapshot)
+      }, options))
+    } finally {
+      originalReturned = true
+    }
+  } as Persistence["transaction"]
+
+  const wrappedSnapshots: NonNullable<Persistence["currentSnapshots"]> = function () {
+    if (!observing.getStore()) return originalSnapshots!.call(persistence)
+    const frame = transactions.getStore()
+    const label = frame ? transactionLabel(frame) : "outside"
+    const started = performance.now()
+    try { return originalSnapshots!.call(persistence) }
+    finally { record(`currentSnapshots.${label}`, performance.now() - started) }
+  }
+
+  const wrappedClone: typeof structuredClone = function (...args: Parameters<typeof structuredClone>) {
+    if (!observing.getStore()) return Reflect.apply(originalClone, this, args)
+    const frame = transactions.getStore()
+    const read = reads.getStore()
+    // No input-property inspection, stack capture, descriptor traversal, extra
+    // clone, serializer, callback invocation or result retention is introduced.
+    const phase = frame ? `${transactionLabel(frame)}.${frame.entered ? "callback" : "admission"}` : "outside"
+    const label = `structuredClone.${read ? `stateRead.${read.namespace}` : "outsideStateRead"}.${phase}`
+    const started = performance.now()
+    try { return Reflect.apply(originalClone, this, args) }
+    finally { record(label, performance.now() - started) }
+  } as typeof structuredClone
+
+  persistence.transaction = wrappedTransaction
+  if (originalSnapshots) persistence.currentSnapshots = wrappedSnapshots
+  state.read = wrappedRead
+  globalThis.structuredClone = wrappedClone
+
+  return {
+    async observe<T>(work: () => Promise<T>): Promise<T> {
+      if (restored || active || observations !== 0) throw new Error("Diagnostic accepts exactly one exclusive observation")
+      observations++
+      active = true
+      const started = performance.now()
+      try { return await observing.run(true, work) }
+      finally { observationElapsedMs = performance.now() - started; active = false }
+    },
+    snapshot() {
+      return {
+        observations,
+        active,
+        observationElapsedMs,
+        counts: { ...counts },
+        metrics: Object.fromEntries(Object.entries(metrics).map(([name, value]) => [name, { ...value }])),
+        interpretation: {
+          callbackEntrySync: "Synchronous invocation-to-callback interval: runtime admission, validation and copying plus probe overhead; not copy-only time.",
+          callbackEntryAsync: "Includes waits and queue time; do not attribute it to copying.",
+          stateReadClones: "Native structuredClone spans during an unchanged state.read callback context; aggregate provenance, not exclusive provider callsite attribution.",
+          scopes: "Root/nested labels describe this probe's call ancestry, not an independently granted runtime authority.",
+          overhead: "Timers and AsyncLocalStorage add uncalibrated overhead. Durations are diagnostic and have no ratio or timeout assertion.",
+        },
+      }
+    },
+    restore() {
+      if (active) throw new Error("Await the diagnostic observation before restoring")
+      if (restored) return
+      // A competing mutation must not be silently overwritten by cleanup.
+      if (persistence.transaction === wrappedTransaction) persistence.transaction = originalTransaction
+      if (originalSnapshots && persistence.currentSnapshots === wrappedSnapshots) persistence.currentSnapshots = originalSnapshots
+      if (state.read === wrappedRead) state.read = originalRead
+      if (globalThis.structuredClone === wrappedClone) globalThis.structuredClone = originalClone
+      restored = true
+    },
+  }
+}

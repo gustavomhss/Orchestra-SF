@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.authority-final.v1",
+  "mission": 58,
+  "id": "portfolio-runtime-qualification",
+  "lease_epoch": "portfolio-runtime-browser58",
+  "branch": "astra-wp13",
+  "PR": 37,
+  "state": "TERMINATED_P03_FAIL_EXTERNAL_DEPENDENCY_HELD",
+  "active": false,
+  "lease_ended": true,
+  "effective": "Successful CAS publishing the commit that contains this file",
+  "terminal_commit": "CONTAINING_COMMIT",
+  "expected_parent": "d00a74824c360fc557521ca77097e7593961909e",
+  "result": {
+    "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+    "run": 43661532296,
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "deadline_ms": 180000,
+    "P03": "FAIL_HELD"
+  },
+  "successor_integration": {
+    "actor": 57,
+    "exclusive_stack_writer": true,
+    "consumer_ACK58": "REQUESTED_NOT_OBSERVED_AT_TERMINAL"
+  },
+  "checks": {
+    "actor": 45,
+    "typecheck": "NOT_RUN_BY58",
+    "guards": "NOT_RUN_BY58"
+  },
+  "prior_authorities": {
+    "54": "Explicitly ended at651738f8ebcf003a4c66517a72f0ebd9a7c95050; not revived",
+    "56": "Explicitly ended at8cfbf59067b44df166d4b0550dfb4ea9aa73362e; not revived"
+  },
+  "new_product_edits": 0,
+  "external_proposals_applied": 0,
+  "local_product_tests": 0,
+  "full_epic": 0,
+  "runtime_source_edits": 0,
+  "stack_writes": 0,
+  "remaining": [
+    "Original P03 has not completed and remains HELD",
+    "External causal implementation not yet proved safe or measured",
+    "57 composed legacy/runtime regressions and45 engineering gates",
+    "Full WP13/global/S0 acceptance remains open"
+  ],
+  "resume_rule": "A future writer must reconcile actual source/stack/control and obtain applicable continuation authority. Silence, time or this evidence package do not revive58 or assign foreign paths.",
+  "campaign": {
+    "T0": "2026-11-13T04:01:10Z",
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "GLOBAL_RELEASE": false
+}

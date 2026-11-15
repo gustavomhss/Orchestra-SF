@@ -1,0 +1,36 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.checks-request.v1",
+  "mission": 58,
+  "owner": 45,
+  "PR": 32,
+  "source_PR": 37,
+  "consumer": 57,
+  "state": "REQUESTED_NOT_RUN_BY58",
+  "exact_tested_W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+  "exact_W_tree": "d265540ea5d410801c2d535e8c13ee3dacc9c235",
+  "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+  "run_id": 43661532296,
+  "checks": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "state": "NOT_RUN"
+    },
+    {
+      "cwd": "repository root",
+      "command": "bun run check:guards --base origin/dev",
+      "state": "NOT_RUN"
+    }
+  ],
+  "constraint": "45 retains its execution/interface authority.58 did not run local typechecks/guards, alter workflows or move45 refs.",
+  "candidate_binding": "If57 requests checks on a later candidate, record its exact W/tree/base and reconcile the closure; do not transfer checks from another head.",
+  "base": "dev/origin/dev must be resolved and recorded by45 at execution; not guessed from test evidence.",
+  "result_limit": "Even passing engineering checks will not close P03, whose original journey failed onW1.",
+  "latest_integrator_candidate": {
+    "symbol": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "state": "COMPOSED_ENGINEERING_GATES_NOT_RUN_BY58",
+    "note": "Prefer57's actual candidate for its checks. The executed P03 run remains bound only toW1/S1; do not claim C27 was itself run by58."
+  }
+}

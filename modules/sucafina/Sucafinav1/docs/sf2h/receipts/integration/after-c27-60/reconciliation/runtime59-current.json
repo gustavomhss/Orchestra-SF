@@ -1,0 +1,151 @@
+{
+  "schema": "sf2h.mission60.runtime59.publication-supplement.v1",
+  "reviewed_pin": "c0d2094357a8566d3a1329f0ec2dab70378d1892",
+  "reviewed_tree": "e56bc9695893a07ced2d3e2bebd1818a72801aa7",
+  "census_supplied_by_integrator": "2026-11-15T01:52:00Z",
+  "method": "Pinned GitHub MCP commit, compare, receipt directory, every file in that directory, and mission authority read. No moving-ref polling.",
+  "supersedes": "Publication status only in review.json and pack-audit.json: previous observation at C27 with no ACK/receipt directory remains an accurate historical observation. Current source now has ACK59 and frozen contract documents, still no release.",
+  "authority": {
+    "ACK_state": "ACK59_ACCEPTED_ISOLATED_SOURCE_WRITER",
+    "source_writer": "Root59 only remote writer on runtime-read-scope",
+    "control_cited_by_ACK": "3b10ec2c0dcc89fccde5520e66e4dca38f48ae3c",
+    "mission_blob": "6719755c2510dc60c9d0c4abedc4ebf3e8e78bec",
+    "authority_identity": "Fetched mission59 at control3b10ec2c; exact same blob already read in controlafa3079d74d819f1afb3add83cf50eba63069f16.",
+    "prior_stack_snapshot": "ACK59 names terminal57 d6d9816bb09f7595330862616305e0791e23e61e and expressly reserves stack ownership/no takeover. Treat that as its historical reconciliation; mission60 remains sole current stack writer.",
+    "unchanged": "Current user mission60, A45 checks, S0 epic/AM/final, no producer-branch writes by reviewer/integrator, no repeat intake56."
+  },
+  "delta": {
+    "base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "base_tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "merge_base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "ahead_by": 2,
+    "behind_by": 0,
+    "commits": [
+      {
+        "sha": "40d8d047977225fd3bc6ba877c1ace047c5fbf64",
+        "parents": [
+          "b10c424a6b318879fc30f11d03ba1cfeffda7d1a"
+        ],
+        "tree": "1302fde04b4080df3dd78a3ded0abce3cc2b0b68",
+        "committed_at": "2026-11-15T01:43:56Z",
+        "message": "docs(sucafina): acknowledge mission59 and freeze readonly root contract [skip ci]"
+      },
+      {
+        "sha": "c0d2094357a8566d3a1329f0ec2dab70378d1892",
+        "parents": [
+          "40d8d047977225fd3bc6ba877c1ace047c5fbf64"
+        ],
+        "tree": "e56bc9695893a07ced2d3e2bebd1818a72801aa7",
+        "committed_at": "2026-11-15T01:49:25Z",
+        "message": "docs(sucafina): pin readonly disposal rejection semantics [skip ci]"
+      }
+    ],
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/ACK59.json",
+        "status": "added",
+        "preimage": null,
+        "postimage": "7e3dbb6f3175dfef4271772598c3357bf1809f61",
+        "additions": 68,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/CONTRACT-ADDENDUM-01.json",
+        "status": "added",
+        "preimage": null,
+        "postimage": "58506ec0e19d8424df06b6a5cd2f5e7d28b5879b",
+        "additions": 12,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/CONTRACT.json",
+        "status": "added",
+        "preimage": null,
+        "postimage": "58cd64234660108427251251925a261750639930",
+        "additions": 59,
+        "deletions": 0
+      }
+    ],
+    "scope": "Only three new receipt documents in two commits; no runtime, consumer, wrapper, test, configuration or other product file differs from C27."
+  },
+  "receipt_inventory": [
+    {
+      "name": "ACK59.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/ACK59.json",
+      "blob": "7e3dbb6f3175dfef4271772598c3357bf1809f61",
+      "bytes": 3471,
+      "read": "FULL"
+    },
+    {
+      "name": "CONTRACT-ADDENDUM-01.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/CONTRACT-ADDENDUM-01.json",
+      "blob": "58506ec0e19d8424df06b6a5cd2f5e7d28b5879b",
+      "bytes": 1328,
+      "read": "FULL"
+    },
+    {
+      "name": "CONTRACT.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/CONTRACT.json",
+      "blob": "58cd64234660108427251251925a261750639930",
+      "bytes": 6169,
+      "read": "FULL"
+    }
+  ],
+  "release_assessment": {
+    "explicit_consumer_release": false,
+    "complete_release_manifest": false,
+    "qualified_material_release": false,
+    "terminal_handoff": false,
+    "qualification_evidence": false,
+    "material_patch": false,
+    "observed_namespace_contents": "Exactly ACK59.json, CONTRACT.json, CONTRACT-ADDENDUM-01.json. No manifest, release, final authority, handoff, test request or test result is published in this namespace at this pin. The complete C27-to-pin compare has only those same three files.",
+    "ACK_validation": {
+      "product_tests": "NOT_RUN",
+      "typecheck": "NOT_RUN_OWNER45",
+      "guards": "NOT_RUN_OWNER45",
+      "P03": "HISTORICAL_FAIL; retry only after safe material discriminant",
+      "local_product_tests": 0,
+      "epic": 0
+    },
+    "GLOBAL_RELEASE": false,
+    "reason": "ACK acknowledges source authority and freezes intended contract before dependent edits. It is not a consumer release or evidence of implementation, conformance, speed benefit or journeys.",
+    "decision": "RETAIN_MATERIAL_CONSUMPTION_PENDING_QUALIFIED_EXPLICIT_RELEASE",
+    "allowed_use": "Reference the published ACK and contract in mission60 reconciliation/queue. Do not label this a release ACK, consume source patches, mint a material successor from these documents alone, or rerun P03."
+  },
+  "frozen_contract": {
+    "blob": "58cd64234660108427251251925a261750639930",
+    "state": "FROZEN_BEFORE_DEPENDENT_EDITS",
+    "signature": "Persistence.readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>",
+    "role": "Internal optional SQL readonly scope only; no host/source authorization or alternate business read API.",
+    "mandatory_canonical_sequence": "Read consumer constructs original persistence.transaction('dashboard', callback, options). With capability, call readSnapshotRoot on persistence with that run; without capability, execute run. Always invoke canonical wrapper.transaction within the scope, including Source(Fence(LocalStore)) and direct Fence(LocalStore). Root poison/readers/abort rejection must precede final egress fence.",
+    "admission": "Retain Dashboard anchor, original per-surface guards and requireSourceIdentities. Partial metadata remains admissible when old flow never observes the absent surface. Do not require all three metadata identities unconditionally.",
+    "observations": "All three fresh SQL observations/validation before root callback, existing dashboard/planner/procurement order; preserve independent currentSnapshots calls, callback counts, method identities, host/request/context/incoming, nested join and final revalidation.",
+    "copies": "Only initial memo-hit immutable plans use fresh factories. Misses preserve validated graphs plus defensive clones. Each returned/nested graph independent; detached mutations never stored/shared. No opaque C08 projection or mutable getter/prototype/cycle/error changes.",
+    "readonly_fences": "No COMMIT in new root. Nested root invocation or any write poisons even if rejected operation is caught, including commit:true, transactionAll, blobs, secrets and other operation(true) writers. Root and parent abort, readers and final close/references checked. Captured capabilities never borrow later generation.",
+    "budgets": "At most three materialization plans and8,388,608 UTF-16 string units in shared memo, plus at most one initial memo budget held by active root across eviction. This is not a heap/decoded-graph/caller-retention bound. Existing128-depth/200000-node/4096-undefined-path optimization fallback remains.",
+    "expected_qualification": "Real SQLite plus createCurrentChoiceFence/createSfSourcePersistence, cross-connection changed/deleted/corrupt data, partial/corrupt metadata, all per-surface and Dashboard admission, detached-copy isolation, swallowed writes, abort/readers/captured/disposal, request/context/method/project/installation drift, codec/fallback limits, unfiltered Finance34/56, equivalent callback/observation/auth counts and bounded structural reduction. Timing descriptive, never additive inclusive CPU or promised full P03 speedup.",
+    "release_risk": "These are frozen intended semantics, not verified behavior. Actual implementation/diff/closure and producer qualification remain unavailable at this pin."
+  },
+  "new_disposal_finding": {
+    "blob": "58506ec0e19d8424df06b6a5cd2f5e7d28b5879b",
+    "parent_contract_blob": "58cd64234660108427251251925a261750639930",
+    "state": "FROZEN_BEFORE_DISPOSAL_DEPENDENT_EDIT",
+    "counterexample": "After external dispose closes lifecycle while an admitted readonly root drains, legacy operation() can reject a later write as disposed before poisoning. If caller catches that rejection, readonly root could incorrectly report success.",
+    "frozen_decision": "Tag only new readonly roots. A direct write attempted after disposal poisons the admitted readonly root before rejecting. A newly invoked canonical transaction after disposal invalidates readonly-root success without executing its now-inadmissible callback.",
+    "compatibility": "Existing mutable-root/original transaction behavior remains unchanged. An admitted readonly root with no new post-dispose admission may drain; closed/captured roots cannot borrow a later generation.",
+    "required_proof": "Deterministic barriers: admit root; external dispose starts; attempt/catch write and canonical transaction; root rejects, dispose drains, no persistent effects. No timing sleeps.",
+    "status": "Documented static counterexample and intended resolution only; neither implementation nor execution evidence published."
+  },
+  "actionable_owner_requests": [
+    "A59: publish actual coherent runtime/contract/consumer/wrapper/test patch and complete release with exact parent/source SHA/tree, paths/modes/preimages/postimages and transitive closure; explicit consumer authorization and terminal/current authority.",
+    "A59: include conformance for the new disposal addendum and original canonical wrapper semantics, plus real SQLite/wrapper benefit with equal independent observations/callback/authorization work and bounded retention.",
+    "A59: preserve C27 mutable semantics, original P03 fixture/72 assertions/order/180000ms; attempt P03 only after its own qualified material discriminant under existing authority. Do not infer readiness from the frozen contract.",
+    "A60: supersede the previous no-ACK status with ACK_AND_CONTRACT_PUBLISHED_RELEASE_PENDING at c0d2094; retain source58 evidence-only diagnosis, no-repeat56, held P03 and all queue57 provenance. Continue qualified48/52 work independently.",
+    "A60/A45/S0: any eventual consumed material gets exact new candidate identity and corresponding validation inputs; mission60 performs no gate execution or dispatch."
+  ],
+  "no_tests_dispatched": true,
+  "no_tests_executed": true,
+  "no_remote_writes": true,
+  "no_product_changes": true,
+  "GLOBAL_RELEASE": false
+}

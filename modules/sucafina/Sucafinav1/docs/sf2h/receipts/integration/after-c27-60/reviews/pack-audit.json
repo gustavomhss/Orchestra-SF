@@ -1,0 +1,246 @@
+{
+  "schema": "sf2h.mission60.readonly-pack-audit.v1",
+  "reviewer": "runtime59_review; read-only delegate, no supervisory or writer authority",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+      "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+      "characters": 485743,
+      "read": "FULL"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "characters": 13825,
+      "read": "FULL"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "characters": 41053,
+      "read": "FULL"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "characters": 11845,
+      "read": "FULL"
+    }
+  ],
+  "read_coverage": {
+    "section_count": 38,
+    "sections": [
+      "provenance",
+      "job_id",
+      "actor",
+      "session",
+      "assignment",
+      "branch_provenance",
+      "common",
+      "write_authority",
+      "allocation",
+      "physical_slot",
+      "work_packages",
+      "contracts",
+      "incoming_outgoing_handoffs",
+      "task_output_dependencies",
+      "consumer_edges",
+      "coverage",
+      "dependency_context",
+      "proof_bindings",
+      "evidence",
+      "execution_proofs",
+      "review_assignment",
+      "review_sources_read_only",
+      "resident",
+      "reference_context_rule",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_ui",
+      "mandatory_appendices",
+      "code_sources",
+      "source_receipt_index",
+      "workflow",
+      "coverage_source",
+      "numeric_oracles",
+      "selection_pointers",
+      "criterion_ids",
+      "completion",
+      "ci_plan",
+      "resident_packaging"
+    ],
+    "scalar_occurrences": 7913,
+    "distinct_scalar_values": 2462,
+    "method": "Complete fetched JSON parsed as documentation; every section read in bounded chunks, with repeated identical scalar prose deduplicated. All operation/profile/skill mappings read with their associations. Earlier truncated views were replaced by complete bounded views. All three appendices read completely.",
+    "detailed": {
+      "work_packages": 2,
+      "tasks": 7,
+      "contracts": 17,
+      "proof_bindings": 155,
+      "criterion_ids": 155,
+      "resident_profiles": 5,
+      "resident_skills_in_actor_slice": 9,
+      "resident_mcp_packs": 8,
+      "resident_operation_routes_in_actor_slice": 33,
+      "integrated_proofs": 6,
+      "numeric_oracles": 7,
+      "ci_recipes": 8,
+      "code_source_references": 34,
+      "empty_sections": [
+        "review_assignment",
+        "review_sources_read_only"
+      ]
+    },
+    "emphasis": "All resident, resident_ui, resident_packaging, contracts, work_packages, ci_plan, 155 proof bindings and numeric_oracles covered. References to 34 code source paths were read as pack contents; this does not claim fresh reading of all 34 source files.",
+    "global_resident_obligation": "5 profiles / 18 skills / 8 packs / 39 operations / 6 integrated proofs. The actor slice's 9 skills and 33 routes do not reduce global coverage.",
+    "numeric_oracle_ids": [
+      "FX01",
+      "FX02",
+      "FX03",
+      "AI-RENEWAL",
+      "AI-COUNTEREXAMPLE",
+      "AI-RENEWAL-OMITTED-CATEGORY",
+      "CONFIRM-SCOPE"
+    ]
+  },
+  "authority_resolution": {
+    "current": "User mission60 and integration-after-c27.json: A60 sole stack writer; A45 checks; S0 epic, AM and final acceptance. No test/typecheck/guard/build/CI/AM execution or dispatch by mission60.",
+    "historical": "Old S0-C windows, dispatcher assignments and continuous coordination text in the baseline pack do not supersede current bounded mission60 authority.",
+    "boundaries": "No source-branch writes, new supervisor, dev merge, deploy, Azure operations or sidebar implementation. Reference access is not write or test authority.",
+    "execution_in_this_review": "NONE; GitHub read-only fetches and deterministic document decomposition only."
+  },
+  "immutable_checklist": [
+    {
+      "id": "SCOPE",
+      "keep": "15 WPs / 74 tasks / 17 contracts / 1610 criteria; 155 S0-C criteria; all five axiom families, T0, 28 existing capabilities, three surfaces, four routines, eight charts and specified journeys/states."
+    },
+    {
+      "id": "FINANCE-AUTHORITY",
+      "keep": "Domain-owned commands, real actor authority, policy, locks and CAS; receipt plus effect atomic within each domain. Central case reconciliation may be partial and is not a cross-domain transaction. Reauthorize retries; equal idempotency key with different content conflicts; lost response does not authorize blind mutation retry."
+    },
+    {
+      "id": "SOURCE-SCOPE",
+      "keep": "Observed source version distinct from current storage version; semantic fingerprints include material dependencies, identity/incarnation and absence, exclude unrelated storage versions/audit timestamps. Material races retain draft and conflict; irrelevant races require fresh scope equality and current storage CAS. Recoverable drift preserves authorized intent; real revocation removes private fields, links and fingerprints."
+    },
+    {
+      "id": "READONLY-59",
+      "keep": "Optional additive readonly capability, old fallback, fresh SQL root and independent materializations, bounded lifetime/retention, abort/disposal/locks, poison all writes even swallowed or across namespaces, ingress/egress authorization, Dashboard anchor and canonical wrappers. No second store, auth cache, fewer independent observations, selected-only C08 projection or opaque callback semantic changes."
+    },
+    {
+      "id": "C08-TRANSPORT",
+      "keep": "Real Request-derived current-role domain authentication; host-only lease, no constructed actor credentials, listener/store duplication or fourth surface; no generic protected __sfProductV1 export. Shared transport/body/route/Node patches preserve Microsoft composition, origins, session/privacy and admission semantics."
+    },
+    {
+      "id": "C17-HISTORY",
+      "keep": "Whole-entry suppression when source/field authorization is lost or incarnation replaced; immutable historical content only through current authorization; fresh ingress and egress, independent reads and original positive replay. Genuine physical reincarnation, scoped rotation and tombstone recreation remain distinct."
+    },
+    {
+      "id": "P03",
+      "keep": "Original full semantic-union fixture, 72 expect lines and order, 180000 ms test and fixture budgets. No identical rerun without qualified material change. Source 8-test or runtime component PASS is not P03 closure."
+    },
+    {
+      "id": "M31-MI07",
+      "keep": "Original approve-unwritten-replacement then Apply/C12 journey; PR100 -> choice150 -> genuine prepare of exactly one command and capture before edit. Canonical edit/submit/approve persisted snapshot does not substitute. MI07 225000 ms cooperative and 240000 ms individual budgets remain."
+    },
+    {
+      "id": "REPORTS-DECISIONS",
+      "keep": "Reports four real browser journeys and 86 criteria; four green contracts do not establish journeys. Decisions five nominal browser paths including positive financial path. Intake only a complete explicit release, preserving every manifest/preimage/postimage/closure and prior failed finding."
+    },
+    {
+      "id": "FX-ORACLES",
+      "keep": "FX01 base590000 and replacement totals602000 /596000, deltas12000 /6000, margins-2000 /4000; replacement counted once. FX02 A32400, B28000 EUR*1.08=30240, ranking87.9333333 vs85, C ineligible, differences2160/7.142857% and400/1.25%; historical FX immutable. FX03 explicit monthly vectors, November license, no annual interpolation."
+    },
+    {
+      "id": "AI-COST-ORACLES",
+      "keep": "Renewal240000 vs complete210000 -> advantage30000, minimum20000, implementation ceiling55000. Implementation70000 ->235000, advantage5000 and broken condition. All nine cost categories retained; sum actual components once. Omitted training -> known subtotal210000/difference30000, complete totals null and conditioned; training40000 ->250000/difference-10000/ceiling15000 and broken financial condition. Original conditioned ChoiceRecord remains immutable. Confirmed zero with evidence differs from missing/null; financial completeness does not establish deadline viability."
+    },
+    {
+      "id": "CONFIRM-SCOPE-ORACLE",
+      "keep": "All ten branches: FEB_ONLY, JAN_MATERIAL, DEPENDENCY_CHANGE, RACE_MATERIAL, RACE_IRRELEVANT, ACCESS_REVOKED, REPLACED, SOURCE_REMOVED, ACCESS_RESTORED, ABSENT_VS_ZERO. Counterexample March31 contract end versus May31 project must cite both and ask viability."
+    },
+    {
+      "id": "RESIDENT-PROOFS",
+      "keep": "Actual SessionV2 skill load, instructions SHA256, message/SkillLoadReceipt, persisted typed output and real consumer after reload; catalog or fixture is insufficient. Every private MCP call uses opaque lease bound to actual request/principal/session/case/version/incarnation/profile/skill/generation; schema args carry no authority; homonymous provider fails closed. Reviewer independent run/session, no fork. C07 routine admission/recursion denial, no automatic financial approval. AM01-06 all positive/negative branches on final C."
+    },
+    {
+      "id": "ATLAS",
+      "keep": "Real factories and DurableMemory commit/restart/recall; named scanner clean/hit/could-not-run states. Task/project scope only; business owners host-derived partitions are not ACL. WP14 pure transformation, no IO/UI/scheduler/persistence. C17 staging persists only after awaited outer transaction; canceled/failed/commit-false leaves no durable effects. Exact nine Atlas paths, two subpaths/four generated artifacts; literal memory-emit -> external scanner native-memory edge, no copied constant/shim/engine changes/manual generated edits/guard allowlist relaxation."
+    },
+    {
+      "id": "RAG-PRIVACY",
+      "keep": "Authorized document view and designated text/PDF/DOCX extraction; no arbitrary paths. SHA256 content identity and BLAKE3 identities remain distinct. No source, privacy, authorization or financial policy changed to make a journey pass."
+    },
+    {
+      "id": "EVIDENCE-IDENTITY",
+      "keep": "Candidate C and tree, source S and parent, request hash/normalized selection, runtime config/test/fixture identity, run/attempt/job/artifacts, Omni controls and counts. Producer results are not composed PASS. New material runtime/contract/test/config/fixture/tooling/guide inputs require new C and affected consumer requalification; unknown impact does not justify reuse."
+    },
+    {
+      "id": "C-VS-D",
+      "keep": "D is an admitted append-only receipt envelope over C with ancestry/full diff/hashes and original inputs. D is not a new material candidate and C tests must not be relabeled as tests of D. S0/executor must establish G8; readback by60 is not execution of G8."
+    },
+    {
+      "id": "FINAL-GATES",
+      "keep": "Eight minimum final recipes, inherited footprint/epic suites, AM01-06, three independent FINAL reviews and C/G7 then D/G8 remain open until actual results on qualified identity. APP-SRC separate from APP-BROWSER; Playwright does not replace Bun browser. Zero or mismatched selection fails. Surgical queue is not an extra final recipe. Exact dedup requires same product tree, request, workflow validator, runtime config and fixture selection."
+    },
+    {
+      "id": "MICROSOFT-SIDEBAR-AZURE",
+      "keep": "Microsoft49 installation/auth/role/origin/privacy plus live assigned/unassigned B2B, oid mapping/session proof remain. Old maps/fixtures retained; a materially changed shared transport needs atomic new map/fixture on new C. Sidebar planning only; no migration implementation from plan brief. Azure separate."
+    }
+  ],
+  "queue57_reconciliation": {
+    "source": {
+      "commit": "d6d9816bb09f7595330862616305e0791e23e61e",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/gate-queue-final.json",
+      "blob": "cd79edc9c0f55cd1ce97144ee659f3a2318a7844"
+    },
+    "reading_scope": "Targeted current-state reconciliation: metadata, all 11 queue items, A45, all 12 functional selectors and states, cold missing proofs, blockers, eight S0 final recipes, budgets/dedup/owner authority. Parent owns full queue57 reading; this audit does not claim a second full unabridged read of all 131484 characters.",
+    "immutable_historical_record": "Keep queue57 and all its inherited intake, contracts, requests, results and findings unchanged; publish a superseding mission60 addendum.",
+    "supersede_fields": [
+      "queue[id=Q57-P54].owner/state/action (old no-release58/no-C27-equivalence assertion)",
+      "queue[id=Q57-R56].owner (old active58 P03 ownership)",
+      "functional_requests[id=Q57-P03-ORIGINAL].owner/state/retry_condition/latest_failure_observed",
+      "budgets.P03.state",
+      "owner_authority",
+      "blockers P03 current-state entry"
+    ],
+    "source58": {
+      "terminal": "00813b2ebacf5b0cd1c69d871c7a757ac323ebb4",
+      "decision": "EVIDENCE_ONLY_INTAKE; diagnostic release explicit, no new product patch and no qualified product release. Lease ended. Do not fabricate C28 or claim C27 execution.",
+      "equivalence": "140/142 P03 source files and19/19 configs equal, two source differences only trace/diagnostic; C27 analysis54/runtime56 blobs exact tested W. Preserve both prior and latest failure identity.",
+      "latest_result": "run43661532296/job132651714845; 0 PASS,1 FAIL,1 error;180032.59 ms; no full P03 journeys. Inclusive durations overlap; clone dominance/speedup unproved."
+    },
+    "source59": {
+      "branch": "runtime-read-scope",
+      "observed_head": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+      "decision": "RETAIN_NO_RELEASE: observed head equals C27, no receipt namespace or PR/release observed. This is publication status, not a claim about live worker activity. Await explicit complete readonly-root release and real SQLite/canonical-wrapper benefit plus conformance. Do not repeat56 intake."
+    },
+    "p03_exact_input": {
+      "package": "sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "p03_retry": "Hold until qualified material causal change59 (or other explicit qualified causal release), revised candidate with exact closure and matching fixtures/config, executor authority and preserved original 72 assertions/180000 ms budgets.",
+    "retained_open_requests": "Q57-R56-COMPOSED-UNFILTERED remains 11 files/no -t/nominal66 tests; old source65 PASS plus one filter is not composed green. Keep P53 seven-file mixed gate, read-before-bind, CurrentChoice W3/W4 dedup, Memory40, Atlas35, MI07, Native41 components, Agenda39, Microsoft49, Portfolio50 P02 and original limits.",
+    "cold_missing_proofs": [
+      "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+      "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+      "Q57-MIXED-TOMBSTONE-RECREATE",
+      "Q57-MIXED-REVOKE-BETWEEN-READS"
+    ],
+    "cold_proof_status": "All four retain test_path:null and executable_request:null. Do not invent filenames or promote existing four mixed tests to these missing branches.",
+    "other_held": "Admission53 inert pending real existingUiContextFor native provider/UI hook; M31/MI07; real authenticatedRequest -> Maestro Task continuation/schedule; live Microsoft; Reports48/Decisions52 release qualification; Agenda large-capture budget.",
+    "checks": "A45 retains all15 queued commands and effective E2E evidence verification. No functional test delegation to45. S0 owns eight final recipes/epic/AM/final. New A45 material workflow/tooling release changes candidate identity; origin/dev and merge-base pins must be re-established by executor when relevant."
+  },
+  "disposition": "No new normative blocker beyond explicit current pending proofs. Integrate only qualified coherent material increments, publish exact candidate/closure and give authorized owners inputs; do not wait for final gates to construct candidate.",
+  "no_tests_dispatched": true,
+  "no_remote_writes": true,
+  "no_product_changes": true,
+  "GLOBAL_RELEASE": false
+}

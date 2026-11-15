@@ -1,0 +1,83 @@
+{
+  "schema": "sf2h.after-c27-60.microsoft-map-preservation-proposal-review.v1",
+  "reviewer": "decisions52_review",
+  "status": "STATIC_PRESERVATION_REVIEW_ACCEPTABLE_AS_INERT_FEEDBACK_ONLY",
+  "authorization": "No release52 has been established. This review authorizes no integration, fixture mutation, product mutation or execution.",
+  "files_read_in_full": [
+    "/workspace/scratch/7e754a386946/proposals60/microsoft-map-preservation.patch.txt",
+    "/workspace/scratch/7e754a386946/proposals60/microsoft49-composition-52.json.txt",
+    "/workspace/scratch/7e754a386946/proposals60/integration-fixture.ts.preimage.txt",
+    "/workspace/scratch/7e754a386946/proposals60/integration-fixture.ts.postimage.txt"
+  ],
+  "supplied_blob_identities": {
+    "fixture_preimage": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+    "fixture_postimage": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1",
+    "proposed_map": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+    "identity_verification": "Supplied identities are consistent with the patch headers and preceding GitHub review. No hash command or product validator was executed during this proposal review."
+  },
+  "actual_proposed_delta": {
+    "added_map_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+    "fixture_path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+    "fixture_delta": "Only current composition map lookup changes from path.join(intake, microsoft49-composition.json) to path.resolve(import.meta.dir, ../../docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json).",
+    "mode": "100644",
+    "historical_map_unchanged": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "historical_map_blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+    "map_content": "The new map uses the exact proposed52 content rather than changing the historical55 file."
+  },
+  "preserved_fences": [
+    "intake remains final-intake-55.",
+    "receipts remains intake/source-outputs/microsoft49/integration.",
+    "Source installation manifest must retain blob89d033326a26ed4c0674a85a5e2ba86a2799d36e.",
+    "Target must exist in source manifest.",
+    "Archived source preimage and postimage both retain SHA256 and Git blob identity checks.",
+    "Map schema sf2h.microsoft49-composition.v1 and source release74ba5b7f71182e531049b8c56fe304c3bec4c3db remain fixed.",
+    "Map source_manifest_blob must equal actual archived manifest blob.",
+    "Map file count, path uniqueness and source postimage blob/SHA256 pairing checks remain identical.",
+    "Installed canonical target still must match current composition postimage blob and SHA256.",
+    "Dynamic import still uses repository canonical target via pathToFileURL, never archived source postimage.",
+    "Suite lifecycle exports and no-temporary-modules behavior remain unchanged.",
+    "No auth, origin, privacy, policy, financial lifecycle, runtime transport, test title, test assertion or budget is changed by this two-file proposal."
+  ],
+  "findings": [
+    {
+      "id": "M60-MICROSOFT-MAP-PRESERVATION-PROPOSAL",
+      "severity": "NONE_STATIC_PRESERVATION_BLOCKER",
+      "conclusion": "The proposed path relocation removes the identified historical55 receipt overwrite while keeping original49 archive and canonical installed-byte checks. Relative path resolves from the same fixture directory to the intended Sucafinav1/docs namespace."
+    },
+    {
+      "id": "M60-MICROSOFT-MAP-HISTORICAL-BASE-PROVENANCE",
+      "severity": "PROVENANCE_NOTE",
+      "observation": "The exact map b572fbf4525e2d5015a1e8d4245c96085703e1c1 retains target_base3f35d8ee987cdeaafd3341c2fde13c4125a1f69e and installation target_preimage_blob e1392759f00d6d42477249823bbb6b3cec51601c from historical49/55 composition. Its source_postimage fields intentionally retain original49 bytes.",
+      "required_future_record": "The enclosing future intake manifest must separately state actual current candidate/base and installation preimage21236af83e4de879242fd298d9e15a9923f3bf41 -> postimage5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437. Do not present inherited map target_base or target_preimage as new60 CAS/application inputs. Preserve exact offered map bytes; annotate provenance externally.",
+      "runtime_effect": "These historical target_base/target_preimage metadata fields are not consumed by the unchanged fixture validation logic."
+    },
+    {
+      "id": "M60-MICROSOFT-MAP-ATOMIC-INSTALLATION-REQUIREMENT",
+      "severity": "FUTURE_INTEGRATION_CONDITION",
+      "conclusion": "The map expects installation52 postimage5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437; C27 currently has21236af83e4de879242fd298d9e15a9923f3bf41. Applying only this map/fixture would deliberately mismatch the current canonical installation.",
+      "required_future_record": "After complete explicit release52 and any newer authority reconciliation, compose installation52, current map and fixture lookup atomically with all owned/shared release dependencies. Record all exact modes/pre/postimages and material candidate SHA/tree. Reconcile against actual HEAD again if material changes."
+    }
+  ],
+  "qualification": {
+    "source_greens_transfer": false,
+    "runtime_result": "NOT_RUN",
+    "microsoft_journeys": "NOT_RUN_BY_REVIEWER",
+    "composed_candidate_acceptance": false,
+    "checks_owner": 45,
+    "epic_and_final_acceptance_owner": "S0",
+    "rule": "This is a static review of an inert proposal. It does not validate Node transport, Microsoft authentication/origins/privacy, nominal Decisions journeys or the eventual composed candidate."
+  },
+  "execution": {
+    "product_execution": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "remote_writes": 0,
+    "product_or_fixture_writes": 0,
+    "local_review_artifact_only": true
+  },
+  "GLOBAL_RELEASE": false
+}

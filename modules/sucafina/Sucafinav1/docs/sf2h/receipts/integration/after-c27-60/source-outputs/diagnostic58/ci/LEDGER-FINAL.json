@@ -1,0 +1,240 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.ci-ledger.v1",
+  "mission": 58,
+  "hosted_runs": [
+    {
+      "schema": "sf2h.portfolio-runtime-qualification.result.v1",
+      "mission": 58,
+      "selection": "R1-original-P03",
+      "state": "COMPLETED_FAIL_TIMEOUT",
+      "run_id": 43661532296,
+      "run_attempt": 1,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43661532296",
+      "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+      "W_tree": "d265540ea5d410801c2d535e8c13ee3dacc9c235",
+      "base_C24": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+      "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+      "S_tree": "a5654f33856eaf138d5c8107ef4e4d7c551ed895",
+      "request_blob": "4620fe7c5235107089dc8a0ae32b6915cb46e2a9",
+      "trigger_branch": "ci-run-linux-m58p03r1",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "material_snapshot_delta": [
+        ".ci-run.json"
+      ],
+      "jobs": [
+        {
+          "id": 132651714845,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure",
+          "started_at": "2026-11-15T01:07:09Z",
+          "completed_at": "2026-11-15T01:11:42Z"
+        },
+        {
+          "id": 132652872049,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "completed_at": "2026-11-15T01:11:50Z"
+        }
+      ],
+      "tests": {
+        "pass": 0,
+        "fail": 1,
+        "error": 1,
+        "expect_calls_reported": 24,
+        "expect_call_limit": "Aggregate Bun count includes helper/fixture calls; it is not 24 of the original 72 assertions qualified.",
+        "test_elapsed_ms": 180032.59,
+        "runner_summary_seconds": 180.26,
+        "file_count": 1,
+        "test_count": 1
+      },
+      "deadlines": {
+        "test_ms": 180000,
+        "fixture_guard_ms": 180000,
+        "cli_default_ms": 120000,
+        "changed": false
+      },
+      "failure": {
+        "fixture_deadline_at_ms": 180004,
+        "phase": "omitted / analysis.evaluate / previousBinding comparison.read after persist",
+        "persist_start_ms": 101476,
+        "persist_complete_ms": 171881,
+        "previous_binding_start_ms": 171909,
+        "previous_binding_end_ms": 180025,
+        "previous_binding_duration_ms": 8116,
+        "duration_censored_by_deadline": true,
+        "result": {
+          "status": "unavailable",
+          "reason": "comparison-binding-unavailable"
+        },
+        "recovery_bind": {
+          "start_ms": 180025,
+          "end_ms": 180025,
+          "reason": "read returned unavailable after deadline; recovery did not establish a binding"
+        },
+        "not_reached": [
+          "independent binding read",
+          "selectionAgain",
+          "analysis.revalidate",
+          "choose",
+          "resolve-training",
+          "compose-after",
+          "confirmed",
+          "original ChoiceRecord/history assertions",
+          "later replay and source/revocation assertions"
+        ],
+        "semantic_violation_proven": false
+      },
+      "runtime": {
+        "bun": "1.3.14",
+        "bun_commit": "0d9b296a",
+        "os": "Ubuntu 24.04.5 LTS",
+        "runner": "ubuntu-24.04",
+        "image": "20261111.370.1",
+        "cloud": "Azure",
+        "region": "centralus",
+        "runtime_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "request_env": {},
+        "runtime_configuration": "Pinned in composition/dependency-closure.json; no runtime flags or workflow altered."
+      },
+      "omni": {
+        "mode": "declared",
+        "nonce": "941b0c72b1b49a1a8acb186b07ba57e1",
+        "verdict": "not applicable",
+        "nonce_matched": true,
+        "declaring_tests_ran": false,
+        "spawn_proved": false
+      },
+      "artifacts": {
+        "github_uploaded": [],
+        "raw_job_log": "logs/R1.log.txt",
+        "phases": "metrics/R1-phases.json",
+        "boundaries": "metrics/R1-boundaries.json",
+        "fixture": "metrics/R1-fixture.json"
+      },
+      "final_counts": {
+        "storage.transaction.dashboard": {
+          "calls": 11660,
+          "completed": 11660,
+          "elapsedMs": 255582,
+          "maximumMs": 7628
+        },
+        "storage.transaction.planner": {
+          "calls": 32006,
+          "completed": 32006,
+          "elapsedMs": 99127,
+          "maximumMs": 35
+        },
+        "storage.currentSnapshots": {
+          "calls": 202,
+          "completed": 202,
+          "elapsedMs": 667,
+          "maximumMs": 8
+        },
+        "planner.compareScenarios": {
+          "calls": 20,
+          "completed": 20,
+          "elapsedMs": 147835,
+          "maximumMs": 7486
+        },
+        "rules.evaluate": {
+          "calls": 92,
+          "completed": 92,
+          "elapsedMs": 160766,
+          "maximumMs": 3442
+        },
+        "analysis.evaluate": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 131739,
+          "maximumMs": 116547
+        },
+        "analysis.select": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 45707,
+          "maximumMs": 30516
+        },
+        "comparison.proofs": {
+          "calls": 4,
+          "completed": 4,
+          "elapsedMs": 208,
+          "maximumMs": 53
+        },
+        "analysis.persist": {
+          "calls": 1,
+          "completed": 1,
+          "elapsedMs": 70404,
+          "maximumMs": 70404
+        },
+        "comparison.bind": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 32732,
+          "maximumMs": 32732
+        },
+        "comparison.verifyBinding": {
+          "calls": 6,
+          "completed": 6,
+          "elapsedMs": 44635,
+          "maximumMs": 7486
+        },
+        "comparison.read": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 30049,
+          "maximumMs": 21933
+        }
+      },
+      "criterion_evaluations": {
+        "calls": 92,
+        "completed": 92,
+        "totalElapsedMs": 160807,
+        "maximumElapsedMs": 3442
+      },
+      "limitations": [
+        "Timings of asynchronous nested calls are inclusive and overlap; do not add them as CPU time.",
+        "R1 proves the original P03 does not complete on this W within 180000ms. Runtime56 component65PASS does not qualify this journey.",
+        "No timing or PASS from another W is transferred.",
+        "No unchanged retry, local product execution or full epic was run."
+      ],
+      "retained_snapshot_ref": {
+        "branch": "astra-validation58",
+        "sha": "1574ee70c81518c80c92935a048b2bb075996d01",
+        "purpose": "Retains exact S1 and its W1 parent after test-ci cleanup; not a stack or source branch and not a ci-run trigger."
+      }
+    }
+  ],
+  "dispatch_dedup": {
+    "statuses_checked": [
+      "in_progress",
+      "queued",
+      "waiting",
+      "pending"
+    ],
+    "each_total_count": 0,
+    "trigger_count": 1,
+    "dispatch_after_W_and_S_verified": true
+  },
+  "retries": 0,
+  "unchanged_retries": 0,
+  "local_product_tests": 0,
+  "full_epic": 0,
+  "new_workflows": 0,
+  "legacy_foreign_test": "NOT_RUN",
+  "component56_65PASS": "Prior immutable source56 evidence only; not counted as58 tests.",
+  "new_run_decision": "C27 materialized the same54/56 product closure already executed inW1. No materially changed qualified implementation afterR1; no repeat of this timeout.",
+  "all_own_jobs_terminal": true
+}

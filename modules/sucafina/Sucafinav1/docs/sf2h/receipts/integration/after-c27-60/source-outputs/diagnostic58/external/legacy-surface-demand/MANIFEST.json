@@ -1,0 +1,24 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.external-legacy.v1",
+  "state": "RELEASED_BY56_FOR57_NOT_APPLIED_NOT_RUN_BY58",
+  "release": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+  "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+  "pre_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+  "post_blob": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+  "patch_blob": "348f22907a7f0b16c2f3a46999c2a0e6a21d2cb2",
+  "changes": [
+    "Only descriptive test title and nativeDashboard structural expectation1→4",
+    "Two nested demanded copies plus two currentSnapshots copies each materialize a fresh native Dashboard graph",
+    "All19target assertions/order, independent graphs, mutation isolation, closed-scope output and persisted SQL checks remain"
+  ],
+  "actual_W_foreign_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+  "prior56_evidence": "65PASS1filtered24522expect; old exact-title test filtered; equivalent replacement test executed. Does not prove full foreign file with patch.",
+  "owner_action": "57 has materialized the exact title/counter adaptation inC27. Reconcile this postimage and run the unfiltered composed regression under57/45 authority; do not reapply over it.58 did not execute this foreign file. Do not weaken semantic assertions.",
+  "latest_integrator_state": {
+    "candidate": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "post_blob": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+    "ACK56_blob": "c7167aa6998e519416915fc3fecb884517f6fb39",
+    "state": "APPLIED_BY57_NOT_RUN_UNFILTERED_CASE_REQUIRED"
+  }
+}

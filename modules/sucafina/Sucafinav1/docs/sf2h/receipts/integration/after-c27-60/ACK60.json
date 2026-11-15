@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h.after-c27-60.ack.v1",
+  "mission": 60,
+  "recorded_at": "2026-11-15 01:52:42 UTC",
+  "state": "ACK60_ACCEPTED_BOUNDED_SUCCESSION",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "lease_epoch": "S0-C-e12-browser60",
+  "writer": "A60 only sf2-stack writer",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "expected_head": "d6d9816bb09f7595330862616305e0791e23e61e",
+  "observed_head": "d6d9816bb09f7595330862616305e0791e23e61e",
+  "predecessor": {
+    "mission": 57,
+    "terminal": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "tree": "69cf88239d09ee164b12fecd482c6da3350b8b71",
+    "authority_blob": "5f2009672caed4b729924e88033b639fae8df7ee",
+    "handoff_blob": "91ae527cffe5315a8e67ec77efd88aede798b1a0",
+    "state": "HANDOFF_TERMINAL_LEASE_ENDED"
+  },
+  "current_material_candidate": {
+    "name": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "control": {
+    "branch": "sf2-control",
+    "head": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/integration-after-c27.json",
+    "mission_blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+    "newer_authority": "No later control ref or stack authority observed in bounded pre-ACK census; PR65 comments reconciled. Source59 ACK is isolated producer authority, never stack custody."
+  },
+  "read_coverage": "Full predecessor57 queue/authority/handoff/closure/pending/census/verification/errata, pinned START/WORKFLOW/COMMON/full S0-C pack and appendices read; reviews/predecessor-*.json and reviews/pack-audit.json carry delegated full reads. All historical artifacts remain immutable.",
+  "substantive_delta": {
+    "reports48": "45 paths reconciled against C27, all pre/post/modes; current bundle already rebased; HOLD no release; discovery admission classification finding routed separately from POST timeout.",
+    "decisions52": "16 paths reconciled against C27; HOLD no release. Historical Microsoft map overwrite rejected. Complete inert alternative map+fixture proposal preserves source49 fences.",
+    "cross": "No path intersection (45 vs16); static API/header review found no incompatibility, not runtime qualification.",
+    "diagnostic58": "Explicit evidence-only terminal release accepted and archived with FAIL; no new product candidate/no repeat54 or56 intake/no identical P03 retry.",
+    "runtime59": "New ACK/contract publication c0d2094357a8566d3a1329f0ec2dab70378d1892 observed; no product or release at pin.",
+    "sidebar": "Planning brief only at87d6e496a6a1e08e64ffb6d3c06890647a401459; no implementation."
+  },
+  "release_rule": "Only an explicit complete qualified producer release may activate product; no source green transfer. Coherent accepted material would receive a new candidate immediately, before final gates.",
+  "authority_limits": {
+    "A45": "Checks/generation/guards/preflight interface only",
+    "S0": "Epic/AM/final acceptance",
+    "A60": "MCP/CAS stack intake and concrete reconciliation/queue/handoff only",
+    "reviews": "Three focused read-only delegates, no second supervisor or independent writer",
+    "communication": "Producer PR feedback requested by user; no source branch edits or external messaging"
+  },
+  "preserve": {
+    "pending_ids": 56,
+    "pending_digests": "all",
+    "prior_findings": "17 inherited47 +6 new55 +5 new57, with all updates retained",
+    "scope": "15WP/74tasks/17contracts/1610criteria;5profiles/18skills/8packs/39operations;AM01-06;8finalCIselections;3FINALreviews;C/G7,D/G8"
+  },
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "preflights": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_moves": 0,
+    "producer_branch_writes": 0,
+    "dev_merge": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "product_execution": 0
+  },
+  "GLOBAL_RELEASE": false
+}

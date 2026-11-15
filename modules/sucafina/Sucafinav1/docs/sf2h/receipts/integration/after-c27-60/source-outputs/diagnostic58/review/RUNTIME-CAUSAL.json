@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "mission": 58,
+  "reviewer": "runtime_audit",
+  "status": "P03_FAILED_EXTERNAL_CAUSAL_FIX_NOT_PROVEN",
+  "readOnly": true,
+  "remoteWrites": 0,
+  "testsExecutedByReviewer": 0,
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "workloadCommit": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "dispatchCommit": "1574ee70c81518c80c92935a048b2bb075996d01",
+    "runtimeRelease": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+    "runtimeBlob": "666259511ad459629ef52f48aca20b231b0dff4b",
+    "runId": 43661532296,
+    "jobId": 132651714845,
+    "logsUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43661532296/job/132651714845"
+  },
+  "observedR1": {
+    "testOutcome": "FAIL",
+    "testDurationMs": 180032.59,
+    "existingTimeoutMs": 180000,
+    "lastCompletedProductPhase": "baseline:complete, status ok, elapsed 48015ms",
+    "failingProductPhase": "omitted:complete, status unavailable, elapsed 180026ms",
+    "omittedStartedMs": 48015,
+    "analysisPersistCompletedMs": 171881,
+    "previousBindingReadStartedMs": 171909,
+    "previousBindingReadCompletedMs": 180025,
+    "previousBindingReadElapsedMs": 8116,
+    "fallbackBindStartedMs": 180025,
+    "expectCallsReached": 24,
+    "criterionEvaluationsCompleted": 92,
+    "plannerComparisonsCompleted": 20,
+    "dashboardTransactionsCompleted": 11660,
+    "plannerTransactionsCompleted": 32006,
+    "currentSnapshotsCallsCompleted": 202,
+    "criterionElapsedInclusiveMs": 160766,
+    "plannerCompareElapsedInclusiveMs": 147835,
+    "dashboardTransactionElapsedInclusiveMs": 255582,
+    "plannerTransactionElapsedInclusiveMs": 99127,
+    "currentSnapshotsElapsedMs": 667,
+    "interpretation": "The workload exhausts its unchanged deadline during the original omitted-training path after persistence, while validating the existing comparison binding. These inclusive nested durations overlap and must not be added or presented as exclusive CPU cost. Remaining confirmation/history/replay/revocation assertions were not reached."
+  },
+  "notMeasured": [
+    "Exclusive runtime target Dashboard cloning cost in R1",
+    "Exclusive state-provider structuredClone cost in R1",
+    "A safe alternative runtime or provider release on P03",
+    "Any performance gain from a projection, a different root surface, or a new capability",
+    "The diagnostic draft below: neither typechecked nor executed"
+  ],
+  "staticCallgraph": {
+    "readSnapshot": {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "finding": "Canonical portfolio read scope opens Dashboard as mutable root target. Its callback ignores the root snapshot. Runtime56 therefore still uses defensive target copying for nested Dashboard reads; non-target Planner copies use the fresh native factory."
+    },
+    "stateProvider": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "finding": "Opaque state.read callbacks receive structuredClone(state). Only provider-registered frozen-context case selectors can project a selected case. C08 result callbacks remain opaque. Authorization runs before and after the read."
+    },
+    "resultStore": {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "finding": "A successful ordinary C08 read has three state observations, each with two provider authorization calls, interleaved with case, source and authority checks. Calculation reads additionally verify calculation sources. No proposal removes these observations."
+    }
+  },
+  "heldProposals": [
+    {
+      "name": "C08 result projection",
+      "artifact": "c08-result-projection.patch",
+      "status": "HELD_STATIC_OBSERVABILITY_GAP_NOT_APPLIED_NOT_TESTED",
+      "reason": "Selecting only the result and case skips clone errors and getters in unselected state. A valid readSfState graph containing an uncloneable function can fail the old whole-state clone but succeed in the projection. A stored-result getter can change caseRef.id during cloning, changing which case the original callback observes. Frozen authority context does not make the authorized mutable state graph safe for this transformation."
+    },
+    {
+      "name": "Generic root Dashboard-to-Procurement swap",
+      "status": "HELD_NOT_APPLIED_NOT_TESTED",
+      "reason": "Generic Persistence does not guarantee interchangeable root surfaces. The real SourcePersistence wrapper calls requireSourceIdentities(snapshot) and guard(surface, snapshot) before the callback even when commit=false. A different anchor changes metadata admission and guards. The raw LocalStore P03 fixture would not qualify these installed wrappers."
+    },
+    {
+      "name": "Explicit root read-only capability",
+      "status": "OWNER_DESIGN_NEEDED_NO_PATCH_OR_MEASUREMENT",
+      "reason": "A new capability could allow all surfaces to remain private immutable read sources without pretending a generic mutable transaction is equivalent. It requires runtime/contract ownership, compatible wrapper propagation, preservation of authority, original observations, callback count, abort, poison and unjoined-reader rejection, and owner conformance. This is a new external release rather than a safe minimal change in mission58 paths."
+    }
+  ],
+  "diagnosticDraft": {
+    "artifact": "c08-observation-probe.ts.txt",
+    "status": "INERT_NOT_APPLIED_NOT_TYPECHECKED_NOT_EXECUTED",
+    "possibleRepositoryPath": "modules/sucafina/Sucafinav1/test/product/portfolio-runtime-qualification/c08-observation-probe.ts",
+    "scope": "One separately authorized real C08 observation using createRenewalChoiceHistory and the existing canonical product read, not a repeated P03 or a benchmark substitute.",
+    "technique": "Pass through LocalStore transactions, currentSnapshots, state.read and native structuredClone. Count synchronous invocation-to-callback intervals separately from asynchronous entries. Retain original state reader identity and return original production promises. Do not inspect payloads or add descriptor traversal, clones, SQL reads, or product callbacks.",
+    "limits": "Native clone attribution is by unchanged state.read context, not exclusive source callsite. Nested admission timing includes validation, copy work and probe overhead. Timers/AsyncLocalStorage add uncalibrated overhead. No ratio or elapsed-time assertion is proposed. The existing trace54 helper remains untouched.",
+    "recommendation": "Do not execute now. Preserve as optional owner evidence tooling only if a specific causal question remains after an external release proposal."
+  },
+  "decision": "Close mission58 with the real P03 failure and exact composition evidence. Do not repeat the unchanged product with timers, do not apply either held shortcut, do not enlarge the timeout, and do not claim a journey pass from runtime56's 65 component tests. Await an owner-approved causal external release before another P03 qualification."
+}

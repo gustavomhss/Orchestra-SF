@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h.after-c27-60.source-census.v1",
+  "recorded_at": "2026-11-15 01:50:57 UTC",
+  "candidate": {
+    "name": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "sources": [
+    {
+      "role": "stack",
+      "branch": "sf2-stack",
+      "head": "d6d9816bb09f7595330862616305e0791e23e61e",
+      "tree": "69cf88239d09ee164b12fecd482c6da3350b8b71",
+      "decision": "ACK60 succession accepted; C27 material unchanged"
+    },
+    {
+      "role": "control",
+      "branch": "sf2-control",
+      "head": "afa3079d74d819f1afb3add83cf50eba63069f16",
+      "decision": "User mission pin remains current; no later stack authority observed"
+    },
+    {
+      "role": "Reports48",
+      "branch": "astra-wp07",
+      "pr": 27,
+      "sha": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+      "decision": "HOLD_EXPLICIT_COMPLETE_QUALIFIED_RELEASE_PENDING",
+      "review": "reconciliation/reports48.json"
+    },
+    {
+      "role": "Decisions52",
+      "branch": "astra-wp11",
+      "pr": 40,
+      "head": "fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+      "product": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
+      "product_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
+      "receipt_root": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/",
+      "manifest_blob": "3aaf2133e7af7cab78da2c846052ff7fde4be9e0",
+      "ack_blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+      "status": "ACTIVE_P5_NOMINAL06_FAILED_DIAGNOSTIC07_RUNNING",
+      "decision": "HOLD_RELEASE_PENDING_AND_HISTORICAL_MAP_PATCH_REJECTED",
+      "review": "reconciliation/decisions52.json"
+    },
+    {
+      "role": "Runtime59",
+      "branch": "runtime-read-scope",
+      "head": "c0d2094357a8566d3a1329f0ec2dab70378d1892",
+      "tree": "e56bc9695893a07ced2d3e2bebd1818a72801aa7",
+      "state": "ACK_AND_CONTRACT_PUBLISHED_RELEASE_PENDING",
+      "decision": "RETAIN_MATERIAL_CONSUMPTION_PENDING_QUALIFIED_EXPLICIT_RELEASE",
+      "review": "reconciliation/runtime59-current.json"
+    },
+    {
+      "role": "Diagnostic58",
+      "terminal": "00813b2ebacf5b0cd1c69d871c7a757ac323ebb4",
+      "tree": "dffd2a878b17ebea90ee351db3c6d9be4c505b62",
+      "branch": "astra-wp13",
+      "pr": 37,
+      "namespace": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-runtime-qualification/",
+      "release_blob": "767b3d2e4fadb9e3c1bc090832bf3241897683b0",
+      "manifest_blob": "719a9961cd9aa8fa62ac98359913886c6d77bf99",
+      "decision": "ACCEPT_EVIDENCE_ONLY_P03_FAIL",
+      "review": "consumer-ack58.json"
+    },
+    {
+      "role": "Compiler45",
+      "branch": "astra-compose",
+      "pr": 32,
+      "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "decision": "CHECK_AUTHORITY_RETAINED; scoped interface not published at observed pin"
+    },
+    {
+      "role": "Sidebar",
+      "branch": "sf-sidebar-plan",
+      "head": "87d6e496a6a1e08e64ffb6d3c06890647a401459",
+      "brief_blob": "4417f036ca47a3f5d9c3dfe79157e776b087cc20",
+      "decision": "PLANNING_ONLY_BRIEF; no migration or plan merge"
+    }
+  ],
+  "comments": "PR65 latest terminal58 comment6887285715; PR27 has no comments; PR40 latest historical owner findings, none release52. Bounded reads, no inference of running/liveness from status strings or silence.",
+  "release_observed": false,
+  "new_material_candidate": null,
+  "GLOBAL_RELEASE": false
+}

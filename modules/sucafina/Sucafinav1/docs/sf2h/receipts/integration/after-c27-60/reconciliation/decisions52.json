@@ -1,0 +1,616 @@
+{
+  "schema": "sf2h.mission60.decisions52-read-review.v1",
+  "mission": 60,
+  "role": "read-only specialist; root is sole stack writer",
+  "source": {
+    "branch": "astra-wp11",
+    "pr": 40,
+    "head": "fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+    "product": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
+    "product_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
+    "receipt_root": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/",
+    "manifest_blob": "3aaf2133e7af7cab78da2c846052ff7fde4be9e0",
+    "ack_blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+    "status": "ACTIVE_P5_NOMINAL06_FAILED_DIAGNOSTIC07_RUNNING"
+  },
+  "target": {
+    "candidate": "C27",
+    "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "terminal57": "d6d9816bb09f7595330862616305e0791e23e61e"
+  },
+  "disposition": "RETAIN_UNRELEASED; no source terminal or explicit complete release observed in source namespace/PR comments",
+  "authority_limit": "ACK_ACTIVE is a repository contract observation, not proof of process liveness.",
+  "material": {
+    "own": 9,
+    "shared_code": 6,
+    "shared_map": 1,
+    "existing_preimages_exact": 14,
+    "new_paths_absent": 2,
+    "existing_modes_verified_100644": 14,
+    "complete_patch_sections": 16,
+    "text_reconstruction_exact": 16,
+    "rows": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "preimage": null,
+        "postimage": "0832650685246e386f0270533bb58ed840effd65",
+        "postimage_sha256": "9d0d055e68711d829e347e1ecbb02c5f41a7231a85677cfdd6390e8101a7a119",
+        "preimage_sha256": null,
+        "bytes": 4363,
+        "ownership": "own",
+        "preimage_observed": null,
+        "preimage_matches": true,
+        "pre_mode": null,
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+          "preimage": null,
+          "postimage": "0832650685246e386f0270533bb58ed840effd65",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "preimage": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+        "postimage": "3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2",
+        "postimage_sha256": "e285f499fc39211a2751c20c288cdb7eeb883a8d4749cceb8b55c579722ad46a",
+        "preimage_sha256": "a934c3c67ddb17515d6b7e11d4103900ca279c7bcf9819c52cfe378c8e0c2977",
+        "bytes": 9064,
+        "ownership": "own",
+        "preimage_observed": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+          "preimage": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+          "postimage": "3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+        "preimage": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad",
+        "postimage": "ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f",
+        "postimage_sha256": "7ff275012e5b43e951790037d56a411ba8438475ce2006a69038b8469e445e2b",
+        "preimage_sha256": "f766022c137a2ce57b4c8e7ce027214ce0c33e11183fe79f0601970a8719d45c",
+        "bytes": 7059,
+        "ownership": "own",
+        "preimage_observed": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+          "preimage": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad",
+          "postimage": "ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+        "preimage": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+        "postimage": "9fe64294027cf6805ff8e7ba4b7cfac83455de85",
+        "postimage_sha256": "d8d092793ae2416bece2637a8487267f353121f911bc5d252905697225101ac9",
+        "preimage_sha256": "3a77abd7bb57416dc5857a48d92042f968cd8b39ad224abc133aca150123fa6f",
+        "bytes": 2512,
+        "ownership": "own",
+        "preimage_observed": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+          "preimage": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+          "postimage": "9fe64294027cf6805ff8e7ba4b7cfac83455de85",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "preimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+        "postimage": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+        "postimage_sha256": "9924641f3fef04434be4987509ad865d03d9cf46a1f021d92acd89dc9504f81d",
+        "preimage_sha256": "2750be7e46c2f9824cc1177605c93b6b8e6118f056704a576d0699aaa92fda52",
+        "bytes": 12983,
+        "ownership": "own",
+        "preimage_observed": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "preimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+          "postimage": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+        "preimage": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a",
+        "postimage": "903b48594ff95e0d1f78539982adcf75eb3b9272",
+        "postimage_sha256": "c55f5d72fc6767327f10e41e85b26092d6ffbaff76c22a1003768ff832ad9f78",
+        "preimage_sha256": "8b7e77d18505f063f2506dca22849eba3adc723a43deff2930ecf2260e5b63ab",
+        "bytes": 19336,
+        "ownership": "own",
+        "preimage_observed": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+          "preimage": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a",
+          "postimage": "903b48594ff95e0d1f78539982adcf75eb3b9272",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+        "preimage": "c469187a2e04d49d157cf9d3830145ca845f4064",
+        "postimage": "de8671b4482339791b8f03bd5616c13d50dc4a87",
+        "postimage_sha256": "0f2bd070ee2889719b6998d58e33f55b62f6c15b6040042f4dbd587424411563",
+        "preimage_sha256": "2f03762cf5b7d16a33036cd5c126bcf35982ddb36c1fdcb90cd712df934c0b41",
+        "bytes": 12222,
+        "ownership": "own",
+        "preimage_observed": "c469187a2e04d49d157cf9d3830145ca845f4064",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+          "preimage": "c469187a2e04d49d157cf9d3830145ca845f4064",
+          "postimage": "de8671b4482339791b8f03bd5616c13d50dc4a87",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+        "preimage": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa",
+        "postimage": "10b59adfce7d8fb5143f49c9df9a0d7321425018",
+        "postimage_sha256": "632a2e839b2c4a242ed74bd2934981e5d8a9fb0e87e3ca9a5b77d8aa4917cc03",
+        "preimage_sha256": "82094133ca959f6850c0f85f0d79999e085070046b51a552bb395a9b0ef53a18",
+        "bytes": 4801,
+        "ownership": "own",
+        "preimage_observed": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+          "preimage": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa",
+          "postimage": "10b59adfce7d8fb5143f49c9df9a0d7321425018",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "preimage": "596512b4e12c094fd178ea845f4b560bbf23a348",
+        "postimage": "a77da76589ece60a6925bdd20731efbc8f19b597",
+        "postimage_sha256": "47a6716e74d0a75b84279992e741b5b56c79e336bc8b063be4b2d7e6c1f0e623",
+        "preimage_sha256": "bf4b7f397e8376451836cfb6f292577aac63350a23c9afe9a778a87175452fa9",
+        "bytes": 39285,
+        "ownership": "own",
+        "preimage_observed": "596512b4e12c094fd178ea845f4b560bbf23a348",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "branch fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+        "reconstruction": {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "preimage": "596512b4e12c094fd178ea845f4b560bbf23a348",
+          "postimage": "a77da76589ece60a6925bdd20731efbc8f19b597",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "preimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+        "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
+        "preimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "bytes": 6258,
+        "ownership": "shared",
+        "preimage_observed": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "inert proposal blob",
+        "reconstruction": {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "preimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+        "preimage": "302334c0e5a50c681005d6c6463132abce84d8b1",
+        "changed_fields": [
+          "files[installation].postimage_blob",
+          "files[installation].postimage_sha256",
+          "files[installation].bytes"
+        ],
+        "source49_fields_unchanged": true,
+        "other_entries_unchanged": true,
+        "postimage": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+        "postimage_sha256": "432a4db46c1a2bb0bd71f52a5adfa58bcd7358d9ca8f31e44977527482537357",
+        "preimage_sha256": "d7b63c7b70e009e6cc08804bad167fdbd16c5d26d2ed8c604730f77cb85e39a9",
+        "bytes": 2411,
+        "ownership": "shared",
+        "preimage_observed": "302334c0e5a50c681005d6c6463132abce84d8b1",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "inert proposal blob",
+        "reconstruction": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+          "preimage": "302334c0e5a50c681005d6c6463132abce84d8b1",
+          "postimage": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+        "preimage": null,
+        "postimage": "13188a92ace68e6730bd22f8ee87872af2c1dea1",
+        "postimage_sha256": "2ddd1728f4e7d3fd5f71fff6a6799c4e55be490f5d68091adff69000eeffdede",
+        "preimage_sha256": null,
+        "bytes": 5641,
+        "ownership": "shared",
+        "preimage_observed": null,
+        "preimage_matches": true,
+        "pre_mode": null,
+        "post_mode": "100644",
+        "postimage_source": "inert proposal blob",
+        "reconstruction": {
+          "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+          "preimage": null,
+          "postimage": "13188a92ace68e6730bd22f8ee87872af2c1dea1",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "preimage": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+        "postimage": "36ad71ccbeacc42382dcc2d0f35ee7f707981790",
+        "postimage_sha256": "bd9c6d2b11d723711af52cf35eaebcc60ef578b757e5f133bb0b42ce6bf1ce32",
+        "preimage_sha256": "09017349a0e60c625ab92f68bb209ea0d369aaa9ab7570d1e585fbae5e3689ea",
+        "bytes": 78103,
+        "ownership": "shared",
+        "preimage_observed": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "inert proposal blob",
+        "reconstruction": {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimage": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+          "postimage": "36ad71ccbeacc42382dcc2d0f35ee7f707981790",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "preimage": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "postimage": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+        "postimage_sha256": "0287ea4491f3a15bd98780100a05a804c3012bfe8ccc2df1ab28f1987e85dce5",
+        "preimage_sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "bytes": 13294,
+        "ownership": "shared",
+        "preimage_observed": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "inert proposal blob",
+        "reconstruction": {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "preimage": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "postimage": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "preimage": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+        "postimage": "e91191ec5fa37da12db4d92e973e9105c00be4e5",
+        "postimage_sha256": "bbd8132ea6e0ab0b14e6eacc7753aa01adf4866a1b2846de4165830e9935f655",
+        "preimage_sha256": "219b48f070e8d42fef2308667928c75a813807821d61f557a870af0abb4a1a0d",
+        "bytes": 9460,
+        "ownership": "shared",
+        "preimage_observed": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "inert proposal blob",
+        "reconstruction": {
+          "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+          "preimage": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+          "postimage": "e91191ec5fa37da12db4d92e973e9105c00be4e5",
+          "reconstruction_exact": true
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "preimage": "7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11",
+        "postimage": "feae4846feb657924d9229193eeeded58b378851",
+        "postimage_sha256": "a52cd613e8f9b6fbb572a8f6f6df04ad14da36b58d1dbbafaab2115e6716939a",
+        "patch_sha256": "fa7a31097a1e71777942a0b5c916103ee7f9b7e43d93933143c0dffc7987e491",
+        "preimage_sha256": "2d7c282c256153f6b3db1868c90eb15660d4c81fb875545cd802095a43cf18bc",
+        "bytes": 16683,
+        "ownership": "shared",
+        "preimage_observed": "7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11",
+        "preimage_matches": true,
+        "pre_mode": "100644",
+        "post_mode": "100644",
+        "postimage_source": "inert proposal blob",
+        "reconstruction": {
+          "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+          "preimage": "7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11",
+          "postimage": "feae4846feb657924d9229193eeeded58b378851",
+          "reconstruction_exact": true
+        }
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "M60-D52-RELEASE-PENDING",
+      "owner": "A52",
+      "status": "HOLD",
+      "cause": "PRODUCT-MANIFEST remains ACTIVE_P5_NOMINAL06_FAILED_DIAGNOSTIC07_RUNNING; route/node/batch manifests explicitly proposals; diagnostic07 not for source release.",
+      "action": "Publish explicit release pin and complete authorized scope, terminal/continuation authority and per-journey outcomes; integration may only consume released qualified subset with explicit dependencies."
+    },
+    {
+      "id": "M60-D52-MICROSOFT-MAP-PRESERVATION",
+      "owner": "A52 and stack integrator",
+      "status": "HOLD_CURRENT_MAP_PATCH",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "preimage": "302334c0e5a50c681005d6c6463132abce84d8b1",
+      "proposed": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+      "cause": "Proposed patch mutates historical intake55 evidence. Current fixture bf99964856dca491e5ccf922f76a5e3e1fb6b22b hard-codes this directory for both original source archive and current composition map.",
+      "action": "Keep map55 and source49 archive immutable. Publish current map under after-c27-60 (or next authorized intake namespace) and change only composition-map lookup in test/microsoft-login/integration-fixture.ts, retaining source archive path, source manifest89d033326a26ed4c0674a85a5e2ba86a2799d36e, shape/source/blob/SHA256 checks and canonical imports. Bind map+fixture+installation in same material candidate. This new test input requires new candidate qualification; do not transfer W6 greens."
+    },
+    {
+      "id": "M60-D52-COMPARE-DEADLINE",
+      "owner": "A52 plus Portfolio shared owner",
+      "status": "FAIL_RETAINED",
+      "cause": "W6 original J1 net::ERR_ABORTED before decision-compare HTTP status/body; UI 10000ms deadline and test180000ms unchanged.",
+      "action": "Use published diagnostic07 to locate causal producer/call; publish qualified material correction before new original nominal. Do not increase deadline or add cross-phase cache; do not call batch patch a sufficient speedup."
+    },
+    {
+      "id": "M60-D52-PROCUREMENT-QUEUE",
+      "owner": "Procurement/installation owner and S0",
+      "status": "FAIL_RETAINED",
+      "cause": "W6 J2 Requests GET503 procurement-queue-unavailable before real form. Source static contextFor requires canonical formSettings.currency; queue requires valid collection. Run does not identify internal failing branch.",
+      "action": "Resolve authorized installation/configuration precondition without changing approval policy or seeding the business journey. Original real form and UI operations stay required."
+    },
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "owner": "S0/WP00 plus Procurement/C12 owners",
+      "status": "OPEN_UNCHANGED",
+      "cause": "C25 canonical draft save→submit→approve frozen persisted snapshot does not authorize replacement not yet persisted followed by Apply. W6 stops even earlier at queue.",
+      "action": "Maintain original J2 financial family and MI07. No conversion of canonical approval, UI choice or checkbox into unsupported approval; no closure from source component greens."
+    },
+    {
+      "id": "M60-D52-TRANSPORT-PROOF",
+      "owner": "A52/transport owner and A45/S0 validators",
+      "status": "PENDING",
+      "cause": "V3 Node body changes server transport; published review explicitly lacks independent chunked over-limit, binary and abort network proof and Microsoft composed-suite result.",
+      "action": "Qualify exact released composition under existing authorized executor. Preserve host/origin, sanitized forwarded hints, privacy Layer, raw body bytes, canonical BodyLimit classification and final request signal. A60 must not execute gates."
+    }
+  ],
+  "cross_reports48": {
+    "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "patch_blob": "908c4533ed468d72329b93a3611e522065b929c3",
+    "shared52_patch_blob": "322aa703425a1690be2b09ad8e00207b46ff3759",
+    "path_intersection": [],
+    "api_review": "Product-authority return structure unchanged. Reports strict read dispatch only sf_review_prepare/collaborationReads aliases; the exact collaborationReads catalog contains no sf_case_read/decisions.edit/decisions.portfolio.read. Headers preserved by Node52, with review binding interpreted only by Reports HTTP boundaries.",
+    "combined_runtime": "NOT_RUN; independent source successes do not qualify combined candidate."
+  },
+  "nominal": {
+    "run_id": 43663347199,
+    "job_id": 132657295185,
+    "attempt": 1,
+    "W": "78f2362bd09fcbf606505d7833860f1af07b8e6f",
+    "W_tree": "545203f96b7f5087e85c159f8ab9b7290ede8f12",
+    "S": "6dea9a6f9a96b0e5c9051472d1bd6513189376fc",
+    "S_tree": "f37e8e81d67e9ef0f211f31da849f756e6ddb0e2",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "artifact_id": 14140709737,
+    "artifact_sha256": "a5cec5aa3f1db913bb8a365a7ee3ad27d59de9778509b5d31a1ad08970a2ce9f",
+    "artifact_bytes": 2966084,
+    "selected": 5,
+    "passed": 3,
+    "failed": 2,
+    "retries": 0,
+    "skipped": 0,
+    "cases": [
+      {
+        "index": 1,
+        "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+        "status": "failed",
+        "duration_ms": 51730,
+        "budget_ms": 180000,
+        "reached": [
+          "Six actual Planner UI commands returned200/ok; distinct annual versions1200 and2400USD2027 created.",
+          "One Workbench intention created a durable case.",
+          "Authorized BI discovery and source preview attached both real Planner refs through decision-edit200, caseversion2.",
+          "Two explicit pending inventories covering all nine categories saved through decision-coverage200.",
+          "First alternative promoted through UI. Second promotion response was deliberately lost; identical UI retry recovered same intention and caseversion4. Three promotion requests represented exactly two distinct intentions.",
+          "Saved alternatives reopened and selected in comparison. Original POST decision-compare emitted, then requestfailed net::ERR_ABORTED with no observed HTTP status or body."
+        ],
+        "not_reached": [
+          "Successful comparison response and known1200USD/complete-total-null assertions",
+          "Portfolio catalog containing both alternatives in this journey",
+          "Numeric rule registration and numeric criterion comparison",
+          "Choice recording and identical-retry history recovery",
+          "Real Planner source refresh and immutable original choice verification"
+        ],
+        "proof_limits": [
+          "No nominal test timeout: failed at51730ms within unchanged180000ms budget.",
+          "A request abortion is observed. The artifact does not identify the server computation responsible or prove an authority change.",
+          "The earlier decision-promote net::ERR_CONNECTION_RESET is deliberate fault injection and its exact retry succeeded.",
+          "Compared with nominal05, C27 Runtime56 and fresh batch forwarding changed together; smaller durations do not isolate either effect or establish a sufficient speedup."
+        ],
+        "diagnosis": {
+          "mode": "decision-compare",
+          "transport_event": "requestfailed",
+          "error": "net::ERR_ABORTED",
+          "http_status": null,
+          "body": null,
+          "case_version": 4,
+          "failed_step": "reopen the exact alternatives and consume them in the current comparison",
+          "failed_step_duration_ms": 14569,
+          "dom_status": "Comparison unavailable or sources changed. Check the alternatives and try again.",
+          "record_choice_enabled": false,
+          "recorded_choices": 0,
+          "ui_abort_deadline_ms": 10000,
+          "request_elapsed_ms": null,
+          "request_timing_limit": "Artifact network events lack per-request timestamps; entire step includes reopen/select/click."
+        }
+      },
+      {
+        "index": 2,
+        "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+        "status": "failed",
+        "duration_ms": 14660,
+        "budget_ms": 180000,
+        "reached": [
+          "GET /sucafina/procurement?page=Requests returnedHTTP503 JSON.",
+          "DOM displayed status unavailable / reason procurement-queue-unavailable.",
+          "Original real requisition form assertion observed0 elements instead of1 after10000ms."
+        ],
+        "not_reached": [
+          "Real requisition creation and evidence attachment",
+          "Procurement proposal and comparison",
+          "Formal financial approval",
+          "C12 Apply and exact unique receipt recovery"
+        ],
+        "proof_limits": [
+          "Current C27 runtime independently reconfirms the queue503 blocker; this is not a transferred C25 result.",
+          "M31/MI07 formal approval contract remains open in consumer57 receipt, but this run stops before that boundary."
+        ],
+        "diagnosis": {
+          "mode": "Requests navigation",
+          "http_status": 503,
+          "body": {
+            "status": "unavailable",
+            "reason": "procurement-queue-unavailable"
+          },
+          "first_failing_locator": "form[data-command=\"create\"][data-page=\"Requests\"]",
+          "expected": 1,
+          "received": 0,
+          "assertion_timeout_ms": 10000
+        }
+      },
+      {
+        "index": 3,
+        "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+        "status": "passed",
+        "duration_ms": 10481,
+        "budget_ms": 180000,
+        "reached": [
+          "Entered installed Workbench through dashboard UI.",
+          "Submitted one explicit human intention and receivedJSON200/ok with exact case outputRef.",
+          "Read and reloaded same durable caseversion1.",
+          "Saved a human edit through decision-editJSON200/ok, advanced same case toversion2, reloaded and reopened the persisted current version."
+        ],
+        "not_reached": [],
+        "proof_limits": [
+          "Pass proves this original create/edit/reopen journey on isolated W only. It does not prove financial application."
+        ],
+        "diagnosis": {
+          "result": "PASS",
+          "case_versions": [
+            1,
+            2
+          ],
+          "financialApplication": false
+        }
+      },
+      {
+        "index": 4,
+        "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+        "status": "passed",
+        "duration_ms": 7049,
+        "budget_ms": 180000,
+        "reached": [
+          "Created a real empty decision case through UI.",
+          "Find decisions consumed actual decision-listJSON200/ok.",
+          "Alternative discovery consumed actual decision-portfolio-catalogJSON200/ok.",
+          "Catalog returned exact case identity/version1 and alternatives:[], plus real criteria/horizon/currency; no alternatives invented."
+        ],
+        "not_reached": [],
+        "proof_limits": [
+          "Pass proves original empty-case catalog journey. Two-alternative catalog assertions in J1 remained beyond its comparison failure."
+        ],
+        "diagnosis": {
+          "result": "PASS",
+          "case_version": 1,
+          "alternatives": []
+        }
+      },
+      {
+        "index": 5,
+        "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+        "status": "passed",
+        "duration_ms": 7457,
+        "budget_ms": 180000,
+        "reached": [
+          "Original Workbench creation responseHTTP200 captured and deliberately dropped.",
+          "Draft and locked form preserved; exactly one creation submission.",
+          "Recovered by reading same durable case, then reloaded same case without resubmission."
+        ],
+        "not_reached": [],
+        "proof_limits": [
+          "The observed net::ERR_CONNECTION_RESET is deliberate CDP response loss.",
+          "Pass proves C09 uncertain creation recovery only; financial C12 recovery remains unexecuted."
+        ],
+        "diagnosis": {
+          "result": "PASS",
+          "creationSubmits": 1,
+          "recovery": "read-same-case-without-resubmission"
+        }
+      }
+    ],
+    "run_metadata_independently_read": {
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "6dea9a6f9a96b0e5c9051472d1bd6513189376fc"
+    },
+    "limit": "Source receipt and run metadata read. No raw artifact download or runtime execution by this reviewer; results belong to W6."
+  },
+  "future_nominal_request": {
+    "exact_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "literal": "{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"packageSelector\":\"packages/app\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/decisions.spec.ts\"],\"env\":{\"ORCHESTRA_CHANNEL\":\"prod\"},\"config\":\"e2e/playwright.production.config.ts\"}",
+    "precondition": "Explicit release, material causal fix for failure boundary and exact newly assembled candidate W/tree; no dispatch by A60."
+  },
+  "checks": {
+    "source_check": "checks/source-01.json",
+    "run": 43661892542,
+    "verdict": "FAILURE_INHERITED_130_TS_43_GATE_18_WARN_NO_NEW",
+    "scope": "Own source HTTP compiled as part of Sucafina; shared CLI/app-shell/E2E and C27 global checks not supplied by this workflow.",
+    "not_waived": true
+  },
+  "execution": {
+    "remote_writes": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatch": 0,
+    "AM": 0,
+    "integrity": "Read GitHub blobs/modes; reconstructed inert unified diff as text only; no product imports/interpreter."
+  },
+  "GLOBAL_RELEASE": false
+}
+
