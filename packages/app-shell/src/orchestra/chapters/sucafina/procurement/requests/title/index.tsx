@@ -48,7 +48,7 @@ async function authorizedTitleRead(
   try {
     // No new endpoint, client-side HTML parsing or producer field recalculation.
     // A03 owns this closed CAP25 GET input codec; default selection is no filters.
-    const input = {} // A03 PageSelection: all selection keys are optional
+    const input = { request: id } satisfies Parameters<ProcurementClient["domain.page.CAP25"]>[0]
     const result = await client["domain.page.CAP25"](input, { signal })
     if (result.kind !== "response") return { kind: "unavailable" }
     if (result.status === 401) return { kind: "unauthenticated" }
@@ -147,7 +147,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps) {
             value: { title: result.record.title },
             revalidation: {
               operationId: "domain.page.CAP25",
-              input: {},
+              input: { request: requestRef },
               fieldPaths: ["pr.title"],
               actionIds: ["save"],
             },
@@ -181,7 +181,7 @@ export function SfRequestTitleEdit(props: SfSurfaceProps) {
       value: { title: row.title },
       revalidation: {
         operationId: "domain.page.CAP25",
-        input: {},
+        input: { request: requestRef },
         fieldPaths: ["pr.title"],
         actionIds: ["save"],
       },
