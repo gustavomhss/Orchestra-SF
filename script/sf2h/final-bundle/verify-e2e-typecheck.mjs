@@ -114,23 +114,47 @@ if (!values.inventory) {
   if (outputFiles.every((file) => file && isFile(file))) {
     observation.compiler_evidence = outputFiles.map(digest)
     const effectiveText = readFileSync(outputFiles[0], "utf8")
-    // A failed showConfig may contain a diagnostic instead of JSON. Preserve it as failed evidence.
-    const effective = configStatus === 0 ? JSON.parse(effectiveText) : null
-    if (effective) {
-      const files = new Set((effective.files ?? []).map((file) => path.resolve(app, file)))
-      requireCheck(files.size > 0, "EMPTY_COMPILER_CONFIG: showConfig selected no files")
-      requireCheck(effective.compilerOptions?.strict === true && effective.compilerOptions?.noEmit === true &&
-        effective.compilerOptions?.composite === false && effective.compilerOptions?.noCheck !== true &&
-        effective.compilerOptions?.noResolve !== true, "EFFECTIVE_OPTIONS: strict, nonemitting, noncomposite, resolved check required")
-      for (const file of roots) requireCheck(files.has(file), `CONFIG_OMISSION: ${relative(file)}`)
-      observation.effective_root_count = files.size
+    // Bun emits exactly one known invocation prefix; native TSGo showConfig is flat.
+    // Unlike tsc --showConfig, it does not enumerate program roots: require --listFiles below.
+    const prefix = "$ tsgo -p tsconfig.sf-e2e.json --showConfig"
+    const normalized = effectiveText.replace(/\r\n/g, "\n")
+    const clean = normalized.startsWith(prefix + "\n") ? normalized.slice(prefix.length + 1) : normalized
+    let effective = null
+    if (configStatus === 0) {
+      try {
+        effective = JSON.parse(clean)
+      } catch {
+        requireCheck(false, "EFFECTIVE_CONFIG_PARSE: native TSGo flat JSON or recognized Bun prefix required")
+      }
+    }
+    if (effective !== null) {
+      const flat = effective && typeof effective === "object" && !Array.isArray(effective) &&
+        !Object.hasOwn(effective, "compilerOptions") && !Object.hasOwn(effective, "files")
+      requireCheck(flat, "EFFECTIVE_SCHEMA: unexpected TSGo showConfig shape; no default empty roots")
+      if (flat) {
+        requireCheck(effective.project === realpathSync(configPath) &&
+          effective.configFilePath === realpathSync(configPath), "EFFECTIVE_PROJECT: unexpected TSGo config path")
+        requireCheck(effective.rootDir === root &&
+          effective.pathsBasePath === app, "EFFECTIVE_ROOTS: repository and app resolution mismatch")
+        requireCheck(effective.strict === true && effective.noEmit === true &&
+          effective.composite === false && effective.emitDeclarationOnly === false &&
+          effective.allowImportingTsExtensions === true &&
+          effective.noCheck !== true && effective.noResolve !== true,
+          "EFFECTIVE_OPTIONS: strict, nonemitting, noncomposite, resolved check required")
+        requireCheck(JSON.stringify(effective.types) === JSON.stringify(["node", "bun", "vite/client"]),
+          "EFFECTIVE_TYPES: E2E ambient types changed")
+        observation.effective_config_format = "native-tsgo-flat"
+        observation.effective_config_project = effective.project
+        observation.roots_checked_by = "--listFiles; flat showConfig does not report roots"
+      }
     }
     const log = readFileSync(outputFiles[1], "utf8")
     const program = [...new Set(log.split(/\r?\n/).map((line) => line.trim())
       .filter((line) => /\.(?:[cm]?[tj]sx?|json)$/.test(line))
       .map((line) => path.resolve(app, line)).filter(isFile).map((file) => realpathSync(file)))].sort()
     requireCheck(program.length > 0, "EMPTY_COMPILER_PROGRAM: --listFiles emitted no existing files")
-    for (const file of roots) requireCheck(program.includes(file), `PROGRAM_OMISSION: ${relative(file)}`)
+    for (const file of roots) requireCheck(isFile(file) && program.includes(realpathSync(file)), `PROGRAM_OMISSION: ${relative(file)}`)
+    observation.compiler_root_count = roots.filter((file) => isFile(file) && program.includes(realpathSync(file))).length
     observation.compiler_files = program.map((file) => ({ ...digest(file),
       kind: file.includes(`${path.sep}node_modules${path.sep}`) ? "dependency" :
         roots.includes(file) ? "declared-input" : "transitive-source" }))
@@ -142,6 +166,7 @@ if (!values.inventory) {
 }
 
 observation.status = failures.length ? "FAIL" : values.inventory ? "INPUTS_PRESENT_COMPILER_NOT_RUN" : "PASS"
+if (!values.inventory) observation.compiler_status = failures.length ? "FAIL" : "PASS"
 const serialized = JSON.stringify(observation, null, 2) + "\n"
 if (values.output) {
   const destination = path.resolve(root, values.output)
