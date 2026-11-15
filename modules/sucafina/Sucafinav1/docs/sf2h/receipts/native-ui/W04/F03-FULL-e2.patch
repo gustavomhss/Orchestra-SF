@@ -1,0 +1,1683 @@
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/types.ts b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/types.ts
+new file mode 100644
+index 0000000..d1eb054
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/types.ts
+@@ -0,0 +1,198 @@
++import type { JSX } from "solid-js"
++import type { SfHref, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
++
++// F03 public presentation contracts: COMPONENT-CONTRACTS.md and component-signatures.ts
++// are frozen. The only external identities are F01 Schema's opaque route/ref types.
++// I00 composes the full leaf dictionary; its keys must never be arbitrary data text.
++declare const sfCopyKey: unique symbol
++export type SfCopyKey = string & { readonly [sfCopyKey]: "key-from-frozen-typed-dictionaries" }
++export type SfDensity = "comfortable" | "compact"
++export type SfLayoutMode = "single" | "split" | "split-context"
++export type SfScalar = string | number | boolean | null
++export type SfMessage = Readonly<{
++  key: SfCopyKey
++  params?: Readonly<Record<string, string | number>>
++}>
++export type SfText =
++  | Readonly<{ kind: "message"; message: SfMessage }>
++  | Readonly<{ kind: "data"; text: string }>
++export type SfUiState =
++  | "loading"
++  | "ready"
++  | "empty"
++  | "filtered-empty"
++  | "partial"
++  | "invalid"
++  | "not-found"
++  | "stale"
++  | "conflict"
++  | "unavailable"
++  | "denied"
++  | "session-expired"
++  | "outcome-unknown"
++export type SfCoverage = Readonly<{
++  state: "complete" | "partial" | "unavailable"
++  summary: SfMessage
++  reasons: readonly SfMessage[]
++  knownCount: number | null
++  expectedCount: number | null
++}>
++export type SfAction = Readonly<{
++  id: string
++  labelKey: SfCopyKey
++  labelParams?: Readonly<Record<string, string | number>>
++  tone: "primary" | "secondary" | "danger"
++  disabled: boolean
++  reasonKey?: SfCopyKey
++  busy: boolean
++  onInvoke: () => void
++}>
++export type SfUnit =
++  | Readonly<{ kind: "currency"; code: string }>
++  | Readonly<{ kind: "percent" }>
++  | Readonly<{ kind: "quantity"; label: SfMessage }>
++  | Readonly<{ kind: "unspecified"; label: SfMessage }>
++export type SfSource = Readonly<{
++  ref: SfRef
++  version: SfVersion
++  label: SfText
++  scope: SfText
++  coverage: SfCoverage
++}>
++export type SfDisplayValue =
++  | Readonly<{ kind: "text"; text: SfText }>
++  | Readonly<{ kind: "number"; value: number; unit: SfUnit; fractionDigits: number }>
++  | Readonly<{ kind: "boolean"; value: boolean; trueLabel: SfMessage; falseLabel: SfMessage }>
++  | Readonly<{ kind: "date"; isoDate: string }>
++  | Readonly<{ kind: "timestamp"; isoTimestamp: string; timezone: string }>
++  | Readonly<{ kind: "missing"; reason: SfMessage }>
++  | Readonly<{ kind: "unavailable"; reason: SfMessage }>
++  | Readonly<{ kind: "list"; items: readonly SfDisplayValue[] }>
++
++export type SfPageFrameProps = Readonly<{
++  titleKey: SfCopyKey
++  subtitleKey?: SfCopyKey
++  eyebrow?: SfText
++  context: readonly Readonly<{ id: string; label: SfMessage; value: SfText }>[]
++  tabs: readonly Readonly<{ id: string; labelKey: SfCopyKey; href: SfHref; available: boolean }>[]
++  activeTab: string | null
++  primaryAction?: SfAction
++  secondaryActions: readonly SfAction[]
++  density: SfDensity
++  layout: "reading" | "work" | "split" | "comparison"
++  onLayoutMode: (mode: SfLayoutMode) => void
++  children: JSX.Element
++}>
++export type SfStatePanelProps = Readonly<{
++  state: SfUiState
++  messageKey: SfCopyKey
++  detailsKey?: SfCopyKey
++  coverage?: SfCoverage
++  onRetryRead?: () => void
++  onLogin?: () => void
++  onBack?: () => void
++  children?: JSX.Element
++}>
++export type SfContextControl = "year" | "period" | "version" | "currency" | "view"
++export type SfContextOption = Readonly<{
++  id: string
++  control: SfContextControl
++  value: SfScalar
++  label: SfText
++  available: boolean
++  reason?: SfMessage
++}>
++export type SfContextBarProps = Readonly<{
++  selection: readonly Readonly<{ control: SfContextControl; optionId: string | null }>[]
++  catalog: readonly SfContextOption[]
++  lockedReasons: readonly Readonly<{ control: SfContextControl; reason: SfMessage }>[]
++  onRequestChange: (change: Readonly<{ control: SfContextControl; optionId: string }>) => void
++  state: SfUiState
++}>
++export type SfPlotValue =
++  | Readonly<{ kind: "known"; value: number }>
++  | Readonly<{ kind: "missing" | "unavailable"; reason: SfMessage }>
++export type SfPlotPoint = Readonly<{
++  id: string
++  x: SfScalar
++  xLabel: SfText
++  value: SfPlotValue
++  selectionRef?: SfRef
++}>
++export type SfPlotSeries = Readonly<{
++  id: string
++  label: SfMessage
++  unit: SfUnit
++  semanticToken: string
++  points: readonly SfPlotPoint[]
++}>
++export type SfChartTable = Readonly<{
++  caption: SfMessage
++  columns: readonly Readonly<{ id: string; label: SfMessage }>[]
++  rows: readonly Readonly<{
++    id: string
++    selectionRef?: SfRef
++    cells: Readonly<Record<string, SfDisplayValue>>
++  }>[]
++}>
++export type SfChartFrameProps = Readonly<{
++  titleKey: SfCopyKey
++  questionKey: SfCopyKey
++  context: readonly Readonly<{ label: SfMessage; value: SfText }>[]
++  coverage: SfCoverage
++  series: readonly SfPlotSeries[]
++  table: SfChartTable
++  selection: SfRef | null
++  state: SfUiState
++  onSelect: (selectionRef: SfRef) => void
++  onOpenSource: (sourceRef: SfRef) => void
++  children: JSX.Element
++}>
++export type SfRunPhase =
++  | "unavailable"
++  | "ready"
++  | "queued"
++  | "running"
++  | "needs-input"
++  | "cancelling"
++  | "cancelled"
++  | "failed"
++  | "partial"
++  | "complete"
++  | "stale"
++export type SfRunTask =
++  | Readonly<{ kind: "routine"; recipeRef: SfRef; title: SfText; recipeVersion: SfVersion }>
++  | Readonly<{
++      kind: "analysis"
++      profileId: string
++      profileVersion: string
++      skillId: string
++      skillVersion: string
++      title: SfText
++    }>
++export type SfRunIdentity =
++  | Readonly<{ kind: "unadmitted"; task?: SfRunTask; inputVersion?: SfVersion }>
++  | Readonly<{ kind: "run"; runRef: SfRef; task: SfRunTask; inputVersion: SfVersion }>
++export type SfRunCommonProps = Readonly<{
++  modelSession?: Readonly<{ modelLabel: SfText; sessionRef: SfRef }>
++  coverage?: SfCoverage
++  actions: readonly SfAction[]
++  onOpen: (resultRef: SfRef) => void
++}>
++export type SfRunStateProps = SfRunCommonProps &
++  (
++    | Readonly<{
++        identity: Extract<SfRunIdentity, { kind: "unadmitted" }>
++        state: "unavailable" | "ready" | "needs-input"
++        progress?: never
++        result?: never
++      }>
++    | Readonly<{
++        identity: Extract<SfRunIdentity, { kind: "run" }>
++        state: SfRunPhase
++        progress?:
++          | Readonly<{ kind: "percent"; value: number; label: SfMessage }>
++          | Readonly<{ kind: "indeterminate"; label: SfMessage }>
++        result?: Readonly<{ ref: SfRef; summary: SfText; source: SfSource }>
++      }>
++  )
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/presentation.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/presentation.tsx
+new file mode 100644
+index 0000000..d868f67
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/presentation.tsx
+@@ -0,0 +1,192 @@
++import { For, Show, createUniqueId } from "solid-js"
++import type { JSX } from "solid-js"
++import { useLanguage } from "@/context/language"
++import { SF_COMMON_COPY } from "@/i18n/orchestra-chapters/sf-common"
++import type {
++  SfAction,
++  SfCopyKey,
++  SfCoverage,
++  SfDisplayValue,
++  SfMessage,
++  SfText,
++  SfUiState,
++  SfUnit,
++} from "./types"
++
++export function sfCommonKey(key: keyof typeof SF_COMMON_COPY): SfCopyKey {
++  return key as SfCopyKey
++}
++
++// The shared catalogue supplies every new message verbatim in en and pt-BR.
++// I00 registers it in language.tsx's existing Orchestra dictionary.
++// Preserve dynamic data and parameter values: they must never become copy keys.
++export function useSfPresentation() {
++  const language = useLanguage()
++  const t = (key: SfCopyKey, params?: Readonly<Record<string, string | number>>) =>
++    language.t(key as Parameters<typeof language.t>[0], params ? { ...params } : undefined)
++  return { t, locale: language.intl }
++}
++
++export function SfMessageText(props: { message: SfMessage }) {
++  const { t } = useSfPresentation()
++  return <>{t(props.message.key, props.message.params)}</>
++}
++
++export function SfTextValue(props: { value: SfText }) {
++  return (
++    <>
++      <Show when={props.value.kind === "data" ? props.value : undefined}>
++        {(value) => <bdi>{value().text}</bdi>}
++      </Show>
++      <Show when={props.value.kind === "message" ? props.value : undefined}>
++        {(value) => <SfMessageText message={value().message} />}
++      </Show>
++    </>
++  )
++}
++
++function formattedNumber(value: number, digits: number, locale: string) {
++  if (!Number.isFinite(value) || digits < 0 || digits > 20 || !Number.isInteger(digits)) return null
++  return new Intl.NumberFormat(locale, {
++    minimumFractionDigits: digits,
++    maximumFractionDigits: digits,
++  }).format(value)
++}
++
++function dateLabel(iso: string, locale: string, timezone: string | undefined) {
++  const date = new Date(timezone ? iso : `${iso}T00:00:00Z`)
++  if (!Number.isFinite(date.getTime())) return iso
++  try {
++    return new Intl.DateTimeFormat(locale, {
++      dateStyle: "medium",
++      ...(timezone ? { timeStyle: "short", timeZone: timezone } : { timeZone: "UTC" }),
++    }).format(date)
++  } catch {
++    // Preserve the producer's exact value instead of guessing a timezone.
++    return iso
++  }
++}
++
++export function SfUnitText(props: { unit: SfUnit }) {
++  return (
++    <>
++      <Show when={props.unit.kind === "currency" ? props.unit : undefined}>
++        {(unit) => <bdi>{unit().code}</bdi>}
++      </Show>
++      <Show when={props.unit.kind === "percent"}>%</Show>
++      <Show when={props.unit.kind === "quantity" || props.unit.kind === "unspecified" ? props.unit : undefined}>
++        {(unit) => <SfMessageText message={unit().label} />}
++      </Show>
++    </>
++  )
++}
++
++export function SfDisplayValueText(props: { value: SfDisplayValue }) {
++  const { locale } = useSfPresentation()
++  return (
++    <>
++      <Show when={props.value.kind === "text" ? props.value : undefined}>
++        {(value) => <SfTextValue value={value().text} />}
++      </Show>
++      <Show when={props.value.kind === "number" ? props.value : undefined}>
++        {(number) => (
++          <span class="sf-numeric" dir="auto">
++            {formattedNumber(number().value, number().fractionDigits, locale()) ??
++              <SfMessageText message={{ key: sfCommonKey("sf.common.unknown") }} />}
++            <span class="sf-unit"><SfUnitText unit={number().unit} /></span>
++          </span>
++        )}
++      </Show>
++      <Show when={props.value.kind === "boolean" ? props.value : undefined}>
++        {(value) => <SfMessageText message={value().value ? value().trueLabel : value().falseLabel} />}
++      </Show>
++      <Show when={props.value.kind === "date" ? props.value : undefined}>
++        {(value) => (
++          <time dateTime={value().isoDate}>
++            {dateLabel(value().isoDate, locale(), undefined)}
++          </time>
++        )}
++      </Show>
++      <Show when={props.value.kind === "timestamp" ? props.value : undefined}>
++        {(value) => (
++          <time dateTime={value().isoTimestamp}>
++            {dateLabel(value().isoTimestamp, locale(), value().timezone)}
++          </time>
++        )}
++      </Show>
++      <Show when={props.value.kind === "missing" || props.value.kind === "unavailable" ? props.value : undefined}>
++        {(value) => <span class="sf-missing"><SfMessageText message={value().reason} /></span>}
++      </Show>
++      <Show when={props.value.kind === "list" ? props.value : undefined}>
++        {(value) => (
++          <ul class="sf-value-list">
++            <For each={value().items}>
++              {(item) => <li><SfDisplayValueText value={item} /></li>}
++            </For>
++          </ul>
++        )}
++      </Show>
++    </>
++  )
++}
++
++export function SfCoverageView(props: { coverage: SfCoverage; compact?: boolean }): JSX.Element {
++  return (
++    <div class="sf-coverage" data-sf-coverage={props.coverage.state}>
++      <strong><SfMessageText message={props.coverage.summary} /></strong>
++      <Show when={!props.compact && props.coverage.reasons.length > 0}>
++        <ul class="sf-coverage-reasons">
++          <For each={props.coverage.reasons}>{(reason) => <li><SfMessageText message={reason} /></li>}</For>
++        </ul>
++      </Show>
++    </div>
++  )
++}
++
++export function SfActionButton(props: { action: SfAction; variant?: "primary" | "secondary" }): JSX.Element {
++  const { t } = useSfPresentation()
++  const actionId = `sf-action-${createUniqueId()}`
++  const disabled = () => props.action.disabled || props.action.busy
++  return (
++    <span class="sf-action" data-sf-action={props.action.id}>
++      <button
++        type="button"
++        class="mx-btn sf-action-button"
++        classList={{
++          primary: props.variant === "primary" && props.action.tone !== "danger",
++          "sf-danger": props.action.tone === "danger",
++        }}
++        disabled={disabled()}
++        aria-busy={props.action.busy}
++        aria-describedby={props.action.reasonKey ? actionId : undefined}
++        onClick={() => { if (!disabled()) props.action.onInvoke() }}
++      >
++        {t(props.action.labelKey, props.action.labelParams)}
++        <Show when={props.action.busy}>
++          <span class="sf-action-running" role="status">{t(sfCommonKey("sf.common.running"))}</span>
++        </Show>
++      </button>
++      <Show when={props.action.reasonKey}>
++        <small class="sf-action-reason" id={actionId}>
++          {t(props.action.reasonKey!)}
++        </small>
++      </Show>
++    </span>
++  )
++}
++
++export const SF_STATE_FALLBACK_KEY: Readonly<Record<SfUiState, keyof typeof SF_COMMON_COPY>> = {
++  loading: "sf.common.loading",
++  ready: "sf.common.currentSource",
++  empty: "sf.common.empty",
++  "filtered-empty": "sf.common.filterEmpty",
++  partial: "sf.common.partial",
++  invalid: "sf.common.fieldErrorSummary",
++  "not-found": "sf.common.removed",
++  stale: "sf.common.stale",
++  conflict: "sf.common.conflict",
++  unavailable: "sf.common.unavailable",
++  denied: "sf.common.noAccess",
++  "session-expired": "sf.common.loginAgain",
++  "outcome-unknown": "sf.common.operationUnknown",
++}
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx
+new file mode 100644
+index 0000000..efd0e79
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx
+@@ -0,0 +1,363 @@
++import { A } from "@solidjs/router"
++import { createEffect, createMemo, createUniqueId, For, onCleanup, onMount, Show } from "solid-js"
++import { createStore } from "solid-js/store"
++import type { JSX } from "solid-js"
++import { MxPage } from "@/orchestra/chapters/kit"
++import {
++  SfActionButton,
++  SfCoverageView,
++  SfDisplayValueText,
++  SfMessageText,
++  SfTextValue,
++  sfCommonKey,
++  SF_STATE_FALLBACK_KEY,
++  useSfPresentation,
++} from "./presentation"
++import type {
++  SfChartFrameProps,
++  SfContextBarProps,
++  SfContextControl,
++  SfContextOption,
++  SfLayoutMode,
++  SfPageFrameProps,
++} from "./types"
++import { SfStatePanel } from "../states"
++import "./frame.css"
++
++export type {
++  SfAction, SfChartFrameProps, SfContextBarProps, SfCopyKey, SfCoverage,
++  SfDensity, SfDisplayValue, SfLayoutMode, SfMessage, SfPageFrameProps,
++  SfPlotSeries, SfRunStateProps, SfStatePanelProps, SfText, SfUiState,
++} from "./types"
++
++// W is the observed *usable content width* after the shell sidebar and page insets.
++// Do not decide from window.innerWidth, device type, or CSS viewport alone.
++export function resolveSfLayoutMode(
++  width: number,
++  layout: SfPageFrameProps["layout"],
++): SfLayoutMode {
++  if (!Number.isFinite(width) || width < 801 || (layout !== "split" && layout !== "comparison")) return "single"
++  if (layout === "comparison" && width >= 1122) return "split-context"
++  return "split"
++}
++
++export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
++  const id = createUniqueId()
++  const { t } = useSfPresentation()
++  let root: HTMLDivElement | undefined
++  const [state, setState] = createStore({ width: 0, mode: "single" as SfLayoutMode })
++  let lastNotified: SfLayoutMode | undefined
++  const applyWidth = (width: number) => {
++    if (!Number.isFinite(width) || width <= 0) return
++    const next = resolveSfLayoutMode(width, props.layout)
++    if (state.width !== width || state.mode !== next) setState({ width, mode: next })
++    if (next !== lastNotified) {
++      lastNotified = next
++      props.onLayoutMode(next)
++    }
++  }
++
++  onMount(() => {
++    const content = root?.querySelector<HTMLElement>(".mx-inner")
++    if (!content) return
++    const measure = () => applyWidth(content.getBoundingClientRect().width)
++    measure()
++    if (typeof ResizeObserver !== "undefined") {
++      const observer = new ResizeObserver((entries) => {
++        const entry = entries[0]
++        if (entry) applyWidth(entry.contentRect.width)
++      })
++      observer.observe(content)
++      onCleanup(() => observer.disconnect())
++    } else {
++      window.addEventListener("resize", measure, { passive: true })
++      onCleanup(() => window.removeEventListener("resize", measure))
++    }
++  })
++  // React to parent layout changes even when no resize event occurs.
++  createEffect(() => {
++    const width = state.width
++    const layout = props.layout
++    if (width > 0) {
++      const next = resolveSfLayoutMode(width, layout)
++      if (next !== state.mode) setState("mode", next)
++      if (next !== lastNotified) {
++        lastNotified = next
++        props.onLayoutMode(next)
++      }
++    }
++  })
++
++  const currentTab = createMemo(() => props.tabs.find((tab) => tab.id === props.activeTab))
++  const navItem = (tab: SfPageFrameProps["tabs"][number]): JSX.Element => (
++    <Show
++      when={tab.available}
++      fallback={
++        <span class="sf-tab sf-tab-disabled" aria-disabled="true">
++          {t(tab.labelKey)}
++        </span>
++      }
++    >
++      <A
++        href={tab.href}
++        class="sf-tab"
++        classList={{ "sf-tab-active": props.activeTab === tab.id }}
++        aria-current={props.activeTab === tab.id ? "page" : undefined}
++      >
++        {t(tab.labelKey)}
++      </A>
++    </Show>
++  )
++
++  const secondary = (): JSX.Element => (
++    <For each={props.secondaryActions}>
++      {(action) => <SfActionButton action={action} variant="secondary" />}
++    </For>
++  )
++  return (
++    <div
++      ref={(element) => (root = element)}
++      class="sf-page-frame"
++      data-sf-frame="page"
++      data-sf-layout={props.layout}
++      data-sf-mode={state.mode}
++      data-sf-density={props.density}
++    >
++      <MxPage
++        id={`sf-page-${id}`}
++        title={t(props.titleKey)}
++        description={props.subtitleKey ? t(props.subtitleKey) : ""}
++        eyebrow={
++          props.eyebrow
++            ? props.eyebrow.kind === "data"
++              ? props.eyebrow.text
++              : t(props.eyebrow.message.key, props.eyebrow.message.params)
++            : undefined
++        }
++        action={
++          <Show when={props.primaryAction}>
++            {(action) => <SfActionButton action={action()} variant="primary" />}
++          </Show>
++        }
++      >
++        <div class="sf-frame-workarea" data-sf-usable-width={state.width}>
++          <Show when={props.context.length > 0}>
++            <dl class="sf-page-context">
++              <For each={props.context}>
++                {(entry) => (
++                  <div class="sf-page-context-item" data-sf-context={entry.id}>
++                    <dt><SfMessageText message={entry.label} /></dt>
++                    <dd><SfTextValue value={entry.value} /></dd>
++                  </div>
++                )}
++              </For>
++            </dl>
++          </Show>
++          <Show when={props.tabs.length > 0}>
++            <nav class="sf-page-tabs" aria-label={t(sfCommonKey("sf.common.moreViews"))}>
++              <div class="sf-tabs-inline">
++                <For each={props.tabs}>{navItem}</For>
++              </div>
++              <div class="sf-tabs-compact">
++                <Show when={currentTab()}>
++                  {(tab) => <strong class="sf-tabs-current">{t(tab().labelKey)}</strong>}
++                </Show>
++                <details class="sf-tabs-menu">
++                  <summary>{t(sfCommonKey("sf.common.moreViews"))}</summary>
++                  <div class="sf-tabs-menu-content">
++                    <For each={props.tabs}>{navItem}</For>
++                  </div>
++                </details>
++              </div>
++            </nav>
++          </Show>
++          <Show when={props.secondaryActions.length > 0}>
++            {/* Keep secondary actions visible and keyboard reachable at every width.
++                COPY-01 has no "More actions" key; do not mislabel them as "Show details". */}
++            <div class="sf-secondary-actions">
++              <div class="sf-secondary-inline">{secondary()}</div>
++            </div>
++          </Show>
++          <div class="sf-frame-body" data-sf-content={props.layout}>
++            {props.children}
++          </div>
++        </div>
++      </MxPage>
++    </div>
++  )
++}
++
++const CONTROL_ORDER: readonly SfContextControl[] = ["year", "period", "version", "currency", "view"]
++
++export function SfContextBar(props: SfContextBarProps): JSX.Element {
++  const { t } = useSfPresentation()
++  const id = createUniqueId()
++  const privateState = () => props.state === "denied" || props.state === "session-expired"
++  const loading = () => props.state === "loading"
++  const interactive = () => [
++    "ready", "partial", "stale", "conflict", "empty", "filtered-empty", "invalid",
++  ].includes(props.state)
++  const groups = createMemo(() =>
++    CONTROL_ORDER.flatMap((control) => {
++      const options = props.catalog.filter((option) => option.control === control)
++      if (!options.length) return []
++      const selection = props.selection.find((entry) => entry.control === control)
++      const reason = props.lockedReasons.find((entry) => entry.control === control)?.reason
++      const picked = options.find((option) => option.id === selection?.optionId)
++      return [{ control, options, selection, reason, picked }]
++    }),
++  )
++
++  return (
++    <div class="sf-context-bar" data-sf-context-state={props.state} aria-busy={loading()}>
++      <Show
++        when={!privateState() && !loading() && interactive()}
++        fallback={
++          <p role={privateState() || !interactive() ? "alert" : "status"}>
++            {t(sfCommonKey(SF_STATE_FALLBACK_KEY[props.state]))}
++          </p>
++        }
++      >
++        <For each={groups()}>
++          {(group) => (
++            <div class="sf-context-control">
++              <label for={`sf-context-${id}-${group.control}`}>
++                {/* The frozen signature supplies option labels but no separate field labelKey.
++                    Use the producer's authorized presentation text, never invent a property-name label. */}
++                <Show when={group.picked} fallback={<span>{t(sfCommonKey("sf.common.unknown"))}</span>}>
++                  {(option) => <SfTextValue value={option().label} />}
++                </Show>
++              </label>
++              <select
++                id={`sf-context-${id}-${group.control}`}
++                value={group.picked?.id ?? ""}
++                disabled={!!group.reason || group.options.every((option) => !option.available)}
++                aria-describedby={group.reason ? `sf-locked-${id}-${group.control}` : undefined}
++                onChange={(event) => {
++                  const optionId = event.currentTarget.value
++                  if (!group.reason && optionId !== group.selection?.optionId &&
++                      group.options.some((option) => option.id === optionId && option.available)) {
++                    props.onRequestChange({ control: group.control, optionId })
++                  }
++                  // The owner must admit the request before a selection changes.
++                  // Never leave an optimistic native <select> showing another context.
++                  event.currentTarget.value = group.picked?.id ?? ""
++                }}
++              >
++                <Show when={!group.picked}>
++                  <option value="" disabled>{t(sfCommonKey("sf.common.unknown"))}</option>
++                </Show>
++                <For each={group.options}>
++                  {(option: SfContextOption) => (
++                    <option value={option.id} disabled={!option.available}>
++                      {option.label.kind === "data"
++                        ? option.label.text
++                        : t(option.label.message.key, option.label.message.params)}
++                    </option>
++                  )}
++                </For>
++              </select>
++              <Show when={group.reason}>
++                {(reason) => (
++                  <small id={`sf-locked-${id}-${group.control}`}>
++                    <SfMessageText message={reason()} />
++                  </small>
++                )}
++              </Show>
++            </div>
++          )}
++        </For>
++      </Show>
++    </div>
++  )
++}
++
++export function SfChartFrame(props: SfChartFrameProps): JSX.Element {
++  const { t } = useSfPresentation()
++  const id = createUniqueId()
++  const privateState = () => props.state === "denied" || props.state === "session-expired"
++  return (
++    <section class="sf-chart-frame" data-sf-chart-state={props.state} aria-labelledby={`sf-chart-${id}`}>
++      <header class="sf-chart-header">
++        <h2 id={`sf-chart-${id}`}>{t(props.titleKey)}</h2>
++        <p>{t(props.questionKey)}</p>
++        <Show when={!privateState() && props.context.length > 0}>
++          <dl class="sf-chart-context">
++            <For each={props.context}>
++              {(entry) => (
++                <div>
++                  <dt><SfMessageText message={entry.label} /></dt>
++                  <dd><SfTextValue value={entry.value} /></dd>
++                </div>
++              )}
++            </For>
++          </dl>
++        </Show>
++      </header>
++      <SfStatePanel
++        state={props.state}
++        messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[props.state])}
++        coverage={props.coverage}
++      >
++        <Show when={props.state === "ready"}><SfCoverageView coverage={props.coverage} /></Show>
++        <div class="sf-chart-visual" aria-describedby={`sf-chart-caption-${id}`}>
++          {/* BI consumers supply their original native SVG, not arbitrary HTML. */}
++          {props.children}
++        </div>
++        <div class="sf-chart-table-region">
++          <table class="sf-chart-table">
++            <caption id={`sf-chart-caption-${id}`}>
++              <SfMessageText message={props.table.caption} />
++            </caption>
++            <thead>
++              <tr>
++                <For each={props.table.columns}>
++                  {(column) => <th scope="col"><SfMessageText message={column.label} /></th>}
++                </For>
++                <Show when={props.table.rows.some((row) => row.selectionRef !== undefined)}>
++                  <th scope="col">{t(sfCommonKey("sf.common.showDetails"))}</th>
++                </Show>
++              </tr>
++            </thead>
++            <tbody>
++              <For each={props.table.rows}>
++                {(row) => (
++                  <tr data-sf-row={row.id} data-sf-selected={row.selectionRef && props.selection === row.selectionRef ? "true" : undefined}>
++                    <For each={props.table.columns}>
++                      {(column) => (
++                        <td>
++                          <Show
++                            when={row.cells[column.id]}
++                            fallback={<span class="sf-missing">{t(sfCommonKey("sf.common.unknown"))}</span>}
++                          >
++                            {(value) => <SfDisplayValueText value={value()} />}
++                          </Show>
++                        </td>
++                      )}
++                    </For>
++                    <Show when={props.table.rows.some((entry) => entry.selectionRef !== undefined)}>
++                      <td>
++                        <Show when={row.selectionRef}>
++                          {(ref) => (
++                            <button
++                              type="button"
++                              class="mx-btn sf-table-action"
++                              aria-pressed={props.selection === ref()}
++                              onClick={() => props.onSelect(ref())}
++                            >
++                              {t(sfCommonKey("sf.common.showDetails"))}
++                            </button>
++                          )}
++                        </Show>
++                      </td>
++                    </Show>
++                  </tr>
++                )}
++              </For>
++            </tbody>
++          </table>
++        </div>
++      </SfStatePanel>
++    </section>
++  )
++}
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css
+new file mode 100644
+index 0000000..5cfa5f5
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css
+@@ -0,0 +1,200 @@
++/* F03: a composition layer over Orchestra's native Mx kit, not a new skin.
++   All paint, type and motion read the existing theme tokens. */
++.sf-page-frame {
++  --sf-page-gutter: 32px;
++  --sf-row-height: 44px;
++  display: flex;
++  flex: 1 1 auto;
++  inline-size: 100%;
++  min-inline-size: 0;
++  min-block-size: 0;
++  container-name: sf-frame;
++  container-type: inline-size;
++  color: var(--mx-strong);
++  font-family: var(--mx-sans);
++}
++.sf-page-frame[data-sf-density="compact"] { --sf-row-height: 36px; }
++.sf-page-frame .mx-page { inline-size: 100%; min-inline-size: 0; }
++.sf-page-frame .mx-page .mx-inner {
++  inline-size: calc(100% - var(--sf-page-gutter) - var(--sf-page-gutter));
++  max-inline-size: none;
++  box-sizing: border-box;
++  padding-block: 32px 48px;
++}
++.sf-page-frame[data-sf-layout="reading"] .mx-page .mx-inner { max-inline-size: 1020px; }
++.sf-page-frame[data-sf-layout="work"] .mx-page .mx-inner { max-inline-size: 1280px; }
++.sf-page-frame[data-sf-layout="comparison"] .mx-page .mx-inner { max-inline-size: 1440px; }
++.sf-page-frame .mx-heading { flex-wrap: wrap; align-items: center; gap: 16px; margin-block-end: 20px; }
++.sf-page-frame .mx-heading > div:first-child { min-inline-size: 0; flex: 1 1 300px; }
++.sf-page-frame .mx-heading h1,
++.sf-page-frame .mx-heading p,
++.sf-page-frame .mx-eyebrow { overflow-wrap: anywhere; }
++.sf-page-frame .mx-heading p:empty { display: none; }
++.sf-page-frame .mx-heading > div:last-child { min-inline-size: 0; }
++.sf-frame-workarea, .sf-frame-body { min-inline-size: 0; }
++.sf-frame-body { margin-block-start: 18px; }
++.sf-page-context, .sf-chart-context {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 8px 20px;
++  padding: 12px 0;
++  margin: 0;
++  min-inline-size: 0;
++}
++.sf-page-context-item, .sf-chart-context > div { min-inline-size: 0; }
++.sf-page-context dt, .sf-chart-context dt {
++  font-size: var(--orchestra-font-size-sm);
++  color: var(--mx-dim);
++}
++.sf-page-context dd, .sf-chart-context dd { margin: 3px 0 0; overflow-wrap: anywhere; }
++.sf-page-tabs { border-block-end: 1px solid var(--mx-line); min-inline-size: 0; }
++.sf-tabs-inline { display: flex; gap: 3px; overflow: auto; scrollbar-width: thin; }
++.sf-tab {
++  display: inline-flex;
++  flex: none;
++  align-items: center;
++  min-block-size: 44px;
++  padding-inline: 12px;
++  color: var(--mx-dim);
++  font-size: var(--orchestra-font-size-sm);
++  border-block-end: 2px solid transparent;
++  text-decoration: none;
++  overflow-wrap: anywhere;
++}
++.sf-tab:hover { color: var(--mx-strong); background: var(--mx-soft); }
++.sf-tab-active { color: var(--mx-strong); border-block-end-color: var(--mx-blue); }
++.sf-tab-disabled { color: var(--mx-dim); opacity: .65; }
++.sf-tabs-compact, .sf-secondary-menu { display: none; }
++.sf-tabs-current { min-inline-size: 0; overflow-wrap: anywhere; }
++.sf-tabs-menu, .sf-secondary-menu { min-inline-size: 0; position: relative; }
++.sf-tabs-menu summary, .sf-secondary-menu summary {
++  cursor: pointer;
++  display: inline-flex;
++  align-items: center;
++  min-block-size: 44px;
++  padding: 8px 12px;
++  color: var(--mx-strong);
++  background: var(--mx-raised);
++  border: 1px solid var(--mx-line);
++  border-radius: var(--orchestra-radius-md);
++}
++.sf-tabs-menu-content, .sf-secondary-menu-content {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 6px;
++  padding: 10px 0 0;
++  max-inline-size: 100%;
++}
++.sf-secondary-actions { display: flex; justify-content: flex-end; padding-block: 10px; min-inline-size: 0; }
++.sf-secondary-inline, .sf-secondary-menu-content {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 8px;
++  align-items: flex-start;
++  min-inline-size: 0;
++}
++.sf-action { display: inline-flex; flex-direction: column; align-items: stretch; min-inline-size: 0; gap: 4px; }
++.sf-action-button {
++  display: inline-flex;
++  flex-wrap: wrap;
++  align-items: center;
++  justify-content: center;
++  gap: 8px;
++  min-block-size: 44px;
++  white-space: normal;
++  text-align: start;
++}
++.sf-action-button.sf-danger { border-color: var(--mx-bad); color: var(--mx-bad); }
++.sf-action-running { font-size: var(--orchestra-font-size-xs); }
++.sf-action-reason { color: var(--mx-dim); overflow-wrap: anywhere; }
++.sf-page-frame :is(a, button, summary, select):focus-visible,
++.sf-context-bar :is(button, select):focus-visible,
++.sf-chart-frame :is(a, button):focus-visible {
++  outline: 2px solid var(--mx-blue);
++  outline-offset: 2px;
++}
++.sf-context-bar {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 12px;
++  min-inline-size: 0;
++  padding: 12px;
++  border: 1px solid var(--mx-line);
++  border-radius: var(--orchestra-radius-lg);
++  background: var(--mx-raised);
++}
++.sf-context-bar > p { margin: 0; }
++.sf-context-control { flex: 1 1 180px; min-inline-size: 0; display: flex; flex-direction: column; gap: 6px; }
++.sf-context-control label { font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); overflow-wrap: anywhere; }
++.sf-context-control select {
++  inline-size: 100%;
++  min-block-size: 44px;
++  border: 1px solid var(--mx-line);
++  border-radius: var(--orchestra-radius-md);
++  background: var(--mx-raised);
++  color: var(--mx-strong);
++  font: inherit;
++  padding-inline: 10px;
++}
++.sf-context-control small { color: var(--mx-dim); overflow-wrap: anywhere; }
++.sf-coverage { padding: 8px 0; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
++.sf-coverage strong { display: block; color: var(--mx-strong); }
++.sf-coverage-reasons { margin: 6px 0 0; padding-inline-start: 20px; }
++.sf-coverage-reasons > li { overflow-wrap: anywhere; }
++.sf-value-list { margin: 0; padding-inline-start: 18px; }
++.sf-unit { margin-inline-start: .3em; color: var(--mx-dim); }
++.sf-numeric { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
++.sf-missing { color: var(--mx-dim); }
++.sf-chart-frame {
++  min-inline-size: 0;
++  border: 1px solid var(--mx-line);
++  border-radius: var(--orchestra-radius-lg);
++  padding: 18px;
++  background: var(--mx-raised);
++}
++.sf-chart-header h2 { margin: 0; font-size: var(--orchestra-font-size-xl); }
++.sf-chart-header p { color: var(--mx-dim); overflow-wrap: anywhere; }
++.sf-chart-visual { min-inline-size: 0; max-inline-size: 100%; overflow: clip; }
++.sf-chart-visual > svg { max-inline-size: 100%; block-size: auto; }
++.sf-chart-table-region { max-inline-size: 100%; overflow-x: auto; }
++.sf-chart-table {
++  inline-size: 100%;
++  border-collapse: collapse;
++  font-size: var(--orchestra-font-size-sm);
++  text-align: start;
++}
++.sf-chart-table caption { caption-side: top; text-align: start; color: var(--mx-dim); padding: 8px 0; }
++.sf-chart-table :is(th,td) { padding: 10px; border-block-end: 1px solid var(--mx-line); overflow-wrap: anywhere; }
++.sf-chart-table th { color: var(--mx-dim); font-weight: 600; }
++.sf-chart-table tr[data-sf-selected="true"] { background: var(--mx-enabled); }
++.sf-chart-table .mx-btn { min-block-size: 44px; white-space: normal; }
++@media (min-width: 768px) and (max-width: 1023px) {
++  .sf-page-frame { --sf-page-gutter: 24px; }
++}
++@media (max-width: 767px) {
++  .sf-page-frame { --sf-page-gutter: 16px; }
++}
++/* Container width tracks the real workspace, including sidebar and browser zoom.
++   Mobile actions and tabs remain reachable without document-level horizontal scroll. */
++@container sf-frame (max-width: 767px) {
++  .sf-page-frame .mx-heading { flex-direction: column; align-items: stretch; }
++  .sf-page-frame .mx-heading h1 { font-size: var(--orchestra-font-size-2xl); }
++  .sf-page-frame .mx-heading > div:first-child { flex-basis: auto; }
++  .sf-page-frame .mx-heading > div:last-child .sf-action { inline-size: 100%; }
++  .sf-tabs-inline { display: none; }
++  .sf-tabs-compact { display: flex; gap: 8px; align-items: center; justify-content: space-between; min-inline-size: 0; }
++  .sf-tabs-menu-content { flex-direction: column; align-items: flex-start; }
++  .sf-secondary-inline { flex-direction: column; align-items: stretch; inline-size: 100%; }
++  .sf-secondary-inline .sf-action, .sf-secondary-inline button { inline-size: 100%; }
++  .sf-secondary-actions { justify-content: stretch; }
++  .sf-context-control { flex-basis: 100%; }
++  .sf-page-context-item { flex: 1 1 100%; }
++  .sf-chart-frame { padding: 12px; }
++}
++@media (prefers-reduced-motion: reduce) {
++  .sf-page-frame *, .sf-context-bar *, .sf-chart-frame * {
++    scroll-behavior: auto;
++    transition-duration: 0ms;
++    animation-duration: 0ms;
++  }
++}
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx
+new file mode 100644
+index 0000000..7084c44
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx
+@@ -0,0 +1,192 @@
++import { For, Show, createUniqueId } from "solid-js"
++import type { JSX } from "solid-js"
++import {
++  SfActionButton,
++  SfCoverageView,
++  SfMessageText,
++  SfTextValue,
++  sfCommonKey,
++  useSfPresentation,
++} from "../frame/presentation"
++import type {
++  SfMessage,
++  SfRunPhase,
++  SfRunStateProps,
++  SfStatePanelProps,
++  SfUiState,
++} from "../frame/types"
++import "./states.css"
++
++export type { SfRunStateProps, SfStatePanelProps, SfRunPhase, SfUiState } from "../frame/types"
++
++const PRIVATE_STATES: ReadonlySet<SfUiState> = new Set(["denied", "session-expired"])
++const CONTENT_STATES: ReadonlySet<SfUiState> = new Set([
++  "ready", "partial", "stale", "conflict", "empty", "filtered-empty",
++])
++const ALERT_STATES: ReadonlySet<SfUiState> = new Set([
++  "invalid", "not-found", "conflict", "unavailable", "denied", "session-expired",
++])
++const RETRY_STATES: ReadonlySet<SfUiState> = new Set(["unavailable", "stale", "partial", "conflict"])
++const BACK_STATES: ReadonlySet<SfUiState> = new Set(["denied", "not-found", "invalid"])
++
++export function SfStatePanel(props: SfStatePanelProps): JSX.Element {
++  const id = createUniqueId()
++  const { t } = useSfPresentation()
++  const privacy = () => PRIVATE_STATES.has(props.state)
++  const loading = () => props.state === "loading"
++  const showMessage = () => props.state !== "ready"
++  const showContent = () => CONTENT_STATES.has(props.state) && !privacy()
++  const statusRole = () => (ALERT_STATES.has(props.state) ? "alert" : "status") as "alert" | "status"
++  return (
++    <section
++      class="sf-state-panel"
++      data-sf-state={props.state}
++      aria-busy={loading()}
++      aria-labelledby={showMessage() ? `sf-state-${id}` : undefined}
++    >
++      <Show when={showMessage()}>
++        <div class="sf-state-message" role={statusRole()} aria-atomic="true">
++          <p id={`sf-state-${id}`} class="sf-state-title">{t(props.messageKey)}</p>
++          <Show when={props.detailsKey && !privacy()}>
++            {(key) => <p class="sf-state-details">{t(key())}</p>}
++          </Show>
++          <Show when={loading()}>
++            <div class="sf-state-skeleton" aria-hidden="true">
++              <span /><span /><span />
++            </div>
++          </Show>
++          <Show when={props.coverage && !privacy() && !loading()}>
++            {(coverage) => <SfCoverageView coverage={coverage()} />}
++          </Show>
++          <div class="sf-state-actions">
++            <Show when={props.onRetryRead && RETRY_STATES.has(props.state)}>
++              <button type="button" class="mx-btn" onClick={() => props.onRetryRead?.()}>
++                {t(sfCommonKey(props.state === "conflict" || props.state === "stale" ? "sf.common.currentSource" : "sf.common.retry"))}
++              </button>
++            </Show>
++            <Show when={props.onRetryRead && props.state === "outcome-unknown"}>
++              <button type="button" class="mx-btn" onClick={() => props.onRetryRead?.()}>
++                {t(sfCommonKey("sf.common.pending"))}
++              </button>
++            </Show>
++            <Show when={props.onLogin && props.state === "session-expired"}>
++              <button type="button" class="mx-btn primary" onClick={() => props.onLogin?.()}>
++                {t(sfCommonKey("sf.common.loginAgain"))}
++              </button>
++            </Show>
++            <Show when={props.onBack && BACK_STATES.has(props.state)}>
++              <button type="button" class="mx-btn" onClick={() => props.onBack?.()}>
++                {t(sfCommonKey(props.state === "not-found" ? "sf.common.returnToList" : "sf.common.back"))}
++              </button>
++            </Show>
++          </div>
++        </div>
++      </Show>
++      <Show when={showContent()}>
++        <div class="sf-state-content">{props.children}</div>
++      </Show>
++    </section>
++  )
++}
++
++const RUN_LABELS: Readonly<Record<SfRunPhase, keyof typeof import("@/i18n/orchestra-chapters/sf-common").SF_COMMON_COPY>> = {
++  unavailable: "sf.common.unavailable",
++  ready: "sf.common.currentSource",
++  queued: "sf.common.queued",
++  running: "sf.common.running",
++  "needs-input": "sf.common.needsInput",
++  cancelling: "sf.common.cancelRequested",
++  cancelled: "sf.common.cancelled",
++  failed: "sf.common.failed",
++  partial: "sf.common.partial",
++  complete: "sf.common.completed",
++  stale: "sf.common.stale",
++}
++
++function validPercent(value: { kind: "percent"; value: number; label: SfMessage } | { kind: "indeterminate"; label: SfMessage }): number | undefined {
++  if (value.kind !== "percent" || !Number.isFinite(value.value) || value.value < 0 || value.value > 100) return undefined
++  return value.value
++}
++
++export function SfRunState(props: SfRunStateProps): JSX.Element {
++  const id = createUniqueId()
++  const { t } = useSfPresentation()
++  const active = () => props.state === "queued" || props.state === "running" || props.state === "cancelling"
++  const allowResult = () => props.state === "complete" || props.state === "partial" || props.state === "stale"
++  const progress = () => props.identity.kind === "run" ? props.progress : undefined
++  const result = () => props.identity.kind === "run" && allowResult() ? props.result : undefined
++  const task = () => props.identity.task
++
++  return (
++    <section class="sf-run-state" data-sf-run-state={props.state} data-sf-run-identity={props.identity.kind} aria-labelledby={`sf-run-${id}`}>
++      <header class="sf-run-header">
++        <Show when={task()}>{(current) => <h3 id={`sf-run-${id}`}><SfTextValue value={current().title} /></h3>}</Show>
++        <Show when={!task()}><h3 id={`sf-run-${id}`}>{t(sfCommonKey(RUN_LABELS[props.state]))}</h3></Show>
++        <span
++          class="sf-run-phase"
++          role={props.state === "failed" || props.state === "unavailable" ? "alert" : "status"}
++          aria-live={active() ? "off" : "polite"}
++        >{t(sfCommonKey(RUN_LABELS[props.state]))}</span>
++      </header>
++      <Show when={props.identity.kind === "run" ? props.modelSession : undefined}>
++        {(session) => (
++          <p class="sf-run-model">
++            <SfTextValue value={session().modelLabel} />
++          </p>
++        )}
++      </Show>
++      <Show when={props.coverage}>
++        {(coverage) => <SfCoverageView coverage={coverage()} />}
++      </Show>
++      <Show when={progress()}>
++        {(current) => (
++          <div class="sf-run-progress">
++            <p><SfMessageText message={current().label} /></p>
++            <Show when={current().kind === "indeterminate"}>
++              <progress aria-label={t(sfCommonKey("sf.common.running"))} />
++            </Show>
++            <Show when={current().kind === "percent" && validPercent(current()) !== undefined}>
++              <progress
++                value={validPercent(current())}
++                max={100}
++                aria-label={t(sfCommonKey("sf.common.running"))}
++              />
++            </Show>
++          </div>
++        )}
++      </Show>
++      <Show when={result()}>
++        {(current) => (
++          <div class="sf-run-result">
++            <p><SfTextValue value={current().summary} /></p>
++            <dl class="sf-run-source">
++              <div>
++                <dt>{t(sfCommonKey("sf.common.source"))}</dt>
++                <dd><SfTextValue value={current().source.label} /></dd>
++              </div>
++              <div>
++                <dt>{t(sfCommonKey("sf.common.currentSource"))}</dt>
++                <dd><SfTextValue value={current().source.scope} /></dd>
++              </div>
++            </dl>
++            <SfCoverageView coverage={current().source.coverage} />
++            <button
++              type="button"
++              class="mx-btn"
++              onClick={() => props.onOpen(current().ref)}
++            >
++              {t(sfCommonKey("sf.common.openPage"))}
++            </button>
++          </div>
++        )}
++      </Show>
++      <Show when={props.actions.length > 0}>
++        <div class="sf-run-actions">
++          <For each={props.actions}>
++            {(action) => <SfActionButton action={action} variant={action.tone === "primary" ? "primary" : "secondary"} />}
++          </For>
++        </div>
++      </Show>
++    </section>
++  )
++}
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/states.css b/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/states.css
+new file mode 100644
+index 0000000..1bc1027
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/states.css
+@@ -0,0 +1,93 @@
++/* F03 state and run primitives, entirely scoped to Orchestra's Mx palette. */
++.sf-state-panel, .sf-run-state {
++  min-inline-size: 0;
++  color: var(--mx-strong);
++  font-family: var(--mx-sans);
++}
++.sf-state-panel[data-sf-state="loading"] { min-block-size: 112px; }
++.sf-state-message {
++  padding: 16px;
++  margin-block-end: 12px;
++  border: 1px solid var(--mx-line);
++  border-radius: var(--orchestra-radius-md);
++  background: var(--mx-soft);
++}
++.sf-state-panel[data-sf-state="denied"] .sf-state-message,
++.sf-state-panel[data-sf-state="session-expired"] .sf-state-message,
++.sf-state-panel[data-sf-state="conflict"] .sf-state-message,
++.sf-state-panel[data-sf-state="invalid"] .sf-state-message {
++  border-inline-start: 3px solid var(--mx-bad);
++}
++.sf-state-panel[data-sf-state="partial"] .sf-state-message,
++.sf-state-panel[data-sf-state="stale"] .sf-state-message,
++.sf-state-panel[data-sf-state="outcome-unknown"] .sf-state-message {
++  border-inline-start: 3px solid var(--mx-blue);
++}
++.sf-state-title { margin: 0; color: var(--mx-strong); font-weight: 600; overflow-wrap: anywhere; }
++.sf-state-details { margin: 6px 0 0; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); overflow-wrap: anywhere; }
++.sf-state-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: 10px; }
++.sf-state-actions:empty { display: none; }
++.sf-state-actions .mx-btn { min-block-size: 44px; white-space: normal; }
++.sf-state-content { min-inline-size: 0; }
++.sf-state-skeleton {
++  display: grid;
++  gap: 8px;
++  margin-block-start: 14px;
++  max-inline-size: 32rem;
++}
++.sf-state-skeleton span { display: block; block-size: 12px; background: var(--mx-line); border-radius: var(--orchestra-radius-xs); }
++.sf-state-skeleton span:nth-child(2) { inline-size: 83%; }
++.sf-state-skeleton span:nth-child(3) { inline-size: 61%; }
++.sf-run-state {
++  display: flex;
++  flex-direction: column;
++  gap: 12px;
++  padding: 16px;
++  border: 1px solid var(--mx-line);
++  background: var(--mx-raised);
++  border-radius: var(--orchestra-radius-lg);
++}
++.sf-run-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; min-inline-size: 0; }
++.sf-run-header h3 { margin: 0; min-inline-size: 0; font-size: var(--orchestra-font-size-lg); overflow-wrap: anywhere; }
++.sf-run-phase {
++  display: inline-flex;
++  flex-shrink: 0;
++  border: 1px solid var(--mx-line);
++  border-radius: var(--orchestra-radius-full);
++  padding: 4px 10px;
++  color: var(--mx-strong);
++  background: var(--mx-soft);
++  font-size: var(--orchestra-font-size-xs);
++}
++.sf-run-state[data-sf-run-state="failed"] .sf-run-phase,
++.sf-run-state[data-sf-run-state="unavailable"] .sf-run-phase { border-color: var(--mx-bad); }
++.sf-run-state[data-sf-run-state="complete"] .sf-run-phase { border-color: var(--mx-good); }
++.sf-run-model { margin: 0; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); overflow-wrap: anywhere; }
++.sf-run-progress p { margin: 0 0 6px; color: var(--mx-dim); }
++.sf-run-progress progress {
++  display: block;
++  inline-size: 100%;
++  block-size: 10px;
++  accent-color: var(--mx-blue);
++}
++.sf-run-result { min-inline-size: 0; padding-block: 10px; border-block-start: 1px solid var(--mx-line); }
++.sf-run-result > p { overflow-wrap: anywhere; }
++.sf-run-source { display: flex; flex-wrap: wrap; gap: 12px 20px; margin: 0; }
++.sf-run-source > div { min-inline-size: 0; }
++.sf-run-source dt { color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
++.sf-run-source dd { margin: 4px 0 0; overflow-wrap: anywhere; }
++.sf-run-result > .mx-btn { min-block-size: 44px; }
++.sf-run-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
++.sf-run-state :is(button, a):focus-visible,
++.sf-state-panel :is(button, a):focus-visible {
++  outline: 2px solid var(--mx-blue);
++  outline-offset: 2px;
++}
++@container sf-frame (max-width: 767px) {
++  .sf-run-state { padding: 12px; }
++  .sf-run-actions, .sf-state-actions { flex-direction: column; align-items: stretch; }
++  .sf-run-actions .sf-action, .sf-run-actions button, .sf-state-actions button { inline-size: 100%; }
++}
++@media (prefers-reduced-motion: reduce) {
++  .sf-state-skeleton *, .sf-run-state * { animation: none; transition: none; }
++}
+
+diff --git a/packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts b/packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts
+new file mode 100644
+index 0000000..9195c2c
+--- /dev/null
++++ b/packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts
+@@ -0,0 +1,152 @@
++// F03 / COPY-01. Frozen source: surface-manifest.json@50e2993a881e207aa3b2a1cd250a7da84cea5855.
++// Do not edit strings here to accommodate a component. I00 registers the pair in orchestra.ts.
++// English and pt-BR are deliberate UX copy; never substitute a producer's data as translation.
++export const SF_COMMON_COPY = {
++  "sf.common.loading": "Loading…",
++  "sf.common.empty": "No records yet.",
++  "sf.common.filterEmpty": "No results for these filters.",
++  "sf.common.retry": "Try again",
++  "sf.common.readOnly": "Read only",
++  "sf.common.unavailable": "Currently unavailable",
++  "sf.common.noAccess": "You do not have access to this content.",
++  "sf.common.removed": "This record is no longer available.",
++  "sf.common.partial": "Partial coverage",
++  "sf.common.stale": "Review the current source before continuing.",
++  "sf.common.pending": "Checking the outcome…",
++  "sf.common.saved": "Changes saved.",
++  "sf.common.edit": "Edit",
++  "sf.common.save": "Save",
++  "sf.common.review": "Review changes",
++  "sf.common.discard": "Discard draft",
++  "sf.common.keepEditing": "Keep editing",
++  "sf.common.back": "Back",
++  "sf.common.openPage": "Open page",
++  "sf.common.close": "Close",
++  "sf.common.source": "View source",
++  "sf.common.history": "View history",
++  "sf.common.useAsEntry": "Use as entry",
++  "sf.common.moreViews": "More views",
++  "sf.common.showDetails": "Show details",
++  "sf.common.showAllMonths": "Edit all months",
++  "sf.common.deleteDraft": "Delete draft",
++  "sf.common.cancelRequest": "Cancel request",
++  "sf.common.applyImport": "Apply import",
++  "sf.common.submitRequisition": "Submit requisition",
++  "sf.common.submitSourcing": "Submit sourcing",
++  "sf.common.submitPO": "Submit purchase order",
++  "sf.common.selectQuote": "Select quote",
++  "sf.common.approve": "Approve",
++  "sf.common.reject": "Reject",
++  "sf.common.issueInternal": "Issue internally",
++  "sf.common.unknown": "Unavailable",
++  "sf.common.inherited": "Inherited value",
++  "sf.common.observedZero": "Recorded zero",
++  "sf.common.closedPeriod": "Closed period",
++  "sf.common.draft": "Draft",
++  "sf.common.changesPending": "Unsaved changes",
++  "sf.common.currentSource": "Current source",
++  "sf.common.yourDraft": "Your draft",
++  "sf.common.conflict": "The source changed. Review your draft against the current version.",
++  "sf.common.navigationDiscard": "Discard the draft and change context?",
++  "sf.common.deleteConfirmation": "Delete this draft? This action cannot be undone.",
++  "sf.common.cancelReason": "Reason for cancellation",
++  "sf.common.returnToList": "Return to list",
++  "sf.common.selectOwner": "Select server, project and installation to continue.",
++  "sf.common.missingPreference": "Your preferred entry is no longer available. Choose another entry.",
++  "sf.common.loginAgain": "Sign in again to continue.",
++  "sf.common.operationUnknown": "The response was lost. Check the outcome before trying again.",
++  "sf.common.invalidLink": "This link is invalid.",
++  "sf.common.noAuthorizedDestination": "No Sucafina destination is available in this context.",
++  "sf.common.fieldErrorSummary": "Review the highlighted fields.",
++  "sf.common.queued": "Queued",
++  "sf.common.running": "Running",
++  "sf.common.needsInput": "More information is required.",
++  "sf.common.cancelRequested": "Cancellation requested",
++  "sf.common.cancelled": "Cancelled",
++  "sf.common.completed": "Completed",
++  "sf.common.failed": "The operation failed.",
++  "sf.common.reviewImport": "Review import impact",
++  "sf.common.saveAsNew": "Save as new version",
++  "sf.common.sourceChanged": "The source changed. Generate a new preview.",
++  "sf.common.chooseCase": "Choose an existing case",
++  "sf.common.noAuthorizedCase": "No authorized case is available for this routine.",
++  "sf.common.openCases": "Open cases",
++  "sf.common.currentScheduleUnavailable": "The producer has not made the current schedule details available. Editing is unavailable.",
++  "sf.common.proposedValues": "Proposed values",
++  "sf.common.previousValuesUnavailable": "Previous values unavailable",
++} as const
++
++export const SF_COMMON_COPY_BR: Readonly<Record<keyof typeof SF_COMMON_COPY, string>> = {
++  "sf.common.loading": "Carregando…",
++  "sf.common.empty": "Ainda não há registros.",
++  "sf.common.filterEmpty": "Nenhum resultado para estes filtros.",
++  "sf.common.retry": "Tentar novamente",
++  "sf.common.readOnly": "Somente leitura",
++  "sf.common.unavailable": "Indisponível no momento",
++  "sf.common.noAccess": "Você não tem acesso a este conteúdo.",
++  "sf.common.removed": "Este registro não está mais disponível.",
++  "sf.common.partial": "Cobertura parcial",
++  "sf.common.stale": "Revise a fonte atual antes de continuar.",
++  "sf.common.pending": "Consultando o resultado…",
++  "sf.common.saved": "Alterações salvas.",
++  "sf.common.edit": "Editar",
++  "sf.common.save": "Salvar",
++  "sf.common.review": "Revisar alterações",
++  "sf.common.discard": "Descartar rascunho",
++  "sf.common.keepEditing": "Continuar editando",
++  "sf.common.back": "Voltar",
++  "sf.common.openPage": "Abrir página",
++  "sf.common.close": "Fechar",
++  "sf.common.source": "Ver fonte",
++  "sf.common.history": "Ver histórico",
++  "sf.common.useAsEntry": "Usar como entrada",
++  "sf.common.moreViews": "Mais vistas",
++  "sf.common.showDetails": "Mostrar detalhes",
++  "sf.common.showAllMonths": "Editar todos os meses",
++  "sf.common.deleteDraft": "Excluir rascunho",
++  "sf.common.cancelRequest": "Cancelar pedido",
++  "sf.common.applyImport": "Aplicar importação",
++  "sf.common.submitRequisition": "Enviar solicitação",
++  "sf.common.submitSourcing": "Enviar sourcing",
++  "sf.common.submitPO": "Enviar pedido de compra",
++  "sf.common.selectQuote": "Selecionar cotação",
++  "sf.common.approve": "Aprovar",
++  "sf.common.reject": "Rejeitar",
++  "sf.common.issueInternal": "Emitir internamente",
++  "sf.common.unknown": "Indisponível",
++  "sf.common.inherited": "Valor herdado",
++  "sf.common.observedZero": "Zero registrado",
++  "sf.common.closedPeriod": "Período fechado",
++  "sf.common.draft": "Rascunho",
++  "sf.common.changesPending": "Alterações não salvas",
++  "sf.common.currentSource": "Fonte atual",
++  "sf.common.yourDraft": "Seu rascunho",
++  "sf.common.conflict": "A fonte mudou. Compare seu rascunho com a versão atual.",
++  "sf.common.navigationDiscard": "Descartar o rascunho e mudar de contexto?",
++  "sf.common.deleteConfirmation": "Excluir este rascunho? Esta ação não pode ser desfeita.",
++  "sf.common.cancelReason": "Motivo do cancelamento",
++  "sf.common.returnToList": "Voltar à lista",
++  "sf.common.selectOwner": "Selecione servidor, projeto e instalação para continuar.",
++  "sf.common.missingPreference": "Sua entrada preferida não está mais disponível. Escolha outra entrada.",
++  "sf.common.loginAgain": "Entre novamente para continuar.",
++  "sf.common.operationUnknown": "A resposta foi perdida. Consulte o resultado antes de tentar novamente.",
++  "sf.common.invalidLink": "Este link é inválido.",
++  "sf.common.noAuthorizedDestination": "Nenhum destino Sucafina está disponível neste contexto.",
++  "sf.common.fieldErrorSummary": "Revise os campos destacados.",
++  "sf.common.queued": "Na fila",
++  "sf.common.running": "Em execução",
++  "sf.common.needsInput": "São necessárias mais informações.",
++  "sf.common.cancelRequested": "Cancelamento solicitado",
++  "sf.common.cancelled": "Cancelado",
++  "sf.common.completed": "Concluído",
++  "sf.common.failed": "A operação falhou.",
++  "sf.common.reviewImport": "Revisar impacto da importação",
++  "sf.common.saveAsNew": "Salvar como nova versão",
++  "sf.common.sourceChanged": "A fonte mudou. Gere uma nova prévia.",
++  "sf.common.chooseCase": "Escolher um caso existente",
++  "sf.common.noAuthorizedCase": "Nenhum caso autorizado está disponível para esta rotina.",
++  "sf.common.openCases": "Abrir casos",
++  "sf.common.currentScheduleUnavailable": "O produtor não disponibilizou os detalhes atuais da recorrência. A edição está indisponível.",
++  "sf.common.proposedValues": "Valores propostos",
++  "sf.common.previousValuesUnavailable": "Valores anteriores indisponíveis",
++}
+
+diff --git a/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts b/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts
+new file mode 100644
+index 0000000..0d0cd16
+--- /dev/null
++++ b/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts
+@@ -0,0 +1,238 @@
++import type { JSX } from "solid-js"
++import { expect, test } from "bun:test"
++import path from "node:path"
++
++// The only authorized execution lane is 120 / GitHub Actions. This file is
++// source-only until 114 admits F03 and wires the frozen F01 route contracts.
++if (process.env.SF_F03_DOM !== "1") {
++  test("F03 frame and state DOM suite (hosted by mission120)", async () => {
++    const proc = Bun.spawn(
++      [Bun.which("bun")!, "--conditions=browser", "test", "--preload", "./happydom.ts", import.meta.path],
++      {
++        cwd: path.resolve(import.meta.dir, "../.."),
++        env: { ...process.env, SF_F03_DOM: "1" },
++        stdout: "pipe",
++        stderr: "pipe",
++        timeout: 180000,
++        killSignal: "SIGKILL",
++      },
++    )
++    const [stdout, stderr, exit] = await Promise.all([
++      new Response(proc.stdout).text(),
++      new Response(proc.stderr).text(),
++      proc.exited,
++    ])
++    expect(exit, `${stdout}\n${stderr}`).toBe(0)
++  }, 240000)
++} else {
++  const { createComponent, render } = await import("../lean-dom.test-helper")
++  const { solidDom } = await import("../solid-dom")
++  const { loadLocaleDict, LanguageProvider }: typeof import("@/context/language") = await import(
++    solidDom("@/context/language", import.meta.dir)
++  )
++  const frame: typeof import("@/orchestra/chapters/sucafina/shared/frame") = await import(
++    solidDom("@/orchestra/chapters/sucafina/shared/frame", import.meta.dir)
++  )
++  const states: typeof import("@/orchestra/chapters/sucafina/shared/states") = await import(
++    solidDom("@/orchestra/chapters/sucafina/shared/states", import.meta.dir)
++  )
++  type Key = import("@/orchestra/chapters/sucafina/shared/frame").SfCopyKey
++  const key = (value: string) => value as Key
++  const message = (value: string) => ({ key: key(value) })
++  const emptyCoverage = {
++    state: "partial" as const,
++    summary: message("sf.common.partial"),
++    reasons: [message("sf.common.stale")],
++    knownCount: 0,
++    expectedCount: null,
++  }
++
++  function mount(component: () => JSX.Element, locale: "en" | "br" = "en") {
++    const host = document.createElement("div")
++    document.body.append(host)
++    const dispose = render(
++      () => createComponent(LanguageProvider, {
++        locale,
++        get children() { return component() },
++      }),
++      host,
++    )
++    return { host, close: () => { dispose(); host.remove() } }
++  }
++
++  test("five viewport classes map to content width, never window or guessed device", () => {
++    for (const w of [320, 767, 768, 800, 1024, 1280, 1440]) {
++      expect(frame.resolveSfLayoutMode(w, "reading")).toBe("single")
++      expect(frame.resolveSfLayoutMode(w, "work")).toBe("single")
++    }
++    expect(frame.resolveSfLayoutMode(800, "split")).toBe("single")
++    expect(frame.resolveSfLayoutMode(801, "split")).toBe("split")
++    expect(frame.resolveSfLayoutMode(1121, "comparison")).toBe("split")
++    expect(frame.resolveSfLayoutMode(1122, "comparison")).toBe("split-context")
++    expect(frame.resolveSfLayoutMode(320, "comparison")).toBe("single")
++    expect(frame.resolveSfLayoutMode(NaN, "comparison")).toBe("single")
++  })
++
++  test("denied and session-expired never expose stale private children or partial counts", () => {
++    for (const state of ["denied", "session-expired"] as const) {
++      const events: string[] = []
++      const screen = mount(() => createComponent(states.SfStatePanel, {
++        state,
++        messageKey: key(state === "denied" ? "sf.common.noAccess" : "sf.common.loginAgain"),
++        coverage: emptyCoverage,
++        onRetryRead: () => events.push("retry"),
++        onLogin: () => events.push("login"),
++        onBack: () => events.push("back"),
++        children: document.createTextNode("CONFIDENTIAL_PREVIOUS_OWNER"),
++      }))
++      try {
++        expect(screen.host.textContent).not.toContain("CONFIDENTIAL_PREVIOUS_OWNER")
++        expect(screen.host.textContent).not.toContain("Partial coverage")
++        expect(screen.host.querySelector("[role=alert]")).not.toBeNull()
++        expect(screen.host.querySelectorAll("button").length).toBe(1)
++        screen.host.querySelector("button")!.click()
++        expect(events).toEqual([state === "denied" ? "back" : "login"])
++      } finally { screen.close() }
++    }
++  })
++
++  test("loading, filtered empty, partial and outcome unknown remain distinct without fake zero", () => {
++    for (const entry of [
++      { state: "loading", key: "sf.common.loading", canShow: false },
++      { state: "filtered-empty", key: "sf.common.filterEmpty", canShow: true },
++      { state: "partial", key: "sf.common.partial", canShow: true },
++      { state: "outcome-unknown", key: "sf.common.operationUnknown", canShow: false },
++    ] as const) {
++      let reads = 0
++      const screen = mount(() => createComponent(states.SfStatePanel, {
++        state: entry.state,
++        messageKey: key(entry.key),
++        coverage: entry.state === "partial" ? emptyCoverage : undefined,
++        onRetryRead: () => { reads += 1 },
++        children: document.createTextNode("AUTHORIZED_PRESENTATION"),
++      }))
++      try {
++        expect(screen.host.getAttribute("data-sf-state")).toBeNull()
++        expect(screen.host.querySelector("[data-sf-state]")?.getAttribute("data-sf-state")).toBe(entry.state)
++        expect(screen.host.textContent?.includes("AUTHORIZED_PRESENTATION")).toBe(entry.canShow)
++        if (entry.state === "outcome-unknown") {
++          expect(screen.host.textContent).toContain("response was lost")
++          screen.host.querySelector("button")!.click()
++          expect(reads).toBe(1)
++        }
++      } finally { screen.close() }
++    }
++  })
++
++  test("context requests only available unlocked option; no implicit change", () => {
++    const changes: string[] = []
++    const screen = mount(() => createComponent(frame.SfContextBar, {
++      selection: [{ control: "year", optionId: "this" }],
++      catalog: [
++        { id: "this", control: "year", value: 2026, label: { kind: "data", text: "2026" }, available: true },
++        { id: "last", control: "year", value: 2025, label: { kind: "data", text: "2025" }, available: true },
++        { id: "secret", control: "year", value: 2024, label: { kind: "data", text: "2024" }, available: false },
++      ],
++      lockedReasons: [],
++      state: "ready",
++      onRequestChange: ({ optionId }) => changes.push(optionId),
++    }))
++    try {
++      expect(changes).toEqual([])
++      const select = screen.host.querySelector("select")!
++      expect(select.value).toBe("this")
++      expect(select.querySelector<HTMLOptionElement>('option[value="secret"]')?.disabled).toBe(true)
++      select.value = "last"
++      select.dispatchEvent(new Event("change", { bubbles: true }))
++      expect(changes).toEqual(["last"])
++      // A selection change is a request; without owner acceptance the current
++      // control must keep displaying the authorized option.
++      expect(select.value).toBe("this")
++    } finally { screen.close() }
++  })
++
++  test("denied chart does not expose its previous owner's context or SVG", () => {
++    const screen = mount(() => createComponent(frame.SfChartFrame, {
++      titleKey: key("sf.common.currentSource"),
++      questionKey: key("sf.common.partial"),
++      context: [{ label: message("sf.common.source"), value: { kind: "data", text: "PRIVATE_CONTEXT" } }],
++      coverage: emptyCoverage,
++      series: [],
++      table: { caption: message("sf.common.currentSource"), columns: [], rows: [] },
++      selection: null,
++      state: "denied",
++      onSelect: () => { throw new Error("unauthorized select") },
++      onOpenSource: () => { throw new Error("unauthorized source") },
++      children: document.createTextNode("PRIVATE_CHART"),
++    }))
++    try {
++      expect(screen.host.textContent).not.toContain("PRIVATE_CONTEXT")
++      expect(screen.host.textContent).not.toContain("PRIVATE_CHART")
++      expect(screen.host.textContent).not.toContain("Partial coverage")
++    } finally { screen.close() }
++  })
++
++  test("run unadmitted is not forged as queued/executed and offers only admitted actions", () => {
++    const screen = mount(() => createComponent(states.SfRunState, {
++      identity: { kind: "unadmitted" },
++      state: "ready",
++      actions: [],
++      onOpen: () => { throw new Error("not admitted") },
++    }))
++    try {
++      expect(screen.host.querySelector('[data-sf-run-identity="unadmitted"]')).not.toBeNull()
++      expect(screen.host.querySelector("progress")).toBeNull()
++      expect(screen.host.querySelector("button")).toBeNull()
++    } finally { screen.close() }
++  })
++
++  test("chart preserves known zero, labels unknown as unavailable, and keeps a real table", () => {
++    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
++    svg.setAttribute("viewBox", "0 0 300 100")
++    const screen = mount(() => createComponent(frame.SfChartFrame, {
++      titleKey: key("sf.common.currentSource"),
++      questionKey: key("sf.common.currentSource"),
++      context: [],
++      coverage: {
++        state: "complete",
++        summary: message("sf.common.currentSource"),
++        reasons: [],
++        knownCount: 1,
++        expectedCount: null,
++      },
++      series: [],
++      table: {
++        caption: message("sf.common.currentSource"),
++        columns: [{ id: "value", label: message("sf.common.currentSource") }],
++        rows: [
++          { id: "zero", cells: { value: { kind: "number", value: 0, unit: { kind: "percent" }, fractionDigits: 0 } } },
++          { id: "unknown", cells: { value: { kind: "unavailable", reason: message("sf.common.unavailable") } } },
++        ],
++      },
++      selection: null,
++      state: "ready",
++      onSelect: () => {},
++      onOpenSource: () => {},
++      children: svg,
++    }))
++    try {
++      expect(screen.host.querySelector(".sf-chart-visual svg")).not.toBeNull()
++      expect(screen.host.querySelectorAll(".sf-chart-table tbody tr")).toHaveLength(2)
++      expect(screen.host.querySelector('[data-sf-row="zero"] .sf-numeric')?.textContent).toContain("0")
++      expect(screen.host.querySelector('[data-sf-row="unknown"] .sf-missing')?.textContent)
++        .toContain("Currently unavailable")
++      expect(screen.host.querySelector('[data-sf-row="unknown"] .sf-numeric')).toBeNull()
++    } finally { screen.close() }
++  })
++
++  test("pt-BR common messages derive from the frozen dictionary, not new local copy", async () => {
++    await loadLocaleDict("br")
++    const screen = mount(() => createComponent(states.SfStatePanel, {
++      state: "filtered-empty",
++      messageKey: key("sf.common.filterEmpty"),
++    }), "br")
++    try {
++      expect(screen.host.textContent).toContain("Nenhum resultado para estes filtros.")
++    } finally { screen.close() }
++  })
++}
