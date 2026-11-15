@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.correction-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 137,
+  "order": "F02",
+  "actor": "fresh user-invoked ChatGPT session, mission 137",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_reason": "Browser conversation session identifier not exposed",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w03",
+  "pr": 122,
+  "epoch": "ux-native-w03-e3",
+  "previous_epoch": "ux-native-w03-e2",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES; delivered commits preserved",
+  "verified_head": "f7e11ba51a2a1d200f28cfd9e0ba3b5410d09cf5",
+  "verified_head_tree": "38ed25a8ac34660d0667b2764e47086813c9f49a",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/S0-FENCE.json",
+  "fence_blob": "14116c9c6d5d0b1225b9f79ad29e2c9879551015",
+  "current_source_preimages": {
+    "apps/cli/src/sucafina-product/native-ui/router.ts": "860d44eb7c215aafe05eba0df265a721c563c148",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts": "7fe06cad2bff509039e1a093bbd6224d2fd2c262"
+  },
+  "consumer_C64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+  "consumer_registry_blob": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+  "contracts": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70"
+  },
+  "write_paths": [
+    "apps/cli/src/sucafina-product/native-ui/router.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/**"
+  ],
+  "root_cause": "C64 TS2339: SfOperationRegistry const union lacks maxRequestBytes on some members; preserve narrowly typed metadata and safe projection preflight",
+  "integrator": "132 / PR65",
+  "compiler": "128 / PR107",
+  "product_ci": "129 / PR106",
+  "status": "ACK_E3_PUBLISHED_AUTHORING",
+  "native_goal": "paused",
+  "global_release": false,
+  "restrictions": {
+    "local_tests": false,
+    "shared_writes": false,
+    "force": false,
+    "reset": false,
+    "merge": false,
+    "deploy": false
+  }
+}
