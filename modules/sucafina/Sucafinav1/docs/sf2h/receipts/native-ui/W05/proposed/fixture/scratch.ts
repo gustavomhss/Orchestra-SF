@@ -17,7 +17,7 @@ export async function createNativeScratch() {
   try {
     const configuration = await prepareLocalConfiguration(root)
     await prepareOperatorAccess(configuration, true)
-    const persistence = await openLocalStore(path.join(root, "business"))
+    const persistence = await openLocalStore(path.join(root, "business-local"))
     let closed = false
     return {
       root,
