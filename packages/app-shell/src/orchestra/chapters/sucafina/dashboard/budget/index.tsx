@@ -38,7 +38,7 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
   const stat = (id: string, label: Key, value: number | null | undefined) =>
     <div class="sf-u02-stat" data-sf-metric={id}><dt>{t(key(label))}</dt><dd>{money(value)}</dd></div>
 
-  return <SfPageFrame titleKey={key("sf.cap03.title")} context={[]} tabs={[]} activeTab={null}
+  return <SfPageFrame titleKey={key("sf.cap03.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
     <div class="sf-u02-page" data-sf-surface="CAP03">
       <SfStatePanel state={read.state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[read.state()])}
@@ -89,7 +89,7 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
           </Show>
           <p>{t(key("sf.u02.sourceWarning"))}</p>
         </section>
-        <Show when={year() !== undefined && read.owner()}>
+        <Show when={year() !== undefined ? read.owner() : undefined}>
           {(ready) => <section class="sf-u02-section" aria-labelledby="sf-u02-budget-maintenance">
             <h2 id="sf-u02-budget-maintenance">{t(key("sf.u02.inputs"))}</h2>
             <div class="sf-u02-edit-grid">
