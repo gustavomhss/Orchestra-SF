@@ -60,18 +60,28 @@
     {
       "path": "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
       "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
-      "postimage_sha": "fbfba9224797efd11da3c5e752a0ee9e027b15b9"
+      "postimage_sha": "e9938385e1422480012c501af5c5ad783ad8dc39"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/native/journeys/u47.spec.ts",
       "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
-      "postimage_sha": "7643456b4b5c669307004b03f44d46574025fba2"
+      "postimage_sha": "8794107ce969df4245e7902b52ddd86649615b6f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N14/TEST-REQUEST-120.json",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "a915fa871dd42ed1c6f95382f16106e45bd18cb3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N14/COMPILER-REQUEST-119.json",
+      "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
+      "postimage_sha": "c8882aa18ad20d6bc8f182e3af3dfc5ed6e5db11"
     }
   ],
   "shared_patches": {
     "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N14/SHARED-PATCHES-TO-125.md",
     "preimage": "ABSENT_AT_INITIAL_N14_HEAD",
-    "postimage_sha": "04e7b25ce2545ad33bd1d97414eee78fac8aba43",
+    "postimage_sha": "893a78916b52c89825c3cb0ca48c77ca080b58be",
     "owner": "125",
     "applied": false
   },
@@ -113,7 +123,8 @@
     "A10 typed import lacks original workbook preview/scanner binding",
     "A10 export returns {ok:true} without file bytes; actual download unavailable",
     "119 compiler not invoked; no typecheck claim",
-    "120 hosted surgical E2E not run; no 200%/400% browser-zoom claim"
+    "120 hosted surgical E2E not run; no 200%/400% browser-zoom claim",
+    "F01 public pending draft cannot clear deterministic 400/409/422: known-reject/rebase owner API pending shared 125 integration (P125-N14-06)"
   ],
   "local_tests": "NOT_RUN_BY_INSTRUCTION",
   "local_typecheck": "NOT_RUN_BY_INSTRUCTION",
@@ -138,5 +149,10 @@
     "U47_EXPORT_BYTES",
     "DEPLOYED",
     "MERGED"
-  ]
+  ],
+  "latest_compared_base": "sf2-stack@a15434ab558a650137f2472c7d59e6ae1e98e72a",
+  "branch_sync_merge": "72a561f8321df4426e56e19655bf20ca267ec47a",
+  "pr_diff_exclusive_only": true,
+  "test_request_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N14/TEST-REQUEST-120.json",
+  "compiler_request_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N14/COMPILER-REQUEST-119.json"
 }
