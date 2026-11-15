@@ -1,4 +1,3 @@
-import { A } from "@solidjs/router"
 import { createEffect, createSignal, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
@@ -280,7 +279,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       const input = {
         page: "FX rates", action: "save", version: intent.version,
         ...(intent.id ? { id: intent.id } : {}),
-        values: { versionId, cur: value?.cur, rate: value?.rate },
+        values: { versionId, cur: value!.cur, rate: value!.rate },
       } as const
       return { input, call: () => client["domain.command.CAP22.save"](input, options) }
     })()
@@ -405,9 +404,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                 onInput={(event) => setScreen("filter", event.currentTarget.value)} />
             </label>
             <Show when={can("import-workbook")}>
-              <A href="/orchestra/sf-imports/new" class="mx-link">
-                {language.t("sf.cap22.action.import-workbook")}
-              </A>
+              <p class="sf-n20-source-only">{language.t("sf.cap22.import-hint")}</p>
             </Show>
           </div>
           <section aria-label={language.t("sf.cap22.base")} class="mx-card sf-n20-fx-base">
