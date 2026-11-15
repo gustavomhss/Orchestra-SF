@@ -1,0 +1,981 @@
+{
+  "schema": "sf2h.integration162.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 162,
+  "logical_actor": "S0-C",
+  "title": "Consumir fila pronta e compor candidato íntegro",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "lease_epoch": "S0-C-e20-browser162",
+  "expected_head": "f325fce996440b05a9d0366ad6f143977e05bcf9",
+  "fence": {
+    "schema": "sf2h.integration-authority-transfer.v1",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "mission": 162,
+    "logical_actor": "S0-C",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "previous_epoch": "S0-C-e19-browser132",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "next_epoch": "S0-C-e20-browser162",
+    "expected_previous_head": "8094e599e3d18609e269548d24619a3246fbc735",
+    "authority": "S0 under explicit user request for fresh sessions to consume delivered source backlog",
+    "reason": "Transfer sole integration authority, preserve all132 product/evidence and existing author/validator lanes. No second integrator or native S0.",
+    "runtime_termination_claimed": false,
+    "limitation": "Browser lifecycle handle not exposed. Authority fencing only, not process kill/token revocation; no inference of death from silence. Late predecessor commits require reconciliation before effects, never force/reset.",
+    "compiler": "149/compiler-e3-browser149/PR107",
+    "product_ci": "150/product-ci-e3-browser150/PR106",
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED",
+    "commit": "f325fce996440b05a9d0366ad6f143977e05bcf9",
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after132-162/"
+  },
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "next30_source": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "ux_orders": 78,
+    "surfaces": 70,
+    "operations": 305
+  },
+  "prior_material": {
+    "sha": "8094e599e3d18609e269548d24619a3246fbc735",
+    "tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+    "not_final_accepted": true
+  },
+  "write_paths": [
+    "sf2-stack ONLY: apply verified released source-unit hunks/blobs, integrate shared I00 typed bindings/providers/routes/registry/package exports/i18n/native host and desktop seams",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after132-162/**"
+  ],
+  "protected_paths": [
+    "All author SOURCE branches and their active leases.162 may integrate RELEASED source into sf2-stack but MUST NOT modify upstream source branches or independently correct author-owned leaves.",
+    "Unreleased source from156/157/161 and any other active writer. Consume only proven released version, preserve newer source history.",
+    "Immutable approved plans, sf2-control as product snapshot, dev merge/deploy/Azure/engines/secrets/runtime restart/generated hand-edit."
+  ],
+  "routing": {
+    "sole_integrator": "162/PR65/S0-C-e20-browser162",
+    "compiler": "149/PR107/compiler-e3-browser149",
+    "product_ci": "150/PR106/product-ci-e3-browser150",
+    "predecessor132": "REVOKED_FOR_FUTURE_WRITES",
+    "authors151_155": "Keep exclusive author-source ownership and completed outputs",
+    "authors156_157_161": "Keep their source ownership; real ACK via comments for157/161, source not yet delivered at queue cut"
+  },
+  "precedence": "This packet replaces132 ONLY for future integration. All old IDs in embedded132/125 records and source handoffs are historical. Released source protection forbids unauthorised authorship/upstream edits; it does NOT prohibit copying exact released fixes into sf2-stack. No second supervisor or dispatcher.",
+  "required_reads": [
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "Applicable AGENTS; pinned prompts/S0.md and manifest hashes; full S0-C pack and mandatory appendices/criterion pointers, not only summary",
+    "Current162packet and full21-unit queue;132 integration receipts at8094e599e3d18609e269548d24619a3246fbc735 including actual source consumption and shared composition",
+    "Actual released handoffs/patches, current source+consumer blobs and code/dependencies before edits; compiler149 causal queue, CI150 final handoff/run43758731378, preliminary review169–171",
+    "Previous132 mission/checkpoint delta below; retain full canonical criteria access without redoing completed bootstrap"
+  ],
+  "predecessor_mission_context": {
+    "schema": "sf2h.correction-author.v1",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "execution_status": "CONTINUING_LATE",
+    "mission": 132,
+    "title": "Integração sucessora125",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "lease_epoch": "S0-C-e19-browser132",
+    "expected_head": "0a1bf8009bbfc6f0fb2693c29701f835419c3c4a",
+    "fence": {
+      "schema": "sf2h.correction-wave-fence.v1",
+      "campaign": "sf2h-integral-20261112",
+      "authority": "S0 explicit fresh-session-only succession for confirmed source findings and integration backlog",
+      "mission": 132,
+      "branch": "sf2-stack",
+      "previous_epoch": "S0-C-e18-browser125",
+      "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ACCEPT_OLD_DELIVERED_BLOBS_ONLY_AS_HISTORICAL_INTAKE",
+      "next_epoch": "S0-C-e19-browser132",
+      "observed_head": "a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "runtime_termination_claimed": false,
+      "new_session_state": "PREPARED_NOT_STARTED",
+      "user_reports_old_sessions_stopped": "No new death inference; real control action is S0 revocation and CAS/epoch fencing, not elapsed silence.",
+      "old_writer_rule": "Cease future writes/dispatch upon observing fence. Already delivered artifacts remain available by immutable SHA; late commits quarantined/reconciled, never force-reset.",
+      "new_writer_rule": "Confirm head/fence, publish actual ACK epoch/model/session. Unexpected old actor activity pauses overlap; no blind reset/force.",
+      "integrator": 132,
+      "compiler": 128,
+      "product_ci": 129,
+      "scope": [
+        "sf2-stack: released integration units and shared I00 only"
+      ],
+      "native_goal": "paused",
+      "global_release": false,
+      "fence_commit": "0a1bf8009bbfc6f0fb2693c29701f835419c3c4a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after125-132/S0-FENCE.json",
+      "auxiliary": false
+    },
+    "state": "PREPARED_NOT_STARTED",
+    "actual_actor": null,
+    "effective_model": null,
+    "session_id": null,
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "next30_source": "1d9d49ec26281ffd6486d722a97298596289605d",
+    "material": {
+      "id": "C64",
+      "sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+      "accepted": false
+    },
+    "write_paths": [
+      "sf2-stack: released integration units and shared I00 only",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after125-132/**"
+    ],
+    "protected_paths": [
+      "packages/schema/src/sucafina/planner.ts",
+      "packages/schema/src/sucafina/planner/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+      "packages/schema/src/sucafina/decisions.ts",
+      "packages/schema/src/sucafina/decisions/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+      "packages/protocol/src/groups/sucafina.ts",
+      "packages/schema/src/sucafina/context.ts",
+      "apps/cli/src/sucafina-product/native-ui/context.ts",
+      "packages/server/src/handlers/sucafina.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts",
+      "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+      "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+      "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+      "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/**"
+    ],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after125-132/",
+    "original_order": "I00",
+    "finding": "Integration backlog and source/private-native producer gaps remain; complete I00 integration with actual consumers, not inventory.",
+    "source_evidence": {
+      "compiler_run": 43738074189,
+      "compiler_job": 132884987559,
+      "compiler_artifact": 14171118214,
+      "native_run": 43738115971,
+      "native_job": 132885115197,
+      "app_shell_run": 43738907064,
+      "app_shell_job": 132887516559,
+      "compiler_receipt": "compiler128/RESULTS128-C64.json@f8bbf593f40c210946b75a43828f99450a3f6d25",
+      "ci_findings": "product-ci129/FINDINGS-129.json@bd2bc0f9d055d800eeeb65727d4426b88e11346d"
+    },
+    "routing": {
+      "integrator": "132 / S0-C-e19-browser132 / PR65",
+      "compiler": "128 / PR107",
+      "product_ci": "129 / PR106"
+    },
+    "requirements": [
+      "Fresh browser session only. Verify S0-FENCE/current HEAD, publish actual ACK/model/session(if exposed),epoch+inputs before writes. S0 revoked predecessor FUTURE authority explicitly; no process-kill/death claimed. Old delivered blobs remain historical eligible inputs. Unexpected old actor activity requires safe reconciliation, not force/reset.",
+      "Read applicable AGENTS, FULL packet, assigned whole original work-orders/required_reads/frozen contracts/source and criteria pointers. New explicit write_paths override broader old packs. Canonical dbf9547211d9b0fade619790de7c19c0869b7c7d and normative cbac654784714f68779ae1434d30e6ea8970c4d1 unchanged.",
+      "Read actual C64 target preimages AND predecessor branch/dependencies before edits. Preserve all existing commits. Source branch may lack later integrated dependencies: record source preimage separately from actual consumer preimage; no copying stale whole files or wholesale UX envelope merges.",
+      "S0 grants exclusive correction authoring after real ACK. Implement the cause directly in product/test paths and complete PR, not preflight-only. No any/casts/ts-ignore/exclusions, weaker assertions/fixtures, longer timeout, synthetic grants/receipts, permissive schema or alternate backend.",
+      "132 sole integrator/shared writer;128 compiler and129 productCI retain authority. No sourcewriter may edit sf2-stack/shared registries/routes/globali18n/exports/generated. Supply complete shared patches/preimages to132 and require real consumer ACK for acceptance.",
+      "At complete unit, request meaningful surgical hosted checks129 and compiler128 on newly integrated coherent material. No local test/parser/validator/typecheck, new dispatcher or prematureepic. PublicProtocol/ServerHttpApi requires real packages/client bun run generate via128, integrated by132, nevergeneratedmanual.",
+      "Remote GitHub MCP only,CASexpected-head,forcefalse. No gitpush/gh/reset/blindrebase/devmerge/deploy/Azure/engines/financialpolicy/accesspolicy/secrets/Orchestra restart/nativeGoal/controller. Goal remains paused.",
+      "Deliver commits+samePR, exact postblobs/full patches, regression specs and finding→criteria evidence, real runs orNOT_RUN, unresolvedcauses and durable terminalhandoff. Sourceartifact notQUALIFIED/DONE. Preserve15WP74tasks17contracts1610criteria+UX78/70/305+sameC8CIepicAM01–06threeFINALvalidDseparateG7/G8."
+    ],
+    "native_goal": "paused",
+    "global_release": false,
+    "logical_actor": "S0-C/C00/I00 unique successor125",
+    "previous_mission_packet": {
+      "schema": "sf2h.integration-successor125.v1",
+      "mission": 125,
+      "id": "integrate-after114",
+      "logical_actor": "S0-C / C00 / I00",
+      "actor_pack": "execution/actors/S0-C.json",
+      "branch": "sf2-stack",
+      "pr": 65,
+      "lease_epoch": "S0-C-e18-browser125",
+      "state": "PREPARED_NOT_STARTED",
+      "actual_actor": null,
+      "effective_model": null,
+      "session_id": null,
+      "campaign": "sf2h-integral-20261112",
+      "T0": "2026-11-13T04:01:10Z",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+      "scope": {
+        "wps": 15,
+        "tasks": 74,
+        "contracts": 17,
+        "criteria": 1610,
+        "ux_orders": 78,
+        "surfaces": 70,
+        "operations": 305
+      },
+      "expected_head": "9cbff3e4a111b4eaa5376c5419f5991ece67e492",
+      "material": {
+        "id": "C58",
+        "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "tree": "647b024075265fc76d6253c99bec00a82618f816",
+        "state": "NOT_FROZEN_NOT_ACCEPTED"
+      },
+      "source_authority": "S0 explicitly revokes previous114 and designates NEW browser125 as sole successor after real ACK. No recycled session and no second concurrent integrator. Old actor retains no integration write authority.",
+      "predecessor": {
+        "mission": 114,
+        "lease": "S0-C-e17-browser114",
+        "status": "REVOKED_BY_S0_FOR_USER_REQUESTED_SUCCESSION",
+        "observed_head": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+        "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/S0-FENCE-125.json",
+        "fence_sha": "9cbff3e4a111b4eaa5376c5419f5991ece67e492",
+        "runtime_termination_claimed": false,
+        "actual_ack": "receipts/integration/after106-114/ACK-114.json",
+        "checkpoint": "receipts/integration/after106-114/QUEUE-114-C58.json",
+        "candidate_receipt": "receipts/integration/after106-114/C58-CONSUMPTION.json"
+      },
+      "required_reads": [
+        "Applicable AGENTS at actual HEAD",
+        "START.md, WORKFLOW.md, execution/COMMON.md, COMPLETE execution/actors/S0-C.json, mandatory pack annexes/criteria at immutable planning SHA; validate manifest",
+        "predecessor ACK/C58 checkpoint/consumption from actual sf2-stack; source SHAs and latest PR65 receipts/comments",
+        "UX normative cbac654784714f68779ae1434d30e6ea8970c4d1; original docs39bff1976d33f5b1a85c3224186ce2e9207ed021; EXECUTION-PROTOCOL, CONTRACTS, COMPONENT-CONTRACTS, host/route/component signatures and relevant work orders",
+        "sf2-control native-ui AUTHORING-ADMISSION19@8852ed4; successors INDEX-e2@49a92b9; wave2 INDEX@a82ba0f; preserve pinned blobs and19+9 scopes"
+      ],
+      "write_authority": {
+        "branch": "sf2-stack integration of accepted ready source blobs and genuinely shared composition only",
+        "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/",
+        "shared": "I00 registry/routes/exports/i18n/owner wiring and authorized generated outputs per contracts. Actual source owner retains exclusive paths; complete writer patches need provenance/preimage/contract review before integrating.",
+        "control": "Use sf2-control only for coordination receipts with CAS; never merge its tree into product."
+      },
+      "immediate_queue": [
+        {
+          "source": "121",
+          "pr": 117,
+          "head": "914b56e076ca80ea9ecbc97253486ea90ee2dedf",
+          "material": "1091aa090f9e401ece1b52b2aa74138560d04c88",
+          "action": "Intake three creation tests; fixes16TS. Preserve startup→creation consumers→lifecycle order."
+        },
+        {
+          "source": "122",
+          "pr": 126,
+          "head": "2b49748bc255f6a5cfa5dd71f5dad1fd348c8402",
+          "action": "Intake five residual type fixes plus complete mandatory owner patch relations-fixture after owner/preimage reconciliation, not consumer-only incomplete composition."
+        },
+        {
+          "source": "123",
+          "pr": 132,
+          "head": "35a4c7aa972cefb6b0d185cd66991f98edead721",
+          "action": "Review six causal runtime patches and stage probe. Some patches exceed123 source grants; identify real owner and consume only authorized correct patches, not waive security tests. WP08 timeout remains OPEN."
+        },
+        {
+          "source": "119 tooling",
+          "pr": 107,
+          "head": "1c5113845ad54db1f9582169d183e17d50a7b9e4",
+          "action": "Review/adopt builder+TSGo verifier v2, regenerate committed epic matching real source. Do not merely change recorded hash. Compiler C58 had22uniqueTS;13/17PASS;55guard gates pending independent allowed disposition."
+        },
+        {
+          "source": "UX originals with real code",
+          "prs": [
+            131,
+            130,
+            125,
+            119,
+            127,
+            128,
+            121,
+            133
+          ],
+          "action": "F01,A03,S01,S05,U10.queue,U11.title-save,A06,A01. Intake exact exclusive leaf sets; review generic output schema/local-admin503/typed context gaps. No raw merge of inherited UX envelopes."
+        },
+        {
+          "source": "UX11 e2",
+          "orders": [
+            "W01",
+            "W03",
+            "W04",
+            "W05",
+            "W07",
+            "W08",
+            "W09",
+            "W13",
+            "W15",
+            "W16",
+            "W17"
+          ],
+          "action": "All user-launched; only e2 ACK-authority accepted. Latest W07 PR124 ARTIFACT_READY@58554e019479eac01a5bd5c5c42127d88b886e2b; W04 PR129@4b1de4f6108a02cdef8e633309b4b2f0378e76ae materialized8leaves. Read current manifests, not preauth revisions."
+        },
+        {
+          "source": "UX wave2",
+          "orders": [
+            "A07",
+            "A08",
+            "A09",
+            "A10",
+            "A11",
+            "A12",
+            "A13",
+            "A14",
+            "A15"
+          ],
+          "action": "User reports9new sessions deployed. Independent authoring permitted by S0; integrate only actual versioned outputs, never demand another per-leaf admission loop."
+        },
+        {
+          "source": "legacy pending",
+          "action": "Restore95+110native child,99/109P03,102XLSX,124DOCX/112review, AM01–06 and3FINAL. Preserve historical results and known gaps; no mock/HOLD→PASS."
+        }
+      ],
+      "execution": [
+        "First reconcile HEAD, material, fence and sources/actual handles. Publish real ACK125 and sole-authority before shared/source integration. Supersede stale RUNNING114 queue operationally; do not falsify terminal/process state.",
+        "Integrate ready coherent increments immediately by verified SHA/epoch/allowlist/preimages and contract review. Record source→candidate map and consumer ACK. Return findings to owner without writing its branch. Source artifact alone is not DONE.",
+        "Own I00 composition: F01/F02/S03 atomic wiring, F03 visual foundations, exact operation-registry and closed codec/binding map, schema/client exports, central i18n, desktop IPC/provider/sidebar/context integration. Match frozen exported interfaces; no fake stubs, success adapters or alternate standalone app.",
+        "Public Protocol/Server HttpApi requires packages/client bun run generate before qualification, through authorized existing compiler/runner route; never edit generated by hand. Dependencies Schema→Core/Protocol→Server and client no Core/Server preserved.",
+        "120 remains only product dispatcher,119 compiler. Reconcile pending/inflight requests/run IDs before submitting. Surgical hosted checks on coherent material inputs; no duplicate CI/source-green laundering or repeated unchanged failures. Full epic/eightfinal at complete accepted freeze.",
+        "One integration writer and branch CAS expected-head forcefalse. If predecessor writes again, stop overlap/reconcile and notify S0, never overwrite. No new C00 supervisor, native Goal resume or watchdog.",
+        "Update durable queue/checkpoint at material changes with exact heads, inputs, leases, findings, consumers, CI and next ready action; last predecessor queue is stale, not proof that all stillpending entries remain unexecuted.",
+        "Remain executing integration while independent ready work exists. Do not end just after inventory/planning/ACK. End only concrete integrated handoff or real external blocker after independent ready work; record full resumable checkpoint."
+      ],
+      "final_acceptance": [
+        "Complete canonical15/74/17/1610 plus allUXoutputs and actual consumers",
+        "SameacceptedC eightfinalCI selections+mandatoryepic/gates/typechecks+AM01–06",
+        "Three independent FINAL approvals, sufficient delta rechecks, no mandatory findings",
+        "D allowed evidence envelope preserving C blobs and provenance",
+        "Actual C/G7 andD/G8 bun run check:guards --base origin/dev separate SHAs/results; no suppression or unauthorized approval label",
+        "All commits/remotes verifiedMCP; no sf2-control merge; no orphan authorized writer"
+      ],
+      "prohibitions": [
+        "No local tests/UX validator/parser/typecheck, heavy local suites or CI bypass",
+        "No gh/newtokens/gitpush/force/devmerge/deploy/Azure/engines/financialpolicy/secret exposure/Orchestra restart",
+        "No scope reduction/oracle weakening/fake metadata/model/runtime proofs",
+        "Native Goal remains paused; user asks browser continuation only."
+      ],
+      "global_release": false
+    },
+    "checkpoint_inputs": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/ACK-125.json@a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/CHECKPOINT-125-C64.json@a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/QUEUE-125-C64.json@a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/CONSUMPTION-C59-C64.json@a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/CI-REQUEST-125-C64.json@a15434ab558a650137f2472c7d59e6ae1e98e72a"
+    ],
+    "required_canonical_urls": [
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json?ref=dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    ],
+    "integration_instructions": [
+      "Read complete pinned S0-C pack(485743chars),START/WORKFLOW/COMMON,manifest and required attachments; S0 verified APIaccessible. Local path/RemoteDesktopoffline is not evidence GitHubcanonical unavailable. Restore via checkpoint+delta retaining full criteria access.",
+      "Replace125explicitlyrevoked, not anotherconcurrentC00; keep128/129authority until actual fenced succession. No recycling endedchats. Confirmactual runs before effects, no duplicateCI or oldsourcePASSasnewC.",
+      "Dynamic intake18/21UI PRs atlastsnapshot;N15/N18/N23 stillhavecommits so preserve them. Q01PR154/Q02PR151,DOCX130PR161finaltest3036b25,Office131PR159;9adaptersPR141142140138143144139136137. Allreadyblobs needepoch/manifest/preimage review; don't blindlymergecohort/cleanbranchwithoutscopecheck.",
+      "Integrate readyunits incrementally and own I00coded bindings+metadata+SDKexports+i18n+15native sidebar chapters/providers/navigation, original Request,mounts and realdesktopbroker. No standalone,codecstub,fakestamp/availabilityorapproval.",
+      "Missing real readContext/currentBinding/policyVersion/accessRevision, in-transactionownerfence,returnintents,workdestinations,viewsV2 and sourcecodednativeports must be completed via legitimate current producer/public APIs, preservingfrozencontracts andauth. Metadata305IDs is not305admittedcodecs/product.",
+      "Do not edit author sources reserved133–142. Materialize only released patches in sf2-stack and ACK sourceSHA→C. Office142XLSX and130DOCX separatewriterpaths. 140 owns F03/S05 testfixture only; aux W10testfence recorded.",
+      "Follow nativechain/actualconsumer proof. Legacy123regressions/timeouts,95+110C15Task,99/109P03original72assertions,M31/MI07,Atlas/MCP/residentactualskills/AM01–06 stillmandatory.",
+      "Compiler12815/23checksPASS8FAIL;6diagnosticsobserved mayhideothersdueparser;SDKblockedbyF01structquery,guard56open. Consume correctedSDK128after136source, generatedepicactual bytes beforefinalfreeze. No unauthorizedguardapproval/ignore/deletion.",
+      "Keep integrating allindependentreadyoutputs androutingcausalfindings until complete product/consumers or real external blocker after remainingwork. No endingafterACK/inventory/3commits. Durablecheckpoint everymaterialstep; finalsameC8CI+epic+AM01–06+3FINAL+validD+actualC/G7D/G8;noGLOBALotherwise.",
+      "Commentpublication is not communicationACK; trackreceived/consumed/evidence separately."
+    ]
+  },
+  "source_queue": [
+    {
+      "mission": 133,
+      "branch": "sf-ux-w15",
+      "pr": 116,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/",
+      "source_head": "2817298f2982c34d90574f84e5a5537cc388c508",
+      "source_tree": "afddadbf3a8f88a3db1c0b6b6205585221a8cec6",
+      "latest_message": "docs(sf): correction133 C64 evidence full patch and terminal handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/HANDOFF.md",
+          "ref": "2817298f2982c34d90574f84e5a5537cc388c508",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2817298f2982c34d90574f84e5a5537cc388c508/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/PATCH-132.md",
+          "ref": "2817298f2982c34d90574f84e5a5537cc388c508",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2817298f2982c34d90574f84e5a5537cc388c508/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/PATCH-132.md"
+        }
+      ],
+      "author_epoch": "ux-native-w15-e3",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 134,
+      "branch": "sf-ux-w16",
+      "pr": 135,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/",
+      "source_head": "d4eb94170675a2cee6bce33aff2ead04a81eb8aa",
+      "source_tree": "9aac78f9ab586fc4dda1a36710335fe70607b030",
+      "latest_message": "docs(sf): hand off mission134 exact source patch and NOT_RUN gates [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/HANDOFF-e3.json",
+          "ref": "d4eb94170675a2cee6bce33aff2ead04a81eb8aa",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4eb94170675a2cee6bce33aff2ead04a81eb8aa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/HANDOFF-e3.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/PATCH-134.diff",
+          "ref": "d4eb94170675a2cee6bce33aff2ead04a81eb8aa",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4eb94170675a2cee6bce33aff2ead04a81eb8aa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/PATCH-134.diff"
+        }
+      ],
+      "author_epoch": "ux-native-w16-e3",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 135,
+      "branch": "sf-ux-w17",
+      "pr": 134,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/",
+      "source_head": "d6be25ce2c64a353871cbb4991b846a35a2f525b",
+      "source_tree": "7fe36e03595b1db8c403c151343c7170aa143706",
+      "latest_message": "docs(sf): hand off W17 e3 portfolio correction to integration132",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/HANDOFF-e3.md",
+          "ref": "d6be25ce2c64a353871cbb4991b846a35a2f525b",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d6be25ce2c64a353871cbb4991b846a35a2f525b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/HANDOFF-e3.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/PATCH-e3.patch",
+          "ref": "d6be25ce2c64a353871cbb4991b846a35a2f525b",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d6be25ce2c64a353871cbb4991b846a35a2f525b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/PATCH-e3.patch"
+        }
+      ],
+      "author_epoch": "ux-native-w17-e3",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 136,
+      "branch": "sf-ux-w02",
+      "pr": 131,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/",
+      "source_head": "871cae3dd5e36f8efb4edb1ab1482adfe3427446",
+      "source_tree": "82f2ca9c65c82e08be89343188e4b7fce97e7e3c",
+      "latest_message": "docs(sf): seal correction136 checkpoint and consumer handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/HANDOFF-136.json",
+          "ref": "871cae3dd5e36f8efb4edb1ab1482adfe3427446",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/871cae3dd5e36f8efb4edb1ab1482adfe3427446/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/HANDOFF-136.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/PATCHES-136.json",
+          "ref": "871cae3dd5e36f8efb4edb1ab1482adfe3427446",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/871cae3dd5e36f8efb4edb1ab1482adfe3427446/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/PATCHES-136.json"
+        }
+      ],
+      "author_epoch": "ux-native-w02-e2",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 137,
+      "branch": "sf-ux-w03",
+      "pr": 122,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/",
+      "source_head": "411961a501b5a40c78ebd2870654577039a091bd",
+      "source_tree": "d6c8b6f8939847592ea9612812a7010da103ce8c",
+      "latest_message": "docs(sf): checkpoint mission137 consumer handoff and NOT_RUN gates [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/HANDOFF-e3.md",
+          "ref": "411961a501b5a40c78ebd2870654577039a091bd",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/411961a501b5a40c78ebd2870654577039a091bd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/HANDOFF-e3.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/PATCH-137-e3.patch",
+          "ref": "411961a501b5a40c78ebd2870654577039a091bd",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/411961a501b5a40c78ebd2870654577039a091bd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/PATCH-137-e3.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/SOURCE-MANIFEST-e3.json",
+          "ref": "411961a501b5a40c78ebd2870654577039a091bd",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/411961a501b5a40c78ebd2870654577039a091bd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/SOURCE-MANIFEST-e3.json"
+        }
+      ],
+      "author_epoch": "ux-native-w03-e3",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 138,
+      "branch": "sf-ux-w11",
+      "pr": 130,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/",
+      "source_head": "d4f53e8b0e54cb2a746cdb8eac504d5b6128d0c6",
+      "source_tree": "7b902f925170165dea43a86af69f990790932277",
+      "latest_message": "docs(sf): hand off mission138 procurement fix with exact patches [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/HANDOFF.json",
+          "ref": "d4f53e8b0e54cb2a746cdb8eac504d5b6128d0c6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4f53e8b0e54cb2a746cdb8eac504d5b6128d0c6/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/HANDOFF.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/PATCHES.diff",
+          "ref": "d4f53e8b0e54cb2a746cdb8eac504d5b6128d0c6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d4f53e8b0e54cb2a746cdb8eac504d5b6128d0c6/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/PATCHES.diff"
+        }
+      ],
+      "author_epoch": "ux-native-w11-e2",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 139,
+      "branch": "sf-ux-w06",
+      "pr": 125,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/",
+      "source_head": "4d94cbe3c0e699529d703034634c8acecc46eda8",
+      "source_tree": "3c85006ed00d81c04b26660a8e0f722b362728da",
+      "latest_message": "docs(sf2h): correction139 source images, regression patch, evidence and 132 handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/HANDOFF139.md",
+          "ref": "4d94cbe3c0e699529d703034634c8acecc46eda8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4d94cbe3c0e699529d703034634c8acecc46eda8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/HANDOFF139.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/PATCH139-S01.patch",
+          "ref": "4d94cbe3c0e699529d703034634c8acecc46eda8",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4d94cbe3c0e699529d703034634c8acecc46eda8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/PATCH139-S01.patch"
+        }
+      ],
+      "author_epoch": "ux-native-w06-e2",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 140,
+      "branch": "sf-ux-w04",
+      "pr": 129,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/",
+      "source_head": "785057e47111381a869ce8ef6302ee017ecff85d",
+      "source_tree": "fcef0cfc6bd658595838bd6d16086b1bc1d7c0e0",
+      "latest_message": "docs(sf): record mission140 Platform fixture evidence and handoff",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/CORRECTION-140.patch",
+          "ref": "785057e47111381a869ce8ef6302ee017ecff85d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/785057e47111381a869ce8ef6302ee017ecff85d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/CORRECTION-140.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/HANDOFF.md",
+          "ref": "785057e47111381a869ce8ef6302ee017ecff85d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/785057e47111381a869ce8ef6302ee017ecff85d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/MANIFEST.json",
+          "ref": "785057e47111381a869ce8ef6302ee017ecff85d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/785057e47111381a869ce8ef6302ee017ecff85d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/MANIFEST.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S01-FOLLOWUP-139.patch",
+          "ref": "785057e47111381a869ce8ef6302ee017ecff85d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/785057e47111381a869ce8ef6302ee017ecff85d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S01-FOLLOWUP-139.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S05-CONSUMER-C64.patch",
+          "ref": "785057e47111381a869ce8ef6302ee017ecff85d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/785057e47111381a869ce8ef6302ee017ecff85d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S05-CONSUMER-C64.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/TERMINAL.json",
+          "ref": "785057e47111381a869ce8ef6302ee017ecff85d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/785057e47111381a869ce8ef6302ee017ecff85d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/TERMINAL.json"
+        }
+      ],
+      "author_epoch": "native-platform-fixture-e1-browser140",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 141,
+      "branch": "sf-ux-w07",
+      "pr": 124,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction141/",
+      "source_head": "c799553dd22f307c993b1289fced272d9c5f7f91",
+      "source_tree": "c3b94afee245b6e9176c4def53845df1597d40c8",
+      "latest_message": "docs(sf): complete correction141 e3 handoff with prepost and full patch [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction141/HANDOFF-141-e3.json",
+          "ref": "c799553dd22f307c993b1289fced272d9c5f7f91",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c799553dd22f307c993b1289fced272d9c5f7f91/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction141/HANDOFF-141-e3.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction141/PATCH-141-e3.diff",
+          "ref": "c799553dd22f307c993b1289fced272d9c5f7f91",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c799553dd22f307c993b1289fced272d9c5f7f91/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction141/PATCH-141-e3.diff"
+        }
+      ],
+      "author_epoch": "ux-native-w07-e3",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 142,
+      "branch": "xlsx-print-layout",
+      "pr": 105,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/",
+      "source_head": "55a622ff56e029e2375a1f337d094403f3757e77",
+      "source_tree": "f29de7e5381ad0879b35f1a02dbec42940e2b891",
+      "latest_message": "docs(sf): publish mission142 exact patches and terminal handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/HANDOFF-142.json",
+          "ref": "55a622ff56e029e2375a1f337d094403f3757e77",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/55a622ff56e029e2375a1f337d094403f3757e77/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/HANDOFF-142.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/PATCH-132.diff",
+          "ref": "55a622ff56e029e2375a1f337d094403f3757e77",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/55a622ff56e029e2375a1f337d094403f3757e77/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/PATCH-132.diff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/PREPOST-142.md",
+          "ref": "55a622ff56e029e2375a1f337d094403f3757e77",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/55a622ff56e029e2375a1f337d094403f3757e77/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction142/PREPOST-142.md"
+        }
+      ],
+      "author_epoch": "xlsx-layout-e2-browser142",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 143,
+      "branch": "sf-ux-n15",
+      "pr": 174,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance143/",
+      "source_head": "e7dc313df6455491a33a8f204c26b51d29f84dc1",
+      "source_tree": "1ab722f2955c2636a74de0ecd9e86e970181e01f",
+      "latest_message": "docs(sf): publish terminal N15 mission143 handoff and proofs NOT_RUN",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance143/HANDOFF.json",
+          "ref": "e7dc313df6455491a33a8f204c26b51d29f84dc1",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e7dc313df6455491a33a8f204c26b51d29f84dc1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance143/HANDOFF.json"
+        }
+      ],
+      "author_epoch": "ux-native-n15-e2",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 144,
+      "branch": "sf-ux-n18",
+      "pr": 172,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance144/",
+      "source_head": "736027ef8f40c1dce9378cf0ad861832d761d23c",
+      "source_tree": "116acdba655420e8cb80d5d5169158bf93714a90",
+      "latest_message": "docs(sf): terminal N18 mission144 exact blobs and 132 handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance144/HANDOFF.md",
+          "ref": "736027ef8f40c1dce9378cf0ad861832d761d23c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/736027ef8f40c1dce9378cf0ad861832d761d23c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance144/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance144/TERMINAL.json",
+          "ref": "736027ef8f40c1dce9378cf0ad861832d761d23c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/736027ef8f40c1dce9378cf0ad861832d761d23c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance144/TERMINAL.json"
+        }
+      ],
+      "author_epoch": "ux-native-n18-e2",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 145,
+      "branch": "sf-ux-n23",
+      "pr": 173,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance145/",
+      "source_head": "db6e4a503267d0f54c61c4f966dbde162a2c5500",
+      "source_tree": "2f398b2849b49be474391c0dc39ef07b61e67c75",
+      "latest_message": "docs(sf): publish mission145 terminal receipts and exact integrator132 handoff",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance145/HANDOFF.json",
+          "ref": "db6e4a503267d0f54c61c4f966dbde162a2c5500",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/db6e4a503267d0f54c61c4f966dbde162a2c5500/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance145/HANDOFF.json"
+        }
+      ],
+      "author_epoch": "ux-native-n23-e2",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 151,
+      "branch": "sf-ux-a07",
+      "pr": 141,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction151/",
+      "source_head": "abd27697d1e2844ee777978ace0e5a0a9b87acc3",
+      "source_tree": "296f72ae43c64c6760b0dc995bc9d190210430f4",
+      "latest_message": "docs(sucafina): hand off A07 correction151 to 132 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction151/A07-151-e2.patch",
+          "ref": "abd27697d1e2844ee777978ace0e5a0a9b87acc3",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/abd27697d1e2844ee777978ace0e5a0a9b87acc3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction151/A07-151-e2.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction151/handoff-e2.json",
+          "ref": "abd27697d1e2844ee777978ace0e5a0a9b87acc3",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/abd27697d1e2844ee777978ace0e5a0a9b87acc3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction151/handoff-e2.json"
+        }
+      ],
+      "author_epoch": "ux-native-a07-e2-browser151",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 152,
+      "branch": "sf-ux-a09",
+      "pr": 140,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/",
+      "source_head": "f22f7dfd508d877075477879236861f07a7fc117",
+      "source_tree": "a28cb09cb776c9af969f5e47e23800a3aec1e8a3",
+      "latest_message": "docs(sf2h): hand off A09 correction152 patch and verification fence",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/HANDOFF.json",
+          "ref": "f22f7dfd508d877075477879236861f07a7fc117",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f22f7dfd508d877075477879236861f07a7fc117/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/HANDOFF.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/HANDOFF.md",
+          "ref": "f22f7dfd508d877075477879236861f07a7fc117",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f22f7dfd508d877075477879236861f07a7fc117/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/PATCH.diff",
+          "ref": "f22f7dfd508d877075477879236861f07a7fc117",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f22f7dfd508d877075477879236861f07a7fc117/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/PATCH.diff"
+        }
+      ],
+      "author_epoch": "ux-native-a09-e2-browser152",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 153,
+      "branch": "sf-ux-a12",
+      "pr": 144,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/",
+      "source_head": "0608f3760db961f518ed8717f89a718c6c1ffad6",
+      "source_tree": "c4fdc2c49d610bf894d9da26653fb9c2377e3022",
+      "latest_message": "docs(sf2h): refresh A12 handoff with corrected strict codec patch",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/HANDOFF.json",
+          "ref": "0608f3760db961f518ed8717f89a718c6c1ffad6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0608f3760db961f518ed8717f89a718c6c1ffad6/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/HANDOFF.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/PATCH.diff",
+          "ref": "0608f3760db961f518ed8717f89a718c6c1ffad6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0608f3760db961f518ed8717f89a718c6c1ffad6/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/PATCH.diff"
+        }
+      ],
+      "author_epoch": "ux-native-a12-e2-browser153",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 154,
+      "branch": "sf-ux-a13",
+      "pr": 139,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/",
+      "source_head": "255010fa18e4c55f481bf623da45b5f1c5fcdfb9",
+      "source_tree": "f53b45f3010e14450043c5e57f451a64dc9673b8",
+      "latest_message": "docs(sf): hand off A13 correction154 with selective patch and source/consumer preimages",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/A13-selective.patch",
+          "ref": "255010fa18e4c55f481bf623da45b5f1c5fcdfb9",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/255010fa18e4c55f481bf623da45b5f1c5fcdfb9/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/A13-selective.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/HANDOFF.json",
+          "ref": "255010fa18e4c55f481bf623da45b5f1c5fcdfb9",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/255010fa18e4c55f481bf623da45b5f1c5fcdfb9/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction154/HANDOFF.json"
+        }
+      ],
+      "author_epoch": "ux-native-a13-e2-browser154",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 155,
+      "branch": "sf-ux-a15",
+      "pr": 137,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction155/",
+      "source_head": "d3279c36a38e7be5df6bd6f848f3ded9d22b31a4",
+      "source_tree": "03d9cdd1256be2bd9f9181ebb8af891fa2b6dd7b",
+      "latest_message": "docs(sf2h): normalize correction155 unified patch file boundary",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction155/HANDOFF.json",
+          "ref": "d3279c36a38e7be5df6bd6f848f3ded9d22b31a4",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d3279c36a38e7be5df6bd6f848f3ded9d22b31a4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction155/HANDOFF.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction155/PATCH.diff",
+          "ref": "d3279c36a38e7be5df6bd6f848f3ded9d22b31a4",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d3279c36a38e7be5df6bd6f848f3ded9d22b31a4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction155/PATCH.diff"
+        }
+      ],
+      "author_epoch": "ux-native-a15-e2-browser155",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 158,
+      "branch": "sf-ux-n14",
+      "pr": 146,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/",
+      "source_head": "5d802259adbefd0b2031c436afc3f51dd276a050",
+      "source_tree": "ef7ac01e1b148de305d3d52b249ab37479708696",
+      "latest_message": "docs(sf2h): finalize mission158 source/consumer manifests and terminal handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/HANDOFF.md",
+          "ref": "5d802259adbefd0b2031c436afc3f51dd276a050",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d802259adbefd0b2031c436afc3f51dd276a050/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/MANIFEST.json",
+          "ref": "5d802259adbefd0b2031c436afc3f51dd276a050",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d802259adbefd0b2031c436afc3f51dd276a050/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/MANIFEST.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch",
+          "ref": "5d802259adbefd0b2031c436afc3f51dd276a050",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d802259adbefd0b2031c436afc3f51dd276a050/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch",
+          "ref": "5d802259adbefd0b2031c436afc3f51dd276a050",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d802259adbefd0b2031c436afc3f51dd276a050/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/TERMINAL.json",
+          "ref": "5d802259adbefd0b2031c436afc3f51dd276a050",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d802259adbefd0b2031c436afc3f51dd276a050/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/TERMINAL.json"
+        }
+      ],
+      "author_epoch": "ux-native-n14-e2-browser158",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 159,
+      "branch": "sf-ux-n28",
+      "pr": 152,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/",
+      "source_head": "dd1f13b28837eadca7e41a6692c0f4175affdfe5",
+      "source_tree": "7d1900dee24394ba3a8e9eb18337b0379f4812d6",
+      "latest_message": "docs(sf): mission159 terminal U32 correction handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/TERMINAL.json",
+          "ref": "dd1f13b28837eadca7e41a6692c0f4175affdfe5",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dd1f13b28837eadca7e41a6692c0f4175affdfe5/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/TERMINAL.json"
+        }
+      ],
+      "author_epoch": "ux-native-n28-e2-browser159",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    },
+    {
+      "mission": 160,
+      "branch": "sf-ux-n27",
+      "pr": 157,
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction160/",
+      "source_head": "8a5128c8bd30e91ae72a8a3886de60c06ac1f26b",
+      "source_tree": "a23b228f68504c669027aee96256a273ebb302c2",
+      "latest_message": "test(sf): accept localized import preview label in period regression",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction160/handoff.json",
+          "ref": "8a5128c8bd30e91ae72a8a3886de60c06ac1f26b",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8a5128c8bd30e91ae72a8a3886de60c06ac1f26b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction160/handoff.json"
+        }
+      ],
+      "author_epoch": "ux-native-n27-e2-browser160",
+      "state": "SOURCE_HANDOFF_PUBLISHED_NOT_YET_CONSUMED",
+      "acceptance": "Verify actual epoch, preimages, exact allowed blobs and criteria; only after material application publish consumer ACK. NOT_RUN remains until new real hosted proof."
+    }
+  ],
+  "first_material_delivery": {
+    "goal": "Actually APPLY released corrections as first product work, not another inventory or preflight-only handoff.",
+    "suggested_first_batch": [
+      136,
+      133,
+      134,
+      135,
+      137,
+      138,
+      139
+    ],
+    "steps": [
+      "Verify lease/fence+HEAD and ACK; read exact handoffs/preimages for ready batch.",
+      "Apply only exact granted released code and specs into sf2-stack via MCP create_tree/create_commit/update_ref CAS expected_head forcefalse. If any unit preimage diverges, reconcile semantic delta or defer ONLY that unit while consuming other disjoint ready units.",
+      "Commit real material and durable sourceSHA→consumerSHA/tree/blob ACK; do not fake product delivery with receipt-only fence/empty commit.",
+      "Publish candidate-bound surgical compiler/SDK request to149 for newly fixed inputs, and tests150 where coherent, without assuming a comment wakes browser session. No C64 unchanged rerun."
+    ]
+  },
+  "execution_loop": [
+    "After first batch consume remaining133–142,143–145,151–155,158–160 through same exact provenance/preimage process.21 released source units already located; no need another campaign census.",
+    "Integrate missing N15/N18/N23 leaves into native components/providers/selection/registry/i18n. Existing18leaves/38dictionaries/frozen70surfacepathregistry/Q01/Q02/DOCX130/desktop are already in prior132material; preserve all.",
+    "Integrate author-supplied shared patches without claiming consuming output grants source authorship. I00 shared wiring is yours. Body access uses original Request/principal/context and fail-closed bounded public services. Metadata305IDs never stands in for real callbacks/operations.",
+    "Close shared seams using actual current producer/public APIs: F01 readContext/currentBinding/principal/policy/accessRevision/owner fence; A07 review factory using real scoped services; A12 work read/verify and NAV-01 privacy-safe search; desktop connection/enrollment and exact return intents. Coordinate with156/157 rather than editing their active source. Missing signature/API blocks only affected seam; continue remaining ready work.",
+    "Use newest released source versions; source143–145 resolves old21UI missing-source blocker. Source153 latestPATCH supersedes earlier malformed codec patch. Source155 patch boundary normalized;source140S05consumer patch differs from old author branch;source142workbooks consumer preimage differs from sourcepreimage. Never wholesale overwrite.",
+    "Carry compiler128/149 artifact14171118214 actual generated epic YAML+patch and bundle drift, SDK source136 repair, guard56findings, CI150 48pass/7fail including2importerrors/338expects as historical evidence only. New C requires real qualification, no assumptions.",
+    "No local tests/parsers/validators/typechecks/build.149 handles hosted package bun typecheck/SDKgeneration/guards;150 hosted test:ci snapshots via MCP. No gh/gitpush, extra dispatcher/workflow or premature fullEPIC/final8. Final epic on coherent integrated bundle only, dedup existing requests/runs by material/tree+orderedselector+runtime/config/fixtures/producers.",
+    "Integrate rolling consumable units and route genuine new failures back to actual writer; do not wait for all authors to finish before consuming ready sources. Registry/provider gap is not reason to hold source schema fixes or independent leaves.",
+    "Durable checkpoints after each material batch with queue state, source epochs, candidate heads, pending runs and next actual edit. Continue all independent authorized work; no stop after ACK/inventory/three commits or only publishing comments.",
+    "Before terminating save terminal handoff with exact consumed/remaining units, unintegrated patches/owners, current C, output consumers and validator requests/results. A comment isn't consumer/worker ACK. If browser149/150 has actually ended, record supported fresh handoff need forS0 and continue integration; no phantom wake or duplicated dispatcher."
+  ],
+  "material_boundary": "Changing normative guides/skills/prompts/config/source/tests/fixtures requires new C as applicable; evidenceD only envelope preserving product C blobs. Keep C/G7 and D/G8 separate actual check:guards --base origin/dev receipts. Mandatory8CI+epic/gates+AM01–06+3independentFINAL+validD+remoteproof+noorphanwriters remains unchanged; no final approval from source author or preliminary review.",
+  "pending_source_inputs": [
+    {
+      "mission": 156,
+      "branch": "sf-ux-n10",
+      "cut": "683c1ae0f7e8c602a2c982b52f93ed444057c11a",
+      "state": "CODE_WRITTEN_HANDOFF_PENDING"
+    },
+    {
+      "mission": 157,
+      "branch": "sf-ux-n11",
+      "state": "ACK_BY_COMMENT_NO_CODE_OUTPUT_YET"
+    },
+    {
+      "mission": 161,
+      "branch": "native-host-provider",
+      "state": "ACK_BY_COMMENT_NO_CODE_OUTPUT_YET"
+    }
+  ]
+}
