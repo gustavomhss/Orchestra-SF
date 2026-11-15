@@ -1,0 +1,88 @@
+{
+  "schema": "sf2h.compiler190.guards-e2e-request.v1",
+  "mission": 190,
+  "epoch": "compiler-e5-browser190",
+  "state": "REQUESTED_BY_EXISTING_WORKFLOW_PUSH_NOT_RUN_PROOF",
+  "source": {
+    "owner": 189,
+    "product_W": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "tree": "61b5cfc0df910105a67a344706795b4c3b7d30b7",
+    "latest_consumed": [
+      185,
+      186,
+      187
+    ],
+    "product_pr": 65,
+    "source_postblobs": {
+      "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts": "1d59507133649d2ca57c0c30e2507193f35181fd",
+      "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts": "0f2463a8e6dcc201f5a8a630172e3d88c7bb3d91",
+      "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts": "66e269a78af8262764228557e2eeccd29bca1a36",
+      "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts": "bc84476891d97e7baad4f6462933c60688c11847"
+    },
+    "skip_markers_in_three_new_files": "0 literal test.skip/describe.skip observed by remote read, NOT hosted guard proof"
+  },
+  "ordered": [
+    [
+      "e2e-inventory",
+      ".",
+      "node verify-e2e-typecheck.mjs --inventory"
+    ],
+    [
+      "guards",
+      ".",
+      "bun run check:guards --base origin/dev"
+    ],
+    [
+      "sf-e2e-showConfig",
+      "packages/app-shell",
+      "bun run typecheck:sf-e2e --showConfig"
+    ],
+    [
+      "sf-e2e-listFiles",
+      "packages/app-shell",
+      "bun run typecheck:sf-e2e --listFiles --pretty false"
+    ],
+    [
+      "sf-e2e-verify",
+      ".",
+      "node verify-e2e-typecheck.mjs on hosted config/log"
+    ],
+    [
+      "spawn-imports",
+      ".",
+      "bun run check:spawn-imports"
+    ]
+  ],
+  "dedup": {
+    "prior_run": 43772959867,
+    "prior_W": "77e58de895b5157b2a32e3427483bd12f40a7525",
+    "historical_guard_run": 43766055614,
+    "historical_gate": 66,
+    "historical_warn": 141,
+    "changed_paths": "U15/U39/U40 installed journeys and F04 manifest/fixtures",
+    "repeat_previous_typechecks": false,
+    "sdk_generate": false,
+    "browser_product_tests_191_only": true
+  },
+  "guard": {
+    "rule_engine_no_edits": true,
+    "allowlist_no_edits": true,
+    "waiver": false,
+    "approval": false,
+    "history_55_logs_must_be_preserved": true,
+    "scratch_helper_not_deleted": true,
+    "expected_state": "REPORT_REAL_GATES_NO_PASS_INFERENCE",
+    "review_188": "INDEPENDENT_REVIEW_NOT_CLEANUP_AUTHORITY",
+    "final_C_G7_D_G8": "NOT_PROVEN"
+  },
+  "environment": {
+    "hosted_only": true,
+    "runner": "ubuntu-24.04",
+    "source_lock_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+  },
+  "goal": "paused",
+  "GLOBAL_RELEASE": false
+}

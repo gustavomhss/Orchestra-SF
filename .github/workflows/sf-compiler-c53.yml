@@ -1,6 +1,6 @@
-name: sf-compiler-composed-190
+name: sf-compiler-composed-190-guard
 
-# Mission 190: causal compiler verification on accepted 173-181 + F01/A12 product snapshot. No SDK re-generation while public API inputs stay identical.
+# Mission 190: second coherent W; native U15/U39/U40 185-186 plus real F04 fixture changed. Verify guards and E2E compiler without repeating old package errors.
 # This is not an epic or product-test workflow; A45's paths and dispatcher are untouched.
 on:
   push:
@@ -14,12 +14,12 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SF_SOURCE_SHA: 77e58de895b5157b2a32e3427483bd12f40a7525
-  SF_SOURCE_TREE: 28feb531911172b68a5615e81510a00fda9cb1b8
+  SF_SOURCE_SHA: 4426445c05823ed4932b8a8e35391df024bf74f3
+  SF_SOURCE_TREE: 61b5cfc0df910105a67a344706795b4c3b7d30b7
   SF_PLANNING_SHA: dbf9547211d9b0fade619790de7c19c0869b7c7d
 
 jobs:
-  compiler-composed-190-batch-01:
+  compiler-composed-190-guard-batch-02:
     if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/sf-compiler-checks' && github.event_name == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 45
@@ -30,7 +30,7 @@ jobs:
       - name: Checkout pinned coherent integrated 189 product W, without stored credentials
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          ref: 77e58de895b5157b2a32e3427483bd12f40a7525
+          ref: 4426445c05823ed4932b8a8e35391df024bf74f3
           fetch-depth: 0
           persist-credentials: false
 
@@ -46,7 +46,7 @@ jobs:
           git merge-base HEAD origin/dev
           git rev-parse HEAD HEAD^{tree} origin/dev > "$EVIDENCE/revisions.txt"
           git merge-base HEAD origin/dev > "$EVIDENCE/merge-base.txt"
-          printf "%s\\n" "candidate_sha=$SF_SOURCE_SHA" "candidate_tree=$SF_SOURCE_TREE" "selection_kind=compiler190-causal-09" "historic_c64_not_pass=true" > "$EVIDENCE/selection-identity.txt"
+          printf "%s\\n" "candidate_sha=$SF_SOURCE_SHA" "candidate_tree=$SF_SOURCE_TREE" "selection_kind=compiler190-guards-e2e-06" "historic_c64_not_pass=true" > "$EVIDENCE/selection-identity.txt"
           git status --porcelain=v1 > "$EVIDENCE/status-before.txt"
           test ! -s "$EVIDENCE/status-before.txt"
           sha256sum bun.lock package.json packages/app-shell/package.json packages/app-shell/tsconfig.json packages/app-shell/tsconfig.sf-e2e.json \
@@ -72,6 +72,16 @@ jobs:
             modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts \
             modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts \
             modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts \
+            packages/app-shell/e2e/sucafina/native/fixture.ts \
+            packages/app-shell/e2e/sucafina/native/fixture/scratch.ts \
+            packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts \
+            packages/app-shell/e2e/sucafina/native/fixture/journeys.ts \
+            packages/app-shell/e2e/sucafina/native/fixture/readiness.ts \
+            packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts \
+            packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts \
+            packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts \
+            packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts \
+            packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts \
             packages/client/src/sucafina/transport.ts packages/client/src/sucafina/work.ts \
             packages/schema/src/sucafina/operation-registry.ts packages/schema/src/sucafina/work.ts > "$EVIDENCE/input-sha256.txt"
 
@@ -93,13 +103,13 @@ jobs:
           git status --porcelain=v1 > "$EVIDENCE/status-after-tool-overlay.txt"
           echo "SF128_TOOL_DIR=$TOOL_DIR" >> "$GITHUB_ENV"
 
-      - name: Run only causal package typechecks, E2E compiler and spawn imports; preserve exits
+      - name: Run guards and causal installed E2E compilation on newly integrated U15 U39 U40; preserve exits
         run: |
           set -uo pipefail
           EVIDENCE="$RUNNER_TEMP/sf-compiler-190"
           mkdir -p "$EVIDENCE"
           : > "$EVIDENCE/exit-codes.tsv"
-          printf "%s\\n" e2e-inventory typecheck-schema typecheck-client typecheck-sucafina typecheck-cli sf-e2e-showConfig sf-e2e-listFiles sf-e2e-verify spawn-imports > "$EVIDENCE/ordered-selection.txt"
+          printf "%s\\n" e2e-inventory guards sf-e2e-showConfig sf-e2e-listFiles sf-e2e-verify spawn-imports > "$EVIDENCE/ordered-selection.txt"
           bun --version > "$EVIDENCE/bun-version.txt" 2>&1
           node --version > "$EVIDENCE/node-version.txt" 2>&1
           git --version > "$EVIDENCE/git-version.txt" 2>&1
@@ -117,13 +127,10 @@ jobs:
             tail -n 60 "$EVIDENCE/$name.log" || true
             return 0
           }
-          # No SDK generation: Protocol/Server HttpApi, client contract, build/codegen input blobs match 163.
-          # Guard sources/skip sites remain 188/185/186-owned; no unchanged gate rerun on this batch.
+          # W442 introduces U15/U39/U40 sources and F04 fixture; new guard findings are meaningful.
+          # Do not repeat unchanged Schema/Client/CLI errors from W77e. No guard waiver/approval.
           record e2e-inventory . node "$SF128_TOOL_DIR/verify-e2e-typecheck.mjs" --inventory
-          record typecheck-schema packages/schema bun typecheck
-          record typecheck-client packages/client bun typecheck
-          record typecheck-sucafina modules/sucafina bun typecheck
-          record typecheck-cli apps/cli bun typecheck
+          record guards . bun run check:guards --base origin/dev
           record sf-e2e-showConfig packages/app-shell bun run typecheck:sf-e2e --showConfig
           record sf-e2e-listFiles packages/app-shell bun run typecheck:sf-e2e --listFiles --pretty false
           config_exit="$(awk '$1 == "sf-e2e-showConfig" {print $2}' "$EVIDENCE/exit-codes.tsv")"
@@ -144,8 +151,8 @@ jobs:
             echo 'FAIL: one or more real checks failed (see per-command exit codes)'
             exit 1
           fi
-          test "$(wc -l < "$EVIDENCE/exit-codes.tsv")" -eq 9
-          echo 'PASS: all 9 causally selected compiler/typecheck/import commands returned 0 (not product acceptance)'
+          test "$(wc -l < "$EVIDENCE/exit-codes.tsv")" -eq 6
+          echo 'PASS: all 6 scoped guard/E2E compiler/import commands exit0 (not final C/G7 or D/G8 acceptance)'
 
       - name: Record SDK not-selected state and preserve original epic provenance
         if: always()
@@ -262,7 +269,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: sf-compiler-190-w77e-01
+          name: sf-compiler-190-guards-w442-02
           path: ${{ runner.temp }}/sf-compiler-190
           if-no-files-found: error
           retention-days: 14
