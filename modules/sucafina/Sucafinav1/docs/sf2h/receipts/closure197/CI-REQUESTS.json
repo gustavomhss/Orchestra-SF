@@ -1,0 +1,228 @@
+{
+  "schema": "sf2h.surgical-ci-request.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 197,
+  "epoch": "native-closure-e1-browser197",
+  "branch": "sf-proof-authority",
+  "immutable_code_sha": "de007eca612e3a6a0b084b3d09229529d74ef7a4",
+  "base_product_sha": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+  "owner": {
+    "ci_dispatcher": 191,
+    "ci_pr": 106,
+    "integrator": 189,
+    "integrator_pr": 65,
+    "compiler": 190,
+    "installed_fixture_owner": 199
+  },
+  "run_policy": "REQUEST_ONLY. No workflow, local test, validator, build or typecheck run by mission197. Mission191 exclusively dispatches selective CI.",
+  "requests": [
+    {
+      "id": "197-AM03-public-authority",
+      "kind": "bun-test-selectors",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+      "blob_sha": "530b1d6618218f11cefa699e3e6def1bd8f96270",
+      "selectors": [
+        "AM03 public discovery cannot authorize a revoked actor; another same-profile session survives, old generation cannot revive",
+        "AM03 a previously discovered Planner source cannot be read after revocation or across principals"
+      ],
+      "actual_inputs": [
+        "real core SessionV2 and skill loading from resident manifest",
+        "two deterministic fixture principals finance/admin with distinct Planner source scope",
+        "real public ToolRegistry settlement and MCP bridge for sf_forecast_compare"
+      ],
+      "actual_effects": [
+        "authorized Planner read only; zero domain mutations",
+        "forged native bindings and role/operation fail before dispatch",
+        "revocation denies first actor while other actor survives",
+        "invalidated generation refuses old Session after rollback",
+        "fresh Request/native Session/skill receipt binds generation 2"
+      ],
+      "required_consumption": [
+        "tool settlement structured result and native receipts",
+        "verified-call count 2 only for authorized operations",
+        "Planner source version data unmodified",
+        "negative results contain no result value"
+      ],
+      "proof_level": "component-only, no installed identity/model turn"
+    },
+    {
+      "id": "197-AM03-existing-generation",
+      "kind": "bun-test-selector",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+      "blob_sha": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+      "selectors": [
+        "AM03: an invalidated provider generation cannot be revived; a new loaded session needs fresh Request authentication"
+      ],
+      "required_consumption": [
+        "actual loaded native Session/skill receipt and generation transition; no provider model result"
+      ],
+      "proof_level": "component-only"
+    },
+    {
+      "id": "197-AM03-existing-public-tool",
+      "kind": "bun-test-selector",
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "blob_sha": "22e41fcd2066f409f3d4e212a17429e59bebe331",
+      "selectors": [
+        "public SF tool registration executes the real loaded forecast skill route with UI parity and session isolation"
+      ],
+      "required_consumption": [
+        "real source/result receipts actor isolation through public ToolRegistry"
+      ],
+      "proof_level": "component-only"
+    },
+    {
+      "id": "197-AM04-postcommit-recovery",
+      "kind": "bun-test-selector",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+      "blob_sha": "1fbabb2be4bd2540f1f280cf432630e6dd3f486d",
+      "selectors": [
+        "AM04 genuine domain-commit/return interruption recovers one receipt across SQLite reopen with human review and no second effect"
+      ],
+      "actual_inputs": [
+        "human-authorized decision-review and decision-apply through actual Procurement HTTP adapter",
+        "real Requests.save PR-1 amount 100 -> 150, expectedVersion 0",
+        "afterReceiptCommit hook after real SQLite transactionAll commit",
+        "original caseId, case/choice/changeRef, reviewDigest, idempotencyKey",
+        "dispose(false) and new service composition openLocalStore retained directory"
+      ],
+      "actual_effects": [
+        "one procurement domain write and history entry; one original receipt",
+        "first response 503 after commit before case linkage",
+        "original receipt from durable reopened store; decision-recover 200; repeated recovery same result",
+        "changed human review digest with reused public key denied; post-recovery revocation denied"
+      ],
+      "required_consumption": [
+        "receipt.id/commandDigest/idempotencyKey/targetIncarnation physical version 1",
+        "domain history exactly one entry before/after retry",
+        "case planned but raw receipt exists before recovery; case linked applied afterward",
+        "fresh SQLite instance and no extra receipt commit after recovery"
+      ],
+      "proof_level": "component real SQLite/human action; not installed corporate identity or process restart"
+    },
+    {
+      "id": "197-AM04-key-digest",
+      "kind": "bun-test-selector",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+      "blob_sha": "4a7100ca6d4a3c109924674fc6d6ae8c4e79aee0",
+      "selectors": [
+        "AM04 original domain receipt is replayed by identical key+digest and different content is rejected before mutation callback"
+      ],
+      "actual_inputs": [
+        "original public Procurement decision-apply and durable receipt",
+        "state.transaction receipt namespace and Procurement domainSurface, identical prepared: key/digest/review binding"
+      ],
+      "actual_effects": [
+        "identical command recovers actual original stored receipt without callback",
+        "same key/different 64-hex digest yields idempotency-content-changed",
+        "zero duplicate callbacks, one physical domain history entry"
+      ],
+      "required_consumption": [
+        "original state.transactions receipt proof and exact receipt",
+        "authoritative outcome of real SfProductStatePort transactionAll",
+        "no callback/domain side effect on either replay/collision"
+      ],
+      "proof_level": "component real domain/storage; no installed model"
+    },
+    {
+      "id": "197-AM04-existing-real-cross-domain",
+      "kind": "bun-test-selectors",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "blob_sha": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55",
+      "selectors": [
+        "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+        "both real domain edits apply, retain ordered receipts and replay after restart without another effect",
+        "domain permission and receipt revocation preserve case access while denying pending application and restricted aggregate results"
+      ],
+      "required_consumption": [
+        "distinct per-domain receipts and explicit partially-applied versus applied",
+        "no global transaction claim; no duplicated domain command after reopen"
+      ],
+      "proof_level": "component, genuine durable domain ports"
+    },
+    {
+      "id": "197-AM04-existing-browser",
+      "kind": "bun-test-selectors-playwright-driver",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "blob_sha": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+      "selectors": [
+        "C12 UI recovers the original receipt after lost response concurrent edit reload and a new SQLite composition",
+        "C12 UI recovers a successful committed Apply whose 200 response was lost"
+      ],
+      "required_consumption": [
+        "original browser human confirmation, failed network response, explicit retry and recovery",
+        "real browser reload/new browser context, SQLite reopen and original receipt ID",
+        "one real Procurement history effect, no fabricated receipt"
+      ],
+      "proof_level": "component installed browser driver; processRestarted=false"
+    },
+    {
+      "id": "197-AM04-existing-negative",
+      "kind": "bun-test-selectors",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "blob_sha": "76bf7963d30dde72eb369616dfcd0fee61948803",
+      "selectors": [
+        "C12 recovery rejects altered digest payload principal case and target identity while preserving the real receipt",
+        "C12 recovery rechecks revocation after its receipt read and rejects a replaced physical target",
+        "C12 Procurement recovery preserves partial execution and cannot dispatch another domain"
+      ],
+      "required_consumption": [
+        "original stored receipt and target identity",
+        "authorized replay denial after revocation, preserved partial state"
+      ],
+      "proof_level": "component"
+    }
+  ],
+  "installed_candidate_requests": [
+    {
+      "id": "AM03-installed-positive",
+      "status": "BLOCKED_EXTERNAL_FIXTURE",
+      "dependency_owner": 199,
+      "required_nonsecret_inputs": [
+        "accessible installed Sucafina integration URL and tested installation/project/location selectors",
+        "two legitimate principal references with distinct real permission grants and relevant same resident profile",
+        "two distinct case ids plus their versions/incarnations, original source search and drilldown refs",
+        "native model provider name/object identity and generation observation before/after replacement; installation restart/reopen action",
+        "supported revocation operation and resulting accessRevision for each principal",
+        "real Task/run ID and native SessionV2 skillLoadReceipt IDs generated by host"
+      ],
+      "actions": [
+        "start two authenticated distinct sessions, each with genuine profile and manifest skill",
+        "exercise direct operation, memory/prompt/BI/report/link search then detail and discovery then execution",
+        "revoke/rebind between stages, force provider homonym/object replacement and restart via approved installed harness",
+        "capture raw invocation and denial receipts, independent actor outputs and absence of leaks"
+      ],
+      "not_permitted": [
+        "manufacture principal/grant/corporate token",
+        "simulate provider model output/receipt",
+        "restart desktop/server or change engine/allowlist"
+      ]
+    },
+    {
+      "id": "AM04-installed-positive",
+      "status": "BLOCKED_EXTERNAL_FIXTURE",
+      "dependency_owner": 199,
+      "required_nonsecret_inputs": [
+        "installed domain case and real prepared model runRef, nativeSessionId and skill loaded receipts",
+        "authorized review and human application command for exact target/version/idempotencyKey/commandDigest",
+        "documented supported fault injection at public postcommit/pre-return boundary",
+        "durable installed source namespace and receipt read; supported reload of host/service without restarting desktop"
+      ],
+      "actions": [
+        "model prepares real proposal and authenticated human selects/approves",
+        "interrupt after physical per-domain commit before caller return; recover receipt by key+digest and retry",
+        "deny different content under same key and revocation; preserve independent domain states"
+      ],
+      "not_permitted": [
+        "mock receipt/authority",
+        "claim global atomic transaction",
+        "mark PASS without hosted run and observed consumer"
+      ]
+    }
+  ],
+  "entry_state": "NOT_RUN",
+  "ci_run_ids": [],
+  "ci_action_urls": [],
+  "approval": "NONE",
+  "note": "Comments to PR106/PR65 are notifications only, not ACK or a chat wake. Bundle C eight final selections deferred to integrator/dispatcher."
+}
