@@ -1,0 +1,147 @@
+{
+  "status": "PASS_DOCUMENT_STRUCTURE",
+  "strict": true,
+  "product_tests_executed": false,
+  "work_orders": 78,
+  "ui_work_orders": 47,
+  "ownership_claims": 361,
+  "integration_graph_nodes": 78,
+  "qualification_graph_nodes": 78,
+  "atomic_integration_groups": 1,
+  "component_dependency_links": 175,
+  "surface_operation_owner_links": 73,
+  "typed_route_pairs": 165,
+  "incremental_outputs": 8,
+  "pilot_closure": [
+    "A03",
+    "D01",
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "Q01.pilot",
+    "Q02.pilot",
+    "S01",
+    "S03",
+    "U10.queue",
+    "U13.pr-approval"
+  ],
+  "contract_operations": 305,
+  "pilot_operation_bindings": 43,
+  "surface_ids": 70,
+  "canonical": {
+    "indexed": 1610,
+    "resolved": 1610,
+    "matching": 1610,
+    "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "git_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "local_materialization": "removed one extra terminal LF from local materialization; exact pinned Git blob verified",
+    "referenced_tasks": 74
+  },
+  "errors": [],
+  "warnings": [],
+  "additional_root_checks": {
+    "json_files_parsed": 90,
+    "local_markdown_links_checked": 176,
+    "broken_local_links": [],
+    "unique_route_shapes": 165,
+    "route_collisions": [],
+    "domain_controls": 109,
+    "producer_aliases": 14,
+    "empty_contract_resources": 0,
+    "operation_source_refs_resolved": 305,
+    "duplicate_typed_declarations": 0,
+    "star_imports_in_normative_types": 0,
+    "pdf_pages": 18,
+    "out_of_page_pdf_text_spans": 0,
+    "pdf_visual_review": "All original 17 pages read by UX reviewer; final stamped page 1 and added page 18 rendered and inspected by root.",
+    "type_script_validation": "Declarations reviewed independently by reading; no parser/compiler PASS claimed; see reviews/component-signatures-syntax.json.",
+    "independent_hash_acks": [
+      {
+        "review": "cross-execution.md",
+        "file": "execution/CONTRACTS.md",
+        "sha256": "d3fa19390c8673ec1f6dfa24d95cec33f251e76f553d916995c7cedb83986642",
+        "match": true
+      },
+      {
+        "review": "cross-execution.md",
+        "file": "execution/contract-catalog.json",
+        "sha256": "7cd799147af22376a84c2a0844fd9893e37a19b3d7ad389270dde93efb571725",
+        "match": true
+      },
+      {
+        "review": "cross-execution.md",
+        "file": "execution/SURFACE-SPECS.md",
+        "sha256": "5e3d8e92adcdb70f92f7b1a21af46b587b6fd90d620a6795d83e841b21f4f49f",
+        "match": true
+      },
+      {
+        "review": "cross-execution.md",
+        "file": "execution/surface-manifest.json",
+        "sha256": "28633c40d9f6a0e5e6dcb2c7de6fc9cf3272e3aafe9b2e97d492a80252e17cbd",
+        "match": true
+      },
+      {
+        "review": "cross-execution.md",
+        "file": "execution/COMPONENT-CONTRACTS.md",
+        "sha256": "079eb0c07092e514ae0b7bb771f366e6bf9ba9be9227f8888f49592920f701c0",
+        "match": true
+      },
+      {
+        "review": "cross-execution.md",
+        "file": "execution/component-signatures.ts",
+        "sha256": "ec77a2fbec74154b90fb7a5b8b2edb47021a6f8bbc92b528bb8c6a48af7569a2",
+        "match": true
+      },
+      {
+        "review": "cross-execution.md",
+        "file": "execution/host-signatures.ts",
+        "sha256": "72919a84e8c03e157376ed610f62673b668ae8c86084f3249aeac32cb0b86524",
+        "match": true
+      },
+      {
+        "review": "cross-execution.md",
+        "file": "execution/route-signatures.ts",
+        "sha256": "ece53b32c660ee87cbae4ed88239c96e800110afa317268628b6722f29a1eaaf",
+        "match": true
+      },
+      {
+        "review": "cross-ux.md",
+        "file": "README.md",
+        "sha256": "83e2fc0ee8155cd4f189395687e3bf8946071f9c63b26e6b6fa355034114f235",
+        "match": true
+      },
+      {
+        "review": "cross-ux.md",
+        "file": "UX-DESIGN.md",
+        "sha256": "2c1fcea50135e9ddd8b96d4b73a96382261e1f16c6a5e263e79ffb329300df4f",
+        "match": true
+      },
+      {
+        "review": "cross-ux.md",
+        "file": "NATIVE-ARCHITECTURE.md",
+        "sha256": "7e1ce7d6a53fcd7870f57779490f386491a42905b2af76675944fab27fe4dd27",
+        "match": true
+      },
+      {
+        "review": "cross-ux.md",
+        "file": "ACCEPTANCE.md",
+        "sha256": "82d4551aa5c36f75cb6fef9dba260f0f1b6e5cbecf25f894e772be0242b78e13",
+        "match": true
+      },
+      {
+        "review": "cross-ux.md",
+        "file": "SCREEN-INVENTORY.md",
+        "sha256": "115bf00b25624e60eef2862d0c8383161353d8cccfb891f51c50238ef0d32e67",
+        "match": true
+      },
+      {
+        "review": "cross-ux.md",
+        "file": "DELIVERY-PLAN.md",
+        "sha256": "89e8804230a914c63ad52c747ee745213c4a10daa61769fcf5bed2ac6e6e294f",
+        "match": true
+      }
+    ]
+  },
+  "scope": "Document integrity and independent design review only; no product implementation, typecheck, runtime, CI, deploy or acceptance."
+}

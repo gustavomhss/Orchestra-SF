@@ -1,0 +1,218 @@
+{
+  "id": "R01",
+  "title": "FINAL independente: produto, UX nativa, a11y e arquitetura",
+  "kind": "independent-review",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 9,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r01/**"
+  ],
+  "may_write_shared_registry": false,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP10.T03"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [],
+  "exports": [],
+  "depends_authoring": [
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "surface-specs",
+      "source": "surface-manifest.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [
+    "Q01",
+    "Q02"
+  ],
+  "depends_qualification": {
+    "work_orders": [
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "A09",
+      "A10",
+      "A11",
+      "A12",
+      "A13",
+      "A14",
+      "A15",
+      "D01",
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "Q01",
+      "Q02",
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "U01",
+      "U02",
+      "U03",
+      "U04",
+      "U05",
+      "U06",
+      "U07",
+      "U08",
+      "U09",
+      "U10",
+      "U11",
+      "U12",
+      "U13",
+      "U14",
+      "U15",
+      "U16",
+      "U17",
+      "U18",
+      "U19",
+      "U20",
+      "U21",
+      "U22",
+      "U23",
+      "U24",
+      "U25",
+      "U26",
+      "U27",
+      "U28",
+      "U29",
+      "U30",
+      "U31",
+      "U32",
+      "U33",
+      "U34",
+      "U35",
+      "U36",
+      "U37",
+      "U38",
+      "U39",
+      "U40",
+      "U41",
+      "U42",
+      "U43",
+      "U44",
+      "U45",
+      "U46",
+      "U47"
+    ],
+    "external": [
+      "Complete canonical same-C gate set and real runtime proofs"
+    ],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport"
+    ],
+    "producer_exports": [
+      {
+        "order": "Q01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "Q02",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      }
+    ],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/R01.json"
+    ],
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": []
+  },
+  "deliver": [
+    "Review the same frozen final material C with all required proofs available; reviewer has no implementation authorship.",
+    "Publish concrete findings immediately with path/line/causal sequence and owner; author corrects and reviewer rechecks affected findings.",
+    "Trace every mandatory original reviewer scope and affected work-package criteria into exact C/tree, source SHA, access identity, observed controls and evidence; a reviewer with implementation authorship is replaced. Finding must include line/causal path and owner for correction."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "R01-AC01",
+      "expected": "No mandatory finding or unknown evidence is promoted to PASS; original criteria remain required.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "R01-AC02",
+      "expected": "All three independent opinions identify exact same final C, authorship exclusions and evidence scope.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "R01-SCOPE",
+      "expected": "All 15 native chapters, 70 surface routes, flows, web+desktop, renderer/main binding, shell/owner, accessibility, responsiveness, i18n, navigation, visual fidelity and architecture/app UX invariants; independent of implementation authorship. No scope can be silently delegated away; same candidate C and all mandatory gates.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [],
+    "typecheck_packages": [],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  },
+  "reviewScope": "All 15 native chapters, 70 surface routes, flows, web+desktop, renderer/main binding, shell/owner, accessibility, responsiveness, i18n, navigation, visual fidelity and architecture/app UX invariants; independent of implementation authorship.",
+  "reviewRequiredChecks": [
+    "15 chapters/70 surfaces and full 28 CAP + 42 supplemental field/action/state parity",
+    "Keyboard, 320/768/1024/1280/1440, 200% text, 400% reflow, theme/locale/visual and no screenshots-only PASS",
+    "Owner/deeplink, shell events, desktop auth/IPC, draft, errors and real navigation transitions"
+  ]
+}

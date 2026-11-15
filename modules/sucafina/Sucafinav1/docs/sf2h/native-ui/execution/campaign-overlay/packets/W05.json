@@ -1,0 +1,98 @@
+{
+  "schema": "sf2h.native-ui.author-packet.v1",
+  "mission_id": "UX20-W05",
+  "seat": "W05",
+  "work_order_id": "F04",
+  "output_id": null,
+  "title": "Harness instalado e corpus isolado",
+  "state": "PREPARED_USER_AUTHORIZED_OUTPUT_PREFLIGHT",
+  "requested_model": "Astra (user browser); record actual model when exposed",
+  "effective_model": null,
+  "actual_session_id": null,
+  "actual_actor": null,
+  "branch": "sf-ux-w05",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "cohort_base": "resolve branch initial head; same immutable shared cohort commit for all19",
+  "source": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+  },
+  "common_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/campaign-overlay/COMMON.md",
+  "work_order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F04.json",
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/app-shell/e2e/AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "component-signatures.ts",
+      "host-signatures.ts",
+      "route-signatures.ts"
+    ],
+    "local": [
+      "work-orders/F04.json"
+    ],
+    "contracts": [
+      "ctx",
+      "surface-specs",
+      "transport",
+      "ui-frame"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": []
+  },
+  "write_paths": [
+    "packages/app-shell/e2e/sucafina/native/fixture/**",
+    "packages/app-shell/e2e/sucafina/native/fixture.ts",
+    "packages/app-shell/test-browser/sucafina-native/fixture/**"
+  ],
+  "test_write_grants": [],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/",
+  "lease": {
+    "reserved_epoch": "ux-native-w05-e1",
+    "state": "RESERVED_NOT_ACTIVE; publish real ACK and per-output admission",
+    "integrator": "same current114 C00, no second supervisor"
+  },
+  "frozen_contract_blobs": {
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+    "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "authoring_locks": [
+    "ctx",
+    "surface-specs",
+    "transport",
+    "ui-frame"
+  ],
+  "contract_refs": [
+    "ctx",
+    "surface-specs",
+    "transport",
+    "ui-frame"
+  ],
+  "source_binding_pins": {},
+  "entrypoints": [],
+  "integration_dependencies": [
+    "F01",
+    "F02"
+  ],
+  "qualification_dependencies": [
+    "F01",
+    "F02"
+  ],
+  "affected_test_files": [],
+  "scope_clarifications": [],
+  "delivery": "Complete assigned output; one PR to sf2-stack, exactprepost/patch/tests/dependencies and ARTIFACT_READY handoff to114; do not edit sharedpaths or wait for unrelated services."
+}

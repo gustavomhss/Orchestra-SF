@@ -1,0 +1,177 @@
+{
+  "id": "A08",
+  "title": "Bindings finos: Visualizações BI",
+  "kind": "adapter",
+  "status": "PLANNED_NOT_AUTHORIZED",
+  "priority": 3,
+  "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+  "owns": [
+    "packages/schema/src/sucafina/bi.ts",
+    "packages/client/src/sucafina/bi.ts",
+    "apps/cli/src/sucafina-product/native-ui/bi.ts",
+    "packages/schema/src/sucafina/bi/**",
+    "packages/client/src/sucafina/bi/**",
+    "apps/cli/src/sucafina-product/native-ui/bi/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+  ],
+  "may_write_shared_registry": false,
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "task_refs": [
+      "WP05.T01",
+      "WP05.T02",
+      "WP05.T03",
+      "WP05.T04",
+      "WP05.T05"
+    ],
+    "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+  },
+  "surfaces": [],
+  "exports": [
+    "SfBi",
+    "createSfBiClient"
+  ],
+  "depends_authoring": [
+    {
+      "lock": "bi",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "ctx",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    },
+    {
+      "lock": "transport",
+      "source": "contract-catalog.json",
+      "requires": "FROZEN with digest in launch record"
+    }
+  ],
+  "depends_integration": [
+    "F01",
+    "F02"
+  ],
+  "depends_qualification": {
+    "work_orders": [
+      "F01",
+      "F02"
+    ],
+    "external": [],
+    "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+  },
+  "consumes": {
+    "contracts": [
+      "bi",
+      "ctx",
+      "transport"
+    ],
+    "producer_exports": [
+      {
+        "order": "F01",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      },
+      {
+        "order": "F02",
+        "policy": "Only frozen public exports; no private file imports or source-copying."
+      }
+    ],
+    "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+    "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+    "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+    "operation_refs": [
+      "contract-catalog.json#/operations/bi.bi-data",
+      "contract-catalog.json#/operations/bi.bi-decision",
+      "contract-catalog.json#/operations/bi.bi-options",
+      "contract-catalog.json#/operations/bi.bi-source"
+    ],
+    "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+  },
+  "required_reads": {
+    "instructions": [
+      "AGENTS.md",
+      "packages/schema/AGENTS.md"
+    ],
+    "common": [
+      "EXECUTION-PROTOCOL.md",
+      "manifest.json",
+      "host-signatures.ts"
+    ],
+    "local": [
+      "work-orders/A08.json"
+    ],
+    "contracts": [
+      "bi",
+      "ctx",
+      "transport"
+    ],
+    "surfaces": [],
+    "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+    "source_bindings": [
+      "contract-catalog.json#/sources/extended"
+    ]
+  },
+  "deliver": [
+    "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
+    "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
+    "Publish operation/field/source equivalence and current-access/redaction negative cases."
+  ],
+  "acceptance_cases": [
+    {
+      "id": "A08-AC01",
+      "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A08-AC02",
+      "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "A08-AC03",
+      "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+      "status": "PLANNED_NOT_RUN"
+    }
+  ],
+  "gates": {
+    "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+    "test_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+    ],
+    "typecheck_packages": [
+      "apps/cli",
+      "packages/client",
+      "packages/schema"
+    ],
+    "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+    "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+    "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+  },
+  "stop": [
+    "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+    "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+    "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+    "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+    "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+    "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+  ],
+  "handoff": {
+    "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+    "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+    "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+  },
+  "entrypoints": [
+    {
+      "path": "packages/schema/src/sucafina/bi.ts",
+      "symbol": "SfBi",
+      "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+    },
+    {
+      "path": "packages/client/src/sucafina/bi.ts",
+      "symbol": "createSfBiClient",
+      "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+    }
+  ],
+  "server_leaf_policy": "Existing JSON operations are called directly through typed client. Do not create a duplicate server forwarder; optional server allowlist is reserved only for an explicitly frozen missing projection."
+}
