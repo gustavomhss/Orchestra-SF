@@ -29,7 +29,7 @@ export function createSfWorkClient(transport: SfTransport) {
   const viewsV1 = <Input, Output>(operation: SfOperation<Input, Output>) =>
     (input: Input, options: SfCallOptions): Promise<SfTransportResult<Output>> =>
       v2Requested(input)
-        ? Promise.resolve({ kind: "transport-error", reason: "contract-unavailable" })
+        ? Promise.resolve({ kind: "transport-error", reason: "contract-unavailable" } as const)
         : transport.execute(operation, input, options)
 
   return {
