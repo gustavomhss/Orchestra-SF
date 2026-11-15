@@ -76,13 +76,14 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     group: PrGroup | "all"
     search: string
     layoutMode: "single" | "split" | "split-context"
+    detailPage: boolean
     review: Readonly<{ source: PrProjection; decision: PrDecision; intentRef: SfIntentRef }> | null
     phase: Phase
     pending: Pending | null
     failure: "denied" | "not-found" | "stale" | "unavailable" | "invalid" | null
   }>({
     authority: null, page: null, state: "loading", selected: null,
-    group: "all", search: "", layoutMode: "single",
+    group: "all", search: "", layoutMode: "single", detailPage: false,
     review: null, phase: "idle", pending: null, failure: null,
   })
   let readController: AbortController | undefined
@@ -172,7 +173,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionBusy = false
     setUi({
       authority: token, page: null, state: token ? "loading" : "session-expired",
-      selected: directRef ?? null, group: "all", search: "",
+      selected: directRef ?? null, group: "all", search: "", detailPage: false,
       review: null, pending: null, phase: "idle", failure: null,
     })
     if (token) {
@@ -182,7 +183,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         if (!page || authority() !== token || props.route.kind !== "review") return
         const result = findSubmittedPr(page, props.route.params.requestRef)
         if (result.kind === "submitted-pr" && result.actions.includes("approve"))
-          setUi("review", { source: result, decision: "approve" })
+          setUi("review", { source: result, decision: "approve", intentRef: crypto.randomUUID() as SfIntentRef })
       })
     }
     onCleanup(() => {
@@ -201,6 +202,11 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
   const decisionValue = () => {
     const snapshot = decisionDraft()?.snapshot()
     return snapshot?.availability === "active" ? snapshot.value : null
+  }
+  const orphanPending = () => {
+    const state = decisionDraft()?.snapshot()
+    return !ui.pending && state?.availability === "active" &&
+      (state.pendingOperation !== null || state.value.commandStarted)
   }
   createEffect(() => {
     const source = selectedPr()
@@ -226,11 +232,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
   const viewState = (): State => {
     if (!authority() || ui.authority !== authority()) {
       const state = host.state().status
-      return state === "denied" || state === "context-mismatch" ? "denied" :
-        state === "resolving" ? "loading" : "session-expired"
+      return state === "denied" ? "denied" :
+        state === "context-mismatch" ? "invalid" :
+        state === "resolving" ? "loading" :
+        state === "unavailable" || state === "choose-installation" ? "unavailable" : "session-expired"
     }
     if (ui.state !== "ready") return ui.state
-    if (ui.phase === "outcome-unknown" || ui.phase === "source-changed") return "outcome-unknown"
+    if (ui.phase === "outcome-unknown" || ui.phase === "source-changed" || orphanPending()) return "partial"
     if (ui.phase === "conflict") return "conflict"
     if (ui.phase === "failed") return ui.failure === "denied" ? "denied" :
       ui.failure === "not-found" ? "not-found" : ui.failure === "stale" ? "conflict" : "unavailable"
@@ -243,6 +251,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
   }
   const stateMessage = (): SfU13CopyKey => {
     if (ui.phase === "source-changed") return "sf.u13.sourceChanged"
+    if (orphanPending()) return "sf.u13.unknown"
     if (ui.phase === "outcome-unknown") return "sf.u13.unknown"
     if (ui.phase === "conflict") return "sf.u13.conflict"
     if (ui.phase === "submitting") return "sf.u13.submitting"
@@ -448,8 +457,39 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionBusy = false
   }
 
+  /** A restored F01 draft may retain a lost operation across chapter changes. */
+  const reconcileAbandoned = async () => {
+    const token = authority()
+    const source = selectedPr()
+    const state = decisionDraft()?.snapshot()
+    if (!token || !source || state?.availability !== "active" ||
+        (!state.pendingOperation && !state.value.commandStarted) || actionBusy) return
+    actionBusy = true
+    const controller = new AbortController()
+    actionController = controller
+    const result = await sourceRead(token, source.requestRef, controller.signal)
+    if (!controller.signal.aborted && authority() === token) {
+      if (result.kind === "ok") {
+        setUi("page", null)
+        setUi("page", result.page)
+        setUi("state", "ready")
+        const later = findSubmittedPr(result.page, source.requestRef)
+        setUi("phase", later.kind === "not-submitted" ||
+          (later.kind === "submitted-pr" && later.version !== state.baseVersion)
+          ? "source-changed" : "outcome-unknown")
+      } else if (result.kind === "denied" || result.kind === "session-expired") {
+        setUi("page", null)
+        setUi("state", result.kind)
+      }
+    }
+    actionBusy = false
+  }
+
   const onBack = () => {
-    if (ui.pending) return
+    if (ui.detailPage) {
+      setUi("detailPage", false)
+      return
+    }
     if (props.route.kind !== "entry" && props.route.query.returnTo) {
       navigate(props.route.query.returnTo)
       return
@@ -502,7 +542,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         }] : []}
         sourceActions={[]}
         onBack={onBack}
-        onOpenPage={() => undefined}
+        onOpenPage={() => setUi("detailPage", true)}
       />
     )
   }
@@ -521,7 +561,12 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       <SfStatePanel
         state={viewState()}
         messageKey={key(stateMessage())}
-        onRetryRead={() => { const token = authority(); if (token) void refresh(token, routeRef() ?? undefined) }}
+        onRetryRead={() => {
+          if (ui.pending) { void reconcile(); return }
+          if (orphanPending()) { void reconcileAbandoned(); return }
+          const token = authority()
+          if (token) void refresh(token, routeRef() ?? undefined)
+        }}
         onBack={onBack}
       >
         <Show when={authorizedPage()}>
@@ -547,11 +592,12 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                 {t("sf.u13.refresh")}
               </button>
             </div>
+            <Show when={!ui.detailPage} fallback={recordDetail()}>
             <SfListDetail
               selectedRef={selectedPr()?.requestRef as SfRef | undefined}
               layoutMode={ui.layoutMode}
               onBack={onBack}
-              onOpenPage={() => undefined}
+              onOpenPage={() => setUi("detailPage", true)}
               list={<SfDataTable
                 rows={visibleRows()}
                 getRowKey={(row) => row.number as SfRef}
@@ -568,6 +614,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                 onSelect={(recordRef) => {
                   if (ui.pending) return
                   setUi("selected", recordRef)
+                  setUi("detailPage", false)
                   setUi("review", null)
                   setUi("phase", "idle")
                 }}
@@ -579,6 +626,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
               />}
               detail={recordDetail()}
             />
+            </Show>
             <Show when={ui.review && selectedPr() && samePrReview(ui.review.source, selectedPr()!)}>
               {() => {
                 const review = ui.review!
@@ -652,6 +700,26 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                   </section>
                 )
               }}
+            </Show>
+            <Show when={orphanPending()}>
+              <section class="rounded-lg border border-border p-3" role="status">
+                <p>{t("sf.u13.unknown")}</p>
+                <p>{t("sf.u13.noReceipt")}</p>
+                <Show when={decisionDraft()?.snapshot()}>
+                  {(restored) => restored().availability === "active" && restored().pendingOperation ? (
+                    <SfReceiptView
+                      operationRef={restored().pendingOperation!.operationRef}
+                      producerStatus={{ kind: "pending" }}
+                      effects={[]}
+                      receipts={[]}
+                      state="outcome-unknown"
+                      onReconcileRead={() => { void reconcileAbandoned() }}
+                    />
+                  ) : null}
+                </Show>
+                <button type="button" class="rounded-md border border-border px-3 py-2"
+                  onClick={() => { void reconcileAbandoned() }}>{t("sf.u13.reconcile")}</button>
+              </section>
             </Show>
             <Show when={ui.pending}>
               {(pending) => <div class="rounded-lg border border-border p-3" aria-live="polite">
