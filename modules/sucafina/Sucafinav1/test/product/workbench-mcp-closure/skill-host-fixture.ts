@@ -80,7 +80,7 @@ export async function withSkillHost<A>(use: (host: SkillHost) => Effect.Effect<A
     })
     const host = Host.merge([contribution])
     const layer = AppNodeBuilder.build(LayerNode.group([
-      ApplicationTools.node, Database.node, EventV2.node, SessionV2.node, SessionExecution.node, ...host.nodes,
+      ApplicationTools.node, Database.node, EventV2.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node, ...host.nodes,
     ]), [
       [SessionExecution.node, SessionExecutionLocal.node],
       [Database.node, Database.layerFromPath(path.join(directory, "sessions.sqlite"))],
