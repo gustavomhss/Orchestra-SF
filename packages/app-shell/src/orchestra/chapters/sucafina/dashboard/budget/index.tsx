@@ -126,3 +126,6 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
     </div>
   </SfPageFrame>
 }
+
+// Frozen U02 entrypoint consumed by I00/current integrator125.
+export { SfBudgetOverview as SfDashboardBudgetView }
