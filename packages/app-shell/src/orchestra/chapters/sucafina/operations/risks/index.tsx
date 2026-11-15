@@ -8,6 +8,7 @@ type RiskCommand = typeof SfDomain.operations["domain.command.CAP13.save"]["inpu
 type RiskValues = RiskCommand["values"]
 const txt = (value: unknown) => value === undefined || value === null ? "" :
   typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? String(value) : ""
+const optionalText = (value: unknown) => value === null || value === undefined ? undefined : txt(value)
 const riskStatus = (value: unknown): RiskValues["status"] =>
   value === "open" || value === "mitigating" || value === "monitoring" || value === "closed" ? value : undefined
 const fields: readonly Field<Risk, RiskValues>[] = [
@@ -26,19 +27,19 @@ const fields: readonly Field<Risk, RiskValues>[] = [
   {name:"notes",label:"sf.u30.risk.notes",kind:"textarea"},
 ]
 const riskValues = (row?: Risk): RiskValues => ({
-  title: row ? txt(row.title) : "",
-  name: row ? txt(row.name) : "",
-  action: row ? txt(row.action) : "",
-  responsible: row ? txt(row.responsible) : "",
-  desc: row ? txt(row.desc) : "",
-  category: row ? txt(row.category) : "",
-  impact: row?.impact === undefined ? undefined : txt(row.impact),
-  probability: row?.probability === undefined ? undefined : txt(row.probability),
+  title: row ? optionalText(row.title) : "",
+  name: row ? optionalText(row.name) : "",
+  action: row ? optionalText(row.action) : "",
+  responsible: row ? optionalText(row.responsible) : "",
+  desc: row ? optionalText(row.desc) : "",
+  category: row ? optionalText(row.category) : "",
+  impact: row?.impact === null ? null : row?.impact === undefined ? undefined : txt(row.impact),
+  probability: row?.probability === null ? null : row?.probability === undefined ? undefined : txt(row.probability),
   status: riskStatus(row?.status),
-  owner: row ? txt(row.owner) : "",
-  mitigation: row ? txt(row.mitigation) : "",
-  due: row ? txt(row.due) : "",
-  notes: row ? txt(row.notes) : "",
+  owner: row ? optionalText(row.owner) : "",
+  mitigation: row ? optionalText(row.mitigation) : "",
+  due: row ? optionalText(row.due) : "",
+  notes: row ? optionalText(row.notes) : "",
 })
 const spec: CollectionSpec<"CAP13", Risk, RiskValues> = {
   id:"CAP13", collection:"risks", title:"sf.cap13.title", primary:"sf.cap13.primary",
