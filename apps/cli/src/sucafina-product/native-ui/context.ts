@@ -8,7 +8,11 @@ import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/
 import type { SfNativeHostDependencies } from "./router.ts"
 
 type TrustedContextReader = (request: Request, expected: SfExpectedContextBinding) => Promise<SfContextResult>
-type HostWithReader = SfHostServices & Readonly<{ nativeUiProducts?: Readonly<{ readContext?: TrustedContextReader }> }>
+type HostWithReader = SfHostServices & Readonly<{ nativeUiProducts?: Readonly<{
+  /** I00 installs a read-only live view of runtime.identity(), never caller data. */
+  currentBinding?: () => Readonly<{ installationId: string; projectId: string; hostId: string }> | undefined
+  readContext?: TrustedContextReader
+}> }>
 const jsonHeaders = (additional?: HeadersInit): Headers => {
   const headers = new Headers(additional)
   headers.set("Cache-Control", "no-store")
@@ -66,16 +70,18 @@ export function createSfContextHandler(
     const expected = expectedContext(request, deps.origin, deps.mount)
     if (!expected || request.method !== "GET" || request.signal.aborted)
       return { status: "unavailable", reason: "contract-mismatch" }
-    const runtime = deps.runtime()
-    if (!runtime || !sameBinding(expected, runtime.identity()))
+    const services = deps.runtime() as HostWithReader | undefined
+    const producer = services?.nativeUiProducts
+    // F01 has no public access to the legacy authority's private resolve().
+    // Reuse the legitimate installed producer reader; never synthesize its stamp.
+    const reader = producer?.readContext
+    if (!reader || !producer?.currentBinding) return { status: "unavailable", reason: "host-unavailable" }
+    if (!sameBinding(expected, producer.currentBinding()))
       return { status: "unavailable", reason: "contract-mismatch" }
-    const services = runtime.services?.() as HostWithReader | undefined
-    const reader = services?.nativeUiProducts?.readContext
-    if (!reader) return { status: "unavailable", reason: "host-unavailable" }
     const result = await reader(request, expected).catch((): SfContextResult =>
       ({ status: "unavailable", reason: "host-unavailable" }))
-    if (request.signal.aborted || !sameBinding(expected, runtime.identity()) ||
-        deps.runtime() !== runtime) return { status: "unavailable", reason: "contract-mismatch" }
+    if (request.signal.aborted || !sameBinding(expected, producer.currentBinding()) ||
+        deps.runtime() !== services) return { status: "unavailable", reason: "contract-mismatch" }
     if (!Schema.is(SfContextResultSchema)(result)) return { status: "unavailable", reason: "contract-mismatch" }
     if (result.status !== "ok") return result
     const stamp = result.value.stamp
