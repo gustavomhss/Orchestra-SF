@@ -227,11 +227,11 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                                 type="button"
                                 class={"mx-btn" + (action.tone === "danger" ? " danger" : "")}
                                 data-sf-action={action.id}
-                                disabled={action.disabled || action.busy}
+                                disabled={action.disabled || action.busy || (props.state !== "ready" && props.state !== "partial")}
                                 aria-busy={action.busy}
                                 title={action.reason ? copy.message(action.reason) : undefined}
                                 onClick={() => {
-                                  if (!action.disabled && !action.busy)
+                                  if (!action.disabled && !action.busy && (props.state === "ready" || props.state === "partial"))
                                     props.onRowAction({ recordRef: recordRef(), actionId: action.id })
                                 }}
                               >
