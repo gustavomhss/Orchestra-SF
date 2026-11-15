@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.native-ui.W03.proposed-patch.v1",
+  "order": "F02",
+  "branch": "sf-ux-w03",
+  "base_product": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "frozen_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+  "state": "AUTHOR_SOURCE_STAGED_NOT_ADMITTED_NOT_IN_PRODUCT_TREE",
+  "outputs": [
+    {
+      "path": "packages/schema/src/sucafina/common.ts",
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/proposed/common.ts.txt",
+      "target_preimage": null,
+      "source_blob": "f486d0bdb266935791059514c11c34372204623f",
+      "lines": 471,
+      "bytes": 13505,
+      "apply_gate": "114_PER_OUTPUT_ADMISSION_REQUIRED"
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/proposed/transport.ts.txt",
+      "target_preimage": null,
+      "source_blob": "8b838c163365428653457de18b140ed0a0b7f0cb",
+      "lines": 472,
+      "bytes": 25959,
+      "apply_gate": "114_PER_OUTPUT_ADMISSION_REQUIRED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/proposed/router.ts.txt",
+      "target_preimage": null,
+      "source_blob": "b42734d7ec36e8e85f198fe5e6b6f4fdd36a3f5d",
+      "lines": 88,
+      "bytes": 4345,
+      "apply_gate": "114_PER_OUTPUT_ADMISSION_REQUIRED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/proposed/transport.test.ts.txt",
+      "target_preimage": null,
+      "source_blob": "59429a0ba82deb9ec718a244eb3b69b033e23444",
+      "lines": 127,
+      "bytes": 4972,
+      "apply_gate": "114_PER_OUTPUT_ADMISSION_REQUIRED"
+    }
+  ],
+  "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/F02-PROPOSED.patch",
+  "tests": "NOT_RUN",
+  "ci_dispatcher": "120",
+  "compiler": "119",
+  "integrator": "114",
+  "source_gate": "REQUIRES_REAL_114_PER_OUTPUT_ADMISSION",
+  "global_release": false
+}
