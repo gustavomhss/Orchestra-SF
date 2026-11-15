@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "mission": "UX20-W07",
+  "order": "S02",
+  "output": "SfMonthlyGrid",
+  "state": "ACK_REAL_PREFLIGHT_RECORDED_PENDING_114_PER_OUTPUT_ADMISSION",
+  "actor": "ChatGPT GPT-6 W07 author session",
+  "requested_label": "Astra",
+  "effective_model": "GPT-6",
+  "runtime_session_id": null,
+  "runtime_session_id_reason": "not exposed",
+  "github_actor": "gustavomhss",
+  "branch": "sf-ux-w07",
+  "branch_base": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "branch_base_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "reserved_lease_epoch": "ux-native-w07-e1",
+  "lease_state": "RESERVED_NOT_ACTIVE_UNTIL_114_ADMISSION",
+  "integrator": "114 S0-C-e17-browser114",
+  "dispatcher": "120",
+  "compiler": "119",
+  "checks": {
+    "branch_initial_head_verified": true,
+    "existing_w07_pr": false,
+    "ownership_overlap_observed": false,
+    "source_contracts_frozen": true,
+    "per_output_114_admission_observed": false,
+    "live_product_code_started": false
+  },
+  "write_allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+    "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/**"
+  ],
+  "sources": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "packet_blob": "f5ea25aad4c62a72606e002023d8d0cb65fcd5a8",
+    "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+    "workorder_blob": "08605acceb598f8dab17bef9e5415d6a3c556526",
+    "component_signatures_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component_contracts_blob": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "component_locks_blob": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "surface_specs_blob": "d62847af81dffdc129312e71e69692081fd74b75",
+    "planner_http_blob": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+    "monthly_edit_blob": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+    "monthly_host_blob": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5"
+  },
+  "invariants": [
+    "pure UI no Domain/Server imports",
+    "month IDs 0..11 only; A02 maps to host 1..12 exactly once",
+    "producer preview/apply owns parsing/revision/CAS/partial outcomes",
+    "no local testing",
+    "no merge, deploy, or Azure"
+  ],
+  "admission_question": "114 must publish explicit S02/W07 output admission binding this actor/lease/branch/frozen input before product writes; 114 ACK from C53 predates UX cohort and is not treated as S02 admission",
+  "test_status": "NOT_RUN"
+}
