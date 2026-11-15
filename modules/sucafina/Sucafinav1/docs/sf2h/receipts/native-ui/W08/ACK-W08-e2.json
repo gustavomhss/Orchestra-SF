@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v2",
+  "mission_id": "UX20-W08-R2",
+  "seat": "W08",
+  "work_order": "S03",
+  "output": "S03",
+  "state": "AUTHORING_ADMITTED_S0_E2_NOT_INTEGRATED",
+  "actor": "ChatGPT via GitHub connector (authenticated user gustavomhss)",
+  "effective_model": "GPT-6",
+  "requested_model": "Astra",
+  "session_id": null,
+  "session_id_exposure": "not exposed",
+  "branch": "sf-ux-w08",
+  "pr": 123,
+  "initial_head": "e3b1940b7ffe5dd5c7b96fdfcb4c0d1805b1d940",
+  "initial_tree": "b32a612fd464b3a44d0f9286741738ac7f728139",
+  "lease_epoch": "ux-native-w08-e2",
+  "previous_epoch": "ux-native-w08-e1",
+  "previous_epoch_state": "REVOKED_FOR_FUTURE_ACCEPTANCE",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/S0-FENCE-e2.json",
+  "s0_admission_ref": "8852ed4a060f6eb3b49c142b894852d0af49740f",
+  "sources": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "successor": "49a92b9c6bd2c23cf30686a279aa17d2d7aabb5a"
+  },
+  "contracts": {
+    "component": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "context": "94553a3119826ef1c44271966233dd58042ddd70"
+  },
+  "exclusive_write_allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+    "packages/app-shell/test-browser/sucafina-native/s03.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/**"
+  ],
+  "dependent_integration": [
+    "F01",
+    "F02",
+    "F03",
+    "I00/114 copy and shared composition"
+  ],
+  "test_owner": "120",
+  "compiler_owner": "119",
+  "no_local_tests": true,
+  "global_release": false,
+  "operation": "new successor ACK; preserve all prior commits; no e1 activity accepted"
+}
