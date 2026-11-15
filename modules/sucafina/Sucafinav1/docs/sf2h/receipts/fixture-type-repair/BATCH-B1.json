@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h-fixture-type-repair-batch-v1",
+  "mission": 118,
+  "batch": "B1",
+  "source_parent": "2ba997ddfabd9701f0011a9920221a0778e2f19a",
+  "source_tree": "1a23dab910f0d50912d30efe36866c9bb0cd22d3",
+  "writer": "fixture-types-browser118",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts",
+      "preimage_blob_sha": "5d0feb74e3a41424afa5c94ef09178dac80caecf",
+      "postimage_sha": "see commit tree",
+      "change_class": "closed-scope scenario-operation admission"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "preimage_blob_sha": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "postimage_sha": "see commit tree",
+      "change_class": "closed-scope scenario-operation admission"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "preimage_blob_sha": "68dda95afd92154dc426ef40479648c21576de01",
+      "postimage_sha": "see commit tree",
+      "change_class": "closed-scope scenario-operation admission"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+      "preimage_blob_sha": "552284d39866ad866e5f30dfdba7f765537f6507",
+      "postimage_sha": "see commit tree",
+      "change_class": "closed-scope scenario-operation admission"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "preimage_blob_sha": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+      "postimage_sha": "see commit tree",
+      "change_class": "closed-scope scenario-operation admission"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "preimage_blob_sha": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "postimage_sha": "see commit tree",
+      "change_class": "closed-scope scenario-operation admission"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "preimage_blob_sha": "712cce53626fca058f0e66dbfafb6fb09cccc9cf",
+      "postimage_sha": "see commit tree",
+      "change_class": "closed-scope scenario-operation admission"
+    }
+  ],
+  "authority": "Exact production zero-operation branch: require current request and revalidation; reject any fixture case with scenario operations; prevent selectors and case bytes from changing across awaits",
+  "not_run": [
+    "typecheck 119",
+    "surgical test 120",
+    "epic"
+  ]
+}
