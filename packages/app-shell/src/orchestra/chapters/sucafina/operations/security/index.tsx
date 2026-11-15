@@ -49,7 +49,7 @@ type SecurityView = Readonly<{
   editor: SecurityEditor | null
   refresh: number
   submitting: boolean
-  operationState: "idle" | "saved" | "failed" | "unknown"
+  operationState: "idle" | "saved" | "failed" | "unknown" | "conflict"
   errorText: string | null
 }>
 const key = (part: string) => ("sf.cap12." + part) as SfCopyKey
@@ -147,6 +147,18 @@ function validForm(editor: SecurityEditor, values: FormValues, page: SfSecurityP
       value === null || value === "" || nonnegative(String(value))))
 }
 
+function securityReadState(page: SfSecurityPage): "ready" | "empty" | "filtered-empty" {
+  const records = [
+    ...(page.data.secKpi ?? []), ...(page.data.secActions ?? []),
+    ...(page.data.secIncidents ?? []), ...(page.data.secPhishing ?? []),
+  ]
+  if (records.length === 0) return "empty"
+  if ((page.data.secActions ?? []).length || (page.data.secPhishing ?? []).length ||
+    (page.data.secKpi ?? []).some((row) => row.year === page.selection.year) ||
+    (page.data.secIncidents ?? []).some((row) => row.date?.startsWith(String(page.selection.year)))) return "ready"
+  return "filtered-empty"
+}
+
 function formFields(editor: SecurityEditor, value: FormValues): SfReviewField[] {
   if (editor.command.startsWith("delete-")) return []
   const sourceFields = editor.entity === "kpi" ? [...SECURITY_KPI_FIELDS, "notes"] :
@@ -192,6 +204,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   }
   const can = (command: SecurityCommand) =>
     state.page?.allowedActionIds.includes(command) === true &&
+    !["unknown", "conflict"].includes(state.operationState) &&
     owner.state().status === "ready" && !!owner.ready()
   const activeDraft = () => {
     state.editor
@@ -206,6 +219,16 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const displayedYear = () => state.page?.selection.year ?? state.year
   const displayedMonth = () => state.page?.selection.month ?? state.month
   const refresh = () => setState("refresh", (value) => value + 1)
+
+  const changeSelection = (field: "year" | "month", value: number) => {
+    // Keep F01's same-owner draft registry, but never reuse a period editor.
+    if (state.editor) {
+      setState("editor", null)
+      draft = undefined
+      draftOwner = undefined
+    }
+    setState(field, value)
+  }
 
   function openEditor(entity: SecurityEntity, id: string | null = null, destructive = false) {
     const page = state.page
@@ -331,20 +354,36 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
         return
       }
       const value = body.value
+      const editing = state.editor
+      if (draft && editing && !submitted && String(editing.scope).startsWith(
+        "CAP12:" + editing.command + ":" + value.selection.year + ":" + value.selection.month + ":"
+      )) {
+        const currentVersion = securityVersion(value, editing.entity, editing.id ?? undefined)
+        if (currentVersion !== editing.version) {
+          draft.receiveRemote({
+            baseVersion: currentVersion,
+            value: initialForm(value, editing.entity, editing.id),
+          })
+          setState("operationState", "conflict")
+        }
+      }
       setState("page", value)
-      setState("state", "ready")
+      setState("state", securityReadState(value))
       if (submitted && submitted.owner === latest.ownerKey &&
         submitted.year === value.selection.year && submitted.month === value.selection.month) {
         const wasDelete = submitted.command.startsWith("delete-")
         const remains = submitted.id !== null && securityRow(value, submitted.entity, submitted.id)
         if (!wasDelete || !remains) {
-          const projected = initialForm(value, submitted.entity, submitted.id)
           if (draft && !wasDelete) {
-            draft.confirmSave({
-              kind: "projected", operationRef: submitted.operationRef,
-              baseVersion: securityVersion(value, submitted.entity, submitted.id ?? undefined),
-              value: projected,
-            })
+            const existing = submitted.id !== null && securityRow(value, submitted.entity, submitted.id)
+            // Creating a record without a returned source ref must never
+            // promote an empty form or a guessed name match into proof.
+            draft.confirmSave(existing
+              ? { kind: "projected", operationRef: submitted.operationRef,
+                  baseVersion: securityVersion(value, submitted.entity, submitted.id ?? undefined),
+                  value: initialForm(value, submitted.entity, submitted.id) }
+              : { kind: "confirmed-without-projection", operationRef: submitted.operationRef,
+                  resultVersion: null })
           }
           if (draft && wasDelete) draft.discard()
           draft = undefined
@@ -355,7 +394,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
         } else {
           // Never present a deletion as confirmed if current authorized source
           // still shows the record; a later explicit read may resolve it.
-          setState("state", "stale")
+          setState("operationState", "conflict")
         }
       }
       if (state.editor === null && routeEntryConsumed !== String(props.route.href)) {
@@ -407,7 +446,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       snapshot.pendingOperation !== null || !validForm(editor, snapshot.value, page)) return
     if (securityVersion(page, editor.entity, editor.id ?? undefined) !== editor.version) {
       draft?.setPhase("conflict")
-      setState("state", "conflict")
+      setState("operationState", "conflict")
       return
     }
     const client = createSfOperationsClient(active.transport)
@@ -513,7 +552,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       if (!result.body.ok) {
         if (result.status === 409 || result.body.status === 409) {
           draft?.setPhase("conflict")
-          setState("state", "conflict")
+          setState("operationState", "conflict")
         } else {
           draft?.setPhase("validation-error")
         }
@@ -571,14 +610,14 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   }]))
   const removeDepartment = (index: number) =>
     edit("departments", JSON.stringify(departmentRows().filter((_row, i) => i !== index)))
-  const reviewSnapshot = (value: FormValues, original: boolean): SfReviewSnapshot => {
+  const reviewSnapshot = (value: FormValues, original: boolean, version = state.editor!.version): SfReviewSnapshot => {
     const editor = state.editor!
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: msg(common("empty")) }
     return original
       ? { kind: "persisted",
         ref: editor.identity.kind === "record" ? editor.identity.recordRef : ref(""),
-        version: editor.version, fields: formFields(editor, value) }
+        version, fields: formFields(editor, value) }
       : { kind: "draft",
         intentRef: editor.identity.kind === "new" ? editor.identity.newIntentRef : intent("u29:" + editor.scope),
         sourceRef: editor.identity.kind === "record" ? editor.identity.recordRef : null,
@@ -586,7 +625,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   }
   const reviewerState = () =>
     state.operationState === "unknown" ? "outcome-unknown" :
-    state.state === "conflict" ? "conflict" : state.state
+    state.operationState === "conflict" ? "conflict" : state.state
   const editTitle = () => {
     const editor = state.editor
     if (!editor) return key("title")
@@ -616,7 +655,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
       onLayoutMode={() => undefined}
     >
       <div class="sf-security" data-sf-surface="CAP12" data-sf-read-state={state.state}>
-        <Show when={state.page && state.state === "ready"} fallback={
+        <Show when={state.page && ["ready", "empty", "filtered-empty", "partial"].includes(state.state)} fallback={
           <SfStatePanel
             state={state.state}
             messageKey={state.state === "loading" ? common("loading") :
@@ -628,14 +667,17 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
             onRetryRead={refresh}
           />
         }>
+          <Show when={state.state === "empty" || state.state === "filtered-empty"}>
+            <p role="status">{t(state.state === "empty" ? common("empty") : common("filterEmpty"))}</p>
+          </Show>
           <section class="sf-security-reference" aria-label={t(key("section.reference"))}>
             <label>{t(key("field.year.label"))}
-              <select value={displayedYear()} onChange={(event) => setState("year", Number(event.currentTarget.value))}>
+              <select value={displayedYear()} onChange={(event) => changeSelection("year", Number(event.currentTarget.value))}>
                 <For each={SECURITY_YEARS}>{(year) => <option value={year}>{year}</option>}</For>
               </select>
             </label>
             <label>{t(key("field.month.label"))}
-              <select value={displayedMonth()} onChange={(event) => setState("month", Number(event.currentTarget.value))}>
+              <select value={displayedMonth()} onChange={(event) => changeSelection("month", Number(event.currentTarget.value))}>
                 <For each={SECURITY_MONTHS}>{(month) => <option value={month}>{month}</option>}</For>
               </select>
             </label>
@@ -803,6 +845,10 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
             </button>
           </section>
 
+          <Show when={state.operationState === "conflict"}>
+            <p role="alert">{t(common("conflict"))}</p>
+            <button type="button" onClick={refresh}>{t(common("retry"))}</button>
+          </Show>
           <Show when={state.operationState === "saved"}><p role="status">{t(common("saved"))}</p></Show>
           <Show when={state.operationState === "unknown"}><p role="alert">{t(common("operationUnknown"))}</p></Show>
           <Show when={state.operationState === "failed" || state.errorText}>
@@ -821,7 +867,10 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                       state.editor!.id ?? String(state.page!.selection.year) + "-" + String(state.page!.selection.month) },
                   }}
                   base={reviewSnapshot(activeDraft()!.base ?? {}, true)}
-                  current={reviewSnapshot(activeDraft()!.base ?? {}, true)}
+                  current={reviewSnapshot(
+                     activeDraft()!.conflict?.current ?? activeDraft()!.base ?? {}, true,
+                     activeDraft()!.conflict?.currentVersion ?? state.editor!.version,
+                   )}
                   proposed={reviewSnapshot(values(), false)}
                   effects={[{
                     id: state.editor!.command, domain: "dashboard",
@@ -853,7 +902,11 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                     if (state.editor!.command.startsWith("delete-")) setState("editor", null)
                     else { setState("editor", "review", false); draft?.setPhase("dirty") }
                   }}
-                  onCancel={() => setState("editor", null)}
+                  onCancel={() => {
+                    if (state.operationState === "conflict") setState("editor", "review", false)
+                    else setState("editor", null)
+                  }}
+                  onReconcile={refresh}
                 />
               }>
                 <form onSubmit={(event) => { event.preventDefault(); review() }}>
@@ -942,8 +995,16 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                     <button type="button" onClick={() => {
                       const snapshot = activeDraft()
                       if (snapshot?.dirty && !window.confirm(t(common("navigationDiscard")))) return
+                      const editor = state.editor
                       draft?.discard()
+                      if (editor) owner.ready()?.drafts.discard({
+                        surfaceId: "CAP12", identity: editor.identity, editScopeKey: editor.scope,
+                      })
+                      draft = undefined
+                      draftOwner = undefined
                       setState("editor", null)
+                      setState("operationState", "idle")
+                      setState("errorText", null)
                     }}>{t(common("discard"))}</button>
                   </div>
                 </form>
