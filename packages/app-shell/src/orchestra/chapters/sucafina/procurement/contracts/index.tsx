@@ -546,3 +546,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     </SfPageFrame>
   </section>
 }
+
+/** I00 public U15 entrypoint; CAP14 is the only admitted surface. */
+export function SfContractsView(props: SfSurfaceProps) {
+  if (props.surfaceId !== "CAP14")
+    return <SfStatePanel state="invalid" messageKey={key("sf.u15.invalid")} />
+  return <SfVendorContractsPage {...props} />
+}
