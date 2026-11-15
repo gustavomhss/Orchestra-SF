@@ -1,0 +1,16 @@
+diff --git a/apps/cli/src/sucafina-product/native-ui/routines.ts b/apps/cli/src/sucafina-product/native-ui/routines.ts
+index f7fd5dece84a8374e0fd89c8c357e94b843ba1b6..6948316a7dc0b07296180fed7f5b32f613bcc106 100644
+--- a/apps/cli/src/sucafina-product/native-ui/routines.ts
++++ b/apps/cli/src/sucafina-product/native-ui/routines.ts
+@@ -175,8 +175,10 @@
+     if (!permitted) return reply(denied(), 403)
+     const products = runtime.nativeUiProducts
++    // The optional host binding is the availability gate; when installed,
++    // routines and withCase are both required. Native C07 stays producer-admitted.
+     const result: RoutineOrSchedule = operation.startsWith("routines.")
+-      ? products?.routines && products.withCase
++      ? products
+         ? await routineCall(operation, payload, products, binding).catch(() => unavailable("routine-producer-unavailable"))
+         : unavailable("native-routine-port-unavailable")
+       : await scheduleCall(operation, payload, products, binding).catch(() =>
+         unavailable("native-schedule-operation-unavailable"))

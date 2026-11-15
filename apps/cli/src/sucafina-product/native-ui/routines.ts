@@ -174,8 +174,10 @@ async function authorizedPost(
       : await runtime.human.authorize(binding, intent.action as Parameters<typeof runtime.human.authorize>[1], payload)
     if (!permitted) return reply(denied(), 403)
     const products = runtime.nativeUiProducts
+    // The optional host binding is the availability gate; when installed,
+    // routines and withCase are both required. Native C07 stays producer-admitted.
     const result: RoutineOrSchedule = operation.startsWith("routines.")
-      ? products?.routines && products.withCase
+      ? products
         ? await routineCall(operation, payload, products, binding).catch(() => unavailable("routine-producer-unavailable"))
         : unavailable("native-routine-port-unavailable")
       : await scheduleCall(operation, payload, products, binding).catch(() =>
