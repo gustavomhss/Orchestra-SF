@@ -168,7 +168,7 @@ test("S05 question uses authorized recipient ref and preserves source refs on dr
   const submitted: string[] = []
   const answered: Parameters<SfQuestionProps["onAnswer"]>[0][] = []
   const opened: SfRef[] = []
-  const view = mount(SfQuestion, {
+  const view = mount<SfQuestionProps>(SfQuestion, {
     questionRef: ref("q1"), sourceRef: ref("source-1"),
     recipientOptions: [
       { ref: ref("recipient-allowed"), label: data("Alex"), available: true },
