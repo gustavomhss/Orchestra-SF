@@ -1,0 +1,159 @@
+{
+  "schema": "sf2h.correction-136.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 136,
+  "title": "F01 — SDK-compatible closed discovery query",
+  "branch": "sf-ux-w02",
+  "pr": 131,
+  "epoch": "ux-native-w02-e2",
+  "actor": {
+    "type": "fresh ChatGPT conversation",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_status": "NOT_EXPOSED"
+  },
+  "authority": {
+    "s0_fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/S0-FENCE.json",
+    "s0_fence_sha": "6a0f36cf50c7444d965b889182e376b4173bc00c",
+    "ack_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/ACK-136.json",
+    "ack_commit": "509d7c74f7cbe10b0e10643a5854be5baac31429",
+    "predecessor_epoch": "ux-native-w02-e1",
+    "predecessor_future_writes": "REVOKED"
+  },
+  "code_commit": "c80f6e84a97f5895f0f38cd1f4e112d0323f998b",
+  "source_c64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+  "consumer": {
+    "integrator": 132,
+    "integrator_branch": "sf2-stack",
+    "integrator_pr": 65,
+    "compiler": 128,
+    "compiler_pr": 107,
+    "product_ci": 129,
+    "product_ci_pr": 106,
+    "target_head_when_inspected": "fc8840207377a363d4e6844aab496b4f1521f83c",
+    "consumer_ack": "PENDING_REAL_ACK",
+    "merge_raw_pr131": "PROHIBITED"
+  },
+  "evidence": {
+    "confirmed_failure": {
+      "run_id": 43738074189,
+      "job_id": 132884987559,
+      "command": "packages/client: bun run generate",
+      "message": "GenerationError: Input schema must be a struct: server.sucafina.sucafina.installations.query",
+      "source": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43738074189/job/132884987559",
+      "checked_log": true,
+      "source_sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4"
+    },
+    "change_inspection": {
+      "baseline_commit": "509d7c74f7cbe10b0e10643a5854be5baac31429",
+      "implementation_commit": "c80f6e84a97f5895f0f38cd1f4e112d0323f998b",
+      "added_files": 1,
+      "modified_files": 2,
+      "source_and_consumer_preimages_match": true
+    },
+    "new_checks": {
+      "sdk_generate": "NOT_RUN_AFTER_FIX; 128 only, on integrated material",
+      "client_typecheck": "NOT_RUN_AFTER_FIX; 128 only",
+      "protocol_typecheck": "NOT_RUN_AFTER_FIX; 128 only",
+      "schema_typecheck": "NOT_RUN_AFTER_FIX; 128 only",
+      "server_typecheck": "NOT_RUN_AFTER_FIX; 128 only",
+      "surgical_regressions": "NOT_RUN_AFTER_FIX; 129 only",
+      "guards": "NOT_RUN_AFTER_FIX; 128 only"
+    }
+  },
+  "finding_and_fix": {
+    "finding": "HttpApiEndpoint query was SfInstallationSelector = Schema.Union. Codegen inputFields uses Schema.toType(query).ast and requires SchemaAST.isObjects with zero index signatures.",
+    "root_cause": "Top-level discriminated Union cannot satisfy real SDK compiler's Struct input shape.",
+    "implementation": "Keep SfInstallationSelector discriminated union and native raw-url parseSfInstallationSelector untouched; add SfInstallationQuery = Schema.Struct with select ids|location plus optional branch-specific members, and bind only HttpApiEndpoint.query to it.",
+    "security_invariants": [
+      "No new grant, no policy relaxation, no synthetic auth or context stamp",
+      "Raw parser still rejects unknown/duplicate/mixed/partial/bad escapes",
+      "select=ids never calls LocationMiddleware or a stale directory",
+      "select=location uses trusted admitted resolver; ownership constrained to selected connection",
+      "Origin/currentBinding/context triple and request original remain unchanged",
+      "Generated SDK is 128-owned, never edited by 136"
+    ]
+  },
+  "regression_file": "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts",
+  "regressions": [
+    {
+      "case": "sdk_struct",
+      "oracle": "Schema.toType(SfInstallationQuery).ast is Objects, zero indexSignatures, exact fields and select literals; the precise codegen inputFields invariant"
+    },
+    {
+      "case": "wire_closed",
+      "oracle": "ids and location exact wire forms parse; malformed, cross-branch, duplicate, unknown and partial fields throw SfInvalidInstallationSelector"
+    },
+    {
+      "case": "owner_ids",
+      "oracle": "Selected runtime mismatch returns [] and never calls Location; valid IDs return only matching runtime descriptor"
+    },
+    {
+      "case": "location",
+      "oracle": "Admitted Location resolver invoked with exact directory/workspace; current() must not be called"
+    }
+  ],
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/context.ts",
+      "change": "modified",
+      "source_preimage_git_blob": "423050658692902ddb94358574762906fc06ccff",
+      "c64_preimage_git_blob": "423050658692902ddb94358574762906fc06ccff",
+      "consumer_preimage_git_blob_at_target_head": "423050658692902ddb94358574762906fc06ccff",
+      "postimage_git_blob": "cd4a8605ac733d3fe156365ed84daefa4ec5385e"
+    },
+    {
+      "path": "packages/protocol/src/groups/sucafina.ts",
+      "change": "modified",
+      "source_preimage_git_blob": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+      "c64_preimage_git_blob": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+      "consumer_preimage_git_blob_at_target_head": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+      "postimage_git_blob": "1fe0f77985758d0f5cee037db6a308934c85de0f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts",
+      "change": "added",
+      "source_preimage_git_blob": null,
+      "c64_preimage_git_blob": null,
+      "consumer_preimage_git_blob_at_target_head": null,
+      "postimage_git_blob": "d0d54dca9245feb151f9f6cf6015f344cfe741e2"
+    }
+  ],
+  "full_patch_bundle": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction136/PATCHES-136.json",
+    "blob": "9a94e1ab8d0eb30e3017fbae2dc35cac613cd8e9"
+  },
+  "acceptance": {
+    "state": "ARTIFACT_READY_UNVERIFIED",
+    "not_qualified": true,
+    "blocking": [
+      "132 integration/admission and generation on coherent source",
+      "128 real bun run generate and typecheck",
+      "129 hosted regression tests",
+      "F01 original context producer reader/stamp remains separately fail-closed, not changed in this correction",
+      "Native Goal remains paused; no GLOBAL_RELEASE"
+    ],
+    "original_criteria": [
+      "F01-AC01",
+      "F01-AC02",
+      "F01-AC03",
+      "F01-77-CTX"
+    ],
+    "retained_campaign": "15 WP / 74 tasks / 17 contracts / 1610 criteria / UX78/70/305 / C8 epic and G7/G8 independent"
+  },
+  "checkpoint": {
+    "next_action_132": "Inspect latest sf2-stack and take only the changed two product paths and the new test from immutable implementation commit; if source preimages differ, semantically reapply; record consumer ACK.",
+    "next_action_128": "After 132 coherent integration, run exactly normal packages/client bun run generate; save generated diff and typecheck/guards under 128 authority.",
+    "next_action_129": "After integration, run new sdk-query-repair.test.ts and related auth/discovery tests under 129 surgical hosted CI authority.",
+    "do_not": [
+      "No direct merge PR131",
+      "No extra dispatcher",
+      "No local tests",
+      "No force/reset",
+      "No edits to generated clients",
+      "No Goal reactivation",
+      "No dev merge/deploy"
+    ]
+  },
+  "terminal_state": "ARTIFACT_READY_UNVERIFIED; handoff to sole integrator 132; await real consumer ack; no claim of qualified release"
+}
