@@ -16,8 +16,10 @@
     "directory": "modules/sucafina",
     "runner": "bun",
     "args": [
+      "Sucafinav1/test/product/wp01/browser-startup.test.ts",
       "Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
-      "Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts"
+      "Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+      "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
     ],
     "env": {}
   },
@@ -50,5 +52,18 @@
     "typecheck": null,
     "guards": null
   },
-  "global_release": false
+  "global_release": false,
+  "source_branch_head_at_request": "059278ade4d4634a67cafcd9c043c9469eb0a978",
+  "source_tree_at_request": "9c5e42b96bac3524a843512a142e812f4b7fda79",
+  "lifecycle_contract": {
+    "source": "Sucafinav1/test/product/wp01/browser-fixture.ts",
+    "required_os": "linux",
+    "first": "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "last": "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+    "contiguous": "one Bun test selection in listed order",
+    "chrome_spawns": 1,
+    "termination": "WP01 physically verifies Node/Omni-owned browser process exit; failures remain failures",
+    "runner_cli": "bun test with exact file names; no additional discovery, parallel flags, or separate browser"
+  },
+  "notes": "Four selected existing/new files but exactly TWO NEW test files; WP01 startup+finalizer are mandatory existing lifecycle controls, not broad suite expansion. Dispatch no run unless this whole ordered selection is admitted by dispatcher45 with dedup by tree/config."
 }

@@ -69,5 +69,17 @@
     "static_replay": "4/4 exact",
     "installed": false
   },
-  "observed_source_head_before_hardening": "d195d019d3dc2c4f5f470c4d17c5b1c9af8186c4"
+  "observed_source_head_before_hardening": "d195d019d3dc2c4f5f470c4d17c5b1c9af8186c4",
+  "ci_lifecycle": {
+    "state": "REQUEST_CORRECTED_NOT_RUN",
+    "source": "wp01/browser-fixture.ts",
+    "ordered_files": [
+      "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+      "Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+      "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ],
+    "runner": "bun/Linux/one named selection",
+    "source_head_at_request": "059278ade4d4634a67cafcd9c043c9469eb0a978"
+  }
 }
