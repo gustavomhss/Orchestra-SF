@@ -1,0 +1,61 @@
+diff --git a/packages/schema/src/sucafina/analyses.ts b/packages/schema/src/sucafina/analyses.ts
+index ff222fc..c90cf04 100644
+--- a/packages/schema/src/sucafina/analyses.ts
++++ b/packages/schema/src/sucafina/analyses.ts
+@@ -69,7 +69,7 @@
+ // The producer takes a selection keyed by the installed skill input producer.
+ // The key/value map has no stable public shape across 18 producer families;
+ // it is validated inside the real producer after admission, not interpreted here.
+-const Selection = Schema.Record({ key: Schema.String, value: Schema.Json })
++const Selection = Schema.Record(Schema.String, Schema.Json)
+ export const SfIntelligenceAnalysisPrepareInput = Schema.Struct({
+   input: Schema.Struct({ request: Request, selection: Selection }),
+ })
+
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts
+index df21e92..8fb0ddb 100644
+--- a/modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts
+@@ -4,6 +4,7 @@
+   SfAnalyses,
+   SfIntelligenceAnalysisCancel,
+   SfIntelligenceAnalysisList,
++  SfIntelligenceAnalysisPrepareInput,
+   SfIntelligenceAnalysisStartInput,
+   SfProjectionResidents,
+ } from "../../../../../packages/schema/src/sucafina/analyses"
+@@ -14,6 +15,34 @@
+ }
+ 
+ describe("A15 / native analysis wire contracts", () => {
++  test("prepare selection accepts an installed-skill JSON map with Effect 4 positional Record", () => {
++    const request = {
++      caseRef: { id: "case-1", incarnation: "inc-1", version: 1 },
++      objective: "Explain the current forecast",
++      profileId: "sf_finance", profileVersion: "v1",
++      skillId: "sf-explicar-forecast", skillVersion: "v1",
++      manifestDigest: "digest", outputSchemaVersion: "sf-contribution-v1",
++      requestedOperationScope: ["sf_dashboard_read"],
++    }
++    const selection = {
++      forecast: { amount: 0, confirmed: false, note: null, periods: [0, null, "current"] },
++      context: { filters: { years: [2025, 2026] } },
++    }
++    const input = { input: { request, selection } }
++    expect(Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)(
++      input, { onExcessProperty: "error" },
++    )).toEqual(input)
++
++    // Skill-specific keys are intentionally dynamic JSON, not an opaque grant
++    // and not a reason to accept extra fields on the enclosing request.
++    expect(() => Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)({
++      input: { request, selection: { forecast: undefined } },
++    }, { onExcessProperty: "error" })).toThrow()
++    expect(() => Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)({
++      input: { request: { ...request, forgedOwner: "admin" }, selection },
++    }, { onExcessProperty: "error" })).toThrow()
++  })
++
+   test("binds exactly seven producer analysis actions and the residents projection", () => {
+     expect(Object.keys(SfAnalyses.operations).sort()).toEqual([
+       "intelligence.analysis.cancel",

@@ -1,0 +1,175 @@
+{
+  "schema": "sf2h.causal-correction-handoff.v1",
+  "mission": 155,
+  "order": "A15",
+  "title": "Schema.Record Effect 4.0.0-beta.83 compatibility",
+  "epoch": "ux-native-a15-e2-browser155",
+  "state": "ARTIFACT_READY",
+  "lease_terminal": "HANDOFF_TO_132_PENDING_CONSUMER_ACK",
+  "actor": "ChatGPT via GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-a15",
+  "pr": 137,
+  "base_branch": "sf2-stack",
+  "ack_commit": "055396e9f5f0927306421f367adf23879c43d6c8",
+  "code_commit": "79279ba13a5449c084f6176dfde3124b20e322f3",
+  "code_tree": "83ab8e9e7f74860ee5a8b07f39a799c24048e136",
+  "original_preflight": {
+    "prepared_head": "51df0d66fb71fa6896ed50180270d39fbe1b316b",
+    "prepared_tree": "d6015a2c757c197bb68eac12bdd9a3517d7c30c4",
+    "fence_blob": "41d114de06781e0bb8ecc089ded80cff29d2f530",
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "schema_agents_blob": "2dc577ff394a02b4c6812d78e23ef43da869f850",
+    "correction_authority": "Exclusive A15 successor, no shared/other ownership"
+  },
+  "consumer": {
+    "owner": 132,
+    "pr": 65,
+    "branch": "sf2-stack",
+    "head_at_handoff": "8094e599e3d18609e269548d24619a3246fbc735",
+    "preimages": {
+      "packages/schema/src/sucafina/analyses.ts": "ff222fcc02d26dbe59ccb40da797d2a723c2ed47",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts": "df21e9284d7cbcb46ff1ddf553a8bf4c12ee601c",
+      "packages/client/src/sucafina/analyses.ts": "43c096141146c3ce2b5a9fac67282c5eed959bdf",
+      "apps/cli/src/sucafina-product/native-ui/analyses.ts": null
+    },
+    "warning": "Composer branch can move; re-read both blob preimages before applying. CLI A15 server leaf missing in this consumer snapshot: selectively consume older unchanged 224758... blob if still required, never whole historical branch."
+  },
+  "outputs": [
+    {
+      "path": "packages/schema/src/sucafina/analyses.ts",
+      "source_preimage": "ff222fcc02d26dbe59ccb40da797d2a723c2ed47",
+      "source_postimage": "c90cf04ae5e92db5f351879b27ba4161d33b9e6d",
+      "consumer_preimage_at_handoff": "ff222fcc02d26dbe59ccb40da797d2a723c2ed47",
+      "consumer_expected_postimage": "c90cf04ae5e92db5f351879b27ba4161d33b9e6d",
+      "kind": "ONE_LINE_SCHEMA_CONSTRUCTOR",
+      "change": "Schema.Record({ key: Schema.String, value: Schema.Json }) -> Schema.Record(Schema.String, Schema.Json)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts",
+      "source_preimage": "df21e9284d7cbcb46ff1ddf553a8bf4c12ee601c",
+      "source_postimage": "8fb0ddb6631d5c35bc568a8a06a24294b25ca95e",
+      "consumer_preimage_at_handoff": "df21e9284d7cbcb46ff1ddf553a8bf4c12ee601c",
+      "consumer_expected_postimage": "8fb0ddb6631d5c35bc568a8a06a24294b25ca95e",
+      "kind": "REGRESSION_SPEC",
+      "change": "Effect 4 positional Record; nested JSON/0/false/null; rejects non-JSON and forged extra request field"
+    },
+    {
+      "path": "packages/client/src/sucafina/analyses.ts",
+      "source_preimage": "43c096141146c3ce2b5a9fac67282c5eed959bdf",
+      "source_postimage": "43c096141146c3ce2b5a9fac67282c5eed959bdf",
+      "consumer_preimage_at_handoff": "43c096141146c3ce2b5a9fac67282c5eed959bdf",
+      "kind": "UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/analyses.ts",
+      "source_preimage": "224758f6f9d611268bea1d1f9b8d76678d99807c",
+      "source_postimage": "224758f6f9d611268bea1d1f9b8d76678d99807c",
+      "consumer_preimage_at_handoff": null,
+      "kind": "UNCHANGED_SOURCE_NOT_INSTALLED_IN_CONSUMER"
+    }
+  ],
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction155/PATCH.diff",
+    "base_preimages": {
+      "packages/schema/src/sucafina/analyses.ts": "ff222fcc02d26dbe59ccb40da797d2a723c2ed47",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts": "df21e9284d7cbcb46ff1ddf553a8bf4c12ee601c"
+    },
+    "new_blobs": {
+      "packages/schema/src/sucafina/analyses.ts": "c90cf04ae5e92db5f351879b27ba4161d33b9e6d",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts": "8fb0ddb6631d5c35bc568a8a06a24294b25ca95e"
+    },
+    "guidance": "Apply ONLY these two hunks/files to A132 current C material after verifying the expected preimages. If changed, 132 must reconcile instead of overwriting. Existing A15 original four outputs and old source history remain preserved."
+  },
+  "source_evidence": {
+    "upstream": "https://raw.githubusercontent.com/Effect-TS/effect/effect@4.0.0-beta.83/packages/effect/src/Schema.ts",
+    "record_signature": "Record(key, value, options?)",
+    "upstream_implementation": "SchemaAST.record(key.ast, value.ast, keyValueCombiner)",
+    "installed_version": "effect@4.0.0-beta.83",
+    "root_package_json_sha": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+    "patch_effect_sha": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+    "causal_scope": "Exactly one Schema.Record constructor in packages/schema/src/sucafina/analyses.ts; Schema.Struct, Schema.Union and Schema.Literals inspected; unaffected."
+  },
+  "initial_failure": {
+    "run": 43758731378,
+    "job": 132948475697,
+    "attempt": 1,
+    "comment_id": 6901000387,
+    "material_commit": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+    "snapshot": "b9e68821206cdd9510b1faa5d07f98140b1df581",
+    "summary": "48PASS/7FAIL including 2 import errors and 5 assertion failures; A15 import error before tests; TypeError value.ast at analyses.ts:72",
+    "finding_status": "SOURCE_FIX_PUBLISHED; RECHECK_PENDING_ON_NEW_COHERENT_MATERIAL",
+    "limitation": "Other failures are outside A15 and remain unqualified"
+  },
+  "preserved_contracts": {
+    "pins": {
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "criteria-trace.json": "1dba83d77882073af587c031d63299ed472905e8"
+    },
+    "source_producer_blobs": {
+      "analysis-base": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+      "analysis-host": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+      "host-types": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+      "resident-types": "38e3d664f4dedb56f3e614bde41d51548e44f805"
+    },
+    "behavior": [
+      "Seven existing analysis producer operations and projection.residents still closed by identity/codec",
+      "Selection remains dynamic installed-skill JSON map; actual producer retains skill input schema validation, owner/binding and admission",
+      "Digest, manifestDigest, version, authorAnalysis, cancellation and status errors unchanged",
+      "No any, casts, shims, mocks, dependency upgrades, registry/engine writes",
+      "Legacy A15 assertions retained; only additive causal spec"
+    ]
+  },
+  "acceptance": {
+    "A15-AC01": "No field loss in selection; nested valid JSON with 0,false,null; existing version/optional tests remain",
+    "A15-AC02": "JSON values checked by Schema.Json; unknown request owner rejected in strict decode; operation IDs remain literal/closed; producer validates dynamic skill schema",
+    "A15-AC03": "Current request/manifest/source-version and operation keys unchanged; no bypass to admission/revalidation",
+    "WP12.T01": "Scope/provider authority not modified; qualification remains gated",
+    "WP12.T02": "Intent/selection values preserved for producer validation",
+    "WP12.T03": "Existing output/critique contracts unchanged",
+    "WP12.T04": "Async state, cancel and stale behavior unchanged",
+    "finding 6901000387": "Incompatible constructor corrected; root cause addressed; no new hosted outcome yet"
+  },
+  "validation": {
+    "local_tests": "NOT_RUN_FORBIDDEN_BY_MISSION155",
+    "local_typecheck": "NOT_RUN_FORBIDDEN_BY_MISSION155",
+    "local_parser": "NOT_RUN_FORBIDDEN_BY_MISSION155",
+    "hosted_product_after_fix": "NOT_RUN_AWAITING_132_COMPOSITION_AND_150",
+    "hosted_compiler_after_fix": "NOT_RUN_AWAITING_132_COMPOSITION_AND_149",
+    "hosted_sdk_generation": "NOT_RUN_AWAITING_149",
+    "hosted_guards": "NOT_RUN_AWAITING_149",
+    "global_release": "NOT_PROVEN"
+  },
+  "owner_requests": [
+    {
+      "owner": 132,
+      "pr": 65,
+      "action": "Re-fetch current sf2-stack HEAD and preimages; selectively compose only correction schema+test blobs, plus original missing A15 CLI leaf if still necessary; preserve all other authors. Publish consumed SHA/tree and ACK."
+    },
+    {
+      "owner": 149,
+      "pr": 107,
+      "action": "After coherent new 132 composition, hosted packages/schema,packages/client,apps/cli typecheck; SDK generation/guards only on causally changed inputs; report exact run and logs."
+    },
+    {
+      "owner": 150,
+      "pr": 106,
+      "action": "After 132 coherent composition and 149 readiness as required, rerun surgical hosted analyses.test.ts import+added regression (and only changed transitive consumers). Do not repeat unchanged failing C64."
+    }
+  ],
+  "blockers": [
+    "A132 consumer ACK not yet observed",
+    "Only owner149/150 can establish hosted checks",
+    "Global release/Goal remain paused; source artifact is not integrated qualification"
+  ],
+  "next_action": "132 consumes exact code blobs on sf2-stack and reports new W SHA/tree; 149/150 validate hosted on that new W; then finding status can advance.",
+  "predecessor_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A15/HANDOFF.json",
+  "global_release": false,
+  "native_goal": "paused",
+  "consumer_ack": null
+}
