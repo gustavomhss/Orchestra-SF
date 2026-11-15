@@ -1,0 +1,325 @@
+diff --git a/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts b/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts
+@@ -1,4 +1,4 @@
+-import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
++import { canonicalSfValue, digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+ import type { ScenarioRequest } from "../contracts/operations.ts"
+ import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+@@ -90,7 +90,7 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
+     const again = await compare()
+     const sourceAgain = await input.sources.resolveForecastSource(scenario.baseRef, context)
+     const resolvedAgain = await resolve()
+-    const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? digestSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : digestSfValue(entry)
++    const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? canonicalSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : canonicalSfValue(entry)
+     return again.status === "ok" && projectionDigest(again.value.baseline) === projectionDigest(values) && sourceAgain.status === "ok" && sourceAgain.value.evidence.refDigest === source.value.evidence.refDigest && resolvedAgain.length === resolved.length && resolvedAgain.every((entry, index) => stable(entry) === stable(resolved[index]!)) && !request.signal.aborted && await input.host.revalidate(context)
+   }
+ }
+
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+@@ -1,6 +1,7 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { PortResult, PlannerPort } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
++import { readHistoricalScenarios } from "../decisions/result-store.ts"
+ import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
+ import type { createCriterionComparisonBindings } from "../decisions/criterion-comparison.ts"
+ import type { createPlannerResultPersistence } from "../planner/persistence.ts"
+@@ -24,7 +25,9 @@ export function createPortfolioAnalysis(input: {
+       if (stored.status !== "ok" || stored.value.kind !== "comparison" || stored.value.resultRef !== expected.comparisonRef || stored.value.resultDigest !== digestSfValue(expected.comparison) || digestSfValue(stored.value.result) !== stored.value.resultDigest || expected.comparison.alternativeResultRef !== expected.scenarioResultRef || expected.comparison.baselineResultRef === expected.scenarioResultRef) return undefined
+       const binding = structuredClone(await input.bindings.read({ caseRef: stored.value.caseRef, resultRef: expected.comparisonRef }, context))
+       if (binding.status !== "ok" || binding.value.resultRef !== stored.value.resultRef || binding.value.resultDigest !== stored.value.resultDigest || binding.value.requestDigest !== stored.value.requestDigest || binding.value.requestDigest !== digestSfValue(binding.value.request) || digestSfValue(binding.value.caseRef) !== digestSfValue(stored.value.caseRef) || digestSfValue(binding.value.request.scenarioRefs) !== digestSfValue([expected.comparison.baselineResultRef, expected.scenarioResultRef])) return undefined
+-      const scenarios = structuredClone(await Promise.all(binding.value.request.scenarioRefs.map((resultRef) => input.results.readHistoricalScenario({ resultRef }, context))))
++      const store = input.results
++      const scenarios = structuredClone(await readHistoricalScenarios(store, binding.value.request.scenarioRefs, context, "parallel"))
++      if (input.results !== store) return undefined
+       if (scenarios.some((item, index) => item.status !== "ok" || item.value.kind !== "scenario" || item.value.resultRef !== binding.value.request.scenarioRefs[index] || item.value.resultDigest !== digestSfValue(item.value.result) || item.value.caseRef.id !== stored.value.caseRef.id || item.value.caseRef.incarnation !== stored.value.caseRef.incarnation || item.value.caseRef.version > stored.value.caseRef.version)) return undefined
+       const alternative = scenarios[1]
+       if (!alternative || alternative.status !== "ok" || digestSfValue(alternative.value.result) !== digestSfValue(expected.scenario)) return undefined
+
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+--- a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+@@ -1,4 +1,5 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
++import { selectSfDecisionResult, selectSfDecisionResultBatch } from "../host-binding/state-provider.ts"
+ import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DecisionCase } from "../contracts/decisions.ts"
+@@ -90,19 +91,15 @@ export function createSfDecisionResultStore(input: {
+     const historicalRequest = ledger ? structuredClone(ledger) : undefined
+     const source = input.host.requestFor(context)
+     if (!source || !request.resultRef.trim() || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
+-    const current = await input.state.read(source, "cases", (state, authority) => {
+-      if (!sameAuthority(authority, context)) return undefined
+-      const stored = (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef]
+-      return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
+-    }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
++    const current = await input.state.read(source, "cases", selectSfDecisionResult(request.resultRef, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+     if (current.status !== "ok") return { status: current.status === "preview" ? "unavailable" : current.status, reason: "result-unavailable" }
+     const value = structuredClone(current.value)
+     if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
+     if (historicalRequest && !historicalCalculationMatches(value.current, value.stored, historicalRequest, context)) return { status: "denied", reason: "historical-calculation-unavailable" }
+     if (calculation && (value.stored.kind !== "scenario" || !input.verifyCalculationSources && calculationSources(value.stored).some((ref) => ref.kind !== "record"))) return { status: "unavailable", reason: "calculation-source-unsupported" }
+     if (!allowedCase(value.current, value.stored.caseRef, context, historical) || !await authorizeCase(value.current!, context).catch(() => false) || !await verifySources(value.stored, calculation && value.stored.kind === "scenario" ? calculationSources(value.stored) : value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+     if (calculation && value.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(value.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
+-    const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
++    const again = await input.state.read(source, "cases", selectSfDecisionResult(request.resultRef, context, value.stored.caseRef.id)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
+     const latest = structuredClone(again.value)
+     if (historicalRequest && (!latest?.stored || !historicalCalculationMatches(latest.current, latest.stored, historicalRequest, context) || digestSfValue(latest.current) !== digestSfValue(value.current))) return { status: "denied", reason: "historical-calculation-changed" }
+@@ -115,7 +112,7 @@ export function createSfDecisionResultStore(input: {
+     if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+     // Source replay can await domain reads. Observe the same authorized case and result
+     // after that last callback, under C08's read fence, before releasing the value.
+-    const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
++    const final = await input.state.read(source, "cases", selectSfDecisionResult(request.resultRef, context, value.stored.caseRef.id)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+     if (final.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
+     const observed = structuredClone(final.value)
+     if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || digestSfValue(observed.current) !== digestSfValue(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
+@@ -157,12 +154,7 @@ export function createSfDecisionResultStore(input: {
+         failures[index] = { status: "denied", reason: "invalid-authority" }
+     }
+     if (!source || !remaining()) return failRemaining(denied())
+-    const observe = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
+-      ? references.map((reference, index) => {
+-        if (failures[index]) return undefined
+-        const stored = state.decisionResults?.[reference]
+-        return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
+-      }) : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
++    const observe = () => input.state.read(source, "cases", selectSfDecisionResultBatch(references, context, (index) => !!failures[index])).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+     const first = await observe()
+     if (first.status !== "ok") return failRemaining({ status: first.status === "preview" ? "unavailable" : first.status, reason: "result-unavailable" })
+     const values = structuredClone(first.value)
+
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+--- a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+@@ -29,6 +29,93 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
+   return read
+ }
+ 
++// Only these constructor-owned C08 callbacks may project cases plus stored
++// result envelopes. The registry never holds an observed snapshot, outcome or
++// grant. Opaque and wrapped functions still receive the whole private clone.
++type ResultSelection = { references: readonly string[]; fixedCaseId?: string; skip?: (index: number) => boolean }
++const resultReads = new WeakMap<object, ResultSelection>()
++
++export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId?: string) {
++  const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
++    if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
++    const stored = state.decisionResults?.[resultRef]
++    return fixedCaseId !== undefined ? { current: state.cases[fixedCaseId], stored }
++      : stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
++  }
++  registerResultRead(read, context, { references: [resultRef], fixedCaseId })
++  return read
++}
++
++export function selectSfDecisionResultBatch(references: readonly string[], context: TrustedDomainContext, skip: (index: number) => boolean) {
++  const refs = [...references]
++  const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
++    if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
++    return refs.map((resultRef, index) => {
++      if (skip(index)) return undefined
++      const stored = state.decisionResults?.[resultRef]
++      return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
++    })
++  }
++  registerResultRead(read, context, { references: refs, skip })
++  return read
++}
++
++function registerResultRead(read: object, context: TrustedDomainContext, selection: ResultSelection) {
++  const binding = Object.getOwnPropertyDescriptor(context, "binding")
++  // A mutable context or accessor retains the opaque full-clone path; the
++  // predicate is evaluated at the original callback observation, not cached.
++  if (!Object.isFrozen(context) || !binding || !("value" in binding) || !binding.value || typeof binding.value !== "object" || !Object.isFrozen(binding.value) ||
++    !selection.references.every((ref) => typeof ref === "string") ||
++    !["principalRef", "policyVersion", "accessRevision"].every((key) => {
++      const field = Object.getOwnPropertyDescriptor(binding.value, key)
++      return !!field && "value" in field && typeof field.value === "string"
++    })) return
++  resultReads.set(read, selection)
++}
++
++function projectResultRead(state: SfProductState, selection: ResultSelection): SfProductState | undefined {
++  const casesField = Object.getOwnPropertyDescriptor(state, "cases")
++  const resultsField = Object.getOwnPropertyDescriptor(state, "decisionResults")
++  if (!casesField?.enumerable || !("value" in casesField) || !resultsField?.enumerable || !("value" in resultsField)) return undefined
++  const plain = (value: unknown): value is Record<string, unknown> =>
++    !!value && typeof value === "object" && !Array.isArray(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value))
++  if (!plain(casesField.value) || !plain(resultsField.value)) return undefined
++  const cases = casesField.value
++  const results = resultsField.value
++  const chosenCases: Record<string, unknown> = Object.create(null)
++  const chosenResults: Record<string, unknown> = Object.create(null)
++  for (const [index, ref] of selection.references.entries()) {
++    if (selection.skip?.(index)) continue
++    const field = Object.getOwnPropertyDescriptor(results, ref)
++    if (!field) { if (ref in results) return undefined }
++    else {
++      if (!field.enumerable || !("value" in field)) return undefined
++      chosenResults[ref] = field.value
++    }
++    const stored = field && "value" in field ? field.value : undefined
++    const caseId = (() => {
++      if (selection.fixedCaseId !== undefined) return selection.fixedCaseId
++      if (stored === undefined) return undefined
++      if (!plain(stored)) return null
++      const caseRef = Object.getOwnPropertyDescriptor(stored, "caseRef")
++      if (!caseRef?.enumerable || !("value" in caseRef) || !plain(caseRef.value)) return null
++      const id = Object.getOwnPropertyDescriptor(caseRef.value, "id")
++      return id?.enumerable && "value" in id && typeof id.value === "string" ? id.value : null
++    })()
++    if (caseId === null) return undefined
++    if (caseId === undefined) continue
++    const current = Object.getOwnPropertyDescriptor(cases, caseId)
++    if (!current) { if (caseId in cases) return undefined; continue }
++    if (!current.enumerable || !("value" in current)) return undefined
++    chosenCases[caseId] = current.value
++  }
++  // Clone one joint selected graph to retain aliases, structuredClone errors,
++  // getter behaviour *inside* selected records and cross-occurrence separation.
++  // Durable SQLite snapshots have plain cloneable root maps; unsafe selected
++  // descriptors, inherited fields and legacy state take the original path.
++  return structuredClone({ cases: chosenCases, decisionResults: chosenResults }) as unknown as SfProductState
++}
++
+ /** The caller composes current product authority; a Dashboard role never grants it implicitly. */
+ export function createSfProductState(input: {
+   persistence: Persistence
+@@ -57,11 +144,14 @@ export function createSfProductState(input: {
+         const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
+         const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
+           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
++        const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
++        const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+         // Keep missing/inherited, accessor and malformed lookups on the original
+         // path. Durable SQLite snapshots contain plain cloneable data.
+         const value = selection && selected?.enumerable && "value" in selected && selected.value &&
+           typeof selected.value === "object" && !Array.isArray(selected.value)
+           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
++          : selectedResults ? await read(selectedResults, authority)
+           : await read(structuredClone(state), authority)
+         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
+         const current = await input.authorize(request, snapshot, namespace, "read")
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts b/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts
+@@ -0,0 +1,94 @@
++import { expect, test } from "bun:test"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { selectSfDecisionResult } from "../../../product/host-binding/state-provider.ts"
++import { createCalculationFixture } from "../planner-p03-finish/calculation-fixture.ts"
++
++test("C08 selected result reads detach cases/results without traversing unrelated SQLite root maps", async () => {
++  const f = await createCalculationFixture()
++  const transaction = f.fixture.store.transaction
++  const visit = { unrelated: 0 }
++  try {
++    // Instrument only a detached per-read SQLite snapshot. The returning
++    // transaction is commit=false, so no accessor is written to persistence.
++    f.fixture.store.transaction = (surface, work, options) => transaction(surface, async (snapshot, blobs) => {
++      if (surface === "dashboard") {
++        const state = snapshot.data.__sfProductV1 as SfProductState
++        if (state?.preferences) Object.defineProperty(state.preferences, "__p03_unrelated__", {
++          configurable: true, enumerable: true,
++          get: () => { visit.unrelated++; return { rootOnly: true } },
++        })
++      }
++      return work(snapshot, blobs)
++    }, options)
++    const request = f.fixture.request
++    const context = f.fixture.context
++    const selector = selectSfDecisionResult(f.original.resultRef, context)
++    const fullClone = (state: Parameters<typeof selector>[0], authority: Parameters<typeof selector>[1]) => selector(state, authority)
++    const initial = await f.settings.state.read(request, "cases", fullClone)
++    const fullTraversal = visit.unrelated
++    const selected = await f.settings.state.read(request, "cases", selector)
++    expect(selected).toEqual(initial)
++    expect(fullTraversal).toBeGreaterThan(0)
++    expect(visit.unrelated).toBe(fullTraversal)
++    expect(initial.status).toBe("ok")
++    expect(selected.status).toBe("ok")
++    if (initial.status !== "ok" || selected.status !== "ok" || !initial.value?.stored || !selected.value?.stored ||
++      initial.value.stored.kind !== "scenario" || selected.value.stored.kind !== "scenario") throw new Error("C08 result observation unavailable")
++    expect(selected.value.stored).not.toBe(initial.value.stored)
++    expect(selected.value.current).not.toBe(initial.value.current)
++    selected.value.stored.result.knownSubtotal = -928000
++    const later = await f.settings.state.read(request, "cases", selectSfDecisionResult(f.original.resultRef, context))
++    expect(later).toEqual(initial)
++    expect(visit.unrelated).toBe(fullTraversal)
++    expect(f.trace.reads).toBeGreaterThanOrEqual(3)
++  } finally {
++    f.fixture.store.transaction = transaction
++    await f.cleanup()
++  }
++}, 60000)
++
++test("C08 selected result fallback preserves accessor effects, noncloneable failure and current authority", async () => {
++  const f = await createCalculationFixture()
++  const transaction = f.fixture.store.transaction
++  const getter = { calls: 0, unsupported: false }
++  try {
++    const context = f.fixture.context
++    const request = f.fixture.request
++    const ref = f.original.resultRef
++    f.fixture.store.transaction = (surface, work, options) => transaction(surface, async (snapshot, blobs) => {
++      if (surface === "dashboard") {
++        const root = snapshot.data.__sfProductV1 as SfProductState
++        const stored = root.decisionResults?.[ref]
++        if (stored && root.decisionResults) Object.defineProperty(root.decisionResults, ref, {
++          configurable: true, enumerable: true, get: () => {
++            getter.calls++
++            return getter.unsupported ? () => "uncloneable" : stored
++          },
++        })
++      }
++      return work(snapshot, blobs)
++    }, options)
++    const result = await f.settings.state.read(request, "cases", selectSfDecisionResult(ref, context))
++    expect(result.status).toBe("ok")
++    expect(getter.calls).toBe(1)
++    if (result.status !== "ok") throw new Error("Selected result missing")
++    getter.unsupported = true
++    await expect(f.settings.state.read(request, "cases", selectSfDecisionResult(ref, context))).rejects.toThrow()
++    expect(getter.calls).toBe(2)
++    getter.unsupported = false
++    const mutable = { ...context, binding: { ...context.binding } }
++    const selected = selectSfDecisionResult(ref, mutable)
++    mutable.binding.principalRef = "outsider"
++    const denied = await f.settings.state.read(request, "cases", selected)
++    expect(denied).toMatchObject({ status: "ok", value: undefined })
++    expect(getter.calls).toBe(3)
++    f.fixture.store.transaction = transaction
++    const fresh = await f.settings.state.read(request, "cases", selectSfDecisionResult(ref, context))
++    expect(fresh.status).toBe("ok")
++    if (fresh.status !== "ok" || !fresh.value?.stored) throw new Error("Detached restart read missing")
++    expect(fresh.value.stored).toEqual(f.original)
++  } finally {
++    f.fixture.store.transaction = transaction
++    await f.cleanup()
++  }
++}, 60000)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
+--- a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
+@@ -1,9 +1,9 @@
+ /** Only this manifest changes between diagnostic snapshots; test/probe bytes stay fixed. */
+ export const diagnosticExpected = {
+-  label: "improved",
++  label: "p03-causal-closure99",
+   producers: {
+-    "product/host-binding/state-provider.ts": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+-    "product/decisions/result-store.ts": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de",
++    "product/host-binding/state-provider.ts": "acc07d5f12aa1818a72d6ab9ac8ced36489739485d661d72b5a02249d5d34b8f",
++    "product/decisions/result-store.ts": "3f238642d247269a807353378a7d5f68b9c36c9ca5deb7a2a13be3d8f00ae6e5",
+     "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef",
+   },
+ } as const

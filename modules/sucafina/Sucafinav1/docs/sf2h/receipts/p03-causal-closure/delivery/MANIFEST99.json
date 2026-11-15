@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.p03-causal-closure.delivery.v1",
+  "mission": 99,
+  "lease": "p03-causal-browser99",
+  "pr": 95,
+  "branch": "planner-p03-finish",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "preimage_commit": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+  "postimage_commit": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+  "postimage_tree": "7d6e71c2c925ac83b8d4e948d1188787fb188e6a",
+  "authored_commits": [
+    "460bff81a9b6d80a94f7ba139f53b0cad68afa90",
+    "d4889972c4803592722876126a9353066feca966",
+    "41744d183ecba54efb8da2bacf5d9f18b1d55380"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "preimage_ref": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+      "postimage_ref": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+      "short_name": "product__planner__operation-verifier.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "preimage_ref": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+      "postimage_ref": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+      "short_name": "product__portfolio__analysis.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "preimage_ref": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+      "postimage_ref": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+      "short_name": "product__decisions__result-store.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage_ref": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+      "postimage_ref": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+      "short_name": "product__host-binding__state-provider.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts",
+      "preimage_ref": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+      "postimage_ref": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+      "short_name": "test__product__p03-causal-closure__result-read-projection.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts",
+      "preimage_ref": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+      "postimage_ref": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+      "short_name": "test__product__planner-p03-finish__diagnostic-expected.ts"
+    }
+  ],
+  "dependency_observations": {
+    "stored_scenarios_branch_blob": "c1634b7388216af2da62f1af0d229e2dc78affad",
+    "stored_scenarios_sf2_stack_blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+    "result_store_from76_integrated_target": "c76d9bc385a4b5102b756812b778c844f20ab733",
+    "unchanged_canonical_sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+    "unchanged_original_P03_test_blob": "47b5358c8dda3179045499388ce98871576a2aa9"
+  },
+  "R1": {
+    "state": "SUCCESS",
+    "run": 43680997173,
+    "job": 132711373396,
+    "cleanup_job": 132712035001,
+    "snapshot": "8a87cd72b03549e9bbddf3b694712fb39347ca85",
+    "snapshot_tree": "e9e8741832bf1ce13f8a9a77339320b6281baf35",
+    "request_blob": "66b11fd8fb5e81c88acfba05033d554d2edeb896",
+    "pass": 21,
+    "fail": 0,
+    "expect": 232,
+    "callback_events": 87440,
+    "callback_order_sha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+    "output_digests_identical_to_R2_89": true,
+    "diagnostic_duration_ms": 38535.49,
+    "historical89_duration_ms": 39408.16,
+    "wall_indicative_only": true,
+    "source_commit": "41744d183ecba54efb8da2bacf5d9f18b1d55380"
+  },
+  "P03": {
+    "state": "RUNNING",
+    "run": 43681302722,
+    "snapshot": "c9c38cbf92844dcbdfbdc543fb6b378b241817f4",
+    "snapshot_tree": "cafaf70f8ae0a7dd07f0201abaaae5833e3f33f9",
+    "request_blob": "091831843963eca23229e3ddef89869acdbb0c29",
+    "original_expect_calls": 72,
+    "unchanged_test_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "timeout_ms": 180000
+  },
+  "validation_limit": "R1 bounded controls only; no integrated candidate acceptance without original P03 PASS, independent reviewer and 71 composition",
+  "GLOBAL_RELEASE": false
+}
