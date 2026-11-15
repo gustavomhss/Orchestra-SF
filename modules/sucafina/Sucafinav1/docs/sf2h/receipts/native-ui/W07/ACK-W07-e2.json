@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.native-ui.successor-ack.v1",
+  "mission": "UX20-W07-R2",
+  "order": "S02",
+  "output": "SfMonthlyGrid",
+  "state": "ACK_REAL_E2_S0_ADMITTED_AUTHORING",
+  "actor": "ChatGPT GPT-6 W07 successor",
+  "effective_model": "GPT-6",
+  "requested_label": "Astra",
+  "actual_runtime_session_id": null,
+  "runtime_session_id_reason": "not exposed to this tool session",
+  "github_actor": "gustavomhss",
+  "branch": "sf-ux-w07",
+  "pr": 124,
+  "lease_epoch": "ux-native-w07-e2",
+  "prior_epoch": "ux-native-w07-e1",
+  "prior_epoch_state": "REVOKED_FOR_FUTURE_ACCEPTANCE",
+  "input_head": "3caf1209b6a0faafac24fcd2bf10871119443f9f",
+  "input_tree": "0746c30ad7cd22830f8ac7902294676a383c165a",
+  "expected_head": "3caf1209b6a0faafac24fcd2bf10871119443f9f",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/S0-FENCE-e2.json",
+  "authoring_authority": "S0:8852ed4a060f6eb3b49c142b894852d0af49740f",
+  "input_packet_commit": "49a92b9c6bd2c23cf30686a279aa17d2d7aabb5a",
+  "checks": {
+    "fence_and_branch_head_equal": true,
+    "pr_124_open_on_expected_branch": true,
+    "foreign_writer_after_fence_observed": false,
+    "read_instructions_and_handoffs": true,
+    "per_output_authoring_granted_by_s0": true
+  },
+  "allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+    "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/**"
+  ],
+  "sources": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+    "order_blob": "08605acceb598f8dab17bef9e5415d6a3c556526",
+    "component_signatures_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component_contracts_blob": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "surface_specs_blob": "d62847af81dffdc129312e71e69692081fd74b75"
+  },
+  "integration_owner": "114 / S0-C-e17-browser114",
+  "validation_owner": "120",
+  "compiler_owner": "119",
+  "forbidden": [
+    "shared registry edits",
+    "generated SDK edits",
+    "local tests/typecheck/parser",
+    "reset/rebase/force push",
+    "merge",
+    "deploy/Azure",
+    "resume native Goal"
+  ],
+  "constraints": [
+    "Month IDs remain 0..11; A02 maps to producer months 1..12 once",
+    "Original TSV and row CAS/partial results are producer-owned",
+    "No domain financial arithmetic in S02",
+    "ARTIFACT_READY does not mean INTEGRATED or QUALIFIED"
+  ],
+  "global_release": false
+}
