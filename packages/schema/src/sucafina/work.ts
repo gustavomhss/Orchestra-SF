@@ -26,6 +26,8 @@ const closedStruct = <const Fields extends Schema.Struct.Fields>(fields: Fields)
 }
 
 const NonEmpty = Schema.String.check(Schema.isMinLength(1))
+// Search travels only in a bounded JSON POST body; no search text in a URL.
+const PrivateSearchText = Schema.String.check(Schema.isMinLength(1), Schema.isMaxLength(3800))
 const ShortRef = Schema.String.check(Schema.isMinLength(1), Schema.isMaxLength(16_384))
 const DatePart = Schema.String.check(Schema.isPattern(/^\d{4}-\d{2}-\d{2}$/))
 const Period = closedStruct({ start: DatePart, end: DatePart })
@@ -148,7 +150,7 @@ export const SfProjectionHome = {
   })),
 } as const
 export const SfProjectionSearch = {
-  Input: closedStruct({ q: NonEmpty }),
+  Input: closedStruct({ q: PrivateSearchText }),
   Output: result(closedStruct({
     matches: Schema.Array(closedStruct({ documentRef: SfWorkEvidence, text: Schema.String, lexicalScore: Schema.Finite })),
     limitations: Schema.Array(Schema.String),
