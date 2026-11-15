@@ -78,10 +78,10 @@ index cc5a3e0..70fbd98 100644
      const { client, calls } = recordingClient()
      const options = { signal, idempotencyKey: "intent-once-a12" }
 diff --git a/packages/schema/src/sucafina/work.ts b/packages/schema/src/sucafina/work.ts
-index 0fa4c0c..91f9253 100644
+index 0fa4c0c..ef6f3ef 100644
 --- a/packages/schema/src/sucafina/work.ts
 +++ b/packages/schema/src/sucafina/work.ts
-@@ -7,22 +7,32 @@
+@@ -7,22 +7,37 @@
   * schemaVersion:2 is intentionally not an admitted codec: the real
   * personal-views.ts V2 producer has not been released.
   */
@@ -89,14 +89,19 @@ index 0fa4c0c..91f9253 100644
 +import { Effect, Schema } from "effect"
  import { optional } from "../schema"
  
-+// Effect Struct's default decoder discards extra keys. Close each object at
-+// the schema boundary (including nested arrays/unions) *before* decoding to
-+// the public shape, so an unrecognized permission/source field is an error,
-+// never a silently laundered success.
++// Effect Struct normally discards excess object keys. Preserve source keys
++// in a temporary record, reject any outside the fixed field set *before*
++// projecting to the public shape, and apply this to every nested struct.
++// The unknown-valued rest is internal only: it cannot pass the closed-key
++// check or escape through the resulting typed codec.
 +const closedStruct = <const Fields extends Schema.Struct.Fields>(fields: Fields) => {
 +  const shape = Schema.Struct(fields)
-+  return Schema.StructWithRest(shape, [Schema.Record(Schema.String, Schema.Never)])
-+    .pipe(Schema.decodeTo(shape))
++  const allowed = new Set(Object.keys(fields))
++  const withExtras = Schema.StructWithRest(shape, [Schema.Record(Schema.String, Schema.Unknown)])
++  return withExtras.check(Schema.makeFilter<typeof withExtras.Type>(
++    (value) => Object.keys(value).every((key) => allowed.has(key)),
++    { expected: "an object containing only declared fields" },
++  )).pipe(Schema.decodeTo(shape))
 +}
 +
  const NonEmpty = Schema.String.check(Schema.isMinLength(1))
@@ -118,7 +123,7 @@ index 0fa4c0c..91f9253 100644
    ProjectionFailure,
  ])
  
-@@ -45,7 +55,7 @@ export type SfWorkEvidenceRef = Readonly<{
+@@ -45,7 +60,7 @@ export type SfWorkEvidenceRef = Readonly<{
    | { kind: "policy"; target: { packageId: string; version: string; sourceDigest: string; ruleId: string; reviewRef: string; scope: string } }
  )>
  
@@ -127,7 +132,7 @@ index 0fa4c0c..91f9253 100644
  const EvidenceIdentity = {
    schema: Schema.Literal("sf-evidence-v1"),
    refId: NonEmpty,
-@@ -55,41 +65,41 @@ const EvidenceIdentity = {
+@@ -55,41 +70,41 @@ const EvidenceIdentity = {
    evidenceLevel: Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
  }
  export const SfWorkEvidence = Schema.suspend((): Schema.Schema<SfWorkEvidenceRef> => Schema.Union([
@@ -178,7 +183,7 @@ index 0fa4c0c..91f9253 100644
    kind: Schema.Literals(["clarification", "handoff", "procurement", "confirmation", "signal"]),
    actionRef: NonEmpty,
    title: Schema.Union([Schema.String, Schema.Null]),
-@@ -103,57 +113,57 @@ const WorkItem = Schema.Struct({
+@@ -103,57 +118,57 @@ const WorkItem = Schema.Struct({
    observedVersion: NonNegativeVersion.pipe(optional),
    state: Schema.String,
    destination: Schema.Union([
@@ -258,7 +263,7 @@ index 0fa4c0c..91f9253 100644
  } as const
  
  // The original producer's pages, ranges and optional keys (never a native
-@@ -164,7 +174,7 @@ const Title = Schema.String.check(Schema.isMaxLength(120), Schema.isPattern(/\S/
+@@ -164,7 +179,7 @@ const Title = Schema.String.check(Schema.isMaxLength(120), Schema.isPattern(/\S/
  const Year = Schema.String.check(Schema.isPattern(/^(|202[4-7])$/))
  const Month = Schema.String.check(Schema.isPattern(/^(|[1-9]|1[0-2])$/))
  const FilterValue = Schema.String.check(Schema.isMaxLength(500))
@@ -267,7 +272,7 @@ index 0fa4c0c..91f9253 100644
    year: Year.pipe(optional), own: Year.pipe(optional),
    execYear: Year.pipe(optional), opsYear: Year.pipe(optional), secYear: Year.pipe(optional),
    month: Month.pipe(optional), executiveMonth: Month.pipe(optional),
-@@ -176,7 +186,7 @@ const Selections = Schema.Struct({
+@@ -176,7 +191,7 @@ const Selections = Schema.Struct({
    topicStatus: FilterValue.pipe(optional), memberStatus: FilterValue.pipe(optional),
    request: FilterValue.pipe(optional), supplier: FilterValue.pipe(optional),
  })
@@ -276,7 +281,7 @@ index 0fa4c0c..91f9253 100644
    query: FilterValue.pipe(optional), selections: Selections.pipe(optional),
  })
  const ViewFields = {
-@@ -187,52 +197,55 @@ const ViewFields = {
+@@ -187,52 +202,55 @@ const ViewFields = {
    filters: Filters.pipe(optional),
  }
  export const SfPersonalViewLegacy = Schema.Union([

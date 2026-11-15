@@ -26,22 +26,22 @@
   },
   "code": {
     "base_commit": "df2b4d1f9c6114572b023de9dace9c86414599f2",
-    "commit": "ea027b56491cd99c140ccfb2549b2a05ade6785f",
-    "tree": "8e6885207efeefcacafd14e88c3732c4f07741d5",
+    "commit": "08397d61dd5149d6940ee270c3182cdf9d0a232f",
+    "tree": "fd8180abd3f0b309d6688028bdc214e972f35fd2",
     "patch": {
       "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/PATCH.diff",
-      "blob": "a035bf01254ce54f89514023a94de3431466741e",
-      "format": "git unified diff; git apply --check/apply by authorized integrator only",
+      "blob": "571aa40868fa768def24a17838c6280222b19113",
+      "format": "complete git unified diff against original source/132 consumer preimages; apply only after integrator CAS verification",
       "complete": true
     },
     "changed_files": {
-      "packages/schema/src/sucafina/work.ts": {
-        "preimage": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
-        "postimage": "91f9253b8abdfa37ffdbd9b7e06358a606323ecd"
-      },
       "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": {
         "preimage": "cc5a3e075d16aeb67eb604bb5e5b7139a48bb4f0",
         "postimage": "70fbd980e1a8bb18b27095c88488386f62227253"
+      },
+      "packages/schema/src/sucafina/work.ts": {
+        "preimage": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+        "postimage": "ef6f3ef73966caf976e1bd816984356eedd6e007"
       }
     },
     "untouched_preimages": {
@@ -75,7 +75,14 @@
       "inherited_all_work_package_campaign_axioms": true
     },
     "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
-    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70"
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "static_upstream_parser_review": {
+      "source": "Effect v4 SchemaAST Objects.getParser, inspected read-only through GitHub MCP",
+      "finding": "Record(String,Never) indexes visit known keys too, so first strict helper risked rejection of valid V1; corrected BEFORE hosted qualification",
+      "superseding_commit": "08397d61dd5149d6940ee270c3182cdf9d0a232f",
+      "schema_blob": "ef6f3ef73966caf976e1bd816984356eedd6e007",
+      "validation_state": "NOT_RUN"
+    }
   },
   "causal_finding": {
     "run_id": 43758731378,
@@ -93,13 +100,13 @@
         "file": "work.test.ts",
         "line": 78,
         "pre": "invalid/unknown V1/V2 accepted after schema silently strips fields",
-        "change": "closedStruct strict unknown field handling at every nested schema level, keeping invalid CAS and V2 refusals"
+        "change": "closedStruct now validates raw admitted key names before projecting a schema: temporary Schema.Record(String,Unknown) carries fields through StructWithRest, a schema-level predicate rejects extras, then decodeTo enforces public shape; unsupported V2 rejected"
       },
       {
         "file": "work.test.ts",
         "line": 104,
         "pre": "extra output secretRoleMap accepted",
-        "change": "WorkItem and projection envelopes reject extras recursively without destroying title:null,sourceVersion:0,observedVersion:0"
+        "change": "Nested WorkItem, projection and output containers use closedStruct: legitimate keys accepted; secretRoleMap/extras rejected; title:null,sourceVersion:0,observedVersion:0 retained"
       }
     ],
     "status": "SOURCE_PATCH_PUBLISHED_PENDING_CI_RECHECK",
@@ -110,7 +117,7 @@
     "view_save": "{view,expectedVersion:number>0|null}; null means create; positive number means per-view CAS update",
     "view_remove": "{id,expectedVersion:number>0}; per-view CAS",
     "read": "list/open preserve current reauthorization and principal; redacted unavailable entry exactly {id,version,availability} without private title",
-    "response": "source status envelopes unchanged; schema uses strict structs for nested records, refs, destinations, period, filters and outputs",
+    "response": "Closed-key schema gate via StructWithRest(String,Unknown) + makeFilter + decodeTo; the temporary open record is private to validation, and public type/output stay exact. No use of Never on known keys.",
     "zero_null": "title:null preserved; sourceVersion:0 and observedVersion:0 preserved; expectedVersion:0 rejected",
     "v2": "schemaVersion:2 is not supported by producer and is rejected by schema or client contract-unavailable before network",
     "no_surface_requirement": "surface route selector supplies dashboard default only when absent; explicit dashboard/planner/procurement remain preserved",
@@ -140,7 +147,7 @@
       "modules/sucafina/Sucafinav1/product/interface/personal-views.ts": "e424c7454a1aa4b7bd8290408001e65ae029d156"
     },
     "author_post_blobs": {
-      "packages/schema/src/sucafina/work.ts": "91f9253b8abdfa37ffdbd9b7e06358a606323ecd",
+      "packages/schema/src/sucafina/work.ts": "ef6f3ef73966caf976e1bd816984356eedd6e007",
       "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": "70fbd980e1a8bb18b27095c88488386f62227253"
     },
     "instructions": "Use the provided complete PATCH.diff against these exact consumer preimage blobs, re-check current CAS and reconcile any newer deltas. Only selectively integrate two source paths, do NOT merge the author branch/inherited UX cohort. Keep original shared registry, generated, producer and private source ownership."
@@ -149,20 +156,20 @@
     "local_tests": "NOT_RUN_PROHIBITED",
     "local_typecheck": "NOT_RUN_PROHIBITED",
     "local_parser": "NOT_RUN_PROHIBITED",
-    "hosted_ci": "NOT_RUN_ON_NEW_CODE",
-    "compiler_sdk_guards": "NOT_RUN_ON_NEW_CODE",
+    "hosted_ci": "NOT_RUN_ON_CURRENT_CORRECTED_CODE",
+    "compiler_sdk_guards": "NOT_RUN_ON_CURRENT_CORRECTED_CODE",
     "prior_hosted_evidence": "FAIL_SOURCE_PREIMAGE_JOB_132948475697; not evidence for new patch",
     "request_149": {
       "owner": "149",
       "pr": 107,
       "when": "After A132 composes exact source and new candidate CI snapshot",
-      "action": "Hosted compiler packages/schema + packages/client + apps/cli, SDK generation/guards only on causally new integrated inputs; preserve prior C64 unrelated failures"
+      "action": "Hosted compiler packages/schema + packages/client + apps/cli, SDK generation/guards only on causally new integrated inputs; preserve prior C64 unrelated failures; use corrected blob ef6f3ef73966caf976e1bd816984356eedd6e007 (supersedes earlier 91f9253...)"
     },
     "request_150": {
       "owner": "150",
       "pr": 106,
       "when": "After A132 composes exact patch and approved .ci-run.json candidate",
-      "action": "Surgical hosted work.test.ts:61,78,104 and added regressions; no full epic rerun, no stale C64 repeat; report run/job SHA/status"
+      "action": "Surgical hosted work.test.ts:61,78,104 and added regressions; no full epic rerun, no stale C64 repeat; report run/job SHA/status; use corrected blob ef6f3ef73966caf976e1bd816984356eedd6e007 (supersedes earlier 91f9253...)"
     },
     "readiness": "SOURCE_ARTIFACT_ONLY_PENDING_INTEGRATION_QUALIFICATION",
     "global_release": false
@@ -175,6 +182,11 @@
     "work_item": "BLOCKED_CONTRACT: no installed destinations.read+verify port, no fake work-item handler"
   },
   "pending": [
+    {
+      "owner": 132,
+      "item": "Use latest complete PATCH.diff from initial consumer A12 blobs to ef6f3ef schema and 70fbd test; older PATCH.diff blob a035bf is superseded",
+      "state": "PENDING"
+    },
     {
       "owner": 132,
       "item": "Apply narrow PATCH.diff against current sf2-stack same source blob or reconcile drift; integrate without historical merge",
@@ -211,6 +223,6 @@
     "no_goals_reactivation": true,
     "native_goal": "paused"
   },
-  "status": "CORRECTION_ARTIFACT_PUBLISHED_READY_FOR_132_NOT_QUALIFIED",
+  "status": "CORRECTED_SOURCE_ARTIFACT_PUBLISHED_READY_FOR_132_NOT_QUALIFIED",
   "lease_terminal": "SOURCE_READY_HANDED_OFF_TO_132_PENDING_RECEIPT_AND_HOSTED_CHECKS"
 }
