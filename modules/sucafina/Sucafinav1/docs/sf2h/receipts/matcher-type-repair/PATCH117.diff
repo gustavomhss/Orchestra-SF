@@ -1,0 +1,364 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts
+index 83ca43d..6de4bc1 100644
+--- a/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts
+@@ -11,11 +11,14 @@ export function requireOriginalRecord(fixture: DocumentFixture, records: readonl
+   expect(records).toHaveLength(1)
+   const record = records[0]
+   if (!record) throw new Error("Real Atlas recall did not retain its committed record")
+-  expect(digestSfValue({ kind: record.envelope.kind, owner: record.envelope.owner, entry: record.entry })).toBe(fixture.receipt.recordDigest)
+-  if ("recordDigest" in record) expect(record.recordDigest).toBe(fixture.receipt.recordDigest)
+-  expect(record.envelope.eventId).toBe(fixture.receipt.eventId)
++  const publishedDigest = fixture.receipt.recordDigest
++  const publishedEventId = fixture.receipt.eventId
++  if (typeof publishedDigest !== "string" || typeof publishedEventId !== "string") throw new Error("Committed Atlas receipt omitted its digest or event identity")
++  expect(digestSfValue({ kind: record.envelope.kind, owner: record.envelope.owner, entry: record.entry })).toBe(publishedDigest)
++  if ("recordDigest" in record) expect(record.recordDigest).toBe(publishedDigest)
++  expect(record.envelope.eventId).toBe(publishedEventId)
+   expect(record.envelope.sourceEventId).toBe(fixture.eventRef.target.eventId)
+-  expect(record.envelope.scannerReceipt.digest).toBe(fixture.receipt.recordDigest)
++  expect(record.envelope.scannerReceipt.digest).toBe(publishedDigest)
+   expect(record.envelope.dependencies).toEqual(fixture.sources.map((source) => source.ref))
+ }
+ 
+@@ -24,6 +27,7 @@ export async function readOriginalRaw(fixture: DocumentFixture, call: TrustedDom
+   expect(read.status).toBe("ok")
+   if (read.status !== "ok") throw new Error("Intact raw recall unavailable")
+   requireOriginalRecord(fixture, read.records)
++  if (typeof fixture.receipt.recordDigest !== "string") throw new Error("Committed Atlas receipt omitted its record digest")
+   expect(read.records[0]?.recordDigest).toBe(fixture.receipt.recordDigest)
+   return read.records
+ }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts
+index 31f6297..fcaa2d1 100644
+--- a/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts
+@@ -17,16 +17,24 @@ const runtimeVersions = () => ({ boundaryVersion: "1", schemaVersion: "1", manif
+ 
+ function requirePublishedRecords(records: readonly { envelope: BusinessMemoryEnvelope; entry: SfAtlasProjection["entry"]; recordDigest: string }[], receipts: readonly MemoryWriteReceipt[]) {
+   expect(records).toHaveLength(receipts.length)
+-  expect(new Set(records.map((record) => record.envelope.eventId))).toEqual(new Set(receipts.map((receipt) => receipt.eventId)))
++  const publishedEventIds = receipts.map((receipt) => {
++    if (typeof receipt.eventId !== "string") throw new Error("Published Atlas receipt omitted its event identity")
++    return receipt.eventId
++  })
++  expect(new Set(records.map((record) => record.envelope.eventId))).toEqual(new Set(publishedEventIds))
+   for (const receipt of receipts) {
+     const matches = records.filter((record) => record.envelope.eventId === receipt.eventId)
+     expect(matches).toHaveLength(1)
+     const record = matches[0]
+     if (!record) throw new Error("Rank omitted an actual published record")
++    if (typeof receipt.recordDigest !== "string" || receipt.scanner.status !== "clean") throw new Error("Published Atlas receipt lacks a clean scan or record digest")
+     expect(record.envelope.sourceEventId).toBe(receipt.sourceEventId)
+     expect(record.recordDigest).toBe(receipt.recordDigest)
+     expect(digestSfValue({ owner: record.envelope.owner, kind: record.envelope.kind, entry: record.entry })).toBe(receipt.recordDigest)
+-    expect(record.envelope.scannerReceipt).toEqual({ ...receipt.scanner, digest: receipt.recordDigest })
++    const expectedScannerReceipt: BusinessMemoryEnvelope["scannerReceipt"] = {
++      name: receipt.scanner.name, version: receipt.scanner.version, status: "clean", digest: receipt.recordDigest,
++    }
++    expect(record.envelope.scannerReceipt).toEqual(expectedScannerReceipt)
+   }
+ }
+ 
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts
+index 71b947d..c5f1305 100644
+--- a/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts
+@@ -39,6 +39,7 @@ async function readGroups(f: DocumentFixture, second: SecondCase, call: RecallCa
+   expect(another.status).toBe("ok")
+   if (another.status !== "ok") throw new Error("Second actual raw recall unavailable")
+   expect(another.records).toHaveLength(1)
++  if (typeof second.receipt.recordDigest !== "string") throw new Error("Second committed Atlas receipt omitted its digest")
+   expect(another.records[0]?.recordDigest).toBe(second.receipt.recordDigest)
+   return [first, another.records]
+ }
+@@ -55,16 +56,21 @@ test("M69 complete public recall preserves two real cases, authenticated empty s
+     await f.ui("sf_decision_recall", selection, async (call) => {
+       const publicRecords = await f.atlas.context.recall(selection, call)
+       expect(publicRecords).toHaveLength(2)
++      const firstEventId = f.receipt.eventId
++      const secondEventId = second.receipt.eventId
++      const secondDigest = second.receipt.recordDigest
++      if (typeof firstEventId !== "string" || typeof secondEventId !== "string" || typeof secondDigest !== "string")
++        throw new Error("Committed Atlas receipts omitted original identities or digest")
+       expect(new Set(publicRecords.map((record) => record.envelope.eventId)))
+-        .toEqual(new Set([f.receipt.eventId, second.receipt.eventId]))
++        .toEqual(new Set([firstEventId, secondEventId]))
+       requireOriginalRecord(f, publicRecords.filter((record) => record.envelope.eventId === f.receipt.eventId))
+       const secondRecord = publicRecords.find((record) => record.envelope.eventId === second.receipt.eventId)
+       if (!secondRecord) throw new Error("Public multi-case recall dropped the second actual record")
+       expect(secondRecord.envelope.caseRef).toMatchObject(second.caseRef)
+       expect(secondRecord.envelope.sourceEventId).toBe(second.eventRef.target.eventId)
+-      expect(secondRecord.envelope.scannerReceipt.digest).toBe(second.receipt.recordDigest)
++      expect(secondRecord.envelope.scannerReceipt.digest).toBe(secondDigest)
+       expect(digestSfValue({ kind: secondRecord.envelope.kind, owner: secondRecord.envelope.owner, entry: secondRecord.entry }))
+-        .toBe(second.receipt.recordDigest)
++        .toBe(secondDigest)
+       const groups = await readGroups(f, second, call)
+       expect(await revalidateSfAtlasRecall(groups, call)).toBe(true)
+       expect(await revalidateSfAtlasRecall(groups, call)).toBe(false)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts
+index 4f5a40d..5d36a44 100644
+--- a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts
+@@ -15,8 +15,11 @@ test("C12 first case save reopens the original C08 creation after its committed
+     const lost = await fixture.draftCase(caseInput, key)
+     expect(lost).toEqual({ status: "unavailable", reason: "product-state-unavailable" })
+     expect(fixture.acknowledgements).toHaveLength(1)
+-    const original = fixture.acknowledgements[0]!.value
++    const acknowledged = fixture.acknowledgements[0]!.value
+     const persisted = await fixture.state()
++    const original = Object.values(persisted.cases)[0]
++    if (!original) throw new Error("First committed case missing from durable state")
++    expect(acknowledged).toEqual(original)
+     expect(Object.values(persisted.cases)).toEqual([original])
+     expect(Object.keys(persisted.transactions)).toHaveLength(1)
+     expect(Object.values(persisted.receipts)).toHaveLength(0)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts b/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts
+index 7013df4..31d4b7f 100644
+--- a/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts
+@@ -8,7 +8,7 @@ test("C08 private observations keep callback order and independently mutable sca
+   try {
+     const context = setup.fixture.context
+     const request = { kind: "scenario" as const, resultRef: setup.original.resultRef }
+-    const expected = { status: "ok", value: setup.original }
++    const expected: { status: "ok"; value: typeof setup.original } = { status: "ok", value: setup.original }
+     const wire = canonicalSfValue(setup.original)
+     const caseWire = canonicalSfValue(setup.fixture.decision)
+     const hashes = { count: 0, cases: 0 }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts b/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts
+index 8f0051c..72c2607 100644
+--- a/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts
+@@ -39,7 +39,8 @@ test("measures bounded canonical C08, rule and binding work without repeating P0
+     expect(evaluated.status).toBe("ok")
+     if (evaluated.status !== "ok") throw new Error("Real criterion evaluation unavailable")
+     const expected = phase.comparison.criterionResults.find((value) => value.criterionId === "renewal-difference")
+-    expect({ state: evaluated.value.state, reason: evaluated.value.reason }).toEqual({ state: expected?.state, reason: expected?.reason })
++    if (!expected) throw new Error("Persisted renewal criterion missing from the canonical comparison")
++    expect({ state: evaluated.value.state, reason: evaluated.value.reason }).toEqual({ state: expected.state, reason: expected.reason })
+     outputs.evaluation = digestSfValue(evaluated.value)
+     const proofs = await probe.phase("binding-proofs", () => ports.bindings.proofs(phase.caseRef, comparisonRequest.criteria, context))
+     expect(proofs.status).toBe("ok")
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts
+index 4f26806..795a146 100644
+--- a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts
+@@ -67,6 +67,7 @@ test("real composed DOCX and PPTX preserve content, source bindings, bytes and t
+       expect(response.headers.get("x-content-type-options")).toBe("nosniff")
+       expect(response.headers.get("cache-control")).toBe("no-store")
+       const bytes = new Uint8Array(await response.arrayBuffer())
++      if (typeof state.bytes !== "string" || typeof state.digest !== "string") throw new Error("Committed Office artifact omitted encoded bytes or digest")
+       expect(Buffer.from(bytes).toString("base64")).toBe(state.bytes)
+       const opened = await inspectOfficeBytes(bytes, format)
+       expect(opened.sha256).toBe(state.digest)
+@@ -215,6 +216,7 @@ test("real C08 corrupted or tombstoned artifacts fail closed before download wit
+     }
+     const recovered = await f.request("review-download", { query: { artifactRef: ref } })
+     expect(recovered.status).toBe(200)
++    if (typeof original.bytes !== "string") throw new Error("Original sealed Office artifact omitted encoded bytes")
+     expect(Buffer.from(await recovered.arrayBuffer()).toString("base64")).toBe(original.bytes)
+     console.log("SF66_CORRUPTION_RESULT " + JSON.stringify({ rejected: mutations.map((mutation) => mutation.label), denial_body: "Access denied", read_side_effects: false }))
+   } finally { await f.dispose() }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts
+index 1cff4b1..5321c1f 100644
+--- a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts
+@@ -30,6 +30,7 @@ test("WP07.T04.CHK.02 newly generated DOCX and PPTX keep captured values after c
+       expect(download.status).toBe(200)
+       const bytes = new Uint8Array(await download.arrayBuffer())
+       const opened = await inspectOfficeBytes(bytes, format)
++      if (typeof stored.digest !== "string") throw new Error("Committed Office artifact omitted its digest")
+       expect(opened.sha256).toBe(stored.digest)
+       for (const value of values) {
+         expect(opened.compact).toContain(`${value.id}:${value.value === null ? "unavailable" : String(value.value)}${value.unit ?? ""}${value.currency ?? ""}`.replace(/\s+/g, ""))
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts
+index e263892..0dabb38 100644
+--- a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts
+@@ -37,6 +37,7 @@ test("focused BI10 dispatch reconciles canonical period and cost plans on its pe
+       ...(temporal.projection.comparison ? { comparison: temporal.projection.comparison } : {}) }, pair, "BI10"), "Canonical period presentation")
+     const cost = ok(plannerScenarioBiPresentation({ ...pair.candidate.projection, decision,
+       ...(temporal.projection.comparison ? { comparison: temporal.projection.comparison } : {}) }, pair, "BI09"), "Canonical cost presentation for the same pair")
++    if (cost.projection.decision?.kind !== "scenario") throw new Error("Canonical cost presentation lost the persisted scenario")
+     expect(decision).toEqual(cost.projection.decision)
+     expect(temporal.projection.components).toEqual(cost.projection.components)
+     expect(temporal.projection.version).toBe(cost.projection.version)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts
+index 252b519..f1a2570 100644
+--- a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts
+@@ -16,6 +16,7 @@ test("installed BI10 uses the canonical period producer over the same persisted
+     const decision = temporal.projection.decision
+     if (decision?.kind !== "scenario") throw new Error("BI10 lost its persisted scenario")
+     expect(fixture.baseline.caseRef.version).toBeLessThan(fixture.candidate.caseRef.version)
++    if (cost.projection.decision?.kind !== "scenario") throw new Error("Installed BI09 cost presentation lost the persisted scenario")
+     expect(decision).toEqual(cost.projection.decision)
+     expect(decision.scenarioResultRef).toBe(fixture.candidate.resultRef)
+     expect(decision.comparisonRef).toBe(fixture.comparisonRef)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts
+index 6089391..51ea6e0 100644
+--- a/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts
+@@ -43,6 +43,7 @@ for (const mutation of ["revoked", "actor", "access", "policy", "request", "head
+       expect(race.fired).toBe(true)
+       expect(race.after).toBeDefined()
+       expect(f.observations.refs[0]).toEqual({ id: f.refs.procurement.refId, state: "fresh" })
++      if (!race.after) throw new Error("Real authority race omitted its durable audit observation")
+       expect(await f.audit()).toEqual(race.after)
+       expect(f.decision.choices).toEqual([])
+       expect(f.decision.preparedChanges).toEqual([])
+@@ -144,6 +145,7 @@ test("mixed preview refuses a real C08 membership change between its protected c
+     expect(race.reads).toBeGreaterThan(0)
+     expect(result?.status).not.toBe("ok")
+     expect(result && "value" in result).toBe(false)
++    if (!race.after) throw new Error("C08 membership race omitted its durable audit observation")
+     expect(await f.audit()).toEqual(race.after)
+     console.info("SF_MIXED_AUTHORITY_PROOF", JSON.stringify({ mutation: "C08-membership", eventFired: race.fired,
+       sourceFenceReads: race.reads, producerStatus: result?.status, effectsDigest: digestSfValue(race.after), financialEffect: false }))
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts
+index 9a44cca..488ac9b 100644
+--- a/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts
+@@ -96,6 +96,7 @@ test("recorded mixed verifier rechecks Procurement after real historical Planner
+     expect(allowed).toBe(false)
+     expect(race.fired).toBe(true)
+     expect(f.observations.refs.filter((entry) => entry.id === f.refs.procurement.refId).length).toBeGreaterThan(2)
++    if (!race.after) throw new Error("Procurement drift race omitted its durable audit observation")
+     expect(await f.audit()).toEqual(race.after)
+     console.info("SF_MIXED_RECORDED_PROOF", JSON.stringify({ fixture: "external-drift-during-planner", captureStatus: capture.status,
+       eventFired: race.fired, allowed, observations: f.observations.refs, effectsDigest: digestSfValue(race.after), financialEffect: false }))
+@@ -124,6 +125,7 @@ test("mixed fallback refuses genuine source change between independent reads and
+     expect(race.fired).toBe(true)
+     expect(race.after).toBeDefined()
+     expect(f.observations.refs.filter((entry) => entry.id === f.refs.base.refId)).toHaveLength(2)
++    if (!race.after) throw new Error("Planner source race omitted its durable audit observation")
+     expect(await f.audit()).toEqual(race.after)
+     expect(f.decision).toEqual(original)
+     delete f.observations.afterResolve
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts b/modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts
+index e6d0f3c..0098a06 100644
+--- a/modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts
+@@ -72,7 +72,7 @@ test("component: exact POST/UI origin wraps one original settlement with the rea
+     expect(yield* f.database.db.select().from(SessionMessageTable).all().pipe(Effect.orDie)).toEqual(beforeMessages)
+   })))
+ 
+-const unavailable: ReadonlyArray<[string, string, (f: AdmissionFixture) => void]> = [
++const unavailable: ReadonlyArray<[string, ReturnType<AdmissionFixture["admission"]["readiness"]>, (f: AdmissionFixture) => void]> = [
+   ["missing authenticated origin", "authenticated-native-origin-unavailable", (f) => { f.admissionState.origin = undefined }],
+   ["unready authenticated origin", "authenticated-native-origin-unavailable", (f) => { f.admissionState.originReady = false }],
+   ["missing publication", "publication-unavailable", (f) => { f.admissionState.publication = undefined }],
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts
+index 85874c5..41bdd6d 100644
+--- a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts
+@@ -75,6 +75,7 @@ function present(state: Snapshot) {
+   expect(html[1]).toContain('data-source-version="7"')
+   expect(state).toEqual(before)
+   expect(projection).toEqual(projectedBefore)
++  if (record.value !== null && typeof record.value !== "number") throw new Error("Canonical Procurement base amount was not numeric or null")
+   expect(queue.rows[0]?.baseAmount).toBe(record.value)
+   return { html, record, projection, money: procurementMonetaryFacts(record, "USD", view.data.formSettings) }
+ }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts
+index 8c0a49d..7ad663d 100644
+--- a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts
+@@ -30,7 +30,7 @@ const residentRoot = path.resolve(import.meta.dir, "../../../product/ai")
+ test("all 39 canonical routes fit the actual byte-verified profile and skill ceilings", async () => {
+   const bundle = await createResidentAiBundle({ root: residentRoot, manifestPath: path.join(residentRoot, "manifests/resident.json") })
+   expect(resident.packs.map((pack) => ({ id: pack.id, operations: pack.operations.map((operation) => operation.id) })))
+-    .toEqual(Object.entries(packs).map(([id, operations]) => ({ id, operations })))
++    .toEqual(Object.entries(packs).map(([id, operations]) => ({ id, operations: [...operations] })))
+   expect(operations).toHaveLength(39)
+   expect(new Set(operations).size).toBe(39)
+   expect(Object.keys(sfOperationInputSchemas).sort()).toEqual([...operations].sort())
+@@ -114,10 +114,10 @@ test("real domain composition exposes canonical descriptors and keeps missing na
+       expect(descriptor.inputSchema).toEqual(sfOperationInputSchemas[id])
+       expect(descriptor.outputSchema).toEqual(sfOperationOutputSchemas[id])
+       expect(descriptor.pack).toBe(operation.pack)
+-      expect(descriptor.mode).toBe(operation.mode)
++      expect(operation.mode).toBe(descriptor.mode)
+       expect(descriptor.handlerExport).toBe(operation.handlerExport)
+       expect(descriptor.producerTask).toBe(operation.producerTask)
+-      expect([...descriptor.grantProfiles].sort()).toEqual([...operation.profiles].sort())
++      expect([...operation.profiles].sort()).toEqual([...descriptor.grantProfiles].sort())
+       expect(descriptor.handler).toBeFunction()
+       expect(operation.officialDomainMutation).toBe("none")
+     }
+@@ -126,7 +126,7 @@ test("real domain composition exposes canonical descriptors and keeps missing na
+       revalidateSources: async () => { throw new Error("Missing native owner cannot revalidate routine sources") },
+     })
+     expect(routine.descriptors).toEqual([])
+-    expect(operations.filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation))).toEqual(packs.routines)
++    expect(operations.filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation))).toEqual([...packs.routines])
+     expect(createSfDocumentServices({ runtime: { ...runtime, assets: undefined }, authority: fixture.authority })).toBeUndefined()
+     expect(createSfImportServices({ runtime: { ...runtime, assets: undefined }, authority: fixture.authority })).toBeUndefined()
+   } finally {
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts
+index 2075f89..22e41fc 100644
+--- a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts
+@@ -72,7 +72,7 @@ test("public SF tool registration executes the real loaded forecast skill route
+         expect(loaded[0]).toMatchObject({ id: receipt.loadedMessageId, type: "synthetic" })
+         expect(receipt).toMatchObject({ nativeSessionId: created.id, profileId: selected.profile.id,
+           sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, manifestDigest: host.bundle.manifestDigest })
+-        expect((yield* host.session.context(created.id)).map((message) => message.id)).toContain(receipt.loadedMessageId)
++        expect((yield* host.session.context(created.id)).map<string>((message) => message.id)).toContain(receipt.loadedMessageId)
+         const binding = yield* Effect.promise(() => fixture.registry.bind({
+           request: new Request("https://example.test/component-public-forecast", { headers: { authorization: principals[index]! } }),
+           selected, sessionID: created.id, runId: receipt.runId, caseRef: { id: `component-case-${index}`, incarnation: `component-inc-${index}`, version: 1 },
+@@ -94,7 +94,7 @@ test("public SF tool registration executes the real loaded forecast skill route
+           principalRef: principals[index], operation: forecast.id, handlerExport: "compareForecast", inputDigest: digestSfValue(payloads[index]!), resultDigest: digestSfValue(human[index]!.result) } })
+         const decoded = decodeSfOperationOutput("sf_forecast_compare", result.result)
+         if (!decoded.ok) throw new Error("The public tool did not return a schema-valid FinancialAnalysis")
+-        expect(decoded.value).toEqual(human[index]!.result)
++        expect(human[index]!.result).toEqual(decoded.value)
+         expect(decoded.value.knownDifference).toBe(index === 0 ? 12000 : 6000)
+         expect(decoded.value).toMatchObject({ baseline: { context: { principalRef: principals[index] } }, candidate: { context: { principalRef: principals[index] } } })
+         expect(decoded.value.sourceRefs.map((ref) => ref.refId)).toEqual([payloads[index]!.baseRef, payloads[index]!.candidateRef])
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts
+index cef07db..c61e812 100644
+--- a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts
+@@ -79,7 +79,7 @@ async function withFenceHost<A>(name: string, use: (fixture: FenceFixture) => Ef
+     expect(messages[0]).toMatchObject({ id: receipt.loadedMessageId, type: "synthetic" })
+     expect(receipt).toMatchObject({ nativeSessionId: created.id, profileId: selected.profile.id,
+       sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, manifestDigest: host.bundle.manifestDigest })
+-    expect((yield* host.session.context(created.id)).map((message) => message.id)).toContain(receipt.loadedMessageId)
++    expect((yield* host.session.context(created.id)).map<string>((message) => message.id)).toContain(receipt.loadedMessageId)
+     const admission: SfNativeAdmission = { request, selected, sessionID: created.id, runId,
+       caseRef: { id: `component-case-${name}`, version: 1, incarnation: `component-incarnation-${name}` },
+       profile: selected.profile, manifestDigest: selected.manifestDigest, skillReceipts: [receipt], entryMode: "routine-result" }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts
+index 8e1b277..fd8830f 100644
+--- a/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts
+@@ -28,7 +28,7 @@ test("public SF host loads 18 distributed skills for all 25 authorized profile b
+       for (const skill of host.bundle.skills.filter((skill) => !selected.skills.some((allowed) => allowed.id === skill.id)))
+         expect(PermissionV2.evaluate("skill", skill.id, agent.permissions).effect).toBe("deny")
+       const created = yield* host.session.create({ location: host.location, agent: agent.id })
+-      expect(created.agent).toBe(selected.profile.id)
++      expect(created.agent).toBe(AgentV2.ID.make(selected.profile.id))
+       for (const skill of selected.skills) {
+         expect(PermissionV2.evaluate("skill", skill.id, agent.permissions).effect).toBe("allow")
+         const before = yield* host.session.messages({ sessionID: created.id })
