@@ -235,5 +235,34 @@
     "UI54 proposal source / receipts require authorized live case, choice and prepared change"
   ],
   "authored_files": 14,
-  "release": "N12_AUTHOR_HANDOFF_ARTIFACT_READY; no global release assertion"
+  "release": "N12_AUTHOR_HANDOFF_ARTIFACT_READY; no global release assertion",
+  "launch_material": {
+    "pin_commit": "b187c2b765c0a47cdc2317ebc083a61187ad58ac",
+    "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/launch30/N12.json",
+    "work_orders": [
+      "U02",
+      "U38"
+    ]
+  },
+  "contract_sha_at_lease": {
+    "manifest": "3d444da59c661faa17d23798f8a212a71d3d8f6d",
+    "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route_signatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "operation_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1"
+  },
+  "pr": {
+    "number": 162,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/162",
+    "base": "sf2-stack",
+    "head": "sf-ux-n12",
+    "draft": true
+  },
+  "lease_terminal": "HANDOFF_ARTIFACT_READY_WAITING_125_INTEGRATION",
+  "test_execution_authority": {
+    "compiler": "119",
+    "journeys": "120",
+    "local": "DENIED_BY_CAMPAIGN"
+  }
 }
