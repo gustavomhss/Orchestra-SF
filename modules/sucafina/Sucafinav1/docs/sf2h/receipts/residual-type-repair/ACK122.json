@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.residual-type-repair.ack.v1",
+  "mission": 122,
+  "campaign": "sf2h-integral-20261112",
+  "actor": "Astra browser session 122 (manual continuity); no native agent/Goal resumed",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_id_observation": "Not exposed by ChatGPT/GitHub connector; not invented",
+  "branch": "residual-type-repair",
+  "lease_epoch": "residual-type-repair-e1-browser122",
+  "mission_source": {
+    "commit": "2dc0f8f1640495a84d1207710c50a9dabfd66bde",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/122.json"
+  },
+  "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "material_C58": {
+    "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816"
+  },
+  "observed_head_before_edit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "incoming": {
+    "compiler119": {
+      "run": 43726143757,
+      "job": 132848377567,
+      "artifact": 14166956181,
+      "unique_diagnostics_total": 22,
+      "allocated": 6
+    },
+    "source116": {
+      "pr": 112,
+      "head": "3dc622981faa3c40ae9f6fcf81f6d53464618d00",
+      "state": "OUTPUT_READY_C58_COMPOSED"
+    },
+    "source118": {
+      "pr": 114,
+      "head": "bcd2afbdb745dc8cd60f6e5b84e0c90163b86878",
+      "state": "OUTPUT_READY_C58_COMPOSED"
+    },
+    "source52": {
+      "pr": 40,
+      "head": "3cce0806f4e958b2282afae5717e4948e270745a",
+      "authority": "ENDED_BY_MISSION52_BOUNDED_HANDOFF"
+    },
+    "source111": {
+      "pr": 109,
+      "head": "bd65179c3ce1da921974c686439d3877f735f852",
+      "shared_http": "inert owner patch already composed at C58"
+    }
+  },
+  "paths": {
+    "apps/cli/src/sucafina-product/bi-services.ts": "597b5c3b536c2416d9d7d39c7d4329ce5c4183ff",
+    "modules/sucafina/Sucafinav1/product/interface/http.ts": "78574180369c9495cbe5e5d3e569bb500fbff277",
+    "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts": "03c918632f8c7bf40e1b4bbb91e71a6ae3de74ac",
+    "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts": "88c0cbf4dd0fe2b2dd856ecf7819b0bd613e33f7",
+    "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts": "68973132641e5eb09cce84383156235d87e296d9"
+  },
+  "write_authority": "New mission122 only; all overlapping source revisions reconciled against exact C58 blobs. Source52 terminal declaration verified. Preserve 111 private HTTP bridge and hand off changed HTTP diff to 114.",
+  "test_authority": "Only 120 may dispatch surgical product Actions; 119 compilation. No local tests, no second dispatcher.",
+  "scope": "Exactly five source paths plus append-only receipts under residual-type-repair. No writes to sf2-stack/dev, no deploy, merge or paused Goal restart.",
+  "initial_status": "ACK_BEFORE_SOURCE_EDITS; compiler and product checks pending; integration solely 114/PR65",
+  "known_type_contract_caveat": "Reports source fixture currently emits legacy creationTarget {ref:'workspace',incarnation:'workspace-inc'}, while product authority requires sf-workspace:<installationId>; fix must retain real receipt identity and coordinate upstream fixture if necessary."
+}
