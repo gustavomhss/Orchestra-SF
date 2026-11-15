@@ -120,7 +120,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
 
   const parsedCase = (): CaseQuery | null => {
     const version = Number(view.versionText)
-    return view.caseId.trim() && view.incarnation.trim() && /^\\d+$/.test(view.versionText) &&
+    return view.caseId.trim() && view.incarnation.trim() && /^\d+$/.test(view.versionText) &&
       Number.isSafeInteger(version) && version > 0
       ? { caseId: view.caseId.trim(), incarnation: view.incarnation.trim(), version } : null
   }
