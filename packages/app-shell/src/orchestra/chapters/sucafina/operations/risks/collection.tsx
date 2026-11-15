@@ -1,0 +1,557 @@
+import { createEffect, createMemo, createSignal, For, onCleanup, Show, type JSX } from "solid-js"
+import { createStore } from "solid-js/store"
+import { useLanguage } from "@/context/language"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
+import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
+import type { SfOperationId } from "@orchestra/schema/sucafina/common"
+import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
+import { useSfContext } from "../../context"
+import { SfPageFrame } from "../../shared/frame"
+import type { SfColumn, SfCopyKey, SfUiState } from "../../shared/table"
+import { SfStatePanel } from "../../shared/states"
+import { SfDataTable } from "../../shared/table"
+import { SfChangeReview } from "../../shared/change-review"
+import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
+import "./collection.css"
+
+type Cap = "CAP13" | "CAP15"
+type Entity = Readonly<{ id: string | number }>
+export type Filters = Readonly<{ q?: string; status?: string; filter?: string; owner?: string }>
+export type PageResult<Row> =
+  | Readonly<{ kind: "ok"; rows: readonly Row[]; versions: Readonly<Record<string, number>>; actions: readonly string[] }>
+  | Readonly<{ kind: "error"; state: SfUiState }>
+export type WriteResult =
+  | Readonly<{ kind: "ok"; warnings: readonly string[] }>
+  | Readonly<{ kind: "error"; state: SfUiState; errors: readonly string[] }>
+  | Readonly<{ kind: "outcome-unknown" }>
+export type Field<Value> = Readonly<{
+  name: Extract<keyof Value, string>
+  label: string
+  kind: "text" | "textarea" | "date" | "email" | "select"
+  required?: boolean
+  options?: readonly Readonly<{ value: string; label: string }>[]
+}>
+export type Column<Row> = Readonly<{
+  name: Extract<keyof Row, string>
+  label: string
+}>
+export type CollectionSpec<Id extends Cap, Row extends Entity, Values extends object> = Readonly<{
+  id: Id
+  collection: "risks" | "stakeholders"
+  title: string
+  primary: string
+  fields: readonly Field<Values>[]
+  columns: readonly Column<Row>[]
+  name: (record: Row) => string
+  initial: (record?: Row) => Values
+  deepRef: (route: SfSurfaceProps<Id>["route"]) => string | null
+  query: (route: SfSurfaceProps<Id>["route"]) => Filters
+  readOperation: SfOperationId
+  saveOperation: SfOperationId
+  deleteOperation: SfOperationId
+  read: (transport: SfTransport, query: Filters, signal: AbortSignal) => Promise<PageResult<Row>>
+  save: (transport: SfTransport, command: { id?: string; version: number; values: Values },
+    signal: AbortSignal, key: string) => Promise<WriteResult>
+  delete: (transport: SfTransport, command: { id: string; version: number },
+    signal: AbortSignal, key: string) => Promise<WriteResult>
+}>
+type Mode = "list" | "detail" | "edit" | "review-save" | "review-delete"
+type LiveDraft<Row, Values> = Readonly<{
+  controller: SfPublicDraftController<Values>
+  entity: Row | undefined
+  identity: { kind: "record"; recordRef: SfRef } | { kind: "new"; newIntentRef: SfIntentRef }
+  operationRef: SfOperationRef
+}>
+const k = (text: string) => text as SfCopyKey
+const idOf = (value: string | number) => String(value) as SfRef
+const scalar = (value: unknown) => value === undefined || value === null ? "" :
+  typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? String(value) : ""
+const message = (label: string) => ({ key: k(label) })
+const reviewField = (path: string, label: string, value: unknown): SfReviewField => ({
+  path, label: message(label), value: value === undefined || value === null
+    ? { kind: "missing", reason: message("sf.common.unknown") }
+    : { kind: "text", text: { kind: "data", text: scalar(value) } },
+})
+const initialError = (status: string): SfUiState =>
+  status === "denied" ? "denied" : status === "unauthenticated" ? "session-expired" :
+  status === "stale" ? "stale" : status === "needs-input" ? "invalid" : "unavailable"
+
+export function readFailure(result: Readonly<{ kind: string; status?: number; body?: { status: string } }>): SfUiState {
+  if (result.kind !== "response") return "unavailable"
+  if (result.status === 401) return "session-expired"
+  if (result.status === 403) return "denied"
+  return initialError(result.body?.status || "unavailable")
+}
+export function writeOutcome(result: Readonly<
+  | { kind: "response"; status: number; body: { ok: boolean; warnings?: readonly string[]; errors?: readonly string[] } }
+  | { kind: "transport-error"; reason: string }
+>): WriteResult {
+  if (result.kind !== "response") return result.reason === "outcome-unknown"
+    ? { kind: "outcome-unknown" } : { kind: "error", state: "unavailable", errors: [] }
+  if (result.body.ok && result.status >= 200 && result.status < 300)
+    return { kind: "ok", warnings: result.body.warnings || [] }
+  return { kind: "error", state: result.status === 401 ? "session-expired"
+    : result.status === 403 ? "denied" : result.status === 409 ? "conflict"
+    : result.status === 404 ? "not-found" : "invalid", errors: result.body.errors || [] }
+}
+
+/** Source-frozen CAP13 and CAP15 collection shell. No arbitrary command dispatcher.
+ * F01 retains per-owner drafts, A01 supplies typed operations, S03 owns review.
+ */
+export function SfNativeCollection<Id extends Cap, Row extends Entity, Values extends object>(
+  props: SfSurfaceProps<Id> & { spec: CollectionSpec<Id, Row, Values> },
+): JSX.Element {
+  const spec = props.spec
+  const owner = useSfContext()
+  const language = useLanguage()
+  const [store, setStore] = createStore({
+    status: "loading" as SfUiState,
+    rows: undefined as readonly Row[] | undefined,
+    versions: {} as Readonly<Record<string, number>>,
+    actions: [] as readonly string[],
+    ownerId: "",
+    filters: spec.query(props.route),
+    filtersEdit: spec.query(props.route),
+    selected: null as SfRef | null,
+    mode: "list" as Mode,
+    order: "none" as "none" | "asc" | "desc",
+    error: null as string | null,
+    warnings: [] as readonly string[],
+    busy: false,
+    unknown: false,
+    reload: 0,
+  })
+  const [draft, setDraft] = createSignal<LiveDraft<Row, Values> | null>(null)
+  const [confirmed, setConfirmed] = createSignal<
+    Readonly<{ draft: SfPublicDraftController<Values>; operationRef: SfOperationRef; id: SfRef | null }> | null>(null)
+  let lastOwner = ""
+  let admittedLink = ""
+  const t = (label: string) => language.t(label as Parameters<typeof language.t>[0])
+  const nowReady = () => {
+    const state = owner.state()
+    const ready = owner.ready()
+    return state.status === "ready" && ready
+      ? { state, ready, identity: [state.ownerKey, state.context.stamp.accessRevision].join("|") }
+      : undefined
+  }
+  const isCurrent = () => !!nowReady() && store.ownerId !== "" && store.ownerId === nowReady()?.identity
+  const rows = () => isCurrent() && store.rows ? store.rows : []
+  const destination = () => nowReady()?.state.context.destinations.find(
+    (entry) => entry.capabilityId === spec.id && entry.canRead)
+  const admitted = (action: "save" | "delete") => {
+    const operationId = action === "save" ? spec.saveOperation : spec.deleteOperation
+    return isCurrent() && !!destination() &&
+      destination()!.allowedActionIds.includes(action) && store.actions.includes(action) &&
+      nowReady()!.state.context.availability.some((family) => family.operations.some(
+        (operation) => operation.operationId === operationId && operation.state === "ready"))
+  }
+  const version = (row: Row) => store.versions[spec.collection + ":" + String(row.id)]
+  const selected = () => {
+    if (!store.selected) return undefined
+    const matches = rows().filter((entry) => String(entry.id) === String(store.selected))
+    return matches.length === 1 ? matches[0] : undefined
+  }
+  const refresh = () => setStore("reload", (n) => n + 1)
+
+  createEffect(() => {
+    const r = nowReady()
+    const generation = owner.generation()
+    const query = store.filters
+    void store.reload
+    if (!r || !r.state.context.destinations.some(
+      (entry) => entry.capabilityId === spec.id && entry.canRead)) {
+      lastOwner = ""
+      admittedLink = ""
+      setDraft(null)
+      setConfirmed(null)
+      const status = !r ? owner.state().status === "resolving" ? "loading"
+        : owner.state().status === "unauthenticated" ? "session-expired"
+        : owner.state().status === "denied" ? "denied" : "unavailable" : "denied"
+      setStore({ status, rows: undefined, ownerId: "", versions: {},
+        actions: [], selected: null, mode: "list", error: null, warnings: [] })
+      return
+    }
+    const identity = r.identity
+    if (lastOwner !== identity) {
+      lastOwner = identity
+      admittedLink = ""
+      setDraft(null)
+      setConfirmed(null)
+      setStore({ ownerId: "", rows: undefined, selected: null,
+        mode: "list", error: null, warnings: [] })
+    }
+    setStore("status", "loading")
+    const abort = new AbortController()
+    let active = true
+    void spec.read(r.ready.transport, query, abort.signal).then((result) => {
+      if (!active || owner.generation() !== generation || nowReady()?.identity !== identity) return
+      if (result.kind === "error") {
+        setStore({ status: result.state, rows: undefined, ownerId: "", actions: [], versions: {} })
+        return
+      }
+      setStore({ rows: result.rows, versions: result.versions, actions: result.actions,
+        ownerId: identity, status: result.rows.length ? "ready" :
+          query.q || query.filter || query.owner || query.status ? "filtered-empty" : "empty" })
+      const pending = confirmed()
+      if (pending) {
+        const match = pending.id ? result.rows.find((row) => String(row.id) === String(pending.id)) : undefined
+        const current = match ? result.versions[spec.collection + ":" + String(match.id)] : undefined
+        if (match && current !== undefined) pending.draft.confirmSave({
+          kind: "projected", operationRef: pending.operationRef, baseVersion: current, value: spec.initial(match),
+        })
+        else pending.draft.confirmSave({ kind: "confirmed-without-projection",
+          operationRef: pending.operationRef, resultVersion: null })
+        setConfirmed(null)
+      }
+      if (admittedLink !== identity + "/" + props.route.pathname) {
+        admittedLink = identity + "/" + props.route.pathname
+        const wanted = spec.deepRef(props.route)
+        if (wanted) {
+          const matches = result.rows.filter((row) => String(row.id) === wanted)
+          if (matches.length !== 1) {
+            setStore({ status: "not-found", ownerId: "", rows: undefined })
+          } else {
+            setStore({ selected: idOf(matches[0]!.id),
+              mode: props.route.kind === "edit" ? "edit" : "detail" })
+            if (props.route.kind === "edit") beginEdit(matches[0])
+          }
+        } else if (props.route.kind === "new") beginEdit(undefined)
+      }
+    }).catch((error: unknown) => {
+      if (!active || abort.signal.aborted) return
+      console.error("N16 native collection read failed", error)
+      setStore({ status: "unavailable", ownerId: "", rows: undefined, actions: [] })
+    })
+    onCleanup(() => { active = false; abort.abort() })
+  })
+
+  const beginEdit = (row: Row | undefined) => {
+    const r = nowReady()
+    if (!r || !admitted("save") || (row && version(row) === undefined)) return
+    const initial = spec.initial(row)
+    const identity: LiveDraft<Row, Values>["identity"] = row
+      ? { kind: "record", recordRef: idOf(row.id) }
+      : { kind: "new", newIntentRef: ("n16-new:" + spec.id) as SfIntentRef }
+    const controller = r.ready.drafts.acquire<Values>({
+      surfaceId: spec.id,
+      identity,
+      editScopeKey: ("native-record:" + spec.id) as SfEditScopeKey,
+      baseVersion: row ? version(row)! : null,
+      base: row ? initial : null,
+      value: initial,
+      revalidation: { operationId: spec.readOperation, input: {},
+        fieldPaths: spec.fields.filter((field) => !row || Object.hasOwn(row, field.name))
+          .map((field) => field.name), actionIds: ["save"] },
+    })
+    setDraft({ controller, entity: row, identity, operationRef: crypto.randomUUID() as SfOperationRef })
+    setStore({ mode: "edit", selected: row ? idOf(row.id) : null, error: null, warnings: [] })
+  }
+  const fieldList = (entity: Row | undefined) =>
+    spec.fields.filter((field) => !entity || Object.hasOwn(entity, field.name))
+  const reviewFields = (entity: Row | undefined, value: Values | Row | undefined): SfReviewField[] =>
+    value ? fieldList(entity).map((field) =>
+      reviewField(field.name, field.label, value[field.name as keyof typeof value])) : []
+  const originalSnapshot = (row: Row | undefined): SfReviewSnapshot | null =>
+    row && version(row) !== undefined ? { kind: "persisted", ref: idOf(row.id),
+      version: version(row)!, fields: reviewFields(row, row) } : null
+  const activeState = () => draft()?.controller.snapshot()
+  const beginSaveReview = () => {
+    const current = draft()
+    const snap = activeState()
+    if (!admitted("save") || !current || snap?.availability !== "active" || store.unknown) return
+    if (fieldList(current.entity).some((field) => field.required &&
+        !scalar(snap.value[field.name]).trim())) {
+      setStore("error", t("sf.common.fieldErrorSummary"))
+      return
+    }
+    current.controller.setPhase("reviewing")
+    setStore({ mode: "review-save", error: null })
+  }
+  const beginDeleteReview = (row: Row) => {
+    if (admitted("delete") && version(row) !== undefined) setStore({
+      selected: idOf(row.id), mode: "review-delete", error: null })
+  }
+
+  const commit = async (action: "save" | "delete") => {
+    if (!admitted(action) || store.busy || store.unknown) return
+    const r = nowReady()
+    if (!r) return
+    const currentDraft = draft()
+    const row = action === "delete" ? selected() : currentDraft?.entity
+    const snap = action === "save" ? currentDraft?.controller.snapshot() : undefined
+    if ((row && version(row) === undefined) ||
+        (action === "save" && (!currentDraft || snap?.availability !== "active" ||
+          (row && snap.baseVersion !== version(row))))) {
+      setStore({ error: t("sf.common.stale"), mode: action === "save" ? "edit" : "detail" })
+      return
+    }
+    const operationRef = action === "save" ? currentDraft!.operationRef : crypto.randomUUID() as SfOperationRef
+    const callKey = crypto.randomUUID()
+    const abort = new AbortController()
+    setStore({ busy: true, error: null })
+    try {
+      if (action === "save" && snap?.availability === "active") {
+        const bytes = new TextEncoder().encode(JSON.stringify(
+          [spec.saveOperation, row ? String(row.id) : null, row ? version(row) : 0, snap.value, callKey]))
+        const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)))
+          .map((n) => n.toString(16).padStart(2, "0")).join("")
+        currentDraft!.controller.setPending({ operationRef, idempotencyKey: callKey,
+          payloadDigest: digest, expectedVersion: row ? version(row)! : null })
+        currentDraft!.controller.setPhase("submitting")
+      }
+      const result: WriteResult = action === "save" && snap?.availability === "active"
+        ? await spec.save(r.ready.transport, { id: row ? String(row.id) : undefined,
+          version: row ? version(row)! : 0, values: snap.value }, abort.signal, callKey)
+        : action === "delete" && row
+          ? await spec.delete(r.ready.transport, { id: String(row.id), version: version(row)! },
+            abort.signal, callKey)
+          : { kind: "error", state: "invalid", errors: [] }
+      if (nowReady()?.identity !== r.identity) return
+      if (result.kind === "ok") {
+        setStore({ error: null, warnings: result.warnings, mode: action === "delete" ? "list" : "detail",
+          selected: action === "delete" ? null : store.selected })
+        if (action === "save") setConfirmed({ draft: currentDraft!.controller, operationRef,
+          id: row ? idOf(row.id) : null })
+        refresh()
+      } else if (result.kind === "outcome-unknown") {
+        currentDraft?.controller.setPhase("outcome-unknown")
+        setStore({ unknown: true, error: t("sf.common.operationUnknown") })
+      } else {
+        currentDraft?.controller.setPhase(result.state === "conflict" ? "conflict" : "validation-error")
+        setStore({ error: result.errors.join(" ") || t("sf.common.failed"),
+          mode: action === "save" ? "edit" : "detail" })
+        if (result.state === "denied" || result.state === "session-expired")
+          setStore({ status: result.state, ownerId: "", rows: undefined, actions: [] })
+      }
+    } catch (error: unknown) {
+      console.error("N16 mutation result unknown", error)
+      currentDraft?.controller.setPhase("outcome-unknown")
+      setStore({ unknown: true, error: t("sf.common.operationUnknown") })
+    } finally {
+      setStore("busy", false)
+    }
+  }
+  const sortRows = createMemo(() => store.order === "none" ? rows() : [...rows()].sort(
+    (a, b) => scalar(a[spec.columns[0]!.name]).localeCompare(scalar(b[spec.columns[0]!.name])) *
+      (store.order === "asc" ? 1 : -1)))
+  const columns: readonly SfColumn<Row>[] = spec.columns.map((field) => ({
+    id: field.name, labelKey: k(field.label), align: "start",
+    widthPolicy: { kind: "content", minPx: 96, maxPx: 260 },
+    sortKey: field.name,
+    render: (row) => <bdi>{scalar(row[field.name]) || t("sf.common.unknown")}</bdi>,
+  }))
+  const statusCopy = () => store.status === "loading" ? "sf.common.loading"
+    : store.status === "empty" ? "sf.common.empty"
+    : store.status === "filtered-empty" ? "sf.common.filterEmpty"
+    : store.status === "denied" ? "sf.common.noAccess"
+    : store.status === "session-expired" ? "sf.common.loginAgain"
+    : store.status === "not-found" ? "sf.common.removed"
+    : store.status === "stale" ? "sf.common.stale" : "sf.common.unavailable"
+  const complete = () => ({ state: "complete", summary: message("sf.common.currentSource"),
+    reasons: [], knownCount: null, expectedCount: null } as const)
+
+  return (
+    <div data-sf-surface={spec.id} data-sf-authorized={isCurrent()}>
+      <SfPageFrame titleKey={k(spec.title)} context={[]} tabs={[]} activeTab={null}
+        density="comfortable" layout="work" onLayoutMode={() => undefined}
+        primaryAction={admitted("save") ? { id: "new", labelKey: k(spec.primary), tone: "primary",
+          disabled: store.busy || store.unknown, busy: store.busy,
+          onInvoke: () => beginEdit(undefined) } : undefined}
+        secondaryActions={[]}>
+        <SfStatePanel state={store.status} messageKey={k(statusCopy())} onRetryRead={refresh}
+          onBack={() => setStore({ mode: "list", selected: null })}>
+          <Show when={isCurrent()}>
+            <div class="sf-u30-root">
+              <Show when={store.error}>{(error) => <p role="alert" class="sf-u30-error"><bdi>{error()}</bdi></p>}</Show>
+              <Show when={store.warnings.length}>
+                <ul role="status"><For each={store.warnings}>{(warning) => <li><bdi>{warning}</bdi></li>}</For></ul>
+              </Show>
+              <Show when={store.unknown}>
+                <SfStatePanel state="outcome-unknown" messageKey={k("sf.common.operationUnknown")}
+                  onRetryRead={refresh} />
+              </Show>
+              <section class="sf-u30-filters" aria-label={t("sf.u30.filters")}>
+                <label>{t("sf.u30.search")}<input value={store.filtersEdit.q || ""}
+                  onInput={(event) => setStore("filtersEdit", "q", event.currentTarget.value)} /></label>
+                <Show when={spec.id === "CAP13"}>
+                  <label>{t("sf.u30.status")}
+                    <select value={store.filtersEdit.status || ""}
+                      onChange={(event) => setStore("filtersEdit", "status", event.currentTarget.value)}>
+                      <option value="">{t("sf.u30.all")}</option>
+                      <For each={["open", "mitigating", "monitoring", "closed"]}>{(option) =>
+                        <option value={option}>{t("sf.u30.risk.option.status." + option)}</option>}</For>
+                    </select>
+                  </label>
+                </Show>
+                <button class="mx-btn" type="button"
+                  onClick={() => setStore("filters", { ...store.filtersEdit })}>{t("sf.u30.apply")}</button>
+              </section>
+              <div class="sf-u30-panels">
+                <section class="sf-u30-list">
+                  <SfDataTable<Row> rows={sortRows()} getRowKey={(row) => idOf(row.id)}
+                    columns={columns} selectedKey={store.selected || undefined}
+                    sort={store.order === "none" ? { kind: "none" }
+                      : { kind: "field", key: spec.columns[0]!.name, direction: store.order }}
+                    page={{ kind: "none", total: rows().length }}
+                    onSort={(sort) => setStore("order", sort.kind === "field" ? sort.direction : "none")}
+                    onPage={() => undefined} onSelect={(recordRef) => setStore({
+                      mode: "detail", selected: recordRef })}
+                    rowActions={() => [
+                      { id: "edit", labelKey: k("sf.common.edit"), tone: "secondary",
+                        disabled: !admitted("save"), busy: store.busy },
+                      { id: "delete", labelKey: k("sf.u30.delete"), tone: "danger",
+                        disabled: !admitted("delete"), busy: store.busy },
+                    ]}
+                    onRowAction={({ recordRef, actionId }) => {
+                      const candidates = rows().filter((row) => String(row.id) === String(recordRef))
+                      if (candidates.length !== 1) return
+                      if (actionId === "edit") beginEdit(candidates[0])
+                      if (actionId === "delete") beginDeleteReview(candidates[0]!)
+                    }}
+                    captionKey={k(spec.title)} density="comfortable" state="ready" />
+                </section>
+                <Show when={store.mode !== "list"}>
+                  <section class="sf-u30-detail">
+                    <button type="button" class="mx-btn" onClick={() => setStore({ mode: "list", selected: null })}>
+                      {t("sf.common.back")}
+                    </button>
+                    <Show when={store.mode === "detail" && selected()}>
+                      {(row) => <article>
+                        <h2><bdi>{spec.name(row())}</bdi></h2>
+                        <dl class="sf-u30-definition">
+                          <For each={fieldList(row())}>{(field) => <>
+                            <dt>{t(field.label)}</dt>
+                            <dd><bdi>{scalar(row()[field.name as keyof Row])}</bdi></dd>
+                          </>}</For>
+                        </dl>
+                        <div class="sf-u30-actions">
+                          <Show when={admitted("save")}><button type="button" class="mx-btn"
+                            onClick={() => beginEdit(row())}>{t("sf.common.edit")}</button></Show>
+                          <Show when={admitted("delete")}><button type="button" class="mx-btn danger"
+                            onClick={() => beginDeleteReview(row())}>{t("sf.u30.delete")}</button></Show>
+                        </div>
+                      </article>}
+                    </Show>
+                    <Show when={store.mode === "edit" && draft() && activeState()?.availability === "active"}>
+                      {(active) => <form class="sf-u30-editor" onSubmit={(event) => {
+                        event.preventDefault(); beginSaveReview()
+                      }}>
+                        <h2>{t(active().entity ? "sf.common.edit" : spec.primary)}</h2>
+                        <For each={fieldList(active().entity)}>{(field) => {
+                          const getValue = () => {
+                            const snapshot = active().controller.snapshot()
+                            return snapshot.availability === "active" ? scalar(snapshot.value[field.name]) : ""
+                          }
+                          const change = (next: string) => {
+                            const snapshot = active().controller.snapshot()
+                            if (snapshot.availability === "active")
+                              active().controller.edit({ ...snapshot.value, [field.name]: next } as Values)
+                          }
+                          return <label>{t(field.label)}
+                            <Show when={field.kind === "textarea"} fallback={
+                              <Show when={field.kind === "select"} fallback={
+                                <input type={field.kind === "email" ? "email"
+                                  : field.kind === "date" ? "date" : "text"}
+                                  required={field.required} value={getValue()}
+                                  onInput={(event) => change(event.currentTarget.value)} />
+                              }>
+                                <select required={field.required} value={getValue()}
+                                  onChange={(event) => change(event.currentTarget.value)}>
+                                  <For each={field.options || []}>{(option) =>
+                                    <option value={option.value}>{t(option.label)}</option>}</For>
+                                </select>
+                              </Show>
+                            }>
+                              <textarea value={getValue()}
+                                onInput={(event) => change(event.currentTarget.value)} />
+                            </Show>
+                          </label>
+                        }}</For>
+                        <div class="sf-u30-actions">
+                          <button type="submit" class="mx-btn primary" disabled={store.busy || store.unknown}>
+                            {t("sf.common.review")}
+                          </button>
+                          <button type="button" class="mx-btn" onClick={() => setStore("mode", "detail")}>
+                            {t("sf.common.back")}
+                          </button>
+                          <button type="button" class="mx-btn" onClick={() => {
+                            active().controller.discard()
+                            setStore({ mode: "detail", error: null })
+                          }}>{t("sf.common.discard")}</button>
+                        </div>
+                      </form>}
+                    </Show>
+                    <Show when={store.mode === "review-save" && draft() && activeState()?.availability === "active"}>
+                      {(active) => {
+                        const current = () => active().controller.snapshot()
+                        const sourceVersion = () => current().availability === "active" ? current().baseVersion : null
+                        const proposedFields = () => current().availability === "active"
+                          ? reviewFields(active().entity, current().value) : []
+                        return <SfChangeReview
+                          operation={{ ref: active().operationRef, label: message(spec.primary),
+                            scope: { kind: "message", message: message(spec.title) } }}
+                          base={originalSnapshot(active().entity)}
+                          current={originalSnapshot(active().entity)}
+                          proposed={{ kind: "draft",
+                            intentRef: active().identity.kind === "new"
+                              ? active().identity.newIntentRef
+                              : ("n16-review:" + String(active().entity!.id)) as SfIntentRef,
+                            sourceRef: active().entity ? idOf(active().entity!.id) : null,
+                            sourceVersion: sourceVersion(), fields: proposedFields() }}
+                          effects={[{ id: "domain-save", domain: "dashboard", state: "proposed",
+                            title: { kind: "message", message: message(spec.title) },
+                            details: proposedFields() }]}
+                          coverage={complete()}
+                          blockingReasons={store.unknown ? [message("sf.common.operationUnknown")] : []}
+                          confirmation={!store.unknown && admitted("save") &&
+                            (!active().entity || version(active().entity!) !== undefined)
+                            ? { kind: "admitted", labelKey: k("sf.common.save"), purpose: "save",
+                              binding: { kind: "catalog-command", operationId: spec.saveOperation,
+                                version: active().entity
+                                  ? { kind: "record", expectedVersion: version(active().entity!)! }
+                                  : { kind: "none" }, confirmation: "presentation-only" } }
+                            : { kind: "blocked", labelKey: k("sf.common.unavailable"),
+                              reasons: [message("sf.common.unavailable")] }}
+                          state={store.unknown ? "outcome-unknown" : "ready"}
+                          onConfirm={() => { void commit("save") }}
+                          onRevise={() => setStore("mode", "edit")}
+                          onCancel={() => setStore("mode", "edit")}
+                          onReconcile={refresh}
+                        />
+                      }}
+                    </Show>
+                    <Show when={store.mode === "review-delete" && selected()}>
+                      {(row) => <SfChangeReview
+                        operation={{ ref: ("n16-delete:" + String(row().id)) as SfOperationRef,
+                          label: message("sf.u30.delete"),
+                          scope: { kind: "data", text: spec.name(row()) } }}
+                        base={originalSnapshot(row())} current={originalSnapshot(row())}
+                        proposed={{ kind: "not-provided", reason: message("sf.common.removed") }}
+                        effects={[{ id: "domain-delete", domain: "dashboard", state: "proposed",
+                          title: { kind: "data", text: spec.name(row()) }, details: [] }]}
+                        coverage={complete()}
+                        blockingReasons={store.unknown ? [message("sf.common.operationUnknown")] : []}
+                        confirmation={!store.unknown && admitted("delete") && version(row()) !== undefined
+                          ? { kind: "admitted", labelKey: k("sf.u30.delete"), purpose: "delete",
+                            binding: { kind: "catalog-command", operationId: spec.deleteOperation,
+                              version: { kind: "record", expectedVersion: version(row())! },
+                              confirmation: "presentation-only" } }
+                          : { kind: "blocked", labelKey: k("sf.common.unavailable"),
+                            reasons: [message("sf.common.unavailable")] }}
+                        state={store.unknown ? "outcome-unknown" : "ready"}
+                        onConfirm={() => { void commit("delete") }}
+                        onRevise={() => setStore("mode", "detail")}
+                        onCancel={() => setStore("mode", "detail")}
+                        onReconcile={refresh}
+                      />}
+                    </Show>
+                  </section>
+                </Show>
+              </div>
+            </div>
+          </Show>
+        </SfStatePanel>
+      </SfPageFrame>
+    </div>
+  )
+}
