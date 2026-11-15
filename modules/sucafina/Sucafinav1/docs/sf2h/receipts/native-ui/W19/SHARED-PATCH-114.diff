@@ -1,0 +1,30 @@
+diff --git a/packages/app-shell/src/i18n/orchestra.ts b/packages/app-shell/src/i18n/orchestra.ts
+--- a/packages/app-shell/src/i18n/orchestra.ts
++++ b/packages/app-shell/src/i18n/orchestra.ts
+@@ -20,7 +20,8 @@
+ import { CHAT_COPY, CHAT_COPY_BR } from "./orchestra-chapters/chat"
+ import { ATLAS_COPY, ATLAS_COPY_BR } from "./orchestra-chapters/atlas"
+ import { RAG_STUDIO_COPY, RAG_STUDIO_COPY_BR } from "./orchestra-chapters/rag-studio"
+ import { BOARD_COPY, BOARD_COPY_BR } from "./orchestra-chapters/board"
++import { SF_U11_COPY, SF_U11_COPY_BR } from "./orchestra-chapters/sf-u11"
+ import { BOARD_MONEY_COPY, BOARD_MONEY_COPY_BR } from "./orchestra-chapters/board-money"
+ import { BOARD_VIEWS_COPY, BOARD_VIEWS_COPY_BR } from "./orchestra-chapters/board-views"
+ import { FLIGHT_ENGINEER_COPY, FLIGHT_ENGINEER_COPY_BR } from "./orchestra-chapters/flight-engineer"
+@@ -386,7 +387,8 @@
+   ...GUARDRAILS_COPY,
+   ...FLIGHT_ENGINEER_COPY,
+   ...INBOX_COPY,
+   ...BOARD_COPY,
++  ...SF_U11_COPY,
+   ...BOARD_VIEWS_COPY,
+   ...BOARD_MONEY_COPY,
+   // English base for every locale; Portuguese is layered on top through ORCHESTRA_COPY_BR (Actions: ActionsCopy.dictBr).
+@@ -735,7 +737,8 @@
+   ...GUARDRAILS_COPY_BR,
+   ...FLIGHT_ENGINEER_COPY_BR,
+   ...INBOX_COPY_BR,
+   ...BOARD_COPY_BR,
++  ...SF_U11_COPY_BR,
+   ...BOARD_VIEWS_COPY_BR,
+   ...BOARD_MONEY_COPY_BR,
+   ...ActionsCopy.dictBr,

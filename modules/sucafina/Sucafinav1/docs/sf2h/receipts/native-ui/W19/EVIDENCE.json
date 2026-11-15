@@ -1,0 +1,116 @@
+{
+  "schema": "sf2h.native-ui.w19.evidence.v1",
+  "worker": "W19",
+  "output": "U11.title-save",
+  "outcome": "AUTHOR_CANDIDATE_REMOTE_COMMITTED_BUT_UNADMITTED",
+  "pull_request": {
+    "number": 128,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/128",
+    "state": "draft",
+    "base": "sf2-stack",
+    "head": "sf-ux-w19"
+  },
+  "branch": {
+    "sha": "91d824d8bef4666b7c51c0641588c72bcd54cf16",
+    "base": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "verified_tree": "b3cdf984493718d75d167669f340d69d9fa4ec8c"
+  },
+  "actor": {
+    "model": "GPT-6",
+    "label_requested": "Astra",
+    "github": "gustavomhss",
+    "session_id": "unavailable"
+  },
+  "admission": {
+    "lease": "ux-native-w19-e1",
+    "status": "RESERVED_NOT_ACTIVE",
+    "request": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6896745931",
+    "decision": "NOT_OBSERVED"
+  },
+  "contracts": {
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "contracts": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "protocol_expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "protocol_cohort": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "protocol_delta": "obsolete dispatcher references overridden by COMMON; no U11 semantics drift"
+  },
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "sha": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "delta": "C58 export egress and visibility changes; no native owner fence at cohort base"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "sha": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "delta": "C58 visibility before CAS/404; saved request increments requests:id version on success"
+    },
+    {
+      "path": "packages/schema/src/sucafina/procurement.ts",
+      "branch": "sf-ux-w11",
+      "delta": "A03 PageSelection permits exact request, typed CAP25 save requires page Requests/action save, pr.title only is valid"
+    },
+    {
+      "path": "packages/client/src/sucafina/procurement.ts",
+      "branch": "sf-ux-w11",
+      "delta": "A03 createSfProcurementClient(transport), methods domain.page.CAP25 and domain.command.CAP25.save"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+      "branch": "sf-ux-w02",
+      "delta": "F01 SfSurfaceProps, SfDraftRegistry, SfPublicDraftController, owner identity"
+    }
+  ],
+  "changed_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/ACK.json",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/model.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/index.tsx",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+  ],
+  "properties": {
+    "source_locked_title_only": true,
+    "source_status": [
+      "draft",
+      "pr_rejected"
+    ],
+    "source_version": "versions['requests:'+id].version",
+    "owner_header": "X-SF-Native-Owner enforced by I00 within producer transaction after authenticate, not by W19",
+    "producer_call": "domain.command.CAP25.save",
+    "mutation_shape": "{page:'Requests',action:'save',id,version,values:{pr:{title}}}",
+    "post_ack_authorized_refetch": true,
+    "no_auto_retry_on_lost_response": true,
+    "no_financial_approval": true,
+    "no_C12_receipt": true,
+    "no_generated_or_shared_direct_edits": true
+  },
+  "qualifications": {
+    "local_tests": "NOT_RUN_AS_REQUESTED",
+    "github_actions_120": "NOT_RUN",
+    "compiler_guards_119": "NOT_RUN",
+    "real_fixture_F04": "NOT_CONFIRMED",
+    "integration_114": "NOT_ADMITTED",
+    "merge": "NOT_DONE",
+    "deploy": "NOT_DONE",
+    "azure": "NOT_ACCESSED"
+  },
+  "no_go": [
+    "114 grants per-output lease/admission and applies shared patch; absent as of recorded handoff",
+    "I00 integrates F01/F02/F03/A03/S01/S03 & public package exports and CAP25 authoritative projection",
+    "I00 enforces X-SF-Native-Owner inside legacy application transaction, before execute; no 503 fallback",
+    "F04 real actor/CAS/response loss fixtures ready; 120 runs 5 exact Playwright scenarios via Actions and ensures no skips",
+    "119 compiler/typecheck and guards on composed tree"
+  ],
+  "source_commit_chain": [
+    "31dea05a8b8f0808e556a9f8c8282d9260a27429",
+    "a258d2c586ce2e9d728cda4d28b49d29f85d5ac3",
+    "f71165493e6c7676a275d75f728882188651e1bb",
+    "3d71cbee2c1d161c2db761a26335fdcdc0061244",
+    "e2b84f2bd1820c32f4cf6c80a47cb3803edc8ba2",
+    "d0a1ab18d605f294dac7e7b1cbd92ae43f11d3f1",
+    "91d824d8bef4666b7c51c0641588c72bcd54cf16"
+  ]
+}
