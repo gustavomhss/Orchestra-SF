@@ -111,13 +111,14 @@ export function createSfNativeAuthorityProducer(input: {
     { permission: "sf_*", pattern: "*", action: "deny" },
   ]
   const keyOf = (id: SessionSchema.ID) => reservedPrefix + id
-  const ready = () => !disposed && input.enabled() && !!input.identity() && !!input.nativeHost() &&
+  const parentReady = () => !disposed && !!input.identity() && !!input.nativeHost() &&
     Number.isSafeInteger(input.policy.contextBudgetTokens) && input.policy.contextBudgetTokens > 0 &&
     input.policy.contextBudgetTokens <= 24_000 && Number.isSafeInteger(input.policy.toolCallBudget) &&
     input.policy.toolCallBudget > 0 && input.policy.toolCallBudget <= 12 &&
     input.policy.tools.length > 0 && input.policy.tools.length <= 12 &&
     new Set(input.policy.tools).size === input.policy.tools.length &&
     input.policy.tools.every((tool) => !!tool.trim() && !tool.startsWith("sf_") && !tool.startsWith("mcp_"))
+  const ready = () => parentReady() && input.enabled()
 
   const sameCase = (value: CaseRef, other: CaseRef) =>
     value.id === other.id && value.incarnation === other.incarnation && value.version === other.version
@@ -127,14 +128,14 @@ export function createSfNativeAuthorityProducer(input: {
     !!intent.authorizationId?.trim() && /^[a-f0-9]{64}$/.test(intent.inputDigest) && validCase(intent.caseRef)
   const admission = async (context: TrustedUiContext, request: Request, action: "routines.admit" | "routines.run",
     value: unknown): Promise<boolean> => {
-    if (!ready() || context.kind !== "ui" || request.method !== "POST" || request.signal.aborted ||
+    if (!parentReady() || (action === "routines.run" && !ready()) || context.kind !== "ui" || request.method !== "POST" || request.signal.aborted ||
       input.authority.host.requestFor(context) !== request || !input.identity() ||
       context.binding.installationId !== input.identity()?.installationId ||
       context.binding.projectId !== input.identity()?.projectId || Date.now() >= Date.parse(context.binding.expiresAt))
       return false
     if (!await input.authority.authority.revalidateDomainContext(context).catch(() => false) ||
       !await input.authority.human.authorize(context, action, value).catch(() => false)) return false
-    return ready() && input.authority.host.requestFor(context) === request && !request.signal.aborted &&
+    return parentReady() && (action !== "routines.run" || ready()) && input.authority.host.requestFor(context) === request && !request.signal.aborted &&
       await input.authority.human.authorize(context, action, value).catch(() => false)
   }
   const currentCase = async (request: Request, context: TrustedUiContext, ref: CaseRef) => {
@@ -271,7 +272,7 @@ export function createSfNativeAuthorityProducer(input: {
         throw new Error("SF_NATIVE_MAESTRO_RECEIPT_AUTHORITY_CHANGED")
     })
   const admit = async (request: Request, value: Readonly<{ caseRef: CaseRef; objective: string }>): Promise<PortResult<{ sessionID: SessionSchema.ID }>> => {
-    if (!ready() || acquiring.has(request) || !value?.objective?.trim() || value.objective.length > 30_000 ||
+    if (!parentReady() || acquiring.has(request) || !value?.objective?.trim() || value.objective.length > 30_000 ||
       !validCase(value.caseRef)) return { status: "denied", reason: "native-maestro-start-unavailable" }
     acquiring.add(request)
     let context: TrustedUiContext | undefined
@@ -402,7 +403,7 @@ export function createSfNativeAuthorityProducer(input: {
    * Registry90 independently rechecks Session metadata and downstream case/sources/Relay.
    */
   const historical = async (context: TrustedUiContext, request: Request): Promise<SfNativeMaestroHistory | undefined> => {
-    if (!ready() || context?.kind !== "ui" || input.authority.host.requestFor(context) !== request ||
+    if (!parentReady() || context?.kind !== "ui" || input.authority.host.requestFor(context) !== request ||
       !await input.authority.authority.revalidateDomainContext(context).catch(() => false)) return undefined
     const candidates = await input.authority.state.read(request, "preferences", (state, actor) =>
       Object.entries(state.preferences)
@@ -426,7 +427,7 @@ export function createSfNativeAuthorityProducer(input: {
     return Object.freeze({ authoritySessionID: id, signal, current })
   }
   return {
-    ready, admit, run, historical,
+    parentReady, ready, admit, run, historical,
     subscribe: (listener: OriginListener) => {
       if (disposed || listeners.size) return () => {}
       listeners.add(listener)
@@ -510,7 +511,9 @@ export function createSfNativeMaestroHttp(input: {
     if (!record(parsed) || !["admit", "run"].includes(String(parsed.action)))
       return reply({ status: "needs-input", reason: "native-maestro-command-invalid" }, 400)
     const producer = input.producer()
-    if (!producer?.ready()) return reply({ status: "unavailable", reason: "native-maestro-c15-or-publication-unavailable" }, 503)
+    if (!producer || parsed.action === "admit" && !producer.parentReady() ||
+      parsed.action === "run" && !producer.ready())
+      return reply({ status: "unavailable", reason: "native-maestro-c15-or-publication-unavailable" }, 503)
     if (parsed.action === "admit" && closed(parsed, ["action", "caseRef", "objective"]) &&
       record(parsed.caseRef) && closed(parsed.caseRef, ["id", "incarnation", "version"]) &&
       typeof parsed.caseRef.id === "string" && typeof parsed.caseRef.incarnation === "string" &&
