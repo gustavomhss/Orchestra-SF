@@ -1,6 +1,6 @@
-import { createContext, createEffect, onCleanup, useContext, type JSX } from "solid-js"
+import { batch, createContext, createEffect, onCleanup, useContext, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
-import { createStore } from "solid-js/store"
+import { createStore, reconcile } from "solid-js/store"
 import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { createSfOwnerDrafts } from "./drafts"
@@ -41,24 +41,30 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
   const sameSelection = (a: SfOwnerSelection, b: SfOwnerSelection) =>
     a.serverKey === b.serverKey && a.projectId === b.projectId && a.installationId === b.installationId
 
-  const fence = () => {
+  const fence = (selection: SfOwnerSelection) => {
     inFlight?.abort()
     inFlight = new AbortController()
-    setStore("generation", (value) => value + 1)
-    setStore("active", undefined)
+    batch(() => {
+      setStore("generation", (value) => value + 1)
+      setStore("active", undefined)
+      // replace, do not merge: stale ready/private keys must not survive a revocation.
+      setStore("state", reconcile({ status: "resolving", selection } satisfies SfContextState))
+    })
     return { abort: inFlight, generation: store.generation }
   }
   const publish = (generation: number, next: SfContextState, active?: Active) => {
     if (disposed || generation !== store.generation || inFlight?.signal.aborted) return
-    setStore("state", next)
-    setStore("active", active)
+    batch(() => {
+      setStore("active", active)
+      setStore("state", reconcile(next)) // union variant replacement removes old private fields
+    })
   }
   const fail = (generation: number, selection: SfOwnerSelection, reason: "network" | "installation-unavailable") =>
     publish(generation, { status: "unavailable", selection, reason })
 
   const load = async (selection: SfOwnerSelection) => {
     const prior = store.state
-    const { abort, generation } = fence()
+    const { abort, generation } = fence(selection)
     const changingSelection = !sameSelection(prior.selection, selection)
     if (changingSelection) {
       current?.drafts.revoke("owner-changed")
@@ -195,7 +201,7 @@ export function SfContextProvider(props: SfContextProviderProps): JSX.Element {
     }
   }
   const invalidate: SfContextHandle["invalidate"] = (reason) => {
-    fence()
+    fence(props.selection())
     current?.drafts.revoke(reason === "logout" ? "logout" : reason === "revoked" ? "access-revoked" : "owner-changed")
     current = undefined
     currentOwner = undefined
@@ -237,7 +243,7 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
   const key = (value: string) => value as Parameters<typeof SfStatePanel>[0]["messageKey"]
   const ready = () => {
     const state = owner.state()
-    return state.status === "ready" ? state : undefined
+    return state.status === "ready" && owner.ready() ? state : undefined
   }
   const state = () => {
     switch (owner.state().status) {
