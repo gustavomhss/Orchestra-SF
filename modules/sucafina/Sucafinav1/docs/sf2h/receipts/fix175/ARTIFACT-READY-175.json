@@ -1,0 +1,250 @@
+{
+  "schema": "sf2h.causal-compiler-fix175.artifact-ready.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission": 175,
+  "order": "A05",
+  "branch": "sf-ux-w17",
+  "pr": 134,
+  "epoch": "native-fix-e1-browser175",
+  "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "actor": {
+    "model": "GPT-6",
+    "astra_requested": true,
+    "astra_effective": false,
+    "github_login": "gustavomhss",
+    "session_id": null,
+    "reason": "Runtime session ID not exposed; cannot assert a separate Astra process"
+  },
+  "authority": {
+    "packet": {
+      "commit": "dd4e12b7b396307bb548bbd6e62a670281d342a7",
+      "blob": "f9ffad06f0ec573e73402699f41def7a27074c23"
+    },
+    "fence_previous_epoch": "ux-native-w17-e3",
+    "fence_next_epoch": "native-fix-e1-browser175",
+    "fence_state": "PREDECESSOR_REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "previous_runtime_termination_claimed": false,
+    "branch_head_verified": true,
+    "root_agents": "READ",
+    "schema_agents": "READ",
+    "ACK": {
+      "commit": "7ece75e873ce3d3ef39182085f3ab9d5f222959f",
+      "tree": "f894f20e6a988e395c5335363bf2484d1a36c023",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/ACK-175.json",
+      "blob": "4270227b093dbc1357b76c539f2b6b33522fc6d4"
+    }
+  },
+  "source": {
+    "base_commit": "b1238d1d43308739f915111708d88bfb729d4799",
+    "base_tree": "7c53b243e4a94c26115da86017f1c285cfd576b2",
+    "ack_commit": "7ece75e873ce3d3ef39182085f3ab9d5f222959f",
+    "ack_tree": "f894f20e6a988e395c5335363bf2484d1a36c023",
+    "fix_commit": "04318ca003007bca89bda535af6bc0e1f6100289",
+    "fix_tree": "1fe07a18d8a473a6471ae24a9f529ea5e83fa339",
+    "fix_paths": [
+      {
+        "path": "packages/schema/src/sucafina/portfolio.ts",
+        "pre_blob": "708731dbbaf1fe69664715a4f34007976a4b0476",
+        "post_blob": "5ace759126c6e810d9718df01ce22779146193ce",
+        "change": "FOUR TYPE ANNOTATIONS ONLY"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+        "pre_blob": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+        "post_blob": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+        "change": "UNCHANGED existing specs reused"
+      }
+    ],
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/PATCH-175.patch",
+      "blob": "dbcd700f7f02ae51b8ea7e223bca287665e8fd3c"
+    },
+    "detailed_receipt": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/SOURCE-PATCH-175.json",
+      "blob": "ff469c4912a00189df0d1bea2dbaf43e33b1cb46"
+    }
+  },
+  "consumer": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "integrator_mission": 162,
+    "pre_commit": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "pre_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "pre_files": [
+      {
+        "path": "packages/schema/src/sucafina/portfolio.ts",
+        "blob": "708731dbbaf1fe69664715a4f34007976a4b0476"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+        "blob": "3820d0dea2470e7ad620bbf48ee50120ccdaece6"
+      }
+    ],
+    "post_commit": null,
+    "post_tree": null,
+    "post_files": null,
+    "post_reason": "PENDING_ONLY_162_CAS_INTEGRATION_AND_REAL_CONSUMER_ACK",
+    "expected_portfolio_post_blob": "5ace759126c6e810d9718df01ce22779146193ce",
+    "expect_test_blob_unchanged": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+    "shared_seam_inert_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/PATCH-175.patch",
+    "needs_reconcile_if_consumer_changes": true,
+    "do_not_copy_entire_author_branch": true
+  },
+  "cause": {
+    "observed": [
+      "TS2345 packages/schema/src/sucafina/portfolio.ts:256 S not assignable to Decoder<unknown, never>",
+      "TS2345 packages/schema/src/sucafina/portfolio.ts:260 S not assignable to Decoder<unknown, never>"
+    ],
+    "effect_version": "4.0.0-beta.83",
+    "bun_version": "1.3.14",
+    "runner": "ubuntu-24.04",
+    "package_effect_dependency": "effect catalog",
+    "api": "Schema.decodeUnknownOption and Schema.decodeUnknownSync accept Decoder<unknown> (default decoding services never); Schema.Top/Schema.Schema<T> permit unknown decoding services",
+    "fix": "Constrain recursive EvidenceRef to Schema.Decoder<EvidenceRefType>; envelope, closed, operation to Schema.Decoder<unknown>; preserve inferred concrete output, no runtime changes",
+    "runtime_behavior_changed": false,
+    "original_unknown_input_preserved": true,
+    "strict_parser_option": "onExcessProperty:error",
+    "recursive_extra_rejection_preserved": true,
+    "unknown_keys_no_longer_accepted": false,
+    "original_case_cas_and_null_zero_preserved": true,
+    "not_used": [
+      "any",
+      "unsafe cast",
+      "stub",
+      "permissive schema",
+      "Schema.Unknown replacement",
+      "disabled strict validation",
+      "test/fixture/timeout/oracle modification",
+      "dependency upgrade"
+    ]
+  },
+  "contracts": {
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "execution_protocol_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "host_signatures_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "producer_path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+    "producer_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "producer_drift": false,
+    "operation_count": 10,
+    "original_tasks": [
+      "WP13.T01",
+      "WP13.T02",
+      "WP13.T03",
+      "WP13.T04"
+    ],
+    "wp13_criteria": 68,
+    "global_criteria_retained": 1610,
+    "global_tasks_retained": 74,
+    "global_work_packages_retained": 15,
+    "contract_families_retained": 17
+  },
+  "findings": [
+    {
+      "id": "compiler163-portfolio-TS2345:256",
+      "pre": "FAIL_ON_W690a34_run43766055614",
+      "post": "SOURCE_FIXED_TYPE_ONLY; HOSTED_TYPECHECK_NOT_RUN"
+    },
+    {
+      "id": "compiler163-portfolio-TS2345:260",
+      "pre": "FAIL_ON_W690a34_run43766055614",
+      "post": "SOURCE_FIXED_TYPE_ONLY; HOSTED_TYPECHECK_NOT_RUN"
+    },
+    {
+      "id": "correction135-C64-strict-extras",
+      "pre": "Original tests failed due default Struct stripping; correction135 made nested strict parse",
+      "post": "AST and strict parser unchanged, regression spec preserved, no new product behavior"
+    }
+  ],
+  "acceptance": {
+    "A05_AC01": {
+      "scope": "Original operation output types and zero/null/version fields preserved (type-level)",
+      "qualified": false,
+      "reason": "No new hosted result"
+    },
+    "A05_AC02": {
+      "scope": "Unknown action/payload and recursively extraneous fields remain rejected via original strict codec; original test reused",
+      "qualified": false,
+      "reason": "No new hosted result"
+    },
+    "A05_AC03": {
+      "scope": "Ten original operation keys unchanged; producer/ref and case CAS unchanged",
+      "qualified": false,
+      "reason": "No new hosted result"
+    }
+  },
+  "evidence": {
+    "compiler163": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "Wtree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+      "verdict": "FAIL",
+      "portfolio_errors": [
+        "256 TS2345",
+        "260 TS2345"
+      ],
+      "after_fix": "NOT_RUN"
+    },
+    "product164_portfolio": {
+      "run": 43765725305,
+      "job": 132970248049,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "portfolio_test": "9 PASS HISTORICAL ONLY",
+      "overall_verdict": "FAIL unrelated decisions module Schema.minLength import",
+      "after_fix": "NOT_RUN; TYPE_ONLY_NO_CAUSAL_BEHAVIOR_DELTA"
+    },
+    "product164_browser": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "verdict": "FAIL unrelated F03/S01/S05",
+      "portfolio_selected": false
+    },
+    "checks": {
+      "local_parser": "NOT_RUN_POLICY",
+      "local_build": "NOT_RUN_POLICY",
+      "local_tests": "NOT_RUN_POLICY",
+      "local_typecheck": "NOT_RUN_POLICY",
+      "hosted_typecheck_after_fix": "NOT_RUN_162_INTEGRATION_REQUIRED",
+      "hosted_tests_after_fix": "NOT_RUN_TYPE_ONLY_DELTA",
+      "guards_after_fix": "NOT_RUN_163_SCOPE",
+      "sdk_after_fix": "NOT_RUN_NO_HTTPAPI_PROTOCOL_DELTA",
+      "full_epic": "NOT_RUN",
+      "final_reviews": "NOT_RUN"
+    }
+  },
+  "handoff": {
+    "integrator": 162,
+    "integrator_pr": 65,
+    "integrator_branch": "sf2-stack",
+    "compiler": 163,
+    "compiler_pr": 107,
+    "product_ci": 164,
+    "product_ci_pr": 106,
+    "integrator_request": "Confirm current sf2-stack CAS preimages, apply only four-hunk PATCH-175.patch (old schema blob 708731... -> new blob 5ace...), preserve all other source/test/history, publish actual integrated commit/tree/postblobs and ACK; no force/reset/whole branch",
+    "compiler_request": "ONLY AFTER 162 new coherent integrated W/tree + consumer ACK: dedup by W/tree/version/selector and run existing hosted bun typecheck from packages/schema, packages/client, apps/cli; verify portfolio 256/260 absent; inherited unrelated failures remain failures; scoped guards with real input change only; avoid duplicate SDK if public Protocol/Server HttpApi unchanged",
+    "product_ci_request": "NO NEW PORTFOLIO TEST DISPATCH for type-only change. Reuse 9 historical PASS only as scoped evidence for prior W, never qualify new W from it. After 162, 164 may select existing portfolio.test.ts solely on documented causal behavior delta; never rerun unchanged failing input or full suite",
+    "shared_seam_162_only": true,
+    "integration_status": "PENDING_CONSUMER_ACK",
+    "lease_terminal": true,
+    "no_new_dispatcher": true
+  },
+  "blockers": [
+    "163 hosted new-W typechecks/guards NOT_RUN",
+    "162 has not consumed exact patch",
+    "Other nonportfolio 163 typecheck failures unresolved by this output",
+    "164 F03/S01/S05 and decisions errors are separate owners",
+    "Native Goal paused and full review/G7/G8/AM01-06/FINAL gates not accepted"
+  ],
+  "terminal": {
+    "source_output": "ARTIFACT_READY",
+    "released_to_integrator": 162,
+    "author_scope_closed": true,
+    "global_release": false
+  }
+}
