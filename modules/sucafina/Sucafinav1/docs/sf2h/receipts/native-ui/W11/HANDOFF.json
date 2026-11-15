@@ -1,0 +1,180 @@
+{
+  "schema": "sf2h.native-ui.author-handoff.v1",
+  "missionId": "UX20-W11",
+  "workOrderId": "A03",
+  "cohort": "2026-11-15",
+  "branch": "sf-ux-w11",
+  "lease": "ux-native-w11-e1",
+  "actualModel": "GPT-6",
+  "requestedModel": "Astra",
+  "sessionId": "unavailable-in-connector-session",
+  "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "ownership": {
+    "seat": "W11",
+    "integrator": "114 / S0-C-e17-browser114 / sf2-stack PR65",
+    "testOwner": "120 / GitHub Actions",
+    "compilerOwner": "119",
+    "productBase": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "headAtHandoff": "e3957e977d7aae7ee68cc3c9ab090e5212ba135e"
+  },
+  "pr": {
+    "number": 130,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/130",
+    "target": "sf2-stack",
+    "draft": true,
+    "merged": false,
+    "mergeableAtCreation": false
+  },
+  "code": [
+    {
+      "path": "packages/schema/src/sucafina/procurement.ts",
+      "blob": "1b69faa66446264d70964f0235a3e77d1979e6fb",
+      "role": "39 public named operation contracts + closed fieldsets, strict command validations, title-save, scenario/sourcing"
+    },
+    {
+      "path": "packages/client/src/sucafina/procurement.ts",
+      "blob": "7875c98e14fcde4255bd807f094685cc0fcf60b6",
+      "role": "39 literal-method wrappers over F02 SfTransport, no generic execute"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+      "blob": "0751e4861ab025a7bfc0f132fb24409fd29f8198",
+      "role": "five source-based read projections CAP24..28; principal, roleMap, transaction, original Request, productView, re-admission, minimized DTOs"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "blob": "75df2cfc7a28cb6e0f545d7ac91a63b165a6a511",
+      "role": "unit/contract/source CAS tests; not executed, not installed proof"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W11/ACK.json",
+      "blob": "960f5122486552ae1560d2e54b9faa471a9f3ff6",
+      "role": "real author ACK before writes, exact pins"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W11/SHARED-PATCHES.json",
+      "blob": "61553ccd52406fe9a8c5ece52d9b66a9171db849",
+      "role": "complete package.json pre/postimages with blob hashes, full 39 IDs, integration requirements"
+    }
+  ],
+  "operations": {
+    "declared": 39,
+    "typedClientMethods": 39,
+    "projectionHandlers": 5,
+    "originalProducerOperations": 34,
+    "newMutationRouters": 0,
+    "unknownActionFallbacks": 0,
+    "sourceCatalog": "contract-catalog.json#/families/procurement"
+  },
+  "sourceDeltas": {
+    "modules/sucafina/Sucafinav1/runtime/application.ts": {
+      "beforeBlob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "currentBlob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "result": "C58 re-check authorization after render/download before egress and check attachment request visibility; A03 does not copy or override"
+    },
+    "modules/sucafina/Sucafinav1/runtime/procurement.ts": {
+      "beforeBlob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "currentBlob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "result": "C58 visible request existence before CAS; monetary presentation correction. A03 uses original live source"
+    },
+    "apps/cli/src/sucafina-product/procurement-scenario-services.ts": {
+      "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "result": "unchanged; existing read/preview cannot approve financially"
+    },
+    "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts": {
+      "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+      "result": "unchanged; original sourcing prepare remains authoritative"
+    }
+  },
+  "contractPins": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "safetyAssertions": {
+    "authority": "principal bound to F01 context and original Application.authenticate + current roleMap; F01 recheck before response",
+    "write": "Original POST producer and F02 original Request only; no W11 mutation handler",
+    "cas": "Original versions['requests:'+id], versions['suppliers:'+id] or versions.settings; page projection versions only from authorized view",
+    "holder": "Original approvalQueue/procurementApprovalGroups; real approval producer remains sole decision",
+    "money": "procurementDashboard is original existing source; no browser FX or approval simulation",
+    "privacy": "visibleRequests/domain.view before selecting DTOs, supplier bank withheld unless admin/supplier admin, no raw Snapshot returned",
+    "loss": "Client wrapper makes one transport call per intent; F02 owns unknown outcome and no auto retry",
+    "zeroNull": "schema and DTO projection preserve numeric 0, explicit null and absent field distinctions",
+    "titleSave": "save action only, pr.title, existing Request CAS, source state constraints; approval path separate"
+  },
+  "evidence": {
+    "tests": "NOT_RUN_BY_DESIGN",
+    "compiler": "NOT_RUN_BY_DESIGN",
+    "generated": "NOT_EDITED",
+    "installedUI": "NOT_PROVEN",
+    "actionRuns": [],
+    "localTestInvocations": 0,
+    "githubCommits": 11,
+    "review": "source read, source-diff comparison, static code review; no CI qualification"
+  },
+  "ciHandoff": {
+    "owner120": {
+      "selection": "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "additional": "source procurement-runtime.test.ts and F01/F02 scoped e2e after integration",
+      "note": "Run via GitHub Actions only; report run ID, exact commit, pass/fail and attach artifacts"
+    },
+    "owner119": {
+      "selection": "Effect v4 Schema, SfTransport/SfCallOptions contract, CLI SfNativeHostDependencies/approvalQueue/procurementDashboard inference, real nonempty TSGo compiler",
+      "note": "Run compiler/guards via owned Actions, no W11 local check"
+    }
+  },
+  "dependencies": [
+    {
+      "id": "F01",
+      "state": "UNVERIFIED",
+      "need": "authoritative SfContextResult stamps, destinations and source ownership"
+    },
+    {
+      "id": "F02",
+      "state": "UNVERIFIED",
+      "need": "SfTransport execute interface, Router handler signature, original Request bridge"
+    },
+    {
+      "id": "I00/114",
+      "state": "PENDING_ADMISSION",
+      "need": "static 39 registry codec bindings, five page mounts, package export postimages and composite root"
+    },
+    {
+      "id": "119",
+      "state": "PENDING",
+      "need": "compiler/typecheck and guards via Actions"
+    },
+    {
+      "id": "120",
+      "state": "PENDING",
+      "need": "GitHub Actions tests after composed tree"
+    }
+  ],
+  "risksAndReviewPoints": [
+    "Without F01/F02 source trees the author-only branch intentionally lacks the imported client transport and CLI router; compile/admission must be checked after composition.",
+    "F01 principalRef equality with legacy resolved actor id must be verified from the real source before admitting page projection; do not weaken identity check or inject synthetic actor.",
+    "Scenario/sourcing complex evidence outputs must be checked against real producer variants by 119/120; the current schema encodes source record evidence and must be extended if legitimate non-record refs are observed, never replaced by opaque JSON.",
+    "The draft PR reported mergeable=false at creation, so 114 should compose via per-output admission and explicit conflict reconciliation, not a blind merge.",
+    "Schema decoders must be confirmed against legitimate producer response envelopes and protected fieldsets; unknown or mismatched shapes are blocked, not coerced."
+  ],
+  "nextActionsFor114": [
+    "Verify matching pins, branch HEAD, owner leases and per-output admission before consuming any file.",
+    "Inspect SHARED-PATCHES.json exact pre/postimage; reconcile current shared files before applying, and preserve later work.",
+    "Admit schema+client+host+test as separate outputs; mount only CAP24..CAP28 GET handlers.",
+    "Route domain command POSTs, sourcing prepare and scenario endpoints through existing producers unchanged.",
+    "Delegate compiler/guards 119 and surgical GH Actions 120; do not mark installed or qualified until real run/receipt."
+  ],
+  "prohibitedAndObserved": {
+    "localTests": false,
+    "merge": false,
+    "deploy": false,
+    "azure": false,
+    "sharedFilesEdited": false,
+    "generatedEdited": false,
+    "policyChanged": false
+  }
+}
