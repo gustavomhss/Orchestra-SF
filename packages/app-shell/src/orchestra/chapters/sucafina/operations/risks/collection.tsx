@@ -228,7 +228,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
       }
     }).catch((error: unknown) => {
       if (!active || abort.signal.aborted) return
-      console.error("N16 native collection read failed", error)
+      console.error("N16 native collection read failed")
       setStore({ status: "unavailable", ownerId: "", rows: undefined, actions: [] })
     })
     onCleanup(() => { active = false; abort.abort() })
@@ -333,7 +333,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
           setStore({ status: result.state, ownerId: "", rows: undefined, actions: [] })
       }
     } catch (error: unknown) {
-      console.error("N16 mutation result unknown", error)
+      console.error("N16 mutation result unknown")
       currentDraft?.controller.setPhase("outcome-unknown")
       setStore({ unknown: true, error: t("sf.common.operationUnknown") })
     } finally {
