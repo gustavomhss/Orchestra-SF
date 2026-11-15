@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h.advance-eight-index.v1",
+  "state": "PREPARED_NOT_STARTED",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "goal": "paused",
+  "global_release": false,
+  "integrator": 132,
+  "material": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "prior_wave": "132–142 remains authorized; no duplicates",
+  "missions": [
+    {
+      "mission": 143,
+      "title": "Concluir N15 — serviços e segurança",
+      "branch": "sf-ux-n15",
+      "epoch": "ux-native-n15-e2",
+      "expected_head": "4020cb43e3381f2769bf02a7c0ec75d88b1c91a1",
+      "kind": "author",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/143.json"
+    },
+    {
+      "mission": 144,
+      "title": "Concluir N18 — Planner overview, versões e comparação",
+      "branch": "sf-ux-n18",
+      "epoch": "ux-native-n18-e2",
+      "expected_head": "317ee8af52917c9755fdba5b68901ce79efc1723",
+      "kind": "author",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/144.json"
+    },
+    {
+      "mission": 145,
+      "title": "Concluir N23 — sourcing, fornecedores e complemento de aprovações",
+      "branch": "sf-ux-n23",
+      "epoch": "ux-native-n23-e2",
+      "expected_head": "3c92bcdd3e223d9e28f87000a6fd3539ac9a8c18",
+      "kind": "author",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/145.json"
+    },
+    {
+      "mission": 146,
+      "title": "Revisão antecipada funcional e UX",
+      "branch": "sf-review-functional",
+      "epoch": "pre-r01-e1-browser146",
+      "expected_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+      "kind": "preliminary-review",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/146.json"
+    },
+    {
+      "mission": 147,
+      "title": "Revisão antecipada financeira e de autoridade",
+      "branch": "sf-review-integrity",
+      "epoch": "pre-r02-e1-browser147",
+      "expected_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+      "kind": "preliminary-review",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/147.json"
+    },
+    {
+      "mission": 148,
+      "title": "Revisão antecipada runtime, IA e evidências",
+      "branch": "sf-review-runtime",
+      "epoch": "pre-r03-e1-browser148",
+      "expected_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+      "kind": "preliminary-review",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/148.json"
+    },
+    {
+      "mission": 149,
+      "title": "Compilação e SDK — sucessora128",
+      "branch": "sf-compiler-checks",
+      "epoch": "compiler-e3-browser149",
+      "expected_head": "a762ab905e48595d24a2f285a692b24a5c7f73e7",
+      "kind": "compiler",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/149.json"
+    },
+    {
+      "mission": 150,
+      "title": "CI cirúrgico — sucessora129",
+      "branch": "sf-ci-validation",
+      "epoch": "product-ci-e3-browser150",
+      "expected_head": "98b99eaa35f676570f1ae234ed30e6aea9246aeb",
+      "kind": "ci",
+      "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/150.json"
+    }
+  ],
+  "constraints": "Three preliminary reviews start useful source/delta analysis now; final R01–R03 gates unchanged. Validators reconcile immediately, dispatch only causal-ready inputs. New UI writers continue preserved source branches after explicit fences; no claim of runtime process termination."
+}

@@ -1,0 +1,320 @@
+{
+  "schema": "sf2h.advance-eight.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "ux_plan": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "ux_orders": 78,
+    "surfaces": 70,
+    "operations": 305
+  },
+  "mission": 148,
+  "title": "Revisão antecipada runtime, IA e evidências",
+  "branch": "sf-review-runtime",
+  "epoch": "pre-r03-e1-browser148",
+  "order": "R03",
+  "kind": "preliminary-review",
+  "expected_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "material": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "material_label": "Current composed product, NOT final accepted C. Resolve132 latest manifest before qualification.",
+  "routing": {
+    "integrator": "132/PR65/S0-C-e19-browser132",
+    "compiler": "149/PR107/compiler-e3-browser149",
+    "ci": "150/PR106/product-ci-e3-browser150"
+  },
+  "rules": [
+    "Nova sessão, sem reciclar chat. Ler AGENTS aplicáveis e o pacote inteiro. Confirmar HEAD/fence, source blobs e ACK real com actor/modelo efetivo/session ID apenas se exposto, epoch e SHA antes de escrever. PREPARED não significa iniciado.",
+    "Remote somente GitHub MCP, CAS expected_head e force=false. Preservar commits e branches anteriores. Se HEAD mudou, reconciliar deltas e autoridade antes de qualquer efeito. Não inferir morte por silêncio; fence revoga autoridade futura, não afirma encerramento de processo.",
+    "132/S0-C-e19-browser132 é único integrador de sf2-stack. Compiler149/PR107 e CI150/PR106 são únicos validadores em seus escopos após ACK. Não criar outro integrador/dispatcher. Preservar todas as missões133–142 e demais autores ativos.",
+    "Nenhum teste, parser, validador ou typecheck local. Autores/revisores solicitam verificações cirúrgicas ao responsável. CI GitHub Actions via protocolo existente aprovado; nunca gh/git push. Epic/full8 somente no bundle final coerente.",
+    "Não editar planos aprovados, generated, fontes alheias, engines Maestro/Relay/Schedule, Azure ou recursos externos. Sem devmerge/deploy/segredos/restart. Nenhum novo controlador/worker nativo; Goal permanece pausada.",
+    "Comportamento real e todos critérios originais preservados. Sem mocks/stubs/fixtures permissivas como entrega, sem waivers ou aprovações próprias. ARTIFACT_READY não equivale GLOBAL_RELEASE.",
+    "Após trabalho independente útil, publicar PR/handoff terminal com SHA/tree/blobs/preimages, critérios, achados reais, evidências ou NOT_RUN e próxima ação exata. Não gastar turnos em polling vazio, resumos repetidos nem repetir run equivalente falho."
+  ],
+  "native_goal": "paused",
+  "global_release": false,
+  "precedence": "This packet supersedes predecessor runtime authority/routing only; all normative scope, contracts, criteria and immutable input evidence remain in force.",
+  "logical_actor": "PRE-R03",
+  "final_reviewer_identity_reserved": "S3-R3",
+  "reference_final_work_order": {
+    "id": "R03",
+    "title": "FINAL independente: IA, MCP, Atlas, Relay, Schedule e integrações",
+    "kind": "independent-review",
+    "status": "PLANNED_NOT_AUTHORIZED",
+    "priority": 9,
+    "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+    "owns": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/**"
+    ],
+    "may_write_shared_registry": false,
+    "canonical": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "task_refs": [
+        "WP10.T03"
+      ],
+      "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+    },
+    "surfaces": [],
+    "exports": [],
+    "depends_authoring": [
+      {
+        "lock": "ctx",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "surface-specs",
+        "source": "surface-manifest.json",
+        "requires": "FROZEN with digest in launch record"
+      },
+      {
+        "lock": "transport",
+        "source": "contract-catalog.json",
+        "requires": "FROZEN with digest in launch record"
+      }
+    ],
+    "depends_integration": [
+      "Q01",
+      "Q02"
+    ],
+    "depends_qualification": {
+      "work_orders": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "D01",
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "Q01",
+        "Q02",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08",
+        "U09",
+        "U10",
+        "U11",
+        "U12",
+        "U13",
+        "U14",
+        "U15",
+        "U16",
+        "U17",
+        "U18",
+        "U19",
+        "U20",
+        "U21",
+        "U22",
+        "U23",
+        "U24",
+        "U25",
+        "U26",
+        "U27",
+        "U28",
+        "U29",
+        "U30",
+        "U31",
+        "U32",
+        "U33",
+        "U34",
+        "U35",
+        "U36",
+        "U37",
+        "U38",
+        "U39",
+        "U40",
+        "U41",
+        "U42",
+        "U43",
+        "U44",
+        "U45",
+        "U46",
+        "U47"
+      ],
+      "external": [
+        "Complete canonical same-C gate set and real runtime proofs"
+      ],
+      "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+    },
+    "consumes": {
+      "contracts": [
+        "ctx",
+        "surface-specs",
+        "transport"
+      ],
+      "producer_exports": [
+        {
+          "order": "Q01",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        },
+        {
+          "order": "Q02",
+          "policy": "Only frozen public exports; no private file imports or source-copying."
+        }
+      ],
+      "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+      "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+      "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+      "operation_refs": [],
+      "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+    },
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts",
+        "route-signatures.ts"
+      ],
+      "local": [
+        "work-orders/R03.json"
+      ],
+      "contracts": [
+        "ctx",
+        "surface-specs",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": []
+    },
+    "deliver": [
+      "Review the same frozen final material C with all required proofs available; reviewer has no implementation authorship.",
+      "Publish concrete findings immediately with path/line/causal sequence and owner; author corrects and reviewer rechecks affected findings.",
+      "Trace every mandatory original reviewer scope and affected work-package criteria into exact C/tree, source SHA, access identity, observed controls and evidence; a reviewer with implementation authorship is replaced. Finding must include line/causal path and owner for correction."
+    ],
+    "acceptance_cases": [
+      {
+        "id": "R03-AC01",
+        "expected": "No mandatory finding or unknown evidence is promoted to PASS; original criteria remain required.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "R03-AC02",
+        "expected": "All three independent opinions identify exact same final C, authorship exclusions and evidence scope.",
+        "status": "PLANNED_NOT_RUN"
+      },
+      {
+        "id": "R03-SCOPE",
+        "expected": "Original third FINAL of canonical: real model/runtime, profiles/skills, eight MCP packs/39 operations, Atlas scanner, Relay, Schedule, documents/WP14, agent workflow integration, shipped assets and end-to-end operational readiness. No scope can be silently delegated away; same candidate C and all mandatory gates.",
+        "status": "PLANNED_NOT_RUN"
+      }
+    ],
+    "gates": {
+      "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+      "test_files": [],
+      "typecheck_packages": [],
+      "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+      "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+      "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+    },
+    "stop": [
+      "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+      "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+      "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+      "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+      "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+      "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+    ],
+    "handoff": {
+      "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+      "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+      "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+    },
+    "reviewScope": "Original third FINAL of canonical: real model/runtime, profiles/skills, eight MCP packs/39 operations, Atlas scanner, Relay, Schedule, documents/WP14, agent workflow integration, shipped assets and end-to-end operational readiness.",
+    "reviewRequiredChecks": [
+      "Eight MCP packs and 39 cataloged actions with real providers/negative cases, no stub or mock truth",
+      "Atlas/scanner real, Relay/Schedule/recurrence/remote state, 15 WP and 17 contracts edges, no deferred HOLD passed as green",
+      "Documents WP14 render and integrity, shipped app/skill assets, real runtime integration and source graph in final C"
+    ]
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r03/preliminary148/**"
+  ],
+  "protected_paths": [
+    "All product, test, fixture, workflow, shared registry and normative plan files. All other reviewer receipt namespaces."
+  ],
+  "final_approval_authorized": false,
+  "required_reads": [
+    "AGENTS.md",
+    "Pinned sf2h-plan/START.md, execution/COMMON.md, own applicable review pack and mandatory attachments; full criterion pointers relevant to assigned review",
+    "native-ui EXECUTION-PROTOCOL.md, manifest.json, work-orders/R03.json at normative cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Actual132 material manifest/tree, relevant source blobs and PR diffs. Existing reviews PR100/97/98 and Office131 PR159; compiler128/CI129 findings and correction132–142 outputs."
+  ],
+  "focus": "Real runtime/AI/skills/MCP/Relay/Atlas contracts, source/evidence provenance, AM01–06 readiness, candidate/config/fixture binding, codec/Office evidence and independence. Check behavior paths and evidence claims concretely.",
+  "actions": [
+    "Begin useful PRELIMINARY code/delta review NOW on material d8f14... and exact relevant delivered source PR SHAs; record source/tree per finding. New context, no prior authorship. This is an operational early review, not execution/completion of final R01/R02/R03.",
+    "Inspect newly composed sources and delivered UI PR deltas, deduplicate old findings; publish concrete new defects immediately with severity, path/line, causal sequence, criterion, source SHA, exact writer owner, reproduction/check request. Do not produce only a missing-proof checklist or another architecture plan.",
+    "Read-only product; write only your unique preliminary receipt prefix. Route source defects to actual writers and integration defects to132; test requests to150/compiler149. Recheck actual fixes independently by SHA, never mark resolved from author text.",
+    "At end publish scoped findings/evidence/coverage/handoff, with missing real proofs clearly PENDING. Do not grant final APPROVE, GLOBAL_RELEASE, guard labels or waive missing proof. Mandatory three independent FINAL same-C reviews remain after frozen complete C+all proofs; fresh final contexts as needed."
+  ],
+  "known_review_sources": {
+    "functional": 100,
+    "integrity": 97,
+    "runtime": 98,
+    "office": 159,
+    "qualification": [
+      151,
+      154
+    ],
+    "delivered_ui": [
+      147,
+      158,
+      162,
+      150,
+      146,
+      166,
+      168,
+      164,
+      148,
+      163,
+      153,
+      167,
+      149,
+      155,
+      157,
+      152,
+      160,
+      156
+    ]
+  }
+}
