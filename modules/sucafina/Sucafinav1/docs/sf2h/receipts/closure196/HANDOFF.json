@@ -1,0 +1,1490 @@
+{
+  "schema": "sf2h.closure196.handoff.v1",
+  "mission": 196,
+  "epoch": "native-closure-e1-browser196",
+  "branch": "sf-proof-profiles",
+  "pullRequest": 182,
+  "target": "sf2-stack",
+  "notDev": true,
+  "reservedHead": "ab37cd458f02b0f74b321c3dd934924909fcf2c8",
+  "initialACKcommit": "5a6f7f54d210e04e12e9077771452d9b216bd34a",
+  "sourceHeadBeforeHandoff": "89b90ca617e2ce8cca659b3d1c0cbf41be75ebc3",
+  "baseProduct": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+  "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normativeUX": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "immutablePacketRef": "54d5786473feae8e1c7029677503ade4933605e7",
+  "fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/S0-FENCE.json",
+  "predecessorAuthority": [
+    165,
+    166
+  ],
+  "nativeGoal": "PAUSED",
+  "GLOBAL_RELEASE": false,
+  "effectiveAssistantModel": "GPT-6",
+  "chatSessionId": "NOT_EXPOSED",
+  "actualInstalledProviderModel": "NOT_EXPOSED",
+  "installedSessionId": "NOT_EXPOSED",
+  "implemented": {
+    "am01": {
+      "driver": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+      "reusedOriginal": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "reusedWP12": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "behavior": "Five C15 shared-recall selections from actual resident bundle, distinct native model runs and SkillLoadReceipts with hashes, same original case, forbidden-grant/case/incarnation/source negatives, 4 real assistant C16 tool calls replayed via authenticated UI dispatch with identical input/result digests, persistent ready CaseRecall and reopened HTTP consumer. Empty installed model produces NOT_RUN instead of fake result.",
+      "reviewer": "sf_reviewer requires own distinct native SessionV2 run and independently consumed critique (existing native-execution-scenarios-review / documents-contract); source test alone not qualification",
+      "skills": [
+        {
+          "case": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-explicar-forecast",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-comparar-cenarios",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-avaliar-sensibilidade",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-produzir-bi-contextual",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-comparar-sourcing",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-revisar-condicoes-contratuais",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-preparar-compra",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-extrair-evidencias",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-revisar-dependencias",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-compor-portfolio",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-reavaliar-compromissos",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-consultar-memoria-decisoria",
+          "source": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-enquadrar-decisao",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-coordenar-perguntas",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-produzir-material-reuniao",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-REVIEWER",
+          "profile": "sf_reviewer",
+          "skill": "sf-contestar-decisao",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM01-REVIEWER",
+          "profile": "sf_reviewer",
+          "skill": "sf-revisar-evidencias",
+          "source": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+          "status": "NOT_RUN"
+        }
+      ],
+      "correlation": "script/sf2h/proofs/am01/correlate-hosted-evidence.ts",
+      "status": "NOT_RUN"
+    },
+    "am02": {
+      "originalProducer": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+      "nativePerformance": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+      "nativeObserver": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+      "installedBrowser": "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/performance-knowledge-consumers.spec.ts",
+      "behavior": "Real native SessionV2 SkillLoadReceipt/ToolRegistry wrapper plus UI public product dispatcher for Dashboard, KPI, BI; actual provider assistant Knowledge tool messages and UI/domain parity for four operations when installed model runs; installed F04 Browser positive Dashboard/BI and private search require original host. Real Planner producer retained. All 39 remaining complete acceptance statuses unproven without exact logs/consumers/negative parity.",
+      "cases": [
+        {
+          "case": "AM02-sf_dashboard_read",
+          "pack": "performance",
+          "operation": "sf_dashboard_read",
+          "profile": "sf_maestro",
+          "skill": "sf-produzir-bi-contextual",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+          ],
+          "consumerTasks": [
+            "WP05.T05",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "selectionRef de fonte Dashboard emitida; fields autorizados; period",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_kpi_explain",
+          "pack": "performance",
+          "operation": "sf_kpi_explain",
+          "profile": "sf_finance",
+          "skill": "sf-explicar-forecast",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP05.T01",
+            "WP09.T03",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "metricRef de Dashboard KPI emitido; period",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_bi_view",
+          "pack": "performance",
+          "operation": "sf_bi_view",
+          "profile": "sf_finance",
+          "skill": "sf-produzir-bi-contextual",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+          ],
+          "consumerTasks": [
+            "WP05.T05",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "viewId BI01 real; selectionRef emitido; period",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_source_get",
+          "pack": "performance",
+          "operation": "sf_source_get",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "evidenceRef canônico emitido pelo host com hash, versão e principal atuais",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_forecast_compare",
+          "pack": "planning",
+          "operation": "sf_forecast_compare",
+          "profile": "sf_finance",
+          "skill": "sf-explicar-forecast",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP05.T01",
+            "WP09.T03",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "baseRef e candidateRef de versões Planner persistidas; period; currency e FX real",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_scenario_simulate",
+          "pack": "planning",
+          "operation": "sf_scenario_simulate",
+          "profile": "sf_finance",
+          "skill": "sf-comparar-cenarios",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP05.T05",
+            "WP11.T02"
+          ],
+          "nonSecretRequiredInput": "baseRef de cenário válido; operations; assumptions com evidenceRefs reais",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_scenario_compare",
+          "pack": "planning",
+          "operation": "sf_scenario_compare",
+          "profile": "sf_finance",
+          "skill": "sf-comparar-cenarios",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP05.T05",
+            "WP11.T02"
+          ],
+          "nonSecretRequiredInput": "scenarioRefs de dois resultados persistidos; criteria do caso",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_sensitivity_evaluate",
+          "pack": "planning",
+          "operation": "sf_sensitivity_evaluate",
+          "profile": "sf_finance",
+          "skill": "sf-avaliar-sensibilidade",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+          ],
+          "consumerTasks": [
+            "WP05.T05",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "scenarioRef persistido; parameterBounds; criterion",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_portfolio_evaluate",
+          "pack": "planning",
+          "operation": "sf_portfolio_evaluate",
+          "profile": "sf_portfolio",
+          "skill": "sf-compor-portfolio",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP05.T05",
+            "WP13.T04"
+          ],
+          "nonSecretRequiredInput": "scope horizon/currency; candidateRefs; operations; constraints; priorities; explorationLimit",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_request_read",
+          "pack": "procurement",
+          "operation": "sf_request_read",
+          "profile": "sf_procurement",
+          "skill": "sf-comparar-sourcing",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP09.T04"
+          ],
+          "nonSecretRequiredInput": "requestRef emitido pelo registry Procurement",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_supplier_read",
+          "pack": "procurement",
+          "operation": "sf_supplier_read",
+          "profile": "sf_procurement",
+          "skill": "sf-comparar-sourcing",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP09.T04"
+          ],
+          "nonSecretRequiredInput": "supplierRef emitido; fields autorizados",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_contract_read",
+          "pack": "procurement",
+          "operation": "sf_contract_read",
+          "profile": "sf_procurement",
+          "skill": "sf-comparar-sourcing",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP09.T04"
+          ],
+          "nonSecretRequiredInput": "contractRef emitido; fields autorizados",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_sourcing_compare",
+          "pack": "procurement",
+          "operation": "sf_sourcing_compare",
+          "profile": "sf_procurement",
+          "skill": "sf-comparar-sourcing",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP09.T04"
+          ],
+          "nonSecretRequiredInput": "requestRef real; proposalRefs emitidas; criteria reais",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_case_read",
+          "pack": "decisions",
+          "operation": "sf_case_read",
+          "profile": "sf_maestro",
+          "skill": "sf-enquadrar-decisao",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+          ],
+          "consumerTasks": [
+            "WP11.T01",
+            "WP01.T05",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "caseRef codificado com id/incarnation/version vigentes",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_case_draft",
+          "pack": "decisions",
+          "operation": "sf_case_draft",
+          "profile": "sf_maestro",
+          "skill": "sf-enquadrar-decisao",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+          ],
+          "consumerTasks": [
+            "WP11.T01",
+            "WP01.T05",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "objective; horizon; currency; criteria; sourceRefs C07 emitidos",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_alternative_draft",
+          "pack": "decisions",
+          "operation": "sf_alternative_draft",
+          "profile": "sf_finance",
+          "skill": "sf-comparar-cenarios",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP05.T05",
+            "WP11.T02"
+          ],
+          "nonSecretRequiredInput": "caseRef; proposal title/description/sourceRefs; sourceRefs emitidos",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_change_prepare",
+          "pack": "decisions",
+          "operation": "sf_change_prepare",
+          "profile": "sf_procurement",
+          "skill": "sf-preparar-compra",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+          ],
+          "consumerTasks": [
+            "WP11.T03",
+            "WP09.T04",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "caseRef; choiceRef de seleção humana; operations autorizadas",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_receipt_get",
+          "pack": "decisions",
+          "operation": "sf_receipt_get",
+          "profile": "sf_procurement",
+          "skill": "sf-preparar-compra",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+          ],
+          "consumerTasks": [
+            "WP11.T03",
+            "WP09.T04",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "receiptRef retornado por commit C08 real",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_work_list",
+          "pack": "collaboration",
+          "operation": "sf_work_list",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "selectionRef emitido por coleções; period real",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_question_prepare",
+          "pack": "collaboration",
+          "operation": "sf_question_prepare",
+          "profile": "sf_maestro",
+          "skill": "sf-enquadrar-decisao",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"
+          ],
+          "consumerTasks": [
+            "WP11.T01",
+            "WP01.T05",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "caseRef; question text/criterionRef; sourceRefs; recipientRef se resolvido",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_answer_read",
+          "pack": "collaboration",
+          "operation": "sf_answer_read",
+          "profile": "sf_maestro",
+          "skill": "sf-coordenar-perguntas",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts"
+          ],
+          "consumerTasks": [
+            "WP08.T02",
+            "WP08.T06",
+            "WP01.T04",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "questionRef persistido e autorizado na thread",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_relation_read",
+          "pack": "collaboration",
+          "operation": "sf_relation_read",
+          "profile": "sf_maestro",
+          "skill": "sf-coordenar-perguntas",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"
+          ],
+          "consumerTasks": [
+            "WP08.T02",
+            "WP08.T06",
+            "WP01.T04",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "recordRefs reais de fontes com relação confirmada",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_handoff_prepare",
+          "pack": "collaboration",
+          "operation": "sf_handoff_prepare",
+          "profile": "sf_maestro",
+          "skill": "sf-coordenar-perguntas",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"
+          ],
+          "consumerTasks": [
+            "WP08.T02",
+            "WP08.T06",
+            "WP01.T04",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "caseRef; actionRef da questão; recipientRef confirmado; sourceRefs",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_document_extract",
+          "pack": "documents_reports",
+          "operation": "sf_document_extract",
+          "profile": "sf_procurement",
+          "skill": "sf-revisar-condicoes-contratuais",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+          ],
+          "consumerTasks": [
+            "WP09.T04",
+            "WP11.T02",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "documentRef de upload admitido; fieldSchemaRef autorizado com versão",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_import_preview",
+          "pack": "documents_reports",
+          "operation": "sf_import_preview",
+          "profile": "sf_finance",
+          "skill": "sf-explicar-forecast",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP05.T01",
+            "WP09.T03",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "admittedFileRef de arquivo permitido; format; options",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_review_prepare",
+          "pack": "documents_reports",
+          "operation": "sf_review_prepare",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "selectionRef de revisão emitido; period; sectionRefs válidos",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_report_prepare",
+          "pack": "documents_reports",
+          "operation": "sf_report_prepare",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "reviewRef de revisão preservada; format suportado; sectionRefs",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_artifact_get",
+          "pack": "documents_reports",
+          "operation": "sf_artifact_get",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "artifactRef emitido por report/material e ainda autorizado",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_context_get",
+          "pack": "knowledge",
+          "operation": "sf_context_get",
+          "profile": "sf_maestro",
+          "skill": "sf-enquadrar-decisao",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+          ],
+          "consumerTasks": [
+            "WP11.T01",
+            "WP01.T05",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "selectionRefs emitidas; purpose; period",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_knowledge_search",
+          "pack": "knowledge",
+          "operation": "sf_knowledge_search",
+          "profile": "sf_procurement",
+          "skill": "sf-revisar-condicoes-contratuais",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+          ],
+          "consumerTasks": [
+            "WP09.T04",
+            "WP11.T02",
+            "WP01.T05"
+          ],
+          "nonSecretRequiredInput": "query contextual; documentRefs no grant; limit permitido",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_evidence_get",
+          "pack": "knowledge",
+          "operation": "sf_evidence_get",
+          "profile": "sf_procurement",
+          "skill": "sf-comparar-sourcing",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP09.T04"
+          ],
+          "nonSecretRequiredInput": "evidenceRef C07 assinado pela fonte atual",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_decision_recall",
+          "pack": "knowledge",
+          "operation": "sf_decision_recall",
+          "profile": "sf_maestro",
+          "skill": "sf-consultar-memoria-decisoria",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP11.T01",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "selectionRefs de casos escolhidos; similarityCriteria; period; limit; scope Atlas atual",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_freshness_check",
+          "pack": "knowledge",
+          "operation": "sf_freshness_check",
+          "profile": "sf_maestro",
+          "skill": "sf-enquadrar-decisao",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+          ],
+          "consumerTasks": [
+            "WP11.T01",
+            "WP01.T05",
+            "WP06.T03"
+          ],
+          "nonSecretRequiredInput": "evidenceRefs reais, sem assumir que claims estão frescos",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_routine_catalog",
+          "pack": "routines",
+          "operation": "sf_routine_catalog",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "purpose autorizado à identidade",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_routine_prepare",
+          "pack": "routines",
+          "operation": "sf_routine_prepare",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "publishedRecipeRef de versão publicada; inputRefs; parameters period/selectionRefs/reviewRef",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_routine_run",
+          "pack": "routines",
+          "operation": "sf_routine_run",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "admittedRunRef produzido pela publicação nativa; expectedAdmissionVersion",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_routine_status",
+          "pack": "routines",
+          "operation": "sf_routine_status",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "runRef de run Relay realmente criado e autorizado",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_routine_result",
+          "pack": "routines",
+          "operation": "sf_routine_result",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "consumerTasks": [
+            "WP07.T01",
+            "WP07.T02",
+            "WP01.T05",
+            "WP09.T01",
+            "WP09.T02",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "runRef com resultado persistido e consumidor real",
+          "status": "NOT_RUN"
+        },
+        {
+          "case": "AM02-sf_watch_prepare",
+          "pack": "routines",
+          "operation": "sf_watch_prepare",
+          "profile": "sf_portfolio",
+          "skill": "sf-reavaliar-compromissos",
+          "sourceSelectors": [
+            "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+          ],
+          "consumerTasks": [
+            "WP01.T05",
+            "WP08.T04",
+            "WP09.T07"
+          ],
+          "nonSecretRequiredInput": "caseRef, conditionRef, recurrence recipeRef/schedule/timezone; recipientRef confirmado",
+          "status": "NOT_RUN"
+        }
+      ],
+      "reconcile": "script/sf2h/proofs/am02/reconcile-hosted-traces.ts",
+      "status": "NOT_RUN"
+    }
+  },
+  "sourceArtifacts": {
+    "externalResourceManifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/RESOURCE-MANIFEST.json",
+    "resourceManifestBlob": "48299ec512a3e1a55d4aac712c90195a7c62e4b9",
+    "ciRequest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/CI-REQUEST.json",
+    "ciRequestBlob": "55ecfd42cc0a7a74b05e0399eb3bc4b4a576423b",
+    "ciSelectors": {
+      "am01": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+      ],
+      "am02": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts"
+      ],
+      "installed": [
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/performance-knowledge-consumers.spec.ts"
+      ]
+    },
+    "canonicalOperationPacks": [
+      {
+        "id": "C16-performance",
+        "pack": "performance",
+        "operations": [
+          "sf_dashboard_read",
+          "sf_kpi_explain",
+          "sf_bi_view",
+          "sf_source_get"
+        ]
+      },
+      {
+        "id": "C16-planning",
+        "pack": "planning",
+        "operations": [
+          "sf_forecast_compare",
+          "sf_scenario_simulate",
+          "sf_scenario_compare",
+          "sf_sensitivity_evaluate",
+          "sf_portfolio_evaluate"
+        ]
+      },
+      {
+        "id": "C16-procurement",
+        "pack": "procurement",
+        "operations": [
+          "sf_request_read",
+          "sf_supplier_read",
+          "sf_contract_read",
+          "sf_sourcing_compare"
+        ]
+      },
+      {
+        "id": "C16-decisions",
+        "pack": "decisions",
+        "operations": [
+          "sf_case_read",
+          "sf_case_draft",
+          "sf_alternative_draft",
+          "sf_change_prepare",
+          "sf_receipt_get"
+        ]
+      },
+      {
+        "id": "C16-collaboration",
+        "pack": "collaboration",
+        "operations": [
+          "sf_work_list",
+          "sf_question_prepare",
+          "sf_answer_read",
+          "sf_relation_read",
+          "sf_handoff_prepare"
+        ]
+      },
+      {
+        "id": "C16-documents_reports",
+        "pack": "documents_reports",
+        "operations": [
+          "sf_document_extract",
+          "sf_import_preview",
+          "sf_review_prepare",
+          "sf_report_prepare",
+          "sf_artifact_get"
+        ]
+      },
+      {
+        "id": "C16-knowledge",
+        "pack": "knowledge",
+        "operations": [
+          "sf_context_get",
+          "sf_knowledge_search",
+          "sf_evidence_get",
+          "sf_decision_recall",
+          "sf_freshness_check"
+        ]
+      },
+      {
+        "id": "C16-routines",
+        "pack": "routines",
+        "operations": [
+          "sf_routine_catalog",
+          "sf_routine_prepare",
+          "sf_routine_run",
+          "sf_routine_status",
+          "sf_routine_result",
+          "sf_watch_prepare"
+        ]
+      }
+    ]
+  },
+  "crossLeaseChanges": [
+    {
+      "owner": 189,
+      "pr": 65,
+      "status": "INERT_UNAPPLIED",
+      "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/patches/189-WP12-native-C16-receipts.json",
+      "targetSource": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "preBlob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "postBlob": "ebd55c6798bd81f37b29a62f8364dfff28edaee7",
+      "reason": "Current native WP12 consumed log lacks per-operation C16 input/result digests and contextual binding fields needed to independently correlate 39 original tool calls. Patch supplies full new UTF-8 postimage and changes observability only; 189 must own CAS, preserve late edits."
+    }
+  ],
+  "evidence": {
+    "publishedRealGitCommits": true,
+    "PRDraftCreated": true,
+    "localTests": false,
+    "localTypecheck": false,
+    "localBuild": false,
+    "localValidators": false,
+    "CIStartedBy196": false,
+    "actualActionsRunIds": [],
+    "actualHostedProviderToolReceipts": [],
+    "actualHostedConsumerReadbacks": [],
+    "noRunClaims": true,
+    "allCriteriaStatus": "NOT_RUN",
+    "AM01": "NOT_RUN",
+    "AM02": "NOT_RUN"
+  },
+  "canonicalCriteria": [
+    {
+      "proof": "AM01",
+      "entities": [
+        {
+          "entityId": "WP00",
+          "criteria": [
+            "WP00.DOD.40",
+            "WP00.INV.40",
+            "WP00.QLT.40",
+            "WP00.CMP.40",
+            "WP00.SUC.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP00.T04",
+          "criteria": [
+            "WP00.T04.DOD.40",
+            "WP00.T04.INV.40",
+            "WP00.T04.QLT.40",
+            "WP00.T04.CMP.40",
+            "WP00.T04.SUC.40",
+            "WP00.T04.CHK.40",
+            "WP00.T04.CHK.41",
+            "WP00.T04.CHK.42"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP12",
+          "criteria": [
+            "WP12.DOD.40",
+            "WP12.INV.40",
+            "WP12.QLT.40",
+            "WP12.CMP.40",
+            "WP12.SUC.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP12.T01",
+          "criteria": [
+            "WP12.T01.DOD.40",
+            "WP12.T01.INV.40",
+            "WP12.T01.QLT.40",
+            "WP12.T01.CMP.40",
+            "WP12.T01.SUC.40",
+            "WP12.T01.CHK.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP12.T02",
+          "criteria": [
+            "WP12.T02.DOD.40",
+            "WP12.T02.INV.40",
+            "WP12.T02.QLT.40",
+            "WP12.T02.CMP.40",
+            "WP12.T02.SUC.40",
+            "WP12.T02.CHK.40",
+            "WP12.T02.CHK.41"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP10",
+          "criteria": [
+            "WP10.DOD.40",
+            "WP10.INV.40",
+            "WP10.QLT.40",
+            "WP10.CMP.40",
+            "WP10.SUC.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP10.T06",
+          "criteria": [
+            "WP10.T06.DOD.40",
+            "WP10.T06.INV.40",
+            "WP10.T06.QLT.40",
+            "WP10.T06.CMP.40",
+            "WP10.T06.SUC.40",
+            "WP10.T06.CHK.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP10.T03",
+          "criteria": [
+            "WP10.T03.DOD.40",
+            "WP10.T03.INV.40",
+            "WP10.T03.QLT.40",
+            "WP10.T03.CMP.40",
+            "WP10.T03.SUC.40",
+            "WP10.T03.CHK.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "proof": "AM02",
+      "entities": [
+        {
+          "entityId": "WP00",
+          "criteria": [
+            "WP00.DOD.40",
+            "WP00.INV.40",
+            "WP00.QLT.40",
+            "WP00.CMP.40",
+            "WP00.SUC.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP00.T04",
+          "criteria": [
+            "WP00.T04.DOD.40",
+            "WP00.T04.INV.40",
+            "WP00.T04.QLT.40",
+            "WP00.T04.CMP.40",
+            "WP00.T04.SUC.40",
+            "WP00.T04.CHK.40",
+            "WP00.T04.CHK.41",
+            "WP00.T04.CHK.42"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP12",
+          "criteria": [
+            "WP12.DOD.40",
+            "WP12.INV.40",
+            "WP12.QLT.40",
+            "WP12.CMP.40",
+            "WP12.SUC.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP12.T01",
+          "criteria": [
+            "WP12.T01.DOD.40",
+            "WP12.T01.INV.40",
+            "WP12.T01.QLT.40",
+            "WP12.T01.CMP.40",
+            "WP12.T01.SUC.40",
+            "WP12.T01.CHK.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP12.T02",
+          "criteria": [
+            "WP12.T02.DOD.40",
+            "WP12.T02.INV.40",
+            "WP12.T02.QLT.40",
+            "WP12.T02.CMP.40",
+            "WP12.T02.SUC.40",
+            "WP12.T02.CHK.40",
+            "WP12.T02.CHK.41"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP10",
+          "criteria": [
+            "WP10.DOD.40",
+            "WP10.INV.40",
+            "WP10.QLT.40",
+            "WP10.CMP.40",
+            "WP10.SUC.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP10.T06",
+          "criteria": [
+            "WP10.T06.DOD.40",
+            "WP10.T06.INV.40",
+            "WP10.T06.QLT.40",
+            "WP10.T06.CMP.40",
+            "WP10.T06.SUC.40",
+            "WP10.T06.CHK.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP10.T03",
+          "criteria": [
+            "WP10.T03.DOD.40",
+            "WP10.T03.INV.40",
+            "WP10.T03.QLT.40",
+            "WP10.T03.CMP.40",
+            "WP10.T03.SUC.40",
+            "WP10.T03.CHK.40"
+          ],
+          "receiptRule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP00.T02",
+          "criteria": [
+            "WP00.T02.DOD.60",
+            "WP00.T02.INV.60",
+            "WP00.T02.QLT.60",
+            "WP00.T02.CMP.60",
+            "WP00.T02.SUC.60",
+            "WP00.T02.CHK.60"
+          ],
+          "receiptRule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP10.T06",
+          "criteria": [
+            "WP10.T06.DOD.60",
+            "WP10.T06.INV.60",
+            "WP10.T06.QLT.60",
+            "WP10.T06.CMP.60",
+            "WP10.T06.SUC.60",
+            "WP10.T06.CHK.60"
+          ],
+          "receiptRule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP12.T02",
+          "criteria": [
+            "WP12.T02.DOD.60",
+            "WP12.T02.INV.60",
+            "WP12.T02.QLT.60",
+            "WP12.T02.CMP.60",
+            "WP12.T02.SUC.60",
+            "WP12.T02.CHK.60"
+          ],
+          "receiptRule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP06.T02",
+          "criteria": [
+            "WP06.T02.DOD.60",
+            "WP06.T02.INV.60",
+            "WP06.T02.QLT.60",
+            "WP06.T02.CMP.60",
+            "WP06.T02.SUC.60",
+            "WP06.T02.CHK.60"
+          ],
+          "receiptRule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP06.T03",
+          "criteria": [
+            "WP06.T03.DOD.60",
+            "WP06.T03.INV.60",
+            "WP06.T03.QLT.60",
+            "WP06.T03.CMP.60",
+            "WP06.T03.SUC.60",
+            "WP06.T03.CHK.60"
+          ],
+          "receiptRule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio.",
+          "status": "NOT_RUN"
+        },
+        {
+          "entityId": "WP09.T01",
+          "criteria": [
+            "WP09.T01.DOD.60",
+            "WP09.T01.INV.60",
+            "WP09.T01.QLT.60",
+            "WP09.T01.CMP.60",
+            "WP09.T01.SUC.60",
+            "WP09.T01.CHK.60"
+          ],
+          "receiptRule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio.",
+          "status": "NOT_RUN"
+        }
+      ]
+    }
+  ],
+  "pathsPrePostBlobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/ACK.json",
+      "preBlob": null,
+      "postBlob": "53c31e752c5d176b2b78d3ae99776ed477fe536f",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/CI-REQUEST.json",
+      "preBlob": null,
+      "postBlob": "55ecfd42cc0a7a74b05e0399eb3bc4b4a576423b",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/RESOURCE-MANIFEST.json",
+      "preBlob": null,
+      "postBlob": "48299ec512a3e1a55d4aac712c90195a7c62e4b9",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure196/patches/189-WP12-native-C16-receipts.json",
+      "preBlob": null,
+      "postBlob": "37f8ab7a943d840c191c7e4c177513104e5e06f2",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+      "preBlob": null,
+      "postBlob": "71170944471b600c01d80d921bb4bf356931ba8a",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+      "preBlob": null,
+      "postBlob": "fdee242c35f56644c3aaba912eb33f40f49216d7",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+      "preBlob": null,
+      "postBlob": "39fadbd24ce24da349393ea5a1bcddd8a010f597",
+      "status": "added"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/performance-knowledge-consumers.spec.ts",
+      "preBlob": null,
+      "postBlob": "35affab324432817d366ecab70ce86c5fd5805eb",
+      "status": "added"
+    },
+    {
+      "path": "script/sf2h/proofs/am01/correlate-hosted-evidence.ts",
+      "preBlob": "45332299e15db0259c3b4cfd735ba6c99bf96e7a",
+      "postBlob": "2851de47ba3d5b5f6dc6d468a95f2164c4f9c7fb",
+      "status": "modified"
+    },
+    {
+      "path": "script/sf2h/proofs/am02/reconcile-hosted-traces.ts",
+      "preBlob": null,
+      "postBlob": "a848d1641966c3af2988acaefad897b566a924dd",
+      "status": "added"
+    }
+  ],
+  "externalBlockers": [
+    {
+      "owner": 199,
+      "resource": "Private F04 installed manifest SF_NATIVE_INSTALLED_MANIFEST + SF_NATIVE_CANDIDATE_SHA bound in 191, real original authenticated owner sessions/actors, non-empty CAP01/BI01 and authorized 'contract' UI31 search.",
+      "next": "Provide existing real supported host installation and minimal nonsecret source refs; no fake identities/grants."
+    },
+    {
+      "owner": 191,
+      "resource": "Real Actions runs against accepted C with exact selectors, request SHA, candidate SHA/subtree, real provider installed in Catalog and services.models, actual bound SkillLoadReceipts/session IDs and C16 tool logs, reopened output consumers.",
+      "next": "Only 191 dispatches selective runs; request in CI-REQUEST.json; do not claim source/catalog as PASS."
+    },
+    {
+      "owner": 189,
+      "resource": "Apply full inert WP12 C16 tool-tracing patch only when expected preblob matches and PR #182 can be integrated without concurrent writer.",
+      "next": "Reconcile sf2-stack HEAD and apply with own expected-head CAS force:false; inform 191 accepted candidate."
+    },
+    {
+      "owner": "Atlas/Relay C17",
+      "resource": "Actual Atlas admitted index/ledger/scoped evidence and actual version-pinned published Relay recipe/runRef/status/result for Knowledge/Routines under current accessRevision.",
+      "next": "Use existing product host public API, exact per-op inputs in RESOURCE-MANIFEST.json; no synthetic grants/tasks."
+    },
+    {
+      "owner": "independent acceptance",
+      "resource": "39/39 actual private MCP and native agent/UI parity with same principal/case/version/port; 18/18 distinct real skill output receipts and reviewer, all negative and consumer assertions.",
+      "next": "After hosted run, inspect original logs/hashes and real product readbacks; fail rather than infer success."
+    }
+  ],
+  "routing": {
+    "integrator": {
+      "mission": 189,
+      "pr": 65
+    },
+    "ciDispatcher": {
+      "mission": 191,
+      "pr": 106
+    },
+    "compiler": {
+      "mission": 190
+    },
+    "fixture": {
+      "mission": 199
+    },
+    "journeys": [
+      194,
+      195
+    ],
+    "commentsAreAdvisoryNotACK": true
+  },
+  "nextActions": [
+    "189 integrate PR #182 and reconcile exact pre/post for independent WP12 tracing patch, no merge dev",
+    "199 provision original installed host with real sessions/model and source refs",
+    "191 run exact CI-REQUEST selectors only after integrated C accepted and report genuine run URLs/SHA",
+    "Independent reviewer require all 18 skills/39 C16 lanes with 8 packs output+consumer+grant negatives; keep release false until then"
+  ],
+  "notClaimed": [
+    "AM01 PASS",
+    "AM02 PASS",
+    "39 tool invocations already executed",
+    "host session identity observed",
+    "all product code integrated",
+    "installed F04 browser proof passed"
+  ]
+}
