@@ -1,0 +1,37 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "order": "A10",
+  "mission_id": "UX-A10",
+  "status": "ACK_REAL_AUTHORING",
+  "lease_epoch": "ux-native-a10-e1",
+  "actor": "ChatGPT (GitHub connector)",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "branch": "sf-ux-a10",
+  "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "observed_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "allowlist": [
+    "packages/schema/src/sucafina/people.ts",
+    "packages/schema/src/sucafina/people/**",
+    "packages/client/src/sucafina/people.ts",
+    "packages/client/src/sucafina/people/**",
+    "apps/cli/src/sucafina-product/native-ui/people.ts",
+    "apps/cli/src/sucafina-product/native-ui/people/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts"
+  ],
+  "contract_blobs": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "source_blobs": {
+    "application": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "renderer-CAP02/CAP06/CAP07/CAP08": "de499e6d34af826add34bee4125bcfba4e57ddb8"
+  },
+  "source_delta": "C58 application.ts differs from historical pin in Procurement visibility/error fencing; dashboard-people.ts has identical pinned blob. Existing POST decode/safeFailure/domain people paths inspected; do not revert historical source.",
+  "paths_preimage": "All 4 specified leaf paths absent in observed branch; no shared files modified.",
+  "authoring_grant": "S0 exclusive-leaf authoring from A10 wave2 packet. Integration/CI/compiler reserved to 114/120/119.",
+  "constraints": "No tests locally, no producer changes, no merge/dev/deploy/Goal, no privileged snapshot export.",
+  "operation_count": 15
+}
