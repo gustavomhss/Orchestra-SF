@@ -3,9 +3,9 @@
  * that reaches the real SF host is never recreated, and the existing UI
  * admission, source ports, redaction and finishing discipline remain in force.
  *
- * work-item is intentionally NOT registered here. The frozen
- * SfNativeHostDependencies has no workDestinations.read/verify port; projecting
- * work-item without both real steps would weaken the original producer.
+ * Detail uses the real producer's read+verify through a narrowly exposed
+ * private host port. If I00 has not installed that port, it fails closed;
+ * no authority, grant or trusted context is synthesized here.
  */
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { isSfPeriod } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
@@ -15,13 +15,14 @@ import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/
 import type { WorkPresentationItem } from "../../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 
-type WorkProjection = "home" | "search" | "work" | "work-selection"
+type WorkProjection = "home" | "search" | "work" | "work-item" | "work-selection"
 type WorkError = "denied" | "unavailable" | "invalid" | "stale" | "conflict" | "needs-input"
 
 const keys: Readonly<Record<WorkProjection, readonly string[]>> = {
   home: [],
-  search: ["q"],
+  search: [],
   work: ["selectionRef", "start", "end"],
+  "work-item": ["selectionRef", "actionRef", "start", "end"],
   "work-selection": ["start", "end"],
 }
 
@@ -65,18 +66,30 @@ function query(
     request.headers.get("sec-fetch-site") === "cross-site" || request.signal.aborted) {
     return failure(request, "denied")
   }
+  if (url.username || url.password || url.hash) return failure(request, "invalid")
+  // NAV-01: GET/HEAD search and *any* URL query for search are forbidden.
+  // The original Request (including abort signal and headers) is preserved.
+  if (mode === "search") {
+    if (request.method !== "POST" || url.search || !request.body ||
+      !/^application\\/json(?:;\\s*charset=utf-8)?$/i.test(request.headers.get("content-type") ?? "") ||
+      !/^[A-Za-z0-9._:-]{8,128}$/.test(request.headers.get("Idempotency-Key") ?? "") ||
+      request.headers.get("origin") && request.headers.get("origin") !== deps.origin) return failure(request, "invalid")
+    return url.searchParams
+  }
   if (request.method !== "GET" && request.method !== "HEAD") return failure(request, "invalid")
   if (request.body !== null) return failure(request, "invalid")
   const expected = keys[mode]
   if ([...url.searchParams.keys()].some((key) =>
     !expected.includes(key) || url.searchParams.getAll(key).length !== 1) ||
     expected.some((key) => !url.searchParams.has(key))) return failure(request, "invalid")
-  if (mode === "search" && !(url.searchParams.get("q") ?? "").trim()) return failure(request, "invalid")
-  if (mode === "work" || mode === "work-selection") {
+  if (mode === "work" || mode === "work-selection" || mode === "work-item") {
     const period = { start: url.searchParams.get("start"), end: url.searchParams.get("end") }
     if (!isSfPeriod(period)) return failure(request, "invalid")
   }
-  if (mode === "work" && !(url.searchParams.get("selectionRef") ?? "").trim()) return failure(request, "invalid")
+  if ((mode === "work" || mode === "work-item") &&
+    (!(url.searchParams.get("selectionRef") ?? "").trim() || (url.searchParams.get("selectionRef") ?? "").length > 16_384)) return failure(request, "invalid")
+  if (mode === "work-item" &&
+    (!(url.searchParams.get("actionRef") ?? "").trim() || (url.searchParams.get("actionRef") ?? "").length > 16_384)) return failure(request, "invalid")
   return url.searchParams
 }
 
@@ -85,11 +98,42 @@ function currentHost(deps: SfNativeHostDependencies): SfHostServices | undefined
   return deps.runtime()
 }
 
+/** Consume the original JSON body with a hard byte limit even for chunked IO.
+ * This read-only operation never writes search text into a URL, referrer or log. */
+async function privateSearchBody(request: Request): Promise<{ q: string } | undefined> {
+  if (!request.body) return undefined
+  const reader = request.body.getReader()
+  const chunks: Uint8Array[] = []
+  let total = 0
+  try {
+    while (true) {
+      const chunk = await reader.read()
+      if (chunk.done) break
+      total += chunk.value.byteLength
+      if (total > 4096) {
+        await reader.cancel().catch(() => undefined)
+        return undefined
+      }
+      chunks.push(chunk.value)
+    }
+    if (!total) return undefined
+    const bytes = new Uint8Array(total)
+    let offset = 0
+    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength }
+    const parsed: unknown = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed) ||
+      Object.keys(parsed).length !== 1 || !Object.hasOwn(parsed, "q")) return undefined
+    const q = (parsed as { q: unknown }).q
+    return typeof q === "string" && q.trim() && q.length <= 3800 ? { q } : undefined
+  } catch { return undefined }
+  finally { reader.releaseLock() }
+}
+
 async function search(
-  request: Request, runtime: SfHostServices, params: URLSearchParams,
+  request: Request, runtime: SfHostServices, payload: { q: string },
 ): Promise<Response> {
   const decoded = decodeSfOperationInput("sf_knowledge_search", {
-    query: params.get("q") ?? "", limit: 20,
+    query: payload.q, limit: 20,
   })
   if (!decoded.ok) return failure(request, "invalid")
   const digest = digestSfValue(decoded.value)
@@ -152,6 +196,47 @@ async function work(
   } finally {
     runtime.ui.finish(call)
   }
+}
+
+/** The C58 destination producer owns authorization and the two real snapshots.
+ * No Request reconstruction, copied grant or detail resolution in this adapter. */
+async function workItem(
+  request: Request, runtime: SfHostServices, params: URLSearchParams,
+): Promise<Response> {
+  if (!runtime.workDestinations) return failure(request, "unavailable")
+  const selection = decodeSfOperationInput("sf_work_list", {
+    selectionRef: params.get("selectionRef") ?? "",
+    period: { start: params.get("start") ?? "", end: params.get("end") ?? "" },
+  })
+  if (!selection.ok) return failure(request, "invalid")
+  const actionRef = params.get("actionRef") ?? ""
+  const intent = { selection: selection.value, actionRef }
+  const operation = "sf-human:collaboration.work.destination"
+  const digest = digestSfValue(intent)
+  const admitted = await runtime.ui.admit(request, operation, digest)
+  if (admitted.status !== "ok") return producerFailure(request, admitted)
+  const call = admitted.value
+  try {
+    if (!await runtime.ui.validate(call, operation, digest)) return failure(request, "denied")
+    const found = await runtime.workDestinations.read(selection.value, actionRef, call)
+    if (found.status !== "ok") return producerFailure(request, found, call.binding.accessRevision)
+    const value = found.value.view
+    if (value.item.actionRef !== actionRef || value.item.ownerRef !== call.binding.principalRef ||
+      value.item.period && digestSfValue(value.item.period) !== digestSfValue(selection.value.period)) {
+      return failure(request, "denied", call.binding.accessRevision)
+    }
+    // Only the original producer's redacted presentation fields may egress.
+    // Keep null/zero and version semantics; exclude sourceRefs/authority ports.
+    const safe = { status: "ok", value: {
+      item: safeWorkItem(value.item),
+      details: value.details.map((detail) => ({ label: detail.label, value: detail.value })),
+      links: value.links.map((link) => ({ label: link.label, url: link.url })),
+    } }
+    if (!await runtime.ui.revalidate(call) || !await found.value.verify()) {
+      return failure(request, "denied", call.binding.accessRevision)
+    }
+    return response(request, safe, 200, call.binding.accessRevision)
+  } finally { runtime.ui.finish(call) }
 }
 
 async function workSelection(
@@ -259,21 +344,25 @@ async function home(request: Request, runtime: SfHostServices): Promise<Response
   }
 }
 
-/** Only real C58 source-backed leaves are registered: work-item needs the
- * still-unpublished private destinations.read + verify host dependency. */
+/** The work-item handler is inert until I00 exposes the real destination read
+ * port; the operation ID is fixed and no alternative producer is created. */
 export function createSfWorkProjectionHandlers(deps: SfNativeHostDependencies): readonly SfProjectionHandler[] {
   const handler = (mode: WorkProjection): SfProjectionHandler => ({
     operationId: ("projection." + mode) as
-      "projection.home" | "projection.search" | "projection.work" | "projection.work-selection",
+      "projection.home" | "projection.search" | "projection.work" | "projection.work-item" | "projection.work-selection",
     handle: async (request) => {
       const parsed = query(request, deps, mode)
       if (parsed instanceof Response) return parsed
+      // Search parses a bounded private body before touching the host.
+      const privatePayload = mode === "search" ? await privateSearchBody(request) : undefined
+      if (mode === "search" && !privatePayload) return failure(request, "invalid")
       const runtime = currentHost(deps)
       if (!runtime) return failure(request, "unavailable")
       try {
         if (mode === "home") return await home(request, runtime)
-        if (mode === "search") return await search(request, runtime, parsed)
+        if (mode === "search") return await search(request, runtime, privatePayload!)
         if (mode === "work") return await work(request, runtime, parsed)
+        if (mode === "work-item") return await workItem(request, runtime, parsed)
         return await workSelection(request, runtime, parsed)
       } catch {
         // Never expose internal errors, prior-owner contents or private status.
@@ -282,6 +371,6 @@ export function createSfWorkProjectionHandlers(deps: SfNativeHostDependencies): 
     },
   })
   return [
-    handler("home"), handler("search"), handler("work"), handler("work-selection"),
+    handler("home"), handler("search"), handler("work"), handler("work-item"), handler("work-selection"),
   ]
 }

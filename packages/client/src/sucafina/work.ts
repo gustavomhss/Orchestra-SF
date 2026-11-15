@@ -5,6 +5,7 @@
  * No alternative REST path, client cache, view storage or automatic retry.
  */
 import { SfWork } from "@orchestra/schema/sucafina/work"
+import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import type { SfOperation, SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfTransport, SfCallOptions } from "./transport"
 
@@ -32,9 +33,25 @@ export function createSfWorkClient(transport: SfTransport) {
         ? Promise.resolve({ kind: "transport-error", reason: "contract-unavailable" } as const)
         : transport.execute(operation, input, options)
 
+  // The shared registry is I00-owned. Until the exact bounded POST-read
+  // metadata is integrated, never hand a private search string to F02:
+  // its legacy GET serializer would place q in the request URL.
+  const privateSearch = (input: typeof SfWork.operations["projection.search"]["input"]["Type"], options: SfCallOptions) => {
+    const meta = SfOperationRegistry["projection.search"]
+    if (meta.method !== "POST" || meta.pathTemplate !== "{mount}/api/ui/projections/search" ||
+      meta.effect !== "read" || meta.responseMode !== "json" ||
+      !("maxRequestBytes" in meta) || !Number.isSafeInteger(meta.maxRequestBytes) ||
+      meta.maxRequestBytes < 4096 || meta.maxRequestBytes > 8192 ||
+      "fixedQuery" in meta || "fixedBodyDiscriminator" in meta ||
+      typeof input.q !== "string" || !input.q.trim() || options.idempotencyKey !== undefined) {
+      return Promise.resolve({ kind: "transport-error", reason: "contract-unavailable" } as const)
+    }
+    return transport.execute(SfWork.operations["projection.search"], input, options)
+  }
+
   return {
     "projection.home": read(SfWork.operations["projection.home"]),
-    "projection.search": read(SfWork.operations["projection.search"]),
+    "projection.search": privateSearch,
     "projection.work": read(SfWork.operations["projection.work"]),
     "projection.work-item": read(SfWork.operations["projection.work-item"]),
     "projection.work-selection": read(SfWork.operations["projection.work-selection"]),
