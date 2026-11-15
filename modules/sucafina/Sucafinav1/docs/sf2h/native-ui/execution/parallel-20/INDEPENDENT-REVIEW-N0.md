@@ -1,0 +1,31 @@
+# NUI-N0 — missão de cold review independente antes do GO
+
+**Escopo exclusivo:** norma e despacho UX nativa SF / PR99. Não pertence às 20 cartas autoras nem substitui os R01/R02/R03 FINAL do produto. Autor da PR99 não pode assinar esta revisão independente.
+
+## Pins e autoridade — reconcilie HEAD vivo
+
+- Repo `gustavomhss/Orchestra-SF`, PR99 `ux-20-dispatch`; HEAD documental observado `18cc22510e9716345985f50995c1128ea8340198`, **não assumir que permanece atual**. Norma de arquitetura `cbac654784714f68779ae1434d30e6ea8970c4d1`, PR76 original `de7da0689f1a2aba2ebe190f83d807ca949e2c5a`, revisão77 PR91 `16712630025cad3de647f2ea49ecbcdb2cc854fa`.
+- Canônico `dbf9547211d9b0fade619790de7c19c0869b7c7d` (15 WPs/74 tasks/17 contratos/1.610 critérios). Material C51 `529142f63683de8e4b1f7d4232f88faf8ffcef6c`, tree `d679b541596dab3b280a87e15e4a0b29ee518262`. Terminal100 `a6abd2c8d321daf1089f4d440027c46209a89cbe` documental, lease 100 ENDED (71 também). Re-pin stack e source-family antes de concluir.
+
+## Leitura obrigatória
+
+1. AGENTS aplicáveis, `execution/parallel-20/{README.md,GO-NOGO.md,PREFLIGHT-C51-READBACK.md,ADVERSARIAL-AUDIT.md,VALIDATION-DELTA.json}`.
+2. `execution/{manifest.json,EXECUTION-PROTOCOL.md,CONTRACTS.md,COMPONENT-CONTRACTS.md,component-locks.json,host-signatures.ts,component-signatures.ts,route-signatures.ts}`.
+3. `execution/{contract-catalog.json,surface-manifest.json,work-orders/*.json}`, **todas 78 ordens**, `parallel-20/{dispatch.json,PROMPTS.md,launch-record.template.json,validate_dispatch.py,test_validator_inputs.py}` e `../criteria-trace.json` com campaign imutável.
+4. Material C51, terminal100, releases de produtores/owners e autoridade real S0/45/current integrator; diferenciar ACK antigo de lease vigente.
+
+## Revisão e testes documentais exigidos
+
+- Executar em checkout autorizado o `validate_dispatch.py`, `validate_plan.py --strict` com campaign e os **nove testes** do `test_validator_inputs.py`; anexar comando, exit, stdout/artefato. Sem execução observada, marcar NOT_RUN, não PASS.
+- Conferir os 1.610 canonicalPointer/IDs/digest; 78 ordens/20 cartas/19 autores/58 remanescentes; 305 ops, 70 superfícies/165 rotas; ownership exato/prefix e demais leases ativas, grafos autoria vs integração vs qualificação, source/copy/schema digests; nenhum registry duplicado.
+- Conferir PR99 como proveniência real de `source.commit`, separada de PR76; C00 preflight read-only não exige seu próprio launch-record prévio; ACK e lease encerrados da 71 e 100 não dão GO.
+- **Unicidade C00**: se C00 editar shared paths, exigir MESMO ator e MESMA lease do único integrador material designado por S0. Caso diferente, C00 apenas leitor/coordenador com patches inertes; nunca dois writers da stack.
+- P0 `U11.title-save` só CAS `pr.title`, sem receipt C12 ou aprovação; P1 `U13.pr-approval` aprovação real separada, M31/MI07 retidos. Validar negative owner A/B, typed fence na transação original, Microsoft/desktop Session, callback, POST incerto, late response e autorização real.
+- V2 views A12/U43 não PASS sem produtor real/ACL/CAS; MonthlyGrid TSV, zero/null/mês 0..11→1..12 e source host; 305 bindings typed, piloto subset real, desktop broker, no stubs/Any/retry mutação incerta.
+- Casos de ataque: seleção B+URL A, owner switch e stale response, lease duplicada e borrowed path C00, ACK100 reciclado, source drift pós-pin, auth redirect aberto, view v2 sem persistência, TSV perdendo zero, P03 FAIL promovido, screenshot como prova funcional, retry por timeout, CI sem chave completa, reviewer com autoria.
+
+## Saída obrigatória
+
+Um parecer **assinado por outra sessão/reviewer independente**, com HEAD/tree e blobs, identidade observável, comandos/resultados reais, findings por severidade e arquivo/linha/contraexemplo/owner/patch mínimo, gate GO ou FIX-FIRST/NO-GO por família, blocked dependencies, e links na PR99. Sem alterar produto, disparar CI, merge, deploy, Azure ou declarar GLOBAL_RELEASE. Não aceitar autoria como auditoria independente.
+
+DOCUMENTARY_STRUCTURE_PASS não equivale a S0 GO, ARTIFACT_READY, INTEGRATED, QUALIFIED ou FINAL canônico.
