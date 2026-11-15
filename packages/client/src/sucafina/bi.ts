@@ -25,7 +25,9 @@ export function createSfBiClient(transport: SfTransport) {
       if (!onlyKeys(input, ["viewId", "page", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]) ||
         ("selectionRef" in input && ["baseRef", "candidateRef", "currency"].some((key) => key in input)) ||
         (["baseRef", "candidateRef", "currency"].some((key) => key in input) &&
-          !["baseRef", "candidateRef", "currency"].every((key) => key in input))) {
+          (!["baseRef", "candidateRef", "currency"].every((key) => key in input) ||
+            ("viewId" in input && input.viewId !== undefined &&
+              !["BI01", "BI02", "BI03", "BI04"].includes(input.viewId))))) {
         return Promise.resolve(contractMismatch())
       }
       return transport.execute(SfBi.operations["bi.bi-data"], input, options)
