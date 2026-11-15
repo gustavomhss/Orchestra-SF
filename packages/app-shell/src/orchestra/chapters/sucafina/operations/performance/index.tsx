@@ -34,6 +34,7 @@ type FormData = Readonly<{
   totalWeight?: string; owner?: string; ownerWeight?: string
   co1?: string; co1Weight?: string; co2?: string; co2Weight?: string
   score?: string; status?: string; q1?: string; q2?: string; q3?: string; q4?: string
+  statusQ1?: string; statusQ2?: string; statusQ3?: string; statusQ4?: string
   notes?: string
 }>
 type FieldName = Extract<keyof FormData, string>
@@ -43,6 +44,7 @@ type ActiveEdit = Readonly<{
   controller: SfPublicDraftController<FormData>
   identity: { kind: "record"; recordRef: SfRef } | { kind: "new"; newIntentRef: SfIntentRef }
   record: Item | Sub | Performance | undefined
+  sourceSub: Sub | undefined
   itemId: string | null
   command: "save" | "save-item" | "save-sub"
   operationRef: SfOperationRef
@@ -77,6 +79,7 @@ const EDIT_FIELDS: Readonly<Record<EditKind, readonly Field[]>> = {
   item: [
     { name: "name", label: "sf.u31.itemName", kind: "text", required: true },
     { name: "description", label: "sf.u31.description", kind: "textarea" },
+    { name: "color", label: "sf.u31.color", kind: "text" },
     { name: "totalWeight", label: "sf.u31.itemWeight", kind: "number" },
     { name: "ownerWeight", label: "sf.u31.ownerWeight", kind: "number" },
     { name: "co1Weight", label: "sf.u31.co1Weight", kind: "number" },
@@ -85,6 +88,7 @@ const EDIT_FIELDS: Readonly<Record<EditKind, readonly Field[]>> = {
   sub: [
     { name: "label", label: "sf.u31.subName", kind: "text", required: true },
     { name: "objective", label: "sf.u31.objective", kind: "textarea" },
+    { name: "description", label: "sf.u31.description", kind: "textarea" },
     { name: "target", label: "sf.u31.target", kind: "text" },
     { name: "totalWeight", label: "sf.u31.totalWeight", kind: "number" },
     { name: "owner", label: "sf.u31.owner", kind: "text" },
@@ -99,6 +103,10 @@ const EDIT_FIELDS: Readonly<Record<EditKind, readonly Field[]>> = {
     { name: "q2", label: "sf.u31.q2", kind: "text" },
     { name: "q3", label: "sf.u31.q3", kind: "text" },
     { name: "q4", label: "sf.u31.q4", kind: "text" },
+    { name: "statusQ1", label: "sf.u31.statusQ1", kind: "text" },
+    { name: "statusQ2", label: "sf.u31.statusQ2", kind: "text" },
+    { name: "statusQ3", label: "sf.u31.statusQ3", kind: "text" },
+    { name: "statusQ4", label: "sf.u31.statusQ4", kind: "text" },
     { name: "notes", label: "sf.u31.notes", kind: "textarea" },
   ],
 }
@@ -107,19 +115,23 @@ const editContract = (data: Performance): FormData => ({
 })
 const editItem = (item?: Item): FormData => ({
   kind: "item", itemId: reference(item?.id) || undefined,
-  name: text(item?.name), description: text(item?.description),
+  name: text(item?.name), description: text(item?.description), color: stringOr(item?.color),
   totalWeight: stringOr(item?.totalWeight), ownerWeight: stringOr(item?.ownerWeight),
   co1Weight: stringOr(item?.co1Weight), co2Weight: stringOr(item?.co2Weight),
 })
 const editSub = (itemId: string, sub?: Sub): FormData => ({
   kind: "sub", itemId, subId: reference(sub?.id) || undefined,
   label: text(sub?.label), objective: text(sub?.objective), target: stringOr(sub?.target),
+  description: stringOr(sub?.description),
   totalWeight: stringOr(sub?.totalWeight), owner: text(sub?.owner),
   ownerWeight: stringOr(sub?.ownerWeight), co1: text(sub?.co1),
   co1Weight: stringOr(sub?.co1Weight), co2: text(sub?.co2),
   co2Weight: stringOr(sub?.co2Weight), score: stringOr(sub?.score),
   status: text(sub?.status), q1: stringOr(sub?.q1), q2: stringOr(sub?.q2),
-  q3: stringOr(sub?.q3), q4: stringOr(sub?.q4), notes: text(sub?.notes),
+  q3: stringOr(sub?.q3), q4: stringOr(sub?.q4),
+  statusQ1: stringOr(sub?.statusQ1), statusQ2: stringOr(sub?.statusQ2),
+  statusQ3: stringOr(sub?.statusQ3), statusQ4: stringOr(sub?.statusQ4),
+  notes: text(sub?.notes),
 })
 const contractValues = (v: FormData): ContractValues => ({
   name: v.name, year: finite(v.year),
@@ -127,14 +139,21 @@ const contractValues = (v: FormData): ContractValues => ({
 const itemValues = (v: FormData): ItemValues => ({
   itemId: v.itemId, name: v.name, description: v.description,
   totalWeight: finite(v.totalWeight), ownerWeight: finite(v.ownerWeight),
-  co1Weight: finite(v.co1Weight), co2Weight: finite(v.co2Weight),
+  co1Weight: finite(v.co1Weight), co2Weight: finite(v.co2Weight), color: v.color,
 })
-const subValues = (v: FormData): SubValues => ({
+const subValues = (v: FormData, source?: Sub): SubValues => ({
   itemId: v.itemId || "", subId: v.subId, label: v.label, objective: v.objective,
-  target: v.target, totalWeight: finite(v.totalWeight), owner: v.owner,
+  target: v.target === stringOr(source?.target) ? source?.target : v.target,
+  description: v.description, totalWeight: finite(v.totalWeight), owner: v.owner,
   ownerWeight: finite(v.ownerWeight), co1: v.co1, co1Weight: finite(v.co1Weight),
   co2: v.co2, co2Weight: finite(v.co2Weight), score: finite(v.score),
-  status: v.status, q1: v.q1, q2: v.q2, q3: v.q3, q4: v.q4, notes: v.notes,
+  status: v.status,
+  q1: v.q1 === stringOr(source?.q1) ? source?.q1 : v.q1,
+  q2: v.q2 === stringOr(source?.q2) ? source?.q2 : v.q2,
+  q3: v.q3 === stringOr(source?.q3) ? source?.q3 : v.q3,
+  q4: v.q4 === stringOr(source?.q4) ? source?.q4 : v.q4,
+  statusQ1: v.statusQ1, statusQ2: v.statusQ2,
+  statusQ3: v.statusQ3, statusQ4: v.statusQ4, notes: v.notes,
 })
 const finiteEdit = (v: FormData): boolean => {
   const nums: readonly (keyof FormData)[] = v.kind === "contract" ? ["year"]
@@ -346,7 +365,8 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
         fieldPaths: EDIT_FIELDS[kind].map((field) => field.name), actionIds: [operation] },
     })
     setActive({ controller: draft, identity, record: kind === "contract" ? data()
-      : kind === "sub" ? sub : item, itemId, command: operation,
+      : kind === "sub" ? sub : item, sourceSub: kind === "sub" ? sub : undefined,
+      itemId, command: operation,
       operationRef: crypto.randomUUID() as SfOperationRef })
     setRemoval(null)
     setStore({ mode: "edit", error: null, confirmedWeights: false, warnings: [] })
@@ -427,7 +447,8 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
           }, { signal: signal.signal, idempotencyKey })
         : action === "save-sub" && currentDraft?.availability === "active"
         ? await client["domain.command.CAP16.save-sub"]({
-            version: store.cas, confirmed: confirmedWeights, values: subValues(currentDraft.value),
+            version: store.cas, confirmed: confirmedWeights,
+            values: subValues(currentDraft.value, editing?.sourceSub),
           }, { signal: signal.signal, idempotencyKey })
         : null
       if (ready()?.key !== r.key) return
