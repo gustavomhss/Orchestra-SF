@@ -1,0 +1,40 @@
+{
+  "schema": "sf2h.evidence-archive210.ack.v1",
+  "mission": 210,
+  "actor_id": "EVIDENCE-ARCHIVE",
+  "epoch": "evidence-archive-e1-browser210",
+  "authority": "ACCEPTED_EXACT_WRITE_LEASE",
+  "branch": "sf-guard-archive",
+  "expected_head_before_ack": "2d7b3a9c3b1ca9726f9b86518ef30297bf1c7380",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/S0-FENCE.json",
+    "blob": "b91b77c8631917896cc66ffdbf5780367f4aa32c"
+  },
+  "mission_packet": {
+    "source_commit": "57bc98cb10a29e6428df226f496805e7f117dc5a",
+    "blob": "078550beb1e84a9e4f065b31a76f9d299174e054"
+  },
+  "root_agents_read": true,
+  "independent_review188_read": true,
+  "integrator189_guard_disposition_read": true,
+  "historical_evidence_anchor": "690a34cdd81c12d7311f3717c19679b950276161",
+  "historical_anchor_ancestor_of_branch": {
+    "verified_by": "GitHub compare 690a34...sf-guard-archive",
+    "status": "ahead",
+    "ahead_by": 28,
+    "behind_by": 0
+  },
+  "effective_model": "GPT-6",
+  "model_api_descriptor_exposed": false,
+  "session_id": null,
+  "session_id_status": "NOT_EXPOSED",
+  "read_before_write": true,
+  "log_deletions_authorized": 0,
+  "guard_pass_claimed": false,
+  "tests": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "build": "NOT_RUN",
+  "CI": "NOT_RUN",
+  "GLOBAL_RELEASE": false,
+  "native_goal": "paused"
+}
