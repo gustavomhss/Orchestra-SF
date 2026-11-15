@@ -1,0 +1,78 @@
+{
+  "schema": "sf-c12-first-save-external-proposal-v1",
+  "state": "NOT_APPLIED",
+  "sourceRef": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "sourceBranch": "c12-recovery-proof",
+  "writer": "mission65 documentation only",
+  "integrator": "60",
+  "owners": [
+    "60 host/composition and shared-producer intake",
+    "52 UI consumer"
+  ],
+  "scope": "Read-only exact original first Hot Topic register outcome; no financial command and no new grant",
+  "activeProductFilesModified": false,
+  "testExecuted": false,
+  "typecheckExecuted": false,
+  "testsImportArchivedCode": false,
+  "mechanicalVerification": "Preimage bytes matched three pinned Git blobs; unified diff generated from exact archived pre/postimages. No product execution.",
+  "patch": {
+    "path": "first-save-outcome.NOT_APPLIED.patch",
+    "sha256": "a28525a119237a7f10ef9c183b51aa0203e038c8374d292663db8b4eaa94d36d",
+    "bytes": 13073
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "preimage": "preimages/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts.txt",
+      "postimage": "postimages/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts.txt",
+      "beforeGitBlob": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a",
+      "afterGitBlob": "d880fe5a5f7fd3c9c4fa249dbc374620a39a43a7",
+      "beforeSha256": "53132fbae49b69f43bd973e8450270f14384c2b9a5143a5e71b5fbef057e1ad7",
+      "afterSha256": "739c173d2d1e8bee70b139af4c540dc3fcfeb51c8b464458cb3e0745b6a2b747",
+      "beforeBytes": 20274,
+      "afterBytes": 26108
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "preimage": "preimages/apps/cli/src/sucafina-product/dashboard-decisions.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/dashboard-decisions.ts.txt",
+      "beforeGitBlob": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+      "afterGitBlob": "b4d70dfb9467d59e3ac8861e0b4fc1c628d09bc6",
+      "beforeSha256": "faa9602f7f7465e2748ac2fc0fe31a2ced07679a3522c4b4fea603e1dfff1726",
+      "afterSha256": "2546ad134fbdab181297f15c2bd46cb7815418714d4ef98c1b20349911424370",
+      "beforeBytes": 38305,
+      "afterBytes": 39575
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "preimage": "preimages/apps/cli/src/sucafina-product/dashboard-http.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/dashboard-http.ts.txt",
+      "beforeGitBlob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "afterGitBlob": "934c4807916b23c7ecd80ecb1a3aa76d3bcd7201",
+      "beforeSha256": "eb0e6bc5cd0b4d41541bc9eef8c0bfc8cd4ffcf0e09a33b4cde91d2efa1bd068",
+      "afterSha256": "366cbcce6a4bc2dabb05939b382b32bc6571d1e1eba891ea2c18cbcf1b590cd1",
+      "beforeBytes": 13995,
+      "afterBytes": 14281
+    }
+  ],
+  "requiredOwnerGates": [
+    "Lost first register acknowledgement before draftRef, same original key after SQLite/services reopen, original outcome and zero writes",
+    "Two independent same-text same-target drafts recover by exact admitted transaction key, never latest/list position",
+    "Current case may advance legitimately; retained original caseRef must bind the original first-save digest",
+    "Missing/corrupt/ambiguous outcome, already-advanced draft, source replacement or changes, wrong actor/case/incarnation, missing or uncorrelated key, policy/access changes, revocation at final retention must disclose no identity and cause no registration",
+    "Actual browser owner52 retains only caseRef/key, invokes explicit lookup after reload, reauthorizes and clears pending only on complete original ACK",
+    "45 canonical compiler/guards after owner integration; surgical hosted Actions only"
+  ],
+  "limits": [
+    "No supported lookup exists in the source candidate; current list/discover require identity selection and do not bind the original key",
+    "Only first register (version1, expectedVersion0, no prior draftRef) is covered by this proposed endpoint",
+    "UI remains unchanged; owner52 must wire and prove its consumer after60 publishes the capability",
+    "NOT_APPLIED/NOT_RUN is not a closed acceptance result and carries no test credit"
+  ],
+  "livePreimageRecheck": {
+    "ref": "c12-recovery-proof",
+    "method": "GitHub MCP fetch_file",
+    "allThreeMatched": true,
+    "note": "Observation is not a lease;60 must recheck integration target."
+  }
+}

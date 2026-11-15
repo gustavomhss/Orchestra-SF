@@ -1,5 +1,7 @@
 import { digestSfValue } from "../contracts/canonical.ts"
-import type { PreparedChange } from "../contracts/decisions.ts"
+import type { DecisionCase, PreparedChange } from "../contracts/decisions.ts"
+import type { CommandReceipt } from "../contracts/context.ts"
+import type { SfProductState } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 
 export type PreparedApplyRequest = { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }
@@ -46,4 +48,45 @@ export function proposalReviewDigest(input: {
 }
 export function sameApplyRequest(left: PreparedApplyRequest, right: PreparedApplyRequest) {
   return left.changeId === right.changeId && left.choiceId === right.choiceId && digestSfValue(left.caseRef) === digestSfValue(right.caseRef)
+}
+
+/** Retained inside the existing application attempt; canonical receipt proofs remain raw. */
+export function preparedOriginalIntent(request: PreparedApplyRequest, change: PreparedChange, choice: DecisionCase["choices"][number], reviewDigest: string, context: TrustedDomainContext) {
+  return {
+    schema: "sf-prepared-original-intent-v1" as const,
+    request: structuredClone(request),
+    changeDigest: digestSfValue({ ...change, state: "planned", receipt: null }),
+    choiceDigest: digestSfValue(choice),
+    reviewBinding: receiptReviewBinding(change, reviewDigest),
+    binding: {
+      installationId: context.binding.installationId,
+      projectId: context.binding.projectId,
+      principalRef: context.binding.principalRef,
+      policyVersion: context.binding.policyVersion,
+      accessRevision: context.binding.accessRevision,
+    },
+  }
+}
+
+export function preparedOriginalIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][]) {
+  if (!entries.length) return "missing"
+  if (entries.length !== 1 || choices.length !== 1) return "mismatch"
+  const proof = entries[0]!
+  const attempt = proof.value
+  if (!attempt || typeof attempt !== "object" || Array.isArray(attempt) || !("originalIntent" in attempt)) return "missing"
+  const expected = preparedOriginalIntent(request, change, choices[0]!, reviewDigest, context)
+  return proof.namespace === "cases" && proof.scopeDigest === digestSfValue(["cases"]) && proof.incarnation === state.incarnation &&
+    proof.principalRef === context.binding.principalRef && proof.targetRef === request.caseRef.id && proof.targetIncarnation === request.caseRef.incarnation &&
+    proof.commandDigest === digestSfValue(attempt) && digestSfValue(attempt.originalIntent) === digestSfValue(expected) ? "matched" : "mismatch"
+}
+
+/** Shared raw-receipt fence. The domain reader must still revalidate current access. */
+export function receiptProofMatches(state: Readonly<SfProductState>, target: { surface: CommandReceipt["surface"]; id: string; incarnation: string }, receipt: CommandReceipt, principalRef: string) {
+  const stored = state.receipts[receipt.id]
+  const proof = state.transactions[receiptProofTransactionKey(principalRef, target.id, receipt.idempotencyKey)]
+  const matches = Object.values(state.receipts).filter((item) => item.surface === target.surface && item.targetIncarnation === target.incarnation && item.idempotencyKey === receipt.idempotencyKey && item.principalRef === principalRef)
+  const scope = target.surface === "dashboard" ? ["cases", "receipts"] : { namespaces: ["cases", "receipts"], domainSurface: target.surface }
+  return matches.length === 1 && !!stored && !!proof && proof.namespace === "receipts" && proof.scopeDigest === digestSfValue(scope) &&
+    proof.principalRef === principalRef && proof.targetRef === target.id && proof.targetIncarnation === target.incarnation && proof.incarnation === state.incarnation &&
+    digestSfValue(stored) === digestSfValue(receipt) && digestSfValue(proof.value) === digestSfValue(receipt)
 }

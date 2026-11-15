@@ -1,0 +1,292 @@
+{
+  "schema": "sf-c12-recovery-closure-independent-review-v1",
+  "mission": 65,
+  "reviewer": "recovery_audit",
+  "review_kind": "independent static source and compatibility review",
+  "source_base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "reviewed_work_sha_reported_by_owner": "5da7aa9696b99509992c0d83dd1ef0f7315af38d",
+  "reviewed_work_tree_reported_by_owner": "eb2eb413d084c638c8929619bec44ce171dd9713",
+  "pin": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "conclusion": "No unresolved blocking static defect identified in the reviewed candidate. Runtime acceptance remains subject to the owner hosted Actions gate; this receipt is not a test PASS.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sha256": "9ccbd41228ec8ce7da1fe0b61350e1d4dd5d7a2042747da04b4465ce32f18979",
+      "bytes": 23162
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sha256": "d83cc9f344b7d5eb16c918dc88a5dd6be4d7a35e90bb2bd98f210c98232af220",
+      "bytes": 18023
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "sha256": "937258fc8d3a6138edc84c9d13e24b7100a101660ab9292f63766301caad6867",
+      "bytes": 5955
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts",
+      "sha256": "fcb13e9212bd43119b02c3b6d230a5155e99ebcbb101e0a48fa53ff7dcecbce4",
+      "bytes": 6424
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+      "sha256": "ba1b95a8ab483bc736a0aae248ae5b7f8ba6a9c841b343a2ca42825cc80c6d50",
+      "bytes": 6538
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts",
+      "sha256": "74bfe92d97a819a5df538c0def644da56ed6dffa42a339db289289997e5cb752",
+      "bytes": 33556
+    }
+  ],
+  "method": {
+    "repository_reads": "GitHub MCP source reads plus inert local mirrors of those reads and the owner candidate",
+    "source_execution": false,
+    "local_tests": false,
+    "remote_tests": false,
+    "remote_writes": false,
+    "product_edits_by_reviewer": false,
+    "local_write": "This independent review receipt only"
+  },
+  "read_coverage": {
+    "AGENTS": "Root AGENTS.md at source base read; no nested AGENTS found in the SF subtree inventory.",
+    "actor_contracts": "Entire S4-A contracts array, entries 0 through 16 (C01 through C17), including all common keys and every content/proof value, C15 type_shapes/exports, C16 type_shapes/execution_sequence/exports, and C17 type_shapes/allowed_template_mappings/transaction_sequence/exports.",
+    "critical_sources": [
+      "product/host-binding/state-provider.ts",
+      "product/contracts/state.ts",
+      "product/contracts/canonical.ts",
+      "product/contracts/ports.ts",
+      "product/decisions/application-attempt.ts",
+      "product/decisions/application-status.ts",
+      "product/decisions/review-admission.ts",
+      "product/decisions/prepared-review.ts",
+      "product/decisions/prepared-change.ts",
+      "product/decisions/mutations.ts",
+      "product/decisions/receipts.ts",
+      "product/decisions/host-product.ts",
+      "product/procurement/decision-host.ts",
+      "product/planner/prepared.ts",
+      "product/dashboard/prepared.ts",
+      "product/procurement/prepared.ts",
+      "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "apps/cli/src/sucafina-product/business-services.ts"
+    ],
+    "existing_tests_read": [
+      "test/product/wp03/prepared-apply-integration.test.ts",
+      "test/product/wp11/prepared-apply.test.ts",
+      "test/product/wp11/planner-apply.test.ts",
+      "test/product/wp11/choice-prepared-execution.test.ts",
+      "test/product/wp11/execution-reconciliation.test.ts",
+      "test/product/wp11/application-indeterminate.test.ts",
+      "test/product/wp11/prepared-rejection.test.ts",
+      "test/product/wp13/receipt-scope-boundary.test.ts",
+      "test/product/c12-receipt-recovery/fixture.ts",
+      "test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "test/product/c12-composed-compatibility/admission-race.test.ts",
+      "test/product/c12-composed-compatibility/material-race.test.ts",
+      "test/product/c12-composed-compatibility/duplicate-choice.test.ts"
+    ]
+  },
+  "findings_and_dispositions": [
+    {
+      "finding": "The v1 receipt review digest bound claimed command identity, but the generic recovery path did not durably prove the complete original prepared material and historical choice. Entry-time choice comparison did not prove the original dispatch choice.",
+      "evidence": "Base receipt-review-binding.ts:18-27, review-admission.ts:get, apply.ts:found-receipt branch.",
+      "disposition": "Resolved by adding originalIntent to the existing generic application attempt. The full normalized PreparedChange, exact unique choice, original request and stable installation/project/principal/policy/access binding are verified before recovery and retention. Only lifecycle state and receipt are normalized."
+    },
+    {
+      "finding": "A candidate separate pre-domain producer-intent transaction would have broken definitive rollback and retry behavior.",
+      "evidence": "Unchanged wp03/prepared-apply-integration.test.ts:101-108 requires receiptVersion failure to preserve the entire durable snapshot and then permits the same request to succeed.",
+      "disposition": "Rejected design. Final candidate stores originalIntent in the already-existing outer application attempt and preserves the raw producer single atomic domain/receipt transaction. No preflight simulation or additional producer reservation was introduced."
+    },
+    {
+      "finding": "A same-version choice mutation between outer reservation and producer capture could otherwise be accepted as the producer baseline before final retention rejected it.",
+      "evidence": "Candidate prepared-apply.ts:83-87 and 105-120.",
+      "disposition": "Resolved. When an outer attempt exists its original intent must match during the early read and again inside the locked domain callback at lines 110-111, before resolveMutation and execute. Standalone raw producer calls without an outer attempt retain existing atomic behavior."
+    },
+    {
+      "finding": "Direct producer selection used find/some and its receipt replay did not require the complete canonical transaction metadata fence.",
+      "evidence": "Base prepared-apply.ts:56-69 and 86-90.",
+      "disposition": "Resolved by unique change/choice selection, locked choice-material comparison, and final raw receipt/proof scope, target, incarnation, principal and byte-equality checks."
+    },
+    {
+      "finding": "Standalone readReceipt could return replaced authoritative-state receipt bytes although the original transaction value remained different. Canonical host authorizers validate access and identity, not raw proof equality.",
+      "evidence": "Base prepared-apply.ts:28-46; procurement/decision-host.ts:180-184; dashboard-decisions.ts:140-161.",
+      "disposition": "Resolved with a final boolean C08 receipt-proof read after existing command-digest mismatch and authorization checks. It retains the original raw-array observation and returns authoritative-receipt-changed on inconsistency."
+    },
+    {
+      "finding": "An awaited final consistency read must not return receipt bytes after the independent UI lease has ended.",
+      "evidence": "Candidate prepared-apply.ts:47-48 and 67-77; unchanged wp11/prepared-apply.test.ts:55 returns a new Request on every call.",
+      "disposition": "Resolved through synchronous requestFor presence plus original abort checks. Strict request identity remains in the outer executor; it was not imposed on the raw producer fixture contract."
+    }
+  ],
+  "compatibility_findings": [
+    "receiptReviewBinding remains v1; receiptProofKey and receiptProofTransactionKey remain unchanged; raw receipt remains transaction.value.",
+    "The raw proof shape is consumed by mutations.ts:58-61 rejectChange and asserted exactly by wp13/receipt-scope-boundary.test.ts:58-60. Final design preserves both.",
+    "Existing applicationAttempts scanning stays global across principals and stable across case-version or UI-operation-key changes. Added originalIntent does not create a new attempt or mutate the case version.",
+    "readReceipt retains not-found, command-digest mismatch and collision precedence. The new failure reason preserves execution-reconciliation early replacement expectations; late failures still reach existing reconciliation or retention fences.",
+    "Missing originalIntent on legacy outer application attempts is explicitly unverifiable for reconciliation. No original intent is reconstructed from current mutable material; no new dispatch is authorized from a missing receipt.",
+    "Standalone direct producer receipts without an outer attempt remain readable and replayable under current canonical host authorization; they do not themselves authorize generic case reconciliation."
+  ],
+  "new_test_static_review": {
+    "reopen-recovery.test.ts": "Exercises actual post-domain-and-receipt commit response loss, new authority objects over reopened SQLite, old-context rejection, current source and principal denials, unrelated case edits, original raw proof bytes, and lost case-reconciliation acknowledgement. Domain and receipt identities are observed from committed storage.",
+    "original-intent.test.ts": "Mutates prepared command values, expected version, required authority, choice content, duplicate identities and requested original version after a real committed receipt. Separately loses a real reservation acknowledgement before dispatch and checks indeterminate behavior after reopening.",
+    "planner-fixture.ts": "Uses actual C08/privateSQLite, source lifecycle, UI/human authorities, canonical Planner preparation/mutation, canonical choice/preparation/review and actual receipts. Scheduling hooks execute only after the underlying persistence call returns. Test identities and the one-field operation adapter are explicit; alternatives are canonical simulated inputs. No native session, installed HTTP journey, financial approval or OS-process restart is claimed.",
+    "obvious_api_or_fixture_defect_found": false,
+    "same_version_post_reservation_fence": "Verified statically in the production callback. This receipt does not claim a dedicated executed race test."
+  },
+  "limitations": [
+    "No test, typecheck, build or application execution was performed by this reviewer. Hosted Actions results must be attached separately by the owner.",
+    "The source commit and tree identifiers were supplied by the owner after CAS publication; exact reviewed local file bytes are independently recorded above.",
+    "The audit did not claim an exhaustive repository-wide search of every transaction.value consumer. It read the actual decision/procurement/dashboard consumers and relevant tests; the concrete raw consumer and canonical gate are identified.",
+    "The old Procurement estAmount preparation fixture remains financially blocked by its canonical producer. The reviewer did not authorize or invent financial approval and did not edit that fixture, UI52 or producer61."
+  ],
+  "supplemental_reviews": [
+    {
+      "id": "post-r1-negative-coverage-static-review",
+      "review_kind": "Static review of local test additions; no execution or remote access",
+      "candidate_reference": "Owner working files after W1; production hashes independently confirmed identical to the initial W1 review",
+      "historical_w1_manifest_preserved": true,
+      "production_unchanged": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "sha256": "9ccbd41228ec8ce7da1fe0b61350e1d4dd5d7a2042747da04b4465ce32f18979",
+          "bytes": 23162,
+          "initial_review_sha256": "9ccbd41228ec8ce7da1fe0b61350e1d4dd5d7a2042747da04b4465ce32f18979",
+          "unchanged_from_initial_review": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "sha256": "d83cc9f344b7d5eb16c918dc88a5dd6be4d7a35e90bb2bd98f210c98232af220",
+          "bytes": 18023,
+          "initial_review_sha256": "d83cc9f344b7d5eb16c918dc88a5dd6be4d7a35e90bb2bd98f210c98232af220",
+          "unchanged_from_initial_review": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+          "sha256": "937258fc8d3a6138edc84c9d13e24b7100a101660ab9292f63766301caad6867",
+          "bytes": 5955,
+          "initial_review_sha256": "937258fc8d3a6138edc84c9d13e24b7100a101660ab9292f63766301caad6867",
+          "unchanged_from_initial_review": true
+        }
+      ],
+      "file_deltas": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+          "sha256": "2f07b0033fbc4f4f17ca3ff2a1ad8c536c70c956ce7b3c8499016c55664e867b",
+          "bytes": 8155,
+          "initial_review_sha256": "ba1b95a8ab483bc736a0aae248ae5b7f8ba6a9c841b343a2ca42825cc80c6d50",
+          "unchanged_from_initial_review": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts",
+          "sha256": "c952cf6d113fbeb84289e30690a9358ea157358c9475754c42ec6929858770dc",
+          "bytes": 7375,
+          "initial_review_sha256": null,
+          "unchanged_from_initial_review": null
+        }
+      ],
+      "unchanged_supporting_fixture": {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts",
+        "sha256": "74bfe92d97a819a5df538c0def644da56ed6dffa42a339db289289997e5cb752",
+        "bytes": 33556,
+        "initial_review_sha256": "74bfe92d97a819a5df538c0def644da56ed6dffa42a339db289289997e5cb752",
+        "unchanged_from_initial_review": true
+      },
+      "reviewed_additions": [
+        {
+          "path": "test/product/c12-recovery-closure/original-intent.test.ts",
+          "lines": "11, 40-59, 69",
+          "finding": "No blocking static defect identified. The requiredAuthority precondition proves the authority-removal challenge changes material. A persisted new domain idempotency key cannot locate the original receipt in recover mode and cannot evade the stable generic reservation in apply mode. Each refusal is followed by exact durable-state comparison, and the original case material is restored before the next challenge."
+        },
+        {
+          "path": "test/product/c12-recovery-closure/original-intent.test.ts",
+          "lines": "46-59",
+          "qualification": "The target-incarnation challenge mutates the persisted case target selector; it does not demonstrate physical source destruction/recreation. Policy/access revision challenges exercise current canonical source-scope authorization before the new original-intent matcher, so they are meaningful refusal coverage but not separate regressions attributable solely to this patch."
+        },
+        {
+          "path": "test/product/c12-recovery-closure/producer-fence.test.ts",
+          "lines": "20-61",
+          "finding": "The raw receipt comes from the actual standalone producer and real C08/domain commit, with no outer application attempt. Standalone authorized replay retains the original raw receipt. Generic recover then requires originalIntent and returns original-intent-unverifiable without dispatch or durable mutation. No legacy intent or receipt is fabricated."
+        },
+        {
+          "path": "test/product/c12-recovery-closure/producer-fence.test.ts",
+          "lines": "65-119",
+          "finding": "Read for context: wrong-scope proof is computed by real C08 after a one-time adversarial removal of cases scope, not seeded directly. The test observes the genuine committed receipt/effect, refuses exposure and checks no additional effect across SQLite/services reopen."
+        }
+      ],
+      "owner_reported_execution_context": {
+        "independently_verified_by_this_reviewer": false,
+        "R1": "Owner reported 23 PASS and 1 FAIL, with the failure attributed to the HotTopic fixture source period and corrected separately.",
+        "B0": "Owner reported an actual expected failure: baseline accepted mutated payload retaining the declared digest/key and reconciled the original receipt, while candidate R1 refused the six original mutation cases.",
+        "restriction": "These are owner-reported historical context only, not execution evidence certified by this supplemental static review. The HotTopic fixture correction was not part of this supplemental review scope."
+      },
+      "conclusion": "No unresolved blocking static defect identified in these test additions. No rerun, new runtime PASS, typecheck result or remote verification is claimed.",
+      "method": {
+        "local_tests": false,
+        "remote_tests": false,
+        "remote_reads": false,
+        "remote_writes": false,
+        "product_or_test_edits_by_reviewer": false,
+        "local_write": "Append this supplemental metadata to the existing review receipt only"
+      }
+    },
+    {
+      "id": "external-first-save-package-static-review",
+      "review_kind": "Read-only content and identity review of an inert external proposal",
+      "proposal_state": "NOT_APPLIED_NOT_RUN_NOT_TYPECHECKED",
+      "conclusion": "No blocking static flaw identified in the reviewed proposal delta and its packaging. This is not authorization to integrate, a runtime result or closure of the UI first-save recovery gap.",
+      "reviewed_content": [
+        "Complete first-save-outcome.NOT_APPLIED.patch and manifest.json",
+        "README.md, changed store/host/HTTP postimage sections and their surrounding existing paths",
+        "Complete archived preimage/postimage byte identities for all three files",
+        "Previously fetched pinned tree/directory metadata for the three preimage Git blob IDs"
+      ],
+      "package_identity": {
+        "source_ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+        "manifest_sha256": "db34fb90e249dd3ba4510c493014f2dd253f164913a3b41dc48d1ee80959c055",
+        "readme_sha256": "79d6a98e07f676f60873727d08e019ba5322f05defa1bd84fd812fc2168e26eb",
+        "patch_sha256": "a28525a119237a7f10ef9c183b51aa0203e038c8374d292663db8b4eaa94d36d",
+        "patch_bytes": 13073,
+        "all_six_archived_images_match_declared_sha256_git_blob_and_byte_count": true,
+        "three_preimage_git_blobs_match_cached_github_mcp_pinned_metadata": true,
+        "complete_unified_diff_reconstructed_from_archived_images_matches_patch_bytes": true,
+        "active_external_product_paths_present_in_work_mirror": [],
+        "c12_recovery_tests_import_archived_code_or_lookupFirstSave": false
+      },
+      "static_findings": [
+        "The new lookup has no state transaction, domain mutation or fallback call to register. Missing, malformed or uncorrelated records return no ACK identity.",
+        "The lookup key is exact principal/preferences/case/hot-topic-draft-operationIdentity. It never selects by list position, latest result, matching text or target similarity.",
+        "The proposed HTTP route keeps the existing same-origin POST, bounded closed body, current decisions.edit human admission and existing response reauthorization. No financial command or new financial grant is added.",
+        "The store checks canonical C08 metadata and a closed version-1 outcome, validates the actual active/history draft, retains the original case reference and recomputes the complete original first-register digest from protected persisted material.",
+        "The final C08 read compares the case, original transaction, active draft and historical draft bytes together and requires the synchronous host source-snapshot fence. Missing optional authorization/fence dependencies fail closed.",
+        "The proposed host wrapper retains and clears the current environment around lookup. Existing store callers are not granted lookup automatically.",
+        "All three production changes remain archived .txt/.patch proposal material. No UI52 edit or integration to sf2-stack was performed by this reviewer."
+      ],
+      "owner_gates_retained": [
+        "Prove the actual installation commandIdentity retains the original operation identity for decisions.edit plus the original Idempotency-Key when the lookup body is only caseRef. The generic injectable commandIdentity signature alone does not prove that runtime correlation.",
+        "Execute real lost-ACK, two-independent-same-text-intents, wrong identity/scope, advanced draft, source replacement and final-authorization revocation challenges after authorized owner integration.",
+        "Prove owner52 consumer recovery after reload with only retained caseRef/key and no new registration; this package does not implement that consumer.",
+        "Run required compiler/guard and surgical hosted Actions gates only after integration under the appropriate authority."
+      ],
+      "owner_reported_active_test_context": {
+        "work_sha": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "R2": "Owner reported hosted SUCCESS, 27 PASS, 0 FAIL, 824 assertions, 11 files, 24.47 seconds.",
+        "independently_verified_by_this_reviewer": false,
+        "qualification": "Those active-source results do not execute or validate this external NOT_APPLIED proposal."
+      },
+      "method": {
+        "product_execution": false,
+        "local_tests": false,
+        "remote_tests": false,
+        "new_remote_reads": false,
+        "remote_writes": false,
+        "patch_applied": false,
+        "product_or_test_edits": false,
+        "local_write": "This supplemental review metadata only"
+      },
+      "historical_w1_manifest_preserved": true
+    }
+  ]
+}

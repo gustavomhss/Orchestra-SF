@@ -1,0 +1,83 @@
+{
+  "candidate": {
+    "symbol": "C32",
+    "sha": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+    "tree": "87c3d65399a71f4bbf72c8714f7ee02e662b24e7",
+    "parent": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "source": 61,
+    "paths": 9,
+    "manifest": "candidates/C32-mixed61.json",
+    "readback": "PASS_TEXT_IDENTITIES_ONLY",
+    "validation": "NOT_RUN"
+  },
+  "checks": [
+    {
+      "kind": "read61",
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "sha": "a59f695365a71614f6189eb6f2c2737c83ba233d",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "sha": "910701c103aba2866258adf2f3c99fc0bca28b11",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "sha": "c6bdeb197675406c933046fb5ede19e92cc047e7",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "sha": "6089391e6aaedcedc2ca2df8d0684ee25d930c94",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "sha": "50e5e76f9c82687a303c3f70d664cfd97f1d33d8",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "sha": "76ce8b8fb5d7e17ddc33002d239771a7260a9e65",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+      "sha": "8007eccb9dbf0813d4930f4a5b0a99657809c3fa",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "sha": "bf80dc2fe3a31a1953ee9c45a9e8a97c7de6cf66",
+      "match": true
+    },
+    {
+      "kind": "read61",
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "sha": "9a44cca3e2e34f578e7d9d76458a83068371ff44",
+      "match": true
+    },
+    {
+      "kind": "commit",
+      "sha": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+      "tree": "87c3d65399a71f4bbf72c8714f7ee02e662b24e7",
+      "parents": [
+        "7e64ed4f2e59e0baabcc8655b8067ff9eb847665"
+      ]
+    },
+    {
+      "kind": "diff",
+      "files": 58,
+      "unexpected": []
+    }
+  ],
+  "proof": "Text/blob/ancestry only; no product execution"
+}

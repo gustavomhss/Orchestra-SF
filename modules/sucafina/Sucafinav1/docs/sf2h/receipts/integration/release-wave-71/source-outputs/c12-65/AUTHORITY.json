@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.c12-recovery-closure.authority-terminal.v1",
+  "mission": 65,
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "lease_epoch": "c12-recovery-browser65",
+  "branch": "c12-recovery-proof",
+  "PR": 74,
+  "source_release": "EXPLICIT_COMPLETE_UNIT_RELEASE_FOR_AUTHORIZED_CONSUMER_REVIEW_AND_INTEGRATION",
+  "consumer": 60,
+  "consumer_PR": 65,
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+  "W_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+  "S": "041e9d7dd055043a1a3de5c8261e399f8da2de73",
+  "source_tests": {
+    "state": "PASS",
+    "run": 43668690783,
+    "job": 132673683798,
+    "pass": 27,
+    "fail": 0,
+    "expectations": 824,
+    "files": 11
+  },
+  "terminal_identity": {
+    "commit": "CONTAINING_COMMIT",
+    "tree": "CONTAINING_COMMIT_TREE",
+    "parent": "99919e946fa065cbcd458446fc71ab3f50f73267",
+    "self_reference": "Exact final commit/tree and CAS readback published in PR74 and terminal PR65 comment."
+  },
+  "prepared_at_utc": "2026-11-15 02:46:38 UTC",
+  "activation": "Effective after successful expected-SHA CAS on c12-recovery-proof. No further owner65 source writes after terminal publication without a new authorized task.",
+  "consumer_authority": {
+    "observed_target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "authority_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "ack": "REQUESTED_AWAITING_AUTHORIZED_RESUMPTION",
+    "successor_inferred": false
+  },
+  "write_scope": {
+    "active_product_files": [
+      "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts"
+    ],
+    "new_tests": "test/product/c12-recovery-closure/",
+    "evidence": "docs/sf2h/receipts/c12-recovery-closure/",
+    "UI52_modified": false,
+    "producers61_modified": false,
+    "shared_first_save_patch": "INERT_NOT_APPLIED"
+  },
+  "review": {
+    "independent_agent": "/root/recovery_audit",
+    "scope": "Static three owned executors, tests delta and inert external patch; no test claims from subagent",
+    "receipt": "review/independent-executor-audit.json"
+  },
+  "execution": {
+    "hosted_functional_requests": 2,
+    "hosted_baseline_discriminants": 1,
+    "local_product_tests": 0,
+    "local_typechecks": 0,
+    "local_builds": 0,
+    "compiler_guards": "REQUESTED_NOT_RUN_OWNER45",
+    "stack_writes": 0,
+    "dev_merges": 0,
+    "deploys": 0,
+    "Azure_actions": 0,
+    "native_omni_spawns": 0
+  },
+  "retained_holds": [
+    "Minimal caseRef/key first-register lookup and UI52 consumer",
+    "Exact composed validation after authorized integration",
+    "Compiler and guards45",
+    "Actual PID restart and native consumer proof where required",
+    "Full AM04 and global C/G7 D/G8"
+  ],
+  "no_new_financial_approval": true,
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,130 @@
+{
+  "schema": "sf2h.c12-recovery-closure.compiler-request.v1",
+  "mission": 65,
+  "consumer": 45,
+  "state": "REQUESTED_NOT_RUN",
+  "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+  "W_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+  "branch": "c12-recovery-proof",
+  "PR": 74,
+  "repository": "gustavomhss/Orchestra-SF",
+  "integrationConsumer": "60 terminal; handoff in PR65 awaits authorized resumption. No successor or active integration lease is inferred.",
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "constraint": "Use the package canonical script; do not substitute tsc."
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_ref": "origin/dev",
+      "base_observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    }
+  ],
+  "productScope": {
+    "changed": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "gitBlob": "a2d08250d5104285dcdee87d86e39076535cf554"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "gitBlob": "a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+        "gitBlob": "b8c6af0cd15dbafc70c543901ca922701748537a"
+      }
+    ],
+    "newTestNamespace": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/",
+    "evidenceNamespace": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/",
+    "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "storageDelta": "originalIntent is nested in the existing applicationAttempt transaction value. No new namespace, receipt wrapper, C08 schema, or producer reservation was introduced.",
+    "directProducerAtomicity": "createSfPreparedApply retains the single domain+receipts C08 transaction. It validates an applicationAttempt only when an existing attempt is present; direct producer calls do not create a reservation. Failed receiptVersion/grant validation still returns commit:false before copying staged domain state or writing a receipt.",
+    "externalProposal": "external/first-save/ is inert pre/postimage documentation, NOT_APPLIED and not imported by tests.",
+    "regressionEvidence": {
+      "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+      "runId": 43668690783,
+      "jobId": 132673683798,
+      "conclusion": "success",
+      "note": "The functional selection includes unchanged Finance Apply/alias/atomic rollback gates and the new recovery discriminants; exact per-test evidence belongs to the canonical R2 receipt."
+    }
+  },
+  "authority": {
+    "laneOwner": 45,
+    "requesterOwnsWorkflow": false,
+    "requesterMayUpdateForeignCheckRef": false,
+    "requires": "45 must use its authorized hosted compiler/guards interface on exact W; request publication is not a completed check.",
+    "primaryTask": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/composed-compiler-gates.json@173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "priorRequestPattern": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/runtime56/checks/REQUEST-45.json"
+  },
+  "observed_interface": {
+    "branch": "astra-compose",
+    "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "PR": 32,
+    "scoped_workflow": "sf2-scoped-check.yml absent (GitHub MCP404)",
+    "existing_workflow": ".github/workflows/astra-compose-check.yml",
+    "existing_workflow_blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+    "existing_trigger": "astra-check-compose",
+    "observationOnly": true,
+    "foreign_ref_seized": false
+  },
+  "functionalRunPointer": {
+    "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+    "W_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+    "S": "041e9d7dd055043a1a3de5c8261e399f8da2de73",
+    "runId": 43668690783,
+    "jobId": 132673683798,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668690783",
+    "conclusion": "success",
+    "pass": 27,
+    "fail": 0,
+    "expectations": 824,
+    "files": 11,
+    "seconds": 24.47,
+    "resultClaimed": true,
+    "verification": "Root read the real GitHub MCP job log; this documentation delegate performed no execution or remote action during rebinding.",
+    "note": "Functional PASS is source-only and never substitutes compiler/guards or integration acceptance."
+  },
+  "deduplication": {
+    "key": [
+      "W product tree",
+      "exact command",
+      "guard base",
+      "workflow and validator blobs",
+      "configuration",
+      "runtime",
+      "attempt"
+    ],
+    "inFlightRule": "45 must reconcile its existing request lane and reuse an identical valid completed run or in-flight request before dispatch.",
+    "productChangeRule": "Any later material product W supersedes this request; rebind W/tree and required affected validation.",
+    "documentRule": "A later evidence-only commit does not become the tested product W."
+  },
+  "proof_limits": [
+    "No compiler or guards result is claimed for W2; this remains REQUESTED_NOT_RUN despite functional 27PASS/0FAIL.",
+    "No local tests, typechecks, full EPIC or foreign workflow/ref mutations were performed by65.",
+    "No active UI52 or Procurement producer61 files changed.",
+    "No invented Procurement financial approval; preserve the existing Finance Apply behavior.",
+    "No source result is transferred to a later sf2-stack integration, full AM04 or global acceptance.",
+    "Final receipt must identify W/S/job/logs/results, exact commands, dev baseline and all remaining diagnostics."
+  ],
+  "priorRequests": [
+    {
+      "W": "5da7aa9696b99509992c0d83dd1ef0f7315af38d",
+      "W_tree": "eb2eb413d084c638c8929619bec44ce171dd9713",
+      "state": "SUPERSEDED_NOT_RUN",
+      "reason": "Rebound to exact W2 after fixture correction and additional discriminants; no compiler/guards result was claimed for W1."
+    }
+  ],
+  "integrationHandoff": {
+    "owner": 60,
+    "state": "TERMINAL_LEASE_ENDED",
+    "terminalSha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "handoffPR": 65,
+    "handoffUrl": "https://github.com/gustavomhss/Orchestra-SF/pull/65",
+    "handoffState": "AWAITING_AUTHORIZED_RESUMPTION",
+    "successorInferred": false,
+    "integrationAcceptanceClaimed": false
+  }
+}

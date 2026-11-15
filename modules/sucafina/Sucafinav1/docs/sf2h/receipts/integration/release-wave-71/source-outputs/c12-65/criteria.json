@@ -1,0 +1,391 @@
+{
+  "schema": "sf2h.c12-recovery-closure.criteria.v1",
+  "mission": 65,
+  "campaign": "sf2h-integral-20261112",
+  "state": "SOURCE_QUALIFIED_PARTIAL_GLOBAL_NOTCLOSED",
+  "verdict": {
+    "functional_source": "PASS",
+    "mapped_criteria": "SOURCE_QUALIFIED_PARTIAL",
+    "WP11": "NOTCLOSED",
+    "S4-A": "NOTCLOSED",
+    "AM04": "NOTCLOSED",
+    "global_acceptance": "NOTCLOSED",
+    "no_criterion_wide_pass_inferred": true
+  },
+  "planning": {
+    "actor": "S4-A",
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+    "git_blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+    "sha256": "f5ecbabbfba0a4c997341f0c6a7b8d58acdc1f056768dd078ca1fc277aed2c99",
+    "original_criterion_count": 83,
+    "original_proof_packages": [
+      "E10",
+      "E12"
+    ],
+    "original_status_retained": "NOT_RUN",
+    "rule": "This operational evidence map does not edit, replace or reduce the immutable original planning artifact, its 83 S4-A IDs, or the campaign's 15 WPs/74 tasks/17 contracts/1610 criteria. Original native obligations remain 5 profiles/18 skills/8 packs/39 routes/6 integrated proofs."
+  },
+  "hosted_source": {
+    "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+    "W_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+    "S": "041e9d7dd055043a1a3de5c8261e399f8da2de73",
+    "branch": "c12-recovery-proof",
+    "draft_PR": 74,
+    "run_id": 43668690783,
+    "job_id": 132673683798,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668690783",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668690783/job/132673683798",
+    "conclusion": "success",
+    "counts": {
+      "pass": 27,
+      "fail": 0,
+      "expectations": 824,
+      "files": 11,
+      "seconds": 24.47,
+      "new_tests": 8,
+      "existing_tests_revalidated": 19
+    },
+    "observed_by": "/root through GitHub MCP jobs/logs; evidence supplied to this document author",
+    "document_author_executed_tests": false,
+    "transfer_rule": "Qualification binds this exact W/tree and hosted selection. Evidence-only commits do not become the tested W; no automatic transfer to sf2-stack or a later integrated candidate."
+  },
+  "evidence_catalog": [
+    {
+      "id": "new-first-save",
+      "file": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+      "tests": 2,
+      "kind": "new",
+      "status": "PASS",
+      "markers": [
+        "SF_C12_FIRST_CASE_SAVE",
+        "SF_C12_FIRST_REGISTER"
+      ],
+      "scope": "Original case/register acknowledgement; first register body retained; later equal-looking draft is not selected."
+    },
+    {
+      "id": "new-reopen",
+      "file": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts",
+      "tests": 2,
+      "kind": "new",
+      "status": "PASS",
+      "markers": [
+        "SF_C12_DOMAIN_RECOVERY",
+        "SF_C12_RECONCILIATION_RECOVERY"
+      ],
+      "scope": "Original domain receipt and case-reconciliation response loss; fresh authority, same store, no reseed."
+    },
+    {
+      "id": "new-original-intent",
+      "file": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+      "tests": 2,
+      "kind": "new",
+      "status": "PASS",
+      "markers": [
+        "SF_C12_ORIGINAL_INTENT",
+        "SF_C12_INDETERMINATE"
+      ],
+      "scope": "Material/choice/key/incarnation/version/authority negatives and no receipt/no redispatch."
+    },
+    {
+      "id": "new-direct-producer",
+      "file": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts",
+      "tests": 2,
+      "kind": "new",
+      "status": "PASS",
+      "markers": [
+        "SF_C12_DIRECT_RAW_RECEIPT",
+        "SF_C12_WRONG_SCOPE_REFUSED"
+      ],
+      "scope": "Authentic private review binding, canonical raw receipt and genuinely committed wrong-scope proof refusal."
+    },
+    {
+      "id": "existing-planner-apply",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+      "tests": 1,
+      "kind": "existing-revalidated",
+      "status": "PASS",
+      "scope": "Direct-producer rollback/no residue, authentic review admission, original receipt retry/reopen and stale rejected receipt."
+    },
+    {
+      "id": "existing-finance-alias",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "tests": 1,
+      "kind": "existing-revalidated",
+      "status": "PASS",
+      "scope": "Retained reviewed command survives mutated caller-owned outputs; outsider does not apply."
+    },
+    {
+      "id": "existing-reconciliation",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "tests": 9,
+      "kind": "existing-revalidated",
+      "status": "PASS",
+      "scope": "Loss/revocation and removed/replaced/colliding receipts before/after final callbacks. After actual receipt-2/409, original request returns actual receipt-1, including after SQLite reopen."
+    },
+    {
+      "id": "existing-indeterminate",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "tests": 1,
+      "kind": "existing-revalidated",
+      "status": "PASS",
+      "scope": "Concurrent authorized actors/new keys, missing receipt after domain commit, durable reservation, fresh sessions and final lease fences."
+    },
+    {
+      "id": "existing-dashboard-apply",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "tests": 1,
+      "kind": "existing-revalidated",
+      "status": "PASS",
+      "scope": "Dashboard mutation/receipt atomicity and wrong command digest rejection."
+    },
+    {
+      "id": "existing-receipt-scope",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts",
+      "tests": 3,
+      "kind": "existing-revalidated",
+      "status": "PASS",
+      "scope": "Rollback retains reservation; raw proof scope and original receipt recovery; real canonical rejected receipt."
+    },
+    {
+      "id": "existing-cross-domain",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "tests": 3,
+      "kind": "existing-revalidated",
+      "status": "PASS",
+      "scope": "Real Planner plus nonfinancial Procurement title/justification edits, partial/both-success cases, ordered receipts and permission/receipt revocation; no financial approval."
+    }
+  ],
+  "criteria_groups": [
+    {
+      "criterion_ids": [
+        "WP11.DOD.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.DOD.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "source_status": "SOURCE_QUALIFIED_PARTIAL",
+      "evidence": [
+        "new-first-save",
+        "new-reopen",
+        "existing-indeterminate"
+      ],
+      "qualified": "Real C08/private SQLite case creation, original acknowledgement recovery, retained choices, new authority composition, current access refusal and unrelated versioned case edit preservation.",
+      "remaining": "Same Bun process with reopened SQLite/services; no distinct PID restart or complete installed collaborator/UI journey. No import/reused-ID criterion closure."
+    },
+    {
+      "criterion_ids": [
+        "WP11.INV.01",
+        "WP11.INV.20",
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.02",
+        "WP11.T03.DOD.01",
+        "WP11.T03.INV.01",
+        "WP11.T03.QLT.01"
+      ],
+      "source_status": "SOURCE_QUALIFIED_PARTIAL",
+      "evidence": [
+        "new-reopen",
+        "new-original-intent",
+        "new-direct-producer",
+        "existing-finance-alias",
+        "existing-cross-domain"
+      ],
+      "qualified": "New Planner fixture uses real human choice, canonical preparation/review and exact private review admission; pending cost coverage survives. Choice or registration does not supply application or financial approval. Changed original material/choice cannot bind the committed receipt.",
+      "remaining": "No complete cost-inventory/quote-revision journey or installed UI/native preparation. Cross-domain fixture supplies choice/prepared inputs but executes actual producers. Procurement edits retain estimated amount and do not qualify financial approval."
+    },
+    {
+      "criterion_ids": [
+        "WP11.INV.02",
+        "WP11.QLT.02",
+        "WP11.T04.CHK.02",
+        "WP11.T04.DOD.02"
+      ],
+      "source_status": "SOURCE_QUALIFIED_PARTIAL",
+      "evidence": [
+        "new-first-save",
+        "new-reopen",
+        "new-original-intent",
+        "new-direct-producer",
+        "existing-planner-apply",
+        "existing-reconciliation",
+        "existing-indeterminate",
+        "existing-receipt-scope"
+      ],
+      "qualified": "Loss after real domain+receipt commit or case reconciliation returns the original receipt without another effect/write. A durable attempt without a receipt stays indeterminate across fresh admissions, keys, actors and SQLite reopen. Real raw receipt scope/target is checked; failed direct-producer staging leaves no residue.",
+      "remaining": "First register is qualified only when the exact original body/key is retained. Missing minimal caseRef/key lookup remains outside the authorized active source paths. Integrated AM04 is not closed."
+    },
+    {
+      "criterion_ids": [
+        "WP11.DOD.02",
+        "WP11.T04.CHK.01",
+        "WP11.T04.DOD.01",
+        "WP11.T04.INV.01",
+        "WP11.T04.CMP.01",
+        "WP11.T04.SUC.01"
+      ],
+      "source_status": "SOURCE_QUALIFIED_PARTIAL",
+      "evidence": [
+        "existing-cross-domain",
+        "existing-reconciliation",
+        "existing-receipt-scope",
+        "new-reopen"
+      ],
+      "qualified": "Three real Planner/Procurement regression tests cover partial success/conflict, both independent edits succeeding, ordered real receipts, permission/receipt revocation and reopen without repeated effects. The earlier success receipt remains recoverable after a later real rejected receipt.",
+      "remaining": "No global transaction is promised. No fabricated awaiting-approval receipt or financial approval is introduced. Full pending-approval UX, installed consumer acceptance and the integrated candidate remain separate obligations."
+    },
+    {
+      "criterion_ids": [
+        "WP11.INV.10",
+        "WP11.T01.INV.18",
+        "WP11.T03.INV.18",
+        "WP11.T04.CHK.03",
+        "WP11.T04.INV.18"
+      ],
+      "source_status": "SOURCE_QUALIFIED_PARTIAL",
+      "evidence": [
+        "new-original-intent",
+        "new-reopen",
+        "new-direct-producer",
+        "existing-indeterminate",
+        "existing-cross-domain",
+        "existing-planner-apply"
+      ],
+      "qualified": "Changed command payload, expectedVersion, requiredAuthority, choice, duplicate changes/choices, domain key, target incarnation, original request version, principal, current policy/access revision, source grant and old lease are refused with no extra effect. Domain/receipt ACL remains authoritative.",
+      "remaining": "Authentication inputs are declared test actors. These negatives do not establish native/MCP/UI parity, installed identity integration or all producer-owned approval policies."
+    },
+    {
+      "criterion_ids": [
+        "WP11.QLT.01",
+        "WP11.QLT.10",
+        "WP11.SUC.01",
+        "WP11.T04.QLT.01"
+      ],
+      "source_status": "SOURCE_QUALIFIED_PARTIAL",
+      "evidence": [
+        "new-first-save",
+        "new-reopen",
+        "new-original-intent",
+        "new-direct-producer",
+        "existing-cross-domain",
+        "existing-reconciliation"
+      ],
+      "qualified": "Assertions compare durable domain values/versions/audit, original raw receipt/proof bytes, case links and dispatch counters; stable keys and typed failure states distinguish retained outcomes from new intent.",
+      "remaining": "Source tests and log markers do not establish user-visible installed UI comprehension, native narration quality, or full end-to-end work continuation."
+    }
+  ],
+  "retained_unqualified_criteria": {
+    "source_status": "NOT_QUALIFIED_BY_THIS_SELECTION",
+    "criterion_ids": [
+      "WP11.CMP.01",
+      "WP11.CMP.10",
+      "WP11.CMP.20",
+      "WP11.DOD.10",
+      "WP11.DOD.20",
+      "WP11.QLT.20",
+      "WP11.SUC.10",
+      "WP11.SUC.20",
+      "WP11.T01.CHK.02",
+      "WP11.T01.CHK.03",
+      "WP11.T01.CHK.18",
+      "WP11.T01.CMP.18",
+      "WP11.T01.DOD.18",
+      "WP11.T01.QLT.18",
+      "WP11.T01.SUC.01",
+      "WP11.T01.SUC.18",
+      "WP11.T02.CHK.01",
+      "WP11.T02.CHK.02",
+      "WP11.T02.CHK.03",
+      "WP11.T02.CHK.18",
+      "WP11.T02.CHK.20",
+      "WP11.T02.CHK.21",
+      "WP11.T02.CMP.01",
+      "WP11.T02.CMP.18",
+      "WP11.T02.CMP.20",
+      "WP11.T02.DOD.01",
+      "WP11.T02.DOD.18",
+      "WP11.T02.DOD.20",
+      "WP11.T02.INV.01",
+      "WP11.T02.INV.18",
+      "WP11.T02.INV.20",
+      "WP11.T02.QLT.01",
+      "WP11.T02.QLT.18",
+      "WP11.T02.QLT.20",
+      "WP11.T02.SUC.01",
+      "WP11.T02.SUC.18",
+      "WP11.T02.SUC.20",
+      "WP11.T03.CHK.03",
+      "WP11.T03.CHK.18",
+      "WP11.T03.CHK.20",
+      "WP11.T03.CMP.01",
+      "WP11.T03.CMP.18",
+      "WP11.T03.DOD.18",
+      "WP11.T03.QLT.18",
+      "WP11.T03.SUC.01",
+      "WP11.T03.SUC.18",
+      "WP11.T04.CHK.18",
+      "WP11.T04.CMP.18",
+      "WP11.T04.DOD.18",
+      "WP11.T04.QLT.18",
+      "WP11.T04.SUC.18"
+    ],
+    "rule": "All original IDs remain mandatory as originally scoped. Unmapped cost, import, usability, native/MCP parity and resident criteria are not deleted or promoted to PASS."
+  },
+  "criterion_accounting": {
+    "mapped_partial": 32,
+    "unqualified": 51,
+    "total": 83,
+    "each_original_id_accounted_once": true
+  },
+  "integrated_AM04": {
+    "original_id": "AM04",
+    "original_pointers": [
+      "/execution_proofs/3",
+      "/resident/integrated_proofs/3"
+    ],
+    "original_proof_packages": [
+      "E10",
+      "E16"
+    ],
+    "source_support": "Partial source evidence for preparation, atomic domain receipts, lost-response recovery, truthful cross-domain state and no duplicate effects.",
+    "verdict": "NOTCLOSED",
+    "remaining": "No nativeSessionId/profileId/skillLoadReceipts or native consumer witness; no final integrated candidate/reviewer acceptance. Full AM01-AM06/G7 obligations retain their original scope."
+  },
+  "limits_and_handoffs": {
+    "first_save_minimal_lookup": {
+      "finding": "IR-EXT-FIRST-SAVE-LOOKUP",
+      "state": "BLOCKED_EXTERNAL_NOT_APPLIED",
+      "qualified": "Exact original full-body/key retry recovers the original Hot Topic registration under fresh authorization.",
+      "missing": "The historical UI retains only caseRef/key before draftRef and loses the private body. Active code has no authorized minimal correlation lookup; list/discover and readCurrent do not prove the original key.",
+      "inert_proposal": "external/first-save/manifest.json",
+      "owners": [
+        "60 / authorized shared-producer owner",
+        "52 UI consumer"
+      ],
+      "proposal_executed": false
+    },
+    "restart": {
+      "qualified": "Same-process SQLite-driver/services reopen with fresh authorities and no reseeding.",
+      "distinct_PID_restart": false
+    },
+    "native": {
+      "native_sessions_qualified": 0,
+      "omni_spawns": 0,
+      "omni_delegated": 0,
+      "proof_credit": false,
+      "reason": "Deterministic hosted consumer tests do not constitute native/Omni executions."
+    },
+    "fixture_boundary": "Initial records and test identities are controlled inputs. New Planner alternatives come from canonical simulations before real choice/prepare/review. Existing cross-domain/protocol fixtures retain their declared seeded choice/prepared-input limits; domain commands and receipts are real.",
+    "finance": "Apply Finance policy/authority and canonical receipt shape remain preserved. Procurement edits in the cross-domain gate are nonfinancial; no PR/PO approval, amount-policy relaxation or awaiting-approval result is invented.",
+    "active_scope": "Only the three authorized executor/binding product files and the new test namespace are changed. UI52/producers61 are not edited; external proposal files are inert documentation.",
+    "compiler_guards": "Functional PASS is not compiler/guards PASS. The separate authorized 45 request/check evidence remains required.",
+    "integration": "60 must reconcile the exact source through its authorized integration lane and run required affected final-candidate checks; this file grants no successor authority or sf2-stack write permission."
+  },
+  "historical_accounting": {
+    "historical_22": "Historical 22-test evidence remains separate context and is not counted in or promoted by this 27-test R2 qualification.",
+    "W1": "The prior failed hosted selection remains a failed historical attempt; it is not rewritten as PASS.",
+    "R2": "27 current-source PASS = 8 new + 19 existing revalidated, including the three cross-domain tests."
+  }
+}

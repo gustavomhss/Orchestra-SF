@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h.c12-recovery-closure.validation-index.v1",
+  "state": "FINAL_SOURCE_SELECTION_PASS",
+  "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+  "W_tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+  "current": "r2/result.json",
+  "attempts": [
+    "r1/result.json",
+    "b0/result.json",
+    "r2/result.json"
+  ],
+  "baseline": {
+    "expected_failure": true,
+    "test_and_helper_equal_final": true,
+    "original_product_blobs": [
+      "65d2a0518427b1454aa665ef744bce7564ed8049",
+      "90c3e981d8418c562342660bd3d56d03f9995383",
+      "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+    ],
+    "observation": "Base accepted the mutated payload under original claimed digest/key; fixed source rejects before linking original receipt."
+  },
+  "current_observations": [
+    {
+      "marker": "SF_C12_FIRST_CASE_SAVE",
+      "value": {
+        "caseId": "b12fab16-1d41-4d10-ae6c-c9a1ade61c73",
+        "version": 1,
+        "originalResultDigest": "ea8ed0c40ddba6d78730509a4cf484eb1b4b6d859f3fa58918e0641185102ed1",
+        "durableCaseCount": 1,
+        "mutationCount": 1,
+        "reopen": "SQLite-and-services",
+        "reseeded": false
+      }
+    },
+    {
+      "marker": "SF_C12_FIRST_REGISTER",
+      "value": {
+        "caseRef": {
+          "id": "6b388c7f-0d75-423e-b356-a22d6e3f269c",
+          "incarnation": "902696c2-d5f9-4e4d-ab99-6b1ff614d89c",
+          "version": 1
+        },
+        "originalDraftRef": "hot-topic-draft:5b25c9c7424cd8b76788424633a40a964b60cf6e718e684cf33a053be8f7d5e9",
+        "originalResultDigest": "06da5a94ba1e6066ab81cd2824523a6a816bf554d1f486fc1f1b641d433bd497",
+        "originalIntentEffects": 1,
+        "separateIntentEffects": 1,
+        "extraEffectsFromRecovery": 0,
+        "receipts": 0,
+        "reopen": "SQLite-and-services",
+        "reseeded": false,
+        "originalBodyRetained": true,
+        "minimalLookupQualified": false
+      }
+    },
+    {
+      "marker": "SF_C12_DOMAIN_RECOVERY",
+      "value": {
+        "receiptId": "1ca051bf-03dd-425d-a3f2-f220edfa3899",
+        "receiptDigest": "b42427ebc5d70297a3c5ee859ea24e018e878d792ecd7d7bc21c58737381c568",
+        "originalProofDigest": "35e5c13212f0fddef3959bf8a8cd1e9e5b32f9f82b853d9ad28aa24bf6cf48cf",
+        "originalCaseVersion": 4,
+        "reconciledCaseVersion": 6,
+        "domainEffects": 1,
+        "receiptCommits": 1,
+        "recoveryDispatches": 0,
+        "recoveredOriginalBytes": true,
+        "reopened": true,
+        "reseeded": false,
+        "financialApprovalCreated": false
+      }
+    },
+    {
+      "marker": "SF_C12_RECONCILIATION_RECOVERY",
+      "value": {
+        "originalReceiptDigest": "fe0c6fb04f8173eb45f845741a6d9fcfd0f9b704727d2460282454f3d066eff4",
+        "domainEffects": 1,
+        "reconciliations": 1,
+        "additionalWrites": 0,
+        "reopened": true
+      }
+    },
+    {
+      "marker": "SF_C12_ORIGINAL_INTENT",
+      "value": {
+        "cases": [
+          "command-values",
+          "expected-version",
+          "required-authority",
+          "choice-content",
+          "duplicate-choice",
+          "duplicate-change",
+          "domain-key",
+          "target-incarnation",
+          "policy",
+          "access-revision"
+        ],
+        "originalRequestVersionBound": true,
+        "originalReceiptDigest": "faef94e418f5f72e52521c634d6f32a5fe7bf2b8d340f10365158f52422fbbb9",
+        "redispatches": 0,
+        "allRefusalsBeforeReconciliation": true
+      }
+    },
+    {
+      "marker": "SF_C12_INDETERMINATE",
+      "value": {
+        "attempts": 1,
+        "receipts": 0,
+        "domainEffects": 0,
+        "redispatches": 0,
+        "recoveryOutcome": "original-receipt-unavailable",
+        "reopened": true
+      }
+    },
+    {
+      "marker": "SF_C12_DIRECT_RAW_RECEIPT",
+      "value": {
+        "receiptId": "e58a412f-c76b-4f81-9678-a3e3ff2a8fbe",
+        "receiptDigest": "0c6b205f959e83e4be621f332626f2d8016b09a61e025f7aec4b23f2113077b8",
+        "scopeDigest": "e95ca9121fcc4d44bf4beb817dc57951feb3d3d719f371eb144df92f9c481b46",
+        "target": "v1",
+        "domainExecutions": 1
+      }
+    },
+    {
+      "marker": "SF_C12_WRONG_SCOPE_REFUSED",
+      "value": {
+        "receiptId": "0423a67d-431e-458d-a01d-440ae416802b",
+        "rawReceiptDigest": "25232158420a02ad7a52c8db469090773a94b0c3d16126de76a0f88fff28c351",
+        "retainedScopeDigest": "81d4213863591c7ad409c10a6ad5cf0d12a6d091221e81921701413769f35cae",
+        "reopen": "SQLite-and-services",
+        "redispatch": 0,
+        "exposedReceipt": false
+      }
+    }
+  ],
+  "historical_22": {
+    "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+    "S": "114b1c3ff83a038b515f4afcf5db0fc795d59b6d",
+    "run": 43646007759,
+    "job": 132603819490,
+    "pass": 22,
+    "fail": 0,
+    "expectations": 570,
+    "files": 9,
+    "elapsed_seconds": 402.01,
+    "omni_spawns": 2,
+    "counted_in_current": false,
+    "source": "docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/c12-32-supplement/validation-04"
+  },
+  "functional_run_is_not_compiler": true,
+  "compiler": "../checks/REQUEST-45.json",
+  "qualification_transfer_to_stack": false,
+  "GLOBAL_RELEASE": false
+}

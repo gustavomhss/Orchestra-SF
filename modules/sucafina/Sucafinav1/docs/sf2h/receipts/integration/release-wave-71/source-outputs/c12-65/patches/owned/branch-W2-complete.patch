@@ -1,0 +1,1207 @@
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/apply.ts b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+index 65d2a0518427b1454aa665ef744bce7564ed8049..a2d08250d5104285dcdee87d86e39076535cf554 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+@@ -6,7 +6,7 @@
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { SfProductState, SfProductStatePort, SfStateResult } from "../contracts/state.ts"
+ import { caseApplicationState, reconcileDomainReceipt } from "./receipts.ts"
+-import { isReviewDigest, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
++import { isReviewDigest, preparedOriginalIntent, preparedOriginalIntentState, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type PreparedApplyRequest, type ReviewDigestFor } from "./receipt-review-binding.ts"
+ import { applicationAttempt, applicationAttemptKey, applicationAttempts } from "./application-attempt.ts"
+ 
+ /** Explicit human application; each domain commits its own receipt before the case is reconciled. */
+@@ -49,13 +49,17 @@
+       if (expectedCase.preparedChanges.filter((item) => item.receipt?.id === receipt.id).length !== 1 || expectedCase.preparedChanges.find((item) => item.receipt?.id === receipt.id)?.id !== change.id || expectedCase.receipts.filter((item) => item.id === receipt.id).length !== 1 || digestSfValue(expectedCase.receipts.find((item) => item.id === receipt.id)) !== digestSfValue(receipt)) return false
+       // This is a consistency fence for a receipt already authorized by its
+       // canonical reader, never a substitute for that reader's authority.
+-      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, change, receipt, reviewDigest, context.binding.principalRef)).catch(() => undefined)
++      const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, request, change, receipt, reviewDigest, context)).catch(() => undefined)
+       return input.host.requestFor(context) === source && !source.signal.aborted && retained?.status === "ok" && retained.value
+     }
+     if (lookup.value.state === "found") {
+-      const bound = await input.state.read(source, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)] : undefined).catch(() => undefined)
+-      if (!bound || bound.status !== "ok" || !bound.value) return { status: "unavailable", reason: "review-proof-unbound" }
+-      if (bound.value.commandDigest !== receiptReviewBinding(change, reviewDigest) || digestSfValue(bound.value.value) !== digestSfValue(lookup.value.receipt)) return { status: "conflict", reason: "review-proof-mismatch" }
++      const bound = await input.state.read(source, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? {
++        proof: state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)],
++        intent: preparedOriginalIntentState(state, request, change, state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? [], reviewDigest, context, applicationAttempts(state, request)),
++      } : undefined).catch(() => undefined)
++      if (!bound || bound.status !== "ok" || !bound.value?.proof) return { status: "unavailable", reason: "review-proof-unbound" }
++      if (bound.value.proof.commandDigest !== receiptReviewBinding(change, reviewDigest) || digestSfValue(bound.value.proof.value) !== digestSfValue(lookup.value.receipt)) return { status: "conflict", reason: "review-proof-mismatch" }
++      if (bound.value.intent !== "matched") return { status: bound.value.intent === "missing" ? "unavailable" : "conflict", reason: bound.value.intent === "missing" ? "original-intent-unverifiable" : "original-intent-mismatch" }
+       if (change.receipt) {
+         if (digestSfValue(change.receipt) !== digestSfValue(lookup.value.receipt)) return { status: "unavailable", reason: "receipt-identity-collision" }
+         if (!await input.host.revalidate(context) || !await input.authorizeCase(value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
+@@ -77,13 +81,13 @@
+       if (!latest || latest.status !== "ok") return { status: "unavailable", reason: "case-unavailable" }
+       const fresh = latest.value
+       const currentChange = fresh?.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId)
+-      if (!fresh || fresh.incarnation !== value.incarnation || fresh.version !== value.version || !fresh.participants.includes(context.binding.principalRef) || !currentChange || currentChange.state !== "planned" || digestSfValue(currentChange) !== digestSfValue(change)) return { status: "stale", reason: "case-changed" }
++      if (!fresh || fresh.incarnation !== value.incarnation || fresh.version !== value.version || !fresh.participants.includes(context.binding.principalRef) || fresh.preparedChanges.filter((item) => item.id === change.id).length !== 1 || digestSfValue(fresh.choices.filter((choice) => choice.id === request.choiceId)) !== choiceDigest || !currentChange || currentChange.state !== "planned" || digestSfValue(currentChange) !== digestSfValue(change)) return { status: "stale", reason: "case-changed" }
+       if (!await input.authorizeCase(fresh, context).catch(() => false) || !await input.authorizeApplication(request, currentChange, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
+-      const attempt = applicationAttempt(request, currentChange, reviewDigest, context.binding.principalRef, operation)
++      const attempt = { ...applicationAttempt(request, currentChange, reviewDigest, context.binding.principalRef, operation), originalIntent: preparedOriginalIntent(request, currentChange, fresh.choices.filter((choice) => choice.id === request.choiceId)[0]!, reviewDigest, context) }
+       // Persist before crossing the domain boundary. A crash before dispatch is
+       // conservatively unresolved; absence of a receipt never grants a new dispatch.
+       const reservation = { createdHere: false }
+-      const reserved = await input.state.transaction<ReturnType<typeof applicationAttempt> | null>(source, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: applicationAttemptKey(request), commandDigest: digestSfValue(attempt) }, async (state, authority) => {
++      const reserved = await input.state.transaction<typeof attempt | null>(source, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: applicationAttemptKey(request), commandDigest: digestSfValue(attempt) }, async (state, authority) => {
+         const actual = state.cases[value.id]
+         if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || applicationAttempts(state, request).length) return { commit: false, value: null }
+         // A provider may return a prior transaction without invoking this callback.
+@@ -140,7 +144,7 @@
+     const reconciledCase: DecisionCase = { ...fresh, version: fresh.version + 1, preparedChanges: changes, receipts: fresh.receipts.some((receipt) => receipt.id === observed.value.id) ? fresh.receipts : [...fresh.receipts, observed.value], sourceRefs: [...fresh.sourceRefs, result.evidence].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index), state: caseApplicationState(changes) }
+     const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: reconciliation.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
+       const actual = state.cases[value.id]
+-      if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || !receiptSnapshotMatches(state, change, observed.value, reviewDigest, context.binding.principalRef)) return { commit: false, value: false }
++      if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || !receiptSnapshotMatches(state, request, change, observed.value, reviewDigest, context)) return { commit: false, value: false }
+       state.cases[value.id] = reconciledCase
+       return { commit: true, value: true }
+     }).catch(() => undefined)
+@@ -153,12 +157,11 @@
+   }
+ }
+ 
+-function receiptSnapshotMatches(state: SfProductState, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, principalRef: string) {
+-  const stored = state.receipts[receipt.id]
+-  const proof = state.transactions[receiptProofTransactionKey(principalRef, change.target.id, change.idempotencyKey)]
+-  const matches = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.targetIncarnation === change.target.incarnation && item.idempotencyKey === change.idempotencyKey && item.principalRef === principalRef)
+-  const scope = change.target.surface === "dashboard" ? ["cases", "receipts"] : { namespaces: ["cases", "receipts"], domainSurface: change.target.surface }
+-  return matches.length === 1 && !!stored && !!proof && proof.namespace === "receipts" && proof.scopeDigest === digestSfValue(scope) && proof.principalRef === principalRef && proof.targetRef === change.target.id && proof.targetIncarnation === change.target.incarnation && proof.incarnation === state.incarnation && digestSfValue(stored) === digestSfValue(receipt) && proof.commandDigest === receiptReviewBinding(change, reviewDigest) && digestSfValue(proof.value) === digestSfValue(receipt)
++function receiptSnapshotMatches(state: SfProductState, request: PreparedApplyRequest, change: PreparedChange, receipt: CommandReceipt, reviewDigest: string, context: TrustedDomainContext) {
++  const proof = state.transactions[receiptProofTransactionKey(context.binding.principalRef, change.target.id, change.idempotencyKey)]
++  const choices = state.cases[request.caseRef.id]?.choices.filter((choice) => choice.id === request.choiceId) ?? []
++  return receiptProofMatches(state, change.target, receipt, context.binding.principalRef) && proof?.commandDigest === receiptReviewBinding(change, reviewDigest) &&
++    preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, applicationAttempts(state, request)) === "matched"
+ }
+ 
+ async function callDomain<T>(work: () => Promise<PortResult<T>>): Promise<PortResult<T>> {
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts b/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts
+index 90c3e981d8418c562342660bd3d56d03f9995383..a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts
+@@ -5,7 +5,8 @@
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { SfProductStatePort } from "../contracts/state.ts"
+ import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
+-import { isReviewDigest, receiptProofKey, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
++import { isReviewDigest, preparedOriginalIntentState, receiptProofKey, receiptProofMatches, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
++import { applicationAttempts } from "./application-attempt.ts"
+ 
+ /** The callbacks resolve current host authority and domain data; none are supplied by a capability caller. */
+ export function createSfPreparedApply(input: {
+@@ -43,6 +44,8 @@
+       if (!await input.authorizeLookup(request, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-access-unavailable" }
+       if (receipt.commandDigest !== request.commandDigest) return { status: "conflict", reason: "idempotency-content-changed" }
+       if (!await input.authorizeReceipt(receipt, request, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-access-unavailable" }
++      const retained = await input.state.read(source, "receipts", (state, authority) => sameAuthority(authority, context) && receiptProofMatches(state, { surface: request.surface, id: request.targetRef, incarnation: request.targetIncarnation }, receipt, authority.principalRef)).catch(() => undefined)
++      if (retained?.status !== "ok" || !retained.value || source.signal.aborted || !input.host.requestFor(context)) return { status: "unavailable", reason: "authoritative-receipt-changed" }
+       return { status: "ok", value: { state: "found", receipt: structuredClone(receipt) } }
+     },
+     executePrepared: async (incoming, context) => {
+@@ -53,25 +56,42 @@
+       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined).catch(() => undefined)
+       if (!current || current.status !== "ok") return { status: "unavailable", reason: "case-unavailable" }
+       const decision = current.value
+-      const change = decision?.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
+-      if (!decision || decision.incarnation !== request.caseRef.incarnation || decision.version < request.caseRef.version || !decision.participants.includes(context.binding.principalRef) || !decision.choices.some((choice) => choice.id === request.choiceId) || !change || (decision.version !== request.caseRef.version && !change.receipt)) return { status: "stale", reason: "case-changed" }
++      const changes = decision?.preparedChanges.filter((item) => item.id === request.changeId)
++      const choices = decision?.choices.filter((choice) => choice.id === request.choiceId)
++      const change = changes?.[0]
++      if (!decision || decision.incarnation !== request.caseRef.incarnation || decision.version < request.caseRef.version || !decision.participants.includes(context.binding.principalRef) || choices?.length !== 1 || changes?.length !== 1 || !change || change.choiceId !== request.choiceId || (decision.version !== request.caseRef.version && !change.receipt)) return { status: "stale", reason: "case-changed" }
+       if (!await input.authorizeCase(decision, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
+       const reviewDigest = input.reviewDigestFor(context, request, change)
+       if (!isReviewDigest(reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
+       const binding = receiptReviewBinding(change, reviewDigest)
++      const retainReceipt = async (receipt: CommandReceipt) => {
++        const retained = await input.state.read(source, "receipts", (state, authority) => {
++          const actual = state.cases[request.caseRef.id]
++          const selected = actual?.preparedChanges.filter((item) => item.id === request.changeId)
++          const attempts = applicationAttempts(state, request)
++          return sameAuthority(authority, context) && !!actual && actual.incarnation === request.caseRef.incarnation && actual.version >= request.caseRef.version && actual.participants.includes(authority.principalRef) && selected?.length === 1 && selected[0]!.choiceId === request.choiceId &&
++            (!selected[0]!.receipt || digestSfValue(selected[0]!.receipt) === digestSfValue(receipt)) && receiptProofMatches(state, change.target, receipt, authority.principalRef) &&
++            state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)]?.commandDigest === binding &&
++            (!attempts.length || preparedOriginalIntentState(state, request, selected[0]!, actual.choices.filter((choice) => choice.id === request.choiceId), reviewDigest, context, attempts) === "matched")
++        }).catch(() => undefined)
++        return retained?.status === "ok" && retained.value && !source.signal.aborted && !!input.host.requestFor(context)
++      }
+       const recorded = await input.state.read(source, "receipts", (state, authority) => {
+         if (!sameAuthority(authority, context)) return undefined
+         const prior = state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)]
+         const matching = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.idempotencyKey === change.idempotencyKey && item.targetIncarnation === change.target.incarnation && item.principalRef === authority.principalRef)
+-        return { prior, matching }
++        const attempts = applicationAttempts(state, request)
++        return { prior, matching, intent: attempts.length ? preparedOriginalIntentState(state, request, change, choices, reviewDigest, context, attempts) : undefined }
+       }).catch(() => undefined)
+       if (!recorded || recorded.status !== "ok" || !recorded.value || recorded.value.matching.length > 1) return { status: "unavailable", reason: "receipt-unavailable" }
++      if (recorded.value.intent && recorded.value.intent !== "matched") return { status: recorded.value.intent === "missing" ? "unavailable" : "conflict", reason: recorded.value.intent === "missing" ? "original-intent-unverifiable" : "original-intent-mismatch" }
+       const prior = recorded.value.prior
+       const stored = recorded.value.matching[0]
+       if (prior && prior.commandDigest !== binding) return { status: "conflict", reason: "idempotency-content-changed" }
+       if (prior && stored && digestSfValue(prior.value) === digestSfValue(stored)) {
+         if (change.receipt && digestSfValue(change.receipt) !== digestSfValue(stored)) return { status: "unavailable", reason: "receipt-identity-collision" }
+         if (!await input.authorizeReceipt(stored, { surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-access-unavailable" }
++        if (!await retainReceipt(stored)) return { status: "unavailable", reason: "receipt-authority-changed" }
+         return { status: "ok", value: structuredClone(stored) }
+       }
+       if (prior || stored) return { status: "unavailable", reason: "review-proof-unbound" }
+@@ -84,8 +104,11 @@
+       if (!id.trim()) return { status: "unavailable", reason: "receipt-identity-unavailable" }
+       const applied = await input.state.transaction<CommandReceipt | { existing: CommandReceipt } | { failure: "unavailable" | "conflict" } | null>(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
+         const actual = state.cases[request.caseRef.id]
+-        const selected = actual?.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
+-        if (!sameAuthority(authority, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !actual.choices.some((choice) => choice.id === request.choiceId) || !selected || selected.state !== "planned" || digestSfValue(selected) !== digestSfValue(change)) return { commit: false, value: null }
++        const selectedChanges = actual?.preparedChanges.filter((item) => item.id === request.changeId)
++        const selected = selectedChanges?.[0]
++        if (!sameAuthority(authority, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || selectedChanges?.length !== 1 || !selected || selected.choiceId !== request.choiceId || selected.state !== "planned" || digestSfValue(selected) !== digestSfValue(change) || digestSfValue(actual.choices.filter((choice) => choice.id === request.choiceId)) !== digestSfValue(choices)) return { commit: false, value: null }
++        const attempts = applicationAttempts(state, request)
++        if (attempts.length && preparedOriginalIntentState(state, request, selected, actual.choices.filter((choice) => choice.id === request.choiceId), reviewDigest, context, attempts) !== "matched") return { commit: false, value: null }
+         const actor = input.resolveActor(snapshot, context)
+         if (!actor || actor.id !== context.binding.principalRef || !input.verifyGrant(snapshot, request, selected, actor, context)) return { commit: false, value: null }
+         const prior = Object.values(state.receipts).filter((item) => item.surface === selected.target.surface && item.idempotencyKey === selected.idempotencyKey && item.targetIncarnation === selected.target.incarnation && item.principalRef === actor.id)
+@@ -109,11 +132,13 @@
+       if (applied?.status === "preview" && applied.value && "existing" in applied.value && applied.value.existing) {
+         const receipt = applied.value.existing
+         if (!await input.authorizeCase(decision, context).catch(() => false) || !await input.confirmHuman(request, change, context).catch(() => false) || !await input.authorizeReceipt(receipt, { surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-access-unavailable" }
++        if (!await retainReceipt(receipt)) return { status: "unavailable", reason: "receipt-authority-changed" }
+         return { status: "ok", value: receipt }
+       }
+       if (applied?.status === "preview" && applied.value && "failure" in applied.value && applied.value.failure) return { status: applied.value.failure, reason: "domain-application-rejected" }
+       if (!applied || applied.status !== "ok" || !applied.value || "failure" in applied.value || "existing" in applied.value) return { status: applied?.status === "conflict" ? "conflict" : "unavailable", reason: "domain-application-unavailable" }
+       if (!await input.authorizeCase(decision, context).catch(() => false) || !await input.confirmHuman(request, change, context).catch(() => false) || !await input.authorizeReceipt(applied.value, { surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "receipt-authority-changed" }
++      if (!await retainReceipt(applied.value)) return { status: "unavailable", reason: "receipt-authority-changed" }
+       return { status: "ok", value: applied.value }
+     },
+   }
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts b/modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts
+index 6987eddae37ae2c90fe03b2d8e81ea28e8b5221f..b8c6af0cd15dbafc70c543901ca922701748537a 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts
+@@ -1,5 +1,7 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
+-import type { PreparedChange } from "../contracts/decisions.ts"
++import type { DecisionCase, PreparedChange } from "../contracts/decisions.ts"
++import type { CommandReceipt } from "../contracts/context.ts"
++import type { SfProductState } from "../contracts/state.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ 
+ export type PreparedApplyRequest = { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }
+@@ -47,3 +49,44 @@
+ export function sameApplyRequest(left: PreparedApplyRequest, right: PreparedApplyRequest) {
+   return left.changeId === right.changeId && left.choiceId === right.choiceId && digestSfValue(left.caseRef) === digestSfValue(right.caseRef)
+ }
++
++/** Retained inside the existing application attempt; canonical receipt proofs remain raw. */
++export function preparedOriginalIntent(request: PreparedApplyRequest, change: PreparedChange, choice: DecisionCase["choices"][number], reviewDigest: string, context: TrustedDomainContext) {
++  return {
++    schema: "sf-prepared-original-intent-v1" as const,
++    request: structuredClone(request),
++    changeDigest: digestSfValue({ ...change, state: "planned", receipt: null }),
++    choiceDigest: digestSfValue(choice),
++    reviewBinding: receiptReviewBinding(change, reviewDigest),
++    binding: {
++      installationId: context.binding.installationId,
++      projectId: context.binding.projectId,
++      principalRef: context.binding.principalRef,
++      policyVersion: context.binding.policyVersion,
++      accessRevision: context.binding.accessRevision,
++    },
++  }
++}
++
++export function preparedOriginalIntentState(state: Readonly<SfProductState>, request: PreparedApplyRequest, change: PreparedChange, choices: readonly DecisionCase["choices"][number][], reviewDigest: string, context: TrustedDomainContext, entries: readonly SfProductState["transactions"][string][]) {
++  if (!entries.length) return "missing"
++  if (entries.length !== 1 || choices.length !== 1) return "mismatch"
++  const proof = entries[0]!
++  const attempt = proof.value
++  if (!attempt || typeof attempt !== "object" || Array.isArray(attempt) || !("originalIntent" in attempt)) return "missing"
++  const expected = preparedOriginalIntent(request, change, choices[0]!, reviewDigest, context)
++  return proof.namespace === "cases" && proof.scopeDigest === digestSfValue(["cases"]) && proof.incarnation === state.incarnation &&
++    proof.principalRef === context.binding.principalRef && proof.targetRef === request.caseRef.id && proof.targetIncarnation === request.caseRef.incarnation &&
++    proof.commandDigest === digestSfValue(attempt) && digestSfValue(attempt.originalIntent) === digestSfValue(expected) ? "matched" : "mismatch"
++}
++
++/** Shared raw-receipt fence. The domain reader must still revalidate current access. */
++export function receiptProofMatches(state: Readonly<SfProductState>, target: { surface: CommandReceipt["surface"]; id: string; incarnation: string }, receipt: CommandReceipt, principalRef: string) {
++  const stored = state.receipts[receipt.id]
++  const proof = state.transactions[receiptProofTransactionKey(principalRef, target.id, receipt.idempotencyKey)]
++  const matches = Object.values(state.receipts).filter((item) => item.surface === target.surface && item.targetIncarnation === target.incarnation && item.idempotencyKey === receipt.idempotencyKey && item.principalRef === principalRef)
++  const scope = target.surface === "dashboard" ? ["cases", "receipts"] : { namespaces: ["cases", "receipts"], domainSurface: target.surface }
++  return matches.length === 1 && !!stored && !!proof && proof.namespace === "receipts" && proof.scopeDigest === digestSfValue(scope) &&
++    proof.principalRef === principalRef && proof.targetRef === target.id && proof.targetIncarnation === target.incarnation && proof.incarnation === state.incarnation &&
++    digestSfValue(stored) === digestSfValue(receipt) && digestSfValue(proof.value) === digestSfValue(receipt)
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..342df1f422f2f73abda0f868816f6b61786ec979 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts
+@@ -0,0 +1,130 @@
++import { randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { AbsolutePath } from "@orchestra/core/schema"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { object } from "../../../runtime/contract.ts"
++import type { Application } from "../../../runtime/application.ts"
++import type { DecisionCasePort } from "../../../product/contracts/ports.ts"
++import type { SfStateNamespace } from "../../../product/contracts/state.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
++import type { SfProductGrant } from "../../../product/integration/product-authority.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
++import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
++import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
++import { createSfDashboardHttp } from "../../../../../../apps/cli/src/sucafina-product/dashboard-http.ts"
++
++export const firstSavePeriod = { start: "2026-01-01", end: "2026-12-31" }
++const at = "2026-11-14T00:00:00Z"
++// Hot Topic record evidence is an as-of-day scope, separate from the case horizon.
++export const firstSaveRecordPeriod = { start: at.slice(0, 10), end: at.slice(0, 10) }
++const origin = "https://c12-first-save.example.test"
++type Retained = { directory: string; installationId: string }
++type CaseDraft = Parameters<DecisionCasePort["draft"]>[0]
++
++/** Only the initial business record and authenticated actors are fixture inputs.
++ * Cases and draft outcomes are created by their production producers. The fault
++ * drops an acknowledgement after the real C08 transaction has returned: it never
++ * supplies a successful result, alters a callback, or writes an outcome itself. */
++export async function openFirstSaveFixture(retained?: Retained) {
++  const directory = retained?.directory ?? await mkdtemp(join(await realpath(tmpdir()), "sf-c12-first-save-"))
++  if (!retained) await chmod(directory, 0o700)
++  const installationId = retained?.installationId ?? randomUUID()
++  const database = await openLocalStore(directory)
++  const persistence = createSfSourcePersistence({ persistence: database, enumerate: enumerateSfSources,
++    createId: randomUUID, projectScope: createSfSourceScopeProjector(() => at) })
++  if (!retained) {
++    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
++    await persistence.transaction("dashboard", async (snapshot) => {
++      snapshot.data.hotTopics = [{ id: "topic", action: "Original action", owner: "Operations", due: "2026-12-01", priority: "normal", status: "open", notes: "" }]
++      return { commit: true, value: undefined }
++    })
++  }
++  const permitted = new Set(["alice", "bob"])
++  const authenticate: Application["authenticate"] = async (request, selected) => {
++    const id = request.headers.get("authorization")?.replace(/^Bearer /, "")
++    if (!id || !permitted.has(id) || !selected) return null
++    return { id, canWrite: true, roles: [{ surface: selected.surface,
++      role: selected.surface === "dashboard" ? "admin" : selected.surface === "planner" ? "finance" : "buyer" }] }
++  }
++  const environment: Application["environment"] = async () => ({ at, id: randomUUID,
++    directory: [{ id: "alice", name: "Alice" }, { id: "bob", name: "Bob" }] })
++  const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
++  const authority = createSfProductAuthority({
++    identity: () => ({ installationId, hostId: "c12-first-save", projectId: "project", location: { directory: AbsolutePath.make(directory) } }),
++    installationId, origin, policyVersion: "policy", persistence, authenticate, environment, createId: randomUUID, now: Date.now,
++    grants: ["alice", "bob"].map((principalRef): SfProductGrant => ({ principalRef, namespaces: ["cases", "preferences", "receipts"],
++      operations: ["sf_case_draft", "sf_case_read", "sf_dashboard_read"], humanActions: ["decisions.edit"] })),
++    commandIdentity: async (request, operation) => {
++      const key = request.headers.get("idempotency-key")
++      return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
++    },
++    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
++    providerGeneration: async () => undefined, authorizeDocument: async () => undefined, proposalCoverageWrites, dashboardHostWrites,
++  })
++  const acknowledgements: { namespace: SfStateNamespace; key: string; value: unknown; storageVersion: number }[] = []
++  let fault: { namespace: SfStateNamespace; key: string } | undefined
++  const transaction = authority.state.transaction
++  authority.state.transaction = async (request, command, work) => {
++    const result = await transaction(request, command, work)
++    if (fault && command.namespace === fault.namespace && request.headers.get("idempotency-key") === fault.key && result.status === "ok") {
++      acknowledgements.push({ namespace: command.namespace, key: fault.key, value: structuredClone(result.value), storageVersion: result.storageVersion })
++      fault = undefined
++      throw new Error("C12_TEST_ACKNOWLEDGEMENT_LOST_AFTER_REAL_COMMIT")
++    }
++    return result
++  }
++  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
++  const http = createSfDashboardHttp({ origin, mount: "/sf", runtime: () => ({ authority,
++    dashboard: business.dashboardServices, decisions: business.dashboardDecisions }) })
++  const request = (mode: string, payload: unknown, key: string = randomUUID(), actor = "alice") => new Request(`${origin}/sf/dashboard?sf=${mode}`, {
++    method: "POST", headers: { authorization: `Bearer ${actor}`, origin, "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify(payload),
++  })
++  const draftCase = async (payload: CaseDraft, key: string, actor = "alice") => {
++    const source = request("workbench-command", { operation: "sf_case_draft", input: payload }, key, actor)
++    const digest = digestSfValue(payload)
++    const admitted = await authority.ui.admit(source, "sf_case_draft", digest)
++    if (admitted.status !== "ok") return admitted
++    try {
++      if (!await authority.ui.validate(admitted.value, "sf_case_draft", digest)) throw new Error("Real case admission was not consumed")
++      return await business.cases.draft(payload, admitted.value)
++    } finally { authority.ui.finish(admitted.value) }
++  }
++  const read = async <T>(work: (context: TrustedDomainContext) => Promise<T>) => {
++    const payload = { page: "Hot Topics & Actions" }
++    const admitted = await authority.ui.admit(request("dashboard-workbench", payload), "sf_dashboard_read", digestSfValue(payload))
++    if (admitted.status !== "ok") throw new Error(`Real Dashboard read admission failed: ${admitted.reason}`)
++    try {
++      if (!await authority.ui.validate(admitted.value, "sf_dashboard_read", digestSfValue(payload))) throw new Error("Real Dashboard read admission was not consumed")
++      return await work(admitted.value)
++    } finally { authority.ui.finish(admitted.value) }
++  }
++  let closed = false
++  return {
++    retained: { directory, installationId }, authority, business, persistence, request, draftCase, read, acknowledgements,
++    loseNextCommitAcknowledgement: (namespace: SfStateNamespace, key: string) => { fault = { namespace, key } },
++    revoke: (principal: string) => { permitted.delete(principal) }, restore: (principal: string) => { permitted.add(principal) },
++    http: async (mode: string, payload: unknown, key: string = randomUUID(), actor = "alice") => {
++      const response = await http(request(mode, payload, key, actor), "dashboard")
++      if (!response) throw new Error(`Dashboard production route unavailable: ${mode}`)
++      return { status: response.status, body: object(await response.json()) }
++    },
++    state: async () => {
++      const current = await authority.state.read(request("state-observation", {}), "cases", (state) => structuredClone(state))
++      if (current.status !== "ok") throw new Error(`Canonical C08 state unavailable: ${current.status}`)
++      return current.value
++    },
++    durable: async () => {
++      if (!persistence.transactionAll) throw new Error("Real SQLite transactionAll is required")
++      return persistence.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
++    },
++    close: async (remove = true) => {
++      if (!closed) { closed = true; business.dispose(); await database.dispose() }
++      if (remove) await rm(directory, { recursive: true, force: true })
++    },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4f5a40d55224203b613bf12cc79f9b01aa8aa104 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts
+@@ -0,0 +1,125 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { object, rows } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { HotTopicDraftRequest } from "../../../product/decisions/hot-topic-draft.ts"
++import { firstSavePeriod, firstSaveRecordPeriod, openFirstSaveFixture } from "./first-save-fixture.ts"
++
++const caseInput = { objective: "Recover a first operational draft", horizon: firstSavePeriod, currency: "USD", criteria: ["Operational action"], sourceRefs: [] }
++
++test("C12 first case save reopens the original C08 creation after its committed acknowledgement is lost", async () => {
++  let fixture = await openFirstSaveFixture()
++  try {
++    const key = randomUUID()
++    fixture.loseNextCommitAcknowledgement("cases", key)
++    const lost = await fixture.draftCase(caseInput, key)
++    expect(lost).toEqual({ status: "unavailable", reason: "product-state-unavailable" })
++    expect(fixture.acknowledgements).toHaveLength(1)
++    const original = fixture.acknowledgements[0]!.value
++    const persisted = await fixture.state()
++    expect(Object.values(persisted.cases)).toEqual([original])
++    expect(Object.keys(persisted.transactions)).toHaveLength(1)
++    expect(Object.values(persisted.receipts)).toHaveLength(0)
++    const beforeReopen = await fixture.durable()
++    const retained = fixture.retained
++    const oldAuthority = fixture.authority
++    await fixture.close(false)
++    fixture = await openFirstSaveFixture(retained)
++    expect(fixture.authority).not.toBe(oldAuthority)
++    expect(await fixture.durable()).toEqual(beforeReopen)
++
++    const recovered = await fixture.draftCase(caseInput, key)
++    expect(recovered).toEqual({ status: "ok", value: original })
++    expect(await fixture.draftCase(caseInput, key)).toEqual(recovered)
++    expect(await fixture.durable()).toEqual(beforeReopen)
++    expect(await fixture.draftCase({ ...caseInput, objective: "Mutated first intent" }, key))
++      .toEqual({ status: "conflict", reason: "idempotency-content-changed" })
++    fixture.revoke("alice")
++    expect((await fixture.draftCase(caseInput, key)).status).toBe("denied")
++    expect(await fixture.durable()).toEqual(beforeReopen)
++    fixture.restore("alice")
++    expect(await fixture.draftCase(caseInput, key)).toEqual(recovered)
++    expect(await fixture.durable()).toEqual(beforeReopen)
++    console.info("SF_C12_FIRST_CASE_SAVE", JSON.stringify({ caseId: object(original).id, version: object(original).version,
++      originalResultDigest: digestSfValue(original), durableCaseCount: 1, mutationCount: 1, reopen: "SQLite-and-services", reseeded: false }))
++  } finally { await fixture.close() }
++})
++
++test("C12 lost first Hot Topic register recovers its exact original result after reopen without choosing a later identical draft", async () => {
++  let fixture = await openFirstSaveFixture()
++  try {
++    const created = await fixture.draftCase(caseInput, randomUUID())
++    if (created.status !== "ok") throw new Error(`Real case creation failed: ${created.reason}`)
++    const caseRef = { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }
++    expect(created.value.choices).toHaveLength(0)
++    expect(created.value.receipts).toHaveLength(0)
++    const issued = await fixture.http("dashboard-hot-topic-source", { recordId: "topic", period: firstSaveRecordPeriod })
++    expect(issued).toMatchObject({ status: 200, body: { status: "ok" } })
++    const source = object(issued.body.value)
++    if (!source.target || !source.targetEvidence) throw new Error("Real Dashboard source producer did not issue a target")
++    const draft: HotTopicDraftRequest = { caseRef, target: source.target as HotTopicDraftRequest["target"],
++      targetEvidence: source.targetEvidence as HotTopicDraftRequest["targetEvidence"], sourceRefs: [source.targetEvidence as HotTopicDraftRequest["targetEvidence"]],
++      fields: { action: "Two explicit intents with identical text", owner: "Operations", due: "2026-12-01", priority: "normal", notes: "Private operational rationale" }, expectedVersion: 0 }
++    const official = await fixture.durable()
++    const key = randomUUID()
++    fixture.loseNextCommitAcknowledgement("preferences", key)
++    const lost = await fixture.http("dashboard-hot-topic-draft", draft, key)
++    expect(lost).toEqual({ status: 503, body: { status: "unavailable", reason: "hot-topic-draft-unavailable" } })
++    expect(fixture.acknowledgements).toHaveLength(1)
++    const original = object(fixture.acknowledgements[0]!.value)
++    expect(original.version).toBe(1)
++    if (typeof original.draftRef !== "string") throw new Error("The real commit did not persist a draft identity")
++    const originalDraftRef = original.draftRef
++    const afterFirst = await fixture.state()
++    const firstTransaction = Object.values(afterFirst.transactions).filter((item) => item.namespace === "preferences")
++    expect(firstTransaction).toHaveLength(1)
++    expect(firstTransaction[0]!.value).toEqual(original)
++    expect(afterFirst.cases[caseRef.id]).toEqual(created.value)
++    expect(Object.values(afterFirst.receipts)).toHaveLength(0)
++
++    // A different explicitly submitted key creates a different real registration.
++    // Recovery of the original key must not select this later, equal-looking draft.
++    const second = await fixture.http("dashboard-hot-topic-draft", draft, randomUUID())
++    expect(second.status).toBe(200)
++    expect(object(second.body.value).draftRef).not.toBe(originalDraftRef)
++    const durable = await fixture.durable()
++    expect(rows(durable.dashboard.data.hotTopics)).toEqual(rows(official.dashboard.data.hotTopics))
++    expect(durable.dashboard.versions).toEqual(official.dashboard.versions)
++    expect(durable.dashboard.audit).toEqual(official.dashboard.audit)
++    const retained = fixture.retained
++    const oldAuthority = fixture.authority
++    await fixture.close(false)
++    fixture = await openFirstSaveFixture(retained)
++    expect(fixture.authority).not.toBe(oldAuthority)
++    expect(await fixture.durable()).toEqual(durable)
++
++    expect(await fixture.http("dashboard-hot-topic-draft", { ...draft, fields: { ...draft.fields, notes: "Changed original body" } }, key))
++      .toEqual({ status: 409, body: { status: "conflict", reason: "idempotency-content-changed" } })
++    expect((await fixture.http("dashboard-hot-topic-draft", draft, key, "bob")).status).toBe(403)
++    fixture.revoke("alice")
++    expect((await fixture.http("dashboard-hot-topic-draft", draft, key)).status).toBe(403)
++    expect(await fixture.durable()).toEqual(durable)
++    fixture.restore("alice")
++
++    const recovered = await fixture.http("dashboard-hot-topic-draft", draft, key)
++    expect(recovered).toEqual({ status: 200, body: { status: "ok", value: original } })
++    expect(await fixture.http("dashboard-hot-topic-draft", draft, key)).toEqual(recovered)
++    const read = await fixture.read((context) => fixture.business.dashboardDecisions.drafts.readCurrent({ caseRef, draftRef: originalDraftRef }, context))
++    expect(read).toMatchObject({ status: "ok", value: { draftRef: originalDraftRef, version: 1, fields: draft.fields, principalRef: "alice" } })
++    const listed = await fixture.read((context) => fixture.business.dashboardDecisions.drafts.list({ caseRef }, context))
++    if (listed.status !== "ok") throw new Error(`Authorized draft list failed: ${listed.reason}`)
++    expect(listed.value).toHaveLength(2)
++    expect(listed.value.filter((item) => item.draftRef === originalDraftRef)).toHaveLength(1)
++    const after = await fixture.state()
++    expect(Object.values(after.transactions).filter((item) => item.namespace === "preferences")).toHaveLength(2)
++    expect(after.cases[caseRef.id]).toEqual(created.value)
++    expect(Object.values(after.receipts)).toHaveLength(0)
++    expect(await fixture.durable()).toEqual(durable)
++    // This proves exact retained-body recovery at the producer/HTTP boundary.
++    // The historical UI retains only caseRef/key before draftRef; its missing
++    // lookup is an external owner proposal, not a capability supplied by this test.
++    console.info("SF_C12_FIRST_REGISTER", JSON.stringify({ caseRef, originalDraftRef, originalResultDigest: digestSfValue(original),
++      originalIntentEffects: 1, separateIntentEffects: 1, extraEffectsFromRecovery: 0, receipts: 0,
++      reopen: "SQLite-and-services", reseeded: false, originalBodyRetained: true, minimalLookupQualified: false }))
++  } finally { await fixture.close() }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..73de004b6054b6092fa2c42ab7fbc62960001782 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts
+@@ -0,0 +1,101 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
++import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
++import { openPlannerRecoveryFixture } from "./planner-fixture.ts"
++
++test("C12 recovery refuses material or choice replacement even when the original claimed digests and keys are retained", async () => {
++  let fixture = await openPlannerRecoveryFixture()
++  try {
++    const ready = await fixture.prepare()
++    expect(ready.change.requiredAuthority).toContain("finance")
++    fixture.faults.afterReceiptCommit = () => { throw new Error("C12_LOST_RESPONSE_FOR_ADVERSARIAL_RECOVERY") }
++    expect((await fixture.apply(ready.original)).status).toBe("unavailable")
++    const committed = await fixture.observe()
++    const original = Object.values(committed.state.receipts)[0]!
++    expect(original.result.ok).toBe(true)
++    const retained = { directory: fixture.directory, caseRef: ready.request.caseRef }
++    await fixture.close(false)
++    fixture = await openPlannerRecoveryFixture(retained)
++    const mutations: { name: string; edit: (value: DecisionCase) => void; reason: string }[] = [
++      { name: "command-values", edit: (value) => { value.preparedChanges[0]!.operation.command.values.f0 = 777 }, reason: "original-intent-mismatch" },
++      { name: "expected-version", edit: (value) => { value.preparedChanges[0]!.expectedVersion++ }, reason: "original-intent-mismatch" },
++      { name: "required-authority", edit: (value) => { value.preparedChanges[0]!.requiredAuthority = [] }, reason: "original-intent-mismatch" },
++      { name: "choice-content", edit: (value) => { value.choices[0]!.reason = "Replacement choice after the actual effect" }, reason: "original-intent-mismatch" },
++      { name: "duplicate-choice", edit: (value) => { value.choices = [...value.choices, structuredClone(value.choices[0]!)] }, reason: "prepared-change-unavailable" },
++      { name: "duplicate-change", edit: (value) => { value.preparedChanges = [...value.preparedChanges, structuredClone(value.preparedChanges[0]!)] }, reason: "prepared-change-unavailable" },
++    ]
++    for (const mutation of mutations) {
++      await fixture.editCase(mutation.edit)
++      const attacked = await fixture.observe()
++      expect(attacked.decision!.preparedChanges[0]!.operation.commandDigest).toBe(ready.change.operation.commandDigest)
++      expect(attacked.decision!.preparedChanges[0]!.idempotencyKey).toBe(ready.change.idempotencyKey)
++      const refused = await fixture.apply(ready.original, { mode: "recover", operationId: `c12-${mutation.name}` })
++      expect(refused).toEqual({ status: mutation.reason === "original-intent-mismatch" ? "conflict" : "unavailable", reason: mutation.reason })
++      expect("value" in refused).toBe(false)
++      expect(await fixture.observe()).toEqual(attacked)
++      expect(attacked.decision!.receipts).toHaveLength(0)
++      await fixture.editCase((value) => ({ ...structuredClone(committed.decision!), version: value.version + 1 }))
++    }
++    await fixture.editCase((value) => { value.preparedChanges[0]!.idempotencyKey += "-other"; value.preparedChanges[0]!.operation.idempotencyKey = value.preparedChanges[0]!.idempotencyKey })
++    const changedKey = await fixture.observe()
++    expect(await fixture.apply(ready.original, { mode: "recover" })).toEqual({ status: "unavailable", reason: "original-receipt-unavailable" })
++    expect(await fixture.apply(ready.original)).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
++    expect(await fixture.observe()).toEqual(changedKey)
++    await fixture.editCase((value) => ({ ...structuredClone(committed.decision!), version: value.version + 1 }))
++    await fixture.editCase((value) => { value.preparedChanges[0]!.target.incarnation += "-recreated" })
++    const changedTarget = await fixture.observe()
++    expect((await fixture.apply(ready.original, { mode: "recover" })).status).toBe("denied")
++    expect(await fixture.observe()).toEqual(changedTarget)
++    await fixture.editCase((value) => ({ ...structuredClone(committed.decision!), version: value.version + 1 }))
++    const restored = await fixture.observe()
++    for (const authority of ["policy", "revision"] as const) {
++      fixture.access[authority] = "2"
++      const refused = await fixture.apply(ready.original, { mode: "recover" })
++      expect(refused.status).toBe("denied")
++      expect("value" in refused).toBe(false)
++      expect(await fixture.observe()).toEqual(restored)
++      fixture.access[authority] = "1"
++    }
++    const wrongVersion = { ...ready.original, caseRef: { ...ready.original.caseRef, version: ready.original.caseRef.version + 1 } }
++    expect(await fixture.apply(wrongVersion, { mode: "recover" })).toEqual({ status: "conflict", reason: "original-intent-mismatch" })
++    expect(await fixture.observe()).toEqual(restored)
++    expect(await fixture.apply(ready.original, { mode: "recover" })).toEqual({ status: "ok", value: original })
++    const result = await fixture.observe()
++    expect(result.domain).toEqual(committed.domain)
++    expect(result.state.receipts).toEqual(committed.state.receipts)
++    expect(result.decision!.receipts).toEqual([original])
++    expect(fixture.counters).toMatchObject({ dispatch: 0, domainExecutions: 0, receiptCommits: 0, reservationCommits: 0, caseReconciliations: 1 })
++    console.info("SF_C12_ORIGINAL_INTENT", JSON.stringify({ cases: [...mutations.map((value) => value.name), "domain-key", "target-incarnation", "policy", "access-revision"], originalRequestVersionBound: true, originalReceiptDigest: digestSfValue(original), redispatches: 0, allRefusalsBeforeReconciliation: true }))
++  } finally { await fixture.close() }
++}, 180000)
++
++test("C12 a lost reservation without a receipt remains indeterminate and never redispatches after reopen", async () => {
++  let fixture = await openPlannerRecoveryFixture()
++  try {
++    const ready = await fixture.prepare()
++    const initial = await fixture.observe()
++    expect(await fixture.apply(ready.original, { mode: "recover" })).toEqual({ status: "unavailable", reason: "original-receipt-unavailable" })
++    expect(await fixture.observe()).toEqual(initial)
++    fixture.faults.afterReservationCommit = () => { throw new Error("C12_LOST_RESERVATION_ACK_BEFORE_DOMAIN_DISPATCH") }
++    expect(await fixture.apply(ready.original)).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
++    const reserved = await fixture.observe()
++    expect(applicationAttempts(reserved.state, ready.request)).toHaveLength(1)
++    expect(reserved.domain).toEqual(initial.domain)
++    expect(reserved.decision).toEqual(initial.decision)
++    expect(Object.values(reserved.state.receipts)).toHaveLength(0)
++    expect(fixture.counters).toMatchObject({ dispatch: 0, domainExecutions: 0, receiptCommits: 0, reservationCommits: 1, caseReconciliations: 0 })
++    const retained = { directory: fixture.directory, caseRef: ready.request.caseRef }
++    await fixture.close(false)
++    fixture = await openPlannerRecoveryFixture(retained)
++    expect(await fixture.observe()).toEqual(reserved)
++    for (const operationId of ["c12-original-key-retry", "c12-another-ui-key"]) {
++      expect(await fixture.apply(ready.original, { operationId })).toEqual({ status: "unavailable", reason: "application-indeterminate-reconciliation-required" })
++      expect(await fixture.apply(ready.original, { mode: "recover", operationId })).toEqual({ status: "unavailable", reason: "original-receipt-unavailable" })
++    }
++    expect((await fixture.apply(ready.original, { principal: "other" })).status).toBe("denied")
++    expect(await fixture.observe()).toEqual(reserved)
++    expect(fixture.counters).toMatchObject({ dispatch: 0, domainExecutions: 0, receiptCommits: 0, reservationCommits: 0, caseReconciliations: 0 })
++    console.info("SF_C12_INDETERMINATE", JSON.stringify({ attempts: 1, receipts: 0, domainEffects: 0, redispatches: 0, recoveryOutcome: "original-receipt-unavailable", reopened: true }))
++  } finally { await fixture.close() }
++}, 180000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8843c5b219a358226873650b4e053f8643d4fc73 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts
+@@ -0,0 +1,264 @@
++import { randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { Actor, Snapshot } from "../../../runtime/contract.ts"
++import { object, rows } from "../../../runtime/contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { resolve } from "../../../src/identity.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { PreparedCommand } from "../../../product/contracts/context.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageAssessment, CostCoverageBasis, DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { ScenarioOperation, ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { DomainPortHost, PlannerSourceHost, PreparedApplyPort } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { createPreparedExecution } from "../../../product/decisions/apply.ts"
++import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
++import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
++import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
++import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
++import { createDecisionPreparedReview } from "../../../product/decisions/prepared-review.ts"
++import type { AdmittedApply, PreparedApplyRequest } from "../../../product/decisions/receipt-review-binding.ts"
++import { createDecisionReviewAdmission } from "../../../product/decisions/review-admission.ts"
++import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
++import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
++import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
++import { createSfSourcePersistence, sfScopedSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
++import { createSfSourceScopeProjector, sfPlannerProjectionSelector } from "../../../product/integration/source-projections.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
++import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
++import { plannerPreparedRevision, preparePlannerMutation } from "../../../product/planner/prepared.ts"
++import { createPlannerPreparedReview } from "../../../product/planner/prepared-review.ts"
++import { createPlannerProduct } from "../../../product/planner/product.ts"
++import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
++import { plannerAt, plannerPeriod, plannerSnapshot } from "../wp03/planner-fixture.ts"
++
++type CaseRef = PreparedApplyRequest["caseRef"]
++type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
++const origin = "https://c12-recovery.test"
++const january = { start: "2027-01-01", end: "2027-01-31" }
++const creationTarget = { ref: "c12-case-create", incarnation: "c12-case-create-v1" }
++const selectedOperation: ScenarioOperation = { kind: "replace", targetRef: "line:1", amount: 42, currency: "USD", period: january }
++
++/** Real private C08/SQLite and Planner. Test identities/one-field routing are explicit;
++ * no installed HTTP, native session, financial approval or process restart is claimed. */
++export async function openPlannerRecoveryFixture(retained?: { directory: string; caseRef: CaseRef }) {
++  const directory = retained?.directory ?? await mkdtemp(join(await realpath(tmpdir()), "sf-c12-planner-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  if (!retained) {
++    const initial = plannerSnapshot()
++    initial.data.versions = ["v0", "v1"].map((id) => ({ id, name: id, year: 2027, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(100) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++    await store.transaction("planner", async (snapshot) => { Object.assign(snapshot, initial); return { commit: true, value: undefined } })
++  }
++  const access = { allowed: true, revision: "1", policy: "1", sourceAllowed: true, now: Date.parse(plannerAt) }
++  const counters = { dispatch: 0, domainExecutions: 0, receiptCommits: 0, reservationCommits: 0, intentCommits: 0, caseReconciliations: 0 }
++  const faults: Partial<Record<"afterReceiptCommit" | "afterReservationCommit" | "afterIntentCommit" | "afterCaseReconcile", () => void | Promise<void>>> = {}
++  const trigger = async (name: keyof typeof faults) => { const work = faults[name]; delete faults[name]; await work?.() }
++  const lifecycle = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => plannerAt), createId: randomUUID })
++  for (const surface of ["dashboard", "planner", "procurement"] as const) await lifecycle.initializeSources(surface)
++  const linked = (snapshot: Snapshot) => Object.values(object(object(snapshot.data.__sfProductV1).cases)).reduce<number>((count, value) => { const receipts = object(value).receipts; return count + (Array.isArray(receipts) ? receipts.length : 0) }, 0)
++  const committed = async (before: { receipts: number; linked: number }, snapshot: Snapshot, value: unknown) => {
++    if (Object.keys(object(object(snapshot.data.__sfProductV1).receipts)).length > before.receipts) { counters.receiptCommits++; await trigger("afterReceiptCommit") }
++    if (linked(snapshot) > before.linked) { counters.caseReconciliations++; await trigger("afterCaseReconcile") }
++    const schema = object(object(value).value).schema
++    if (schema === "sf-c12-application-intent-v1" || schema === "sf-decision-application-attempt-v1") { counters.reservationCommits++; await trigger("afterReservationCommit") }
++    if (schema === "sf-prepared-original-intent-v1") { counters.intentCommits++; await trigger("afterIntentCommit") }
++  }
++  const persistence: typeof lifecycle = { ...lifecycle,
++    transaction: async (surface, work, options) => {
++      const captured: { snapshot?: Snapshot; before?: { receipts: number; linked: number } } = {}
++      const result = await lifecycle.transaction(surface, async (snapshot, blobs) => {
++        const before = { receipts: Object.keys(object(object(snapshot.data.__sfProductV1).receipts)).length, linked: linked(snapshot) }
++        const outcome = await work(snapshot, blobs)
++        if (surface === "dashboard" && outcome.commit) { captured.snapshot = structuredClone(snapshot); captured.before = before }
++        return outcome
++      }, options)
++      if (captured.snapshot && captured.before) await committed(captured.before, captured.snapshot, result)
++      return result
++    },
++    transactionAll: async (work, options) => {
++      if (!lifecycle.transactionAll) throw new Error("C12 requires real SQLite transactionAll")
++      const captured: { snapshot?: Snapshot; before?: { receipts: number; linked: number } } = {}
++      const result = await lifecycle.transactionAll(async (snapshots) => {
++        const before = { receipts: Object.keys(object(object(snapshots.dashboard.data.__sfProductV1).receipts)).length, linked: linked(snapshots.dashboard) }
++        const outcome = await work(snapshots)
++        if (outcome.commit) { captured.snapshot = structuredClone(snapshots.dashboard); captured.before = before }
++        return outcome
++      }, options)
++      if (captured.snapshot && captured.before) await committed(captured.before, captured.snapshot, result)
++      return result
++    },
++  }
++  const intents = new WeakMap<Request, { operation: string; digest: string; key: string }>()
++  const payloads = new WeakMap<TrustedUiContext, { action: SfHumanAction; payload: unknown }>()
++  const contexts: TrustedUiContext[] = []
++  const authorize = async (request: Request) => access.allowed && intents.has(request) && ["finance", "other"].includes(request.headers.get("authorization") ?? "")
++    ? { installationId: "i", projectId: "p", principalRef: request.headers.get("authorization")!, accessRevision: access.revision, policyVersion: access.policy } : undefined
++  const actions: SfHumanAction[] = ["decisions.portfolio.read", "decisions.choose", "decisions.prepare-changes", "decisions.apply", "decisions.edit"]
++  const ui = createSfUiAuthority({ authorize, privateCommands: actions.map((action) => `sf-human:${action}`), createId: randomUUID, now: () => access.now,
++    commandIdentity: async (request, operation, digest) => { const intent = intents.get(request); return intent?.operation === operation && intent.digest === digest ? digestSfValue({ operation, key: intent.key }) : undefined } })
++  const human = createSfHumanAuthority({ origin, ui })
++  const requestFor = (operation: string, payload: unknown, key: string, principal: string) => {
++    const request = new Request(`${origin}/decisions`, { method: "POST", headers: { authorization: principal, origin, "content-type": "application/json" }, body: JSON.stringify(payload) })
++    intents.set(request, { operation, digest: digestSfValue(payload), key }); return request
++  }
++  const admit = async (action: SfHumanAction, payload: unknown, key: string = randomUUID(), principal = "finance") => {
++    const value = await human.admit(requestFor(`sf-human:${action}`, payload, key, principal), action, payload)
++    if (value.status !== "ok") throw new Error(`Human admission: ${value.reason}`)
++    contexts.push(value.value); payloads.set(value.value, { action, payload: structuredClone(payload) }); return value.value
++  }
++  const admitOperation = async (operation: string, payload: unknown, key: string = randomUUID(), principal = "finance") => {
++    const value = await ui.admit(requestFor(operation, payload, key, principal), operation, digestSfValue(payload))
++    if (value.status !== "ok" || !await ui.validate(value.value, operation, digestSfValue(payload))) throw new Error("UI admission unavailable")
++    contexts.push(value.value); return value.value
++  }
++  const host: DomainPortHost = { persistence,
++    authenticate: async (request, context) => { const identity = await authorize(request); return identity && access.sourceAllowed ? resolve(identity.principalRef, [...context!.roleMap], (group) => group === "finance-group") : null },
++    environment: async () => ({ at: plannerAt, id: randomUUID, directory: [] }), requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined,
++    revalidate: (context) => context.kind === "ui" ? ui.revalidate(context) : Promise.resolve(false),
++  }
++  const identity = (context: TrustedDomainContext): Actor => ({ id: context.binding.principalRef, roles: ["finance"], canWrite: true, assigned: [], domains: [] })
++  const scopeFor = (snapshot: Snapshot, context: TrustedDomainContext) => ({ principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, recordType: "planner-version", recordId: "v1", selector: sfPlannerProjectionSelector(snapshot, identity(context)) })
++  const currentCase: { ref?: CaseRef } = { ref: retained?.caseRef }
++  const issuedRefs: RecordEvidence[] = []
++  const coverage = new Map<string, CostCoverageAssessment>()
++  const basis: CostCoverageBasis = { id: "c12-coverage", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: issuedRefs }
++  let resolveForecastSource: PlannerSourceHost["resolveForecastSource"] | undefined
++  const domainPlanner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async (reference, context) => {
++    const assessment = coverage.get(reference)
++    const source = await resolveForecastSource?.(reference, context)
++    return assessment && source?.status === "ok" && assessment.evaluatedSourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(source.value.evidence))
++      ? { status: "ok", value: { coverageRef: reference, basis, assessment } } : { status: "unavailable", reason: "coverage-unavailable" }
++  } })
++  resolveForecastSource = domainPlanner.sources.resolveForecastSource
++  const state = createSfProductState({ persistence, authorize, createId: randomUUID, resolveTarget: async (request, snapshot, namespace, targetRef, command) => {
++    if (namespace === "cases" && targetRef === creationTarget.ref) return { incarnation: creationTarget.incarnation }
++    if (namespace === "cases") { const value = object(object(object(snapshot.data.__sfProductV1).cases)[targetRef]); return typeof value.incarnation === "string" ? { incarnation: value.incarnation } : undefined }
++    if (namespace !== "receipts" || command.domainSurface !== "planner" || targetRef !== "v1" || !access.sourceAllowed) return undefined
++    const planner = persistence.currentSnapshots?.()?.planner
++    const matches = Object.values(planner?.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === command.targetIncarnation && entry.scope.recordId === targetRef && entry.scope.recordType === "planner-version" && entry.scope.principalRef === request.headers.get("authorization") && entry.scope.policyVersion === access.policy && entry.scope.accessRevision === access.revision)
++    const physical = planner?.sfSources?.records[JSON.stringify(["planner-version", targetRef])]
++    return matches.length === 1 && physical?.alive && physical.incarnation === matches[0]!.sourceIncarnation ? { incarnation: matches[0]!.incarnation } : undefined
++  } })
++  const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
++  const verifySources = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => {
++    for (const ref of refs) { if (ref.kind !== "record") return false; const source = await domainPlanner.sources.resolveForecastSource(ref.refId, context); if (source.status !== "ok" || digestSfValue(source.value.evidence) !== digestSfValue(ref)) return false }
++    return host.revalidate(context)
++  }
++  const evidence: BusinessContextService = { resolve: async (ref, context) => ({ ref, state: await verifySources([ref], context) ? "fresh" : "revoked", accessRevision: context.binding.accessRevision, checkedAt: plannerAt }), context: async ({ refs }, context) => Promise.all(refs.map((ref) => evidence.resolve(ref, context))), recall: async () => [], emitFromLedger: async () => { throw new Error("Native memory is outside this fixture") } }
++  const operationIdentity = (context: TrustedDomainContext) => context.kind === "ui" ? ui.operationIdentity(context) : undefined
++  const verifier = createPlannerOperationVerifier({ host, planner: domainPlanner.planner, sources: domainPlanner.sources, scenarioInputs: domainPlanner.scenarioInputs })
++  const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity, authorizeCase, verifyScenarioOperations: async (value, context) => (await Promise.all(value.alternatives.map((alternative) => verifier(alternative.scenario, context)))).every(Boolean), evidence, createId: randomUUID, now: () => plannerAt })
++  const storedCase = async () => {
++    const context = await admit("decisions.portfolio.read", { caseRef: currentCase.ref })
++    const result = await state.read(ui.requestFor(context)!, "cases", (value) => currentCase.ref ? value.cases[currentCase.ref.id] : undefined)
++    if (result.status !== "ok" || !result.value) throw new Error("C12 case unavailable")
++    return { value: result.value, storageVersion: result.storageVersion, request: ui.requestFor(context)! }
++  }
++  const editCase = async (work: (value: DecisionCase) => DecisionCase | void) => {
++    const current = await storedCase(); const next = structuredClone(current.value); const edited = work(next) ?? next
++    if (edited.version === current.value.version) edited.version++
++    const result = await state.transaction(current.request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: current.value.id, targetIncarnation: current.value.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(edited) }, async (value) => { value.cases[current.value.id] = edited; return { commit: true, value: edited } })
++    if (result.status !== "ok") throw new Error(`C12 fixture case edit: ${result.status}`)
++    return edited
++  }
++  const caseCoverage = createDecisionCoverageAccess({ state, host, authorizeCase, verifyEvidence: (inventory, assessment, context) => verifySources([...inventory.sourceRefs, ...assessment.evaluatedSourceRefs], context) })
++  const sources: PlannerSourceHost = { ...domainPlanner.sources, resolveForecastCoverage: (reference, context) => reference.startsWith("case-coverage:") ? caseCoverage(reference, context) : domainPlanner.sources.resolveForecastCoverage(reference, context) }
++  const results = createSfDecisionResultStore({ state, host, authorizeCase, verifySources: (_value, refs, context) => verifySources(refs, context), createId: randomUUID, now: () => plannerAt })
++  const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: domainPlanner.planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
++  const planner = createPlannerPort({ host, sources, scenarios, evidence })
++  const readSnapshot = () => persistence.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++  const prepareOne = async (operation: ScenarioOperation, context: TrustedDomainContext) => {
++    if (digestSfValue(operation) !== digestSfValue(selectedOperation)) return undefined
++    const source = await domainPlanner.sources.resolveForecastSource(issuedRefs[1]!.refId, context)
++    if (source.status !== "ok") return undefined
++    const snapshot = await readSnapshot()
++    const target = { surface: "planner" as const, type: "planner-version", id: "v1", incarnation: source.value.evidence.target.incarnation, version: source.value.evidence.target.version, fields: source.value.evidence.target.fields, period: plannerPeriod, observedAt: plannerAt }
++    const produced = preparePlannerMutation({ snapshot, actor: identity(context), environment: { at: plannerAt, id: randomUUID, directory: [] }, context, target, evidence: source.value.evidence, scope: scopeFor(snapshot, context), command: { page: "OPEX", action: "save", id: "line", version: snapshot.versions["v1:lines:line"]?.version ?? 0, values: { versionId: "v1", f0: operation.amount } }, operationId: "c12-planner-edit", idempotencyKey: "c12-planner-edit" })
++    const line = produced?.preview && rows(produced.preview.lines).find((item) => item.id === "line")
++    const projection = await domainPlanner.planner.compareForecast({ baseRef: source.value.evidence.refId, candidateRef: source.value.evidence.refId, period: plannerPeriod, currency: "USD" }, context)
++    if (!produced || !line || !Array.isArray(line.f) || typeof line.f[0] !== "number" || projection.status !== "ok") return undefined
++    const command: PreparedCommand = { id: "c12-planner-edit", target, command: produced.command, expectedVersion: produced.command.version, idempotencyKey: "c12-planner-edit", commandDigest: produced.mutation.commandDigest, requiredAuthority: ["finance"], preview: { context: projection.value.baseline.context, version: target.version, engineVersion: "planner-runtime-v1", components: [], missing: [], values: [{ id: "line:1:forecast", value: line.f[0], currency: "USD", period: january, granularity: "month", sourceRefs: [source.value.evidence], drilldown: source.value.evidence, evidenceState: "confirmed" }] } }
++    return { command, targetEvidence: source.value.evidence }
++  }
++  const actionFor = (operation: string): SfHumanAction | undefined => operation === "record-choice" ? "decisions.choose" : operation === "prepare-changes" ? "decisions.prepare-changes" : undefined
++  const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-recovery-proof" })
++  const mutations = createDecisionMutations({ state, host, planner, sources, authorizeCase, operationIdentity,
++    authorizeMutation: async (operation, payload, context) => { const action = actionFor(operation); return !!action && human.authorize(context, action, payload) },
++    verifyMutation: (snapshot, operation, payload, context) => { const action = actionFor(operation); return !!action && context.kind === "ui" && ui.matchesIntent(context, `sf-human:${action}`, digestSfValue(payload)) && access.sourceAllowed && issuedRefs.every((ref) => { const projection = projectPlannerSource(snapshot, identity(context), ref.target.recordId); return !!projection && digestSfValue({ versionId: ref.target.recordId, projection }) === ref.target.projectionDigest }) },
++    confirmChoice: async (ref, alternativeId, context) => { const intent = context.kind === "ui" ? payloads.get(context) : undefined; return intent?.action === "decisions.choose" && object(intent.payload).alternativeId === alternativeId && digestSfValue(object(intent.payload).caseRef) === digestSfValue(ref) && human.authorize(context, intent.action, intent.payload) },
++    resolveQuestion: unavailable, resolveAnswer: unavailable, confirmAnswer: async () => false,
++    resolveChoiceValues: async (_ref, request, context) => { const compared = await planner.compareScenarios(request, context); return compared.status === "ok" ? { status: "ok", value: request.criteria.map((criterionRef) => ({ criterionRef, value: compared.value.knownDifference, unit: "USD", currency: "USD", horizon: plannerPeriod })) } : compared },
++    readScenarioResult: (resultRef, context) => results.readHistoricalScenario({ resultRef }, context),
++    prepareDomainCommands: async (ref, choiceId, operations, context) => { const decision = (await storedCase()).value; const choice = decision.choices.find((item) => item.id === choiceId); if (!choice || decision.version !== ref.version || operations.length !== 1 || digestSfValue(choice.scenario.operations) !== digestSfValue(operations)) return { status: "denied", reason: "selection-unavailable" }; const prepared = await prepareOne(operations[0]!, context); return prepared ? { status: "ok", value: [{ ...prepared, preview: choice.result }] } : unavailable() }, createId: randomUUID, now: () => plannerAt,
++  })
++  const review = createDecisionPreparedReview({ state, cases, host, reviewDomain: createPlannerPreparedReview({ host, issueSource: domainPlanner.issueSource }) })
++  const admission = createDecisionReviewAdmission(ui)
++  const authorizeApplication = async (request: PreparedApplyRequest, context: TrustedDomainContext) => { const payload = context.kind === "ui" ? admission.payload(context, request) : undefined; return !!payload && access.sourceAllowed && human.authorize(context, "decisions.apply", payload) }
++  const authorizeLookup: Parameters<typeof createSfPreparedApply>[0]["authorizeLookup"] = async (request, context) => {
++    if (request.surface !== "planner" || request.targetRef !== "v1" || !access.sourceAllowed || !await host.revalidate(context)) return false
++    const source = await persistence.resolveScopedSource("planner", request.targetIncarnation, async (snapshot, scope) => scope.recordType === "planner-version" && scope.recordId === request.targetRef && scope.principalRef === context.binding.principalRef && scope.accessRevision === context.binding.accessRevision && scope.policyVersion === context.binding.policyVersion && digestSfValue(scope.selector) === digestSfValue(sfPlannerProjectionSelector(snapshot, identity(context))) && access.sourceAllowed && await host.revalidate(context))
++    return !!source && await host.revalidate(context)
++  }
++  const producer = createSfPreparedApply({ state, host, authorizeCase, authorizeLookup,
++    authorizeReceipt: async (receipt, lookup, context) => receipt.principalRef === context.binding.principalRef && receipt.surface === lookup.surface && receipt.targetIncarnation === lookup.targetIncarnation && receipt.idempotencyKey === lookup.idempotencyKey && receipt.commandDigest === lookup.commandDigest && await authorizeLookup(lookup, context),
++    confirmHuman: (request, _change, context) => authorizeApplication(request, context), reviewDigestFor: admission.get,
++    resolveActor: (_snapshot, context) => access.sourceAllowed ? identity(context) : undefined,
++    resolveMutation: (snapshot, change, actor, context) => {
++      const source = change.operation.preview.values[0]?.sourceRefs[0]
++      const mutation = source?.kind === "record" ? preparePlannerMutation({ snapshot, actor, environment: { at: plannerAt, id: randomUUID, directory: [] }, context, target: change.target, evidence: source, scope: scopeFor(snapshot, context), command: change.operation.command, operationId: change.operation.id, idempotencyKey: change.idempotencyKey })?.mutation : undefined
++      return mutation && { ...mutation, execute: (current, principal, environment) => { counters.domainExecutions++; return mutation.execute(current, principal, environment) } }
++    },
++    verifyGrant: (snapshot, _request, change, actor, context) => access.sourceAllowed && actor.id === context.binding.principalRef && actor.canWrite && actor.roles.includes("finance") && sfScopedSourceIdentity(snapshot, scopeFor(snapshot, context))?.incarnation === change.target.incarnation,
++    receiptVersion: (snapshot, change) => plannerPreparedRevision(snapshot, change.operation.command), environment: () => ({ at: plannerAt, id: randomUUID, directory: [] }), createId: randomUUID, now: () => plannerAt,
++  })
++  const measured: PreparedApplyPort = { ...producer, executePrepared: async (request, context) => { counters.dispatch++; return producer.executePrepared(request, context) } }
++  const execute = createPreparedExecution({ state, host, apply: measured, authorizeCase, authorizeApplication: (request, _change, context) => authorizeApplication(request, context), confirmApplication: authorizeApplication, operationIdentity, reviewDigestFor: admission.get,
++    revalidateProducer: async (request, context) => { const value = await review(request, context); return value.status === "ok" ? { status: "ok", value: { reviewDigest: value.value.reviewDigest } } : value },
++    classifyReceipt: async (receipt, change, context) => { if (!await authorizeLookup({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)) return undefined; const ref: Extract<BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", kind: "receipt", refId: receipt.id, installationId: "i", projectId: "p", evidenceLevel: "observed", refDigest: "", target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }; return { state: receipt.result.ok ? "applied" : "conflict", evidence: { ...ref, refDigest: digestSfEvidenceRef(ref) } } },
++  })
++  const admitApply = async (original: AdmittedApply, principal = "finance", key = "c12-human-apply") => { const context = await admit("decisions.apply", original, key, principal); admission.bind(context, original); return context }
++  const apply = async (original: AdmittedApply, options: { mode?: "apply" | "recover"; principal?: string; operationId?: string } = {}) => { const context = await admitApply(original, options.principal, options.operationId); return execute({ caseRef: original.caseRef, choiceId: original.choiceId, changeId: original.changeId }, context, options.mode) }
++  const prepare = async () => {
++    if (currentCase.ref) throw new Error("Reopened C12 composition must use its original prepared request")
++    const context = await admit("decisions.portfolio.read", { purpose: "c12-source-read" })
++    for (const [index, id] of ["v0", "v1"].entries()) { const source = await domainPlanner.issueSource(id, context); if (source.status !== "ok") throw new Error(source.reason); issuedRefs.push(source.value.evidence); coverage.set(source.value.evidence.refId, { basisId: basis.id, basisVersion: basis.version, alternativeId: index ? "selected" : "baseline", alternativeVersion: 1, currency: "USD", horizon: plannerPeriod, evaluatedSourceRefs: [source.value.evidence], coverageState: "pending", entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending", reason: "human-cost-classification-required" })), derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES], issues: ["human-cost-classification-required"] }) }
++    const draft = { objective: "Recover a separately reviewed January forecast edit", criteria: ["Known cost with unresolved coverage"], horizon: plannerPeriod, currency: "USD", sourceRefs: issuedRefs }
++    const created = await cases.draft(draft, await admitOperation("sf_case_draft", draft, "c12-first-case"))
++    if (created.status !== "ok") throw new Error(created.reason)
++    currentCase.ref = { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }
++    const requests: ScenarioRequest[] = [{ baseRef: issuedRefs[0]!.refId, operations: [], assumptions: [] }, { baseRef: issuedRefs[1]!.refId, operations: [selectedOperation], assumptions: [] }]
++    const simulated = await Promise.all(requests.map((request) => domainPlanner.planner.simulateScenario(request, context)))
++    const alternatives = simulated.map((result, index) => { if (result.status !== "ok") throw new Error(result.reason); return { id: index ? "selected" : "baseline", version: 1, title: index ? "January forecast edit" : "Keep forecast", scenario: requests[index]!, result: result.value } })
++    // Inputs only: both alternatives are canonical simulations. Choice, prepared
++    // command, review, admission, domain receipt and reconciliation are never seeded.
++    const comparing = await editCase((value) => ({ ...value, state: "comparing", alternatives, costCoverageBases: [basis] }))
++    const caseRef = { id: comparing.id, incarnation: comparing.incarnation, version: comparing.version }
++    const scenarioRefs: string[] = []
++    for (const alternative of alternatives) { const result = await results.write({ kind: "scenario", caseRef, result: alternative.result, requestDigest: digestSfValue(alternative.scenario), sourceRefs: alternative.result.sourceRefs, idempotencyKey: alternative.id }, context); if (result.status !== "ok") throw new Error(result.reason); scenarioRefs.push(result.value.resultRef) }
++    const criteria = comparing.criteria.map((criterion) => criterion.id)
++    const choiceRequest = { caseRef, alternativeId: "selected", alternativeVersion: 1, comparison: { scenarioRefs, criteria }, criteria, reason: "Review January separately; unresolved coverage confers no financial approval." }
++    const chosen = await mutations.recordChoice(choiceRequest, await admit("decisions.choose", choiceRequest, "c12-human-choice"))
++    if (chosen.status !== "ok") throw new Error(chosen.reason)
++    const choice = (await storedCase()).value.choices[0]!
++    const prepareRequest = { caseRef: chosen.value.caseRef, choiceId: choice.id, operations: [selectedOperation] }
++    const prepared = await mutations.prepareChanges(prepareRequest, await admit("decisions.prepare-changes", prepareRequest, "c12-human-prepare"))
++    if (prepared.status !== "ok") throw new Error(prepared.reason)
++    const change = (await storedCase()).value.preparedChanges[0]!
++    const request: PreparedApplyRequest = { caseRef: prepared.value.caseRef, choiceId: choice.id, changeId: change.id }
++    const reviewed = await review(request, context)
++    if (reviewed.status !== "ok") throw new Error(reviewed.reason)
++    return { request, reviewDigest: reviewed.value.reviewDigest, original: { ...request, reviewDigest: reviewed.value.reviewDigest }, change, choice, review: reviewed.value }
++  }
++  const observe = async () => { if (!persistence.transactionAll) throw new Error("SQLite snapshot unavailable"); return persistence.transactionAll(async (snapshots) => { const value = snapshots.dashboard.data.__sfProductV1 as SfProductState; return { commit: false, value: structuredClone({ state: value, decision: currentCase.ref ? value?.cases[currentCase.ref.id] : undefined, domain: snapshots.planner }) } }) }
++  return { directory, get caseRef() { return currentCase.ref }, access, counters, faults, persistence, state, ui, human, host, admission, cases, mutations, producer, execute, prepare, apply, admit, admitOperation, admitApply, storedCase, readCase: async () => (await storedCase()).value, readSnapshot, editCase, observe,
++    close: async (remove = true) => { contexts.forEach(human.finish); await store.dispose(); if (remove) await rm(directory, { recursive: true, force: true }) },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..11c4440c618030b6bb7476db11382a3246af33ac 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts
+@@ -0,0 +1,119 @@
++import { expect, test } from "bun:test"
++import { rows } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { receiptProofMatches } from "../../../product/decisions/receipt-review-binding.ts"
++import { openPlannerRecoveryFixture } from "./planner-fixture.ts"
++
++test("C12 direct producer requires private review admission and replays only its genuine original raw receipt", async () => {
++  const fixture = await openPlannerRecoveryFixture()
++  try {
++    const ready = await fixture.prepare()
++    const before = await fixture.observe()
++    // The authenticated body includes the real review digest. Its presence alone
++    // cannot replace createDecisionReviewAdmission's exact private binding.
++    const unbound = await fixture.admit("decisions.apply", ready.original, "unbound-original-review")
++    expect(await fixture.producer.executePrepared(ready.request, unbound))
++      .toEqual({ status: "needs-input", reason: "review-proof-required" })
++    expect(await fixture.observe()).toEqual(before)
++    expect(fixture.counters.domainExecutions).toBe(0)
++
++    const admitted = await fixture.admitApply(ready.original)
++    const applied = await fixture.producer.executePrepared(ready.request, admitted)
++    expect(applied.status).toBe("ok")
++    if (applied.status !== "ok") throw new Error(applied.reason)
++    const after = await fixture.observe()
++    const receipt = applied.value
++    const proof = Object.values(after.state.transactions).filter((entry) => entry.namespace === "receipts")
++    expect(proof).toHaveLength(1)
++    expect(proof[0]).toMatchObject({ namespace: "receipts", principalRef: "finance", targetRef: "v1",
++      targetIncarnation: ready.change.target.incarnation,
++      scopeDigest: digestSfValue({ namespaces: ["cases", "receipts"], domainSurface: "planner" }), value: receipt })
++    expect(proof[0]!.value).toEqual(receipt)
++    expect(Object.values(after.state.receipts)).toEqual([receipt])
++    expect(after.decision!.receipts).toHaveLength(0)
++    expect(after.decision!.preparedChanges[0]!.state).toBe("planned")
++    expect(after.domain.versions["v1:lines:line"]?.version).toBe(1)
++    expect(after.domain.audit.length).toBe(before.domain.audit.length + 1)
++    expect(rows(rows(after.domain.data.versions).find((value) => value.id === "v1")?.lines)[0]?.f)
++      .toEqual([42, ...Array(11).fill(100)])
++    expect(fixture.counters.domainExecutions).toBe(1)
++    expect(fixture.counters.receiptCommits).toBe(1)
++    expect(fixture.counters.caseReconciliations).toBe(0)
++    // These are read-only challenges to a real C08 proof, not fabricated receipts.
++    expect(receiptProofMatches(after.state, ready.change.target, receipt, "finance")).toBe(true)
++    expect(receiptProofMatches(after.state, { ...ready.change.target, id: "v0" }, receipt, "finance")).toBe(false)
++    expect(receiptProofMatches(after.state, { ...ready.change.target, incarnation: "recreated-target" }, receipt, "finance")).toBe(false)
++    expect(receiptProofMatches(after.state, ready.change.target, receipt, "other")).toBe(false)
++
++    expect(await fixture.producer.executePrepared(ready.request, await fixture.admitApply(ready.original, "finance", "fresh-authentic-retry")))
++      .toEqual(applied)
++    expect((await fixture.producer.executePrepared(ready.request, await fixture.admitApply(ready.original, "other", "different-actor"))).status)
++      .not.toBe("ok")
++    // A raw historical receipt without a retained outer intent cannot authorize
++    // case reconciliation from today's mutable choice or dispatch again.
++    expect(await fixture.apply(ready.original, { mode: "recover" }))
++      .toEqual({ status: "unavailable", reason: "original-intent-unverifiable" })
++    expect(fixture.counters.dispatch).toBe(0)
++    expect(await fixture.observe()).toEqual(after)
++    expect(fixture.counters.domainExecutions).toBe(1)
++    expect(fixture.counters.receiptCommits).toBe(1)
++    console.info("SF_C12_DIRECT_RAW_RECEIPT", JSON.stringify({ receiptId: receipt.id, receiptDigest: digestSfValue(receipt),
++      scopeDigest: proof[0]!.scopeDigest, target: proof[0]!.targetRef, domainExecutions: fixture.counters.domainExecutions }))
++  } finally { await fixture.close() }
++})
++
++test("C12 direct producer refuses a genuine domain receipt committed by C08 under the wrong proof scope", async () => {
++  let fixture = await openPlannerRecoveryFixture()
++  try {
++    const ready = await fixture.prepare()
++    const before = await fixture.observe()
++    const transaction = fixture.state.transaction
++    let alteredScope = 0
++    // Adversarial persistence contract: execute the real producer callback and
++    // real C08/domain transaction, but remove its cases scope once. C08 computes
++    // the wrong scope proof itself. No receipt value or transaction is seeded.
++    fixture.state.transaction = (request, command, work) => {
++      if (!alteredScope && command.namespace === "receipts" && command.domainSurface === "planner") {
++        alteredScope++
++        const wrongScope = { ...command }
++        delete wrongScope.additionalNamespaces
++        return transaction(request, wrongScope, work)
++      }
++      return transaction(request, command, work)
++    }
++    const rejected = await fixture.producer.executePrepared(ready.request, await fixture.admitApply(ready.original))
++    fixture.state.transaction = transaction
++    expect(alteredScope).toBe(1)
++    expect(rejected.status).toBe("unavailable")
++    expect("value" in rejected).toBe(false)
++    const committed = await fixture.observe()
++    const receipts = Object.values(committed.state.receipts)
++    const proofs = Object.values(committed.state.transactions).filter((entry) => entry.namespace === "receipts")
++    expect(receipts).toHaveLength(1)
++    expect(proofs).toHaveLength(1)
++    expect(proofs[0]!.value).toEqual(receipts[0])
++    expect(proofs[0]!.scopeDigest).toBe(digestSfValue({ namespaces: ["receipts"], domainSurface: "planner" }))
++    expect(receiptProofMatches(committed.state, ready.change.target, receipts[0]!, "finance")).toBe(false)
++    expect(committed.domain.versions["v1:lines:line"]?.version).toBe(1)
++    expect(committed.domain.audit.length).toBe(before.domain.audit.length + 1)
++    expect(committed.decision!.receipts).toHaveLength(0)
++    expect(fixture.counters.domainExecutions).toBe(1)
++    expect(fixture.counters.receiptCommits).toBe(1)
++
++    const directory = fixture.directory
++    const oldAuthority = fixture.ui
++    await fixture.close(false)
++    fixture = await openPlannerRecoveryFixture({ directory, caseRef: ready.request.caseRef })
++    expect(fixture.ui).not.toBe(oldAuthority)
++    expect(await fixture.observe()).toEqual(committed)
++    const recovered = await fixture.producer.executePrepared(ready.request, await fixture.admitApply(ready.original))
++    expect(recovered.status).toBe("unavailable")
++    expect("value" in recovered).toBe(false)
++    expect(await fixture.observe()).toEqual(committed)
++    expect(fixture.counters.domainExecutions).toBe(0)
++    expect(fixture.counters.receiptCommits).toBe(0)
++    console.info("SF_C12_WRONG_SCOPE_REFUSED", JSON.stringify({ receiptId: receipts[0]!.id,
++      rawReceiptDigest: digestSfValue(receipts[0]), retainedScopeDigest: proofs[0]!.scopeDigest,
++      reopen: "SQLite-and-services", redispatch: fixture.counters.domainExecutions, exposedReceipt: "value" in recovered }))
++  } finally { await fixture.close() }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..bd5f9327e4026ccf7efdfb263013ab182e3b46d0 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts
+@@ -0,0 +1,84 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
++import { receiptProofTransactionKey } from "../../../product/decisions/receipt-review-binding.ts"
++import { object, rows } from "../../../runtime/contract.ts"
++import { openPlannerRecoveryFixture } from "./planner-fixture.ts"
++
++test("C12 original domain receipt survives lost response, authority reopen and unrelated case edit without another dispatch", async () => {
++  let fixture = await openPlannerRecoveryFixture()
++  try {
++    const ready = await fixture.prepare()
++    const before = await fixture.observe()
++    expect(before.decision!.receipts).toHaveLength(0)
++    expect(ready.choice.costCoverage.coverageState).toBe("pending")
++    fixture.faults.afterReceiptCommit = () => { throw new Error("C12_LOST_RESPONSE_AFTER_DOMAIN_AND_RECEIPT_COMMIT") }
++    expect((await fixture.apply(ready.original)).status).toBe("unavailable")
++    const committed = await fixture.observe()
++    const originals = Object.values(committed.state.receipts)
++    expect(originals).toHaveLength(1)
++    const original = originals[0]!
++    expect(original.result.ok).toBe(true)
++    expect(committed.decision!.receipts).toHaveLength(0)
++    expect(committed.decision!.preparedChanges[0]!.receipt).toBeUndefined()
++    expect(committed.decision).toEqual(before.decision)
++    expect(committed.domain.versions["v1:lines:line"]!.version).toBe(1)
++    const version = rows(committed.domain.data.versions).find((value) => value.id === "v1")!
++    expect((object(rows(version.lines)[0]).f as number[])[0]).toBe(42)
++    expect(fixture.counters).toMatchObject({ dispatch: 1, domainExecutions: 1, receiptCommits: 1, reservationCommits: 1, caseReconciliations: 0 })
++    expect(applicationAttempts(committed.state, ready.request)).toHaveLength(1)
++    const originalProof = committed.state.transactions[receiptProofTransactionKey("finance", ready.change.target.id, ready.change.idempotencyKey)]!
++    expect(originalProof.value).toEqual(original)
++    const oldContext = await fixture.admitApply(ready.original)
++    const retained = { directory: fixture.directory, caseRef: ready.request.caseRef }
++    await fixture.close(false)
++    fixture = await openPlannerRecoveryFixture(retained)
++    expect(await fixture.observe()).toEqual(committed)
++    expect((await fixture.execute(ready.request, oldContext, "recover")).status).toBe("denied")
++    fixture.access.sourceAllowed = false
++    const revoked = await fixture.apply(ready.original, { mode: "recover" })
++    expect(revoked.status).toBe("denied")
++    expect("value" in revoked).toBe(false)
++    expect(await fixture.observe()).toEqual(committed)
++    fixture.access.sourceAllowed = true
++    expect((await fixture.apply(ready.original, { mode: "recover", principal: "other" })).status).toBe("denied")
++    const edited = await fixture.editCase((value) => { value.objective = "Unrelated human case edit retained during recovery" })
++    const recovered = await fixture.apply(ready.original, { mode: "recover", operationId: "c12-reopened-human" })
++    expect(recovered).toEqual({ status: "ok", value: original })
++    const reconciled = await fixture.observe()
++    expect(reconciled.domain).toEqual(committed.domain)
++    expect(reconciled.state.receipts).toEqual(committed.state.receipts)
++    expect(reconciled.state.transactions[receiptProofTransactionKey("finance", ready.change.target.id, ready.change.idempotencyKey)]).toEqual(originalProof)
++    expect(reconciled.decision!.objective).toBe(edited.objective)
++    expect(reconciled.decision!.version).toBe(edited.version + 1)
++    expect(reconciled.decision!.receipts).toEqual([original])
++    expect(reconciled.decision!.preparedChanges[0]!.receipt).toEqual(original)
++    expect(reconciled.decision!.choices).toEqual(committed.decision!.choices)
++    for (const mode of ["recover", "apply"] as const) expect(await fixture.apply(ready.original, { mode, operationId: `c12-repeat-${mode}` })).toEqual(recovered)
++    expect(await fixture.observe()).toEqual(reconciled)
++    expect(fixture.counters).toMatchObject({ dispatch: 0, domainExecutions: 0, receiptCommits: 0, reservationCommits: 0, caseReconciliations: 1 })
++    console.info("SF_C12_DOMAIN_RECOVERY", JSON.stringify({ receiptId: original.id, receiptDigest: digestSfValue(original), originalProofDigest: digestSfValue(originalProof), originalCaseVersion: ready.request.caseRef.version, reconciledCaseVersion: reconciled.decision!.version, domainEffects: 1, receiptCommits: 1, recoveryDispatches: 0, recoveredOriginalBytes: true, reopened: true, reseeded: false, financialApprovalCreated: false }))
++  } finally { await fixture.close() }
++}, 180000)
++
++test("C12 lost reconciliation response returns the original linked receipt after reopening without another case write", async () => {
++  let fixture = await openPlannerRecoveryFixture()
++  try {
++    const ready = await fixture.prepare()
++    fixture.faults.afterCaseReconcile = () => { throw new Error("C12_LOST_RESPONSE_AFTER_CASE_RECONCILIATION") }
++    expect(await fixture.apply(ready.original)).toEqual({ status: "unavailable", reason: "case-reconciliation-pending" })
++    const committed = await fixture.observe()
++    const original = Object.values(committed.state.receipts)[0]!
++    expect(original.result.ok).toBe(true)
++    expect(committed.decision!.receipts).toEqual([original])
++    expect(committed.decision!.preparedChanges[0]!.receipt).toEqual(original)
++    expect(fixture.counters).toMatchObject({ dispatch: 1, domainExecutions: 1, receiptCommits: 1, reservationCommits: 1, caseReconciliations: 1 })
++    const retained = { directory: fixture.directory, caseRef: ready.request.caseRef }
++    await fixture.close(false)
++    fixture = await openPlannerRecoveryFixture(retained)
++    for (const mode of ["recover", "apply"] as const) expect(await fixture.apply(ready.original, { mode })).toEqual({ status: "ok", value: original })
++    expect(await fixture.observe()).toEqual(committed)
++    expect(fixture.counters).toMatchObject({ dispatch: 0, domainExecutions: 0, receiptCommits: 0, reservationCommits: 0, caseReconciliations: 0 })
++    console.info("SF_C12_RECONCILIATION_RECOVERY", JSON.stringify({ originalReceiptDigest: digestSfValue(original), domainEffects: 1, reconciliations: 1, additionalWrites: 0, reopened: true }))
++  } finally { await fixture.close() }
++}, 180000)
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/ACK65.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/ACK65.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..d95482ea0183e2157542798afc760b7cf4566b5d 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/ACK65.json
+@@ -0,0 +1,108 @@
++{
++  "schema": "sf2h.c12-recovery-closure.ack.v1",
++  "mission": 65,
++  "recorded_at": "2026-11-15 02:11:22 UTC",
++  "state": "ACK65_ACCEPTED_BOUNDED_IMPLEMENTATION",
++  "campaign": "sf2h-integral-20261112",
++  "T0": "2026-11-13T04:01:10Z",
++  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
++  "control_sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
++  "package_blob": "2490a233b952cb81485481b11418595c8d318d7a",
++  "branch": "c12-recovery-proof",
++  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
++  "observed_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
++  "base_tree": "12594fd5a48f934847db717dd872d51776484296",
++  "lease_epoch": "c12-recovery-browser65",
++  "writer": "mission65 root; remote mutations only through GitHub MCP/CAS",
++  "session_id": null,
++  "session_limit": "Backend session ID not exposed. This execution has /root and three actual collaboration delegates; no external session ownership assumed.",
++  "model_effective": "GPT-6 Astra Pro (developer identity); exact backend model identifier not exposed",
++  "target": {
++    "branch": "sf2-stack",
++    "pr": 65,
++    "integrator": 60,
++    "initial_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
++    "latest_observed": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
++    "delta": "Reports48 C28 material/receipts; no changes to three owned C12 paths. Source remains assigned base; target authority stays60."
++  },
++  "write_paths": [
++    "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
++    "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
++    "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
++    "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/",
++    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/"
++  ],
++  "protected": {
++    "apply_preimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
++    "prepared_apply_preimage": "90c3e981d8418c562342660bd3d56d03f9995383",
++    "receipt_binding_preimage": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
++    "fixture": "33650407123163ea881eca9d4940fde364b27c54",
++    "other_producers": "52 UI/HTTP,61 Procurement source authority,59 runtime,45 compiler,60 integration; no edits"
++  },
++  "reads": {
++    "root": [
++      "AGENTS.md complete; no nested AGENTS in modules/sucafina path/subtree",
++      "pinned mission65, START, WORKFLOW, COMMON",
++      "S4-A all work_packages and metadata/dependencies/criteria",
++      "current sources and dependencies before any edit",
++      "ACK60/PR65 live authority; pending57 C12 obligations; current target delta"
++    ],
++    "delegated_complete_actor_keys": {
++      "recovery_audit": [
++        "contracts (all17)"
++      ],
++      "ci_contract": [
++        "proof_bindings (83)",
++        "evidence",
++        "execution_proofs (6)",
++        "mandatory_appendices; product-acceptance.md and resident-runtime.md fully"
++      ],
++      "pack_context": [
++        "resident",
++        "resident_ui",
++        "numeric_oracles",
++        "resident_handoff_interfaces",
++        "resident_gate_requirements"
++      ]
++    }
++  },
++  "criteria": [
++    "WP11.T01.CHK.01",
++    "WP11.T01.CHK.02",
++    "WP11.T01.DOD.01",
++    "WP11.T03.CHK.01",
++    "WP11.T03.CHK.02",
++    "WP11.T03.INV.01",
++    "WP11.T04.CHK.01",
++    "WP11.T04.CHK.02",
++    "WP11.T04.CHK.03",
++    "WP11.T04.DOD.01",
++    "WP11.T04.DOD.02",
++    "WP11.T04.INV.01",
++    "WP11.T04.INV.18",
++    "WP11.T04.QLT.01",
++    "WP11.T04.CMP.01",
++    "WP11.T04.SUC.01",
++    "C12-RECOVERY",
++    "C12-FINANCE-ORACLE-COMPATIBILITY",
++    "M31-C12-PROOF"
++  ],
++  "implementation_focus": [
++    "actual Planner/C12 effects with authentic private UI/human admission, canonical producer/prepared review, C08 and SQLite",
++    "first save/register, response loss after commit, service reopen and case reconciliation",
++    "exact original intent/receipt and no blind redispatch; changed choice/change/payload/key/principal/policy/incarnation/source grant negatives",
++    "source discrimination of generic receipt intent binding; preserve existing Finance behavior and all legacy assertions"
++  ],
++  "validation": {
++    "interface": "existing .ci-run.json/test-ci Actions only; unique ci-run-linux-* snapshot, exact request-only delta over frozen W",
++    "dedup": "coordinate and census existing lane before requests; reuse identical active run",
++    "compiler": "request45 only",
++    "run_count": 0,
++    "local_product_tests": 0,
++    "epic": 0,
++    "native_AM": "NOT_RUN",
++    "M31_financial_approval": "OPEN_EXTERNAL; no fabricated approval"
++  },
++  "release": "No source release before complete patch, dependency manifest and actual results. No source PASS transfer to sf2-stack or global C/D.",
++  "GLOBAL_RELEASE": false
++}

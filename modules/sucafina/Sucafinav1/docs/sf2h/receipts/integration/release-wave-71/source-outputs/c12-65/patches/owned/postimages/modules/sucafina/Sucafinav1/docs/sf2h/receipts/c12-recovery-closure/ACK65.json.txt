@@ -1,0 +1,108 @@
+{
+  "schema": "sf2h.c12-recovery-closure.ack.v1",
+  "mission": 65,
+  "recorded_at": "2026-11-15 02:11:22 UTC",
+  "state": "ACK65_ACCEPTED_BOUNDED_IMPLEMENTATION",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "control_sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "package_blob": "2490a233b952cb81485481b11418595c8d318d7a",
+  "branch": "c12-recovery-proof",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "observed_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "base_tree": "12594fd5a48f934847db717dd872d51776484296",
+  "lease_epoch": "c12-recovery-browser65",
+  "writer": "mission65 root; remote mutations only through GitHub MCP/CAS",
+  "session_id": null,
+  "session_limit": "Backend session ID not exposed. This execution has /root and three actual collaboration delegates; no external session ownership assumed.",
+  "model_effective": "GPT-6 Astra Pro (developer identity); exact backend model identifier not exposed",
+  "target": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "integrator": 60,
+    "initial_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "latest_observed": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "delta": "Reports48 C28 material/receipts; no changes to three owned C12 paths. Source remains assigned base; target authority stays60."
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+    "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/"
+  ],
+  "protected": {
+    "apply_preimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
+    "prepared_apply_preimage": "90c3e981d8418c562342660bd3d56d03f9995383",
+    "receipt_binding_preimage": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+    "fixture": "33650407123163ea881eca9d4940fde364b27c54",
+    "other_producers": "52 UI/HTTP,61 Procurement source authority,59 runtime,45 compiler,60 integration; no edits"
+  },
+  "reads": {
+    "root": [
+      "AGENTS.md complete; no nested AGENTS in modules/sucafina path/subtree",
+      "pinned mission65, START, WORKFLOW, COMMON",
+      "S4-A all work_packages and metadata/dependencies/criteria",
+      "current sources and dependencies before any edit",
+      "ACK60/PR65 live authority; pending57 C12 obligations; current target delta"
+    ],
+    "delegated_complete_actor_keys": {
+      "recovery_audit": [
+        "contracts (all17)"
+      ],
+      "ci_contract": [
+        "proof_bindings (83)",
+        "evidence",
+        "execution_proofs (6)",
+        "mandatory_appendices; product-acceptance.md and resident-runtime.md fully"
+      ],
+      "pack_context": [
+        "resident",
+        "resident_ui",
+        "numeric_oracles",
+        "resident_handoff_interfaces",
+        "resident_gate_requirements"
+      ]
+    }
+  },
+  "criteria": [
+    "WP11.T01.CHK.01",
+    "WP11.T01.CHK.02",
+    "WP11.T01.DOD.01",
+    "WP11.T03.CHK.01",
+    "WP11.T03.CHK.02",
+    "WP11.T03.INV.01",
+    "WP11.T04.CHK.01",
+    "WP11.T04.CHK.02",
+    "WP11.T04.CHK.03",
+    "WP11.T04.DOD.01",
+    "WP11.T04.DOD.02",
+    "WP11.T04.INV.01",
+    "WP11.T04.INV.18",
+    "WP11.T04.QLT.01",
+    "WP11.T04.CMP.01",
+    "WP11.T04.SUC.01",
+    "C12-RECOVERY",
+    "C12-FINANCE-ORACLE-COMPATIBILITY",
+    "M31-C12-PROOF"
+  ],
+  "implementation_focus": [
+    "actual Planner/C12 effects with authentic private UI/human admission, canonical producer/prepared review, C08 and SQLite",
+    "first save/register, response loss after commit, service reopen and case reconciliation",
+    "exact original intent/receipt and no blind redispatch; changed choice/change/payload/key/principal/policy/incarnation/source grant negatives",
+    "source discrimination of generic receipt intent binding; preserve existing Finance behavior and all legacy assertions"
+  ],
+  "validation": {
+    "interface": "existing .ci-run.json/test-ci Actions only; unique ci-run-linux-* snapshot, exact request-only delta over frozen W",
+    "dedup": "coordinate and census existing lane before requests; reuse identical active run",
+    "compiler": "request45 only",
+    "run_count": 0,
+    "local_product_tests": 0,
+    "epic": 0,
+    "native_AM": "NOT_RUN",
+    "M31_financial_approval": "OPEN_EXTERNAL; no fabricated approval"
+  },
+  "release": "No source release before complete patch, dependency manifest and actual results. No source PASS transfer to sf2-stack or global C/D.",
+  "GLOBAL_RELEASE": false
+}
