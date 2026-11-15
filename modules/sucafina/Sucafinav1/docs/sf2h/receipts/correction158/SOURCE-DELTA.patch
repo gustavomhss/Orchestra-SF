@@ -1,5 +1,441 @@
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/HANDOFF.md b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/HANDOFF.md
+index e993838..9933a29 100644
+--- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/HANDOFF.md
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/HANDOFF.md
+@@ -0,0 +1,32 @@
++# Missão158 · N14 / PR146 · terminal source handoff
++
++**Epoch:** `ux-native-n14-e2-browser158`. **Ator autenticado GitHub:** `gustavomhss`. **Modelo efetivo desta sessão:** `GPT-6`. **Astra runtime/session ID:** não expostos; não foi inferida sua criação nem a morte do writer anterior. **HEAD material:** `f308a54c6976edeaba2ed9ecc2a1ff34c8a7fd0c`, **tree:** `28c7191c9136f24669401727c5c1fbc08fb55abe`. **ACK:** `7ff7da570b492a303bb6afd2055647834b0c26ac`.
++
++## PRE-R01-146-004: confirmação causal e trabalho efetivamente aplicado
++
++O pré-blob de CAP06 `df71763074fccb7dd6f26efba762dffc32c42c65` continha `disabled: true` e `onInvoke: () => undefined`, portanto nenhum usuário conseguia seguir “Abrir estrutura”. CAP07 já existe na folha `people/structure/index.tsx@b67ed1ce...`, e a rota congelada `CAP07/entry` consta do manifesto. A fonte e a leitura de A10 foram reconciliadas contra `application.ts@a0deff8a...` e `dashboard-people.ts@de499e6d...`.
++
++O delta REAL em `SOURCE-DELTA.patch` preserva o bloqueio de clique inseguro e corrige a razão de negativa: se CAP06 estiver pronta e a projeção de contexto atual disser que `CAP07/dashboard` não pode ser lida (ou recurso marcado `denied`), o CTA explica `sf.common.noAccess`, sem deduzir permissão a partir de outro papel. Os cenários novos em `u03.spec.ts` exigem, em uma instalação isolada REAL fornecida por150, (a) acesso positivo com CTA habilitada, navegação CAP06→CAP07, read real HTTP200 e stamp idêntico, owner triple/ano/mês, teclado Enter, foco no documento destino, browser back e foco de retorno, reflow 320px; e (b) principal CAP06-only real, CTA desabilitada com mensagem de acesso negado, sem transição por teclado. Nenhum mock/intercept, skip ou sucesso sintético.
++
++## Bloqueio técnico exato — 132 precisa agir
++
++O código AINDA NÃO habilita a CTA para autorizados. O contrato atual `SfSurfaceProps` contém apenas `surfaceId,route` e `SfContextHandle` contém `state,generation,ready,reload,invalidate`; nenhum fornece builder ou callback para `SfHref`. `navigation-state/index.ts@dc264d8c...` oferece uma state machine `requestNativeTransition(href,cause)`, mas NÃO é um builder nem fornece um hook de páginas. O registro de 132 `route-registry.ts@c70c68f...` exporta manifesto/parser e NÃO concede owner-aware href. `SfHref` é opaco; concatenar `/orchestra/sf-people/structure` + query no leaf seria violaçao de NAV-01 e risco de owner misturado.
++
++`OWNER132-UNAPPLIED.patch` é **PATCH INERTE E NÃO APLICADO** (inclui hunk compartilhado, fora do allowlist). Propõe a assinatura exata `SfPeopleStructureNavPort.buildStructureHref({source:SfResolvedRoute<"CAP06">, ownerKey:SfOwnerKey, query:{year?,month?}, returnTo:SfHref}):SfHref|undefined` e `transitionStructure({href,ownerKey,returnTo,returnFocusActionId:"open-team-structure"}):Promise<SfNativeTransitionResult>`. O consumer proposto: exige `CAP07` read e resource `domain.page.CAP07` ready/operational, chama **builder F01** para CAP07/entry com mesmo owner/context, e depois a **transição autorizada** com revalidação atual, sem URL arbitrária; expõe loading/error real, devolução de foco por histórico e não usa route derivada de strings. A propriedade de bridge é opcional para manter negativa até implementação de 132. **O contrato proposto NÃO existe hoje e não deve ser anunciado como implementado.**
++
++132 deve avaliar o patch contra os contratos congelados, instalar uma implementação real host + F01 public route builder antes de aplicar o hunk da folha, revalidar grant/owner no `requestNativeTransition`, preservar período e `returnTo` sem texto livre, e comprovar reversão de foco. Nenhuma modificação compartilhada foi feita pelo158; qualquer ajuste de assinatura pertence a132. A falta dessa API não pode ser contornada com `navigate("/...")`, `new URL` no componente ou cast de `SfHref`.
++
++## SHAs e rastreabilidade
++
++- CAP06: `df71763074fccb7dd6f26efba762dffc32c42c65 → 71d5028ed37864ad98cb767687e354a32730cfbd`.
++- U03 E2E: `e9938385e1422480012c501af5c5ad783ad8dc39 → 7f9481c612026115cfff4513e0771eb301ea852a`.
++- CAP07 leaf: `b67ed1ced5497218b1c2c0d0011cafafed46eb72` (intocado).
++- Public F01 context type: `592eef8206c665a1fc908934e258b286fe85609e` (intocado).
++- Material source: `f308a54c6976edeaba2ed9ecc2a1ff34c8a7fd0c`, tree `28c7191c9136f24669401727c5c1fbc08fb55abe`.
++- Finding `PRE-R01-146-004`, `U03-AC02`, `U03-AC03`, NAV-01/READ-01/COPY-01 e Q02. `U03-AC01` preservado, sem reinterpretação de resultados.
++
++## Validação e encaminhamento terminal
++
++**NOT_RUN:** Playwright local/hosted, browser web/desktop, typecheck, build, codegen, guards, parser/validator; nenhum runner, dispatcher, workflow, reset/force ou merge executado por158. A mudança de razão de negativa e os testes são produto-fonte, **não** prova instalada, não fechamento de PRE-R01-146-004 e **não** GLOBAL_RELEASE. O owner da revisão deve reavaliar no integrado.
++
++**Próxima ação exata:** 132/PR65 receber `SOURCE-DELTA.patch`, `OWNER132-UNAPPLIED.patch` e `MANIFEST.json`, validar/installar builder/port F01 owner-bound, aplicar o hunk da folha e registrar consumer pre/post e ACK real; 149/PR107 executar só compilação/guards dos inputs integrados; 150/PR106 executar seletivamente `u03.spec.ts` com principals autorizada e CAP06-only reais, em web/desktop instalado e foco/back/reflow. Resultado P2 permanece aberto até recheck independente. Goal nativa pausada. A autoridade anterior segue revogada para futuras escritas; conclusão administrativa não implica encerramento técnico de outra sessão.
+
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/MANIFEST.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/MANIFEST.json
+index e993838..1ace8d9 100644
+--- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/MANIFEST.json
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/MANIFEST.json
+@@ -0,0 +1,99 @@
++{
++  "schema": "sf2h.correction-source-manifest.v1",
++  "mission": 158,
++  "epoch": "ux-native-n14-e2-browser158",
++  "branch": "sf-ux-n14",
++  "pr": 146,
++  "finding": "PRE-R01-146-004",
++  "ack": {
++    "commit": "7ff7da570b492a303bb6afd2055647834b0c26ac",
++    "tree": "85caffe7ff2fc6cb8310c32a5ae6d219a423a49c",
++    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/ACK.json",
++    "blob": "0824007749d18093bd6dbdc620bb6e2c2f93ac00"
++  },
++  "source": {
++    "prepared_head": "03b54332774164d9fa2f32000a4130001fb56f62",
++    "prepared_tree": "f182b61209246ff7c9d9d17563f993e06dc05d76",
++    "base_for_material": "7ff7da570b492a303bb6afd2055647834b0c26ac",
++    "material_head": "f308a54c6976edeaba2ed9ecc2a1ff34c8a7fd0c",
++    "material_tree": "28c7191c9136f24669401727c5c1fbc08fb55abe",
++    "files": [
++      {
++        "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
++        "pre_blob": "df71763074fccb7dd6f26efba762dffc32c42c65",
++        "post_blob": "71d5028ed37864ad98cb767687e354a32730cfbd",
++        "effect": "server-authorized CAP07 denied reason; CTA deliberately fail-closed until 132's real route builder"
++      },
++      {
++        "path": "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
++        "pre_blob": "e9938385e1422480012c501af5c5ad783ad8dc39",
++        "post_blob": "7f9481c612026115cfff4513e0771eb301ea852a",
++        "effect": "real installed owner keyboard/route/back/focus + separate CAP06-only denied principal"
++      }
++    ],
++    "unchanged_input_blobs": {
++      "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx": "b67ed1ced5497218b1c2c0d0011cafafed46eb72",
++      "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/session.ts": "5404abc6ea17e598eb571b71aaa059d7e2dea433",
++      "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts": "592eef8206c665a1fc908934e258b286fe85609e",
++      "packages/schema/src/sucafina/context.ts": "423050658692902ddb94358574762906fc06ccff",
++      "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts": "dc264d8c97163922134d09285e1c8d3a38027760",
++      "modules/sucafina/Sucafinav1/runtime/application.ts@C60": "a0deff8a3b272019f472aa2f93499d1940a78370",
++      "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts@C60": "de499e6d34af826add34bee4125bcfba4e57ddb8",
++      "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts@sf2-stack": "c70c68fee7eb3e944c432ad636ef9ba30571b425"
++    }
++  },
++  "source_producer": {
++    "observed_candidate": "8094e599e3d18609e269548d24619a3246fbc735",
++    "application_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
++    "people_renderer_blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
++    "delta": "NO_PRODUCER_WRITE"
++  },
++  "consumer": {
++    "integrator": 132,
++    "pr": 65,
++    "base_snapshot": "8094e599e3d18609e269548d24619a3246fbc735",
++    "consumer_ack": "PENDING_NOT_CLAIMED",
++    "shared_owner_seam": "native F01 buildSameOwnerHref + authorized transition + return/focus; no public port exposed"
++  },
++  "patches": {
++    "material": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch",
++    "inert_owner": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch",
++    "patch_state": "OWNER_PATCH_INERT_NOT_APPLIED"
++  },
++  "contracts": {
++    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
++    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
++    "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
++    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
++    "u03_work_order_blob": "ec744847f11016da6aa622a6ba8655c8d7e04724"
++  },
++  "mapping": {
++    "findings": [
++      "PRE-R01-146-004"
++    ],
++    "criteria": [
++      "U03-AC01 (unchanged)",
++      "U03-AC02 (denied owner/context, positive awaited)",
++      "U03-AC03 (320px navigation/focus requested)",
++      "NAV-01",
++      "READ-01",
++      "COPY-01",
++      "Q02 (requested)"
++    ]
++  },
++  "validation": {
++    "suites": "NOT_RUN",
++    "browser": "NOT_RUN",
++    "typecheck": "NOT_RUN",
++    "build": "NOT_RUN",
++    "parser": "NOT_RUN",
++    "guards": "NOT_RUN",
++    "codegen": "NOT_RUN",
++    "compiler_owner": 149,
++    "ci_owner": 150
++  },
++  "status": "PARTIAL_SAFE_PRODUCT_AND_CAUSAL_REGRESSIONS; BLOCKED_SHARED_NAVIGATION_PORT_132; NOT_QUALIFIED",
++  "global_release": false,
++  "native_goal": "paused",
++  "correction_fully_closed": false
++}
+
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch
+index e993838..c426f4f 100644
+--- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch
+@@ -0,0 +1,138 @@
++diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts b/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts
++--- a/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts
+++++ b/packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts
++@@ -2,10 +2,11 @@
++ import type {
++   SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
++   SfInstallationDescriptor, SfInstallationList, SfOwnerKey, SfOwnerSelection,
++-  SfResolvedRoute, SfVersion, SurfaceId, SfRef, SfOperationId,
+++  SfResolvedRoute, SfVersion, SurfaceId, SfRef, SfHref, SfOperationId,
++ } from "@orchestra/schema/sucafina/context"
++ import type { SfJson } from "@orchestra/schema/sucafina/common"
++ import type { SfTransport } from "@orchestra/client/sucafina/transport"
+++import type { SfNativeTransitionResult } from "../navigation-state"
++ import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
++ 
++ export type {
++@@ -73,10 +74,32 @@
++   dependencies: SfContextDependencies
++   children: JSX.Element
++ }>
+++/**
+++ * OWNER132 PROPOSED SEAM, not present in current F01 public implementation:
+++ * only a same-owner F01 builder may mint SfHref; native transition must
+++ * reauthorize CAP07 at invocation and restore the origin focus on history-back.
+++ * The route href and returned ref are not permission tokens.
+++ */
+++export type SfPeopleStructureNavPort = Readonly<{
+++  buildStructureHref(input: Readonly<{
+++    source: SfResolvedRoute<"CAP06">
+++    ownerKey: SfOwnerKey
+++    query: Readonly<{ year?: number; month?: number }>
+++    returnTo: SfHref
+++  }>): SfHref | undefined
+++  transitionStructure(input: Readonly<{
+++    href: SfHref
+++    ownerKey: SfOwnerKey
+++    returnTo: SfHref
+++    returnFocusActionId: "open-team-structure"
+++  }>): Promise<SfNativeTransitionResult>
+++}>
++ export type SfContextHandle = Readonly<{
++   state: Accessor<SfContextState>
++   generation: Accessor<number>
++   ready: Accessor<Readonly<{ context: SfContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
++   reload: () => Promise<void>
++   invalidate: (reason: "logout" | "revoked" | "owner-changed" | "host-changed") => void
+++  /** Inject ONLY after 132 installs the real F01 builder + native transition. */
+++  peopleStructureNavigation?: SfPeopleStructureNavPort
++ }>
++diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx
++--- a/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx
+++++ b/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx
++@@ -1,4 +1,5 @@
++ import { For, Show, type JSX } from "solid-js"
+++import { createStore } from "solid-js/store"
++ import { SfPeople } from "@orchestra/schema/sucafina/people"
++ import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
++ import type { SfSurfaceProps } from "../../context/contracts"
++@@ -29,6 +30,9 @@
++     })
++   const snapshot = () => session.ready()
++   const data = () => snapshot()?.value.data
+++  const [navigationState, setNavigationState] = createStore({
+++    busy: false, failure: undefined as "denied" | "unavailable" | undefined,
+++  })
++   const structureDenied = () => {
++     const active = snapshot()
++     if (!active) return false
++@@ -38,6 +42,46 @@
++       item.family === "domain-read" && item.resource === "CAP07")
++     return !destination?.canRead || resource?.state === "denied"
++   }
+++  // Pending owner132 bridge: this only becomes available when a real public
+++  // F01 builder and a reauthorizing native transition have been installed.
+++  const structureHref = () => {
+++    const active = snapshot()
+++    const port = session.context.peopleStructureNavigation
+++    if (!active || !port || structureDenied()) return undefined
+++    const resource = active.context.availability.find((item) =>
+++      item.family === "domain-read" && item.resource === "CAP07")
+++    if (!resource || resource.state !== "ready" ||
+++        !resource.operations.some((operation) =>
+++          operation.operationId === "domain.page.CAP07" &&
+++          operation.state === "ready" && operation.operational)) return undefined
+++    return port.buildStructureHref({
+++      source: props.route, ownerKey: active.ownerKey,
+++      query: {
+++        ...(props.route.query.year === undefined ? {} : { year: props.route.query.year }),
+++        ...(props.route.query.month === undefined ? {} : { month: props.route.query.month }),
+++      },
+++      returnTo: props.route.href,
+++    })
+++  }
+++  const openStructure = async () => {
+++    const active = snapshot()
+++    const port = session.context.peopleStructureNavigation
+++    const href = structureHref()
+++    if (!active || !port || !href || navigationState.busy) return
+++    setNavigationState({ busy: true, failure: undefined })
+++    try {
+++      const outcome = await port.transitionStructure({
+++        href, ownerKey: active.ownerKey, returnTo: props.route.href,
+++        returnFocusActionId: "open-team-structure",
+++      })
+++      if (snapshot()?.ownerKey !== active.ownerKey) return
+++      if (outcome.status === "denied") setNavigationState("failure", "denied")
+++      if (outcome.status === "unavailable" || outcome.status === "invalid-link")
+++        setNavigationState("failure", "unavailable")
+++    } finally {
+++      setNavigationState("busy", false)
+++    }
+++  }
++   const metric = (labelKey: string, value: string | number | undefined) => (
++     <Show when={value !== undefined}>
++       <div class="sf-people-stat">
++@@ -63,14 +107,16 @@
++           value: { kind: "data", text: String(snapshot()!.value.selection.year ?? "") } },
++       ] : []}
++       tabs={[]} activeTab={null}
++-      // A valid CAP07 route/permission does not supply an owner-bound SfHref.
++-      // Keep this action fail-closed until I00/132 installs the public builder
++-      // and native transition; report an actual denied destination as denied.
+++      // No URL concatenation or permission fallback: F01/132 mints the target.
++       primaryAction={{
++         id: "open-team-structure", labelKey: key("sf.cap06.primary"),
++-        tone: "primary", disabled: true, busy: false,
++-        reasonKey: sfCommonKey(structureDenied() ? "sf.common.noAccess" : "sf.common.unavailable"),
++-        onInvoke: () => undefined,
+++        tone: "primary", disabled: !structureHref() || navigationState.busy,
+++        busy: navigationState.busy,
+++        reasonKey: structureDenied() || navigationState.failure === "denied"
+++          ? sfCommonKey("sf.common.noAccess") :
+++          !structureHref() || navigationState.failure === "unavailable"
+++            ? sfCommonKey("sf.common.unavailable") : undefined,
+++        onInvoke: () => { void openStructure() },
++       }}
++       secondaryActions={[]} density="comfortable" layout="reading"
++       onLayoutMode={() => undefined}
+
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch
+index e993838..b1760c2 100644
+--- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch
+@@ -0,0 +1,143 @@
++diff --git a/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts b/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts
++index e993838..7f9481c 100644
++--- a/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts
+++++ b/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts
++@@ -8,9 +8,9 @@ import { expect, test, type Page } from "@playwright/test"
++ test.use({ trace: "off", video: "off", screenshot: "off" })
++ test.describe.configure({ retries: 0, timeout: 120_000 })
++ 
++-function installedUrl(path: string) {
+++function installedUrl(path: string, ownerQuery?: string) {
++   const origin = process.env.SF2H_TEST_ORIGIN
++-  const owner = process.env.SF2H_TEST_OWNER_QUERY
+++  const owner = ownerQuery ?? process.env.SF2H_TEST_OWNER_QUERY
++   if (!origin || !owner || process.env.SF2H_TEST_ISOLATED !== "1")
++     throw new Error("120 must supply an isolated real installed Sf owner: SF2H_TEST_ORIGIN, SF2H_TEST_OWNER_QUERY, SF2H_TEST_ISOLATED=1")
++   const url = new URL(path, origin)
++@@ -29,7 +29,10 @@ async function visit(page: Page, cap: "CAP06" | "CAP07") {
++   expect(body).toMatchObject({ status: "ok", value: { capabilityId: cap } })
++   await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
++   await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
++-  return body as { status: "ok"; value: {
+++  return body as { status: "ok"; context: {
+++    installationId: string; projectId: string; hostId: string; principalRef: string
+++    policyVersion: string; accessRevision: string
+++  }; value: {
++     data: Record<string, unknown>; versions: Record<string, number>; allowedActionIds: string[]
++   } }
++ }
++@@ -102,4 +105,75 @@ test.describe("N14 U03 / CAP06-CAP07", () => {
++     // Browser-zoom proof remains with 120's real zoom instrumentation;
++     // CSS font scaling and 320px reflow are not mislabeled as browser zoom.
++   })
+++  test("PRE-R01-146-004 authorized Open team structure preserves owner, period, keyboard, history and focus", async ({ page }, info) => {
+++    info.annotations.push({ type: "finding", description: "PRE-R01-146-004 / U03-AC02 / U03-AC03 / NAV-01 / Q02" })
+++    await page.setViewportSize({ width: 320, height: 900 })
+++    const source = await visit(page, "CAP06")
+++    const sourceUrl = new URL(page.url())
+++    const action = page.locator('[data-sf-action="open-team-structure"] button')
+++    await expect(action).toHaveAccessibleName(/^(Open team structure|Abrir estrutura)$/)
+++    await expect(action).toBeEnabled()
+++    await noDocumentOverflow(page)
+++    await action.focus()
+++    await expect(action).toBeFocused()
+++
+++    const destinationRead = page.waitForResponse((response) =>
+++      response.request().method() === "GET" &&
+++      new URL(response.url()).pathname.endsWith("/api/ui/pages/CAP07"))
+++    await page.keyboard.press("Enter")
+++    const response = await destinationRead
+++    expect(response.status(), "CAP07 must be read through the actual authorized producer").toBe(200)
+++    const target: unknown = await response.json()
+++    expect(target).toMatchObject({ status: "ok", context: source.context, value: { capabilityId: "CAP07" } })
+++    await expect(page).toHaveURL(/\/orchestra\/sf-people\/structure(?:\?|$)/)
+++    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+++    await expect(page.getByRole("heading", { name: /^(Team Structure|Estrutura da equipe)$/ })).toBeVisible()
+++    await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
+++    await noDocumentOverflow(page)
+++
+++    const destinationUrl = new URL(page.url())
+++    expect(destinationUrl.origin).toBe(sourceUrl.origin)
+++    for (const selector of ["server", "project", "installation", "year", "month"])
+++      expect(destinationUrl.searchParams.getAll(selector), selector + " must preserve the source owner/period")
+++        .toEqual(sourceUrl.searchParams.getAll(selector))
+++    const focusMovedToDestination = await page.evaluate(() => {
+++      const frame = document.querySelector('[data-sf-frame="page"]')
+++      const focused = document.activeElement
+++      return !!frame && !!focused && focused !== document.body &&
+++        focused !== document.documentElement && frame.contains(focused)
+++    })
+++    expect(focusMovedToDestination, "Keyboard focus must land within the newly authorized CAP07 page").toBe(true)
+++
+++    await page.goBack()
+++    await expect(page).toHaveURL(sourceUrl.href)
+++    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+++    await expect(page.locator('[data-sf-action="open-team-structure"] button')).toBeFocused()
+++    await noDocumentOverflow(page)
+++  })
+++
+++  test("PRE-R01-146-004 CAP06-only principal cannot open CAP07 through the primary action", async ({ page }, info) => {
+++    info.annotations.push({ type: "finding", description: "PRE-R01-146-004 / U03-AC02 / denied role / no cross-owner fallback" })
+++    const deniedOwner = process.env.SF2H_TEST_CAP06_ONLY_OWNER_QUERY
+++    if (!deniedOwner)
+++      throw new Error("150 must supply a real CAP06-readable/CAP07-denied installation owner (SF2H_TEST_CAP06_ONLY_OWNER_QUERY)")
+++    const originUrl = installedUrl("/orchestra/sf-people/overview", deniedOwner)
+++    const sourceRead = page.waitForResponse((response) => response.request().method() === "GET" &&
+++      new URL(response.url()).pathname.endsWith("/api/ui/pages/CAP06"))
+++    await page.goto(originUrl)
+++    const response = await sourceRead
+++    expect(response.status()).toBe(200)
+++    const projection: unknown = await response.json()
+++    expect(projection).toMatchObject({ status: "ok", value: { capabilityId: "CAP06" } })
+++    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+++    const action = page.locator('[data-sf-action="open-team-structure"] button')
+++    await expect(action).toHaveAccessibleName(/^(Open team structure|Abrir estrutura)$/)
+++    await expect(action).toBeDisabled()
+++    await expect(page.locator('[data-sf-action="open-team-structure"] .sf-action-reason'))
+++      .toHaveText(/^(You do not have access to this content\.|Você não tem acesso a este conteúdo\.)$/)
+++    await page.keyboard.press("Tab")
+++    await page.keyboard.press("Enter")
+++    await expect(page).toHaveURL(originUrl)
+++    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+++  })
+++
++ })
++
++diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx
++index df71763..71d5028 100644
++--- a/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx
+++++ b/packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx
++@@ -29,6 +29,15 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
++     })
++   const snapshot = () => session.ready()
++   const data = () => snapshot()?.value.data
+++  const structureDenied = () => {
+++    const active = snapshot()
+++    if (!active) return false
+++    const destination = active.context.destinations.find((item) =>
+++      item.capabilityId === "CAP07" && item.surface === "dashboard")
+++    const resource = active.context.availability.find((item) =>
+++      item.family === "domain-read" && item.resource === "CAP07")
+++    return !destination?.canRead || resource?.state === "denied"
+++  }
++   const metric = (labelKey: string, value: string | number | undefined) => (
++     <Show when={value !== undefined}>
++       <div class="sf-people-stat">
++@@ -54,12 +63,14 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
++           value: { kind: "data", text: String(snapshot()!.value.selection.year ?? "") } },
++       ] : []}
++       tabs={[]} activeTab={null}
++-      // I00/125 owns route builders. The caption is presented, but no leaf
++-      // fabricates an owner-aware href or performs an unsafe cross-owner jump.
+++      // A valid CAP07 route/permission does not supply an owner-bound SfHref.
+++      // Keep this action fail-closed until I00/132 installs the public builder
+++      // and native transition; report an actual denied destination as denied.
++       primaryAction={{
++         id: "open-team-structure", labelKey: key("sf.cap06.primary"),
++         tone: "primary", disabled: true, busy: false,
++-        reasonKey: sfCommonKey("sf.common.unavailable"), onInvoke: () => undefined,
+++        reasonKey: sfCommonKey(structureDenied() ? "sf.common.noAccess" : "sf.common.unavailable"),
+++        onInvoke: () => undefined,
++       }}
++       secondaryActions={[]} density="comfortable" layout="reading"
++       onLayoutMode={() => undefined}
+
 diff --git a/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts b/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts
-index e993838..7f9481c 100644
+index e993838..3271dae 100644
 --- a/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts
 +++ b/packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts
 @@ -8,9 +8,9 @@ import { expect, test, type Page } from "@playwright/test"
@@ -26,7 +462,7 @@ index e993838..7f9481c 100644
      data: Record<string, unknown>; versions: Record<string, number>; allowedActionIds: string[]
    } }
  }
-@@ -102,4 +105,75 @@ test.describe("N14 U03 / CAP06-CAP07", () => {
+@@ -102,4 +105,80 @@ test.describe("N14 U03 / CAP06-CAP07", () => {
      // Browser-zoom proof remains with 120's real zoom instrumentation;
      // CSS font scaling and 320px reflow are not mislabeled as browser zoom.
    })
@@ -70,7 +506,12 @@ index e993838..7f9481c 100644
 +    expect(focusMovedToDestination, "Keyboard focus must land within the newly authorized CAP07 page").toBe(true)
 +
 +    await page.goBack()
-+    await expect(page).toHaveURL(sourceUrl.href)
++    await expect(page).toHaveURL(/\/orchestra\/sf-people\/overview(?:\?|$)/)
++    const restoredUrl = new URL(page.url())
++    expect(restoredUrl.origin).toBe(sourceUrl.origin)
++    for (const selector of ["server", "project", "installation", "year", "month"])
++      expect(restoredUrl.searchParams.getAll(selector), selector + " must survive browser back")
++        .toEqual(sourceUrl.searchParams.getAll(selector))
 +    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
 +    await expect(page.locator('[data-sf-action="open-team-structure"] button')).toBeFocused()
 +    await noDocumentOverflow(page)
@@ -96,7 +537,7 @@ index e993838..7f9481c 100644
 +    await expect(page.locator('[data-sf-action="open-team-structure"] .sf-action-reason'))
 +      .toHaveText(/^(You do not have access to this content\.|Você não tem acesso a este conteúdo\.)$/)
 +    await page.keyboard.press("Tab")
-+    await page.keyboard.press("Enter")
++    await expect(action).not.toBeFocused()
 +    await expect(page).toHaveURL(originUrl)
 +    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
 +  })

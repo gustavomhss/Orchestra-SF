@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.correction-terminal.v1",
+  "mission": 158,
+  "branch": "sf-ux-n14",
+  "pr": 146,
+  "epoch": "ux-native-n14-e2-browser158",
+  "model": "GPT-6",
+  "github_actor": "gustavomhss",
+  "session_id": null,
+  "session_id_status": "NOT_EXPOSED",
+  "astra_session_attested": false,
+  "ack_commit": "7ff7da570b492a303bb6afd2055647834b0c26ac",
+  "material_head": "4562b05b39f4cdc5d9d232bd9210a6eb22f9ad81",
+  "material_tree": "986df4257a5d3715996353deb5f99c2f0b9f6e17",
+  "finding": {
+    "id": "PRE-R01-146-004",
+    "state": "PARTIAL_FIX_NEGATIVE_DONE_POSITIVE_BLOCKED_BY_OWNER132_SEAM",
+    "review": "INDEPENDENT_RECHECK_PENDING"
+  },
+  "applied": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+      "pre": "df71763074fccb7dd6f26efba762dffc32c42c65",
+      "post": "71d5028ed37864ad98cb767687e354a32730cfbd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
+      "pre": "e9938385e1422480012c501af5c5ad783ad8dc39",
+      "post": "3271dae17c39a7818378f49909de911fd980f136"
+    }
+  ],
+  "patches": {
+    "real": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch",
+    "proposed": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch",
+    "proposed_state": "INERT_OUTSIDE_ALLOWLIST"
+  },
+  "requires": {
+    "integrator132": "real F01 same-owner CAP06->CAP07 builder, CAP07 authorization at transition, returnTo and keyboard focus restoration",
+    "compiler149": "compilation SDK/guards after owner bridge integration",
+    "ci150": "targeted native web+desktop real-installed E2E when source and credentials are available"
+  },
+  "consumer": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "acked": false,
+    "sha_after_apply": null
+  },
+  "checks": {
+    "playwright": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "sdk": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "release": {
+    "global": false,
+    "artifact_ready": false,
+    "integrated": false,
+    "qualified": false,
+    "native_goal": "PAUSED"
+  },
+  "next_action": "132 review and install owner-backed navigation seam, apply owner132 inert patch/real leaf hunk, publish consumer pre/post ACK; 149 compiler; 150 surgical E2E; independent PRE-R01 recheck."
+}

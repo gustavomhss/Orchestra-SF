@@ -15,8 +15,8 @@
     "prepared_head": "03b54332774164d9fa2f32000a4130001fb56f62",
     "prepared_tree": "f182b61209246ff7c9d9d17563f993e06dc05d76",
     "base_for_material": "7ff7da570b492a303bb6afd2055647834b0c26ac",
-    "material_head": "f308a54c6976edeaba2ed9ecc2a1ff34c8a7fd0c",
-    "material_tree": "28c7191c9136f24669401727c5c1fbc08fb55abe",
+    "material_head": "4562b05b39f4cdc5d9d232bd9210a6eb22f9ad81",
+    "material_tree": "986df4257a5d3715996353deb5f99c2f0b9f6e17",
     "files": [
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
@@ -27,7 +27,7 @@
       {
         "path": "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
         "pre_blob": "e9938385e1422480012c501af5c5ad783ad8dc39",
-        "post_blob": "7f9481c612026115cfff4513e0771eb301ea852a",
+        "post_blob": "3271dae17c39a7818378f49909de911fd980f136",
         "effect": "real installed owner keyboard/route/back/focus + separate CAP06-only denied principal"
       }
     ],
@@ -90,10 +90,13 @@
     "guards": "NOT_RUN",
     "codegen": "NOT_RUN",
     "compiler_owner": 149,
-    "ci_owner": 150
+    "ci_owner": 150,
+    "requested_positive": "authorized CAP06 -> CAP07, same owner stamp/selection, keyboard, page focus and browser-back refocus",
+    "requested_negative": "real CAP06-only CAP07-denied principal, keyboard-unfocusable disabled CTA and denial copy"
   },
   "status": "PARTIAL_SAFE_PRODUCT_AND_CAUSAL_REGRESSIONS; BLOCKED_SHARED_NAVIGATION_PORT_132; NOT_QUALIFIED",
   "global_release": false,
   "native_goal": "paused",
-  "correction_fully_closed": false
+  "correction_fully_closed": false,
+  "handoff_effect": "SOURCE_DELTA_AND_OWNER_INERT_PATCH_READY__NOT_INTEGRATED_NOT_QUALIFIED"
 }

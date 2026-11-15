@@ -1,6 +1,6 @@
 # Missão158 · N14 / PR146 · terminal source handoff
 
-**Epoch:** `ux-native-n14-e2-browser158`. **Ator autenticado GitHub:** `gustavomhss`. **Modelo efetivo desta sessão:** `GPT-6`. **Astra runtime/session ID:** não expostos; não foi inferida sua criação nem a morte do writer anterior. **HEAD material:** `f308a54c6976edeaba2ed9ecc2a1ff34c8a7fd0c`, **tree:** `28c7191c9136f24669401727c5c1fbc08fb55abe`. **ACK:** `7ff7da570b492a303bb6afd2055647834b0c26ac`.
+**Epoch:** `ux-native-n14-e2-browser158`. **Ator autenticado GitHub:** `gustavomhss`. **Modelo efetivo desta sessão:** `GPT-6`. **Astra runtime/session ID:** não expostos; não foi inferida sua criação nem a morte do writer anterior. **HEAD material:** `4562b05b39f4cdc5d9d232bd9210a6eb22f9ad81`, **tree:** `986df4257a5d3715996353deb5f99c2f0b9f6e17`. **ACK:** `7ff7da570b492a303bb6afd2055647834b0c26ac`.
 
 ## PRE-R01-146-004: confirmação causal e trabalho efetivamente aplicado
 
@@ -19,10 +19,10 @@ O código AINDA NÃO habilita a CTA para autorizados. O contrato atual `SfSurfac
 ## SHAs e rastreabilidade
 
 - CAP06: `df71763074fccb7dd6f26efba762dffc32c42c65 → 71d5028ed37864ad98cb767687e354a32730cfbd`.
-- U03 E2E: `e9938385e1422480012c501af5c5ad783ad8dc39 → 7f9481c612026115cfff4513e0771eb301ea852a`.
+- U03 E2E: `e9938385e1422480012c501af5c5ad783ad8dc39 → 3271dae17c39a7818378f49909de911fd980f136`.
 - CAP07 leaf: `b67ed1ced5497218b1c2c0d0011cafafed46eb72` (intocado).
 - Public F01 context type: `592eef8206c665a1fc908934e258b286fe85609e` (intocado).
-- Material source: `f308a54c6976edeaba2ed9ecc2a1ff34c8a7fd0c`, tree `28c7191c9136f24669401727c5c1fbc08fb55abe`.
+- Material source: `4562b05b39f4cdc5d9d232bd9210a6eb22f9ad81`, tree `986df4257a5d3715996353deb5f99c2f0b9f6e17`.
 - Finding `PRE-R01-146-004`, `U03-AC02`, `U03-AC03`, NAV-01/READ-01/COPY-01 e Q02. `U03-AC01` preservado, sem reinterpretação de resultados.
 
 ## Validação e encaminhamento terminal
