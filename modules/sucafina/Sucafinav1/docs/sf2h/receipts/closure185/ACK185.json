@@ -1,0 +1,136 @@
+{
+  "schema": "sf2h.closure185.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 185,
+  "order": "U15",
+  "slot": "N22",
+  "epoch": "closure-e1-browser185",
+  "actor": {
+    "requested_seat": "new Astra browser session",
+    "effective_model": "GPT-6",
+    "actual_session_id": null,
+    "session_id_reason": "Not exposed to this actor",
+    "github_username_not_a_runtime_identity": true
+  },
+  "authority": {
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure185/S0-FENCE.json",
+    "fence_blob": "43847d3c17e89e67a495d6e1167625dd40c546dd",
+    "previous_epoch": "ux-native-n22-e1",
+    "previous_future_writes": "REVOKED",
+    "integrator_mission": 162,
+    "pr": 153,
+    "branch": "sf-ux-n22"
+  },
+  "source": {
+    "pre_head": "3429cf23157a56b6ff5d5b4794d1207fad31f1fa",
+    "pre_tree": "c899ac69b1ab3643d5ec4361d06466e110d71566",
+    "code_commit": "a273a1836eb62dc5b75395c6c68e3849bf3eea3e",
+    "code_tree": "ea3b2aa4841bd4d91bbfe96dca1b44266c7e228f",
+    "files": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+        "pre_blob": "f849819ecc16cb8b45fe6a7657cad8f36e0764d2",
+        "post_blob": "1d59507133649d2ca57c0c30e2507193f35181fd"
+      }
+    ]
+  },
+  "contracts": {
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "work_order_U15_blob": "568b040c1cca97157a38e0e2afe38746bd9cfb76",
+    "work_order_F04_blob": "1b25898e583e1eb247a3eec889d0da4e6bb61ab3",
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "component_locks_blob": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "host_signatures_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "app_agents_blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+    "e2e_agents_blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec"
+  },
+  "observed_dependencies": {
+    "integrator": {
+      "mission": 162,
+      "pr": 65,
+      "branch": "sf2-stack",
+      "observed_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+      "consumer_ack": "PENDING_NOT_APPLIED"
+    },
+    "fixture": {
+      "mission": 187,
+      "pr": 120,
+      "branch": "sf-ux-w05",
+      "observed_head": "1720fadc93ba64f3a2058eee3802f285c26ed5ca",
+      "source_module": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "module_blob_at_observed_head": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "integration": "NOT_IN_N22_CODE_TREE"
+    }
+  },
+  "implementation": {
+    "changed_only": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts"
+    ],
+    "scenarios": [
+      "CAP14 authorized list/filtered-empty",
+      "CAP14 edit/source-CAS/authorized reread",
+      "CAP14 denied second real actor",
+      "CAP14 stale producer version/409",
+      "CAP14 producer response delivery lost/no replay",
+      "CAP14 320-1440 owner-scoped reflow/keyboard"
+    ],
+    "actions": [
+      "removed all six conditional skip gates without deleting test body or original assertions",
+      "connected extended Playwright fixture nativeInstalledFixture from F04",
+      "verified installed host, discovery/context binding and actual principal via proveWeb",
+      "requires scenario-specific real CAP14 URLs bound to the installed shell/owner selection",
+      "uses armLostResponse from F04 to forward original dashboard POST then abort only response delivery",
+      "asserts genuine producer status and subsequent authorized read; preserves no-replay assertions"
+    ],
+    "no_auth_mocks": true,
+    "no_server_or_engine_changes": true
+  },
+  "acceptance": {
+    "U15-AC01": "SOURCE_AUTHORITY_AND_CAS_ASSERTIONS_RETAINED__NOT_RUN__CASE_LINK_NOT_PROVEN",
+    "U15-AC02": "READ_FILTER_DENIED_STALE_UNKNOWN_ASSERTIONS_RETAINED__NOT_RUN",
+    "U15-AC03": "VIEWPORT_AND_KEYBOARD_ASSERTIONS_RETAINED__NOT_RUN__TEXT_RESIZE_AND_400_PERCENT_REFLOW_NOT_PROVEN"
+  },
+  "evidence": {
+    "suite": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards_new_material": "NOT_RUN",
+    "build": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "hosted_C_same_tree": "NOT_RUN",
+    "f04_installed_manifest": "NOT_PROVEN",
+    "browser_six_positive": "ZERO_PROVEN",
+    "historical_guard": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "artifact": 14182790522,
+      "rule": "js-test-skipped",
+      "status": "HISTORICAL_FINDING_NOT_REQUALIFIED"
+    },
+    "global_release": false
+  },
+  "blockers": [
+    {
+      "kind": "BLOCKED_INTEGRATION",
+      "cause": "N22 tree has no packages/app-shell/e2e/sucafina/native/fixture.ts; F04 source is on W05/PR120, must be composed by 162, not copied by this author"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "cause": "Hosted F04 installed manifest, candidate binding, CAP14 case URLs, distinct authenticated actors and isolated producer state not supplied/proven"
+    },
+    {
+      "kind": "BLOCKED_VALIDATION",
+      "cause": "163/164 terminal handoffs; no new validation authority/session or hosted run asserted"
+    }
+  ],
+  "lease": {
+    "product_write": "ARTIFACT_READY",
+    "tests_unqualified": true,
+    "consumer_ack": "PENDING",
+    "fix_authority_transfer": "ONLY_AFTER_162_ACCEPTANCE_OR_NEW_EXPLICIT_LEASE",
+    "native_goal": "PAUSED",
+    "global_release": false
+  }
+}

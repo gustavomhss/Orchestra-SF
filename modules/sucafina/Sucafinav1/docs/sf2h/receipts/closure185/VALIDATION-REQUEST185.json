@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h.closure185.validation-request.v1",
+  "request_id": "closure185-u15-six-real-journeys",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 185,
+  "epoch": "closure-e1-browser185",
+  "status": "DURABLE_REQUEST_NOT_DISPATCHED",
+  "no_workflow_created": true,
+  "no_local_commands": true,
+  "source": {
+    "commit": "a273a1836eb62dc5b75395c6c68e3849bf3eea3e",
+    "tree": "ea3b2aa4841bd4d91bbfe96dca1b44266c7e228f",
+    "path": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+    "blob": "1d59507133649d2ca57c0c30e2507193f35181fd"
+  },
+  "recipients": {
+    "current_product_integrator": "mission162/PR65 or explicitly authorized successor by S0",
+    "fixture_author": "mission187/PR120",
+    "compiler": "mission163/PR107 TERMINAL - S0 must authorize supported successor",
+    "product_ci": "mission164/PR106 TERMINAL - S0 must authorize supported successor or own pre-existing dispatcher",
+    "reviewer": "mission188 read-only"
+  },
+  "f04": {
+    "branch": "sf-ux-w05",
+    "observed_head": "1720fadc93ba64f3a2058eee3802f285c26ed5ca",
+    "imports_required": [
+      "nativeInstalledFixture",
+      "armLostResponse",
+      "InstalledNativeHarness"
+    ],
+    "host_file": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+    "not_present_in_n22": true,
+    "manifest_env": [
+      "GITHUB_ACTIONS=true (from Actions runner)",
+      "SF_NATIVE_INSTALLED_MANIFEST (private host-generated absolute file)",
+      "SF_NATIVE_CANDIDATE_SHA (same C as private manifest)"
+    ],
+    "journey_urls": {
+      "SF_NATIVE_U15_LIST_URL": "CAP14 entry for authenticated requester, real contracts projection with filterable data; also reused by reflow test",
+      "SF_NATIVE_U15_EDIT_URL": "isolated real CAP14 existing writable contract, source version under versions['contracts:'+id], single save with idempotency and authorized reread",
+      "SF_NATIVE_U15_DENIED_URL": "real second authenticated principal manifest.actors.denied with no unauthorized values/write",
+      "SF_NATIVE_U15_STALE_URL": "real producer-backed version conflict, stale write gets 409; never synthetic status",
+      "SF_NATIVE_U15_LOST_RESPONSE_URL": "real producer-backed editable contract; delivery abort armed by F04 armLostResponse around original {mount}/dashboard POST; query page Vendor Contracts"
+    },
+    "same_owner_validation": "All URLs must be real shell CAP14 route/descendant matching installed manifest shell origin and canonical query; proveWeb verifies real discovery, host context and principal",
+    "identities": [
+      "manifest.actors.requester",
+      "manifest.actors.denied"
+    ],
+    "further_obligations": [
+      "Secure server/project/installation/host identities bound to actual runner candidate",
+      "Set up distinct authenticated contexts without copied cookie, storageState or synthetic role grant",
+      "Isolate original domain state per journey, including stale CAS fixture and one-effect lost response",
+      "Prove selected native specs are collected by installed host and stage ready; UI/product proof is separate from domain seed",
+      "Do not promote F04 domain fixture or browser locator alone to positive auth/installed proof"
+    ]
+  },
+  "qualification": {
+    "after": "162 composes exact U15 blob and accepted F04 owner artifact onto same C; 162/S0 routes to currently authorized sole dispatcher",
+    "selection": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts"
+    ],
+    "transitive": [
+      "F04 installed mount",
+      "F01 and F02 genuine context/transport",
+      "F03/S01/S03/A01/S04 relevant sources",
+      "U15 CAP14 native router/composition"
+    ],
+    "require": "GitHub Actions real installed web 6 cases, --list/collection evidence, actor/owner/CAS/recovery and traces, no skipped/empty selection; compiler/guard current C under explicit successor",
+    "dedup": "same C/tree + workflow selection + runtime config + private fixture identity; do not reuse unrelated historic PASS",
+    "no_global_release": true,
+    "unscheduled_due_to_missing_inputs": true
+  },
+  "exact_next_action": "162/S0: reconcile F04 owner187 PR120 source with U15 commit a273a18 into same authorized candidate after F04 manifest/actor/URLs, authorize hosted compiler/product CI successor and produce a RUN/ACK explicitly; otherwise retain BLOCKED_INTEGRATION and NOT_RUN."
+}
