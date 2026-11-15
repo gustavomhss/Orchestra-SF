@@ -1,0 +1,90 @@
+{
+  "schema": "sf2h.integration105.consumption.v1",
+  "candidate": "C53",
+  "material": true,
+  "actor": "S0-C-e15-browser105",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "expected_parent": "751741abf263fff6f002907c53fcbac973ccde63",
+  "parent_tree": "a274225298ccf3b1b2f27e50ae8c8dddaed0181d",
+  "previous_material": {
+    "candidate": "C52",
+    "sha": "751741abf263fff6f002907c53fcbac973ccde63",
+    "tree": "a274225298ccf3b1b2f27e50ae8c8dddaed0181d"
+  },
+  "source": {
+    "mission": 104,
+    "branch": "minimal-first-save",
+    "pr": 92,
+    "material_W": "2356b2a453087784d3e2dbb191252e4c04e1c151",
+    "source_tree": "2ecec1a1135f6e43cc8ee800ed08af58f99c54d5",
+    "terminal": "e72345a97b20e2d817537cca4b635622b621d54f",
+    "lease": "first-save-http-browser104",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/first-save-http-repair/HANDOFF-104.md",
+    "patch_spec": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/first-save-http-repair/PATCH-C51-104.md",
+    "receipt_blob": "21ecde44f87d41cac31c2df7141d6ccf41a2d379"
+  },
+  "material_changes": [
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "preimage": "9369722db40a922887c63481753776e3b01e97d8",
+      "postimage": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+      "mode": "exact owner104 precreated C51-based Git blob; guard only",
+      "strip_guard_equals_current_exact": true,
+      "protects": [
+        "dashboard-draft-read",
+        "owner52 specific read fallback",
+        "genuine 503 infrastructure status",
+        "revoked 403"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts",
+      "preimage": null,
+      "postimage": "e5e3783efa011f80ca4e9ac9467776bc9bca2b19"
+    }
+  ],
+  "preserved": {
+    "original_oracle_path": "modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+    "original_oracle_blob": "566e765f201d1a45677c0c52c75eb92ecb16d482",
+    "source87_lookups_unchanged": true,
+    "dashboard_decisions_C51_unchanged": true,
+    "other_C51_and_C52_paths_unchanged": true,
+    "host_C49_native_unchanged": true,
+    "result_store76_not_reapplied": true
+  },
+  "historical_failure": {
+    "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "S": "32c186de11afc265a47aa06355ba560b5e89650b",
+    "run": 43682448571,
+    "job": 132715780313,
+    "attempt": 1,
+    "pass": 12,
+    "fail": 1,
+    "expects": 213,
+    "missing_key_observed": 503,
+    "missing_key_expected": 403
+  },
+  "proof": {
+    "product_tests_C53": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "reviewers91_92": "RECHECK_PENDING",
+    "GLOBAL_RELEASE": false
+  },
+  "routing": {
+    "productCI": 101,
+    "compiler_guards": 45,
+    "reviewers": [
+      91,
+      92
+    ],
+    "acceptance": "S0"
+  },
+  "next": "101 dedup first-save original 3 exact files plus first-save-http-repair negative spec in same ordered Linux/Bun request on C53 W/tree; 45 compiler/guards; 91/92 independent recheck. No automatic acceptance."
+}

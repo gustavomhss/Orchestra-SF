@@ -28,6 +28,11 @@ export function createSfDashboardHttp(input: { origin: string; mount: string; ru
     if (!read && (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site" || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json"))) return reply({ status: "denied" }, 403)
     const payload: unknown = read ? mode === "dashboard-hot-topic-drafts" ? { caseRef: { id: url.searchParams.get("id"), incarnation: url.searchParams.get("incarnation"), version: Number(url.searchParams.get("version")) } } : { id: url.searchParams.get("id") } : await boundedJson(request)
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) return reply({ status: "invalid" }, 400)
+    // A missing/malformed original command key is a caller refusal, not host outage.
+    // Check only first-save recovery, before runtime/admission or any lookup work.
+    if (mode === "dashboard-hot-topic-draft-outcome" &&
+      !/^[A-Za-z0-9._:-]{8,128}$/.test(request.headers.get("idempotency-key") ?? ""))
+      return reply({ status: "denied" }, 403)
     const runtime = input.runtime()
     if (!runtime) return reply({ status: "unavailable" }, 503)
     const action: SfHumanAction | undefined = ["dashboard-review-preserve", "dashboard-capture"].includes(mode!) ? "reviews.preserve" :
