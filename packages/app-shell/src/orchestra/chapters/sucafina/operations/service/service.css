@@ -1,0 +1,51 @@
+/* U04 composition reuses F03's variables and the existing Orchestra shell. */
+.sf-ops-service { display: grid; gap: 24px; min-inline-size: 0; }
+.sf-ops-service > section:not(.sf-ops-editor) {
+  min-inline-size: 0; padding: 18px; border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg); background: var(--mx-raised);
+}
+.sf-ops-service h2 { margin: 0 0 16px; overflow-wrap: anywhere; font-size: var(--orchestra-font-size-lg); }
+.sf-ops-period, .sf-ops-actions {
+  display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px; min-inline-size: 0;
+}
+.sf-ops-period { padding-block: 12px; }
+.sf-ops-period label, .sf-ops-field { display: flex; flex-direction: column; min-inline-size: 0; gap: 6px; }
+.sf-ops-period select, .sf-ops-field :is(input, select, textarea) {
+  min-block-size: 44px; inline-size: 100%; max-inline-size: 100%;
+  color: var(--mx-strong); background: var(--mx-base); border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md); padding: 8px 10px; box-sizing: border-box;
+  font: inherit;
+}
+.sf-ops-field textarea { min-block-size: 128px; white-space: pre-wrap; overflow-wrap: anywhere; resize: vertical; }
+.sf-ops-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px; }
+.sf-ops-actions { margin-block-start: 14px; }
+.sf-ops-service button {
+  min-block-size: 44px; max-inline-size: 100%; text-align: start; white-space: normal;
+  border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-md);
+  color: var(--mx-strong); background: var(--mx-raised); padding: 8px 14px;
+  cursor: pointer; overflow-wrap: anywhere;
+}
+.sf-ops-service button:disabled { cursor: not-allowed; opacity: .6; }
+.sf-ops-service button:focus-visible, .sf-ops-service :is(input,textarea,select):focus-visible,
+.sf-ops-table:focus-visible { outline: 2px solid var(--mx-blue); outline-offset: 2px; }
+.sf-ops-table { overflow-x: auto; max-inline-size: 100%; min-inline-size: 0; margin-block: 10px 14px; }
+.sf-ops-table table { border-collapse: collapse; inline-size: 100%; font-variant-numeric: tabular-nums; }
+.sf-ops-table :is(th,td) {
+  text-align: start; padding: 10px 12px; white-space: nowrap;
+  border-block-end: 1px solid var(--mx-line); min-block-size: 36px;
+}
+.sf-ops-table th { color: var(--mx-strong); font-weight: 600; }
+.sf-ops-table td { color: var(--mx-dim); }
+.sf-ops-service dl { display: grid; grid-template-columns: minmax(0, 160px) minmax(0, 1fr); gap: 8px; }
+.sf-ops-service dl dd { margin: 0; overflow-wrap: anywhere; }
+.sf-ops-editor {
+  border: 1px solid var(--mx-line); padding: 20px;
+  background: var(--mx-raised); border-radius: var(--orchestra-radius-lg);
+  min-inline-size: 0; overflow-wrap: anywhere;
+}
+@container sf-frame (max-width: 767px) {
+  .sf-ops-service > section, .sf-ops-editor { padding: 12px; }
+  .sf-ops-grid { grid-template-columns: minmax(0, 1fr); }
+  .sf-ops-service dl { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .sf-ops-service * { scroll-behavior: auto; } }

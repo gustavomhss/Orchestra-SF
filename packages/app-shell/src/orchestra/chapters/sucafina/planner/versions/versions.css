@@ -1,0 +1,11 @@
+/* N18 / U46 — honor S01/S03 widths and responsive detail behavior. */
+.sf-u46 { display: grid; gap: 1rem; min-width: 0; }
+.sf-u46-fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: .55rem; width: 100%; max-width: 32rem; }
+.sf-u46-fields label, .sf-u46-new label { display: block; font-weight: 600; }
+.sf-u46-fields input, .sf-u46-new input { width: 100%; min-width: 0; box-sizing: border-box; }
+.sf-u46-new { display: grid; gap: .8rem; min-width: 0; padding: 1rem; border: 1px solid var(--border, currentColor); border-radius: .75rem; }
+.sf-u46-source-choices { padding: 0; margin: 0; list-style: none; display: grid; gap: .5rem; }
+.sf-u46-source-choices > li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; border-block-end: 1px solid var(--border, currentColor); padding: .75rem 0; overflow-wrap: anywhere; }
+.sf-u46-alert { padding: .75rem 1rem; border-inline-start: .25rem solid currentColor; }
+.sf-u46 .sf-s03-review { min-width: 0; }
+@media (max-width: 480px) { .sf-u46-source-choices > li > * { flex-basis: 100%; } }
