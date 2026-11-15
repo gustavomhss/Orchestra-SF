@@ -162,7 +162,7 @@ export function correlateAm03(input: Am03HostedCandidate) {
         !record.domainPort || !Number.isSafeInteger(record.exposedRecordCount) ||
         !record.privateCacheNamespaceDigest || !digest64.test(record.privateCacheNamespaceDigest) ||
         !record.privateRefDigests || record.privateRefDigests.length === 0 ||
-        record.exposedRecordCount <= 0 ||
+        (record.exposedRecordCount ?? 0) <= 0 ||
         !record.privateRefDigests.every((value) => digest64.test(value))))
       gaps.push("scenario:" + id + ":missing-real-bridge-to-domain-or-cache-correlation")
     if (id === "revoked-memory" && (!record.scannerBinaryVersion || record.scannerResult !== "clean"))
