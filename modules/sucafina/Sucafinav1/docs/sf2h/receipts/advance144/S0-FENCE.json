@@ -1,0 +1,21 @@
+{
+  "schema": "sf2h.advance-session-fence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "authority": "S0, user explicitly asks to advance these sessions NOW and requires all fresh sessions",
+  "mission": 144,
+  "branch": "sf-ux-n18",
+  "previous_epoch": "ux-native-n18-e1",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+  "next_epoch": "ux-native-n18-e2",
+  "previous_head": "161766425a5535c1b711b9abbe9144a648c3e560",
+  "new_state": "PREPARED_NOT_STARTED",
+  "runtime_termination_claimed": false,
+  "limitation": "Browser session lifecycle ID not exposed. This explicit authority revocation + branch CAS/epoch fence is not a claim old chat died by silence or credential revocation.",
+  "old_rule": "Cease future writes/dispatch if resumed; earlier immutable code/receipts remain preserved inputs. Late activity requires reconciliation without reset/force.",
+  "new_rule": "Confirm live HEAD/fence and actual ACK+epoch before writing or dispatching; preserve all prior product and history.",
+  "integrator": 132,
+  "compiler": 149,
+  "ci": 150,
+  "native_goal": "paused",
+  "global_release": false
+}
