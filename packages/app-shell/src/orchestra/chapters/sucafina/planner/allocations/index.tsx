@@ -1,4 +1,3 @@
-import { A } from "@solidjs/router"
 import { createEffect, createSignal, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
@@ -293,7 +292,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
         page: "Entities & allocations", action: "save", ...(intent.id ? { id: intent.id } : {}),
         version: intent.version,
         values: {
-          collection: intent.collection, name: value?.name,
+          collection: intent.collection, name: value!.name,
           ...(value?.detail === undefined ? {} :
             intent.collection === "entities" ? { code: value.detail } : { desc: value.detail }),
         },
@@ -478,9 +477,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                 onInput={(event) => setScreen("filter", event.currentTarget.value)} />
             </label>
             <Show when={can("import-workbook")}>
-              <A href="/orchestra/sf-imports/new" class="mx-link">
-                {language.t("sf.cap21.action.import-workbook")}
-              </A>
+              <p class="sf-n20-source-only">{language.t("sf.cap21.import-hint")}</p>
             </Show>
           </div>
           <div class="sf-n20-catalog-grid">
