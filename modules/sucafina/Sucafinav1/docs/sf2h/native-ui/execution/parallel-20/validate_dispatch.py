@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path, PurePosixPath
 
 def read(p: Path):
@@ -125,12 +126,34 @@ def validate(root: Path, launch: Path | None):
     launch_state = "NO_LAUNCH_RECORD"
     if launch:
         record = read(launch)
-        required = ["material_sha", "material_tree", "planning_sha", "canonical_sha", "s0_authority", "integrator_71_ack", "dispatcher_45_ack", "leases", "source_family_blobs", "contract_blobs", "observed_actor_slots", "observed_runner_slots", "owner_releases"]
+        required = ["material_sha", "material_tree", "planning_sha", "canonical_sha", "s0_authority", "integrator_71_ack", "current_integrator_ack", "current_integrator_authority", "current_integrator_lease", "integrator_identity", "integrator_branch", "dispatcher_45_ack", "leases", "source_family_blobs", "contract_blobs", "observed_actor_slots", "observed_runner_slots", "owner_releases"]
         missing = [k for k in required if k not in record or record[k] in (None, "", [], {})]
         if missing:
             failures.append(f"launch record lacks factual fields: {missing}")
         ensure(record.get("planning_sha") == data["source"]["commit"], "launch pin differs from design")
         ensure(record.get("canonical_sha") == main["canonical"]["commit"], "launch canonical differs")
+        sha40 = lambda x: isinstance(x, str) and re.fullmatch(r"[0-9a-f]{40}", x) is not None
+        for field in ("material_sha", "material_tree", "planning_sha", "canonical_sha"):
+            ensure(sha40(record.get(field)), f"launch {field} must be full lowercase Git SHA")
+        ensure(record.get("current_integrator_ack") != record.get("integrator_71_ack"), "current integrator ACK cannot reuse ended 71 ACK")
+        previous = record.get("prior_integrator_terminals", {})
+        if not isinstance(previous, dict):
+            failures.append("prior_integrator_terminals must be an object")
+        else:
+            ensure(previous.get("100") == "a6abd2c8d321daf1089f4d440027c46209a89cbe", "terminal100 lineage missing or mismatched")
+        for field in ("source_family_blobs", "contract_blobs"):
+            mapping = record.get(field)
+            if not isinstance(mapping, dict) or not mapping:
+                failures.append(f"{field} must be nonempty path→Git blob SHA mapping")
+            else:
+                for path, sha in mapping.items():
+                    try:
+                        claim(path)
+                    except (TypeError, ValueError) as exc:
+                        failures.append(f"{field}: {exc}")
+                    ensure(sha40(sha), f"{field}: invalid Git blob SHA for {path}")
+        runners = record.get("observed_runner_slots")
+        ensure(type(runners) is int and runners >= 0, "observed_runner_slots must be a nonnegative integer")
         active = record.get("leases", [])
         if not isinstance(active, list):
             failures.append("launch leases must be an array")
@@ -142,6 +165,43 @@ def validate(root: Path, launch: Path | None):
         ensure(all(isinstance(x, dict) and x.get("actor") and x.get("branch") and x.get("lease_id") and x.get("order_id") and x.get("owner_ack") for x in active), "lease missing observed facts or nonobject lease")
         ensure(len({x.get("lease_id") for x in active if isinstance(x, dict)}) == len(active), "duplicate/malformed lease IDs")
         ensure(len(active) <= min(19, slots), "leases exceed actual writer capacity")
+        active_claims = []
+        active_seats = []
+        active_actors = []
+        active_branches = []
+        for lease in active:
+            if not isinstance(lease, dict):
+                continue
+            order = lease.get("order_id")
+            output = lease.get("output_id")
+            matching = [card for card in cards[1:] if card["work_order_id"] == order and card.get("output_id") == output]
+            ensure(len(matching) == 1, f"lease not a first-wave writer/output: {order}/{output}")
+            allowed = matching[0]["owns_exact_or_prefix"] if len(matching) == 1 else []
+            owned = lease.get("owned_paths")
+            if not isinstance(owned, list) or not owned:
+                failures.append(f"lease {order}/{output} requires nonempty owned_paths list")
+                continue
+            for path in owned:
+                try:
+                    claim(path)
+                    ensure(any(path == x or x.endswith("/**") and (path == x[:-3] or path.startswith(x[:-3] + "/")) for x in allowed), f"lease {order}/{output} owns outside allowlist: {path}")
+                    active_claims.append((order, path))
+                except (TypeError, ValueError) as exc:
+                    failures.append(f"lease {order}/{output}: {exc}")
+            for field in ("base_sha", "tree_sha"):
+                ensure(sha40(lease.get(field)), f"lease {order}/{output} invalid {field}")
+            for field in ("current_preimages", "consumed_contract_blobs", "source_pins"):
+                ensure(isinstance(lease.get(field), dict) and bool(lease.get(field)), f"lease {order}/{output} missing {field} map")
+            active_seats.extend(x["seat"] for x in matching)
+            active_actors.append(lease.get("actor"))
+            active_branches.append(lease.get("branch"))
+        ensure(len(set(active_seats)) == len(active_seats), "duplicate active writer seat")
+        ensure(len(set(active_actors)) == len(active_actors), "duplicate active writer actor")
+        ensure(len(set(active_branches)) == len(active_branches), "duplicate active writer branch")
+        for i, (left_owner, left_path) in enumerate(active_claims):
+            for right_owner, right_path in active_claims[i + 1:]:
+                if left_owner != right_owner and intersects(left_path, right_path):
+                    failures.append(f"active lease write collision {left_owner}:{left_path} <> {right_owner}:{right_path}")
         warnings.append("The validator cannot cryptographically prove S0/71/45 authority, release status, current material SHA, active leases or CI; verify externally. No GO is issued.")
         launch_state = "FORMAT_CHECK_ONLY_NOT_AUTHORIZATION"
     else:

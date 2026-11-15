@@ -51,6 +51,13 @@
     ],
     "terminal_handoff": null
   },
-  "evidence_note": "A populated file records observed facts, not authority by itself; verify each linked real ACK, GH refs, material and original CI externally. Never commit tokens, credentials, principal PII, secrets, private data or PDF exports.",
-  "global_release": false
+  "evidence_note": "A populated file records observed facts, not authority by itself; verify each linked real ACK, GH refs, material and original CI externally. Never commit tokens, credentials, principal PII, secrets, private data or PDF exports. Historical ACK71/terminal100 are not active authority. current_integrator_ack/authority/lease must be independently verified live from S0 before any worker GO.",
+  "global_release": false,
+  "prior_integrator_terminals": {
+    "71": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+    "100": "a6abd2c8d321daf1089f4d440027c46209a89cbe"
+  },
+  "current_integrator_ack": null,
+  "current_integrator_authority": null,
+  "current_integrator_lease": null
 }
