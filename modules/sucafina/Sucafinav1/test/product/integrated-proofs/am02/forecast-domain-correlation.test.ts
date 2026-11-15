@@ -73,7 +73,7 @@ test("AM02 Planner correlates UI and agent/MCP domain calls, receipt and forbidd
     expect(entered).toHaveLength(1)
     expect(entered[0]).toMatchObject({ surface: "ui", principal: "finance", domainCallID: uiCommandID,
       inputDigest: digestSfValue(payload), accessRevision: "1" })
-    expect(uiCommandID).toMatch(/^[a-f0-9]{64}$/)
+    expect(uiCommandID).toBe(forecast.id + ":" + digestSfValue(payload))
 
     const answer = await withSkillHost((host) => Effect.gen(function* () {
       const registered = host.bundle.selected.find((item) => item.profile.id === "sf_finance")
