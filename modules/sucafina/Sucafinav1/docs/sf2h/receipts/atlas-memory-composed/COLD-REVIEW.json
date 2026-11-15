@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.atlas-memory-composed.cold-review.v1",
+  "mission": 69,
+  "reviewedW": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "reviewedProductBlobs": {
+    "atlasMemory": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+    "businessContext": "2e7b312561f3f027ab070c61e15ecb6886fa169c"
+  },
+  "method": "Independent read-only reviews by delegated non-product-authors, plus author reconciliation. Text/source examination only; no local execution.",
+  "verdict": "NO_REMAINING_STATIC_BLOCKER_IN_OWN_PRODUCT_PATHS",
+  "closedFindings": [
+    "R1 capture consumer fast path now checks canonical ledger/publication",
+    "R3 scanner name/version/digest matched to original durable outbox receipt",
+    "Selection/call/lease/request/header fences kept through final C08 read",
+    "Group membership/order identity and one-use original observations checked",
+    "Empty public selection retains current authority and returns no data",
+    "Rank features/runtime/call/lease pinned across final read",
+    "All returned rank records derive from the final group for each case, not an earlier per-record observation"
+  ],
+  "preserved": [
+    "correction40 direct canonical settled replay",
+    "A committed while B pending",
+    "private nonrecursive caseForEvidence capture path",
+    "read-only replay with no scanner/append/repair",
+    "existing public method shape"
+  ],
+  "externalHeld": {
+    "R2": [
+      "capabilities.ts final await",
+      "case-recall.ts source selection tail",
+      "capability-dispatch.ts await after descriptor",
+      "sf-mcp-bridge.ts awaits after dispatch"
+    ],
+    "proposals": "owner-patches contains full pre/postimages and prospective patch series; not applied or qualified"
+  },
+  "testReview": {
+    "B0": "Four tests validly exposed five escapes; early selection hook was an oracle defect and is preserved as such.",
+    "F1": "Cold review includes calibrated selection, multicase locator, explicit synthetic premises and exact denial assertions.",
+    "G1": "Independent second review of 3 rank tests and real C08 fixture: no identified static blocker; no differential B0 claim."
+  },
+  "notClaimed": [
+    "compiler/guards PASS",
+    "functional PASS before Actions",
+    "native SessionV2",
+    "rendered UI reload",
+    "external egress closure",
+    "full AM05 or final global reviews"
+  ],
+  "globalRelease": false
+}
