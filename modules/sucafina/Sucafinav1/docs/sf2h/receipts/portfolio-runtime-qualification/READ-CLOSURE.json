@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.read-closure.v1",
+  "mission": 58,
+  "pin": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "state": "COMPLETE_DISTRIBUTED_READING",
+  "root": [
+    "AGENTS.md",
+    "mission58 and57/current authority",
+    "full54/56handoffs/authorities/manifests",
+    "START.md",
+    "WORKFLOW.md",
+    "execution/COMMON.md",
+    "analysis.ts",
+    "production.ts",
+    "originalP03 andtrace",
+    "runtime56 patch",
+    "test-ci workflow"
+  ],
+  "helpers": [
+    {
+      "agent": "analysis54_audit",
+      "read": "S4-C.json entire37fields/68criteria/17contracts and complete54 patch+code+tests",
+      "pack_blob": "c59d7593fe94808048a0377d365d0681482d7252",
+      "pack_sha256": "1594efa92a3037505f8e89d09bb5908af2205e5d2c25a2e4c48b30a50765f2ce",
+      "patch_text_reconstruction": "6/6 exact"
+    },
+    {
+      "agent": "runtime_audit",
+      "read": "Full56handoff/runtime/sevenhelpers+tests/legacy/source-and-tests/composition-with-oracle;resident-runtime259lines",
+      "annex": "specs/resident-runtime.md",
+      "annex_blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "annex_sha256": "024795abe175e756f93f1904eba23884bf4d9ad2416c6185b3eea2e6b13ca420",
+      "patch_text_reconstruction": "1/8/9 paths exact;19legacyexpect-lines preserved except structural1→4"
+    },
+    {
+      "agent": "p03_runner_audit",
+      "read": "FullP03/helpers/runner/requestvalidators/workflow;product-acceptance105segments",
+      "annex": "specs/product-acceptance.md",
+      "annex_blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "annex_bytes": 14228
+    }
+  ],
+  "constraints": [
+    "Original72assertions/order/deadlines and real producer confirmation/history/replay/revocation",
+    "210000conditioned +training40000confirmed=250000;ceiling240000/advantage20000fail",
+    "No authorization/cache shortcut;ChoiceRecord immutable;choice is not approval",
+    "No source runtime/legacy/stack/workflow edit;complete external patches only",
+    "P03 is not fullWP/AM/global acceptance"
+  ],
+  "local_product_tests": 0,
+  "helper_remote_writes": 0
+}
