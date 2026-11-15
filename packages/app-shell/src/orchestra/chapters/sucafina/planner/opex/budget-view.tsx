@@ -24,7 +24,7 @@ import type {
   SfPasteState, SfCellCoordinate,
 } from "../../shared/monthly-grid"
 import { SfStatePanel } from "../../shared/states"
-import type { SfColumn } from "../../shared/monthly-grid/types"
+import type { SfColumn, SfMessage as SfGridMessage } from "../../shared/monthly-grid/types"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewField } from "../../shared/change-review"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
@@ -54,6 +54,7 @@ type Review = Readonly<{
 }>
 const key = (s: string) => s as SfCopyKey
 const msg = (s: string): SfMessage => ({ key: key(s) })
+const gridMsg = (s: string): SfGridMessage => ({ key: s as SfGridMessage["key"] })
 const textual = (s: string) => ({ kind: "text" as const, text: { kind: "data" as const, text: s } })
 const initialEdit = (row: PlanLine | PlanProject): Edit => ({
   name: row.name, desc: row.desc ?? "", owner: row.owner ?? "",
@@ -69,6 +70,10 @@ const cellKey = (coord: SfCellCoordinate) =>
   JSON.stringify([coord.measure, coord.month])
 const fullCoverage = () => ({
   state: "complete" as const, summary: msg("sf.u07.source"), reasons: [],
+  knownCount: 1, expectedCount: 1,
+})
+const monthlyCoverage = () => ({
+  state: "complete" as const, summary: gridMsg("sf.u07.source"), reasons: [],
   knownCount: 1, expectedCount: 1,
 })
 const readableState = (phase: SfUiState) => phase === "ready" || phase === "partial" ||
@@ -250,7 +255,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     const source = grid()
     if (!source || !state.page) return []
     const result: SfGridCell[] = []
-    const complete = fullCoverage()
+    const complete = monthlyCoverage()
     const writable = allowed("save")
     for (const row of source.rows) for (const month of row.cells) {
       if (!Number.isInteger(month.month) || month.month < 1 || month.month > 12) continue
@@ -268,13 +273,13 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           original.source === "inherited-budget"
             ? { kind: "inherited", value: original.value, unit,
                 sourceRef: row.id as SfRef, sourceVersion: row.revision } :
-          original.value === null ? { kind: "missing", reason: msg("sf.s02.missing") } :
+          original.value === null ? { kind: "missing", reason: gridMsg("sf.s02.missing") } :
           { kind: "known", value: original.value, unit, origin }
         result.push({
           coordinate: coord, value, fractionDigits: 2,
           permission: writable && original.editable
             ? { editable: true }
-            : { editable: false, reason: msg(original.editable ? "sf.u07.statusReadonly" : "sf.s02.closedMonth") },
+            : { editable: false, reason: gridMsg(original.editable ? "sf.u07.statusReadonly" : "sf.s02.closedMonth") },
         })
       }
     }
@@ -651,7 +656,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                   onNavigate={navigateCell}
                   onEdit={editCell} onCommitCell={editCell} onCancelCell={()=>undefined}
                   onOpenRow={(rowRef)=>setState("selected",String(rowRef))}
-                  readOnlyReason={allowed("save")?undefined:msg("sf.u07.statusReadonly")}
+                  readOnlyReason={allowed("save")?undefined:gridMsg("sf.u07.statusReadonly")}
                   state={status()}
                 />
               </section>}
