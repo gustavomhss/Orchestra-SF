@@ -35,11 +35,11 @@
     "One causal request, source SHA+tree+normalized request evidence",
     "Do not claim GO on green preflight; N0 independent review and leases still required"
   ],
-  "status": "NEW_GUARD_AND_TS_PARSER_NOT_RUN",
+  "status": "ACTIONS_21_REGRESSIONS_AND_TS_PARSER_PASS_INDEPENDENT_N0_PENDING",
   "actions_run": null,
   "actions_job": null,
   "actions_attempt": null,
-  "verdict": "NOT_RUN_ON_THIS_SOURCE",
+  "verdict": "PASS_DOCUMENTARY_NOT_AUTHORING_GO",
   "canonical_materialization": {
     "strategy": "GitHub Actions only: git fetch exact pinned canonical commit, git show exact campaign blob into ephemeral temp file",
     "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
@@ -56,11 +56,17 @@
     "disposition": "FIX_CAUSAL_INPUT_NO_CLAIM_OF_PYTHON_TEST_PASS"
   },
   "last_actions_attempt": {
-    "run_id": 43706901262,
-    "job_id": 132789826273,
-    "head_sha": "87b536aca6ff3e444c468362c991decb23e104b4",
-    "result": "SUCCESS",
-    "evidence_file": "ACTIONS-PREFLIGHT-RESULT-20261115.json"
+    "run_id": 43724291296,
+    "job_id": 132842733633,
+    "snapshot_sha": "058e8226193243e70ca36408c0da34204e5c8fa6",
+    "run_attempt": 1,
+    "conclusion": "success",
+    "tests": {
+      "node": 4,
+      "python_negative": 21,
+      "typescript_parser": 3,
+      "criteria": 1610
+    }
   },
   "legacy_pass": {
     "run_id": 43706901262,
