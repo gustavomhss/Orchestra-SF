@@ -126,7 +126,7 @@ def validate(root: Path, launch: Path | None):
     launch_state = "NO_LAUNCH_RECORD"
     if launch:
         record = read(launch)
-        required = ["material_sha", "material_tree", "planning_sha", "canonical_sha", "s0_authority", "integrator_71_ack", "current_integrator_ack", "current_integrator_authority", "current_integrator_lease", "integrator_identity", "integrator_branch", "dispatcher_45_ack", "leases", "source_family_blobs", "contract_blobs", "observed_actor_slots", "observed_runner_slots", "owner_releases"]
+        required = ["material_sha", "material_tree", "planning_sha", "canonical_sha", "s0_authority", "integrator_71_ack", "current_integrator_ack", "current_integrator_authority", "current_integrator_lease", "integrator_identity", "integrator_branch", "dispatcher_45_ack", "product_ci_101_ack", "compiler_45_ack", "leases", "source_family_blobs", "contract_blobs", "observed_actor_slots", "observed_runner_slots", "owner_releases"]
         missing = [k for k in required if k not in record or record[k] in (None, "", [], {})]
         if missing:
             failures.append(f"launch record lacks factual fields: {missing}")
@@ -143,6 +143,10 @@ def validate(root: Path, launch: Path | None):
             "a6abd2c8d321daf1089f4d440027c46209a89cbe",
         }
         ensure(record.get("current_integrator_ack") not in historical_integrator_refs, "current integrator ACK cannot reuse ended 71/100 authority")
+        ensure(record.get("s0_control_assignment_sha") == "8819df6169abd94aaa89d50a21f113e5596d2aae", "S0 assignment pin not current; re-pin control")
+        ensure(record.get("prepared_integrator_mission") == 105, "expected S0-prepared integrator mission105; re-pin if superseded")
+        ensure(record.get("product_ci_101_ack") != record.get("compiler_45_ack"), "101 product CI and 45 compiler ACK must be distinct")
+        ensure(record.get("product_ci_101_ack") != record.get("dispatcher_45_ack"), "historical dispatcher45 cannot authorize product CI101")
         ensure(record.get("current_integrator_lease") not in ("S0-C-e13-browser71", "S0-C-e14-browser100"), "current integrator lease cannot reuse ended 71/100 lease")
         previous = record.get("prior_integrator_terminals", {})
         if not isinstance(previous, dict):

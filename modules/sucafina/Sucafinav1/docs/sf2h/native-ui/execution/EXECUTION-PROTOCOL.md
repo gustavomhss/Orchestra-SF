@@ -12,7 +12,7 @@ Uma lane de autoria recebe um subtree/allowlist fechado por vez, em branch isola
 
 ## 2. Preflight único e fonte de verdade
 
-I00 reconcilia a autoridade vigente antes da primeira escrita, conservando uma única custódia de stack e o dispatcher já existente. Lê o HEAD de planejamento, o candidato material e as releases/consumer ACKs; nunca infere encerramento por silêncio.
+I00 reconcilia uma única autoridade de stack antes de escrever; S0-control@8819df61 preparou missão105 (não ativa sem ACK/lease), produto CI101 e compiler/typecheck/guards45, sem segundo controller. Lê o HEAD de planejamento, o candidato material e as releases/consumer ACKs; nunca infere encerramento por silêncio.
 
 I00 publica um `launch-record` imutável com: commit/tree material; commit de planejamento; ator/branch/lease exatos por ordem; allowlist efetiva; SHA/blob de cada família de fonte consumida; digests de contratos, componentes, superfície e microcopy; atores/runners realmente disponíveis; dispatcher e fila em curso; bloqueios externos já conhecidos. Um launch-record identifica fatos e leases, não modifica critérios.
 
@@ -50,7 +50,7 @@ I00 calcula todos os outputs READY e escolhe até a capacidade de autoria realme
 
 Uma lane usa um writer por arquivo. O validador compara paths normalizados, exatos e prefixos pais/filhos, incluindo testes, CSS e locales. Papéis lógicos não concedem escrita: a lease efetiva lista ator, ordem, allowlist e fronteira temporal/terminal. Um timeout de coordenação não expira uma lease automaticamente.
 
-O pool de CI é separado do pool de autoria. Ter dez autores não significa dez runners. Há um único dispatcher canônico; workers entregam requests propostos e observações, não disparam suites.
+O pool de CI é separado do pool de autoria. Ter dez autores não significa dez runners. CI de produto só pela101 usando a interface canônica test:ci/dedup, compiler/typecheck/guards só pela45. Workers entregam requests propostos e observações, não disparam suites.
 
 I00 só escreve os registries/entrypoints enumerados e aplica patches compartilhados liberados pelo dono vigente. Os workers entregam fragmentos de registro e patches exatos com pre/postimage. O integrador não redesenha UI, inventa contratos ou reescreve a implementação para fazê-la encaixar.
 

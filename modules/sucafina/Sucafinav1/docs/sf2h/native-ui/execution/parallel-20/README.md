@@ -8,6 +8,7 @@
 - **Plano anterior:** PR76 `sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a` e review77 PR91 `native-plan-review@16712630025cad3de647f2ea49ecbcdb2cc854fa`. Sua triagem FIX-FIRST é origem dos achados, não contrato concorrente; as propostas 77A–77E **não** são uma segunda fila.
 - **Canônico preservado:** `dbf9547211d9b0fade619790de7c19c0869b7c7d`: 15 WPs, 74 tasks, 17 contratos e 1.610 critérios. O manifesto único mantém **78 ordens**: I00, D01, F01–F04, S01–S05, A01–A15, U01–U47, Q01–Q02 e R01–R03.
 - **Snapshot verificado 2026-11-15:** C51 `529142f63683de8e4b1f7d4232f88faf8ffcef6c`, tree `d679b541596dab3b280a87e15e4a0b29ee518262`; `sf2-stack@a6abd2c8d321daf1089f4d440027c46209a89cbe` é terminal documental da missão100, lease ENCERRADA; P03 original FAIL, produto sem freeze. Próxima autoridade depende de nomeação S0, não de inferência da71/100.
+- **S0 controle posterior:** `8819df6169abd94aaa89d50a21f113e5596d2aae` preparou integradora105, ainda `PREPARED_NOT_STARTED`; 101 tem CI de produto exclusivo, 45 compiler/guards; nenhuma licença de escrita inferida da designação.
 - **Material real da stack:** `sf2-stack` e ACKs S0 e integradora sucessora vigente (71/100 encerradas)/45/72/73/74 mudam independentemente. Cada GO depende de *observação atual* de SHA/tree e blobs por família, jamais de um SHA histórico da documentação.
 
 ## Conteúdo pronto para o operador
@@ -49,7 +50,7 @@ As 138 reivindicações de escrita dessas cartas foram conferidas **documentalme
 
 ## Execução sem retrabalho — condições não negociáveis
 
-C00 valida documento/digest/branch e reconcilia owners reais uma vez; entrega a cada writer sua ficha específica e preimages. Em cada saída, writer só escreve a allowlist, publica `ARTIFACT_READY` com receipt/handoff e solta a capacidade, sem aguardar serviços ou duplicar controllers. I00 integra por output com CAS e recebe fragmentos dos shared registries, sem reimplementar o que pertence ao produtor. O dispatcher canônico 45 escolhe testes causais e só deduplica request/runner/fixture/config/C idênticos; nenhuma suite repetida sem causa, nenhum green transplantado entre C.
+C00 valida documento/digest/branch e reconcilia owners reais uma vez; entrega a cada writer sua ficha específica e preimages. Em cada saída, writer só escreve a allowlist, publica `ARTIFACT_READY` com receipt/handoff e solta a capacidade, sem aguardar serviços ou duplicar controllers. I00 integra por output com CAS e recebe fragmentos dos shared registries, sem reimplementar o que pertence ao produtor. O owner101 de CI produto (45 somente compiler/guards) escolhe testes causais e só deduplica request/runner/fixture/config/C idênticos; nenhuma suite repetida sem causa, nenhum green transplantado entre C.
 
 As revisões finais R01/R02/R03 seguem no candidato completo corrigido, com original `GLOBAL_RELEASE=false` até autorização S0 e gates C/G7–D/G8. Não substituir banco, autenticador, parser, scanner ou contrato por stub para ficar verde. A velocidade não suspende rigor; fator 10× é **meta não medida**.
 

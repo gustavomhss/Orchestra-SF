@@ -47,7 +47,9 @@ class LaunchInputTests(unittest.TestCase):
             "current_integrator_lease": "synthetic-successor-lease",
             "integrator_identity": "synthetic-integrator",
             "integrator_branch": "synthetic-branch",
-            "dispatcher_45_ack": "synthetic-dispatcher",
+            "dispatcher_45_ack": "synthetic-legacy45",
+            "product_ci_101_ack": "synthetic-product101",
+            "compiler_45_ack": "synthetic-compiler45",
             "source_family_blobs": {"apps/cli/src/sucafina-product/installation.ts": "c" * 40},
             "contract_blobs": {"modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/CONTRACTS.md": "d" * 40},
             "observed_actor_slots": 1,
@@ -127,6 +129,27 @@ class LaunchInputTests(unittest.TestCase):
         code, body = self.execute(record)
         self.assertNotEqual(code, 0)
         self.assertTrue(any("duplicate active writer branch" in x for x in body["errors"]), body)
+
+    def test_missing_product_ci_101_ack_fails(self):
+        record = self.fixture()
+        record["product_ci_101_ack"] = None
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("product_ci_101_ack" in x for x in body["errors"]), body)
+
+    def test_missing_compiler_45_ack_fails(self):
+        record = self.fixture()
+        record["compiler_45_ack"] = None
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("compiler_45_ack" in x for x in body["errors"]), body)
+
+    def test_cannot_reuse_product_ack_for_compiler(self):
+        record = self.fixture()
+        record["compiler_45_ack"] = record["product_ci_101_ack"]
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("must be distinct" in x for x in body["errors"]), body)
 
     def test_invalid_git_blob_digest_is_rejected(self):
         record = self.fixture()

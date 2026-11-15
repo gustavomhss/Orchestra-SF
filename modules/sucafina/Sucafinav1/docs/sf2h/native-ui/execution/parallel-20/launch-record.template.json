@@ -29,7 +29,7 @@
   "known_external_blockers": [],
   "source_delta_receipts": [],
   "authoritative_approval_links": [],
-  "worker_start_rule": "No write before observed GO by S0 AND explicitly appointed successor integrator with live ACK/lease; 71 and 100 terminal receipts are historical only. Each output must have registered actor/branch/lease/allowlist, exact frozen family contract hash, current source blob/preimages, real owner releases, and nonoverlap. GO does not waive 45 gates. C00 is the SAME actor/lease as S0-appointed material stack integrator when writing shared paths; otherwise read-only coordination, never a second writer.",
+  "worker_start_rule": "No write before observed GO by S0 AND explicitly appointed successor integrator with live ACK/lease; 71 and 100 terminal receipts are historical only. Each output must have registered actor/branch/lease/allowlist, exact frozen family contract hash, current source blob/preimages, real owner releases, and nonoverlap. GO does not waive 45 gates. C00 is the SAME actor/lease as S0-appointed material stack integrator when writing shared paths; otherwise read-only coordination, never a second writer. S0 mission105 remains PREPARED until observed active ACK/lease. Product tests only101; compiler/guards only45.",
   "lease_shape": {
     "lease_id": null,
     "order_id": null,
@@ -51,7 +51,7 @@
     ],
     "terminal_handoff": null
   },
-  "evidence_note": "A populated file records observed facts, not authority by itself; verify each linked real ACK, GH refs, material and original CI externally. Never commit tokens, credentials, principal PII, secrets, private data or PDF exports. Historical ACK71/terminal100 are not active authority. current_integrator_ack/authority/lease must be independently verified live from S0 before any worker GO.",
+  "evidence_note": "A populated file records observed facts, not authority by itself; verify each linked real ACK, GH refs, material and original CI externally. Never commit tokens, credentials, principal PII, secrets, private data or PDF exports. Historical ACK71/terminal100 are not active authority. current_integrator_ack/authority/lease must be independently verified live from S0 before any worker GO. Never use old dispatcher_45_ack as product CI authority: product101 and compiler45 have disjoint roles.",
   "global_release": false,
   "prior_integrator_terminals": {
     "71": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
@@ -59,5 +59,11 @@
   },
   "current_integrator_ack": null,
   "current_integrator_authority": null,
-  "current_integrator_lease": null
+  "current_integrator_lease": null,
+  "s0_control_assignment_sha": "8819df6169abd94aaa89d50a21f113e5596d2aae",
+  "prepared_integrator_mission": 105,
+  "prepared_integrator_lease": "S0-C-e15-browser105",
+  "prepared_integrator_status": "PREPARED_NOT_STARTED_NOT_ACTIVE",
+  "product_ci_101_ack": null,
+  "compiler_45_ack": null
 }

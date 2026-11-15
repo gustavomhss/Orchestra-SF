@@ -12,11 +12,11 @@
 1. AGENTS aplicáveis, `execution/parallel-20/{README.md,GO-NOGO.md,PREFLIGHT-C51-READBACK.md,ADVERSARIAL-AUDIT.md,VALIDATION-DELTA.json}`.
 2. `execution/{manifest.json,EXECUTION-PROTOCOL.md,CONTRACTS.md,COMPONENT-CONTRACTS.md,component-locks.json,host-signatures.ts,component-signatures.ts,route-signatures.ts}`.
 3. `execution/{contract-catalog.json,surface-manifest.json,work-orders/*.json}`, **todas 78 ordens**, `parallel-20/{dispatch.json,PROMPTS.md,launch-record.template.json,validate_dispatch.py,test_validator_inputs.py}` e `../criteria-trace.json` com campaign imutável.
-4. Material C51, terminal100, releases de produtores/owners e autoridade real S0/45/current integrator; diferenciar ACK antigo de lease vigente.
+4. Material C51, terminal100, releases de produtores/owners e autoridade real S0/105 após ACK vivo, 101 produto CI, 45 compiler; diferenciar ACK antigo de lease vigente.
 
 ## Revisão e testes documentais exigidos
 
-- Executar em checkout autorizado o `validate_dispatch.py`, `validate_plan.py --strict` com campaign e os **nove testes** do `test_validator_inputs.py`; anexar comando, exit, stdout/artefato. Sem execução observada, marcar NOT_RUN, não PASS.
+- Executar em checkout autorizado o `validate_dispatch.py`, `validate_plan.py --strict` com campaign e os **doze testes** do `test_validator_inputs.py`; anexar comando, exit, stdout/artefato. Sem execução observada, marcar NOT_RUN, não PASS.
 - Conferir os 1.610 canonicalPointer/IDs/digest; 78 ordens/20 cartas/19 autores/58 remanescentes; 305 ops, 70 superfícies/165 rotas; ownership exato/prefix e demais leases ativas, grafos autoria vs integração vs qualificação, source/copy/schema digests; nenhum registry duplicado.
 - Conferir PR99 como proveniência real de `source.commit`, separada de PR76; C00 preflight read-only não exige seu próprio launch-record prévio; ACK e lease encerrados da 71 e 100 não dão GO.
 - **Unicidade C00**: se C00 editar shared paths, exigir MESMO ator e MESMA lease do único integrador material designado por S0. Caso diferente, C00 apenas leitor/coordenador com patches inertes; nunca dois writers da stack.
@@ -29,3 +29,6 @@
 Um parecer **assinado por outra sessão/reviewer independente**, com HEAD/tree e blobs, identidade observável, comandos/resultados reais, findings por severidade e arquivo/linha/contraexemplo/owner/patch mínimo, gate GO ou FIX-FIRST/NO-GO por família, blocked dependencies, e links na PR99. Sem alterar produto, disparar CI, merge, deploy, Azure ou declarar GLOBAL_RELEASE. Não aceitar autoria como auditoria independente.
 
 DOCUMENTARY_STRUCTURE_PASS não equivale a S0 GO, ARTIFACT_READY, INTEGRATED, QUALIFIED ou FINAL canônico.
+
+## Adendo de roteamento S0
+Control `8819df6169abd94aaa89d50a21f113e5596d2aae`: missão105 PREPARED_NOT_STARTED, não ACK; produto CI101/test:ci, compiler/guards45. O reviewer N0 deve testar 12 regressões e não confundir esses escopos.

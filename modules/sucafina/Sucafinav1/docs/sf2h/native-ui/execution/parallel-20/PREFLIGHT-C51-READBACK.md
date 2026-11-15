@@ -28,3 +28,7 @@
 5. Antes do release global, completar P03, M31/MI07, source95, testes reais browser+desktop, três FINAL do mesmo C, oito gates/AM e S0 C/G7–D/G8. Nenhum desses foi fechado neste preflight.
 
 **Disposição:** `STRUCTURAL_READBACK_OK / EXECUTION_NO_GO`. Fonte e cartas prontas para operador executar o preflight; **nenhuma sessão autora foi aberta, nenhuma lease concedida, nenhum CI disparado, nenhum teste de produto/compilador feito por esta publicação**.
+
+## Adendo S0-control (2026-11-15)
+
+O HEAD S0-control `8819df6169abd94aaa89d50a21f113e5596d2aae` designou missão105 `S0-C-e15-browser105` como sucessora, porém `PREPARED_NOT_STARTED`. Isso atualiza o `new_integrator_appointee:null` do terminal100, que permanece histórico. Exigir ACK/lease ativos antes de escrita. O mesmo controle designou CI produto exclusivo101 (primeiro ciclo C51 4 SUCCESS/2 FAILURE) e compiler/guards45. Validador e cartas corrigidos; **doze** regressões preparadas, ainda NOT_RUN neste ambiente sem checkout.
