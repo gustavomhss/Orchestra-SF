@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h.product-ci191.v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 191,
+  "epoch": "product-ci-e5-browser191",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "github_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "requested_model": "Astra",
+  "native_session_id": null,
+  "native_session_id_exposed": false,
+  "sole_product_ci": true,
+  "native_goal": "PAUSED",
+  "global_release": false,
+  "product_current": {
+    "head": "4032255351f71bf4e7cd81a38e64160c4a540e13",
+    "tree": "65482c1cb7d2826cb0410e5799c1aaa70b33cad9",
+    "message": "test(sf2h): consume 183 real browser PlatformProvider fixture [skip ci]",
+    "complete_final_candidate": false
+  },
+  "pending": [
+    {
+      "priority": 1,
+      "area": "A04 decisions",
+      "state": "WAIT_AUTHOR_173_OR_OWNER_AND_189_CONSUMPTION",
+      "unchanged_input_not_retested": true,
+      "exact": [
+        "Sucafinav1/test/native-ui-contract/decisions.test.ts"
+      ],
+      "condition": "new test decoder postblob, actual latest C/tree after CAS, no fake Effect API"
+    },
+    {
+      "priority": 2,
+      "area": "A01 A11",
+      "state": "WAIT_189_CONSUME_PROJECTION_DEPS",
+      "exact": [
+        "Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "Sucafinav1/test/native-ui-contract/operations.test.ts"
+      ],
+      "condition": "domain/projection.ts and operations/projection.ts real source postimages incorporated; new W and transitive imports verified"
+    },
+    {
+      "priority": 3,
+      "area": "F03 S01 S02 S05",
+      "state": "WAIT_189_CONSUME_182_183_184",
+      "exact": [
+        "./test-browser/sucafina-native/page-frame.test.ts",
+        "./test-browser/sucafina-native/s01.test.ts",
+        "./test-browser/sucafina-native/s02.test.ts",
+        "./test-browser/sucafina-native/s05.test.ts"
+      ],
+      "package": "app",
+      "directory": "packages/app-shell",
+      "condition": "real 182/183/184 source/tests consumption and withBrowserPlatform, app-shared fixtures and exact corrected ./ paths; 164 wrong path zero-selected INVALID"
+    },
+    {
+      "priority": 4,
+      "area": "AM01–AM06 POSITIVE",
+      "state": "NOT_RUN",
+      "condition": "real installed native provider model/profile skills 5/18 actual calls, private MCP operations, Atlas scanner real binary/digest/process restart and Relay end-to-end on same candidate, proof correlated to authenticated actors",
+      "warning": "B4 negative tests green cannot be promoted to AM positive"
+    },
+    {
+      "priority": 5,
+      "area": "U15 U39 U40",
+      "state": "NOT_RUN",
+      "condition": "185/186 no-skips consumed; 187 installed F04 manifest, real authenticated actors and URLs, same candidate/host with actual test collection and artifacts"
+    },
+    {
+      "priority": 6,
+      "area": "C08 bounded native lifecycle",
+      "state": "NEW_CHANGED_INPUT_NOT_RUN",
+      "source_product_head": "b36de3e0b3aee61c0de25ef3cc5440a48e3c307d",
+      "test_path": "Sucafinav1/test/product/native-host-provider/lifecycle.test.ts",
+      "test_blob": "89f6bbe2fa429be861eab0bb27777ae947f533c2",
+      "condition": "if 189 current candidate retains new code; this is a component fault-injection test, never installed native positive"
+    },
+    {
+      "priority": 7,
+      "area": "FULL EPIC AND 8 FINAL SELECTORS",
+      "state": "NOT_RUN",
+      "condition": "one coherent accepted C with all WPs/74 tasks/1610 criteria real consumers, 190 compiler/SDK, AM01–06, 3 independent FINAL reviews, C/G7 guards, valid D+separate D/G8, proven remote SHA no orphan writers"
+    }
+  ],
+  "current_inflight": 0,
+  "current_queued": 0,
+  "if_late_predecessor": "reconcile epoch/fence/actions; no silence-based death claim, no force",
+  "scope": "Only existing test:ci snapshots, exact selectors, no new CI/controller or parallel dispatcher"
+}
