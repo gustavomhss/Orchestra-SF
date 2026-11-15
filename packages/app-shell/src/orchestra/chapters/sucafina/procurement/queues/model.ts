@@ -6,8 +6,12 @@ import type { SfRef } from "@orchestra/schema/sucafina/context"
  * snapshots nor decides membership, permissions, holder or approval stage.
  * \`id\` is the original record ref after F01 has validated the route codec.
  */
+export type SfProcurementQueueGroup = "waitingForYou" | "waitingForOthers" | "unassigned"
+
 export type SfProcurementQueueRow = Readonly<{
   id: SfRef
+  /** Assigned ONLY by canonical procurementApprovalGroups on the producer. */
+  group: SfProcurementQueueGroup
   sourceRef: string
   sourceDigest: string
   version: number
@@ -29,12 +33,14 @@ export type SfProcurementQueueRow = Readonly<{
 }>
 
 export type SfProcurementQueueFilters = Readonly<{
+  group: SfProcurementQueueGroup | null
   status: string | null
   stage: string | null
   query: string
 }>
 
 export const SF_QUEUE_INITIAL_FILTERS: SfProcurementQueueFilters = Object.freeze({
+  group: null,
   status: null,
   stage: null,
   query: "",
@@ -47,6 +53,7 @@ export function sfQueueFilterRows(
 ): readonly SfProcurementQueueRow[] {
   const query = filters.query.trim().toLocaleLowerCase()
   return rows.filter((row) => {
+    if (filters.group !== null && row.group !== filters.group) return false
     if (filters.status !== null && row.status !== filters.status) return false
     if (filters.stage !== null && row.approvalStage !== filters.stage) return false
     if (!query) return true
@@ -65,7 +72,8 @@ export function sfQueueFilterRows(
 export function sfQueueFilterOptions(rows: readonly SfProcurementQueueRow[]) {
   const statuses = [...new Set(rows.map((row) => row.status).filter((value): value is string => value !== null))]
   const stages = [...new Set(rows.map((row) => row.approvalStage).filter((value): value is string => value !== null))]
-  return { statuses, stages } as const
+  const groups = [...new Set(rows.map((row) => row.group))]
+  return { statuses, stages, groups } as const
 }
 
 export type SfProcurementQueueReadPhase =
