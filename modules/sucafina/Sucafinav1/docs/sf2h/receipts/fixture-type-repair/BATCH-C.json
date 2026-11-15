@@ -1,0 +1,18 @@
+{
+  "schema": "sf2h-fixture-type-repair-batch-v1",
+  "mission": 118,
+  "batch": "C",
+  "source_parent": "90a341498d611630ae33a7d66e4465c3b3f30d6b",
+  "source_tree": "0115602d0dc1d48359d9be739ca9c1f3b76fa62c",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+      "preimage_blob_sha": "869a66168c1b43189b2291f50a80742761ce6043",
+      "change": "HeadersInit typed objects preserve exact zero/understated Content-Length and streaming cancel checks"
+    }
+  ],
+  "not_run": [
+    "typecheck 119",
+    "test 120"
+  ]
+}
