@@ -5,7 +5,7 @@
 **Estado:** alterações de código comitadas e publicadas. AM01 e AM02 permanecem **NOT_RUN**. Nenhum teste, typecheck, build, validador ou CI disparado por esta sessão. `GLOBAL_RELEASE=false`.
 
 ## Código entregue
-**AM01:** driver nativo de cinco perfis em `test/product/integrated-proofs/am01/recall-five-profiles.test.ts`, com caso C09/C10 real, negativas de grant/identidade, turnos do provider apenas quando disponível, 20 chamadas C16 atestadas e paridade autenticada da UI, persistência e consumo após reabrir o host. Preservado `portfolio-recall-proof.test.ts` e testes WP12 das 18 skills, inclusive revisão `sf_reviewer` em execução distinta.
+**AM01:** driver nativo de cinco perfis em `test/product/integrated-proofs/am01/recall-five-profiles.test.ts`, com caso C09/C10 real, negativas de grant/identidade, turnos do provider apenas quando disponível, 20 chamadas C16 que precisarão ser efetivamente observadas no Actions de 191 e paridade autenticada da UI, persistência e consumo após reabrir o host. Preservado `portfolio-recall-proof.test.ts` e testes WP12 das 18 skills, inclusive revisão `sf_reviewer` em execução distinta.
 
 **AM02:** driver real de SessionV2/ToolRegistry/C16 para Dashboard, KPI e BI em `am02/performance-public-c16-reopen.test.ts`, observador de assistentes nativos `am02/observe-native-c16.ts`, E2E F04 de Dashboard/Knowledge e correlação hospedada sem falsificar PASS. Preservado `forecast-domain-correlation.test.ts`.
 
