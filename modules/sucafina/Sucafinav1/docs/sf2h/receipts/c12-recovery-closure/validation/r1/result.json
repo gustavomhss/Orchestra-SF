@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.c12-recovery-closure.validation.v1",
+  "id": "r1",
+  "mission": 65,
+  "state": "FAIL",
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "W": "5da7aa9696b99509992c0d83dd1ef0f7315af38d",
+  "W_tree": "eb2eb413d084c638c8929619bec44ce171dd9713",
+  "S": "31c2339dd0015a9876ee27d904173cc5c901dd18",
+  "S_tree": "9e89d4dd20e66f4ff32a630fec080b1f9a6477dc",
+  "S_parent": "5da7aa9696b99509992c0d83dd1ef0f7315af38d",
+  "S_only_delta": ".ci-run.json",
+  "request_file": "request.json",
+  "request_blob": "a90bb3aa5586e6a3c3cbaa80950bebb03e86c2d4",
+  "workflow": ".github/workflows/test-ci.yml",
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "run_id": 43668120365,
+  "job_id": 132671948853,
+  "attempt": 1,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668120365",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668120365/job/132671948853",
+  "conclusion": "failure",
+  "results": {
+    "pass": 23,
+    "fail": 1,
+    "filtered": 0,
+    "expectations": 676,
+    "files": 10,
+    "elapsed_seconds": 21.75
+  },
+  "diagnosis": "New Hot Topic test requested annual source period. Production issuer correctly refused before register. Daily record period fix changed only new fixture/test; no grants or assertions weakened.",
+  "log_excerpt": "test-output.log",
+  "runtime": {
+    "runner": "ubuntu-24.04",
+    "platform": "linux",
+    "architecture": "x64",
+    "bun": "1.3.14",
+    "bun_revision": "0d9b296af"
+  },
+  "omni": {
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "spawns": 0,
+    "delegated": 0,
+    "credit": false
+  },
+  "test_execution": "Hosted Actions only; zero local product tests/typechecks/builds.",
+  "qualifies_integration": false,
+  "GLOBAL_RELEASE": false
+}

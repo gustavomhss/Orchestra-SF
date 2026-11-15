@@ -1,0 +1,48 @@
+bun test v1.3.14 (0d9b296a)
+2026-11-15T02:36:16.0615901Z 
+2026-11-15T02:36:16.0616401Z Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts:
+2026-11-15T02:36:18.5518686Z 29 |       await fixture.editCase(mutation.edit)
+2026-11-15T02:36:18.5519443Z 30 |       const attacked = await fixture.observe()
+2026-11-15T02:36:18.5520295Z 31 |       expect(attacked.decision!.preparedChanges[0]!.operation.commandDigest).toBe(ready.change.operation.commandDigest)
+2026-11-15T02:36:18.5521292Z 32 |       expect(attacked.decision!.preparedChanges[0]!.idempotencyKey).toBe(ready.change.idempotencyKey)
+2026-11-15T02:36:18.5522063Z 33 |       const refused = await fixture.apply(ready.original, { mode: "recover", operationId: `c12-${mutation.name}` })
+2026-11-15T02:36:18.5522911Z 34 |       expect(refused).toEqual({ status: mutation.reason === "original-intent-mismatch" ? "conflict" : "unavailable", reason: mutation.reason })
+2026-11-15T02:36:18.5523440Z                            ^
+2026-11-15T02:36:18.5523755Z error: expect(received).toEqual(expected)
+2026-11-15T02:36:18.5524195Z 
+2026-11-15T02:36:18.5524264Z   {
+2026-11-15T02:36:18.5524471Z -   "reason": "original-intent-mismatch",
+2026-11-15T02:36:18.5524719Z -   "status": "conflict",
+2026-11-15T02:36:18.5524905Z +   "status": "ok",
+2026-11-15T02:36:18.5525070Z +   "value": {
+2026-11-15T02:36:18.5525270Z +     "at": "2026-11-13T00:00:00Z",
+2026-11-15T02:36:18.5525645Z +     "commandDigest": "eb08fec3250ab9ee9e30e3ae525109a08cc751c4b1527dad8fa6860ced458a0f",
+2026-11-15T02:36:18.5526022Z +     "id": "dec989a3-2c47-431e-b50b-9cd8c40c0c9c",
+2026-11-15T02:36:18.5526293Z +     "idempotencyKey": "c12-planner-edit",
+2026-11-15T02:36:18.5526535Z +     "principalRef": "finance",
+2026-11-15T02:36:18.5526729Z +     "result": {
+2026-11-15T02:36:18.5526890Z +       "ok": true,
+2026-11-15T02:36:18.5527049Z +       "value": {
+2026-11-15T02:36:18.5527232Z +         "status": "applied",
+2026-11-15T02:36:18.5527413Z +       },
+2026-11-15T02:36:18.5527554Z +     },
+2026-11-15T02:36:18.5527710Z +     "surface": "planner",
+2026-11-15T02:36:18.5528110Z +     "targetIncarnation": "1398cf0a-c480-4cf6-aac5-6ab3a4f39f1e",
+2026-11-15T02:36:18.5528369Z +     "version": 1,
+2026-11-15T02:36:18.5528524Z +   },
+2026-11-15T02:36:18.5528669Z   }
+2026-11-15T02:36:18.5528937Z 
+2026-11-15T02:36:18.5529036Z - Expected  - 2
+2026-11-15T02:36:18.5529201Z + Received  + 17
+2026-11-15T02:36:18.5529293Z 
+2026-11-15T02:36:18.5529909Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts:34:23)
+2026-11-15T02:36:18.5532607Z (fail) C12 recovery refuses material or choice replacement even when the original claimed digests and keys are retained [2339.52ms]
+2026-11-15T02:36:18.5545411Z 
+2026-11-15T02:36:18.5546329Z omni positive control [b3f6e6b460940a02d28c083aa7eef4ef]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T02:36:18.5546976Z  0 pass
+2026-11-15T02:36:18.5547153Z  1 filtered out
+2026-11-15T02:36:18.5547319Z  1 fail
+2026-11-15T02:36:18.5547472Z  6 expect() calls
+2026-11-15T02:36:18.5547670Z Ran 1 test across 1 file. [2.50s]
+2026-11-15T02:36:18.5691557Z ##[error]Process completed with exit code 1.
+2026-11-15T02:36:18.6225304Z

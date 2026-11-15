@@ -1,0 +1,633 @@
+{
+  "schema": "sf2h.c12-first-save-criterion-trace.v1",
+  "state": "SOURCE_SUBSET_PASS_EXTERNAL_LOOKUP_BLOCKED",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 65,
+  "source": {
+    "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+    "tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+    "S": "041e9d7dd055043a1a3de5c8261e399f8da2de73",
+    "runId": 43668690783,
+    "jobId": 132673683798,
+    "resultClaimed": true,
+    "runConclusion": "success",
+    "verification": "Root verified the hosted job log via GitHub MCP. No local execution, remote action or product edit by this documentation delegate."
+  },
+  "planning": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor": "S4-A",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+    "gitBlob": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+    "assignedReadCoverage": {
+      "proof_bindings": 83,
+      "evidence": "complete; all required fields and 8 included packages",
+      "execution_proofs": "AM01-AM06 complete; AM01 5 profiles/18 skills and AM02 8 packs/39 routes retained",
+      "mandatory_appendices": 2
+    },
+    "mandatoryAppendices": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "gitBlob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "read": "complete"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "gitBlob": "033737b1051b23443e633df7874c550629bf55a1",
+        "read": "complete"
+      }
+    ],
+    "scopeAccounting": "Operational slices do not replace the original 15 WPs / 74 tasks / 17 contracts / 1610 criteria. No full actor/WP/AM closure is claimed by this trace."
+  },
+  "activeTests": {
+    "file": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+    "helper": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts",
+    "testStatus": "PASS",
+    "note": "Both active first-save scenarios passed on exact W2/S2. This PASS covers canonical creation and retained-body Hot Topic register recovery only; it does not close minimal-key UI lookup, a full S4-A criterion, process restart or global acceptance.",
+    "cases": [
+      {
+        "name": "C12 first case save reopens the original C08 creation after its committed acknowledgement is lost",
+        "producer": "business.cases.draft / createDecisionCasePort",
+        "persistence": "createSfProductState + createSfSourcePersistence + openLocalStore private SQLite",
+        "admission": "Fresh actual ui.admit/validate for sf_case_draft; authenticated fixture actor alice",
+        "fault": "Throw only after the real state.transaction returns status ok; producer maps loss to unavailable/product-state-unavailable",
+        "effect": "One authoritative case and one original C08 transaction, zero application receipts",
+        "retry": "New services/UI authority, same directory+installationId, no initializeSources/reseed; same payload/key returns original full case",
+        "negatives": [
+          "same-key changed objective -> idempotency-content-changed",
+          "revoked actor -> denied",
+          "explicit access restoration permits original result without a new commit"
+        ],
+        "marker": "SF_C12_FIRST_CASE_SAVE",
+        "status": "PASS",
+        "observed": {
+          "caseId": "b12fab16-1d41-4d10-ae6c-c9a1ade61c73",
+          "version": 1,
+          "originalResultDigest": "ea8ed0c40ddba6d78730509a4cf484eb1b4b6d859f3fa58918e0641185102ed1",
+          "elapsedMilliseconds": 122.96,
+          "newRecordFromRecovery": 0,
+          "reopen": "SQLite-and-services",
+          "reseeded": false
+        }
+      },
+      {
+        "name": "C12 lost first Hot Topic register recovers its exact original result after reopen without choosing a later identical draft",
+        "producer": "createSfDashboardHttp -> real human.admit(decisions.edit) -> dashboardDecisions.drafts.register -> createHotTopicDraftStore",
+        "sourceProducer": "Real dashboard-hot-topic-source, canonical record evidence",
+        "fault": "Throw after the real preferences C08 transaction returns status ok; real store/HTTP maps loss to503 hot-topic-draft-unavailable",
+        "effect": "One active/history draft pair and one outcome transaction per original key; no choice, application receipt or official domain mutation",
+        "disambiguation": "A second explicitly admitted key creates a separate draft with identical text/target; original key recovers its first original draftRef, not the later record",
+        "retry": "Same original full body/key, fresh human admission, reopened SQLite/services without reseed",
+        "negatives": [
+          "same-key mutated private notes ->409 idempotency-content-changed",
+          "bob without case participation ->403",
+          "revoked alice ->403",
+          "restored authorized alice -> original ACK and no durable delta"
+        ],
+        "marker": "SF_C12_FIRST_REGISTER",
+        "minimalLookupQualified": false,
+        "status": "PASS",
+        "observed": {
+          "originalDraftRef": "hot-topic-draft:5b25c9c7424cd8b76788424633a40a964b60cf6e718e684cf33a053be8f7d5e9",
+          "originalResultDigest": "06da5a94ba1e6066ab81cd2824523a6a816bf554d1f486fc1f1b641d433bd497",
+          "elapsedMilliseconds": 314.31,
+          "registrationReached": true,
+          "originalIntentEffects": 1,
+          "separateExplicitIntentEffects": 1,
+          "extraEffectsFromRecovery": 0,
+          "originalBodyRetained": true,
+          "minimalLookupQualified": false,
+          "reopen": "SQLite-and-services",
+          "reseeded": false
+        }
+      }
+    ],
+    "comparisonOracle": "Full durable snapshots are equal across reopen and all denied/recovery attempts. Official Hot Topic values/version/audit remain unchanged.",
+    "proofBoundary": "No application CommandReceipt is fabricated. The original C08 creation/register acknowledgement is a distinct record/result proof."
+  },
+  "criteria": [
+    {
+      "criterion_id": "WP11.DOD.01",
+      "criterion_text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "partial",
+      "coveragePlanned": "Canonical case survives SQLite/services reopen; choices are deliberately not seeded or exercised.",
+      "remaining": "No full process restart, authorized collaborator resume, or persisted-choice journey in this file.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T01.CHK.01",
+      "criterion_text": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "partial",
+      "coveragePlanned": "Case producer commits real id/incarnation/version/participants, loses ACK, then resumes through a fresh UI authority and reopened provider.",
+      "remaining": "Uses the original principal after reopen, not a second authorized collaborator. Wrong-principal refusal is exercised for Hot Topic registration.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T01.DOD.01",
+      "criterion_text": "Caso é criado, retomado e atualizado no provider real da composição; adapter em memória isolado não fecha DoD.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "partial",
+      "coveragePlanned": "business.cases.draft creates and resumes a real case through production C08/privateSQLite and production service composition.",
+      "remaining": "No full Workbench browser navigation or UI creation consumption is claimed.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T01.INV.01",
+      "criterion_text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "constraint",
+      "coveragePlanned": "Principal, policy/access revision, namespace permission and command identity originate in the real product authority; producers assign record IDs and versions.",
+      "remaining": "Fixture actors and initial official Hot Topic are explicit controlled inputs, not native/model authority.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.QLT.02",
+      "criterion_text": "Falha conserva trabalho e estado de cada mudança.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "partial",
+      "coveragePlanned": "Post-commit acknowledgement loss preserves the authoritative record and stable original correlation; replay leaves the full durable snapshot unchanged.",
+      "remaining": "The old minimal UI correlation path remains blocked, and apply/reconciliation evidence lives in separate tests.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.INV.02",
+      "criterion_text": "Não há transação global presumida nem efeito repetido em retry.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "partial",
+      "coveragePlanned": "The original registration key has one effect; a second explicitly admitted key is a separate real intent, and retries add no records.",
+      "remaining": "These registration tests do not alone prove multi-domain partial execution or a domain CommandReceipt.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.INV.01",
+      "criterion_text": "Escolha não é aprovação e simulação não grava em fonte oficial.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "constraint",
+      "coveragePlanned": "No choice or approval is seeded; register creates only a protected operational draft, with zero application receipts and official Hot Topic unchanged.",
+      "remaining": "No Procurement financial approval or policy readiness is inferred.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T03.INV.01",
+      "criterion_text": "Escolha gerencial não equivale a aprovação formal; UI ou IA não delegam autoridade inexistente.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "constraint",
+      "coveragePlanned": "Real human admission to decisions.edit authorizes draft registration only.",
+      "remaining": "No claim that a choice grants formal Procurement approval; no policy change.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T03.CHK.02",
+      "criterion_text": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "constraint",
+      "coveragePlanned": "The registration path leaves choices, application receipts and official domain data unchanged.",
+      "remaining": "The actual choosing/preparation flow belongs to separate source tests; this is not a full CHK.02 pass.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T04.CHK.02",
+      "criterion_text": "Perder resposta depois do commit e reenviar a mesma correlação resulta em um efeito; caso sem receipt autoritativo fica indeterminado e exige reconciliação, nunca retry cego.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "supporting-only",
+      "coveragePlanned": "Proves the registration-level original correlation discipline after a real commit, with a digest conflict for mutated payload and no additional durable effect.",
+      "remaining": "Full criterion requires domain mutation plus authoritative original CommandReceipt and recovery without redispatch; the first-save file does not establish that part.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T04.DOD.01",
+      "criterion_text": "O módulo integrado recupera falha parcial e resposta perdida usando recibos reais de domínio.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "not-covered-by-this-file",
+      "coveragePlanned": "Root source tests separately exercise actual domain recovery and partial state.",
+      "remaining": "Registration ACKs are not CommandReceipts and must not substitute for domain execution evidence.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "NOT_RUN",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T04.DOD.02",
+      "criterion_text": "Recuperação consulta recibos de domínio gravados atomicamente com a mutação e reconcilia o caso; a prova inclui resposta perdida após commit e ausência de efeito duplicado.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "not-covered-by-this-file",
+      "coveragePlanned": "Root source tests separately exercise domain-commit/case-reconciliation gaps.",
+      "remaining": "The first-save register does not execute a domain command or reconcile a domain receipt.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "NOT_RUN",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T04.INV.01",
+      "criterion_text": "Não existe promessa de transação global; um erro posterior não desfaz ou oculta commits anteriores.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "constraint",
+      "coveragePlanned": "Each observed C08 transaction has its own committed result; losing a later acknowledgement does not erase it.",
+      "remaining": "No global transaction across Planner/Procurement/Dashboard is promised.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T04.QLT.01",
+      "criterion_text": "Estado informa efeito comprovado e ação de recuperação; correlação estável independe de narrativa IA.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "partial",
+      "coveragePlanned": "The recovered record/result and exact command key are observed from durable C08 transactions and verified independently of narrative.",
+      "remaining": "No LLM/native narrative or fabricated execution receipt is accepted as a proof.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    },
+    {
+      "criterion_id": "WP11.T04.SUC.01",
+      "criterion_text": "O usuário sabe o que já foi feito e retoma só o restante, com ausência verificável de efeitos duplicados.",
+      "proof_packages": [
+        "E10",
+        "E12"
+      ],
+      "status": "NOT_RUN",
+      "proofRole": "supporting-only",
+      "coveragePlanned": "Original first-save retries return the existing record instead of starting another intent.",
+      "remaining": "Pending multi-domain application resumption is a separate test obligation.",
+      "fullCriterionPassClaimed": false,
+      "sourceEvidenceStatus": "PASS",
+      "sourceEvidenceRef": {
+        "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+        "runId": 43668690783,
+        "jobId": 132673683798,
+        "testFile": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts"
+      }
+    }
+  ],
+  "externalFinding": {
+    "id": "IR-EXT-FIRST-SAVE-LOOKUP",
+    "status": "BLOCKED",
+    "history": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-recovery/findings.json",
+    "historyHandoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-recovery/handoff.md",
+    "upstreamCriterionIds": [
+      "WP02.QLT.02",
+      "WP02.T02.QLT.02",
+      "WP01.T03.DOD.01",
+      "WP01.T03.CMP.01",
+      "WP01.T03.SUC.01"
+    ],
+    "upstreamScope": "Historical read-only cross-owner mapping; these IDs are not claimed as new S4-A proof bindings.",
+    "actualMeaning": "First Hot Topic draft save/register loses reply before draftRef; UI retains only caseRef/key and loses private body on reload.",
+    "supportedToday": "Exact full-body register retry can resolve its original durable outcome under fresh authorization.",
+    "missing": "No current store/host/HTTP method resolves minimal original caseRef/key to the authoritative ACK; list/discover do not bind original key and readCurrent requires draftRef.",
+    "proposal": "external/first-save/manifest.json",
+    "proposalState": "NOT_APPLIED_NOT_RUN_NOT_TYPECHECKED",
+    "owners": {
+      "integrationAndHost": "60 terminal; PR65 awaits authorized resumption and correct shared-producer ownership. No automatic successor.",
+      "uiConsumer": "52"
+    },
+    "limits": [
+      "Active first-save test retains original body; it does not close body-free UI recovery",
+      "Proposed method is read-only first register v1, not a new registration or financial approval",
+      "No archived postimage is imported or executed"
+    ],
+    "integrationHandoff": {
+      "owner": 60,
+      "state": "TERMINAL_LEASE_ENDED",
+      "terminalSha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "handoffPR": 65,
+      "handoffUrl": "https://github.com/gustavomhss/Orchestra-SF/pull/65",
+      "handoffState": "AWAITING_AUTHORIZED_RESUMPTION",
+      "successorInferred": false,
+      "integrationAcceptanceClaimed": false
+    }
+  },
+  "sourceChangeConstraints": {
+    "inspectedCompare": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85...5da7aa9696b99509992c0d83dd1ef0f7315af38d",
+    "storage": "originalIntent is nested in the existing applicationAttempt value only; canonical raw receipt shape and C08 schema/namespaces remain unchanged.",
+    "directProducer": "No extra reservation is added to direct createSfPreparedApply. Existing-attempt validation is conditional on a real prior attempt. Atomic staging/receipt-version/grant failure paths still return commit:false before effect/receipt persistence.",
+    "proofCaution": "These are static source constraints; actual regression results must come from the W1 hosted selection.",
+    "finance": "Preserve Finance Apply, including independent prepared producer rollback, current authoritative rereads, final receipt retention and alias behavior. No invented financial approval or Procurement policy weakening.",
+    "namespace": "No active UI52, producers61, runtime59 or other foreign paths modified.",
+    "productW": "99919e946fa065cbcd458446fc71ab3f50f73267",
+    "regressionObservation": {
+      "runId": 43668690783,
+      "jobId": 132673683798,
+      "result": "27PASS/0FAIL",
+      "verification": "Root MCP log verification; source-only."
+    }
+  },
+  "evidenceRequirements": {
+    "applicable": [
+      "criterion/task IDs",
+      "W and tree",
+      "S and request hash",
+      "actual selection and fixture closure",
+      "run/job/log results",
+      "UI actor fixture and current authority",
+      "original command key/digest and output digest",
+      "durable counts and snapshots",
+      "reopen boundary",
+      "explicit limits"
+    ],
+    "notApplicable": [
+      {
+        "field": "nativeSessionId/profileId/skill load receipt/model run",
+        "reason": "No native session, model or skill execution occurs in these deterministic consumer tests."
+      },
+      {
+        "field": "global AM04/C-G7/D-G8/reviewer acceptance",
+        "reason": "This is a source slice; integrated multi-domain and independent acceptance evidence remains required."
+      },
+      {
+        "field": "Orchestra process restart",
+        "reason": "Services and the SQLite driver reopen in the same Bun process."
+      },
+      {
+        "field": "CommandReceipt for Hot Topic register",
+        "reason": "Registration creates a protected draft outcome, not a domain application receipt."
+      }
+    ],
+    "rule": "Source PASS may be assigned only after exact hosted evidence; no aggregate criterion, minimal UI lookup or later integration PASS is inferred."
+  },
+  "hostedHistory": [
+    {
+      "W": "5da7aa9696b99509992c0d83dd1ef0f7315af38d",
+      "tree": "eb2eb413d084c638c8929619bec44ce171dd9713",
+      "S": "31c2339dd0015a9876ee27d904173cc5c901dd18",
+      "runId": 43668120365,
+      "jobId": 132671948853,
+      "conclusion": "failure",
+      "selectionTotals": {
+        "pass": 23,
+        "fail": 1,
+        "expectations": 676,
+        "tests": 24,
+        "files": 10,
+        "seconds": 21.75
+      },
+      "ownFile": {
+        "pass": 1,
+        "fail": 1
+      },
+      "logsObservedVia": "GitHub MCP fetch_workflow_job_logs",
+      "omni": {
+        "nonce": "4873a9204792152e84e7bead0697ef03",
+        "status": "not applicable",
+        "spawns": 0,
+        "delegated": 0,
+        "proofCredit": false
+      },
+      "ownTestResults": [
+        {
+          "name": "C12 first case save reopens the original C08 creation after its committed acknowledgement is lost",
+          "status": "PASS",
+          "observed": {
+            "caseId": "afb0181d-a3ba-4163-b17c-862daef15b4b",
+            "version": 1,
+            "originalResultDigest": "c18cd81758e4818ee32eeac4fdcd8b6d339c079f16f1e4c798951a18464b3ef2",
+            "elapsedMilliseconds": 110.76
+          }
+        },
+        {
+          "name": "C12 lost first Hot Topic register recovers its exact original result after reopen without choosing a later identical draft",
+          "status": "FAIL",
+          "observed": {
+            "stage": "dashboard-hot-topic-source",
+            "expectedStatus": 200,
+            "actualStatus": 403,
+            "elapsedMilliseconds": 39.18,
+            "registrationReached": false,
+            "recoveryQualified": false
+          }
+        }
+      ]
+    },
+    {
+      "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+      "tree": "95e8f51bcfe3f613177e676a1053c2ab87dd8d6d",
+      "S": "041e9d7dd055043a1a3de5c8261e399f8da2de73",
+      "runId": 43668690783,
+      "jobId": 132673683798,
+      "conclusion": "success",
+      "selectionTotals": {
+        "pass": 27,
+        "fail": 0,
+        "expectations": 824,
+        "tests": 27,
+        "files": 11,
+        "seconds": 24.47
+      },
+      "ownFile": {
+        "pass": 2,
+        "fail": 0
+      },
+      "ownTestResults": [
+        {
+          "name": "C12 first case save reopens the original C08 creation after its committed acknowledgement is lost",
+          "status": "PASS",
+          "observed": {
+            "caseId": "b12fab16-1d41-4d10-ae6c-c9a1ade61c73",
+            "version": 1,
+            "originalResultDigest": "ea8ed0c40ddba6d78730509a4cf484eb1b4b6d859f3fa58918e0641185102ed1",
+            "elapsedMilliseconds": 122.96,
+            "newRecordFromRecovery": 0,
+            "reopen": "SQLite-and-services",
+            "reseeded": false
+          }
+        },
+        {
+          "name": "C12 lost first Hot Topic register recovers its exact original result after reopen without choosing a later identical draft",
+          "status": "PASS",
+          "observed": {
+            "originalDraftRef": "hot-topic-draft:5b25c9c7424cd8b76788424633a40a964b60cf6e718e684cf33a053be8f7d5e9",
+            "originalResultDigest": "06da5a94ba1e6066ab81cd2824523a6a816bf554d1f486fc1f1b641d433bd497",
+            "elapsedMilliseconds": 314.31,
+            "registrationReached": true,
+            "originalIntentEffects": 1,
+            "separateExplicitIntentEffects": 1,
+            "extraEffectsFromRecovery": 0,
+            "originalBodyRetained": true,
+            "minimalLookupQualified": false,
+            "reopen": "SQLite-and-services",
+            "reseeded": false
+          }
+        }
+      ],
+      "logsObservedBy": "root via GitHub MCP",
+      "omniEvidence": "See canonical R2 job receipt; this criterion trace does not invent or duplicate an unprovided nonce."
+    }
+  ],
+  "fixtureCorrection": {
+    "state": "VALIDATED_IN_W2",
+    "affectedFiles": [
+      "test/product/c12-recovery-closure/first-save-fixture.ts",
+      "test/product/c12-recovery-closure/first-save-register.test.ts"
+    ],
+    "cause": "The case horizon was incorrectly passed as the Hot Topic record evidence period. The canonical projector requires period.start==period.end==the host as-of date.",
+    "source": "product/integration/source-projections.ts",
+    "sourceBlob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+    "change": "Derive firstSaveRecordPeriod from the fixture host clock at 2026-11-14 and use that day for the production source request; preserve the annual case horizon.",
+    "authorizationChanges": false,
+    "producerChanges": false,
+    "assertionWeakened": false,
+    "next": "Correction passed in the exact W2 hosted selection. Preserve W1 historical failure; do not infer unsupported minimal lookup or full criterion closure.",
+    "W": "99919e946fa065cbcd458446fc71ab3f50f73267",
+    "S": "041e9d7dd055043a1a3de5c8261e399f8da2de73",
+    "runId": 43668690783,
+    "jobId": 132673683798
+  },
+  "criterionStatusRule": "sourceEvidenceStatus describes the qualified subset/constraint in this file. status remains NOT_RUN for full criterion qualification, because the stated remaining obligations have not been discharged by these two tests.",
+  "integrationHandoff": {
+    "owner": 60,
+    "state": "TERMINAL_LEASE_ENDED",
+    "terminalSha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "handoffPR": 65,
+    "handoffUrl": "https://github.com/gustavomhss/Orchestra-SF/pull/65",
+    "handoffState": "AWAITING_AUTHORIZED_RESUMPTION",
+    "successorInferred": false,
+    "integrationAcceptanceClaimed": false
+  }
+}

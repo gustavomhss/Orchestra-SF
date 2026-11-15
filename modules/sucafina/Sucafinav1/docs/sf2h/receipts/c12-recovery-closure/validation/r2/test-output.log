@@ -1,0 +1,65 @@
+bun test v1.3.14 (0d9b296a)
+2026-11-15T02:39:35.2232990Z 
+2026-11-15T02:39:35.2233816Z Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts:
+2026-11-15T02:39:35.6896749Z SF_C12_FIRST_CASE_SAVE {"caseId":"b12fab16-1d41-4d10-ae6c-c9a1ade61c73","version":1,"originalResultDigest":"ea8ed0c40ddba6d78730509a4cf484eb1b4b6d859f3fa58918e0641185102ed1","durableCaseCount":1,"mutationCount":1,"reopen":"SQLite-and-services","reseeded":false}
+2026-11-15T02:39:35.6931645Z (pass) C12 first case save reopens the original C08 creation after its committed acknowledgement is lost [122.96ms]
+2026-11-15T02:39:36.0046557Z SF_C12_FIRST_REGISTER {"caseRef":{"id":"6b388c7f-0d75-423e-b356-a22d6e3f269c","incarnation":"902696c2-d5f9-4e4d-ab99-6b1ff614d89c","version":1},"originalDraftRef":"hot-topic-draft:5b25c9c7424cd8b76788424633a40a964b60cf6e718e684cf33a053be8f7d5e9","originalResultDigest":"06da5a94ba1e6066ab81cd2824523a6a816bf554d1f486fc1f1b641d433bd497","originalIntentEffects":1,"separateIntentEffects":1,"extraEffectsFromRecovery":0,"receipts":0,"reopen":"SQLite-and-services","reseeded":false,"originalBodyRetained":true,"minimalLookupQualified":false}
+2026-11-15T02:39:36.0075121Z (pass) C12 lost first Hot Topic register recovers its exact original result after reopen without choosing a later identical draft [314.31ms]
+2026-11-15T02:39:36.0075608Z 
+2026-11-15T02:39:36.0075877Z Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts:
+2026-11-15T02:39:39.2624431Z SF_C12_DOMAIN_RECOVERY {"receiptId":"1ca051bf-03dd-425d-a3f2-f220edfa3899","receiptDigest":"b42427ebc5d70297a3c5ee859ea24e018e878d792ecd7d7bc21c58737381c568","originalProofDigest":"35e5c13212f0fddef3959bf8a8cd1e9e5b32f9f82b853d9ad28aa24bf6cf48cf","originalCaseVersion":4,"reconciledCaseVersion":6,"domainEffects":1,"receiptCommits":1,"recoveryDispatches":0,"recoveredOriginalBytes":true,"reopened":true,"reseeded":false,"financialApprovalCreated":false}
+2026-11-15T02:39:39.2672384Z (pass) C12 original domain receipt survives lost response, authority reopen and unrelated case edit without another dispatch [3254.55ms]
+2026-11-15T02:39:41.8026351Z SF_C12_RECONCILIATION_RECOVERY {"originalReceiptDigest":"fe0c6fb04f8173eb45f845741a6d9fcfd0f9b704727d2460282454f3d066eff4","domainEffects":1,"reconciliations":1,"additionalWrites":0,"reopened":true}
+2026-11-15T02:39:41.8075893Z (pass) C12 lost reconciliation response returns the original linked receipt after reopening without another case write [2540.41ms]
+2026-11-15T02:39:41.8076311Z 
+2026-11-15T02:39:41.8076793Z Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts:
+2026-11-15T02:39:49.3344995Z SF_C12_ORIGINAL_INTENT {"cases":["command-values","expected-version","required-authority","choice-content","duplicate-choice","duplicate-change","domain-key","target-incarnation","policy","access-revision"],"originalRequestVersionBound":true,"originalReceiptDigest":"faef94e418f5f72e52521c634d6f32a5fe7bf2b8d340f10365158f52422fbbb9","redispatches":0,"allRefusalsBeforeReconciliation":true}
+2026-11-15T02:39:49.3406258Z (pass) C12 recovery refuses material or choice replacement even when the original claimed digests and keys are retained [7531.06ms]
+2026-11-15T02:39:51.7378950Z SF_C12_INDETERMINATE {"attempts":1,"receipts":0,"domainEffects":0,"redispatches":0,"recoveryOutcome":"original-receipt-unavailable","reopened":true}
+2026-11-15T02:39:51.7414835Z (pass) C12 a lost reservation without a receipt remains indeterminate and never redispatches after reopen [2400.84ms]
+2026-11-15T02:39:51.7415264Z 
+2026-11-15T02:39:51.7415563Z Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts:
+2026-11-15T02:39:53.9590648Z SF_C12_DIRECT_RAW_RECEIPT {"receiptId":"e58a412f-c76b-4f81-9678-a3e3ff2a8fbe","receiptDigest":"0c6b205f959e83e4be621f332626f2d8016b09a61e025f7aec4b23f2113077b8","scopeDigest":"e95ca9121fcc4d44bf4beb817dc57951feb3d3d719f371eb144df92f9c481b46","target":"v1","domainExecutions":1}
+2026-11-15T02:39:53.9638512Z (pass) C12 direct producer requires private review admission and replays only its genuine original raw receipt [2220.20ms]
+2026-11-15T02:39:56.1143697Z SF_C12_WRONG_SCOPE_REFUSED {"receiptId":"0423a67d-431e-458d-a01d-440ae416802b","rawReceiptDigest":"25232158420a02ad7a52c8db469090773a94b0c3d16126de76a0f88fff28c351","retainedScopeDigest":"81d4213863591c7ad409c10a6ad5cf0d12a6d091221e81921701413769f35cae","reopen":"SQLite-and-services","redispatch":0,"exposedReceipt":false}
+2026-11-15T02:39:56.1178995Z (pass) C12 direct producer refuses a genuine domain receipt committed by C08 under the wrong proof scope [2154.05ms]
+2026-11-15T02:39:56.1179443Z 
+2026-11-15T02:39:56.1179714Z Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts:
+2026-11-15T02:39:56.7315283Z (pass) Planner preparation and the real WP11 apply consumer preserve grants, atomic receipts, retry, reopen and stale rejection [611.15ms]
+2026-11-15T02:39:56.7315889Z 
+2026-11-15T02:39:56.7316123Z Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts:
+2026-11-15T02:39:56.7968948Z (pass) the prepared command retains its reviewed inputs when caller-owned outputs are mutated [63.12ms]
+2026-11-15T02:39:56.7969671Z 
+2026-11-15T02:39:56.7969875Z Sucafinav1/test/product/wp11/execution-reconciliation.test.ts:
+2026-11-15T02:39:56.8858028Z (pass) real prepared execution reconciles normal without repeating Planner effects [86.32ms]
+2026-11-15T02:39:57.0797591Z (pass) real prepared execution reconciles lost-response without repeating Planner effects [193.91ms]
+2026-11-15T02:39:57.1905284Z (pass) real prepared execution reconciles revoked without repeating Planner effects [110.74ms]
+2026-11-15T02:39:57.3127502Z (pass) real prepared execution reconciles receipt-removed without repeating Planner effects [122.24ms]
+2026-11-15T02:39:57.4551547Z (pass) real prepared execution reconciles receipt-replaced without repeating Planner effects [142.37ms]
+2026-11-15T02:39:57.5679399Z (pass) real prepared execution reconciles receipt-collision without repeating Planner effects [112.81ms]
+2026-11-15T02:39:57.6908926Z (pass) real prepared execution reconciles receipt-removed-late without repeating Planner effects [122.89ms]
+2026-11-15T02:39:57.8100826Z (pass) real prepared execution reconciles receipt-replaced-late without repeating Planner effects [119.20ms]
+2026-11-15T02:39:57.9409300Z (pass) real prepared execution reconciles receipt-collision-late without repeating Planner effects [130.84ms]
+2026-11-15T02:39:57.9409847Z 
+2026-11-15T02:39:57.9410163Z Sucafinav1/test/product/wp11/application-indeterminate.test.ts:
+2026-11-15T02:39:58.1731460Z (pass) a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart [227.01ms]
+2026-11-15T02:39:58.1731870Z 
+2026-11-15T02:39:58.1732038Z Sucafinav1/test/product/wp11/prepared-apply.test.ts:
+2026-11-15T02:39:58.2219286Z (pass) human-approved prepared dashboard command and receipt commit together [46.64ms]
+2026-11-15T02:39:58.2219725Z 
+2026-11-15T02:39:58.2219973Z Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts:
+2026-11-15T02:39:58.2701004Z (pass) portfolio C12 rollback before domain commit retains its durable reservation across reopen [45.52ms]
+2026-11-15T02:39:58.3384060Z (pass) portfolio C12 lost response recovers the original canonical receipt after reopen without repeating the effect [68.24ms]
+2026-11-15T02:39:58.4166136Z (pass) portfolio C12 canonical producer preserves the domain CAS and commits a single rejected receipt [78.22ms]
+2026-11-15T02:39:58.4166680Z 
+2026-11-15T02:39:58.4166970Z Sucafinav1/test/product/wp11/cross-domain-execution.test.ts:
+2026-11-15T02:39:58.9265332Z (pass) Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects [505.56ms]
+2026-11-15T02:39:59.2756371Z (pass) both real domain edits apply, retain ordered receipts and replay after restart without another effect [349.06ms]
+2026-11-15T02:39:59.6784196Z (pass) domain permission and receipt revocation preserve case access while denying pending application and restricted aggregate results [402.77ms]
+2026-11-15T02:39:59.6787562Z 
+2026-11-15T02:39:59.6787694Z  27 pass
+2026-11-15T02:39:59.6787948Z  0 fail
+2026-11-15T02:39:59.6788210Z  824 expect() calls
+2026-11-15T02:39:59.6788494Z Ran 27 tests across 11 files. [24.47s]
+2026-11-15T02:39:59.6789186Z omni positive control [565dfc097a03ee69b9adbd9ec662c98b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T02:39:59.7491722Z

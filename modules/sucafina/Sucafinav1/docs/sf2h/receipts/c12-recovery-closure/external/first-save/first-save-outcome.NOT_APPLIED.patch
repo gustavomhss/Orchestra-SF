@@ -1,0 +1,147 @@
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts b/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
+index a0c1d07be1ddd63492e7bcc3ff5980c0666b432a..d880fe5a5f7fd3c9c4fa249dbc374620a39a43a7 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
+@@ -20,6 +20,8 @@
+   host: Pick<DomainPortHost, "requestFor" | "revalidate">
+   authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
+   authorizeDraft: (request: HotTopicDraftRequest, context: TrustedDomainContext) => Promise<boolean>
++  authorizeLookup?: (request: { caseRef: CaseRef }, context: TrustedDomainContext) => Promise<boolean>
++  verifyLookupSnapshot?: (draft: HotTopicDraft, context: TrustedDomainContext) => boolean
+   verifySources: (draft: HotTopicDraft, context: TrustedDomainContext) => Promise<boolean>
+   verifySnapshot: (snapshot: Snapshot, request: HotTopicDraftRequest, draft: HotTopicDraft, context: TrustedDomainContext) => boolean
+   operationIdentity: (context: TrustedDomainContext) => string | undefined
+@@ -125,7 +127,66 @@
+       return { status: "ok", value: saved.value }
+     } catch { return { status: "unavailable", reason: "hot-topic-draft-unavailable" } }
+   }
+-  return { register, readCurrent, list }
++
++  /** Resolve the first register's original C08 outcome by its admitted operation
++   * identity. This is read-only: absence never authorizes another registration. */
++  const lookupFirstSave = async (incoming: { caseRef: CaseRef }, context: TrustedDomainContext): Promise<PortResult<{ draftRef: string; version: number }>> => {
++    try {
++      const request = structuredClone(incoming)
++      const source = input.host.requestFor(context)
++      const operation = input.operationIdentity(context)
++      if (!request || Object.keys(request).sort().join(",") !== "caseRef" || !request.caseRef ||
++        Object.keys(request.caseRef).sort().join(",") !== "id,incarnation,version" ||
++        typeof request.caseRef.id !== "string" || !request.caseRef.id.trim() || typeof request.caseRef.incarnation !== "string" ||
++        !request.caseRef.incarnation.trim() || !Number.isSafeInteger(request.caseRef.version) || request.caseRef.version < 1)
++        return { status: "needs-input", reason: "invalid-first-save-reference" }
++      if (context.kind !== "ui" || !source || !operation || !await input.authorizeLookup?.(request, context) || !await input.host.revalidate(context))
++        return { status: "denied", reason: "hot-topic-draft-outcome-access-unavailable" }
++      const transactionKey = JSON.stringify([context.binding.principalRef, "preferences", request.caseRef.id, `hot-topic-draft:${operation}`])
++      const caseRead = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
++      if (caseRead.status !== "ok" || !caseRead.value || caseRead.value.id !== request.caseRef.id ||
++        caseRead.value.incarnation !== request.caseRef.incarnation || caseRead.value.version < request.caseRef.version ||
++        !caseRead.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(caseRead.value, context))
++        return { status: "denied", reason: "hot-topic-draft-outcome-access-unavailable" }
++      const outcome = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context)
++        ? { current: state.cases[request.caseRef.id], prior: state.transactions[transactionKey] } : undefined)
++      if (outcome.status !== "ok" || !outcome.value || digestSfValue(outcome.value.current) !== digestSfValue(caseRead.value))
++        return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
++      const prior = outcome.value.prior
++      const saved = prior?.value
++      if (!prior || prior.namespace !== "preferences" || prior.incarnation !== outcome.incarnation ||
++        prior.principalRef !== context.binding.principalRef || prior.targetRef !== request.caseRef.id ||
++        prior.targetIncarnation !== request.caseRef.incarnation || prior.scopeDigest !== digestSfValue(["cases", "preferences"]) ||
++        !saved || typeof saved !== "object" || Array.isArray(saved) || Object.keys(saved).sort().join(",") !== "draftRef,version" ||
++        !("draftRef" in saved) || typeof saved.draftRef !== "string" || !("version" in saved) || saved.version !== 1)
++        return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
++      const currentRef = { id: caseRead.value.id, incarnation: caseRead.value.incarnation, version: caseRead.value.version }
++      const checked = await readCurrent({ caseRef: currentRef, draftRef: saved.draftRef }, context)
++      if (checked.status !== "ok" || checked.value.version !== saved.version || checked.value.principalRef !== context.binding.principalRef ||
++        checked.value.accessRevision !== context.binding.accessRevision || checked.value.policyVersion !== context.binding.policyVersion ||
++        digestSfValue(checked.value.caseRef) !== digestSfValue(request.caseRef))
++        return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
++      const draft = checked.value
++      const original: HotTopicDraftRequest = { caseRef: draft.caseRef, target: draft.target, targetEvidence: draft.targetEvidence,
++        fields: draft.fields, sourceRefs: draft.sourceRefs, expectedVersion: 0 }
++      // The first save has no draftRef. Its complete canonical request is retained
++      // by the protected draft; reconstruct its digest, never its human grant.
++      if (prior.commandDigest !== digestSfValue(original) || !await input.verifySources(draft, context) ||
++        !await input.authorizeCase(caseRead.value, context) || !await input.authorizeLookup?.(request, context) ||
++        !await input.host.revalidate(context))
++        return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
++      const retained = await input.state.read(source, "preferences", (state, authority) =>
++        sameAuthority(authority, context) && digestSfValue(state.cases[request.caseRef.id]) === digestSfValue(caseRead.value) &&
++        digestSfValue(state.transactions[transactionKey]) === digestSfValue(prior) &&
++        digestSfValue(state.preferences[historyKey(draft.draftRef)]) === digestSfValue(draft) &&
++        digestSfValue(state.preferences[activeKey(draft.id)]) === digestSfValue(draft) &&
++        input.verifyLookupSnapshot?.(draft, context) === true)
++      if (retained.status !== "ok" || retained.value !== true || source.signal.aborted || input.host.requestFor(context) !== source)
++        return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" }
++      return { status: "ok", value: { draftRef: saved.draftRef, version: saved.version } }
++    } catch { return { status: "unavailable", reason: "hot-topic-draft-outcome-unconfirmed" } }
++  }
++  return { register, readCurrent, list, lookupFirstSave }
+ }
+ 
+ /** Called only while the case and preferences are locked by C08. */
+diff --git a/apps/cli/src/sucafina-product/dashboard-decisions.ts b/apps/cli/src/sucafina-product/dashboard-decisions.ts
+index 3061f529e1417ba29f9976c3f132c1a08ead0742..b4d70dfb9467d59e3ac8861e0b4fc1c628d09bc6 100644
+--- a/apps/cli/src/sucafina-product/dashboard-decisions.ts
++++ b/apps/cli/src/sucafina-product/dashboard-decisions.ts
+@@ -87,6 +87,14 @@
+   }
+   const drafts = createHotTopicDraftStore({ state, host, authorizeCase,
+     authorizeDraft: (request, context) => human.authorize(context, "decisions.edit", request),
++    authorizeLookup: (request, context) => human.authorize(context, "decisions.edit", request),
++    verifyLookupSnapshot: (draft, context) => {
++      const dashboard = host.persistence.currentSnapshots?.()?.dashboard
++      const environment = environments.get(context)
++      return !!dashboard && !!environment && dashboardSourceCurrent(dashboard, draft.target, context, environment.at) &&
++        draft.sourceRefs.every((ref) => ref.kind === "record" && ref.target.surface === "dashboard" && !!ref.target.period && dashboardSourceCurrent(dashboard,
++          { surface: "dashboard", type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period: ref.target.period, observedAt: environment.at }, context, environment.at))
++    },
+     verifySources,
+     verifySnapshot: (snapshot, _request, draft, context) => {
+       const environment = environments.get(context)
+@@ -265,7 +273,14 @@
+         if (!source) return { status: "denied" as const, reason: "hot-topic-draft-access-unavailable" }
+         environments.set(context, await host.environment(source))
+         try { return await drafts.register(request, context) } finally { environments.delete(context) }
+-      }, readCurrent: drafts.readCurrent, list: drafts.list,
++      },
++      lookupFirstSave: async (request: { caseRef: CaseRef }, context: TrustedDomainContext) => {
++        const source = host.requestFor(context)
++        if (!source) return { status: "denied" as const, reason: "hot-topic-draft-outcome-access-unavailable" }
++        environments.set(context, await host.environment(source))
++        try { return await drafts.lookupFirstSave(request, context) } finally { environments.delete(context) }
++      },
++      readCurrent: drafts.readCurrent, list: drafts.list,
+     },
+     resolveOperation: async (request: { caseRef: CaseRef; draftRef: string; operation: ScenarioOperation }, context: TrustedDomainContext) => {
+       // Reading an already applied choice uses its immutable C12 command/capture
+diff --git a/apps/cli/src/sucafina-product/dashboard-http.ts b/apps/cli/src/sucafina-product/dashboard-http.ts
+index c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c..934c4807916b23c7ecd80ecb1a3aa76d3bcd7201 100644
+--- a/apps/cli/src/sucafina-product/dashboard-http.ts
++++ b/apps/cli/src/sucafina-product/dashboard-http.ts
+@@ -11,7 +11,7 @@
+ 
+ type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; dashboard: ReturnType<typeof createSfDashboardServices>; decisions: ReturnType<typeof createSfDashboardDecisions> }
+ const modes = ["dashboard-workbench", "dashboard-agenda", "dashboard-review-preserve", "dashboard-review", "dashboard-capture", "dashboard-history", "dashboard-hot-topic-source",
+-  "dashboard-hot-topic-draft", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
++  "dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
+ 
+ /** Same-origin host routes. Browser payloads contain selections and human intent, never private commands. */
+ export function createSfDashboardHttp(input: { origin: string; mount: string; runtime: () => Runtime | undefined }) {
+@@ -31,7 +31,7 @@
+     const runtime = input.runtime()
+     if (!runtime) return reply({ status: "unavailable" }, 503)
+     const action: SfHumanAction | undefined = ["dashboard-review-preserve", "dashboard-capture"].includes(mode!) ? "reviews.preserve" :
+-      mode === "dashboard-hot-topic-draft" ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : mode === "dashboard-hot-topic-apply" ? "decisions.apply" : undefined
++      ["dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome"].includes(mode!) ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : mode === "dashboard-hot-topic-apply" ? "decisions.apply" : undefined
+     const digest = digestSfValue(payload)
+     const admitted = action ? await runtime.authority.human.admit(request, action, payload) : await runtime.authority.ui.admit(request, "sf_dashboard_read", digest)
+     if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+@@ -69,6 +69,8 @@
+       incarnation: result.value.target.incarnation, version: result.value.target.version, fields: result.value.target.fields, period: payload.period, observedAt: environment.at } } }
+   }
+   if (mode === "dashboard-hot-topic-draft" && isDraft(value)) return runtime.decisions.drafts.register(value, context)
++  if (mode === "dashboard-hot-topic-draft-outcome" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef))
++    return runtime.decisions.drafts.lookupFirstSave({ caseRef: payload.caseRef }, context)
+   if (mode === "dashboard-hot-topic-drafts" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef)) return runtime.decisions.drafts.list({ caseRef: payload.caseRef }, context)
+   if (mode === "dashboard-hot-topic-operation" && keys(payload, ["caseRef", "draftRef", "operation"]) && isCaseRef(payload.caseRef) && text(payload.draftRef)) {
+     const operation = object(payload.operation)

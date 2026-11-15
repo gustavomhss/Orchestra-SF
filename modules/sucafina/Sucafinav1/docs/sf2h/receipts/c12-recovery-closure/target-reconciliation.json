@@ -1,0 +1,27 @@
+{
+  "schema": "sf2h.c12-recovery-closure.target-reconciliation.v1",
+  "observed_target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+  "material_C28": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "authority": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "authority_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "stack_changed_during_source_work": true,
+  "stack_changes_taken_into_source": false,
+  "external_preimages_rechecked": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "git_blob": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "git_blob": "3061f529e1417ba29f9976c3f132c1a08ead0742"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "git_blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c"
+    }
+  ],
+  "external_preimages_match_manifest": true,
+  "consumption_rule": "Authority reconciliation precedes any future stack mutation;65 only publishes its source and posts requested handoff. Current source PASS never transfers to C28."
+}

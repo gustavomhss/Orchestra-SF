@@ -1,0 +1,22 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+    "./Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts",
+    "./Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+    "./Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts",
+    "./Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+    "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+    "./Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "./Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "./Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+    "./Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts",
+    "./Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}
