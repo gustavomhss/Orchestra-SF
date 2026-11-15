@@ -15,6 +15,11 @@ const asText = (value: unknown): string => value == null ? "" : String(value)
 const asLines = (value: string | readonly string[] | undefined): string =>
   Array.isArray(value) ? value.join("\n") : typeof value === "string" ? value : ""
 const isChecked = (value: unknown): boolean => value === true || value === "true" || value === "on"
+const numericInput = (raw: string): Numeric => {
+  if (raw.trim() === "") return null // absence is never numeric zero
+  const value = Number(raw)
+  return Number.isFinite(value) ? value : raw // validation belongs to the producer
+}
 
 /** Exact CAP28 fieldnames only; no client policy/FX validator and no empty-to-zero coercion. */
 export function SfProcurementSettingsFields(props: Props): JSX.Element {
@@ -42,7 +47,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           <input id={id("field", name)} type={kind} step={kind === "number" ? "any" : undefined}
             disabled={props.disabled} value={asText(props.settings[name])}
             onInput={(event) => edit(name, kind === "number"
-              ? event.currentTarget.value === "" ? null : event.currentTarget.value
+              ? numericInput(event.currentTarget.value)
               : event.currentTarget.value)}
           />
         </Show>
