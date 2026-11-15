@@ -23,7 +23,8 @@ export async function createCalculationFixture() {
       read: async (request, namespace, read) => {
         trace.events.push(`read:${namespace}`)
         const value = await fixture.state.read(request, namespace, read)
-        hooks.read?.(value, namespace, ++trace.reads)
+        trace.reads += 1
+        hooks.read?.(value, namespace, trace.reads)
         return value
       },
     }

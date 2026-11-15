@@ -80,15 +80,25 @@ test("calculation sources preserve complete reference identity, current evidence
       const actual = await setup.fixture.planner.simulateScenario(setup.fixture.scenario, trusted)
       return actual.status === "ok" && value.requestDigest === digestSfValue(setup.fixture.scenario) && digestSfValue(actual.value) === digestSfValue(value.result)
     } })
-    const calculation = { digests: 0, firstStack: "" }
-    const update = Bun.CryptoHasher.prototype.update
-    const probe = spyOn(Bun.CryptoHasher.prototype, "update").mockImplementation(function (this: Bun.CryptoHasher, ...args: Parameters<typeof update>) {
+    const source = (await Bun.file(new URL("../../../product/decisions/result-store.ts", import.meta.url)).text()).split("\n")
+    const firstLine = source.findIndex((line) => line.startsWith("function calculationSources(")) + 1
+    const following = source.findIndex((line, index) => index >= firstLine && line.startsWith("function "))
+    const lastLine = following < 0 ? source.length : following
+    expect(firstLine).toBeGreaterThan(0)
+    const canonical = await import("../../../product/contracts/canonical.ts")
+    const originalDigest = canonical.digestSfValue
+    const calculation = { digests: 0, firstStack: "", callsites: new Set<string>() }
+    // ESM live-import observation retains the producer's exact source callsite,
+    // including unnamed/inlined filter callbacks in the original implementation.
+    const probe = spyOn(canonical, "digestSfValue").mockImplementation((value) => {
       const stack = new Error().stack ?? ""
-      if (stack.includes("calculationSources")) {
+      const callsite = [...stack.matchAll(/product\/decisions\/result-store\.ts:(\d+):\d+/g)].find((match) => Number(match[1]) >= firstLine && Number(match[1]) <= lastLine)
+      if (callsite) {
         calculation.digests += 1
+        calculation.callsites.add(callsite[0])
         if (!calculation.firstStack) calculation.firstStack = stack
       }
-      return update.apply(this, args)
+      return originalDigest(value)
     })
     const calculated = await results.readForCalculation(request, context).finally(() => probe.mockRestore())
     expect(calculated).toEqual({ status: "ok", value: setup.original })
@@ -101,6 +111,8 @@ test("calculation sources preserve complete reference identity, current evidence
       distinctSourceReferences: setup.fixture.sourceRefs.length,
       digests: calculation.digests,
       replayCallbacks: replay.calls,
+      producerLines: { first: firstLine, last: lastLine },
+      callsites: [...calculation.callsites],
       firstStack: calculation.firstStack,
     }))
 
