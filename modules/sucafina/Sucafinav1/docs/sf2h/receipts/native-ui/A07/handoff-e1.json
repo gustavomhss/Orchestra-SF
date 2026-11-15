@@ -11,7 +11,8 @@
   },
   "codeCommits": [
     "229b6e29b146e78dc5f9e8e2ab23d916c24fe01f",
-    "2a715e604ab3187680d6b5663831ec60f2d52ed5"
+    "2a715e604ab3187680d6b5663831ec60f2d52ed5",
+    "5c00bd8e6a9de786de48a74e24d9a97d5b2c0d6c"
   ],
   "status": "ARTIFACT_READY_PENDING_I00_INTEGRATION_AND_119_120_QUALIFICATION",
   "localTests": "NOT_RUN_PER_ORDER",
@@ -24,7 +25,7 @@
   "files": [
     {
       "path": "packages/schema/src/sucafina/reviews.ts",
-      "blob": "4ce7a3e9bae14d1179c4b6d580aad4b20e98b8fd",
+      "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
       "exports": [
         "SfReviews",
         "dashboard.dashboard-agenda",
@@ -55,7 +56,7 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts",
-      "blob": "a461b0422910f966498c06b58c0d67072fdc9ce0",
+      "blob": "e54f5541b3fb64c8b9412c1c4a18487938fd063b",
       "tests": "auth-boundary-negative-schema, no local execution"
     }
   ],
@@ -354,5 +355,24 @@
       "owner": "114",
       "text": "C58 dashboard read denial-vs-unavailable semantics require 120 regression qualification"
     }
-  ]
+  ],
+  "pullRequest": {
+    "number": 141,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/141",
+    "base": "sf2-stack",
+    "head": "sf-ux-a07",
+    "draft": false,
+    "mergeableAsOfCreation": false,
+    "warning": "Inherited UX planning corpus causes 163 files shown in whole-branch PR; A07 own delta against f8e442 contains exactly seven files; I00 must cherry-pick own blobs only, never merge cohort wholesale."
+  },
+  "originalHeadOwnDiff": [
+    "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A07/ACK-e1.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A07/INTEGRATION-114.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A07/handoff-e1.json",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts",
+    "packages/client/src/sucafina/reviews.ts",
+    "packages/schema/src/sucafina/reviews.ts"
+  ],
+  "effectApiVerification": "Source-read only: effect@4.0.0-beta.83 Schema.Top, Schema<out T>, Schema.Json, Schema.Never; amended generic helper signatures in 5c00bd8e6a9de786de48a74e24d9a97d5b2c0d6c. No tests/parser/typecheck executed."
 }
