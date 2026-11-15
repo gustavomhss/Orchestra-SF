@@ -6,6 +6,10 @@
 export const SF_U10_QUEUE_COPY = {
   "sf.u10.queue.caption": "Procurement requests",
   "sf.u10.queue.filters": "Filters",
+  "sf.u10.queue.group": "Queue",
+  "sf.u10.queue.group.waitingForYou": "Waiting for you",
+  "sf.u10.queue.group.waitingForOthers": "Waiting for others",
+  "sf.u10.queue.group.unassigned": "Unassigned",
   "sf.u10.queue.all": "All",
   "sf.u10.queue.search": "Search",
   "sf.u10.queue.request": "Request",
