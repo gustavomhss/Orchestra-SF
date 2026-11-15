@@ -1,0 +1,25 @@
+diff --git a/apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts b/apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts
+index 39ebdb2ecfd3d897ccd0989bdd989b82f27dbcda..8ea7c0c87dc02165ca29be44bc947a6813f96832 100644
+--- a/apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts
++++ b/apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts
+@@ -28,9 +28,10 @@ export function attachSfNativeEnrollment(options: Readonly<{
+       request.kind !== "sf-native-local-enrollment-request"
+       || request.launchId !== options.launchId
+       || request.installationId !== options.descriptor.installationId
+       || typeof request.requestId !== "string" || !UUID.test(request.requestId)
+     ) return
++    const requestId = request.requestId
+     state.pending = true
+     void Promise.resolve().then(() => options.enrollNativeLocal()).then((payload) => {
+       if (state.disposed) return
+       if (
+@@ -44,8 +45,8 @@ export function attachSfNativeEnrollment(options: Readonly<{
+         || payload.expiresAt > Date.now() + 600_000
+       ) return
+       options.transport.postMessage({
+-        kind: "sf-native-local-enrollment", launchId: options.launchId, requestId: request.requestId,
++        kind: "sf-native-local-enrollment", launchId: options.launchId, requestId,
+         installationId: payload.installationId, projectId: payload.projectId,
+         publicOrigin: payload.publicOrigin, mount: payload.mount, url: payload.url, expiresAt: payload.expiresAt,
+       } satisfies SfNativeEnrollmentReply)
+     }).catch(() => {

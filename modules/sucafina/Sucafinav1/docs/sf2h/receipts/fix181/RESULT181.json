@@ -1,0 +1,192 @@
+{
+  "schema": "sf2h.native-fix181.artifact-handoff.v1",
+  "mission": 181,
+  "order": "D01",
+  "campaign": "sf2h-integral-20261112",
+  "epoch": "native-fix-e1-browser181",
+  "previous_epoch": "ux-native-w01-e2",
+  "branch": "sf-ux-w01",
+  "pr": 145,
+  "actor": {
+    "github_login": "gustavomhss",
+    "effective_model": "GPT-6",
+    "requested_model": "Astra",
+    "session_id": null,
+    "actual_runtime": "ChatGPT GitHub connector"
+  },
+  "state": "ARTIFACT_READY_FOR_SINGLE_INTEGRATOR",
+  "integrated": false,
+  "qualified": false,
+  "global_release": false,
+  "native_goal": "paused",
+  "instructions": {
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "packet_blob": "43bf7aedbff058949e9a503df34af23324967a8a",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "workorder_blob": "2e6c4b7a39133d99ee23d050c0423b9133125852",
+    "host_signatures_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "context_schema_consumer_blob": "cd4a8605ac733d3fe156365ed84daefa4ec5385e"
+  },
+  "ack": {
+    "commit": "a4eaee54b41dc7c6e4ba2dac4dd1d65e47c7f33e",
+    "tree": "148dc0df934eeb93eb796b2316bcd9bb86741c82",
+    "blob": "47a258c3ad4c487be916399e2b4279471a17eac5",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/ACK181.json"
+  },
+  "source": {
+    "parent_prepared_commit": "bf031bef97d474da68888662d39bcc844a342f06",
+    "parent_prepared_tree": "e72614417caabda8147863465db76f0e47bb87be",
+    "product_commit": "fbff16ee8e02040a99db272ddedbe41e58467da7",
+    "product_tree": "4b07076dc272792232c34120f29728b38c6180e7",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+        "pre_blob": "39ebdb2ecfd3d897ccd0989bdd989b82f27dbcda",
+        "post_blob": "8ea7c0c87dc02165ca29be44bc947a6813f96832",
+        "readback": "REMOTE_VERIFIED",
+        "changes": [
+          {
+            "line_pre": 33,
+            "line_post": 33,
+            "meaning": "Capture validated requestId in immutable const before async callback"
+          },
+          {
+            "line_pre": 47,
+            "line_post": 48,
+            "meaning": "Use captured string as reply requestId"
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/desktop-enrollment.test.ts",
+        "pre_blob": null,
+        "post_blob": null,
+        "status": "ABSENT_UNCHANGED_NO_TEST_FOR_TYPE_ONLY"
+      }
+    ]
+  },
+  "consumer": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_commit": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "observed_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "observed_file_blob": "39ebdb2ecfd3d897ccd0989bdd989b82f27dbcda",
+    "desired_file_blob": "8ea7c0c87dc02165ca29be44bc947a6813f96832",
+    "post_integration_commit": null,
+    "post_integration_tree": null,
+    "post_integration_blob": null,
+    "reason": "Only mission162 can write sf2-stack; apply when current consumer preimage still matches or reconcile drift first"
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/PATCH181.patch",
+    "blob": "688a9b9d135d3947bed24a147244055089858c17",
+    "kind": "INERT_FOR_162",
+    "applies_to": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+  },
+  "diagnostic": {
+    "actual_run": 43766055614,
+    "actual_job": 132971280139,
+    "material_commit": "690a34cdd81c12d7311f3717c19679b950276161",
+    "error": "src/sucafina-product/native-ui/desktop-enrollment.ts(47,73): TS2322 unknown not assignable to string",
+    "cause": "request.requestId validated as a string in a mutable record but used across asynchronous .then closure; TypeScript invalidates property narrowing",
+    "resolution": "Capture immutable string requestId immediately after existing typeof and UUID checks; no type assertion/coercion, no new authority",
+    "browser_run": 43766970018,
+    "browser_job": 132974180913,
+    "browser_scope": "S01/S05 browser fixture failures unrelated to D01, not claimed fixed"
+  },
+  "contracts_preserved": [
+    "Dock message kind, launchId, installationId, UUID requestId checked before invoking enrollNativeLocal",
+    "SfNativeEnrollmentReply exact private fields; requestId from incoming request only",
+    "Descriptor installationId/projectId/publicOrigin/mount exact-match and TTL <=600000; payload not logged",
+    "No new email-to-identity or email-to-role conversion; original server-bound authority stays unchanged",
+    "Seven closed desktop IPC methods, nonce/return intent/origin/auth state, preload/renderer/main, shared registry untouched"
+  ],
+  "tests": {
+    "source_local": "NOT_RUN_BY_RULE",
+    "compiler_after_patch": "NOT_RUN",
+    "product_ci_after_patch": "NOT_RUN",
+    "guards_after_patch": "NOT_RUN",
+    "sdk_generation_after_patch": "NOT_RUN",
+    "existing_desktop_broker_spec": {
+      "path": "apps/desktop/src/main/sucafina/broker.test.ts",
+      "blob": "207ba248dbb93d89b8490859dc675c6fd72121e1"
+    },
+    "existing_negative_enrollment_spec": {
+      "path": "modules/sucafina/Sucafinav1/test/operator-enroll.test.ts",
+      "consumer_blob": "d0cb78bfc1812f3880e22e3bbed460dca9af4196"
+    },
+    "granted_new_test_path": "modules/sucafina/Sucafinav1/test/native-ui-contract/desktop-enrollment.test.ts",
+    "granted_new_test_status": "ABSENT_NOT_CREATED_TYPE_ONLY",
+    "browser_W01_spec_status": "ABSENT_AT_SOURCE_SNAPSHOT"
+  },
+  "acceptance": {
+    "D01-AC01": "NOT_RUN_BLOCKED_INTEGRATION",
+    "D01-AC02": "NOT_RUN_EXISTING_CODE_AND_CHECKS_PRESERVED",
+    "D01-AC03": "NOT_RUN_EXISTING_CODE_AND_CHECKS_PRESERVED",
+    "D01-77-LOGIN": "NOT_RUN_BLOCKED_CONTRACT"
+  },
+  "to162": {
+    "integrator_mission": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "request": "Apply only this leaf PATCH181.patch/post_blob with consumer preimage guard, no raw PR merge. Reconcile if blob changed; publish actual consumer commit/tree/blob and ACK of consumption on same-C material.",
+    "shared_seam": "NONE_EDITED; any main/preload/renderer/registry composition remains 162-only"
+  },
+  "to163": {
+    "compiler_mission": 163,
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "when": "AFTER_162_CONSUMER_APPLIES_PATCH",
+    "requested_packages": [
+      "apps/cli bun typecheck",
+      "apps/desktop bun typecheck (existing D01 closure)"
+    ],
+    "requested_existing_gates": [
+      "existing SDK generation and guards only where canonical same-C invalidation matrix requires"
+    ],
+    "must_observe": [
+      "No TS2322 at desktop-enrollment.ts(47,73)",
+      "Record exact C/tree/inputHash/run/job and any remaining independent diagnostics"
+    ],
+    "dedup": "Do not rerun W690 unchanged input; use new 162 material C and sole existing compiler dispatcher"
+  },
+  "to164": {
+    "ci_mission": 164,
+    "branch": "sf-ci-validation",
+    "pr": 106,
+    "when": "AFTER_162_SAME_C_INTEGRATION_AND_READY_DEPENDENCIES",
+    "requested_existing_specs": [
+      "apps/desktop/src/main/sucafina/broker.test.ts",
+      "modules/sucafina/Sucafinav1/test/operator-enroll.test.ts"
+    ],
+    "conditional_existing_spec": "packages/app-shell/test-browser/sucafina-native/w01-d01.test.ts only if present in 162 material; absent in observed source",
+    "must_observe": [
+      "Closed managed Dock enrollment negative/valid identity behaviors",
+      "Main/CLI single-use request correlation and no secret exposure"
+    ],
+    "dedup": "Single pre-existing product-ci dispatcher, exact C/tree/request normalized; do not rerun failed browser164 S01 input unchanged"
+  },
+  "blocked": [
+    "Only 162 may integrate source into consumer",
+    "No hosted post-patch typecheck or D01 behavior proof yet",
+    "D01 Microsoft return-intent contract/live desktop remains separate blocked integration"
+  ],
+  "forbidden_effects": {
+    "local_tests": false,
+    "local_build": false,
+    "local_typecheck": false,
+    "local_parser": false,
+    "new_dispatcher": false,
+    "source_test_changed": false,
+    "shared_seam_changed": false,
+    "force": false,
+    "merge": false,
+    "deploy": false,
+    "Azure": false,
+    "engine_change": false,
+    "goal_resume": false
+  },
+  "terminal_lease": true
+}
