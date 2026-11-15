@@ -15,6 +15,7 @@ import type { SfProcurementQueueRow } from "../../src/orchestra/chapters/sucafin
 const ref = (id: string): SfRef => id as SfRef
 const row = (id: string, overrides: Partial<SfProcurementQueueRow> = {}): SfProcurementQueueRow => ({
   id: ref(id),
+  group: "waitingForYou",
   sourceRef: "source-" + id,
   sourceDigest: "digest-" + id,
   version: 3,
@@ -38,17 +39,18 @@ const row = (id: string, overrides: Partial<SfProcurementQueueRow> = {}): SfProc
 
 test("W12 filters only the authorized provided rows; it never invents other holders, counts or server ordering", () => {
   const input = [
-    row("r_b", { holder: "someone-else", status: "src_pending", approvalStage: "Sourcing" }),
+    row("r_b", { holder: "someone-else", group: "waitingForOthers", status: "src_pending", approvalStage: "Sourcing" }),
     row("r_a", { holder: "holder-1" }),
-    row("r_c", { holder: null, status: "po_pending", approvalStage: "PO" }),
+    row("r_c", { holder: null, group: "unassigned", status: "po_pending", approvalStage: "PO" }),
   ]
-  const selected = sfQueueFilterRows(input, { status: null, stage: null, query: "" })
+  const selected = sfQueueFilterRows(input, { group: null, status: null, stage: null, query: "" })
   expect(selected.map((item) => item.id)).toEqual([ref("r_b"), ref("r_a"), ref("r_c")])
-  expect(sfQueueFilterRows(input, { status: "pr_pending", stage: "PR", query: "" }).map((item) => item.id)).toEqual([ref("r_a")])
-  expect(sfQueueFilterRows(input, { status: null, stage: null, query: "sourcing" }).map((item) => item.id)).toEqual([ref("r_b")])
+  expect(sfQueueFilterRows(input, { group: null, status: "pr_pending", stage: "PR", query: "" }).map((item) => item.id)).toEqual([ref("r_a")])
+  expect(sfQueueFilterRows(input, { group: null, status: null, stage: null, query: "sourcing" }).map((item) => item.id)).toEqual([ref("r_b")])
   expect(sfQueueFilterOptions(input)).toEqual({
     statuses: ["src_pending", "pr_pending", "po_pending"],
     stages: ["Sourcing", "PR", "PO"],
+    groups: ["waitingForOthers", "waitingForYou", "unassigned"],
   })
   expect(input[0]?.holder).toBe("someone-else")
   expect(input[2]?.holder).toBeNull()
@@ -57,7 +59,7 @@ test("W12 filters only the authorized provided rows; it never invents other hold
 test("W12 maps authorized empty vs filtered-empty without treating partial, denial or failure as zero", () => {
   const source = [row("r_a")]
   expect(sfQueueVisible("ready", [], SF_QUEUE_INITIAL_FILTERS, undefined).state).toBe("empty")
-  expect(sfQueueVisible("ready", source, { status: "po_issued", stage: null, query: "" }, undefined).state).toBe("filtered-empty")
+  expect(sfQueueVisible("ready", source, { group: null, status: "po_issued", stage: null, query: "" }, undefined).state).toBe("filtered-empty")
   expect(sfQueueVisible("partial", [], SF_QUEUE_INITIAL_FILTERS, undefined).state).toBe("partial")
   for (const failure of ["denied", "session-expired", "unavailable", "loading", "stale", "not-found"] as const) {
     const visible = sfQueueVisible(failure, source, SF_QUEUE_INITIAL_FILTERS, ref("r_a"))
