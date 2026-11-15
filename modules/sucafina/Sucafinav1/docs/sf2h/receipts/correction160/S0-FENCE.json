@@ -1,0 +1,20 @@
+{
+  "schema": "sf2h.review-correction-fence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 160,
+  "branch": "sf-ux-n27",
+  "previous_epoch": "ux-native-n27-e1",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+  "next_epoch": "ux-native-n27-e2-browser160",
+  "previous_head": "19b0a65713287d0285b192a5f3c055a4ead6ec64",
+  "authority": "S0 under explicit user go/new-session authorization",
+  "reason": "New successor for concrete preliminary review findings; same source branch/PR, prior code/history preserved.",
+  "runtime_termination_claimed": false,
+  "limitation": "Administrative write authority fence only. Browser session lifecycle/token revocation not exposed; silence never treated as process death. Reconcile any late commits before writing or accepting output, no reset/force.",
+  "integrator": 132,
+  "compiler": 149,
+  "product_ci": 150,
+  "native_goal": "paused",
+  "global_release": false,
+  "state": "PREPARED_NOT_STARTED"
+}
