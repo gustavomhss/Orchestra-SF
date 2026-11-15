@@ -1,6 +1,6 @@
 name: sf-compiler-c53
 
-# Mission 108 only: a read-only hosted compiler/generation/guard run on immutable C53.
+# Mission 119: immutable SF product checkout with independently pinned compiler tooling W.
 # This is not an epic or product-test workflow; A45's paths and dispatcher are untouched.
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: sf-compiler-c53-108
+  group: sf-compiler-119
   cancel-in-progress: false
 
 env:
@@ -37,7 +37,7 @@ jobs:
       - name: Prove fixed checkout and resolve actual dev/merge-base
         run: |
           set -euo pipefail
-          EVIDENCE="$RUNNER_TEMP/sf-compiler-c53-108"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-119"
           mkdir -p "$EVIDENCE"
           printf '%s\n' "workflow_commit=$GITHUB_SHA" "source_sha=$SF_SOURCE_SHA" "expected_tree=$SF_SOURCE_TREE" > "$EVIDENCE/identity.txt"
           test "$(git rev-parse HEAD)" = "$SF_SOURCE_SHA"
@@ -57,10 +57,25 @@ jobs:
       - name: Setup pinned repository Bun and Node runtime
         uses: ./.github/actions/setup-bun
 
+      - name: Import 119 tooling from the workflow commit without changing the product checkout
+        run: |
+          set -euo pipefail
+          TOOL_DIR="$RUNNER_TEMP/sf119-tools"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-119"
+          mkdir -p "$TOOL_DIR" "$EVIDENCE"
+          git cat-file -e "$GITHUB_SHA^{commit}"
+          git show "$GITHUB_SHA:script/sf2h/final-bundle/build-artifact.py" > "$TOOL_DIR/build-artifact.py"
+          git show "$GITHUB_SHA:script/sf2h/final-bundle/verify-e2e-typecheck.mjs" > "$TOOL_DIR/verify-e2e-typecheck.mjs"
+          cp script/sf2h/final-bundle/requests.json "$TOOL_DIR/requests.json"
+          sha256sum "$TOOL_DIR/build-artifact.py" "$TOOL_DIR/verify-e2e-typecheck.mjs" "$TOOL_DIR/requests.json" > "$EVIDENCE/tooling-sha256.txt"
+          printf '%s\n' "tooling_commit=$GITHUB_SHA" "tooling_source=git-show-at-workflow-sha" > "$EVIDENCE/tooling-identity.txt"
+          git status --porcelain=v1 > "$EVIDENCE/status-after-tool-overlay.txt"
+          echo "SF119_TOOL_DIR=$TOOL_DIR" >> "$GITHUB_ENV"
+
       - name: Run all static/compiler/Atlas/guard checks and preserve every exit code
         run: |
           set -uo pipefail
-          EVIDENCE="$RUNNER_TEMP/sf-compiler-c53-108"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-119"
           mkdir -p "$EVIDENCE"
           : > "$EVIDENCE/exit-codes.tsv"
           bun --version > "$EVIDENCE/bun-version.txt" 2>&1
@@ -80,9 +95,9 @@ jobs:
             tail -n 60 "$EVIDENCE/$name.log" || true
             return 0
           }
-          record bundle-build . python3 script/sf2h/final-bundle/build-artifact.py --repo-root . --check
+          record bundle-build . bash -c 'python3 "$1" --repo-root . --output "$2" && python3 "$1" --repo-root . --check' _ "$SF119_TOOL_DIR/build-artifact.py" "$EVIDENCE/sf2-epic.generated.yml"
           record bundle-requests . node script/sf2h/final-bundle/validate-requests.mjs
-          record e2e-inventory . node script/sf2h/final-bundle/verify-e2e-typecheck.mjs --inventory
+          record e2e-inventory . node "$SF119_TOOL_DIR/verify-e2e-typecheck.mjs" --inventory
 
           record typecheck-atlas modules/atlas/boundary bun typecheck
           record typecheck-sucafina modules/sucafina bun typecheck
@@ -95,7 +110,7 @@ jobs:
           config_exit="$(awk '$1 == "sf-e2e-showConfig" {print $2}' "$EVIDENCE/exit-codes.tsv")"
           program_exit="$(awk '$1 == "sf-e2e-listFiles" {print $2}' "$EVIDENCE/exit-codes.tsv")"
           export SF_PRODUCT_TREE="$SF_SOURCE_TREE"
-          GITHUB_SHA="$SF_SOURCE_SHA" record sf-e2e-verify . node script/sf2h/final-bundle/verify-e2e-typecheck.mjs \
+          GITHUB_SHA="$SF_SOURCE_SHA" record sf-e2e-verify . node "$SF119_TOOL_DIR/verify-e2e-typecheck.mjs" \
             --config "$EVIDENCE/sf-e2e-showConfig.log" --config-status "$config_exit" \
             --log "$EVIDENCE/sf-e2e-listFiles.log" --typecheck-status "$program_exit" \
             --output "$EVIDENCE/e2e-inclusion.json"
@@ -122,7 +137,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: sf-compiler-c53-108
-          path: ${{ runner.temp }}/sf-compiler-c53-108
+          name: sf-compiler-119
+          path: ${{ runner.temp }}/sf-compiler-119
           if-no-files-found: error
           retention-days: 14
