@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.integration114.C55.v1",
+  "mission": 114,
+  "campaign": "sf2h-integral-20261112",
+  "lease": "S0-C-e17-browser114",
+  "status": "C55_COMPOSED_UNTESTED_NOT_FROZEN",
+  "candidate": {
+    "id": "C55",
+    "commit": "8b2a3efe17340b2a23fd038b877455a93cd0379b",
+    "tree": "d559b7afb0b2d53ea7001e396e0445fdacd7d44e",
+    "parent": "67d5c4f1a6e36eb90d4d2244028011e4476965b7",
+    "prior": "C54@3f4643d993c71b0edd197e8c3a1090bfd5ba533a",
+    "base": "C53@180212940105e7b9ad15171b067c1c1b7841df5f"
+  },
+  "source": {
+    "mission": 116,
+    "branch": "product-type-repair",
+    "pr": null,
+    "source_material": "b2b56c8e4583cc01ddad9b30733c45003fbd982d",
+    "source_head": "3dc622981faa3c40ae9f6fcf81f6d53464618d00",
+    "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-type-repair/PREPOST-116.json",
+    "handoff": "HANDOFF-116.md",
+    "authorization": "SOURCE_PATCH_READY_COMPILER_NOT_RUN",
+    "ownership": "4 exact files by116, integrated by114 into sf2-stack"
+  },
+  "prepost": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "preimage": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575",
+      "postimage": "597b5c3b536c2416d9d7d39c7d4329ce5c4183ff",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-services.ts",
+      "preimage": "c2ef2828e824a46d67d7c6e79012656a092a3c82",
+      "postimage": "d6662e987bc149b0b6dd161e5f637ed75c6a55c7",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "preimage": "0ff544b39f61a26cea6d15c238a88217ef7e6130",
+      "postimage": "571bd21a23c9992ab6d8f32363a173596fdc704e",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+      "preimage": "4d2e9087e4adfb57cdcfb6b0c686e1a6b9d7a516",
+      "postimage": "4a49ca7808ae1fe64060ff002c85643c87a85d1a",
+      "status": "modified",
+      "add": 3,
+      "del": 2
+    }
+  ],
+  "patch": "C55-INCREMENTAL.patch",
+  "source_branches_unchanged": true,
+  "source_author_retained": true,
+  "atomic_exact_git_blobs": true,
+  "CAS_force_false": true,
+  "semantic_guards": [
+    "keep non-OK PortResult statuses",
+    "keep selected optional in current choice options",
+    "keep external operation pending/unresolved cost",
+    "keep procurement agenda discriminants",
+    "no oracle/permission/fixture/validator modifications"
+  ],
+  "proofs": {
+    "compiler119": "NOT_RUN_ON_C55",
+    "Actions120": "NOT_RUN_ON_C55",
+    "static_scope": "4/4 exact",
+    "final_review": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "next": [
+    "119 hosted five bun typechecks + E2E and guards on C55 after tooling source intake",
+    "120 C55 surgical Actions for C54 creation pathways and 116 affected consumers",
+    "117/118 type-file releases with exact prepost; 115 native historical source",
+    "recheck91",
+    "epic 8 finals AM01–06 G7/G8"
+  ],
+  "GLOBAL_RELEASE": false
+}

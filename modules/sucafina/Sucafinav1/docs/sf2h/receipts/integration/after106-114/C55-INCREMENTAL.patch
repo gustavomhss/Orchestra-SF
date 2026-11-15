@@ -1,0 +1,56 @@
+diff --git a/apps/cli/src/sucafina-product/bi-services.ts b/apps/cli/src/sucafina-product/bi-services.ts
+index 4f7d24f93838fd6e19ed0403b4b3bbdf644b3575..597b5c3b536c2416d9d7d39c7d4329ce5c4183ff 100644
+--- a/apps/cli/src/sucafina-product/bi-services.ts
++++ b/apps/cli/src/sucafina-product/bi-services.ts
+@@ -210,7 +210,7 @@ function createPortfolioCostProjection(input: {
+       digestSfValue(combination.components) !== digestSfValue(analysis.scenario.components)) return { status: "stale", reason: "portfolio-waterfall-analysis-mismatch" }
+     const scenario = createScenarioCostBiHost({ host: input.host, results: input.results, scenarios: input.scenarios, scenario: {
+       revalidate: (_request, call) => input.host.revalidate(call),
+-      readView: async (forwarded, call) => {
++      readView: async (forwarded, call): Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>> => {
+         if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "portfolio-waterfall-request-changed" }
+         const portfolio = await input.readProjection({ selectionRef: request.selectionRef, portfolioResultRef: selected.portfolioResultRef }, call)
+         if (portfolio.status !== "ok") return portfolio
+diff --git a/apps/cli/src/sucafina-product/current-choice-services.ts b/apps/cli/src/sucafina-product/current-choice-services.ts
+index c2ef2828e824a46d67d7c6e79012656a092a3c82..d6662e987bc149b0b6dd161e5f637ed75c6a55c7 100644
+--- a/apps/cli/src/sucafina-product/current-choice-services.ts
++++ b/apps/cli/src/sucafina-product/current-choice-services.ts
+@@ -221,7 +221,7 @@ export function createSfCurrentChoiceServices(input: {
+     finally { actors.release(call) }
+   }
+   return {
+-    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run(call, async () => {
++    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run<SfCurrentChoiceOptions>(call, async () => {
+       const request = host.requestFor(call)
+       if (!request) return unavailable()
+       const candidates = await authority.state.read(request, "cases", (state, actor) => sameActor(actor, call)
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts b/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
+index 0ff544b39f61a26cea6d15c238a88217ef7e6130..571bd21a23c9992ab6d8f32363a173596fdc704e 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts
+@@ -23,7 +23,7 @@ export function createCompositeDecisionPlanner(input: {
+         const resolve = () => Promise.all(request.operations.map((operation) => input.resolveOperation(operation, context)))
+         const proofs = await resolve()
+         const failure = proofs.find((item) => item.status !== "ok")
+-        if (failure && failure.status !== "ok") return failure
++        if (failure) return failure
+         if (proofs.some((item, index) => item.status !== "ok" || item.value.operationDigest !== digestSfValue(request.operations[index]) || item.value.kind === "external" && (!item.value.sourceRefs.length || !item.value.condition.trim()))) return { status: "unavailable", reason: "scenario-operation-proof-unavailable" }
+         const plannerOperations = request.operations.filter((_operation, index) => { const proof = proofs[index]; return proof?.status === "ok" && proof.value.kind === "planner" })
+         const external = proofs.flatMap((item) => item.status === "ok" && item.value.kind === "external" ? [item.value] : [])
+diff --git a/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts b/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts
+index 4d2e9087e4adfb57cdcfb6b0c686e1a6b9d7a516..4a49ca7808ae1fe64060ff002c85643c87a85d1a 100644
+--- a/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts
+@@ -132,9 +132,10 @@ function validCatalog(value: unknown): value is ReviewAgendaCatalog {
+       if (typeof item.id !== "string" || !item.id || !isSfPeriod(item.period)) return false
+       if (item.kind === "dashboard") return option.domain === "dashboard" && typeof item.topic === "string" && typeof item.selectionRef === "string" && !!item.selectionRef
+       if (item.kind === "forecast-comparison") return option.domain === "planner" && typeof item.title === "string" && typeof item.baseRef === "string" && typeof item.candidateRef === "string" && typeof item.currency === "string" && Array.isArray(item.sides) && item.sides.length > 0 && item.sides.every((side) => side === "baseline" || side === "candidate")
+-      if (option.domain !== "procurement" || typeof item.title !== "string") return false
++      if (option.domain !== "procurement" || !("title" in item) || typeof item.title !== "string") return false
+       if (item.kind === "procurement-request") return typeof item.requestRef === "string" && !!item.requestRef
+       if (item.kind !== "procurement-supplier" && item.kind !== "procurement-contract") return false
+-      return typeof (item.kind === "procurement-supplier" ? item.supplierRef : item.contractRef) === "string" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === "string" && !!field)
++      const recordRef = item.kind === "procurement-supplier" ? item.supplierRef : "contractRef" in item ? item.contractRef : undefined
++      return typeof recordRef === "string" && Array.isArray(item.fields) && item.fields.length > 0 && item.fields.every((field) => typeof field === "string" && !!field)
+     })
+ }
