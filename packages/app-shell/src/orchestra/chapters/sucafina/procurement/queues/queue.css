@@ -1,0 +1,25 @@
+/* U10.queue only. Typography, colors and focus states stay with Orchestra/F03/S01. */
+.sf-procurement-queue-filters {
+  box-sizing: border-box;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+.sf-procurement-queue-filters > legend {
+  padding-inline: 0.25rem;
+}
+.sf-procurement-queue-filters > label {
+  min-width: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.sf-procurement-queue-filters select,
+.sf-procurement-queue-filters input[type="search"] {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  font: inherit;
+}
