@@ -1,0 +1,96 @@
+{
+  "case_id": "composed-docx",
+  "file_name": "composed-docx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.docx",
+  "format": "docx",
+  "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "sha256": "563ce93ed15041cf6f823e6811d45d26d6d25cce24c911b660f2a29b24407c8c",
+  "byte_count": 12739,
+  "observations": {
+    "implementation": "real-C08-SQLite-Request-UI-human-review-report",
+    "corpus": "synthetic",
+    "review_ref": "review:6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649",
+    "review_version": 1,
+    "review_digest": "27d4dbf5c2b4af3124f5547a4cadc0ec3d3554bd24f4444ebea62fbaa4f26966",
+    "source_refs": [
+      {
+        "surface": "dashboard",
+        "type": "dashboard-page",
+        "id": "All Projects",
+        "incarnation": "14d0d6aa-4f5a-4d0d-a691-9ce4a1eea9e8",
+        "version": 1,
+        "fields": [
+          "milestoneDates",
+          "projects"
+        ],
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "observedAt": "2026-11-13T04:01:10.000Z"
+      },
+      {
+        "surface": "planner",
+        "type": "planner-version",
+        "id": "export66-v1",
+        "incarnation": "e7b22c08-93bd-47fc-974f-96087a5737cb",
+        "version": 1,
+        "fields": [
+          "id",
+          "name",
+          "year",
+          "closed",
+          "lines",
+          "fx",
+          "hc",
+          "projects",
+          "lists",
+          "locked",
+          "summary",
+          "hr",
+          "restrictedHr",
+          "fteInputsKnown",
+          "hrMonthStates",
+          "sharedEntities",
+          "sharedAllocations"
+        ],
+        "period": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "observedAt": "2026-11-13T04:01:10Z"
+      }
+    ],
+    "evidence_ref_ids": [
+      "sf-source:14d0d6aa-4f5a-4d0d-a691-9ce4a1eea9e8:1",
+      "planner-version:export66-v1:e7b22c08-93bd-47fc-974f-96087a5737cb:1"
+    ],
+    "source_version_display": "opaque-evidence-reference-only; explicit-source-version-labels-require-Reports48",
+    "record_count": 2,
+    "currencies": [
+      "USD"
+    ],
+    "horizon": {
+      "start": "2026-01-01",
+      "end": "2026-12-31"
+    },
+    "xml_parts": [
+      "word/document.xml"
+    ],
+    "zip_entries": 22,
+    "source_note_complete": true,
+    "private_unselected_field_absent": true,
+    "exact_retry_unchanged": true,
+    "read_snapshot_unchanged": true,
+    "visible_style_markup": [
+      "Aptos",
+      "173D2C"
+    ],
+    "visual_render_qualification": "external-renderer-required"
+  },
+  "run_id": 43667294352,
+  "job_id": 132669403543,
+  "source_sha": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+  "snapshot_sha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+  "transport": "Exact SF66_EXPORT_BYTES chunks recovered from GitHub job logs; size and SHA256 matched",
+  "transport_verified": true
+}

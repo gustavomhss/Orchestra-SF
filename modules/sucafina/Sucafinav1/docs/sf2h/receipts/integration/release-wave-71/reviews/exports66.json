@@ -1,0 +1,691 @@
+{
+  "schema": "mission71.readonly-intake-review66.v1",
+  "reviewer": "/root/review_native64",
+  "verdict": "READY_TO_COMPOSE_HELD",
+  "sourceReleaseState": "SOURCE_PARTIAL_MISSION_HOLD",
+  "sourceLease": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "sourceBranch": "export-artifact-proof",
+  "sourcePR": 77,
+  "sourceBase": {
+    "sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "tree": "12594fd5a48f934847db717dd872d51776484296"
+  },
+  "finalCode": {
+    "sha": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+    "tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e"
+  },
+  "terminal": {
+    "sha": "097e05ea951f19a3e856461ccc361848cb5a49ae",
+    "tree": "07fe69bfc28b63c7231ae16b7bf7bd7f61b2ccde",
+    "parent": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+    "delta": "Only receipt-prefix files; direct Git compare verified"
+  },
+  "targetBase": {
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "materialC28": "d088708276b48f896ad4e0ecd2a95cb73dc413b1"
+  },
+  "material": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+      "pre": "99895e048e1e78e5e8594805291239b7871bf554",
+      "post": "109d41eddc857e1aa19b43f91527caffd0ff8179",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+      "pre": "bf91209e680a94dc0414251e1ab00c227a577d8a",
+      "post": "b98b59c80d8208926ef1b61fccfe098389000230",
+      "hunks": 5,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+      "pre": null,
+      "post": "9cad74dce443530dd026d78c53722d6d7e246b8e",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+      "pre": null,
+      "post": "4f268069e082f0ea463a251e7bceb27f4da74700",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/evidence.ts",
+      "pre": null,
+      "post": "f4cedb5da62893dad1b6f8e498d9a1b6be9545f3",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+      "pre": null,
+      "post": "d941eaf91e301ff530a174c1e92192237e3d3ef0",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+      "pre": null,
+      "post": "85406de21a626ae059597eaf5734a53be15e3ab0",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+      "pre": null,
+      "post": "4b350694202e438c04aa72b7b52a62411178fb1c",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-fixture.ts",
+      "pre": null,
+      "post": "07214942c53f8da210d42b3505f559183bb49a93",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts",
+      "pre": null,
+      "post": "1cff4b1331ce1a2d1d095b2c54aa6279c2904809",
+      "hunks": 1,
+      "completePatchReconstructsExactPostimage": true
+    }
+  ],
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/source.patch",
+    "bytes": 84586,
+    "sha256": "736d07776d4236354027c852c5e37e5ce9fa1de4499fb1a74dc333f586082335",
+    "git_blob": "848db3f1622e5e87b1b0b4657db6518073aec0e0",
+    "format": "Unified text diff with complete production and new test/helper changes against source_base; inert receipt, no patch execution claim.",
+    "completeParsedReconstruction": "All10 exact preimage hunks and exact fetched postimages; no fuzz/no product execution",
+    "newTestDirectoryAbsentAtTarget": true
+  },
+  "deps": {
+    "selected": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "source": "9e9bac976b503409de65868a366f352ca1e65071",
+        "target": "9e9bac976b503409de65868a366f352ca1e65071",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+        "source": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+        "target": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "source": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+        "target": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "source": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "target": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "source": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+        "target": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reports/download.ts",
+        "source": "01a345d1c60fd00499aff1d689b77c9e6e82cfb1",
+        "target": "01a345d1c60fd00499aff1d689b77c9e6e82cfb1",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+        "source": "84d1494057e99551cc8544655f0e0468b8853428",
+        "target": "84d1494057e99551cc8544655f0e0468b8853428",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/inclusion.ts",
+        "source": "460e5d3e88f06f71fc8d2f42b36977e243681738",
+        "target": "460e5d3e88f06f71fc8d2f42b36977e243681738",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/outcome.ts",
+        "source": "c32bc935e80c640110db8df28a8ab3adefad1b61",
+        "target": "c32bc935e80c640110db8df28a8ab3adefad1b61",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/decision.ts",
+        "source": "0e2918cfda9bf1204d99b264534995b90211d9b0",
+        "target": "0e2918cfda9bf1204d99b264534995b90211d9b0",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "source": "62db836fd93e349f19d007e1933396420a3540ff",
+        "target": "1290845a260606bd6e2b30594ba4247724ed7290",
+        "equal": false,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+        "source": "d4ea6ec8cfd1c1a9dbe0be0a92e236df94b1d11f",
+        "target": "d4ea6ec8cfd1c1a9dbe0be0a92e236df94b1d11f",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+        "source": "de76611be141d599b9eecc96e1173559e06be26d",
+        "target": "de76611be141d599b9eecc96e1173559e06be26d",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "source": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "target": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "source": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "target": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "source": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "target": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "source": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "target": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "source": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "target": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "source": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "target": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "source": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+        "target": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "source": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "target": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+        "equal": false,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "source": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+        "target": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "source": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+        "target": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "source": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+        "target": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "source": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "target": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-services.ts",
+        "source": "da98ee9b674a1d7b4f3ba2c8a230745c33ccdbd7",
+        "target": "da98ee9b674a1d7b4f3ba2c8a230745c33ccdbd7",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "source": "ff43e324d280498e629f867d0ac93714bdf608cc",
+        "target": "ff43e324d280498e629f867d0ac93714bdf608cc",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-agenda-services.ts",
+        "source": "1d161deed336cde3753c6f8dd8a7f02854833dca",
+        "target": "1d161deed336cde3753c6f8dd8a7f02854833dca",
+        "equal": true,
+        "error": false
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "source": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+        "target": "d879d52e12945465a965986280bef3a242962a50",
+        "equal": false,
+        "error": false
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "source": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+        "target": "0db2a444c14986cb6d0fec6eb60b279a8e26729d",
+        "equal": false,
+        "error": false
+      }
+    ],
+    "additionalDirectImports": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/fixture/persistence.ts",
+        "source": "b33c8f41fb719266e6100e8dc307c53ec66cdcff",
+        "target": "b33c8f41fb719266e6100e8dc307c53ec66cdcff",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+        "source": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+        "target": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+        "source": "4d2e9087e4adfb57cdcfb6b0c686e1a6b9d7a516",
+        "target": "4d2e9087e4adfb57cdcfb6b0c686e1a6b9d7a516",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+        "source": "3de1bf6369b1ca68e09dbae5ab6ffecaa87b85dc",
+        "target": "3de1bf6369b1ca68e09dbae5ab6ffecaa87b85dc",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+        "source": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "target": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "source": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+        "target": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+        "source": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+        "target": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+        "equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/fixture.ts",
+        "source": "a14accbfe4a089ccb37cb281663ada538a92bc57",
+        "target": "a14accbfe4a089ccb37cb281663ada538a92bc57",
+        "equal": true
+      }
+    ],
+    "packages": {
+      "packageJson": {
+        "path": "modules/sucafina/package.json",
+        "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+        "equalSourceTarget": true
+      },
+      "lock": {
+        "path": "bun.lock",
+        "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+        "equalSourceTarget": true
+      },
+      "newPackages": [],
+      "versions": {
+        "docx": "9.5.1",
+        "exceljs": "4.4.0",
+        "jszip": "3.10.1",
+        "pptxgenjs": "4.0.1",
+        "saxes": "5.0.1"
+      }
+    },
+    "driftDecision": "Preserve four C28 target blobs. Reviewed complete four-file semantic diff: read uncertainty/access/receipt-fence changes remain signature-compatible; source66 qualification is not transferred. Later59 contract/local-store composition requires integrated candidate validation by45, no overwrite with old source dependencies."
+  },
+  "semantics": [
+    "Metadata bounded UTF8basename/control/traversal/bidi/surrogate/Windowsreserved/extensionMIME validation; DOCX/PPTX ZIP envelope real required parts, traversal and cross-format exclusion; no claim of runtime full XML/CRC/visual semantic validation.",
+    "Stored base64 length bounded before allocation; empty/noncanonical/corrupt/digest-invalid/over-limit bytes rejected; canonical review inclusion count/evidence rechecked; no repair during reads.",
+    "Put validates renderer-issued private seal and frozen review, clones bytes/evidence/selected refs before async envelope inspection, preserves original operation intent and first committed bytes/ref; nonew authority/admission/dispatcher.",
+    "Read/download current hostauthority/source-preserved-review checks remain; complete source tests cover C08 SQLite reopen/exact retry/16corruptions/authdenials under synthetic principals.",
+    "Target C28 source reads have4different consumers; fullproduct,native/provider/visual/compiler qualifications stayNOT_RUN."
+  ],
+  "proof": [
+    {
+      "attempt": "R1",
+      "W": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+      "W_tree": "ded1e66c90395404dd3f7492212206c2e801bb0e",
+      "S": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+      "S_tree": "a6520b5d1ab6bd838265fa5793e7031bddf50368",
+      "run": 43667294352,
+      "job": 132669403543,
+      "conclusion": "failure",
+      "pass": 32,
+      "fail": 2,
+      "assertions": 1269,
+      "receipt": "ci/R1-result.json",
+      "disposition": "PPTX fixture limit mismatch resolved by R2. Legacy handler egress failure remains genuine and open.",
+      "provenance": {
+        "attempt": "R1",
+        "W": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+        "S": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+        "S_tree": "a6520b5d1ab6bd838265fa5793e7031bddf50368",
+        "S_parents": [
+          "75e46959101a2ea8a225a518f1f518f4250d76bf"
+        ],
+        "expectedW": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+        "requestBlob": "25d1241a413b9648b80ce9d4192b20f7e8a01d72",
+        "requestMatchesReceipt": true
+      },
+      "runReadback": "failure",
+      "rawJobLogsRead": true,
+      "omni": "not applicable, no native proof"
+    },
+    {
+      "attempt": "R2",
+      "W": "419a00b8faf5b78bce494749d0e45570aca175d2",
+      "W_tree": "288c861ec568d19e5f65d47da985347b3dce5adb",
+      "S": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+      "S_tree": "1423438380c0617ed0dd4ce3f1775bac022c6719",
+      "run": 43667789028,
+      "job": 132670938330,
+      "conclusion": "success",
+      "pass": 4,
+      "fail": 0,
+      "assertions": 919,
+      "receipt": "ci/R2-result.json",
+      "scope": "Only composed-storage.test.ts; real C08/SQLite, preserve/download/reopen/retry/authorization/corruption.",
+      "provenance": {
+        "attempt": "R2",
+        "W": "419a00b8faf5b78bce494749d0e45570aca175d2",
+        "S": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+        "S_tree": "1423438380c0617ed0dd4ce3f1775bac022c6719",
+        "S_parents": [
+          "419a00b8faf5b78bce494749d0e45570aca175d2"
+        ],
+        "expectedW": "419a00b8faf5b78bce494749d0e45570aca175d2",
+        "requestBlob": "3274259ddc8709a14c08a732a0655e95d45d5452",
+        "requestMatchesReceipt": true
+      },
+      "runReadback": "success",
+      "rawJobLogsRead": true,
+      "omni": "not applicable, no native proof"
+    },
+    {
+      "attempt": "R3",
+      "W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+      "W_tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e",
+      "S": "46fb76e4cf9bfb63799537a46c9b2dcc342f6459",
+      "S_tree": "852a1caab5f17562435f541309a2dd08248005d7",
+      "run": 43668383518,
+      "job": 132672748814,
+      "conclusion": "success",
+      "pass": 1,
+      "fail": 0,
+      "assertions": 686,
+      "receipt": "ci/R3-result.json",
+      "scope": "Only preserved-source-drift.test.ts; preserve110USD, change current source130, then first new DOCX/PPTX generation retains110 and captured refs.",
+      "provenance": {
+        "attempt": "R3",
+        "W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+        "S": "46fb76e4cf9bfb63799537a46c9b2dcc342f6459",
+        "S_tree": "852a1caab5f17562435f541309a2dd08248005d7",
+        "S_parents": [
+          "b371c1f9e7015a78d292baadef3e6cdeed781dc7"
+        ],
+        "expectedW": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+        "requestBlob": "6a06623661ccd1a25565b99f10b1332f7091a958",
+        "requestMatchesReceipt": true
+      },
+      "runReadback": "success",
+      "rawJobLogsRead": true,
+      "omni": "not applicable, no native proof"
+    }
+  ],
+  "proofInterpretation": "R1 remains32PASS/2FAIL. R2 only4composedtests; R3 only1source-drift test. W1→W2 changesfixture only16add1del; W2→W3 adds1test; sourceproduction unchanged across3runs. No green aggregate inferred.",
+  "artifactLogReadback": {
+    "count": 14,
+    "totalBytes": 3157240,
+    "records": [
+      {
+        "attempt": "R1",
+        "case_id": "planner-viewer",
+        "name": "planner-viewer-IT_Budget_Planner_2026.xlsx",
+        "sha256": "f27135221582f89e195a006c08719581d18201ba980f640f4a76e3dbdc0578c5",
+        "byte_count": 12506
+      },
+      {
+        "attempt": "R1",
+        "case_id": "dashboard-backup",
+        "name": "dashboard-backup-cio-dashboard.json",
+        "sha256": "b28668a0a42fb47fc46a28152bf9711d7451cedf42a39a7b25971a6bdac3c1d7",
+        "byte_count": 3116
+      },
+      {
+        "attempt": "R1",
+        "case_id": "members-admin",
+        "name": "members-admin-headcount_export_2026-11-14.xlsx",
+        "sha256": "55d1386b32a7ace51be044229c58a48e6fe188d75a4a956519af7b2177e2ab00",
+        "byte_count": 7712
+      },
+      {
+        "attempt": "R1",
+        "case_id": "opex-template",
+        "name": "opex-template-opex-template.xlsx",
+        "sha256": "2eef885fa6459b520ccb1dec8f1101be593a1491afb8dbcfc05cd38d9a5080d8",
+        "byte_count": 6523
+      },
+      {
+        "attempt": "R1",
+        "case_id": "procurement-register",
+        "name": "procurement-register-procurement-register.csv",
+        "sha256": "5c6a777f2bf17cf1c2b7015304861d8bbae589a46ad1982237147b919389ef81",
+        "byte_count": 758
+      },
+      {
+        "attempt": "R1",
+        "case_id": "purchase-order",
+        "name": "purchase-order-PO-2026-0001.html",
+        "sha256": "a3db32b6f749e12dc7be488ae1e623ece1123f4a5a4629061065472d92f5d24c",
+        "byte_count": 2105
+      },
+      {
+        "attempt": "R1",
+        "case_id": "suppliers-buyer",
+        "name": "suppliers-buyer-suppliers.csv",
+        "sha256": "c2be0f72d297a77d6fcb278fb48f9eadbfc13f52b52b621e1f8bc6eacc160b22",
+        "byte_count": 993
+      },
+      {
+        "attempt": "R1",
+        "case_id": "composed-docx",
+        "name": "composed-docx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.docx",
+        "sha256": "563ce93ed15041cf6f823e6811d45d26d6d25cce24c911b660f2a29b24407c8c",
+        "byte_count": 12739
+      },
+      {
+        "attempt": "R1",
+        "case_id": "legacy-egress-control",
+        "name": "legacy-egress-control-Egress_report.docx",
+        "sha256": "d47d6842d2bad4297bad0545e455d54b34b10631ffa8283eac23961f6abb045b",
+        "byte_count": 8883
+      },
+      {
+        "attempt": "R1",
+        "case_id": "legacy-egress-revoked",
+        "name": "legacy-egress-revoked-Egress_report.docx",
+        "sha256": "c25ede33601188f523901488016785e1609dbc9bbc397231f7d16e182513f29a",
+        "byte_count": 8883
+      },
+      {
+        "attempt": "R2",
+        "case_id": "composed-docx",
+        "name": "composed-docx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.docx",
+        "sha256": "9cbb3fcbe9da3ae9e3e5ec7dc82c2734c9279a672f032efcfd2eb49dd02e1fd5",
+        "byte_count": 12738
+      },
+      {
+        "attempt": "R2",
+        "case_id": "composed-pptx",
+        "name": "composed-pptx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.pptx",
+        "sha256": "b9662df138d7ad48812282c7532ed95df83c9a533cf8fd1e0273025efd732cfa",
+        "byte_count": 1533773
+      },
+      {
+        "attempt": "R3",
+        "case_id": "after-drift-docx",
+        "name": "after-drift-docx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.docx",
+        "sha256": "1fe9493e6f7e052b824c264fb4992fe9ef24ec10f640491740f47613a81b0c0f",
+        "byte_count": 12738
+      },
+      {
+        "attempt": "R3",
+        "case_id": "after-drift-pptx",
+        "name": "after-drift-pptx-Review_review_6e9ac25cc2621e5771901e434d1fb8c4d785d46f2f6c6c9412a2d73dbb6a9649.pptx",
+        "sha256": "68440eeb5e75262c9e14611124afd14b915b917a76aa2be5a97a146cb9bf8d87",
+        "byte_count": 1533773
+      }
+    ],
+    "limit": "Read exact hosted logged artifact metadata; did not execute Office reader or re-render locally. Transport/hash receipts remain source evidence."
+  },
+  "externalProposals": [
+    {
+      "target": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "pre": "external/runtime-application/application.ts.preimage",
+      "post": "external/runtime-application/application.ts.proposed",
+      "patch": "external/runtime-application/application.patch",
+      "owner": "New explicit runtime/application owner; not mission66",
+      "hold": "EA66-LEGACY-EGRESS remains FAIL; proposed patch unexecuted; conservative source digest may reject unrelated surface edits with409.",
+      "preBlob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "postBlob": "5c81bf6b46b2be40165c6107d59ed3dde48eff73",
+      "patchBlob": "e0cfda2c303e5039d1c284be15e7a46d303d699f",
+      "hunks": 4,
+      "exactReconstruction": true,
+      "currentTargetPreimageExact": true,
+      "status": "OWNER_REQUIRED_NOT_APPLIED"
+    },
+    {
+      "target": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "pre": "external/reports48-provenance/preimage.txt",
+      "post": "external/reports48-provenance/postimage.txt",
+      "patch": "external/reports48-provenance/render.patch",
+      "owner": "New explicit Reports owner;48 ended",
+      "hold": "Stop-before-apply: extra pages/slides, long source ids/font/clipping and renderer-version/retry compatibility require owner decision and qualification.",
+      "preBlob": "84d1494057e99551cc8544655f0e0468b8853428",
+      "postBlob": "f468b67bab233fcd19e728134f48e3f6b11d2b9f",
+      "patchBlob": "f9c113bcc07344c6a243a5c215339a8cceaa6011",
+      "hunks": 2,
+      "exactReconstruction": true,
+      "currentTargetPreimageExact": true,
+      "status": "OWNER_REQUIRED_NOT_APPLIED"
+    },
+    {
+      "target": ".github/workflows/test-ci.yml",
+      "pre": "owner-proposals/test-ci.yml.preimage",
+      "post": "owner-proposals/test-ci.yml.proposed",
+      "patch": "owner-proposals/test-ci-sf66-reader-proposal.patch",
+      "owner": "New explicit workflow owner; outside66 and current45 writepaths",
+      "hold": "No application or dispatch. Reader success cannot erase functional FAIL;45 keeps compiler interface and S0 acceptance.",
+      "preBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "postBlob": "0b6cf888faa82d3be7b2c683f4bff3b17a6e53e3",
+      "patchBlob": "8e9548668b470c67e54e5c315deb81b5ff032e39",
+      "hunks": 2,
+      "exactReconstruction": true,
+      "currentTargetPreimageExact": true,
+      "status": "OWNER_REQUIRED_NOT_APPLIED"
+    }
+  ],
+  "holds": {
+    "legacyEgress": {
+      "id": "EA66-LEGACY-EGRESS",
+      "status": "FAIL_REPRODUCED_HELD",
+      "expected403": true,
+      "observed200": true,
+      "nextRequest401": true,
+      "readableDocxLeaked": true,
+      "scope": "Real legacy handler + SQLite + synthetic session sourceW1; not installedC28 exploit claim",
+      "unchangedRegressionBlob": "4b350694202e438c04aa72b7b52a62411178fb1c"
+    },
+    "visual": "NOT_RUN",
+    "compilerGuards": "NOT_RUN owner45",
+    "nativeMcpProviderParity": "NOT_RUN",
+    "integratedCandidate": "NOT_RUN",
+    "fullWP06Roundtrip": "NOT_QUALIFIED, permissive scanner fixture not promoted",
+    "aggregateQuota": "NOT_QUALIFIED",
+    "privilegedSupplierBankExport": "NOT_QUALIFIED",
+    "C28": "All inherited HOLDs remain",
+    "GLOBAL_RELEASE": false
+  },
+  "receiptLinks": {
+    "handoff": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/HANDOFF66.json",
+    "sourceManifest": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/SOURCE-MANIFEST.json",
+    "sourcePatch": "https://github.com/gustavomhss/Orchestra-SF/blob/097e05ea951f19a3e856461ccc361848cb5a49ae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/source.patch"
+  },
+  "recommendation": {
+    "compose": "Exactly10owned material paths; receive explicit terminal ACK with allHOLDs and4targetdependencies. No fullbranch/snapshot copy.",
+    "excludeFromMaterial": "All3external proposals including workflow; oldsource dependencies; binaryreceipt snapshot not needed as active product material.",
+    "validationQueue": [
+      "Pinned composed candidate66 product + C28 and59 dependency changes, sourceauthority/reviewread/readintegrity andbyte/rerender/retry behavior.",
+      "Unchanged legacy-egress expected403 plus source-change409 controls only after explicit owner fix/release.",
+      "Owner review of Reports provenance pagination + rendererintent upgrade compatibility.",
+      "Assigned renderer/visual font/glyph/clipping/pagination inspection exact generated files;45 compiler/guards throughitsauthorizedinterface. NoCIin71."
+    ]
+  },
+  "operations": {
+    "githubWrites": 0,
+    "ciDispatches": 0,
+    "localProductTests": 0,
+    "localBuildsTypechecksGuards": 0,
+    "remoteReads": "GitHub MCP only",
+    "localProcessing": "Stored-text diff/reconstruction and JSON review only"
+  }
+}
+

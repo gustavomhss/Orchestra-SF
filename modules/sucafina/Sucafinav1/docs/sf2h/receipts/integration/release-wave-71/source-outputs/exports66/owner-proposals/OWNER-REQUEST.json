@@ -1,0 +1,265 @@
+{
+  "schema": "sf66.owner-request.proposal.v1",
+  "state": "PROPOSED_NOT_APPLIED_NOT_DISPATCHED",
+  "to": [
+    "60 on explicit authorized resumption, or authorized successor",
+    "test-ci workflow owner to be explicitly assigned",
+    "45 compiler owner through authorized interface"
+  ],
+  "sourceBranch": "export-artifact-proof",
+  "targetBranch": "sf2-stack",
+  "exactCandidateSha": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+  "currentDevSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "observedInitialCandidate": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionPackageSha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "proposedPatch": "test-ci-sf66-reader-proposal.patch",
+  "patchTarget": ".github/workflows/test-ci.yml",
+  "expectedPreimageBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "authority": "Outside mission66 lease and outside current45 write_paths;60 must assign workflow ownership before application.",
+  "generatorContract": {
+    "root": "${RUNNER_TEMP}/sf66-export-artifacts",
+    "manifests": "*.manifest.json",
+    "names": "unique per test and per output",
+    "readerOutputs": "_inspection/manifest.json + separate PDF/text/PNG files",
+    "originals": "preserve bytes and prove before/after SHA-256 equality",
+    "fixturesOnly": true,
+    "readerAfterFunctionalFailure": {
+      "enabledInProposal": true,
+      "conditions": [
+        "always()",
+        "!cancelled()",
+        "Linux",
+        "validated own-only request gate",
+        "artifact root is a real directory",
+        "at least one *.manifest.json exists",
+        "renderer runs only when reader installation succeeds"
+      ],
+      "functionalVerdict": "Unchanged. No continue-on-error, skip, expected-failure assertion or test-result rewriting.",
+      "readerVerdict": "Only reader conversion/hash evidence; visualInspection remains PENDING and functionalAcceptance is NOT_ASSERTED.",
+      "knownFailuresRemainInOwnSelection": true
+    }
+  },
+  "surgicalBun": {
+    "purpose": "Future own-only reader selection after60 assigns the workflow owner and the patch is consumed into a fixed candidate",
+    "status": "PROPOSED_NOT_DISPATCHED",
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "exactTestFiles": [
+      "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts"
+    ],
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts"
+      ],
+      "env": {}
+    },
+    "requiredPathPrefix": "Sucafinav1/test/product/export-artifact-closure/",
+    "allowedSuffix": ".test.ts",
+    "flagsForProposedReaderGate": [
+      "--timeout",
+      "120000"
+    ],
+    "flagsProvenance": "Preserves the existing R1 --timeout120000 exactly; no timeout increase or new flag.",
+    "host": "Linux",
+    "candidateContainingAuthorizedWorkflowPatch": null,
+    "snapshotProtocol": "Parent=W_reader; only added/updated .ci-run.json; unique ci-run-linux-*; GitHub MCP/CAS only; refresh dedup before creation.",
+    "noDispatchUntil": "Workflow owner/lease assigned by60, patch in actual pinned candidate, exact own-only selection and latest dedup recorded. This proposal itself authorizes no dispatch.",
+    "functionalScope": "All five own files remain selected, including the open legacy-egress regression. Reader completion cannot erase functional failure."
+  },
+  "separateCompilerRequest": {
+    "status": "NEEDS_AUTHORIZED_INTERFACE_FROM45",
+    "requiredCommands": [
+      {
+        "directory": "modules/sucafina",
+        "command": "bun typecheck"
+      },
+      {
+        "directory": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "requirements": [
+      "W pinned",
+      "actual origin/dev pinned",
+      "workflow/config hashes",
+      "nonempty real commands/results",
+      "run/job/artifact refs"
+    ],
+    "forbidden": [
+      "producttests in compiler lane",
+      "taking astra-check-compose fixed ref",
+      "taking astra-check-wp07 fixed ref"
+    ],
+    "observation": {
+      "checkedAt": "2026-11-15 02:21:39 UTC",
+      "ownerBranch": "astra-compose",
+      "ownerHead": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "liveControlHead": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "targetHead": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "currentDevSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "scopedCheckBranches": [],
+      "scopedCheckInCurrentTargetWorkflowDirectory": false,
+      "existingTestCiBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "conclusion": "No newly published supported sf2-scoped-check interface observed.45 source and live authority unchanged; no foreign fixed-ref takeover.",
+      "limits": "Registered-workflows list endpoint was rejected by GitHub Fetch as unsupported; absence claim is scoped to observed owner head, current target directory, branch search and recent runs."
+    },
+    "exactCandidateSha": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+    "exactDevBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "exactCandidateTree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e"
+  },
+  "unmetBeforeExecution": [
+    "60 assigns workflow owner/lease for this patch",
+    "fixed W_reader includes the authorized workflow config",
+    "own-only test selection emits real generation manifests",
+    "hosted reader/upload steps inspect generated files; any functional test/job failure remains failure",
+    "download and inspect the exact archived outputs",
+    "visual checks of PNGs/HTML",
+    "authorized45 interface and actual current scope compiler/guard results",
+    "legacy egress fix and genuine validation before full functional acceptance"
+  ],
+  "noProductTestExecutedByThisAgent": true,
+  "noGithubMutationByThisAgent": true,
+  "exactCandidateTree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e",
+  "lastReadAt": "2026-11-15T02:37:37Z",
+  "observedTarget": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "actualFunctionalRequestR1": {
+    "statusAtObservation": "COMPLETED",
+    "snapshotSha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+    "snapshotTree": "a6520b5d1ab6bd838265fa5793e7031bddf50368",
+    "parentSha": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+    "requestBlobSha": "25d1241a413b9648b80ce9d4192b20f7e8a01d72",
+    "branch": "ci-run-linux-export66-r1-75e46959",
+    "runId": 43667294352,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667294352",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+        "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+        "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+        "Sucafinav1/test/parity-reports.test.ts",
+        "Sucafinav1/test/product/procurement-exports/export-controls.test.ts"
+      ],
+      "env": {}
+    },
+    "ownTestCount": 4,
+    "regressionTestCount": 4,
+    "readerProposalEligible": false,
+    "reason": "R1 includes four regression paths outside66; existing workflow has no SF66 reader/upload extension. Do not rewrite or represent this executed request as the future own-only reader selection.",
+    "conclusion": "failure",
+    "jobId": 132669403543,
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667294352/job/132669403543",
+    "resultCounts": {
+      "pass": 32,
+      "fail": 2
+    },
+    "resultProvenance": "Terminal job summary and decoded job log read independently through GitHub MCP; no rerun."
+  },
+  "regressionSlot": {
+    "status": "ALREADY_SELECTED_IN_COMPLETED_R1",
+    "exactTestFiles": [
+      "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+      "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+      "Sucafinav1/test/parity-reports.test.ts",
+      "Sucafinav1/test/product/procurement-exports/export-controls.test.ts"
+    ],
+    "requestRunId": 43667294352,
+    "requestSnapshotSha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+    "includedInFutureReaderSelection": false,
+    "repeatRequested": false,
+    "repeatCondition": "Only a concrete remaining regression risk or required gate may justify a fresh deduplicated selection; no optional repeat is requested here.",
+    "requestRunConclusion": "failure"
+  },
+  "lastFunctionalReadAt": "2026-11-15 02:26:55 UTC",
+  "knownFunctionalFindings": [
+    {
+      "id": "EA66-LEGACY-EGRESS",
+      "status": "CONFIRMED_FAIL",
+      "test": "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+      "expectedHttpStatus": 403,
+      "observedHttpStatus": 200,
+      "sourcePath": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "ownerScope": "outside66",
+      "blocksFullAcceptance": true,
+      "nextAction": "Owner patch and genuine hosted validation; renderer observation must not suppress or reclassify this failure."
+    },
+    {
+      "id": "COMPOSED_PPTX_STORAGE",
+      "status": "R1_FIXTURE_ERROR_RESOLVED_BY_R2",
+      "test": "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+      "observed": "sf_report_prepare returned needs-input/invalid-artifact instead of ok.",
+      "diagnosis": {
+        "actualPptxBytes": 1533773,
+        "oldFixtureMaxBytes": 1048576,
+        "installedMaxBytes": 8388608,
+        "source": "R2 run43667789028/job132670938330 observed the exact artifact passed to unchanged storage",
+        "validation": "old cap false, installed cap true",
+        "productionChanged": false,
+        "assertionsRelaxed": false
+      },
+      "blocksFullAcceptance": false,
+      "nextAction": "No additional repetition requested. R2 four tests passed; retain the R1 failure history."
+    }
+  ],
+  "roundtripFollowup": {
+    "status": "NOT_ACCEPTED_NO_NEW_RUN_REQUESTED",
+    "reason": "An existing roundtrip path using a permissive scanner fixture does not count as the required real scanner/production proof.",
+    "scannerProofAccepted": false,
+    "newRequestCreated": false,
+    "newRunRequested": false,
+    "instruction": "Do not dispatch another existing roundtrip selection merely to obtain a passing line; preserve the missing proof explicitly."
+  },
+  "consumerAuthority": {
+    "mission60": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "authorityBlob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "requiresExplicitResumptionOrSuccessor": true
+  },
+  "actualComposedR2": {
+    "W": "419a00b8faf5b78bce494749d0e45570aca175d2",
+    "S": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+    "run": 43667789028,
+    "job": 132670938330,
+    "pass": 4,
+    "fail": 0,
+    "reason": "Fixture corrected to existing installed8MiB; measuredPPTX1533773 exceeded prior1MiB; assertions unchanged"
+  },
+  "actualFreshSourceR3": {
+    "W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+    "S": "46fb76e4cf9bfb63799537a46c9b2dcc342f6459",
+    "run": 43668383518,
+    "job": 132672748814,
+    "pass": 1,
+    "fail": 0,
+    "criterion": "WP07.T04.CHK.02"
+  },
+  "currentResult": "SOURCE_PARTIAL_MISSION_HOLD: legacy-egressFAIL remains; visual/compiler/integration NOT_RUN",
+  "completeWorkflowImages": {
+    "manifest": "WORKFLOW-MANIFEST.json",
+    "preimage": "test-ci.yml.preimage",
+    "postimage": "test-ci.yml.proposed",
+    "preimageGitBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "postimageGitBlob": "0b6cf888faa82d3be7b2c683f4bff3b17a6e53e3"
+  }
+}

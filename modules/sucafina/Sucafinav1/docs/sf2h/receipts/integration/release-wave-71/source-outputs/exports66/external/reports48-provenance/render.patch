@@ -1,0 +1,21 @@
+--- a/modules/sucafina/Sucafinav1/product/reviews/render.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/render.ts
+@@ -60,6 +60,9 @@
+         ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome && validReviewOutcome((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome) ? [...reviewOutcomeLines((projection as DomainProjection & { reviewOutcome: ObservedResultProjection }).reviewOutcome), `Outcome snapshot: ${JSON.stringify((projection as DomainProjection & { reviewOutcome: ObservedResultProjection }).reviewOutcome)}`] : []),
+         ...(projection.decision ? validReviewDecision(projection.decision) ? [...reviewDecisionLines(projection.decision), `Decision snapshot: ${JSON.stringify(projection.decision)}`] : ["Decision details unavailable."] : []),
+         `Selected records: ${section.count}`,
++        // These are the selected capture stamps, never a lookup of current source data.
++        ...section.sourceRefs.map((source) => `Captured source: ${source.surface} · ${source.type} · ${source.id} · version ${source.version} · incarnation ${source.incarnation} · ${source.period.start} – ${source.period.end}`),
++        ...(typeof projection.engineVersion === "string" && projection.engineVersion.trim() ? [`Captured engine version: ${projection.engineVersion}`] : []),
+         ...(chart ? images.length && chart.status === "ok" ? [
+           lineImage
+             ? `Financial trajectory · ${chart.series[0]!.unit}; horizontal axis: ${chartDates[0]} – ${chartDates.at(-1)}; vertical axis: ${chartMinimum} – ${chartMaximum}, with zero marked.`
+@@ -185,7 +188,7 @@
+ 
+ function sealReviewArtifact(artifact: Artifact, review: PreservedReview, options: { title: string; format: "pptx" | "docx"; sectionRefs: readonly string[] }) {
+   const inclusion = reviewInclusion(review, options.sectionRefs)
+-  if (inclusion) seals.set(artifact, { digest: createHash("sha256").update(artifact.bytes).digest("hex"), inclusion, renderDigest: digestSfValue({ rendererVersion: "wp07-paginated-v2", title: options.title, format: options.format }) })
++  if (inclusion) seals.set(artifact, { digest: createHash("sha256").update(artifact.bytes).digest("hex"), inclusion, renderDigest: digestSfValue({ rendererVersion: "wp07-paginated-v3-source-provenance", title: options.title, format: options.format }) })
+ }
+ 
+ /** A store can verify this receipt but only the renderer can create it. */

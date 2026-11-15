@@ -1,0 +1,71 @@
+{
+  "schema": "sf66-external-patch-v1",
+  "finding_id": "EA66-LEGACY-EGRESS-REVOCATION",
+  "status": "PREPARED_NOT_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "target_path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+  "source_blob_sha": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+  "preimage": {
+    "file": "application.ts.preimage",
+    "sha256": "c1ac0f971c3296af6e672a3190c75f631d77b289216eff794f987cf244416bef"
+  },
+  "postimage": {
+    "file": "application.ts.proposed",
+    "git_blob_sha": "5c81bf6b46b2be40165c6107d59ed3dde48eff73",
+    "sha256": "0365be9dbc8f8812413f094f90a178e5bb6af3fcaf19d27c69e51acd89589bfb"
+  },
+  "patch": {
+    "file": "application.patch",
+    "sha256": "74f146417adf67fe2bb2c55090f52fbf237ddfcd3ce8b1eb7751c9fda99c874b"
+  },
+  "producer": "mission66",
+  "consumer": "60 only on explicit authorized resumption, or authorized successor assigning runtime/application ownership",
+  "outside_mission66_production_lease": true,
+  "applied_to_product": false,
+  "regression": "test/product/export-artifact-closure/legacy-egress.test.ts",
+  "reproduction": {
+    "transport": "Real createApplication Request/Response route",
+    "persistence": "openLocalStore real SQLite",
+    "identity": "Explicit synthetic session gate; persisted roleMap resolved by actual resolve()",
+    "scheduling": "Pass-through transaction wrapper revokes the fixture session only after the actual authenticated snapshot transaction returns; it does not replace the domain, export producer, callback or returned bytes.",
+    "positive_control": "Authorized real DOCX generated and parsed through JSZip + Saxes",
+    "negative_expectation": {
+      "revoked_during_generation_egress_status": 403,
+      "generated_content_leaked": false
+    },
+    "failure_evidence": "Before asserting403, records exact actual DOCX bytes and digest if the unpatched route returns200; confirms the next request receives401 and compares persisted snapshots to prove reads did not mutate data.",
+    "hosted_execution_required": true,
+    "runtime_result": {
+      "state": "FAIL_REPRODUCED_ON_UNPATCHED_SOURCE",
+      "run": 43667294352,
+      "job": 132669403543,
+      "W": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+      "expectedStatus": 403,
+      "observedStatus": 200,
+      "nextRequestStatus": 401,
+      "generatedContentLeaked": true,
+      "report": "../../ci/R1-result.json",
+      "bound": "Legacy handler reproduction; installedC28 route not qualified. Proposed fix has not been executed."
+    }
+  },
+  "change": {
+    "behavior": "After generation and before response creation, open a fresh read transaction and reauthenticate the same Request against current roles. A missing/changed actor suppresses bytes with403. Changed public source data/versions suppress bytes with409; no automatic retry.",
+    "boundary": "Initial captured source digest excludes private __sfProductV1 and read audits; revalidation does not regenerate or mutate files and does not repeat effects.",
+    "tradeoff": "Source comparison conservatively covers all public data and versions on the exported surface. Unrelated concurrent public edits may require an explicit fresh download.",
+    "preserves": [
+      "HEAD has no body",
+      "read-only revalidation",
+      "existing initial read audit policy",
+      "private product-state exclusion",
+      "no automatic command replay",
+      "existing download producers"
+    ]
+  },
+  "validation": {
+    "local_product_tests": false,
+    "local_typecheck": false,
+    "hosted_runs": [],
+    "owner_integration_required": true
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "case_id": "planner-viewer",
+  "file_name": "planner-viewer-IT_Budget_Planner_2026.xlsx",
+  "format": "xlsx",
+  "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "sha256": "f27135221582f89e195a006c08719581d18201ba980f640f4a76e3dbdc0578c5",
+  "byte_count": 12506,
+  "observations": {
+    "sheets": [
+      "Info",
+      "OPEX",
+      "CAPEX",
+      "Headcount",
+      "Rate cards",
+      "FX rates"
+    ],
+    "version": {
+      "IT Budget Planner — upload workbook": null,
+      "Version ID": "v66",
+      "Version": "Frozen synthetic version 66",
+      "Budget year": 2026,
+      "Currency": "USD",
+      "Actuals closed through": "Feb",
+      "Exported": "2026-11-14 12:00",
+      "How to use": null,
+      "1. Edit amounts on the OPEX, CAPEX, Headcount and Rate cards sheets. Keep the Line ID / Position ID / Rate ID columns as they are.": null,
+      "2. Each line has three rows: Budget, Actual and Forecast. Leave a Forecast month empty to use the budget for it.": null,
+      "3. To add a line, add rows with an empty Line ID and fill Cost element (OPEX) or Project + Cost element (CAPEX). A new project name creates the project.": null,
+      "4. HR Staff budget rows come from headcount and are ignored on import; their Actual, Forecast and Owner are imported.": null,
+      "5. Owner: the person accountable for the line. On CAPEX, a line with no owner of its own takes the Project owner.": null,
+      "6. Entity and Allocation (OPEX): use names from the lists below, as set up in the Entities & allocations tab.": null,
+      "7. CAPEX: Project code identifies the project. Leave it empty for a new project and the app assigns the next code.": null,
+      "8. CAPEX: Classification is CAPEX (capitalised) or OPEX (expensed). Empty means CAPEX for a new line.": null,
+      "9. Currency: amounts on each row are in that row's currency. Rates are on the FX rates sheet (USD per 1 unit); all totals in the app are in USD.": null,
+      "10. In the app, use Import Excel. You can update this version or load the file as a new version.": null,
+      "Valid OPEX cost elements": "Licenses, Services, Hardware, Depreciation, HR Staff, Facilities, Travel & Expenses, Others",
+      "Valid CAPEX project cost elements": "Licenses, Services, Hardware, HR Staff, Facilities, Travel & Expenses, Others",
+      "Valid classifications (CAPEX sheet)": "CAPEX, OPEX",
+      "Measures": "Budget, Actual, Forecast",
+      "Valid entities": "Entity 66",
+      "Valid allocations": "Allocation 66",
+      "Valid currencies": "USD, EUR, GBP"
+    },
+    "original_currency": "EUR",
+    "currency": "USD",
+    "horizon": "FY2026",
+    "literal_formula_cell": "=HYPERLINK(\"https://example.invalid\",\"literal\")",
+    "cached_total": {
+      "formula": "SUM(J2:U2)",
+      "result": 24
+    },
+    "reader": "ExcelJS + JSZip + production parseWorkbook",
+    "visual_inspection": "NOT_RUN"
+  },
+  "run_id": 43667294352,
+  "job_id": 132669403543,
+  "source_sha": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+  "snapshot_sha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+  "transport": "Exact SF66_EXPORT_BYTES chunks recovered from GitHub job logs; size and SHA256 matched",
+  "transport_verified": true
+}

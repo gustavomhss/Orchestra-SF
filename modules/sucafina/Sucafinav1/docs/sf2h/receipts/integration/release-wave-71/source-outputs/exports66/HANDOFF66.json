@@ -1,0 +1,218 @@
+{
+  "schema": "sf2h.export-artifact-closure.handoff.v1",
+  "mission": 66,
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "recorded_at": "2026-11-15T02:44:54Z",
+  "campaign": "sf2h-integral-20261112",
+  "lease_epoch": "exports-browser66",
+  "branch": "export-artifact-proof",
+  "writer": "mission66/root; only root published with GitHub MCP CAS",
+  "execution_identity": {
+    "system_model_label": "GPT-6 Astra Pro",
+    "provider_effective_model": null,
+    "provider_session_id": null,
+    "collaboration_root": "/root",
+    "capacity": "4 global slots including root; no new supervisor",
+    "limits": "Provider receipt and native user session are not exposed; no inferred session IDs or corporate identity."
+  },
+  "authority": {
+    "effective_when": "Containing receipt commit is published by update_ref on export-artifact-proof with expected_sha equal to final_code.sha and force=false.",
+    "supersedes": "ACK66_ACTIVE_BOUNDED_LEASE in ACK66.json is a historical opening ACK; this terminal authority ends that lease.",
+    "active_writers_after_publication": 0,
+    "active_mission66_runs": 0,
+    "restart": "No further product or branch writes under this ended lease. Any resumption requires explicit fresh authority and reconciliation of current source/target heads."
+  },
+  "result": {
+    "acceptance": "HOLD",
+    "source_state": "SOURCE_PARTIAL_MISSION_HOLD",
+    "legacy_egress": "FAIL_REPRODUCED",
+    "visual": "NOT_RUN",
+    "compiler_guards": "NOT_RUN",
+    "native_provider_parity": "NOT_RUN",
+    "integrated_C28": "NOT_RUN",
+    "release": false,
+    "GLOBAL_RELEASE": false
+  },
+  "delivery": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pull_request": 77,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/77",
+    "draft": true,
+    "base": "sf2-stack",
+    "head": "export-artifact-proof",
+    "final_code": {
+      "sha": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+      "tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e"
+    },
+    "terminal_commit": "Containing commit; exact SHA/tree recorded in PR77 after CAS readback.",
+    "source_manifest": "SOURCE-MANIFEST.json",
+    "complete_owned_patch": "source.patch",
+    "results": "RESULTS.json",
+    "readable_results": "RESULTS.md",
+    "readings": "READINGS.json",
+    "canonical_routing_only": "CANONICAL-MATRIX.json"
+  },
+  "code_scope": {
+    "production_changes": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+        "preimage_git_blob": "99895e048e1e78e5e8594805291239b7871bf554",
+        "postimage_git_blob": "109d41eddc857e1aa19b43f91527caffd0ff8179"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+        "preimage_git_blob": "bf91209e680a94dc0414251e1ab00c227a577d8a",
+        "postimage_git_blob": "b98b59c80d8208926ef1b61fccfe098389000230"
+      }
+    ],
+    "new_test_helper_files": 8,
+    "existing_tests_helpers_edited": false,
+    "Reports48_active_sources_edited": false,
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/",
+    "source_patch_sha256": "736d07776d4236354027c852c5e37e5ce9fa1de4499fb1a74dc333f586082335"
+  },
+  "actions": [
+    {
+      "attempt": "R1",
+      "W": "75e46959101a2ea8a225a518f1f518f4250d76bf",
+      "W_tree": "ded1e66c90395404dd3f7492212206c2e801bb0e",
+      "S": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+      "S_tree": "a6520b5d1ab6bd838265fa5793e7031bddf50368",
+      "run": 43667294352,
+      "job": 132669403543,
+      "conclusion": "failure",
+      "pass": 32,
+      "fail": 2,
+      "assertions": 1269,
+      "receipt": "ci/R1-result.json",
+      "disposition": "PPTX fixture limit mismatch resolved by R2. Legacy handler egress failure remains genuine and open."
+    },
+    {
+      "attempt": "R2",
+      "W": "419a00b8faf5b78bce494749d0e45570aca175d2",
+      "W_tree": "288c861ec568d19e5f65d47da985347b3dce5adb",
+      "S": "35e063d455f09248ba17c58bc259f35b29e4ae1d",
+      "S_tree": "1423438380c0617ed0dd4ce3f1775bac022c6719",
+      "run": 43667789028,
+      "job": 132670938330,
+      "conclusion": "success",
+      "pass": 4,
+      "fail": 0,
+      "assertions": 919,
+      "receipt": "ci/R2-result.json",
+      "scope": "Only composed-storage.test.ts; real C08/SQLite, preserve/download/reopen/retry/authorization/corruption."
+    },
+    {
+      "attempt": "R3",
+      "W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+      "W_tree": "9d1b501dd6a919acf24df4a24bf69c8308d90b0e",
+      "S": "46fb76e4cf9bfb63799537a46c9b2dcc342f6459",
+      "S_tree": "852a1caab5f17562435f541309a2dd08248005d7",
+      "run": 43668383518,
+      "job": 132672748814,
+      "conclusion": "success",
+      "pass": 1,
+      "fail": 0,
+      "assertions": 686,
+      "receipt": "ci/R3-result.json",
+      "scope": "Only preserved-source-drift.test.ts; preserve110USD, change current source130, then first new DOCX/PPTX generation retains110 and captured refs."
+    }
+  ],
+  "results_interpretation": "Three bounded executions, not a green aggregate suite. R1/R2 behavior remains tied to its exact W/S; W3 only adds the independently tested source-drift file. The terminal delta contains receipts only.",
+  "artifacts": {
+    "files": 14,
+    "total_bytes": 3157240,
+    "indexes": [
+      "artifacts/R1/index.json",
+      "artifacts/R2/index.json",
+      "artifacts/R3/index.json"
+    ],
+    "transport": "Exact hosted Actions SF66_EXPORT_BYTES log chunks recovered through GitHub MCP; byte lengths and SHA-256 verified during file copy/reassembly.",
+    "readers": "Actions: JSZip/CRC+Saxes, ExcelJS+parseWorkbook, RFC4180 parser, HTMLRewriter and JSON.parse.",
+    "negative_control_included": true,
+    "visual_readers_executed": false,
+    "corpus": "Synthetic fixture data and principals, actual producers/persistence/authority/HTTP implementations. No corporate user or native provider session inferred."
+  },
+  "required_followup": [
+    {
+      "id": "EA66-LEGACY-EGRESS",
+      "state": "FAIL",
+      "owner": "60 on explicit resumption or successor must assign runtime/application owner; outside66 lease.",
+      "observation": "Real legacy handler returned200 and readable DOCX after session revocation after authenticated read; next request401.",
+      "bound": "Handler reproduction on sourceW1. No installedC28 exploitation or end-to-end route claim.",
+      "proposal": "external/runtime-application/manifest.json",
+      "preimage": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "postimage": "5c81bf6b46b2be40165c6107d59ed3dde48eff73",
+      "next": "Reconcile, review/apply owner patch with CAS and rerun unchanged403 expectation plus source-change409 controls in hosted Actions."
+    },
+    {
+      "id": "OFFICE-VISUAL",
+      "state": "NOT_RUN",
+      "owner": "Explicitly assigned workflow/reader owner; no45 or48 ref takeover.",
+      "proposal": "owner-proposals/OWNER-REQUEST.json",
+      "next": "Consume bounded reader patch, render exact generated files, inspect fonts/styles/pagination/clipping and retain original bytes. A reader success never erases a functional failure.",
+      "complete_images": "owner-proposals/WORKFLOW-MANIFEST.json",
+      "preimage": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "postimage": "0b6cf888faa82d3be7b2c683f4bff3b17a6e53e3"
+    },
+    {
+      "id": "COMPILER-GUARDS",
+      "state": "NOT_RUN",
+      "owner": 45,
+      "proposal": "owner-proposals/OWNER-REQUEST.json#separateCompilerRequest",
+      "next": "Use an actually authorized compiler/check interface with pinned W/dev/config and nonempty real results; do not seize fixed45 refs."
+    },
+    {
+      "id": "SOURCE-PROVENANCE-LABELS",
+      "state": "OWNER_DECISION_REQUIRED",
+      "owner": "Reports48 is ended;60 resumption or successor assigns explicit Reports owner.",
+      "proposal": "external/reports48-provenance/manifest.json",
+      "preimage": "84d1494057e99551cc8544655f0e0468b8853428",
+      "postimage": "f468b67bab233fcd19e728134f48e3f6b11d2b9f",
+      "next": "Review readable source stamps, renderer-version/retry compatibility and pagination before adoption; current manifests/refIds retain version bindings."
+    },
+    {
+      "id": "INTEGRATION-C",
+      "state": "NOT_RUN",
+      "owner": "60 on explicit resumption, or authorized successor",
+      "next": "Reconcile source changes with C28/target terminal, review consumer authority differences and requalify the integrated exact candidate."
+    }
+  ],
+  "other_limits": [
+    "Native/MCP/LLM/provider equivalence not established.",
+    "Full WP06 restore/import/Apply roundtrip not qualified; permissive existing scanner fixture not promoted.",
+    "Aggregate storage quota and privileged supplier-bank export not qualified.",
+    "Final eight selections, AM/reviews and C-G7/D-G8 remain with respective owners and S0 acceptance."
+  ],
+  "consumer": {
+    "requested": 60,
+    "role": "Sole sf2-stack integrator after explicit57 succession;45 compiler;S0 final epic/acceptance.",
+    "latest_observed_target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "material_C28": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "authority_state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "authority_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "ack66": "REQUESTED_NOT_RECEIVED",
+    "ack_request": "On explicitly authorized resumption, or by an authorized successor after reconciling60 terminal: acknowledge receipt of the exact66 source/terminal SHA/tree, retained HOLDs and assigned followups. Receipt ACK does not mean acceptance or merge.",
+    "request_locations": [
+      "HANDOFF66.json",
+      "PR77"
+    ],
+    "assumed_resumption": false
+  },
+  "operational_compliance": {
+    "github": "MCP only; tree/commit/update_ref expected_sha and force=false",
+    "local_product_tests": 0,
+    "local_typecheck_or_guard_runs": 0,
+    "tests": "Only surgical existing test-ci Actions requests; no workflow change in the candidate.",
+    "source_branch_only": true,
+    "temporary_request_branches": "Only unique authorized ci-run-linux request snapshots S; not45/48 refs.",
+    "target_written": false,
+    "dev_merged": false,
+    "deployed": false,
+    "azure_changed": false,
+    "external_messages_sent": false,
+    "new_tokens_or_logins": false,
+    "controller_or_native_UI_created": false
+  },
+  "GLOBAL_RELEASE": false
+}

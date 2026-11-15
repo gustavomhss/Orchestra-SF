@@ -1,0 +1,1081 @@
+--- a/modules/sucafina/Sucafinav1/runtime/artifact.ts
++++ b/modules/sucafina/Sucafinav1/runtime/artifact.ts
+@@ -6,3 +6,33 @@
+   bytes: Uint8Array
+ }
+ export type ArtifactResult = Artifact | Exclude<Result, { ok: true }>
++
++/** Only basenames and the matching report media type may reach a download header. */
++export function validReportArtifactMetadata(artifact: Pick<Artifact, "name" | "type">, format: string) {
++  if (format !== "docx" && format !== "pptx") return false
++  if (typeof artifact.name !== "string" || !artifact.name || artifact.name.trim() !== artifact.name ||
++    Buffer.byteLength(artifact.name, "utf8") > 255 || artifact.name.startsWith(".") ||
++    /[\\/:*?"<>|\u0000-\u001f\u007f-\u009f\u061c\u200e\u200f\u2028-\u202e\u2066-\u2069\ud800-\udfff]/u.test(artifact.name) ||
++    /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(artifact.name) ||
++    !artifact.name.toLowerCase().endsWith(`.${format}`)) return false
++  return artifact.type === (format === "docx"
++    ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
++    : "application/vnd.openxmlformats-officedocument.presentationml.presentation")
++}
++
++/** Check the bounded ZIP envelope and its main part without decompressing document content. */
++export async function validateReportArtifact(artifact: Pick<Artifact, "name" | "type" | "bytes">, format: string, maxBytes: number) {
++  if (!validReportArtifactMetadata(artifact, format) || !Number.isSafeInteger(maxBytes) || maxBytes <= 0 ||
++    !(artifact.bytes instanceof Uint8Array) || !artifact.bytes.length || artifact.bytes.length > maxBytes ||
++    artifact.bytes[0] !== 0x50 || artifact.bytes[1] !== 0x4b || artifact.bytes[2] !== 0x03 || artifact.bytes[3] !== 0x04) return false
++  const { default: JSZip } = await import("jszip")
++  const archive = await JSZip.loadAsync(artifact.bytes).catch(() => undefined)
++  if (!archive || Object.values(archive.files).some((entry) => {
++    const original = (entry as typeof entry & { unsafeOriginalName?: string }).unsafeOriginalName ?? entry.name
++    return original !== entry.name || original.startsWith("/") || original.includes("\\") || original.split("/").some((part) => part === "." || part === "..")
++  })) return false
++  const main = format === "docx" ? "word/document.xml" : "ppt/presentation.xml"
++  const other = format === "docx" ? "ppt/presentation.xml" : "word/document.xml"
++  return !!archive.file("[Content_Types].xml") && !!archive.file("_rels/.rels") && !!archive.file(main) && !archive.file(other)
++}
++
+--- a/modules/sucafina/Sucafinav1/product/reports/storage.ts
++++ b/modules/sucafina/Sucafinav1/product/reports/storage.ts
+@@ -14,6 +14,7 @@
+ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { SfProductStatePort } from "../contracts/state.ts"
++import { validReportArtifactMetadata, validateReportArtifact } from "../../runtime/artifact.ts"
+ 
+ type ArtifactInput = Parameters<ReviewCapabilityHost["artifacts"]["put"]>[0]
+ type StoredReport = {
+@@ -57,10 +58,18 @@
+     // The stored policy stamp describes creation. Authority above and the exact
+     // preserved review below are checked under the current policy on every read.
+     if (stored.kind !== "sf-review-artifact-v1" || stored.principalRef !== context.binding.principalRef || stored.installationId !== context.binding.installationId || stored.projectId !== context.binding.projectId || typeof stored.policyVersion !== "string" || !stored.policyVersion.trim() || !Array.isArray(stored.sectionRefs) || !Array.isArray(stored.evidenceRefs) || typeof stored.bytes !== "string" || typeof stored.digest !== "string" || typeof stored.name !== "string" || typeof stored.mediaType !== "string" || !stored.inclusion || typeof stored.inclusion !== "object" || typeof stored.reviewRef !== "string" || typeof stored.reviewDigest !== "string" || !["docx", "pptx"].includes(stored.format) || !Number.isSafeInteger(stored.recordCount) || stored.recordCount < 0) return { status: "denied", reason: "artifact-unavailable" }
++    if (!validReportArtifactMetadata({ name: stored.name, type: stored.mediaType }, stored.format)) return { status: "denied", reason: "artifact-unavailable" }
++    // Reject oversized encodings before allocating their decoded bytes.
++    if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || !stored.bytes.length || stored.bytes.length > Math.ceil(input.maxBytes / 3) * 4 || !/^[a-f0-9]{64}$/.test(stored.digest)) return { status: "unavailable", reason: "artifact-integrity-failed" }
+     const bytes = Buffer.from(stored.bytes, "base64")
+-    if (!Number.isSafeInteger(input.maxBytes) || bytes.length > input.maxBytes || bytes.toString("base64") !== stored.bytes || createHash("sha256").update(bytes).digest("hex") !== stored.digest) return { status: "unavailable", reason: "artifact-integrity-failed" }
++    if (!bytes.length || bytes.length > input.maxBytes || bytes.toString("base64") !== stored.bytes || createHash("sha256").update(bytes).digest("hex") !== stored.digest || !await validateReportArtifact({ name: stored.name, type: stored.mediaType, bytes }, stored.format, input.maxBytes)) return { status: "unavailable", reason: "artifact-integrity-failed" }
+     const review = await input.reviews.read(stored.reviewRef, context)
+-    if (review.status !== "ok" || digestSfValue(review.value) !== stored.reviewDigest || digestSfValue(reviewInclusion(review.value, stored.sectionRefs)) !== digestSfValue(stored.inclusion) || !await input.host.revalidate(context) || request.signal.aborted) return { status: "denied", reason: "artifact-unavailable" }
++    if (review.status !== "ok" || digestSfValue(review.value) !== stored.reviewDigest) return { status: "denied", reason: "artifact-unavailable" }
++    const inclusion = reviewInclusion(review.value, stored.sectionRefs)
++    if (!inclusion || digestSfValue(inclusion) !== digestSfValue(stored.inclusion)) return { status: "denied", reason: "artifact-unavailable" }
++    if (inclusion.sections.reduce((total, section) => total + section.recordCount, 0) !== stored.recordCount) return { status: "denied", reason: "artifact-coverage-mismatch" }
++    if (digestSfValue(inclusion.sections.flatMap((section) => section.sourceRefs)) !== digestSfValue(stored.evidenceRefs)) return { status: "denied", reason: "artifact-evidence-mismatch" }
++    if (!await input.host.revalidate(context) || request.signal.aborted) return { status: "denied", reason: "artifact-unavailable" }
+     return { status: "ok", value: { stored, bytes: new Uint8Array(bytes) } }
+   }
+   return {
+@@ -68,9 +77,7 @@
+       const request = input.host.requestFor(context)
+       const operation = input.operationIdentity(context, entry)
+       if (!request || !operation || !await input.host.revalidate(context)) return { status: "denied", reason: "artifact-unavailable" }
+-      if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || entry.artifact.bytes.length > input.maxBytes || !entry.artifact.bytes.length || !["docx", "pptx"].includes(entry.format) || !Number.isSafeInteger(entry.recordCount) || entry.recordCount < 0 || new Set(entry.sectionRefs).size !== entry.sectionRefs.length || /[\r\n\0]/.test(entry.artifact.name)) return { status: "needs-input", reason: "invalid-artifact" }
+-      const expectedType = entry.format === "docx" ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+-      if (entry.artifact.type !== expectedType || !entry.artifact.name.toLowerCase().endsWith(`.${entry.format}`)) return { status: "needs-input", reason: "invalid-artifact" }
++      if (!Number.isSafeInteger(input.maxBytes) || input.maxBytes <= 0 || !(entry.artifact.bytes instanceof Uint8Array) || entry.artifact.bytes.length > input.maxBytes || !entry.artifact.bytes.length || !validReportArtifactMetadata(entry.artifact, entry.format) || !Number.isSafeInteger(entry.recordCount) || entry.recordCount < 0 || new Set(entry.sectionRefs).size !== entry.sectionRefs.length) return { status: "needs-input", reason: "invalid-artifact" }
+       const review = await input.reviews.read(entry.reviewRef, context)
+       if (review.status !== "ok") return { status: "denied", reason: "artifact-unavailable" }
+       const inclusion = readReviewArtifactSeal(entry.artifact, review.value, entry.sectionRefs)
+@@ -83,8 +90,11 @@
+         return [...projection.values.flatMap((value) => value.sourceRefs), ...reviewChartEvidence(projection.reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])]
+       })
+       if (digestSfValue(evidence) !== digestSfValue(entry.evidenceRefs)) return { status: "denied", reason: "artifact-evidence-mismatch" }
+-      const digest = createHash("sha256").update(entry.artifact.bytes).digest("hex")
+-      const stored: StoredReport = { kind: "sf-review-artifact-v1", reviewRef: entry.reviewRef, reviewDigest: digestSfValue(review.value), renderDigest, inclusion, sectionRefs: [...entry.sectionRefs], principalRef: context.binding.principalRef, installationId: context.binding.installationId, projectId: context.binding.projectId, policyVersion: context.binding.policyVersion, format: entry.format, name: entry.artifact.name, mediaType: entry.artifact.type, recordCount: entry.recordCount, evidenceRefs: entry.evidenceRefs, digest, bytes: Buffer.from(entry.artifact.bytes).toString("base64") }
++      // Detach the sealed bytes and metadata before the asynchronous ZIP inspection.
++      const artifact = { name: entry.artifact.name, type: entry.artifact.type, bytes: new Uint8Array(entry.artifact.bytes) }
++      const digest = createHash("sha256").update(artifact.bytes).digest("hex")
++      const stored: StoredReport = { kind: "sf-review-artifact-v1", reviewRef: entry.reviewRef, reviewDigest: digestSfValue(review.value), renderDigest, inclusion, sectionRefs: [...entry.sectionRefs], principalRef: context.binding.principalRef, installationId: context.binding.installationId, projectId: context.binding.projectId, policyVersion: context.binding.policyVersion, format: entry.format, name: artifact.name, mediaType: artifact.type, recordCount: entry.recordCount, evidenceRefs: structuredClone(entry.evidenceRefs), digest, bytes: Buffer.from(artifact.bytes).toString("base64") }
++      if (!await validateReportArtifact(artifact, stored.format, input.maxBytes)) return { status: "needs-input", reason: "invalid-artifact" }
+       const ref = `report:${digestSfValue({ installation: context.binding.installationId, project: context.binding.projectId, principal: context.binding.principalRef, operation })}`
+       // ZIP container timestamps can change on an exact retry. The command identifies the
+       // preserved content; the first committed bytes remain the immutable downloadable file.
+@@ -144,3 +154,4 @@
+     recordCount: stored.recordCount, evidenceRefs: stored.evidenceRefs,
+   }
+ }
++
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts
+@@ -0,0 +1,66 @@
++import { expect, test } from "bun:test"
++import JSZip from "jszip"
++import { validReportArtifactMetadata, validateReportArtifact } from "../../../runtime/artifact.ts"
++import { createReport } from "../../../runtime/reports.ts"
++import { empty } from "../../fixture/persistence.ts"
++
++const media = {
++  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
++  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
++}
++
++async function report(format: "docx" | "pptx") {
++  const snapshot = empty()
++  snapshot.data.hotTopics = [{ id: "envelope-source", action: "Envelope validation source", status: "open", priority: "normal" }]
++  const artifact = await createReport(snapshot, { id: "envelope-reader", canWrite: true, roles: ["admin"] },
++    { at: "2026-11-14T12:00:00Z", id: () => "envelope-id", directory: [] },
++    { format, title: "Envelope report", year: 2026, topics: ["Hot Topics & Actions"] })
++  if (!artifact.ok) throw new Error("Actual report generation failed")
++  return artifact
++}
++
++// These are envelope controls; installed authorization/persistence is covered separately.
++test.each(["docx", "pptx"] as const)("EA66-ENVELOPE accepts the actual %s producer at its exact byte limit", async (format) => {
++  const artifact = await report(format)
++  expect(await validateReportArtifact(artifact, format, artifact.bytes.length)).toBe(true)
++  expect(await validateReportArtifact(artifact, format, artifact.bytes.length - 1)).toBe(false)
++  expect(artifact.type).toBe(media[format])
++})
++
++test("EA66-FILENAME rejects unsafe names without rejecting well-formed Unicode", () => {
++  for (const name of ["../report.docx", "..\\report.docx", "/report.docx", "C:report.docx", "report\r\n.docx", "report\0.docx", "report\u007f.docx", "report\u202e.docx", "report\u2066.docx", "report\ud800.docx", "report\udfff.docx", "CON.docx", "LPT1.docx", ".report.docx", " report.docx", "report.docx ", `${"a".repeat(251)}.docx`]) {
++    expect(validReportArtifactMetadata({ name, type: media.docx }, "docx")).toBe(false)
++  }
++  for (const name of ["Report.docx", "Café ação 📄.docx", `${"a".repeat(250)}.docx`]) {
++    expect(validReportArtifactMetadata({ name, type: media.docx }, "docx")).toBe(true)
++  }
++  expect(validReportArtifactMetadata({ name: "Report.docx", type: media.pptx }, "docx")).toBe(false)
++  expect(validReportArtifactMetadata({ name: "Report.pptx", type: media.docx }, "docx")).toBe(false)
++  expect(validReportArtifactMetadata({ name: "Report.pdf", type: "application/pdf" }, "pdf")).toBe(false)
++})
++
++test("EA66-CONTAINER rejects a DOCX relabeled as PPTX, missing main parts and ZIP path traversal", async () => {
++  const original = await report("docx")
++  expect(await validateReportArtifact({ ...original, name: "Report.pptx", type: media.pptx }, "pptx", 5_000_000)).toBe(false)
++  for (const removed of ["word/document.xml", "[Content_Types].xml", "_rels/.rels"]) {
++    const archive = await JSZip.loadAsync(original.bytes)
++    archive.remove(removed)
++    expect(await validateReportArtifact({ ...original, bytes: await archive.generateAsync({ type: "uint8array" }) }, "docx", 5_000_000)).toBe(false)
++  }
++  const mixed = await JSZip.loadAsync(original.bytes)
++  mixed.file("ppt/presentation.xml", "<presentation />")
++  expect(await validateReportArtifact({ ...original, bytes: await mixed.generateAsync({ type: "uint8array" }) }, "docx", 5_000_000)).toBe(false)
++  const traversal = await JSZip.loadAsync(original.bytes)
++  traversal.file("../unsafe.xml", "<unsafe />")
++  expect(await validateReportArtifact({ ...original, bytes: await traversal.generateAsync({ type: "uint8array" }) }, "docx", 5_000_000)).toBe(false)
++})
++
++test("EA66-BYTES rejects empty, invalid and truncated containers and invalid limits", async () => {
++  const artifact = await report("docx")
++  for (const bytes of [new Uint8Array(), new TextEncoder().encode("not a document"), artifact.bytes.subarray(0, 30)]) {
++    expect(await validateReportArtifact({ ...artifact, bytes }, "docx", 5_000_000)).toBe(false)
++  }
++  for (const limit of [0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
++    expect(await validateReportArtifact(artifact, "docx", limit)).toBe(false)
++  }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts
+@@ -0,0 +1,257 @@
++import { expect, test } from "bun:test"
++import { createHash } from "node:crypto"
++import { join } from "node:path"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { DomainProjection, PreservedReview } from "../../../product/contracts/context.ts"
++import type { CapabilityResult } from "../../../product/contracts/sf-execution.ts"
++import { renderPreservedReview } from "../../../product/reviews/render.ts"
++import { object } from "../../../runtime/contract.ts"
++import { createExportArtifactFixture, inspectOfficeBytes } from "./fixture.ts"
++import { exportEvidenceDirectory, recordExportEvidence } from "./evidence.ts"
++
++const mediaTypes = {
++  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
++  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
++}
++
++async function prepare(f: Awaited<ReturnType<typeof createExportArtifactFixture>>, review: PreservedReview, format: "docx" | "pptx", key: string) {
++  const response = await f.request("review-report", { key, payload: { reviewRef: review.id, sectionRefs: review.sections.map((section) => section.id), format } })
++  const result = await response.json() as CapabilityResult
++  expect({ http: response.status, result }).toMatchObject({ http: 200, result: { status: "ok" } })
++  if (result.status !== "ok" || !result.outputRef) throw new Error("Composed report did not produce an artifact reference")
++  return result.outputRef
++}
++
++async function denied(response: Response) {
++  expect(response.status).toBe(403)
++  expect(response.headers.get("content-disposition")).toBeNull()
++  expect(response.headers.get("cache-control")).toBe("no-store")
++  expect(await response.text()).toBe("Access denied")
++}
++
++test("real composed DOCX and PPTX preserve content, source bindings, bytes and the original command after SQLite reopen", async () => {
++  const f = await createExportArtifactFixture()
++  try {
++    expect(Object.keys(object((await f.productState()).reviews))).toEqual([])
++    const review = await f.preserve()
++    expect(review.sections.map((section) => section.count)).toEqual([1, 1])
++    expect(review.sections.map((section) => section.period)).toEqual([f.period, f.period])
++    const projections = review.sections.map((section) => section.content as DomainProjection)
++    const forecast = projections[1]!
++    expect(forecast.values.find((value) => value.id === "license:1:forecast")).toMatchObject({ value: 110, currency: "USD", period: { start: "2026-01-01", end: "2026-01-31" } })
++    expect(forecast.components.reduce((total, component) => total + (component.amount ?? 0), 0)).toBe(1320)
++    expect(projections[0]!.values.some((value) => value.value === f.note)).toBe(true)
++    const sourceRefs = [...new Map(review.sourceRefs.map((ref) => [digestSfValue(ref), ref])).values()]
++    expect(new Set(sourceRefs.map((ref) => ref.surface))).toEqual(new Set(["dashboard", "planner"]))
++    for (const ref of sourceRefs) {
++      expect(Number.isSafeInteger(ref.version) && ref.version > 0).toBe(true)
++      expect(ref.incarnation.length).toBeGreaterThan(0)
++    }
++    const evidence = projections.flatMap((projection) => projection.values.flatMap((value) => value.sourceRefs))
++    expect(evidence.length).toBeGreaterThan(0)
++    const artifacts: { format: "docx" | "pptx"; ref: string; bytes: Uint8Array; digest: string; state: Record<string, unknown> }[] = []
++    const manifests: Awaited<ReturnType<typeof recordExportEvidence>>[] = []
++    for (const format of ["docx", "pptx"] as const) {
++      const key = `export66-original-${format}`
++      const ref = await prepare(f, review, format, key)
++      const state = await f.document(ref)
++      expect(state).toMatchObject({ kind: "sf-review-artifact-v1", principalRef: f.owner, installationId: "export66-installation", projectId: "export66-project",
++        reviewRef: review.id, reviewDigest: digestSfValue(review), format, mediaType: mediaTypes[format], recordCount: 2 })
++      expect(state.evidenceRefs).toEqual(evidence)
++      expect(state.sectionRefs).toEqual(review.sections.map((section) => section.id))
++      const beforeRead = await f.durable()
++      const response = await f.request("review-download", { query: { artifactRef: ref } })
++      expect(response.status).toBe(200)
++      expect(response.headers.get("content-type")).toBe(mediaTypes[format])
++      expect(response.headers.get("content-disposition")).toBe(`attachment; filename*=UTF-8''${encodeURIComponent(String(state.name))}`)
++      expect(response.headers.get("x-content-type-options")).toBe("nosniff")
++      expect(response.headers.get("cache-control")).toBe("no-store")
++      const bytes = new Uint8Array(await response.arrayBuffer())
++      expect(Buffer.from(bytes).toString("base64")).toBe(state.bytes)
++      const opened = await inspectOfficeBytes(bytes, format)
++      expect(opened.sha256).toBe(state.digest)
++      expect(opened.bytes).toBeGreaterThan(0)
++      expect(opened.contentTypes).toContain(format === "docx" ? "wordprocessingml.document.main+xml" : "presentationml.presentation.main+xml")
++      const styled = opened.styles + opened.parts.map((part) => part.xml).join("")
++      expect(styled).toContain("Aptos")
++      expect(styled).toContain("173D2C")
++      expect(opened.compact).toContain(`Review${review.id}v${review.version}`)
++      expect(opened.compact).toContain(review.createdAt)
++      expect(opened.compact).toContain(f.note.replace(/\s+/g, ""))
++      expect(opened.text).not.toContain("SYNTHETIC_UNSELECTED_PRIVATE_66")
++      for (const section of review.sections) {
++        expect(opened.compact).toContain(section.title.replace(/\s+/g, ""))
++        expect(opened.compact).toContain(`${section.period.start}–${section.period.end}`)
++      }
++      for (const value of projections.flatMap((projection) => projection.values)) {
++        const displayed = `${value.id}:${value.value === null ? "unavailable" : String(value.value)}${value.unit ?? ""}${value.currency ?? ""}`.replace(/\s+/g, "")
++        expect(opened.compact).toContain(displayed)
++        expect(opened.compact).toContain(`${value.period.start}–${value.period.end}`)
++      }
++      for (const ref of [...new Set(evidence.map((reference) => reference.refId))]) expect(opened.compact).toContain(ref)
++      expect(await f.durable()).toEqual(beforeRead)
++      const beforeRetry = await f.durable()
++      expect(await prepare(f, review, format, key)).toBe(ref)
++      expect(await f.durable()).toEqual(beforeRetry)
++      expect(await f.document(ref)).toEqual(state)
++      const manifest = await recordExportEvidence({ caseId: `composed-${format}`, name: String(state.name), mediaType: mediaTypes[format], bytes,
++        observations: { implementation: "real-C08-SQLite-Request-UI-human-review-report", corpus: "synthetic", review_ref: review.id, review_version: review.version,
++          review_digest: digestSfValue(review), source_refs: sourceRefs, evidence_ref_ids: [...new Set(evidence.map((reference) => reference.refId))],
++          source_version_display: "opaque-evidence-reference-only; explicit-source-version-labels-require-Reports48", record_count: 2,
++          currencies: [...new Set(projections.flatMap((projection) => projection.values.flatMap((value) => value.currency ? [value.currency] : [])))],
++          horizon: f.period, xml_parts: opened.paths, zip_entries: opened.zipEntries, source_note_complete: true, private_unselected_field_absent: true,
++          exact_retry_unchanged: true, read_snapshot_unchanged: true, visible_style_markup: ["Aptos", "173D2C"], visual_render_qualification: "external-renderer-required" } })
++      manifests.push(manifest)
++      artifacts.push({ format, ref, bytes, digest: opened.sha256, state })
++    }
++    expect(Object.keys(object((await f.productState()).documents)).sort()).toEqual(artifacts.map((artifact) => artifact.ref).sort())
++    const beforeReopen = await f.durable()
++    await f.reopen()
++    expect(await f.durable()).toEqual(beforeReopen)
++    for (const artifact of artifacts) {
++      const reopened = await f.request("review-download", { query: { artifactRef: artifact.ref } })
++      expect(reopened.status).toBe(200)
++      const bytes = new Uint8Array(await reopened.arrayBuffer())
++      expect(Buffer.from(bytes).equals(Buffer.from(artifact.bytes))).toBe(true)
++      expect((await inspectOfficeBytes(bytes, artifact.format)).sha256).toBe(artifact.digest)
++      expect(await prepare(f, review, artifact.format, `export66-original-${artifact.format}`)).toBe(artifact.ref)
++      expect(await f.document(artifact.ref)).toEqual(artifact.state)
++    }
++    expect(await f.durable()).toEqual(beforeReopen)
++    const conflicting = await f.request("review-report", { key: "export66-original-docx", payload: { reviewRef: review.id, sectionRefs: review.sections.map((section) => section.id), format: "pptx" } })
++    expect((await conflicting.json() as CapabilityResult).status).toBe("stale")
++    expect(await f.durable()).toEqual(beforeReopen)
++    // A changed current source cannot rewrite the preserved file or its original receipt.
++    await f.changeCandidate(130)
++    const drifted = await f.durable()
++    await f.reopen()
++    for (const artifact of artifacts) {
++      const historical = await f.request("review-download", { query: { artifactRef: artifact.ref } })
++      expect(historical.status).toBe(200)
++      expect(Buffer.from(await historical.arrayBuffer()).equals(Buffer.from(artifact.bytes))).toBe(true)
++      expect(await f.document(artifact.ref)).toEqual(artifact.state)
++    }
++    expect(await f.durable()).toEqual(drifted)
++    await Bun.write(join(exportEvidenceDirectory, "composed.manifest.json"), JSON.stringify({ schema: "sf66-composed-export-proof-v1", artifacts: manifests,
++      checks: { reopen_exact_bytes: true, original_retry_no_duplicate_or_effect: true, reused_key_changed_intent_rejected: true, changed_source_keeps_capture: true,
++        read_side_effects: "none in complete SQLite snapshots" } }, null, 2) + "\n")
++    console.log("SF66_COMPOSED_STORAGE " + JSON.stringify({ formats: artifacts.map((artifact) => ({ format: artifact.format, artifact_ref: artifact.ref, sha256: artifact.digest, bytes: artifact.bytes.length })),
++      reopen_exact_bytes: true, original_retry_no_duplicate_or_effect: true, changed_source_keeps_capture: true, read_side_effects: false }))
++  } finally { await f.dispose() }
++}, 120000)
++
++test("real Request authority denies foreign, read-only recipient, ungranted, expired, revoked and malformed artifact access without writes", async () => {
++  const f = await createExportArtifactFixture()
++  try {
++    const review = await f.preserve()
++    const ref = await prepare(f, review, "docx", "export66-auth-docx")
++    const initial = await f.durable()
++    for (const session of ["foreign", "viewer", "ungranted", "missing"]) await denied(await f.request("review-download", { session, query: { artifactRef: ref } }))
++    expect(await f.durable()).toEqual(initial)
++    // Source captures bind the original access revision. Downgrading the writer
++    // to viewer closes that captured scope instead of recycling the old grant.
++    f.sessions.owner!.memberships = ["viewers"]
++    await denied(await f.request("review-download", { query: { artifactRef: ref } }))
++    const deniedWrite = await f.request("review-report", { key: "export66-read-only-new-command", payload: { reviewRef: review.id, sectionRefs: review.sections.map((section) => section.id), format: "docx" } })
++    expect((await deniedWrite.json() as CapabilityResult).status).not.toBe("ok")
++    expect(await f.durable()).toEqual(initial)
++    f.sessions.owner!.memberships = ["admins"]
++    f.sessions.owner!.expiresAt = Date.parse(f.clock.at)
++    await denied(await f.request("review-download", { query: { artifactRef: ref } }))
++    f.sessions.owner!.expiresAt = Infinity
++    f.sessions.owner!.active = false
++    await denied(await f.request("review-download", { query: { artifactRef: ref } }))
++    f.sessions.owner!.active = true
++    const beforeExpiry = f.clock.at
++    await f.withCall("sf_artifact_get", { artifactRef: ref }, async (call) => {
++      f.clock.at = new Date(Date.parse(f.clock.at) + 5 * 60 * 1000 + 1).toISOString()
++      await denied(await f.app.artifacts.download(ref, call))
++    })
++    f.clock.at = beforeExpiry
++    for (const invalid of ["../private.docx", "..\\private.docx", ref + "/../secret", "report:" + "0".repeat(64)]) await denied(await f.request("review-download", { query: { artifactRef: invalid } }))
++    const aborted = new AbortController()
++    aborted.abort()
++    const stopped = await f.request("review-download", { query: { artifactRef: ref }, signal: aborted.signal })
++    expect(stopped.status).toBe(403)
++    expect(await stopped.text()).not.toContain("Export66 source project")
++    expect((await f.request("review-download", { method: "POST", query: { artifactRef: ref } })).status).toBe(405)
++    expect(await f.durable()).toEqual(initial)
++    console.log("SF66_AUTHORITY_RESULT " + JSON.stringify({ foreign: "denied", read_only_recipient: "denied", ungranted: "denied", missing_session: "denied",
++      owner_downgraded_to_viewer: "denied-by-captured-source-scope", expired_session: "denied", expired_real_ui_lease: "denied", revoked_session: "denied", malformed_ref: "denied", read_side_effects: false }))
++  } finally { await f.dispose() }
++}, 120000)
++
++test("real C08 corrupted or tombstoned artifacts fail closed before download without repairing durable state", async () => {
++  const f = await createExportArtifactFixture()
++  try {
++    const review = await f.preserve()
++    const ref = await prepare(f, review, "docx", "export66-corrupt-docx")
++    const original = await f.document(ref)
++    const jsonBytes = Buffer.from('{"not":"Office"}')
++    const mutations: { label: string; record: Record<string, unknown> | null }[] = [
++      { label: "traversal-name", record: { ...original, name: "../private.docx" } },
++      { label: "windows-path-name", record: { ...original, name: "C:\\private\\report.docx" } },
++      { label: "header-name", record: { ...original, name: "report.docx\r\nX-Injected: yes" } },
++      { label: "untrusted-mime", record: { ...original, mediaType: "text/html" } },
++      { label: "false-ooxml-format", record: { ...original, name: "report.pptx", mediaType: mediaTypes.pptx, format: "pptx" } },
++      { label: "empty-bytes-valid-hash", record: { ...original, bytes: "", digest: createHash("sha256").update("").digest("hex") } },
++      { label: "noncanonical-base64", record: { ...original, bytes: "%%%=" } },
++      { label: "over-limit-base64-before-decode", record: { ...original, bytes: "A".repeat(Math.ceil(f.maxBytes / 3) * 4 + 4) } },
++      { label: "non-ooxml-valid-hash", record: { ...original, bytes: jsonBytes.toString("base64"), digest: createHash("sha256").update(jsonBytes).digest("hex") } },
++      { label: "wrong-digest", record: { ...original, digest: "0".repeat(64) } },
++      { label: "wrong-review-digest", record: { ...original, reviewDigest: "0".repeat(64) } },
++      { label: "wrong-coverage", record: { ...original, recordCount: Number(original.recordCount) + 1 } },
++      { label: "missing-evidence", record: { ...original, evidenceRefs: [] } },
++      { label: "foreign-principal-stamp", record: { ...original, principalRef: "synthetic-export-foreign" } },
++      { label: "foreign-project-stamp", record: { ...original, projectId: "another-project" } },
++      { label: "tombstoned", record: null },
++    ]
++    for (const mutation of mutations) {
++      await f.corrupt(ref, mutation.record)
++      const corrupt = await f.durable()
++      await denied(await f.request("review-download", { query: { artifactRef: ref } }))
++      expect(await f.durable()).toEqual(corrupt)
++      await f.corrupt(ref, original)
++    }
++    const recovered = await f.request("review-download", { query: { artifactRef: ref } })
++    expect(recovered.status).toBe(200)
++    expect(Buffer.from(await recovered.arrayBuffer()).toString("base64")).toBe(original.bytes)
++    console.log("SF66_CORRUPTION_RESULT " + JSON.stringify({ rejected: mutations.map((mutation) => mutation.label), denial_body: "Access denied", read_side_effects: false }))
++  } finally { await f.dispose() }
++}, 120000)
++
++test("real sealed render cannot authorize a traversal name or relabel DOCX bytes as PPTX", async () => {
++  const f = await createExportArtifactFixture()
++  try {
++    const review = await f.preserve()
++    const sectionRefs = review.sections.map((section) => section.id)
++    const artifact = await renderPreservedReview(review, { title: `Review ${review.id}`, format: "docx", sectionRefs })
++    expect(artifact.ok).toBe(true)
++    if (!artifact.ok) throw new Error("Real DOCX renderer unavailable")
++    const entry = { reviewRef: review.id, sectionRefs, artifact, format: "docx", recordCount: review.sections.reduce((total, section) => total + section.count, 0),
++      evidenceRefs: review.sections.flatMap((section) => (section.content as DomainProjection).values.flatMap((value) => value.sourceRefs)) }
++    const payload = { reviewRef: review.id, sectionRefs, format: "docx" }
++    const valid = await f.withCall("sf_report_prepare", payload, (call) => f.app.artifacts.put(entry, call), { key: "export66-sealed-positive" })
++    expect(valid.status).toBe("ok")
++    const before = await f.durable()
++    const initialName = artifact.name
++    for (const name of ["../report.docx", "..\\report.docx", "/tmp/report.docx", "report.docx\n", "report\u202E.docx"]) {
++      artifact.name = name
++      const rejected = await f.withCall("sf_report_prepare", payload, (call) => f.app.artifacts.put(entry, call))
++      expect(rejected).toEqual({ status: "needs-input", reason: "invalid-artifact" })
++      expect(await f.durable()).toEqual(before)
++    }
++    artifact.name = "relabeled.pptx"
++    artifact.type = mediaTypes.pptx
++    const relabeled = await f.withCall("sf_report_prepare", { ...payload, format: "pptx" }, (call) => f.app.artifacts.put({ ...entry, format: "pptx" }, call))
++    expect(relabeled).toEqual({ status: "needs-input", reason: "invalid-artifact" })
++    expect(await f.durable()).toEqual(before)
++    artifact.name = initialName
++    artifact.type = mediaTypes.docx
++    const unsealed = await f.withCall("sf_report_prepare", payload, (call) => f.app.artifacts.put({ ...entry, artifact: { ...artifact } }, call))
++    expect(unsealed).toEqual({ status: "denied", reason: "artifact-render-proof-unavailable" })
++    expect(await f.durable()).toEqual(before)
++    console.log("SF66_RENDER_SEAL_RESULT " + JSON.stringify({ real_seal_positive: true, traversal_rejected: true, same_sealed_object_cross_format_rejected: true,
++      cloned_unsealed_object_rejected: true, invalid_put_side_effects: false }))
++  } finally { await f.dispose() }
++}, 120000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/evidence.ts
+@@ -0,0 +1,25 @@
++import { createHash } from "node:crypto"
++import { mkdir } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++
++export const exportEvidenceDirectory = join(process.env.RUNNER_TEMP ?? tmpdir(), "sf66-export-artifacts")
++
++/** Synthetic test corpus only. The file and digest describe the exact generated
++ * bytes consumed by the test, for a separate hosted reader/rendering job. */
++export async function recordExportEvidence(input: { caseId: string; name: string; mediaType: string; bytes: Uint8Array; observations: Record<string, unknown> }) {
++  if (!/^[a-z0-9-]+$/.test(input.caseId) || !input.name || /[/\\\0\r\n]/.test(input.name)) throw new Error("Invalid export evidence name")
++  await mkdir(exportEvidenceDirectory, { recursive: true, mode: 0o700 })
++  const file_name = `${input.caseId}-${input.name}`
++  const manifest = { case_id: input.caseId, file_name, format: input.name.split(".").at(-1)?.toLowerCase(), media_type: input.mediaType,
++    sha256: createHash("sha256").update(input.bytes).digest("hex"), byte_count: input.bytes.length, observations: input.observations }
++  await Bun.write(join(exportEvidenceDirectory, file_name), input.bytes)
++  await Bun.write(join(exportEvidenceDirectory, `${input.caseId}.manifest.json`), JSON.stringify(manifest, null, 2) + "\n")
++  console.log("SF66_EXPORT_EVIDENCE " + JSON.stringify(manifest))
++  const encoded = Buffer.from(input.bytes).toString("base64")
++  const size = 12_000
++  const total = Math.ceil(encoded.length / size)
++  for (let index = 0; index < total; index++) console.log("SF66_EXPORT_BYTES " + JSON.stringify({ case_id: input.caseId, format: manifest.format,
++    sha256: manifest.sha256, index, total, data: encoded.slice(index * size, (index + 1) * size) }))
++  return manifest
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts
+@@ -0,0 +1,219 @@
++import { randomUUID, createHash } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import JSZip from "jszip"
++import { SaxesParser } from "saxes"
++import { Location } from "@orchestra/core/location"
++import { AbsolutePath } from "@orchestra/core/schema"
++import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
++import { createSfReviewAgendaHttp, createSfReviewAgendaServices } from "../../../../../../apps/cli/src/sucafina-product/review-agenda-services.ts"
++import { createSfReviewHistory } from "../../../../../../apps/cli/src/sucafina-product/review-history.ts"
++import { protectSfReviewReads } from "../../../../../../apps/cli/src/sucafina-product/review-read-integrity.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { PreservedReview, SourceRef } from "../../../product/contracts/context.ts"
++import type { PortResult } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createDashboardAgendaSelector } from "../../../product/dashboard/agenda.ts"
++import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
++import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
++import { createReviewApplication } from "../../../product/reviews/application.ts"
++import type { ReviewAgendaCatalog } from "../../../product/reviews/agenda-picker.ts"
++import type { ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
++import { object, rows } from "../../../runtime/contract.ts"
++import { validReportArtifactMetadata, validateReportArtifact } from "../../../runtime/artifact.ts"
++import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
++import { DashboardPeople } from "../../../runtime/dashboard-people.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { resolve } from "../../../src/identity.ts"
++
++export function available<T>(result: PortResult<T>): T {
++  if (result.status !== "ok") throw new Error(`${result.status}: ${result.reason}`)
++  return result.value
++}
++
++/** Synthetic identities and source corpus; actual SQLite/C08, source producers,
++ * product authority, UI leases, human admission, review services and HTTP handlers.
++ * No native provider, cast authority or preconstructed review supplies this proof. */
++export async function createExportArtifactFixture(options: { maxBytes?: number } = {}) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-export-artifact-66-"))
++  await chmod(directory, 0o700)
++  const resources = { store: await openLocalStore(directory) }
++  if (!resources.store.transactionAll) throw new Error("Export proof requires real SQLite transactionAll")
++  const clock = { at: "2026-11-13T04:01:10Z" }
++  const period = { start: "2026-01-01", end: "2026-12-31" }
++  const origin = "https://export-artifact.example.test"
++  // Match createSfReviewServices' production default (review-services.ts@da98ee9).
++  const maxBytes = options.maxBytes ?? 8 * 1024 * 1024
++  const owner = "synthetic-export-owner"
++  const sessions: Record<string, { principal: string; memberships: string[]; active: boolean; expiresAt: number }> = {
++    owner: { principal: owner, memberships: ["admins"], active: true, expiresAt: Infinity },
++    foreign: { principal: "synthetic-export-foreign", memberships: ["admins"], active: true, expiresAt: Infinity },
++    viewer: { principal: "synthetic-export-viewer", memberships: ["viewers"], active: true, expiresAt: Infinity },
++    ungranted: { principal: "synthetic-export-ungranted", memberships: ["admins"], active: true, expiresAt: Infinity },
++  }
++  const persistence = createSfSourcePersistence({ persistence: {
++    transaction: (surface, work, options) => resources.store.transaction(surface, work, options),
++    transactionAll: (work, options) => resources.store.transactionAll!(work, options),
++    currentSnapshots: () => resources.store.currentSnapshots?.(),
++  }, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) })
++  for (const surface of ["dashboard", "planner", "procurement"] as const) {
++    await persistence.initializeSources(surface)
++    await persistence.transaction(surface, async (snapshot) => {
++      snapshot.data.roleMap = [
++        { surface, role: "admin", entra: "admins", version: 1, by: owner },
++        { surface, role: "viewer", entra: "viewers", version: 1, by: owner },
++      ]
++      snapshot.data.access = Object.fromEntries(Object.values(sessions).map((session) => [session.principal, { assigned: [], domains: [] }]))
++      if (surface === "dashboard") snapshot.data.summaries = ["All Projects", "Portfolio Dashboard"]
++      return { commit: true, value: undefined }
++    })
++  }
++  const note = "Café, ação e e\u0301; literal <scope> & evidence. " + "Complete source note. ".repeat(12) + "END-EXPORT-66-NOTE"
++  const actor = { id: owner, roles: ["admin"], canWrite: true }
++  const environment = (id = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
++  await persistence.transaction("dashboard", async (snapshot) => {
++    const project = DashboardPortfolio.domain.execute(snapshot, actor, { page: "All Projects", action: "save", version: 0,
++      values: { name: "Export66 source project", budget: 1250, spent: 320, status: "In Progress", risk: "Low", notes: note } }, environment("export66-project"))
++    const privateRow = DashboardPeople.domain.execute(snapshot, actor, { page: "Talent Review", action: "save", version: 0,
++      values: { name: "SYNTHETIC_UNSELECTED_PRIVATE_66", title: "Private fixture", status: "Active", cls: "Talent", outlook: "Promote", notes: "SYNTHETIC_UNSELECTED_PRIVATE_66_NOTE" } }, environment("export66-private"))
++    if (!project.ok || !privateRow.ok) throw new Error("Canonical export source seed rejected")
++    return { commit: true, value: undefined }
++  })
++  // Canonical Planner input data, never a fabricated projection or preserved review.
++  await persistence.transaction("planner", async (snapshot) => {
++    snapshot.data.versions = [100, 110].map((amount, index) => ({ id: `export66-v${index}`, name: index ? "Export66 candidate" : "Export66 baseline", year: 2026, closed: 0,
++      lines: [{ id: "license", name: "Export66 license", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(amount) }],
++      fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++    return { commit: true, value: undefined }
++  })
++  const authority = createSfProductAuthority({
++    identity: () => ({ installationId: "export66-installation", projectId: "export66-project", hostId: "export66-isolated-host", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
++    installationId: "export66-installation", origin, policyVersion: "export66-fixture-policy-v1", persistence,
++    authenticate: async (request, options) => {
++      const session = sessions[request.headers.get("x-export-fixture-session") ?? ""]
++      if (!session?.active || !options || Date.parse(clock.at) >= session.expiresAt || request.signal.aborted) return null
++      return resolve(session.principal, [...options.roleMap], (group) => session.memberships.includes(group))
++    },
++    environment: async () => environment(),
++    grants: ["owner", "foreign", "viewer"].map((key) => ({ principalRef: sessions[key]!.principal,
++      namespaces: ["reviews", "documents"] as const, operations: ["sf_review_prepare", "sf_report_prepare", "sf_artifact_get"], humanActions: ["reviews.preserve"] as const })),
++    createId: randomUUID, now: () => Date.parse(clock.at),
++    commandIdentity: async (request, operation) => request.method === "GET" ? randomUUID()
++      : request.headers.has("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
++    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
++    providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
++  })
++  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet<object>() })
++  business.initializeAtlas(undefined, { boundaryVersion: "export66-fixture-boundary", schemaVersion: "export66-fixture-schema",
++    manifestVersion: "export66-fixture-manifest", skillVersion: "export66-fixture-skill" })
++  const discovery = createSfReviewAgendaServices({ authority, business, persistence })
++  const historical = createSfReviewHistory({ authority, persistence, authorizeCase: business.authorizeCase,
++    evidence: { ...business.context, resolve: async (ref, call) => await discovery.resolveEvidence(ref, call) ?? business.context.resolve(ref, call) } })
++  const sources = async (call: TrustedDomainContext, refs: readonly SourceRef[]) => {
++    if (!await authority.host.revalidate(call)) return false
++    const checked = await Promise.all([...new Map(refs.map((ref) => [digestSfValue(ref), ref])).values()]
++      .map(async (ref) => await historical.currentSource(ref, call) || await historical.historicalSource(ref, call)))
++    return checked.every(Boolean) && await authority.host.revalidate(call)
++  }
++  const unavailable = async () => ({ status: "unavailable", reason: "not-selected-in-export66-proof" } as const)
++  const app = createReviewApplication({
++    state: authority.state, host: authority.host, authority: authority.authority, ui: authority.ui, humanAuthority: authority.human,
++    origin, maxBodyBytes: 256 * 1024, creationTarget: authority.creationTarget, operationIdentity: business.operationIdentity,
++    requiredAuthority: ["reviews:read"], maxBytes, now: () => clock.at, evidence: historical.evidence,
++    ports: { planner: business.plannerProduct.planner, procurement: discovery.procurement,
++      selectDashboardAgenda: createDashboardAgendaSelector({ host: authority.host, dashboard: business.dashboard, sources: business.dashboardSources, recordEvidence: business.dashboardRecords }) },
++    access: { revalidate: sources, authorizeSections: (call, sections) => sources(call, sections.flatMap((section) => section.sourceRefs)),
++      authorizeOutcomeComparison: async (_call, values) => values.length === 0, authorizeOutcome: async (_call, values) => values.length === 0,
++      authorizeDecision: async (_call, values) => values.length === 0, authorizeSensitivity: async (_call, values) => values.length === 0 },
++    collaboration: { threads: { read: unavailable }, history: { readVersion: unavailable }, authorizeSourceMapping: async () => false, maxMessages: 100 },
++  })
++  // Observe the same renderer-issued object after the unchanged storage call.
++  // This cannot issue a seal, change authorization, or replace the returned result.
++  const artifactPut = app.artifacts.put
++  app.artifacts.put = async (entry, call) => {
++    const result = await artifactPut(entry, call)
++    console.log("SF66_ARTIFACT_PUT_OBSERVATION " + JSON.stringify({ format: entry.format, name: entry.artifact.name, media_type: entry.artifact.type,
++      bytes: entry.artifact.bytes.length, sha256: createHash("sha256").update(entry.artifact.bytes).digest("hex"), max_bytes: maxBytes,
++      metadata_valid: validReportArtifactMetadata(entry.artifact, entry.format),
++      valid_at_current_limit: await validateReportArtifact(entry.artifact, entry.format, maxBytes),
++      prior_fixture_max_bytes: 1024 * 1024, valid_at_prior_fixture_limit: await validateReportArtifact(entry.artifact, entry.format, 1024 * 1024),
++      storage_status: result.status, ...(result.status === "ok" ? {} : { storage_reason: result.reason }) }))
++    return result
++  }
++  const readScope = protectSfReviewReads({ authority, reviews: app.reviews, localSnapshotReaders: true })
++  const discoveryHttp = createSfReviewAgendaHttp({ authority, agenda: discovery, origin })
++  const handle = async (request: Request) => await discoveryHttp(request, "dashboard")
++    ?? await readScope.run(request, () => app.http(request, "dashboard")) ?? new Response(null, { status: 404 })
++  const incoming = (mode: string, options: { payload?: unknown; query?: Record<string, string>; session?: string; key?: string; method?: string; signal?: AbortSignal } = {}) => new Request(
++    `${origin}/product?${new URLSearchParams({ sf: mode, ...options.query })}`,
++    { method: options.method ?? (options.payload === undefined ? "GET" : "POST"),
++      headers: { origin, "x-export-fixture-session": options.session ?? "owner", ...(options.payload === undefined ? {} : { "content-type": "application/json", "idempotency-key": options.key ?? randomUUID() }) },
++      ...(options.payload === undefined ? {} : { body: JSON.stringify(options.payload) }), ...(options.signal ? { signal: options.signal } : {}) })
++  const request = (mode: string, options: Parameters<typeof incoming>[1] = {}) => handle(incoming(mode, options))
++  const withCall = async <T>(operation: string, payload: unknown, work: (call: TrustedDomainContext) => Promise<T>, options: { key?: string; session?: string } = {}) => {
++    const req = incoming("review-report", { payload, ...options })
++    const digest = digestSfValue(payload)
++    const admitted = available(await authority.ui.admit(req, operation, digest))
++    try {
++      if (!await authority.ui.validate(admitted, operation, digest)) throw new Error("Export proof UI lease did not validate")
++      return await readScope.run(req, () => work(admitted))
++    } finally { authority.ui.finish(admitted) }
++  }
++  const preserve = async () => {
++    const dashboard = available(await (await request("review-agenda", { query: { start: period.start, end: period.end, domain: "dashboard" } })).json() as PortResult<ReviewAgendaCatalog>)
++    const planner = available(await (await request("review-agenda", { query: { start: period.start, end: period.end, domain: "planner" } })).json() as PortResult<ReviewAgendaCatalog>)
++    const project = dashboard.options.find((option) => option.item.kind === "dashboard" && option.item.topic === "all-projects")
++    const forecast = planner.options.find((option) => option.label === "Forecast · Export66 candidate")
++    if (!project || !forecast) throw new Error("Real export agenda sources unavailable")
++    const preview = available(await (await request("review-agenda", { payload: { items: [project.item, forecast.item] } })).json() as PortResult<ReviewAgendaPreview>)
++    return available(await (await request("review-preserve", { payload: { selectionRef: preview.selectionRef, sectionRefs: preview.sectionRefs }, key: "export66-preserve" })).json() as PortResult<PreservedReview>)
++  }
++  return { origin, directory, clock, period, note, owner, sessions, maxBytes, persistence, authority, business, app, incoming, request, handle, withCall, preserve,
++    durable: () => resources.store.transactionAll!(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) })),
++    productState: () => persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(object(snapshot.data.__sfProductV1)) })),
++    document: (ref: string) => persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(object(object(object(snapshot.data.__sfProductV1).documents)[ref])) })),
++    corrupt: (ref: string, replacement: Record<string, unknown> | null) => persistence.transaction("dashboard", async (snapshot) => {
++      const documents = object(object(snapshot.data.__sfProductV1).documents)
++      if (replacement === null) delete documents[ref]
++      else documents[ref] = structuredClone(replacement)
++      return { commit: true, value: undefined }
++    }),
++    changeCandidate: (amount: number) => persistence.transaction("planner", async (snapshot) => {
++      const candidate = rows(snapshot.data.versions).find((entry) => entry.id === "export66-v1")
++      const line = rows(candidate?.lines).find((entry) => entry.id === "license")
++      if (!line) throw new Error("Canonical Planner source missing")
++      line.f = Array(12).fill(amount)
++      return { commit: true, value: undefined }
++    }),
++    reopen: async () => { await resources.store.dispose(); resources.store = await openLocalStore(directory) },
++    dispose: async () => { business.dispose(); await resources.store.dispose(); await rm(directory, { recursive: true, force: true }) },
++  }
++}
++
++/** Reopens the generated Office containers and parses their XML, never a renderer-side manifest. */
++export async function inspectOfficeBytes(bytes: Uint8Array, format: "docx" | "pptx") {
++  const zip = await JSZip.loadAsync(bytes, { checkCRC32: true })
++  const paths = Object.keys(zip.files).filter((path) => format === "docx" ? path === "word/document.xml" : /^ppt\/slides\/slide\d+\.xml$/.test(path))
++    .sort((left, right) => left.localeCompare(right, undefined, { numeric: true }))
++  if (!paths.length) throw new Error("Generated Office main XML unavailable")
++  const parts: { path: string; xml: string; text: string[] }[] = []
++  for (const path of paths) {
++    const xml = await zip.file(path)!.async("string")
++    const text: string[] = []
++    const parser = new SaxesParser({ xmlns: false })
++    parser.on("text", (value) => text.push(value))
++    parser.write(xml).close()
++    parts.push({ path, xml, text })
++  }
++  const contentTypes = await zip.file("[Content_Types].xml")!.async("string")
++  new SaxesParser({ xmlns: false }).write(contentTypes).close()
++  const styles = format === "docx" ? await zip.file("word/styles.xml")!.async("string")
++    : (await Promise.all(Object.keys(zip.files).filter((path) => /^ppt\/theme\/theme\d+\.xml$/.test(path)).map((path) => zip.file(path)!.async("string")))).join("\n")
++  const text = parts.flatMap((part) => part.text).join("\n")
++  return { sha256: createHash("sha256").update(bytes).digest("hex"), bytes: bytes.length, paths, parts, contentTypes, styles, text,
++    compact: text.replace(/\s+/g, ""), zipEntries: Object.keys(zip.files).length }
++}
++
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts
+@@ -0,0 +1,186 @@
++import { expect, test } from "bun:test"
++import JSZip from "jszip"
++import { Workbook } from "exceljs"
++import { parseWorkbook } from "../../../runtime/workbooks.ts"
++import { object } from "../../../runtime/contract.ts"
++import { buyer, holder, procurementExportFixture } from "../procurement-exports/fixture.ts"
++import { createLegacyDownloadApplication, fixtureRoleMap, legacyDownloadFixture } from "./legacy-fixture.ts"
++import { recordExportEvidence } from "./evidence.ts"
++
++async function file(response: Response | undefined) {
++  expect(response?.status).toBe(200)
++  if (!response || response.status !== 200) throw new Error(`Download failed: ${response?.status}`)
++  expect(response.headers.get("cache-control")).toBe("no-store")
++  expect(response.headers.get("x-content-type-options")).toBe("nosniff")
++  const disposition = response.headers.get("content-disposition") ?? ""
++  expect(disposition.startsWith("attachment; filename*=UTF-8''")).toBe(true)
++  return { name: decodeURIComponent(disposition.slice("attachment; filename*=UTF-8''".length)), mediaType: response.headers.get("content-type") ?? "", bytes: new Uint8Array(await response.arrayBuffer()) }
++}
++
++async function workbookXml(bytes: Uint8Array) {
++  const zip = await JSZip.loadAsync(bytes)
++  return (await Promise.all(Object.values(zip.files).filter((entry) => !entry.dir && entry.name.endsWith(".xml")).map((entry) => entry.async("string")))).join("\n")
++}
++
++/** RFC4180 reader for the actual returned body, including quoted newlines and escaped quotes. */
++function csvRows(body: string): string[][] {
++  const rows: string[][] = []
++  const cursor = { row: [] as string[], value: "", quoted: false }
++  for (let index = 0; index < body.length; index++) {
++    const char = body[index]
++    if (char === '"') {
++      if (cursor.quoted && body[index + 1] === '"') { cursor.value += '"'; index++; continue }
++      cursor.quoted = !cursor.quoted
++    } else if (!cursor.quoted && (char === "," || char === "\r" || char === "\n")) {
++      cursor.row.push(cursor.value); cursor.value = ""
++      if (char !== ",") {
++        rows.push(cursor.row); cursor.row = []
++        if (char === "\r" && body[index + 1] === "\n") index++
++      }
++    } else cursor.value += char
++  }
++  if (cursor.quoted) throw new Error("Unterminated CSV field")
++  cursor.row.push(cursor.value); rows.push(cursor.row)
++  return rows
++}
++
++async function inspectHtml(bytes: Uint8Array) {
++  const observed = { heading: "", stylesheet: "", text: "", scripts: 0, cells: 0 }
++  const reader = new HTMLRewriter()
++    .on("h1", { text: (chunk) => { observed.heading += chunk.text } })
++    .on("style", { text: (chunk) => { observed.stylesheet += chunk.text } })
++    .on("body", { text: (chunk) => { observed.text += chunk.text } })
++    .on("script", { element: () => { observed.scripts++ } })
++    .on("td", { element: () => { observed.cells++ } })
++  await reader.transform(new Response(new Uint8Array(bytes), { headers: { "content-type": "text/html" } })).text()
++  return observed
++}
++
++test("EA66-XLSX reads downloaded Planner bytes, version, currency, horizon, blank/zero and formula safety", async () => {
++  const fixture = await legacyDownloadFixture()
++  try {
++    const before = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++    const exported = await file(await fixture.serve(fixture.request("viewer", "planner", { download: "xlsx", version: "v66" })))
++    expect(exported.mediaType).toBe("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
++    const workbook = new Workbook()
++    await workbook.xlsx.load(new Uint8Array(exported.bytes).buffer)
++    expect(workbook.worksheets.map((sheet) => sheet.name)).toEqual(["Info", "OPEX", "CAPEX", "Headcount", "Rate cards", "FX rates"])
++    const info = workbook.getWorksheet("Info")!
++    const pairs: Record<string, unknown> = {}
++    info.eachRow((row) => { pairs[String(row.getCell(1).value)] = row.getCell(2).value })
++    expect(pairs).toMatchObject({ "Version ID": "v66", Version: "Frozen synthetic version 66", "Budget year": 2026, Currency: "USD", "Actuals closed through": "Feb" })
++    const opex = workbook.getWorksheet("OPEX")!
++    expect(opex.getCell("A2").value).toBe("line-66")
++    expect(opex.getCell("C2").value).toBe('=HYPERLINK("https://example.invalid","literal")')
++    expect(opex.getCell("C2").formula).toBeUndefined()
++    expect(opex.getCell("D2").value).toBe('Ação, "quoted"\nsecond line')
++    expect(opex.getCell("H2").value).toBe("EUR")
++    expect(opex.getCell("J3").value).toBeNull()
++    expect(opex.getCell("K3").value).toBe(0)
++    expect(opex.getCell("J4").value).toBe(0)
++    expect(opex.getCell("K4").value).toBeNull()
++    expect(opex.getCell("V2").value).toEqual({ formula: "SUM(J2:U2)", result: 24 })
++    expect(opex.views[0]?.state).toBe("frozen")
++    expect(opex.autoFilter).toBeTruthy()
++    expect(opex.getColumn(1).width).toBeGreaterThan(0)
++    expect(workbook.getWorksheet("Rate cards")!.rowCount).toBe(1)
++    expect(workbook.getWorksheet("Headcount")!.getCell("L2").value).toBeNull()
++    const xml = await workbookXml(exported.bytes)
++    for (const privateValue of ["PRIVATE_RATE_SENTINEL_66", "987654.32", "123456.78"]) expect(xml).not.toContain(privateValue)
++    const imported = await parseWorkbook(exported.bytes)
++    expect(imported.ok).toBe(true)
++    if (!imported.ok) throw new Error(imported.errors.join("; "))
++    expect(imported.sheets).toHaveProperty("OPEX")
++    expect(JSON.stringify(imported)).toContain("line-66")
++    expect(await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(before)
++    await recordExportEvidence({ caseId: "planner-viewer", ...exported, observations: { sheets: workbook.worksheets.map((sheet) => sheet.name), version: pairs, original_currency: "EUR", currency: "USD", horizon: "FY2026", literal_formula_cell: opex.getCell("C2").value, cached_total: opex.getCell("V2").value, reader: "ExcelJS + JSZip + production parseWorkbook", visual_inspection: "NOT_RUN" } })
++    expect((await fixture.serve(fixture.request("outsider", "planner", { download: "xlsx" })))?.status).toBe(403)
++    fixture.sessions.delete("viewer")
++    expect((await fixture.serve(fixture.request("viewer", "planner", { download: "xlsx" })))?.status).toBe(401)
++  } finally { await fixture.close() }
++})
++
++test("EA66-JSON/MEMBERS/TEMPLATE opens actual HTTP files and excludes protected product state", async () => {
++  const fixture = await legacyDownloadFixture()
++  try {
++    const backup = await file(await fixture.serve(fixture.request("admin", "dashboard", { download: "json" })))
++    const body = new TextDecoder().decode(backup.bytes)
++    const parsed = JSON.parse(body)
++    expect(parsed.members[0].id).toBe("member-66")
++    expect(parsed.nested).toEqual([{ label: "public" }])
++    for (const marker of ["__sfProductV1", "PRIVATE_ATLAS_SENTINEL_66", "PRIVATE_RECEIPT_SENTINEL_66", "PRIVATE_NESTED_SENTINEL_66"]) expect(body).not.toContain(marker)
++    await recordExportEvidence({ caseId: "dashboard-backup", ...backup, observations: { reader: "JSON.parse", members: parsed.members.length, protected_namespace_absent: true, identity_boundary: "synthetic sessions + production role resolver", source_record_id: parsed.members[0].id, version_stamp_in_file: "not provided by legacy JSON producer" } })
++    const roster = await file(await fixture.serve(fixture.request("admin", "dashboard", { download: "members" })))
++    const workbook = new Workbook()
++    await workbook.xlsx.load(new Uint8Array(roster.bytes).buffer)
++    expect(workbook.worksheets.map((sheet) => sheet.name)).toEqual(["All Members", "Summary by Leader"])
++    expect(workbook.getWorksheet("All Members")!.getCell("A2").value).toBe("Synthetic member 66")
++    expect(workbook.getWorksheet("All Members")!.getCell("D2").value).toBe("Synthetic leader 66")
++    expect(workbook.getWorksheet("All Members")!.getCell("L2").value).toBe("Ação — synthetic note")
++    expect(await workbookXml(roster.bytes)).not.toContain("SALARY_SENTINEL_66")
++    await recordExportEvidence({ caseId: "members-admin", ...roster, observations: { sheets: workbook.worksheets.map((sheet) => sheet.name), reader: "ExcelJS + JSZip", row_count: workbook.getWorksheet("All Members")!.actualRowCount - 1, excluded_salary: true, authorized_read_audit: true, visual_inspection: "NOT_RUN" } })
++    const template = await file(await fixture.serve(fixture.request("admin", "dashboard", { download: "opex-template" })))
++    const templateBook = new Workbook()
++    await templateBook.xlsx.load(new Uint8Array(template.bytes).buffer)
++    expect(templateBook.worksheets.map((sheet) => sheet.name)).toEqual(["OPEX"])
++    expect(templateBook.getWorksheet("OPEX")!.getRow(1).values).toEqual([undefined, "Owner", "Annual", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
++    expect(templateBook.getWorksheet("OPEX")!.actualRowCount).toBe(1)
++    await recordExportEvidence({ caseId: "opex-template", ...template, observations: { reader: "ExcelJS", header_only: true, columns: 14, visual_inspection: "NOT_RUN" } })
++    for (const download of ["json", "members", "opex-template"]) expect((await fixture.serve(fixture.request("viewer", "dashboard", { download })))?.status).toBe(403)
++    const audit = await fixture.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.audit }))
++    expect(audit.filter((entry) => entry.record === "members:member-66")).toHaveLength(2)
++  } finally { await fixture.close() }
++})
++
++test("EA66-CSV/HTML reads authenticated procurement files with frozen FX, source identity, escaping and recipient isolation", async () => {
++  const fixture = await procurementExportFixture()
++  try {
++    await fixture.run(buyer, "submit_sourcing")
++    await fixture.run(holder, "approve")
++    await fixture.settings({ fxRates: [{ code: "EUR", rate: 2 }] })
++    await fixture.run(buyer, "submit_po", { po: { description: '<script>alert("synthetic")</script> & ação', paymentTerms: "Net 30", deliveryDate: "2026-12-01", deliveryConditions: "Service delivery", expenseType: "OPEX" } })
++    await fixture.settings({ fxRates: [{ code: "EUR", rate: 3 }] })
++    await fixture.persistence.transaction("procurement", async (snapshot) => {
++      snapshot.data.roleMap = fixtureRoleMap()
++      object(snapshot.data.store).suppliers = ["=1+1", "+1+1", "-1+1", "@SUM(1,1)", "\t=1+1", "\r=1+1", 'Ação, "quoted"\nsecond line'].map((legalName, index) => ({ id: `supplier-${index}`, number: `SUP-${index}`, status: "active", legalName, currency: "EUR", bankName: "PRIVATE_BANK_SENTINEL_66", accountNumber: "PRIVATE_ACCOUNT_SENTINEL_66" }))
++      return { commit: true, value: undefined }
++    })
++    const application = createLegacyDownloadApplication(fixture.persistence)
++    const before = await fixture.material()
++    const register = await file(await application.serve(application.request("buyer", "procurement", { download: "register" })))
++    const rows = csvRows(new TextDecoder().decode(register.bytes))
++    const record = Object.fromEntries(rows[0]!.map((header, index) => [header, rows[1]![index]]))
++    expect(record).toMatchObject({ "PR number": fixture.target.id, Status: "po_pending", "PO currency": "EUR", "PO total (base)": "200", "PO base currency": "USD", "PO FX rate": "2", "PO FX source": "submitted", "PO submitted amount": "200" })
++    await recordExportEvidence({ caseId: "procurement-register", ...register, observations: { reader: "RFC4180 state machine", record, source_id: fixture.target.id, snapshot_fx: 2, current_fx: 3, expected_frozen_base: 200 } })
++    const po = await file(await application.serve(application.request("buyer", "procurement", { download: "po", request: fixture.target.id })))
++    const html = new TextDecoder().decode(po.bytes)
++    const parsedHtml = await inspectHtml(po.bytes)
++    expect(html).toContain("<!doctype html>")
++    expect(html).toContain("<style>")
++    expect(html).toContain("200.00 USD")
++    expect(html).not.toContain("300.00 USD")
++    expect(html).toContain("&lt;script&gt;")
++    expect(html).not.toContain("<script>")
++    expect(html).not.toContain("PRIVATE_BANK_SENTINEL_66")
++    expect(html).toContain("2026-12-01")
++    expect(parsedHtml.heading).toBe("PURCHASE ORDER")
++    expect(parsedHtml.scripts).toBe(0)
++    expect(parsedHtml.cells).toBeGreaterThan(0)
++    expect(parsedHtml.stylesheet).toContain("font:13px/1.5 Arial")
++    expect(parsedHtml.text).toContain("200.00 USD")
++    await recordExportEvidence({ caseId: "purchase-order", ...po, observations: { reader: "Bun HTMLRewriter + UTF-8 structural/escaping assertions", source_id: fixture.target.id, currency: "EUR", base_currency: "USD", base_amount: 200, delivery_date: "2026-12-01", stylesheet_present: true, parsed_cells: parsedHtml.cells, script_elements: parsedHtml.scripts, visual_inspection: "NOT_RUN" } })
++    const suppliers = await file(await application.serve(application.request("buyer", "procurement", { download: "suppliers" })))
++    const suppliersText = new TextDecoder().decode(suppliers.bytes)
++    const supplierRows = csvRows(suppliersText)
++    const legalIndex = supplierRows[0]!.indexOf("legalName")
++    expect(legalIndex).toBeGreaterThan(-1)
++    for (const row of supplierRows.slice(1, 7)) expect(row[legalIndex]?.startsWith("'")).toBe(true)
++    expect(supplierRows[7]![legalIndex]).toBe('Ação, "quoted"\nsecond line')
++    expect(suppliersText).not.toContain("PRIVATE_BANK_SENTINEL_66")
++    expect(suppliersText).not.toContain("PRIVATE_ACCOUNT_SENTINEL_66")
++    await recordExportEvidence({ caseId: "suppliers-buyer", ...suppliers, observations: { reader: "RFC4180 state machine", rows: supplierRows.length - 1, formula_prefixes_guarded: ["=", "+", "-", "@", "TAB", "CR"], restricted_bank_fields_absent: true, unicode_quoted_multiline_preserved: true } })
++    expect((await application.serve(application.request("other-requester", "procurement", { download: "po", request: fixture.target.id })))?.status).toBe(404)
++    expect((await application.serve(application.request("outsider", "procurement", { download: "register" })))?.status).toBe(403)
++    expect(await fixture.material()).toEqual(before)
++  } finally { await fixture.close() }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts
+@@ -0,0 +1,89 @@
++import { expect, test } from "bun:test"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import JSZip from "jszip"
++import { SaxesParser } from "saxes"
++import { createApplication } from "../../../runtime/application.ts"
++import type { Persistence } from "../../../runtime/contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { emptyMap, resolve } from "../../../src/identity.ts"
++import { recordExportEvidence } from "./evidence.ts"
++
++test("EA66-LEGACY-EGRESS revocation after the authenticated SQLite read must suppress generated bytes", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf66-legacy-egress-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  const marker = "EA66-SYNTHETIC-AUTHORIZED-NOTE"
++  const session = { active: true, authenticatedReads: 0 }
++  const scheduling = { revoke: false, revocations: 0 }
++  try {
++    await store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.roleMap = emptyMap().map((row) => ({ ...row, entra: row.surface === "dashboard" && row.role === "admin" ? "egress-admin-group" : null, version: 1, by: "synthetic-fixture" }))
++      snapshot.data.hotTopics = [{ id: "egress-source", action: marker, status: "open", priority: "normal" }]
++      snapshot.versions["hotTopics:egress-source"] = { version: 1, by: "synthetic-fixture" }
++      return { commit: true, value: undefined }
++    })
++    const before = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++    // Scheduling-only wrapper: the real SQLite callback and returned material are untouched.
++    // Revocation occurs after the authorization/read transaction has actually completed.
++    const persistence: Persistence = { ...store, transaction: async (surface, work, options) => {
++      const result = await store.transaction(surface, work, options)
++      if (scheduling.revoke && surface === "dashboard" && result !== null && typeof result === "object" && "snapshot" in result && "actor" in result) {
++        scheduling.revoke = false
++        scheduling.revocations += 1
++        session.active = false
++      }
++      return result
++    } }
++    const application = createApplication("/sucafina", {
++      persistence,
++      authenticate: async (request, context) => {
++        if (!session.active || request.headers.get("x-sf66-session") !== "synthetic-egress-session" || !context) return null
++        session.authenticatedReads += 1
++        return resolve("synthetic-egress-owner", [...context.roleMap], (group) => group === "egress-admin-group")
++      },
++      environment: async () => ({ at: "2026-11-14T12:00:00Z", id: () => "synthetic-egress-id", directory: [] }),
++      domains: { dashboard: [], planner: [], procurement: [] },
++      maxJsonBytes: 1024,
++    })
++    const request = () => new Request("https://example.test/sucafina/dashboard?download=docx&year=2026&title=Egress%20report&topic=Hot%20Topics%20%26%20Actions", { headers: { "x-sf66-session": "synthetic-egress-session" } })
++    const control = await application(request())
++    if (!control || control.status !== 200) throw new Error(`Authorized DOCX control unavailable: ${control?.status}`)
++    const controlBytes = new Uint8Array(await control.arrayBuffer())
++    expect(await containsMarker(controlBytes, marker)).toBe(true)
++    expect(session.authenticatedReads).toBeGreaterThan(0)
++    await recordExportEvidence({ caseId: "legacy-egress-control", name: "Egress_report.docx", mediaType: control.headers.get("content-type") ?? "", bytes: controlBytes,
++      observations: { syntheticCorpus: true, authorizedControl: true, sqlite: true, currentSession: session.active } })
++
++    scheduling.revoke = true
++    const response = await application(request())
++    if (!response) throw new Error("Legacy export route unavailable")
++    const bytes = new Uint8Array(await response.arrayBuffer())
++    const leaked = response.status === 200 && await containsMarker(bytes, marker)
++    if (response.status === 200) await recordExportEvidence({ caseId: "legacy-egress-revoked", name: "Egress_report.docx", mediaType: response.headers.get("content-type") ?? "", bytes,
++      observations: { syntheticCorpus: true, sqlite: true, revokedAfterAuthorizedRead: scheduling.revocations === 1, status: response.status, generatedContentLeaked: leaked, criterionVerdict: "FAIL" } })
++    const afterRevocation = await application(request())
++    expect(afterRevocation?.status).toBe(401)
++    expect(scheduling.revocations).toBe(1)
++    expect(session.active).toBe(false)
++    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))).toEqual(before)
++    console.info("SF66_LEGACY_EGRESS", JSON.stringify({ status: response.status, sessionRevoked: !session.active, revocations: scheduling.revocations, generatedContentLeaked: leaked, nextRequestStatus: afterRevocation?.status }))
++    expect(response.status).toBe(403)
++    expect(leaked).toBe(false)
++  } finally {
++    await store.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++}, 30000)
++
++async function containsMarker(bytes: Uint8Array, marker: string) {
++  const archive = await JSZip.loadAsync(bytes)
++  const document = archive.file("word/document.xml")
++  if (!document) throw new Error("Generated bytes are not a DOCX main document")
++  const parts: string[] = []
++  const reader = new SaxesParser({ xmlns: false })
++  reader.on("text", (value) => parts.push(value))
++  reader.write(await document.async("string")).close()
++  return parts.join("\n").includes(marker)
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/legacy-fixture.ts
+@@ -0,0 +1,70 @@
++import { mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import path from "node:path"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { createApplication } from "../../../runtime/application.ts"
++import type { Persistence } from "../../../runtime/contract.ts"
++import { emptyMap, resolve } from "../../../src/identity.ts"
++import type { Surface } from "../../../src/identity.ts"
++
++export const exportAt = "2026-11-14T12:00:00Z"
++export const fixtureRoleMap = () => emptyMap().map((row) => ({ ...row, entra: `sf66:${row.surface}:${row.role}`, version: 1, by: "synthetic-fixture" }))
++
++/** Synthetic identities enter at the authentication boundary; the persisted role map resolves their actual roles. */
++export function createLegacyDownloadApplication(persistence: Persistence) {
++  const sessions = new Map([
++    ["admin", { id: "sf66-admin", groups: ["sf66:dashboard:admin", "sf66:planner:admin", "sf66:procurement:admin"] }],
++    ["viewer", { id: "sf66-viewer", groups: ["sf66:dashboard:viewer", "sf66:planner:viewer"] }],
++    ["buyer", { id: "buyer", groups: ["sf66:procurement:buyer"] }],
++    ["requester", { id: "requester", groups: ["sf66:procurement:requester"] }],
++    ["other-requester", { id: "other-requester", groups: ["sf66:procurement:requester"] }],
++    ["outsider", { id: "sf66-outsider", groups: [] as string[] }],
++  ])
++  const serve = createApplication("/sf", {
++    persistence,
++    authenticate: async (request, context) => {
++      const session = sessions.get(request.headers.get("x-sf66-session") ?? "")
++      if (!session || !context) return null
++      return resolve(session.id, [...context.roleMap], (group) => session.groups.includes(group))
++    },
++    environment: async () => ({ at: exportAt, id: () => "sf66-export", directory: [{ id: "requester", name: "Synthetic requester" }] }),
++    domains: { dashboard: [], planner: [], procurement: [] },
++    maxJsonBytes: 100_000,
++  })
++  return {
++    serve, sessions,
++    request: (user: string, surface: Surface, query: Record<string, string>) => new Request(`https://sf66.invalid/sf/${surface}?${new URLSearchParams(query)}`, { headers: { "x-sf66-session": user } }),
++  }
++}
++
++export async function legacyDownloadFixture() {
++  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf66-formats-"))
++  const store = await openLocalStore(directory)
++  await store.transaction("dashboard", async (snapshot) => {
++    snapshot.data = {
++      roleMap: fixtureRoleMap(),
++      settings: { year: 2026 },
++      members: [{ id: "member-66", name: "Synthetic member 66", title: "Analyst", type: "Contractor", leaderId: "leader-66", location: "Example", start: "2025-01-01", end: "", status: "Active", cls: "Talent", outlook: "Stay", notes: "Ação — synthetic note", salary: "SALARY_SENTINEL_66" }],
++      leaders: [{ id: "leader-66", name: "Synthetic leader 66", domain: "Example domain", location: "Example" }],
++      __sfProductV1: { atlas: { token: "PRIVATE_ATLAS_SENTINEL_66" }, receipts: "PRIVATE_RECEIPT_SENTINEL_66" },
++      nested: [{ label: "public", __sfProductV1: { token: "PRIVATE_NESTED_SENTINEL_66" } }],
++    }
++    snapshot.versions["members:member-66"] = { version: 7, by: "synthetic-fixture" }
++    return { commit: true, value: undefined }
++  })
++  await store.transaction("planner", async (snapshot) => {
++    snapshot.data = {
++      roleMap: fixtureRoleMap(), curId: "v66",
++      app: { currency: "EUR", entities: [{ id: "entity", name: "Entity 66" }], allocations: [{ id: "allocation", name: "Allocation 66" }] },
++      versions: { v66: {
++        id: "v66", name: "Frozen synthetic version 66", year: 2026, closed: 2, created: "2026-01-01",
++        lines: [{ id: "line-66", sec: "opex", el: "licenses", name: '=HYPERLINK("https://example.invalid","literal")', desc: 'Ação, "quoted"\nsecond line', owner: "Owner 66", entity: "entity", alloc: "allocation", cur: "EUR", b: [12, 12], a: [null, 0], f: [0, null] }],
++        projects: [],
++        hc: { inc: 10, incMonth: 7, positions: [{ id: "position-66", name: "Synthetic person 66", title: "Engineer", include: true, domain: "Example", location: "Example", type: "Employee", fte: 1, start: 1, end: 12, rateId: "rate-66", rateOverride: 123456.78 }], rates: [{ id: "rate-66", name: "PRIVATE_RATE_SENTINEL_66", locs: "Example", annual: 987654.32, cur: "EUR" }], hrAF: {} },
++        fx: [{ cur: "EUR", rate: 1.2 }, { cur: "GBP", rate: null }],
++      } },
++    }
++    return { commit: true, value: undefined }
++  })
++  return { ...createLegacyDownloadApplication(store), store, close: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts
+@@ -0,0 +1,48 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { DomainProjection } from "../../../product/contracts/context.ts"
++import type { CapabilityResult } from "../../../product/contracts/sf-execution.ts"
++import { rows } from "../../../runtime/contract.ts"
++import { createExportArtifactFixture, inspectOfficeBytes } from "./fixture.ts"
++import { recordExportEvidence } from "./evidence.ts"
++
++test("WP07.T04.CHK.02 newly generated DOCX and PPTX keep captured values after current source drift", async () => {
++  const f = await createExportArtifactFixture()
++  try {
++    const review = await f.preserve()
++    const projections = review.sections.map((section) => section.content as DomainProjection)
++    const values = projections.flatMap((projection) => projection.values)
++    const evidenceRefs = values.flatMap((value) => value.sourceRefs)
++    expect(values.find((value) => value.id === "license:1:forecast")).toMatchObject({ value: 110, currency: "USD" })
++    await f.changeCandidate(130)
++    const current = () => f.persistence.transaction("planner", async (snapshot) => ({ commit: false,
++      value: rows(rows(snapshot.data.versions).find((version) => version.id === "export66-v1")?.lines).find((line) => line.id === "license")?.f }))
++    expect(await current()).toEqual(Array(12).fill(130))
++    for (const format of ["docx", "pptx"] as const) {
++      const response = await f.request("review-report", { key: `export66-first-report-after-drift-${format}`,
++        payload: { reviewRef: review.id, sectionRefs: review.sections.map((section) => section.id), format } })
++      const result = await response.json() as CapabilityResult
++      expect({ http: response.status, result }).toMatchObject({ http: 200, result: { status: "ok" } })
++      if (result.status !== "ok" || !result.outputRef) throw new Error("New report after source drift unavailable")
++      const stored = await f.document(result.outputRef)
++      expect(stored).toMatchObject({ reviewRef: review.id, reviewDigest: digestSfValue(review), recordCount: 2, evidenceRefs })
++      const download = await f.request("review-download", { query: { artifactRef: result.outputRef } })
++      expect(download.status).toBe(200)
++      const bytes = new Uint8Array(await download.arrayBuffer())
++      const opened = await inspectOfficeBytes(bytes, format)
++      expect(opened.sha256).toBe(stored.digest)
++      for (const value of values) {
++        expect(opened.compact).toContain(`${value.id}:${value.value === null ? "unavailable" : String(value.value)}${value.unit ?? ""}${value.currency ?? ""}`.replace(/\s+/g, ""))
++        expect(opened.compact).toContain(`${value.period.start}–${value.period.end}`)
++      }
++      for (const refId of new Set(evidenceRefs.map((ref) => ref.refId))) expect(opened.compact).toContain(refId)
++      expect(opened.compact).not.toContain("license:1:forecast:130USD")
++      expect(await current()).toEqual(Array(12).fill(130))
++      await recordExportEvidence({ caseId: `after-drift-${format}`, name: String(stored.name), mediaType: download.headers.get("content-type")!, bytes,
++        observations: { criterion: "WP07.T04.CHK.02", corpus: "synthetic", generation_after_source_change: true, new_command: true,
++          captured_forecast: 110, current_forecast: 130, currency: "USD", horizon: f.period, review_ref: review.id, review_version: review.version,
++          source_refs: review.sourceRefs, evidence_ref_ids: [...new Set(evidenceRefs.map((ref) => ref.refId))], all_captured_values_present: true,
++          current_source_unchanged: true, reader: "JSZip CRC + Saxes", visual_render_qualification: "external-renderer-required" } })
++    }
++  } finally { await f.dispose() }
++}, 120000)

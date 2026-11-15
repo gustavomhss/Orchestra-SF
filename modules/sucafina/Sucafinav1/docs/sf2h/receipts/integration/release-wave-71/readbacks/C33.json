@@ -1,0 +1,83 @@
+{
+  "candidate": {
+    "symbol": "C33",
+    "sha": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+    "tree": "4c9cc42ad6cd557febf721db14c802d1f2fb9ced",
+    "parent": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+    "source": 65,
+    "paths": 9,
+    "manifest": "candidates/C33-c12-65.json",
+    "readback": "PASS_TEXT_IDENTITIES_ONLY",
+    "validation": "NOT_RUN"
+  },
+  "checks": [
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sha": "a2d08250d5104285dcdee87d86e39076535cf554",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sha": "a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "sha": "b8c6af0cd15dbafc70c543901ca922701748537a",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts",
+      "sha": "342df1f422f2f73abda0f868816f6b61786ec979",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+      "sha": "4f5a40d55224203b613bf12cc79f9b01aa8aa104",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+      "sha": "73de004b6054b6092fa2c42ab7fbc62960001782",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts",
+      "sha": "8843c5b219a358226873650b4e053f8643d4fc73",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts",
+      "sha": "11c4440c618030b6bb7476db11382a3246af33ac",
+      "match": true
+    },
+    {
+      "kind": "post65",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts",
+      "sha": "bd5f9327e4026ccf7efdfb263013ab182e3b46d0",
+      "match": true
+    },
+    {
+      "kind": "commit",
+      "sha": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+      "tree": "4c9cc42ad6cd557febf721db14c802d1f2fb9ced",
+      "parents": [
+        "3e26a3c2b18b54d891f44adaac76b228a0daf4c0"
+      ]
+    },
+    {
+      "kind": "diff",
+      "files": 62,
+      "unexpected": []
+    }
+  ],
+  "proof": "Text/blob/ancestry only; no product execution"
+}

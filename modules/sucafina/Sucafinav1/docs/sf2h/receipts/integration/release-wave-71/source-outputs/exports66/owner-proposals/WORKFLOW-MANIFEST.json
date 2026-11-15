@@ -1,0 +1,36 @@
+{
+  "schema": "sf2h.export-artifact-closure.workflow-proposal.v1",
+  "state": "PROPOSAL_NOT_APPLIED_NOT_EXECUTED",
+  "mission": 66,
+  "target": ".github/workflows/test-ci.yml",
+  "outside66Lease": true,
+  "outsideCurrent45WritePaths": true,
+  "requiredOwner": "Explicit workflow owner assigned by60 on authorized resumption or authorized successor",
+  "preimage": {
+    "file": "test-ci.yml.preimage",
+    "bytes": 17126,
+    "sha256": "10c4bb7b3b4fc6c9201736dfa1d4d211dccf0e75de74efa38ae5299473008d26",
+    "git_blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+  },
+  "postimage": {
+    "file": "test-ci.yml.proposed",
+    "bytes": 25909,
+    "sha256": "b302f5f5af8251a7b33599f65c26ea91013e6f9c96c4eecc1e59c93bdf8c7cd3",
+    "git_blob": "0b6cf888faa82d3be7b2c683f4bff3b17a6e53e3"
+  },
+  "patch": {
+    "file": "test-ci-sf66-reader-proposal.patch",
+    "bytes": 9788,
+    "sha256": "9df99d343be68569ddf5835f3a32b8d10079537b49bcabd06160b166246fcb70",
+    "git_blob": "8e9548668b470c67e54e5c315deb81b5ff032e39"
+  },
+  "preimage_expected_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "hunks": 2,
+  "derivation": "Exact unified text patch applied to retained bytes inside inert receipts only; no workflow source was changed and no workflow/product test executed locally.",
+  "instructions": "OWNER-REQUEST.json",
+  "validation": {
+    "executed": false,
+    "visual": "NOT_RUN",
+    "functionalFailureNotOverridden": true
+  }
+}

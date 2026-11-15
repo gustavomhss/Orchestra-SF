@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.export-artifact-closure.ci-result.v1",
+  "attempt": "R3",
+  "state": "EXECUTED_PASS_BOUNDED_SOURCE",
+  "W": "b371c1f9e7015a78d292baadef3e6cdeed781dc7",
+  "S": "46fb76e4cf9bfb63799537a46c9b2dcc342f6459",
+  "run_id": 43668383518,
+  "job_id": 132672748814,
+  "conclusion": "success",
+  "tests": {
+    "pass": 1,
+    "fail": 0,
+    "total": 1,
+    "files": 1,
+    "assertions": 686,
+    "duration_seconds": 17.53
+  },
+  "criterion": "WP07.T04.CHK.02",
+  "observed": {
+    "captured_forecast": 110,
+    "current_forecast_before_first_generation": 130,
+    "currency": "USD",
+    "horizon": {
+      "start": "2026-01-01",
+      "end": "2026-12-31"
+    },
+    "new_docx_keeps_capture": true,
+    "new_pptx_keeps_capture": true,
+    "all_captured_values_periods_and_refs_checked": true,
+    "review_digest_matches": true,
+    "source_current_remains130": true
+  },
+  "test_log": "R3-tests.log",
+  "artifact_directory": "../artifacts/R3",
+  "artifacts_recovered": 2,
+  "artifact_bytes": 1546511,
+  "omni": {
+    "nonce": "bfafb2634aef28831d854c4b4ec35ac3",
+    "verdict": "not applicable",
+    "claim": "No Omni or native-provider proof"
+  },
+  "remaining_gates": [
+    "Legacy egress FAIL remains from R1",
+    "Office visual/typography/clipping NOT_RUN",
+    "Compiler/guards and integratedC28 NOT_RUN"
+  ],
+  "release": false,
+  "GLOBAL_RELEASE": false
+}

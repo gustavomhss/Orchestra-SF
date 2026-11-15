@@ -1,0 +1,468 @@
+name: test-ci
+
+# `bun run test:ci` (script/test-ci.ts) uploads a snapshot of the caller's working tree to a ci-run-* branch together
+# with a .ci-run.json request ({ package, directory?, packageSelector?, runner, args, env?, config?, benchmarkRenderer? }). This workflow runs those
+# tests, then deletes the branch.
+# The request names its runner (`bun`, `node`, `pytest` or `playwright`). A request without one falls back to the files: a package.json means
+# `bun test`, otherwise requirements-dev.txt means pytest.
+on:
+  push:
+    branches:
+      - "ci-run-*"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.host }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # The branch name carries the requested operating systems: ci-run-linux-*, ci-run-windows-*, ci-run-macos-*,
+        # ci-run-both-* (Linux and Windows) or ci-run-all-*. script/test-ci-request.ts maps the same names.
+        # The dedicated Intel lane precedes the generic macOS prefix and records x64 measurement reach separately.
+        # Extension: ci-run-linux-arm64-* selects only ubuntu-24.04-arm before the generic Linux fallback.
+        host: ${{ fromJSON(startsWith(github.ref_name, 'ci-run-macos-intel-') && '["macos-15-intel"]' || startsWith(github.ref_name, 'ci-run-all-') && '["ubuntu-24.04","windows-latest","macos-14"]' || startsWith(github.ref_name, 'ci-run-both-') && '["ubuntu-24.04","windows-latest"]' || startsWith(github.ref_name, 'ci-run-windows-') && '["windows-latest"]' || startsWith(github.ref_name, 'ci-run-macos-') && '["macos-14"]' || startsWith(github.ref_name, 'ci-run-linux-arm64-') && '["ubuntu-24.04-arm"]' || '["ubuntu-24.04"]') }}
+    runs-on: ${{ matrix.host }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      # Extension: branch-scoped so a misrouted ARM64 request cannot skip its CPU assertion.
+      - name: Assert Linux ARM64
+        if: startsWith(github.ref_name, 'ci-run-linux-arm64-')
+        run: |
+          set -euo pipefail
+          if [ "$RUNNER_OS" != Linux ] || [ "$RUNNER_ARCH" != ARM64 ] || [ "$(uname -m)" != aarch64 ]; then
+            echo "::error::${{ matrix.host }} must provide native Linux ARM64 (RUNNER_ARCH=ARM64, uname -m=aarch64)"
+            exit 2
+          fi
+
+      - name: Assert macOS arm64
+        if: runner.os == 'macOS' && matrix.host != 'macos-15-intel'
+        run: |
+          if [ "$RUNNER_ARCH" != ARM64 ] || [ "$(uname -m)" != arm64 ]; then
+            echo "::error::${{ matrix.host }} must provide native arm64"
+            exit 2
+          fi
+
+      - name: Setup request validator Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.15"
+
+      - name: Read request
+        id: request
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'
+          import path from 'node:path'
+          import { omniControlScope, validateRequest } from './script/test-ci-request.ts'
+          import { locateTestPackage } from './script/test-ci-location.ts'
+          const request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+            (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&
+              realpathSync(file).startsWith(realpathSync('.') + path.sep),
+            (selector) => locateTestPackage('.', selector))
+          writeFileSync('.ci-run.json', JSON.stringify(request))
+          mkdirSync('test-ci-evidence', { recursive: true })
+          writeFileSync('test-ci-evidence/request.json', JSON.stringify({ request,
+            platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))
+          appendFileSync(process.env.GITHUB_OUTPUT,
+            `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)
+          const sf66Args = request.args[0] === '--timeout' && request.args[1] === '120000'
+            ? request.args.slice(2) : request.args
+          const sf66Exports = request.package === 'sucafina' && request.directory === 'modules/sucafina' &&
+            request.runner === 'bun' && sf66Args.length > 0 &&
+            sf66Args.every((file) => /^Sucafinav1\/test\/product\/export-artifact-closure\/[^/]+\.test\.ts$/.test(file))
+          appendFileSync(process.env.GITHUB_OUTPUT, `sf66_exports=${sf66Exports}\n`)
+          NODE
+
+      - name: Fetch source history for Script fixtures
+        if: steps.request.outputs.package == 'script' && steps.request.outputs.runner == 'bun'
+        run: |
+          if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+            git fetch --unshallow --no-tags origin
+          fi
+
+      - name: Setup Bun
+        if: steps.request.outputs.runner != 'pytest'
+        uses: ./.github/actions/setup-bun
+
+      # Tests find rg on PATH and must never download it (packages/core/src/ripgrep/binary.ts).
+      - name: ripgrep
+        if: steps.request.outputs.runner != 'pytest'
+        uses: ./.github/actions/ripgrep
+
+      # setup-bun selects Node 24; match the existing e2e lane's extraction workaround afterwards.
+      - name: Setup Playwright Node
+        if: steps.request.outputs.runner == 'playwright'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.15"
+
+      - name: Install Chromium
+        if: steps.request.outputs.runner == 'playwright'
+        working-directory: ${{ steps.request.outputs.directory }}
+        run: bunx playwright install --with-deps chromium
+
+      - name: Linux sandbox dependencies
+        if: runner.os == 'Linux'
+        run: |
+          # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+          # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+          install_sandbox() {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq bubblewrap socat
+          }
+          if ! install_sandbox; then
+            for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do
+              [ -f "$file" ] || continue
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"
+            done
+            install_sandbox
+          fi
+          # Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Setup Python
+        if: steps.request.outputs.runner == 'pytest'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ${{ steps.request.outputs.directory }}/requirements-dev.txt
+
+      - name: Install Python test dependencies
+        if: steps.request.outputs.runner == 'pytest'
+        env:
+          DIRECTORY: ${{ steps.request.outputs.directory }}
+        run: python -m pip install -r "$DIRECTORY/requirements-dev.txt"
+
+      - name: Configure git identity
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      # Only allow-listed keys with plain values reach the environment; test-ci.ts validates before upload too.
+      - name: Export requested environment
+        run: |
+          jq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do
+            key=${line%%=*}
+            value=${line#*=}
+            case "$key" in
+              ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER) pattern='^(1|strict)$' ;;
+              ORCHESTRA_CHANNEL) pattern='^prod$' ;;
+              *) echo "::error::.ci-run.json env key $key is not allow-listed"; exit 2 ;;
+            esac
+            # Omni permits only its two on states; channel checks permit only the production value.
+            if ! printf '%s' "$value" | grep -Eq "$pattern"; then
+              echo "::error::.ci-run.json env value for $key is not allowed"
+              exit 2
+            fi
+            echo "$key=$value" >> "$GITHUB_ENV"
+          done
+
+      - name: omni binaries
+        if: steps.request.outputs.runner != 'pytest'
+        uses: ./.github/actions/omni-binaries
+
+      # The CLI's native Windows artifact controls compile with `rustup run 1.98.0` (packages/core/src/
+      # artifact-native-windows.ts). The omni artifact above skips cargo, so nothing else installs the toolchain
+      # pinned by native/omni/rust-toolchain.toml.
+      - name: Rust toolchain (rust-toolchain.toml)
+        if: runner.os == 'Windows' && steps.request.outputs.directory == 'apps/cli'
+        working-directory: native/omni
+        run: rustup show active-toolchain || rustup toolchain install
+
+      # A per-run secret for the omni positive control's verdict line: script/test-omni-control.ts prints it in its one
+      # verdict line and removes it from the environment before any test loads; test-ci.ts accepts only that line.
+      - name: Omni control nonce
+        run: |
+          nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+          echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
+          echo "omni control nonce: $nonce"
+
+      # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
+      # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
+      - name: Run tests
+        env:
+          ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+          ORCHESTRA_OMNI_CONTROL: ${{ steps.request.outputs.omni_control }}
+          PACKAGE: ${{ steps.request.outputs.package }}
+          DIRECTORY: ${{ steps.request.outputs.directory }}
+          RUNNER: ${{ steps.request.outputs.runner }}
+        run: |
+          if [ "$RUNNER" = playwright ]; then
+            node --input-type=module <<'NODE'
+          import { readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'
+          import path from 'node:path'
+          import { spawnSync } from 'node:child_process'
+          import { benchmarkEnvironment, playwrightArgs, validateRequest, validateSelection } from './script/test-ci-request.ts'
+          import { locateTestPackage } from './script/test-ci-location.ts'
+          const request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+            (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&
+              realpathSync(file).startsWith(realpathSync('.') + path.sep),
+            (selector) => locateTestPackage('.', selector))
+          const cwd = path.resolve(request.directory)
+          const benchmark = benchmarkEnvironment(request.benchmarkRenderer, process.env.GITHUB_SHA)
+          writeFileSync('test-ci-evidence/benchmark-runtime.json', JSON.stringify(benchmark))
+          const env = { ...process.env, ...benchmark }
+          const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure']
+          const listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })
+          if (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
+          writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)
+          const report = JSON.parse(listed.stdout)
+          const hasTests = (suite) => suite.specs?.some((spec) => spec.tests?.length > 0) || (suite.suites ?? []).some(hasTests)
+          validateSelection(request.args.map((file) => path.resolve(cwd, file)),
+            report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))
+          // The flaky reporter lists tests that passed only on a retry in the log and the job summary.
+          const flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')
+          const reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'
+          const run = spawnSync('bun', [...args, `--reporter=${reporters}`], { cwd, stdio: 'inherit',
+            env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),
+              PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })
+          if (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)
+          process.exit(run.status)
+          NODE
+            exit $?
+          fi
+          args=()
+          while IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.args[]' .ci-run.json | tr -d '\r')
+          cd "$DIRECTORY"
+          case "$RUNNER" in
+            pytest) python -m pytest -p no:cacheprovider "${args[@]}" ;;
+            bun)
+              # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a
+              # browser-only export that fails under bun's default (`node`) conditions.
+              # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx
+              # source, which does not make that import. test-ci bypasses the package's own
+              # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.
+              # test-browser/ files follow `test:browser` instead: solid-js has no `solid`
+              # export, so under `solid` it falls through to `node` and loads its server build,
+              # where memos never recompute and onMount never runs. They also preload happydom.
+              if [ "$DIRECTORY" = "packages/app-shell" ]; then
+                unit=()
+                browser=()
+                common=()
+                # Only generated --timeout, -t and --test-name-pattern consume the next
+                # entry, including an empty name pattern. Other dash-prefixed tokens are
+                # one common token each; this is not a Bun CLI parser.
+                for ((index=0; index<${#args[@]}; index=index+1)); do
+                  arg="${args[$index]}"
+                  case "$arg" in
+                    --timeout|-t|--test-name-pattern)
+                      index=$((index+1))
+                      if [ "$index" -ge "${#args[@]}" ]; then
+                        echo "::error::$arg needs a following value"
+                        exit 2
+                      fi
+                      common+=("$arg" "${args[$index]}")
+                      ;;
+                    -*)
+                      common+=("$arg")
+                      ;;
+                    test-browser|test-browser/*|./test-browser/*) browser+=("$arg") ;;
+                    *) unit+=("$arg") ;;
+                  esac
+                done
+                status=0
+                if [ ${#unit[@]} -gt 0 ] || [ ${#browser[@]} -eq 0 ]; then
+                  GITHUB_ACTIONS=false bun test --conditions=solid "${unit[@]}" "${common[@]}" || status=$?
+                fi
+                if [ ${#browser[@]} -gt 0 ]; then
+                  GITHUB_ACTIONS=false bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?
+                fi
+                exit $status
+              fi
+              GITHUB_ACTIONS=false bun test "${args[@]}"
+              ;;
+            node)
+              for file in "${args[@]}"; do
+                case "$file" in
+                  *.node-smoke.mjs) ;;
+                  *) echo "::error::the node runner runs only *.node-smoke.mjs files, not $file"; exit 2 ;;
+                esac
+              done
+              node --experimental-strip-types --test "${args[@]}"
+              ;;
+          esac
+
+      # Inert proposal: apply only after the workflow owner receives an explicit lease from integrator60.
+      # This reuses the validated surgical request; it does not run another product selection.
+      - name: Install SF66 export readers
+        id: sf66_readers
+        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true'
+        run: |
+          set -euo pipefail
+          test -d "$RUNNER_TEMP/sf66-export-artifacts"
+          test ! -L "$RUNNER_TEMP/sf66-export-artifacts"
+          compgen -G "$RUNNER_TEMP/sf66-export-artifacts/*.manifest.json" > /dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends libreoffice-writer libreoffice-impress libreoffice-calc poppler-utils fontconfig fonts-dejavu-core fonts-liberation fonts-crosextra-carlito fonts-crosextra-caladea
+
+      - name: Render SF66 generated exports
+        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true' && steps.sf66_readers.outcome == 'success'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import platform
+          import re
+          import subprocess
+          import sys
+
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "sf66-export-artifacts"
+          if not root.is_dir() or root.is_symlink():
+              raise SystemExit("SF66 artifact directory is missing or is a symlink")
+          if any(path.is_symlink() for path in root.rglob("*")):
+              raise SystemExit("SF66 artifacts must contain regular files and directories")
+          manifests = sorted(root.glob("*.manifest.json"))
+          if not manifests:
+              raise SystemExit("SF66 tests must write distinct *.manifest.json files")
+          for manifest in manifests:
+              json.loads(manifest.read_text(encoding="utf-8"))
+
+          inspection = root / "_inspection"
+          inspection.mkdir(exist_ok=False)
+          originals = sorted(path for path in root.rglob("*")
+                             if path.is_file() and inspection not in path.parents)
+          office = [path for path in originals if path.suffix.lower() in {".docx", ".pptx", ".xlsx"}]
+          if not office:
+              raise SystemExit("No generated Office file exists for real-reader inspection")
+
+          def digest(path):
+              with path.open("rb") as stream:
+                  return hashlib.file_digest(stream, "sha256").hexdigest()
+
+          def command(args):
+              result = subprocess.run(args, check=True, text=True,
+                                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+              return result.stdout.strip()
+
+          input_files = [{"path": str(path.relative_to(root)), "bytes": path.stat().st_size,
+                          "sha256": digest(path)} for path in originals]
+          request = json.loads(pathlib.Path(".ci-run.json").read_text(encoding="utf-8"))
+          (inspection / "request.json").write_text(json.dumps(request, indent=2) + "\n", encoding="utf-8")
+          commit_headers = command(["git", "cat-file", "-p", "HEAD"]).split("\n\n", 1)[0].splitlines()
+          versions = {
+              "python": platform.python_version(),
+              "libreoffice": command(["libreoffice", "--version"]),
+              "poppler": command(["pdftoppm", "-v"]),
+              "packages": command(["dpkg-query", "-W", "libreoffice-writer", "libreoffice-impress",
+                                   "libreoffice-calc", "poppler-utils", "fontconfig", "fonts-dejavu-core",
+                                   "fonts-liberation", "fonts-crosextra-carlito", "fonts-crosextra-caladea"]),
+              "fontMatches": {name: command(["fc-match", "--format", "%{family}|%{file}", name])
+                              for name in ["Arial", "Calibri", "Aptos", "Cambria", "Times New Roman"]},
+          }
+          entries = []
+          for index, source in enumerate(office, start=1):
+              target = inspection / f"file-{index:04d}"
+              target.mkdir()
+              before = digest(source)
+              entry = {"source": str(source.relative_to(root)), "sha256": before,
+                       "bytes": source.stat().st_size, "status": "PENDING"}
+              try:
+                  profile = pathlib.Path(os.environ["RUNNER_TEMP"]) / f"sf66-reader-profile-{index:04d}"
+                  output = command(["libreoffice", "--headless", "-env:UserInstallation=" + profile.as_uri(),
+                                    "--convert-to", "pdf", "--outdir", str(target), str(source)])
+                  (target / "conversion.txt").write_text(output + "\n", encoding="utf-8")
+                  pdfs = sorted(target.glob("*.pdf"))
+                  if len(pdfs) != 1:
+                      raise RuntimeError("LibreOffice did not produce exactly one PDF")
+                  pdf = pdfs[0]
+                  pdf_info = command(["pdfinfo", str(pdf)])
+                  (target / "pdfinfo.txt").write_text(pdf_info + "\n", encoding="utf-8")
+                  match = re.search(r"^Pages:\s+(\d+)\s*$", pdf_info, re.MULTILINE)
+                  if not match or int(match.group(1)) < 1:
+                      raise RuntimeError("Rendered PDF has no readable page count")
+                  command(["pdftotext", "-layout", str(pdf), str(target / "extracted.txt")])
+                  command(["pdftoppm", "-png", "-r", "96", str(pdf), str(target / "page")])
+                  pngs = sorted(target.glob("page-*.png"))
+                  if len(pngs) != int(match.group(1)):
+                      raise RuntimeError("Rendered PNG count differs from PDF page count")
+                  files = [pdf, target / "extracted.txt", target / "pdfinfo.txt", target / "conversion.txt", *pngs]
+                  entry.update({"status": "COMPLETED", "pages": len(pngs),
+                                "outputs": [{"path": str(path.relative_to(root)), "bytes": path.stat().st_size,
+                                             "sha256": digest(path)} for path in files]})
+              except Exception as error:
+                  entry.update({"status": "FAILED", "error": str(error)})
+              entry["sha256AfterRead"] = digest(source)
+              entry["originalUnchanged"] = entry["sha256AfterRead"] == before
+              if not entry["originalUnchanged"]:
+                  entry["status"] = "FAILED"
+              entries.append(entry)
+
+          result = {
+              "schema": "sf66-export-reader-inspection-v1",
+              "ciSnapshotSha": os.environ["GITHUB_SHA"],
+              "candidateParents": [line.split(" ", 1)[1] for line in commit_headers if line.startswith("parent ")],
+              "workflowBlobSha": command(["git", "hash-object", ".github/workflows/test-ci.yml"]),
+              "runId": os.environ["GITHUB_RUN_ID"],
+              "runAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "requestSha256": digest(inspection / "request.json"),
+              "tools": versions,
+              "inputs": input_files,
+              "readers": entries,
+              "readerVerdictOnly": True,
+              "functionalAcceptance": "NOT_ASSERTED: failed tests and the job conclusion remain failed",
+              "visualInspection": "PENDING: review these exact PNGs and text against the test manifests",
+              "pdfRole": "Reader-generated inspection copy; not an additional product export format",
+          }
+          (inspection / "manifest.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+          if any(entry["status"] != "COMPLETED" for entry in entries):
+              raise SystemExit(1)
+          PY
+
+      - name: Upload SF66 generated exports and reader evidence
+        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sf66-exports-${{ github.sha }}-${{ matrix.host }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf66-export-artifacts/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Lean dashboard previews (extension)
+        if: always() && hashFiles(format('{0}/e2e/test-results/lean-visual/*.png', steps.request.outputs.directory)) != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: lean-visual-${{ runner.os }}
+          path: |
+            ${{ steps.request.outputs.directory }}/e2e/test-results/lean-visual/*.png
+            ${{ steps.request.outputs.directory }}/e2e/test-results/lean-visual/*.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Playwright evidence
+        if: always() && steps.request.outputs.runner == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: playwright-${{ matrix.host }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            test-ci-evidence
+            ${{ steps.request.outputs.directory }}/e2e/test-results
+            ${{ steps.request.outputs.directory }}/e2e/playwright-report
+
+  cleanup:
+    needs: test
+    if: always()
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Delete the snapshot branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
