@@ -1,0 +1,566 @@
+{
+  "schema": "sf2h.reports-draft-reconciliation.cold-review.v1",
+  "reviewer": "/root/cold_review",
+  "captured_at": "2026-11-14T23:29:03.234757+00:00",
+  "verdict": "STATIC_PASS_PENDING_HOSTED_QUALIFICATION",
+  "review_stage": "Final limited independent semantic delta review complete; CR48-07 and CR48-08 resolved; no runtime/release approval",
+  "independence": {
+    "authored_product_code": false,
+    "authored_tests": false,
+    "remote_mutations": false,
+    "local_product_execution": false,
+    "local_tests_or_builds": false,
+    "only_written_artifact": "mission48/review/cold-review.json"
+  },
+  "authority": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "source_branch": "astra-wp07",
+    "pull_request": 27,
+    "mission_package_commit": "bd045542ebb287cd5f25ce36e676ce90cbce320f",
+    "mission_package_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/reports-draft-reconciliation.json",
+    "original_finding": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+    "original_finding_commit": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+    "source36_commit": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+    "proposal_preimage_base": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "root_proposed_composition_base": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+    "root_is_only_remote_writer": true
+  },
+  "scope": [
+    "Complete client/view and transport regressions; response classification, pending serialized intent/key, explicit retries, private draft maps and disposal.",
+    "Complete producer patch v2 then all v4 deltas: base/recipient/fallback/history reads, strict authority readers, HTTP adapters, C05 port/services and focus probe.",
+    "Complete five Reports E2E postimages and their patch; exact cookie44 helper; source36 revocation and failed-edit helpers via GitHub MCP.",
+    "Boundary fixtures and read/lost-response/authority tests, including real SQLite/admissions and intentionally limited I/O faults.",
+    "Pinned C13 reviews/port.ts and services.ts via GitHub MCP for actual C05 producer classification."
+  ],
+  "findings": [
+    {
+      "id": "CR48-01",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_IN_OWNED_CLIENT",
+      "title": "Missing response binding erased a pending private intent",
+      "counterexample": "An admitted discussion receives an otherwise successful reconciliation response without X-SF-Review-Binding. Original unverified() disposed the client and emitted an access error; view disposal cleared drafts and pending key.",
+      "resolution": "Missing echo now withholds the value as recoverable/unknown without disposal. A present unequal echo remains terminal, is checked before body consumption/abort classification, and unknown unbound conflicts cannot become rejected.",
+      "checked_details": [
+        "Header mismatch checked before response.json; no body read needed for known scope loss.",
+        "Definite CAS rejection requires echo === binding as well as a pending mutation key and the known precommit conflict reason.",
+        "Tests assert missing echo allows an explicit authorized reread; changed header stays terminal at HTTP200/503; unbound CAS conflict retains unknown outcome and original key/payload."
+      ],
+      "runtime": "NOT_RUN_BY_REVIEWER"
+    },
+    {
+      "id": "CR48-02",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_IN_PRODUCER_V4",
+      "title": "Focus probe treated an absent access revision header as revocation",
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "resolution": "Focus compares a present header with the captured access revision; a missing header no longer purges. Explicit denied responses and present changed revisions still clear private views and emit revocation."
+    },
+    {
+      "id": "CR48-03",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_IN_PRODUCER_V4",
+      "title": "Review read admissions converted unavailable into HTTP403",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "counterexample": "createSfUiAuthority.admit can return unavailable/ui-identity-unavailable with stable caller authority when commandIdentity cannot supply an ID. review-thread-context formerly converted every non-ok admission into denied403, erasing a question draft.",
+      "resolution": "Read admission branches preserve typed failure status, exceptions become503, and post-admission catches distinguish false revalidation from unknown revalidation. This covers thread-context, closure, and GET review reads."
+    },
+    {
+      "id": "CR48-04",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_IN_PRODUCER_V4",
+      "title": "C05 disappearance or identity substitution became recoverable",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "counterexample": "C13 reviews.read returned unavailable for a successful state read with missing review or mismatched review ID. Propagating that status through new thread-context would retain drafts after a genuine target change.",
+      "resolution": "The producer now emits denied/review-target-changed for state-read-ok null or mismatched ID; no blanket reinterpretation of generic unavailable reasons was introduced."
+    },
+    {
+      "id": "CR48-05",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_WITH_STRICT_C05_AND_INSTALLED_PROVIDER_DELTAS",
+      "title": "C05 legacy selection booleans can still mask evidence outage as denial before the strict read check",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts"
+      ],
+      "counterexample": [
+        "Use the existing createReviewAnswersFixture with a real preserved C05, valid same actor/binding, and unchanged review ACL.",
+        "Make evidence.resolve return unavailable for the protected source while actual admission and storage remain available.",
+        "Fixture sources() resolves evidence and returns false unless fresh/historical; authorizeSections calls sources().",
+        "v4 reviews.read invokes authorizeSections and host.revalidate(sources) before revalidateReadEvidence; the earlier false exits as denied/access-unavailable.",
+        "threadContext.authorize returns false, strict collaboration read rejects, HTTP403 reaches the client and purges private drafts/intent despite provider uncertainty."
+      ],
+      "partial_fix_present": "services now has a strict read-only evidence resolver and port has a typed read catch/access revalidation, but the earlier legacy boolean source checks still run first.",
+      "required_closure": "Propagate read uncertainty through the actual C05 selection/source gates, retaining explicit ACL/target denial. Add an existing-fixture C05 regression faulting evidence.resolve, not only collaboration evidence.context, and qualify in hosted surgical CI. Reordering a strict precheck addresses a persistent outage but does not by itself distinguish an outage racing a later legacy boolean false; do not infer a grant from fresh evidence or suppress an explicit ACL refusal.",
+      "production_selection_factory": "Not independently traced beyond services input.selection; no claim that the fixture grants constitute an installed/native witness.",
+      "root_acknowledged_hold": true,
+      "prior_status": "OPEN_BLOCKER_AT_V4",
+      "final_delta_resolution": "The frozen patch validates strict read evidence before the legacy selection booleans and again before egress. The new persistent shared-evidence C05 regression exercises both the original fixture service and a second real consumer; all are expected unavailable503 until the same resolver recovers. This closes the originally reported persistent fixture path statically.",
+      "residual_external_interface": "An arbitrary external callback that reports false for an unknown error is not by itself a blocker for M42. Review does not require a universal proof for callbacks violating the expected false-as-denial contract. Concrete installed providers below still mask known read failures and therefore remain causal blockers.",
+      "final_resolution": "The early/final strict C05 checks close the persistent evidence case; the installed integrity/history wrappers now propagate uncertainty rather than reclassifying it as false denial. See CR48-07/08 final resolutions."
+    },
+    {
+      "id": "CR48-06",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_IN_OWNED_VIEW",
+      "title": "Authorized reconciliation of a newly created question could falsely revoke on focus",
+      "counterexample": "Create returns200 and records intent.threadId; its following thread read fails. Reconcile action then reads the new thread successfully and sets thread while URL/targetThread still refer to the old target. A focus refresh sees thread.id != URL.reviewThread and calls changedScope().",
+      "resolution": "adoptQuestion() now updates targetThread and the URL together after the known receipt and an authorized read, both in complete() and in question reconciliation. The immutable pending intent/key remain retained; no command is sent automatically.",
+      "runtime_followup": "Root plans to qualify this interval in the existing four Reports journeys."
+    },
+    {
+      "id": "CR48-07",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_IN_FINAL_PRODUCER_DELTA",
+      "title": "Installed review integrity wrapper reclassifies corrected read/proof unavailability as denial",
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "pinned_ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "pinned_blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+      "installed_composition": "createSfReviewServices calls protectSfReviewReads on application.reviews; protectSfReviewReads assigns reviews.read = protectedRead. This wrapper is part of the installed application, not an arbitrary injected authority.",
+      "counterexamples": [
+        "legacyRead: the first corrected read succeeds, the first receipt proof succeeds, the second corrected read returns unavailable503 with the same actor/target. The branch current.status !== ok returns denied/review-integrity-unavailable instead of preserving the unavailable result.",
+        "protectedRead local snapshot path: snapshot() maps any state-read non-ok into undefined. A successful raw read followed by a transient unavailable after-snapshot causes the bounded proof attempts to terminate with denied despite no authorization or immutable target change.",
+        "The wrapper catch clauses also return denied for an exception without distinguishing an unavailable proof from a known failed authority check."
+      ],
+      "required_minimum_patch": "Preserve typed non-ok corrected read results, distinguish unavailable proof/snapshot from a successful proof of missing/replaced target or receipt, and map authorized content/fence drift to a recoverable read result. Keep receipt/digest checks, current request/binding validation and actual denied outcomes; do not weaken fences or return unverified content.",
+      "runtime": "NOT_RUN_BY_REVIEWER",
+      "postimage_blob": "0db2a444c14986cb6d0fec6eb60b279a8e26729d",
+      "resolution": "The wrapper uses typed SnapshotProof results. Legacy reads preserve canonical non-ok and C08 proof non-ok results after checking current request/binding. Snapshot reads preserve uncertainty, return stale for bounded authorized fence drift, and still deny changed immutable digest, receipt, access, missing receipt or real failed authority. Catch branches revalidate known authority and return unavailable unless actual access loss is established.",
+      "test_review": "Seven new installed-wrapper cases read in full: second canonical read unavailable, after-read snapshot proof unavailable, two legitimate replies causing repeated fence drift, revocation overriding unavailable for both reader modes, removed actual C08 receipt denied for both modes. Tests were not run by reviewer."
+    },
+    {
+      "id": "CR48-08",
+      "severity": "high",
+      "status": "RESOLVED_STATIC_IN_FINAL_PRODUCER_DELTA",
+      "title": "Installed historical source gate maps typed C08 read failure or authorized scoped drift to false",
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "pinned_ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "pinned_blob": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+      "caller_path": "apps/cli/src/sucafina-product/review-services.ts",
+      "caller_blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "counterexample": [
+        "A preserved review refers to a legitimate older source version, as in the existing Reports journey after the current source is edited.",
+        "The early strict evidence check succeeds with current authorized historical evidence.",
+        "review-services.sources tries currentSource, which returns false for the older version, then calls the installed historicalSource.",
+        "A C08 reviews read used by captures() returns unavailable during this later gate while actor, review and source authorization remain valid.",
+        "captures() converts the non-ok result to undefined; historicalSource returns false for absent matching/again; sources and authorizeSections return false; corrected port returns denied before reaching its final strict check."
+      ],
+      "second_concrete_branch": "historicalSource also returns false when both scoped reads are authorized but same(current, checked) fails due to legitimate source content/version drift. The caller interprets that false as denial.",
+      "required_minimum_patch": "In installed captures()/historicalSource, propagate inconclusive typed read/storage failure and authorized source drift as recoverable uncertainty (for example a dedicated read-unavailable error caught by the corrected port). Retain false for current ACL/binding denial, missing captures or actual physical/immutable target loss. Keep all real source/history proofs; do not infer permission from a prior successful read.",
+      "runtime": "NOT_RUN_BY_REVIEWER",
+      "postimage_blob": "d879d52e12945465a965986280bef3a242962a50",
+      "resolution": "Installed captures() verifies request/binding, preserves real denied as absence of authority, and throws REVIEW_HISTORY_READ_UNAVAILABLE for other non-ok C08 reads. historicalSource() still returns false for absent/changed immutable capture or failed scoped authorization, but throws REVIEW_HISTORY_CHANGED when both scoped reads remain authorized and their contents differ. The corrected C05/Collaboration readers catch these uncertainties as recoverable; no historical grant is manufactured.",
+      "test_review": "The dedicated history sidecar was still being finalized by its owner at the review boundary. No execution result or independent sidecar review is claimed here."
+    }
+  ],
+  "positive_static_findings": [
+    "Authorized content drift between reader observations is stale/thread-content-changed (HTTP409), and inconclusive storage/evidence read is unavailable (HTTP503). Neither is converted into client access loss.",
+    "Base and recipient paths fence request identity and current authority, reject scope/target replacement, and suppress recipient-denied/read-unknown fallback.",
+    "View stores a serialized mutation payload plus its exact idempotency key, suspends normal actions after inconclusive reads, and replays only from an explicit user button. No silent new CAS or key is acquired for replay.",
+    "Real access errors, scope/thread changes, logout/pagehide and disposal clear private maps, pending intent and textarea values; async completion is fenced by client binding/disposal and view liveness.",
+    "E2E fault helpers first execute real route.fetch with maxRetries0/maxRedirects0 and require real HTTP200/ok before discarding a response. They assert serialized payload/key/CAS equality and a single durable effect.",
+    "The original four Reports journeys, 180000ms per-test budget and retries0 remain; no assertions or budgets were weakened in the reviewed E2E patch.",
+    "Cookie44 parser reuses the exact name/token and four required attributes with uniqueness; it accepts ordering variation without loosening policy.",
+    "Shared source changes remain represented as inert preimage/postimage proposals; reviewer performed no branch or remote edits.",
+    "Installed integrity wrapper now preserves typed unavailable/stale outcomes while retaining immutable C05/C08 receipt and authority fences.",
+    "Installed history gate no longer converts typed C08 read uncertainty or authorized scoped content drift into affirmative denial."
+  ],
+  "evidence_limits": [
+    "This is static analysis, not a runtime reproduction, local test result, hosted Actions result or release approval.",
+    "The generic boundary fixtures exercise real SQLite/admissions/domain producers but do not establish installed/native identity; explicit actor/recipient fixture boundaries remain declared.",
+    "The reviewed RPT04 version proves actual session revocation and protected content removal but did not plant a pending draft/intent before logout. Root is arranging coverage inside that existing journey.",
+    "Future E2E/proposal edits after this snapshot require root review and exact final composed-W qualification; the hashes below describe captured local inputs, not a published candidate.",
+    "All identified semantic blockers in this review are now resolved in the final reviewed producer delta. Static PASS does not establish hosted test success, installed E2E success or atomic publication."
+  ],
+  "captured_inputs": {
+    "owned": [
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/owned/collaboration-client.ts",
+        "bytes": 10806,
+        "sha256": "5fed51a7f1de475d60716e43a4567acd2235c0942c87cd240a2c966494e68c88",
+        "git_blob": "d9c4f9472fee1865a349bdffa8190abdece1a873"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/owned/collaboration-view.ts",
+        "bytes": 28606,
+        "sha256": "808d7a4b768047dd0a8f4f69b73f5ceebec0663b788a20e00f0332883fc7bd54",
+        "git_blob": "ce0f54a96d5d3a02671b20c52e1c0b3832504f42"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/owned/discussion-client.test.ts",
+        "bytes": 16828,
+        "sha256": "fe2d10e9e8771a8403973405a383bb666fea4d1f47e5bcd47d3197c571a8bb02",
+        "git_blob": "f316969255bea603f9187800a0af111c716bdc65"
+      }
+    ],
+    "producer_manifest": {
+      "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/manifest.json",
+      "bytes": 9838,
+      "sha256": "ab215c5026d64da821565540d6885fba8ff71c31669b934f87f6204242878f31",
+      "git_blob": "e89c5d700bbba73ce1e8f4039c8f07243a3cde78"
+    },
+    "producer_patch": {
+      "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/producer-contract.patch",
+      "bytes": 84967,
+      "sha256": "87aadd9b9ae5bb294827829be7a374465a4acc342cfc5a6b6b1845dad855c8d8",
+      "git_blob": "97486dfc87fe94c1ac78bfae9ba499662812e2df"
+    },
+    "producer_postimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "declared_preimage_blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+        "declared_postimage_blob": "b7f69a1b71e40af5204280054cb83d0c2e2970c6",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/collaboration/threads.ts.txt",
+        "bytes": 23731,
+        "sha256": "8a549a57b061a9052ecd1b40c58a07bf70859a6e96cde6f92c8019bd0ff8362a",
+        "git_blob": "b7f69a1b71e40af5204280054cb83d0c2e2970c6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+        "declared_preimage_blob": "2d5cc3832da8d26ad1e30978f6f49c80191620c3",
+        "declared_postimage_blob": "438cbf76c6b230ed5a9b3328ef67cbecc73106c6",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts.txt",
+        "bytes": 9921,
+        "sha256": "5fc3e99a71dedd103a6d5b129c0da1858c7c00fa967085cca8308edeeafa3e2a",
+        "git_blob": "438cbf76c6b230ed5a9b3328ef67cbecc73106c6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+        "declared_preimage_blob": "5d3ad37709fff05625877ecd90768d7253ce3735",
+        "declared_postimage_blob": "134b3bb6dd682c23eceb2c525ba35aa0c0584c39",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts.txt",
+        "bytes": 3046,
+        "sha256": "4aafd7c197a8c77026d960495f12988f5022d3caec23cdd0202b091a76c0ade0",
+        "git_blob": "134b3bb6dd682c23eceb2c525ba35aa0c0584c39"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+        "declared_preimage_blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+        "declared_postimage_blob": "59a923fbf7f04b212b24cd4c32f09d67620bccda",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+        "bytes": 14287,
+        "sha256": "e4dc3b190944d086582deaa77c0512233b95d8882d77847e3670048ad14d5e35",
+        "git_blob": "59a923fbf7f04b212b24cd4c32f09d67620bccda"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+        "declared_preimage_blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+        "declared_postimage_blob": "ccae839a2bc35634554a2ac2721d345671c16f77",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+        "bytes": 5336,
+        "sha256": "e4d8a398481653963c499d9b1044a8e708b5bf37e7ebf0b9e92ca47f655a20e8",
+        "git_blob": "ccae839a2bc35634554a2ac2721d345671c16f77"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "declared_preimage_blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+        "declared_postimage_blob": "15d7c376166dca1056e7f40c7dc08a43f31bc7d0",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+        "bytes": 22165,
+        "sha256": "f939460dd6f0bb6ff6431dc5c352d9eb8d2f55369f9a5eea5bbdf6f99fba277b",
+        "git_blob": "15d7c376166dca1056e7f40c7dc08a43f31bc7d0"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+        "declared_preimage_blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+        "declared_postimage_blob": "4be117a9c5399b35502ba77de0caa7e18fdeff19",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+        "bytes": 17849,
+        "sha256": "8898e3c73ce2c39dcc4aa02164ea92ab167397c771de0c3cb492b06d271d6f8b",
+        "git_blob": "4be117a9c5399b35502ba77de0caa7e18fdeff19"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "declared_preimage_blob": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "declared_postimage_blob": "bde64fb8cb1a25e8f10eb979ed5ff111cdb2042e",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/collaboration/authority.ts.txt",
+        "bytes": 14275,
+        "sha256": "5d4afd9d7262742d5395ad7b8deb2af0f49c1f0570ca667abd14b276a04f2044",
+        "git_blob": "bde64fb8cb1a25e8f10eb979ed5ff111cdb2042e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+        "declared_preimage_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+        "declared_postimage_blob": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/collaboration/host.ts.txt",
+        "bytes": 31226,
+        "sha256": "4369323de3ab4f8f442ce913ff34e89f351daa0b1ad4657dfce67afa873e003a",
+        "git_blob": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "declared_preimage_blob": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+        "declared_postimage_blob": "5123063a55dbb7ab8935ff95e432b8bf1a77fd0d",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/reviews/thread-context.ts.txt",
+        "bytes": 7534,
+        "sha256": "b2e673c83efd9b8b3eae1f6ad9a81e369cec12780bc3892d338bee32952d5c52",
+        "git_blob": "5123063a55dbb7ab8935ff95e432b8bf1a77fd0d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "declared_preimage_blob": "62db836fd93e349f19d007e1933396420a3540ff",
+        "declared_postimage_blob": "16aee8320458ba31507ff6c12ab16df1dc9c744d",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/reviews/port.ts.txt",
+        "bytes": 36392,
+        "sha256": "deaaf90c8690854db6e92c877f09e939d351ca4e4b88d8ab5869c03f2058b11c",
+        "git_blob": "16aee8320458ba31507ff6c12ab16df1dc9c744d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "declared_preimage_blob": "f37a2c540b009a8c5bed90365c267b95303e646b",
+        "declared_postimage_blob": "b4e16a0c948d1232cc73f2785a6ee1d2bc0e3dd7",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/product/reviews/services.ts.txt",
+        "bytes": 4491,
+        "sha256": "6350c3cbb4b09762c0b6963fc319a9a528061c7471e8163c2d12fab507970f38",
+        "git_blob": "b4e16a0c948d1232cc73f2785a6ee1d2bc0e3dd7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+        "declared_preimage_blob": "62cb309bd8f192f8cedc6801869df1b0ad4ba458",
+        "declared_postimage_blob": "11162741f8021b7d79a23c1022c06f636a393f26",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts.txt",
+        "bytes": 8414,
+        "sha256": "5d885ac0d2bfe0f340513e688e8e81ab3f393a489fcb60fe5e5466aa73b94d74",
+        "git_blob": "11162741f8021b7d79a23c1022c06f636a393f26"
+      }
+    ],
+    "boundary_tests": [
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/authority-boundary.test.ts",
+        "bytes": 3502,
+        "sha256": "4964ada7938cfe0fc94a28c12ca14c63fa6d1f9b3550d4e63194530454cd127e",
+        "git_blob": "6c05d1de35d2176530cc70ecfa1f849afe95ff0d"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/lost-response.test.ts",
+        "bytes": 3297,
+        "sha256": "5a3dbf671bacd4b3da34b40bbcd7f1cd3c618bc053a809f0e85d2da6bb7ffcb3",
+        "git_blob": "ae37b110099b63ddde6188b9d89be4947408b087"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/read-boundary-fixture.ts",
+        "bytes": 7089,
+        "sha256": "5a746f8727bc319b09325a58a22160002d69d7b2f279e8c388cdc6fbfa17ba9d",
+        "git_blob": "5e24513ec7f015e52d0b944011ae25d1529ac6e2"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/read-boundary.test.ts",
+        "bytes": 4361,
+        "sha256": "d7bae62bc7bfa8a9c8d45162d5fb21de57410ac75988a2564239c4e25e87af03",
+        "git_blob": "332b91ee3bac6303073f397e72d7f09afcd134da"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/review-read-boundary-fixture.ts",
+        "bytes": 9580,
+        "sha256": "2627103111d38dde7c75891be73bdc82a51f27ee48d34e6291fecde983c5194d",
+        "git_blob": "6d03d60364ea5cac477fa0623e749c7f9ba947bc"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/review-read-boundary.test.ts",
+        "bytes": 4740,
+        "sha256": "625a9c5952ffed7bc3aac7518ebe37008413d30ca10321c17a94b63e5bb0a2b5",
+        "git_blob": "af406d7b13fc70f18abc08a1f4fd0978c114d8d9"
+      }
+    ],
+    "e2e_postimages": [
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-e2e/postimages/human-answer-flow.ts",
+        "bytes": 13169,
+        "sha256": "c7559b59f8c115b4dd0ac4451ea02754c20f3b9fc512cc5bb993462a8c666a0a",
+        "git_blob": "5872918090de4605ad906c848aed68ac6f03c040"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-e2e/postimages/lost-edit-response.ts",
+        "bytes": 6901,
+        "sha256": "7977a11cccd2fa9968fba86a7284144d54ab5ab7d22cdf54efe432eec74193e3",
+        "git_blob": "ebbf5b9365e6f5268f00004c1bdf766ecfca4dad"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-e2e/postimages/production-installation.ts",
+        "bytes": 12778,
+        "sha256": "bcaa39d986cae374ebd59957a35f7814db5fd3ac2ddc6104ec6b464acdc18934",
+        "git_blob": "977dc142768d8e7d79d6862a3b2353934dfb833a"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-e2e/postimages/read-reconciliation.ts",
+        "bytes": 6740,
+        "sha256": "9165d013e59f25e4ee287b96d8eb35d6f8c2c02dc3151fd4800f29e022cafb1e",
+        "git_blob": "b145caac8a47e029aded4418253488d250d680e1"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-e2e/postimages/reports.spec.ts",
+        "bytes": 9328,
+        "sha256": "d74ab1b66b60d39bd661ecd1c8851c130ad5a760824290342e11d6a093cbb851",
+        "git_blob": "5084806ef5e7a8373dd753ba4acb7d463d9f8132"
+      }
+    ],
+    "cookie44_dependency": {
+      "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-e2e/dependencies/operator-session-cookie.ts",
+      "bytes": 981,
+      "sha256": "c544459449f16159041d8f20964978e0e943a9fd4283c830bc9747dffb3fbeb2",
+      "git_blob": "81a6863f68fc2b83c4b331c19920c59267b5d060"
+    },
+    "final_producer_manifest": {
+      "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/manifest.json",
+      "bytes": 11972,
+      "sha256": "38d996a480f7591711fe262d4bf092e2cf37bba20c9ec301e25a8c5eb2b981cd",
+      "git_blob": "6cc606b4394db5912c0756c4004335c174b081d6"
+    },
+    "final_producer_patch": {
+      "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/producer-contract.patch",
+      "bytes": 101216,
+      "sha256": "d37236df83dc1317ef9eeea4a6d043e5048609d5e980d476decadd63089d6348",
+      "git_blob": "0bde9fe92c3f80386d9f8ddae902d9609f5bd8c0"
+    },
+    "final_installed_provider_postimages": [
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "declared_preimage_blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+        "declared_postimage_blob": "0db2a444c14986cb6d0fec6eb60b279a8e26729d",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/apps/cli/src/sucafina-product/review-read-integrity.ts.txt",
+        "bytes": 13093,
+        "sha256": "38a320c21ff0c7b17d00a65fba7848257be6c49c0faaac4dee0ca64729e9bb48",
+        "git_blob": "0db2a444c14986cb6d0fec6eb60b279a8e26729d"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "declared_preimage_blob": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+        "declared_postimage_blob": "d879d52e12945465a965986280bef3a242962a50",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/apps/cli/src/sucafina-product/review-history.ts.txt",
+        "bytes": 14832,
+        "sha256": "bef7a52745e3d08854b419318018de62edcbf77a45828a5cafee8cc8901cd9d1",
+        "git_blob": "d879d52e12945465a965986280bef3a242962a50"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+        "declared_preimage_blob": "012c83ed8b6382bebc0046526985f2f900f04035",
+        "declared_postimage_blob": "d3b87293664682a380188239baf0f82e14a21db9",
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-producer/postimage/apps/cli/src/sucafina-product/review-calculation-history.ts.txt",
+        "bytes": 5656,
+        "sha256": "5482e8426b6a3f89a5de675992ce3d66153409128cce490b3021416e87a40de7",
+        "git_blob": "d3b87293664682a380188239baf0f82e14a21db9"
+      }
+    ]
+  },
+  "remote_read_evidence": [
+    {
+      "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "blob": "62db836fd93e349f19d007e1933396420a3540ff",
+      "scope": "lines1-190 including complete read implementation"
+    },
+    {
+      "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+      "blob": "f37a2c540b009a8c5bed90365c267b95303e646b",
+      "scope": "full"
+    },
+    {
+      "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "blob": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+      "scope": "full"
+    },
+    {
+      "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+      "blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+      "scope": "full"
+    },
+    {
+      "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "scope": "full"
+    },
+    {
+      "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "blob": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+      "scope": "full"
+    },
+    {
+      "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+      "scope": "full"
+    }
+  ],
+  "final_delta_review": {
+    "captured_at": "2026-11-14T23:32:42.248230+00:00",
+    "requested_frozen_patch_sha256": "6a4a86378ea38043c2d91bc5fc5fa009746acb491970afc249cdd54fda291537",
+    "observed_patch_sha256": "6a4a86378ea38043c2d91bc5fc5fa009746acb491970afc249cdd54fda291537",
+    "requested_patch_matched_at_initial_read": true,
+    "producer_delta_since_initial_review": [
+      "modules/sucafina/Sucafinav1/product/reviews/port.ts"
+    ],
+    "new_tests_read": [
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/review-read-boundary-fixture.ts",
+        "bytes": 9580,
+        "sha256": "2627103111d38dde7c75891be73bdc82a51f27ee48d34e6291fecde983c5194d",
+        "git_blob": "6d03d60364ea5cac477fa0623e749c7f9ba947bc"
+      },
+      {
+        "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/review-read-boundary.test.ts",
+        "bytes": 6669,
+        "sha256": "23c90baddc6b7bb8b4e8918106afb2187579116dd62d2119dfac2d5e2b5c0a19",
+        "git_blob": "c874e2070e7d92b118eaa8fffe0caf6baf9b0144"
+      }
+    ],
+    "boundary_case_count": 26,
+    "case_count_basis": "Static expansion: read boundary8 + lost response2 + authority boundary6 + C05 boundary10; not an executed count.",
+    "persistent_shared_resolver_regression": "Reviewed complete: real original C05 fixture and second services consumer, resolver-wide unavailable injection, unavailable/no value at service/pin/HTTP, then restored resolver returns the original review and pin.",
+    "test_limits": "New tests cover the originally reported fixture case, admission faults, real target mutation negatives, explicit evidence revocation and recovery. They do not yet exercise installed protectSfReviewReads or createSfReviewHistory causal branches.",
+    "runtime": "NOT_RUN_BY_REVIEWER",
+    "open_blockers": [
+      "CR48-07",
+      "CR48-08"
+    ],
+    "root_disposition": "Root acknowledged both installed causal paths and routed complete patches plus focused real tests; reviewer stopped further investigation to free the qualification slot.",
+    "superseded_by": "limited_final_review"
+  },
+  "open_blockers": [],
+  "limited_final_review": {
+    "captured_at": "2026-11-14T23:38:18.001919+00:00",
+    "scope": [
+      "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "apps/cli/src/sucafina-product/review-history.ts",
+      "apps/cli/src/sucafina-product/review-calculation-history.ts",
+      "mission48/proposal-tests/installed-read-integrity.test.ts"
+    ],
+    "producer_patch_sha256": "d37236df83dc1317ef9eeea4a6d043e5048609d5e980d476decadd63089d6348",
+    "producer_target_count": 16,
+    "semantic_verdict": "PASS_FOR_IDENTIFIED_M42_CORRECTION_AND_REVIEWED_CAUSAL_DELTAS",
+    "resolved_findings": [
+      "CR48-07",
+      "CR48-08"
+    ],
+    "open_blockers": [],
+    "integrity_assertions_retained": [
+      "C08 receipt must exist and match the immutable C05 digest.",
+      "Caller request, binding, principal/access/policy and current authority remain fenced.",
+      "Present changed immutable target, receipt or access is denied.",
+      "No unavailable proof releases protected content.",
+      "Only stable authorized proof is cached within the same read scope.",
+      "The bounded two-read reconciliation performs no command mutation."
+    ],
+    "history_assertions_retained": [
+      "Captures still require actual C08 receipts and current actor binding.",
+      "Absent capture, lost scoped access and immutable captured-review change still refuse historical authorization.",
+      "Inconclusive C08 read and authorized scope-content drift propagate uncertainty instead of false denial."
+    ],
+    "calculation_type_only": "authority input narrowed from the full product authority to Pick<..., host | state>; executable calculation-history body unchanged.",
+    "installed_integrity_cases_read": 7,
+    "installed_integrity_test": {
+      "local_path": "/workspace/scratch/0b7fd2da8e9c/mission48/proposal-tests/installed-read-integrity.test.ts",
+      "bytes": 6592,
+      "sha256": "a00127e4f16483b32f6d3cf03c11555a1e048d0374eb0bc8769cb5b82e4b9baf",
+      "git_blob": "65dd8c157ad31d288ee0f9142e1b41e08221de7c"
+    },
+    "history_sidecar": "Pending finalization by boundary owner at this review boundary; not independently reviewed here.",
+    "runtime": "NOT_RUN_BY_REVIEWER",
+    "hosted_runtime_owner": "/root",
+    "atomic_release": "Not authorized by a static review alone; root must qualify the exact composed W and four Reports journeys, reconcile final hashes, then release the coherent set."
+  }
+}

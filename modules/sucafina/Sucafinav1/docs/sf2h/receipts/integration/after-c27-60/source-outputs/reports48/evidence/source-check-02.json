@@ -1,0 +1,151 @@
+{
+  "schema": "orchestra-sf.reports48.source-check.v1",
+  "id": "E-M48-SOURCE-CHECK-02",
+  "run": 43663977131,
+  "job": 132659187470,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663977131",
+  "conclusion": "failure",
+  "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+  "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+  "executed_sha": "9235894b095a2cf4a90184b4606949f75a70279d",
+  "executed_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+  "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "ref": "astra-check-wp07",
+  "workflow": ".github/workflows/astra-wp07-check.yml",
+  "workflow_blob": "28c453f4b7735f944e1237715e399e955d86546c",
+  "source_equivalence": {
+    "method": "GitHub MCP source8 ac72112c to same-tree validation child9235894b; zero changed files",
+    "changed_files": 0
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "directory": "modules/sucafina",
+    "exit_code": 2,
+    "diagnostics": 186,
+    "prior36_diagnostics": 137,
+    "identical_path_code_message": 136,
+    "new_test_diagnostics": 49,
+    "changed_text_on_unchanged_wp06_file": 1,
+    "diagnostic_receipt": "evidence/source-check-02-diagnostics.json",
+    "assessment": "The186 diagnostic headlines are exactly equal in order to source-CHECK01. This remains a FAIL on the uncomposed source lane; earlier triage49 missing dependency/API or derivative own-test errors still does not prove a composed typecheck PASS.",
+    "prior_check01_diagnostics": 186,
+    "identical_ordered_diagnostic_headlines": true,
+    "typecheck_artifact_bytes_identical_to_check01": true
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "directory": ".",
+    "exit_code": 1,
+    "rules": 78,
+    "changed_paths": 950,
+    "gate": 3,
+    "warn": 12,
+    "errors": 0,
+    "findings": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/client-and-collection.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 884,
+        "mission48_owned": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/nominal-03.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 885,
+        "mission48_owned": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/source-guards.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 886,
+        "mission48_owned": false
+      }
+    ],
+    "own_mission48_gates": 0,
+    "historical_out_of_scope_gates": 3,
+    "causal_remediation": "Four own raw logs were retired at source6 d9e2b517 with exact immutable history references. CHECK02 now confirms the reduction7→3; no suppression, renaming or legacy-path deletion."
+  },
+  "export_fixtures": {
+    "status": "generated",
+    "command": "bun run modules/sucafina/Sucafinav1/test/product/wp07/generate-export-fixtures.ts",
+    "exit_code": 0,
+    "visual_or_browser_credit": false,
+    "manifest": {
+      "schema": "wp07-export-inspection-v1",
+      "fixture": "explicit synthetic data; 25 projects, long notes, monthly financial trajectory, empty section and preserved human comment",
+      "productSha": "9235894b095a2cf4a90184b4606949f75a70279d",
+      "runId": "43663977131",
+      "runAttempt": "1",
+      "contentExtraction": "passed",
+      "visualInspection": "pending; render and inspect these exact files",
+      "files": [
+        {
+          "name": "preserved-long.pptx",
+          "sha256": "f737782e7d2925ef61fd39b28cf855f24f5bb69c35ae4f26697367acc90593c7",
+          "bytes": 1063233,
+          "format": "pptx",
+          "kind": "preserved",
+          "selectedRecords": 26,
+          "slides": 39,
+          "figures": 1,
+          "extractedTextSha256": "7de5d5ada23b1b52bc7868bd3e3e253da6c768f674b1827becdb91e132121d3a"
+        },
+        {
+          "name": "legacy-long.pptx",
+          "sha256": "088d65f10843ea4cb323a550d83349809355787a07d30d04d83f69ba30550ede",
+          "bytes": 399219,
+          "format": "pptx",
+          "kind": "legacy",
+          "selectedRecords": 25,
+          "slides": 26,
+          "figures": 0,
+          "extractedTextSha256": "916d6aa734ed022187d7f7381fc0a9e4361d01ee1d8c718bab3209636676dbe6"
+        },
+        {
+          "name": "preserved-long.docx",
+          "sha256": "0e31e581abf5e4588e2f383e68eda1bb62c5811cd756c99824efb1a9602e9e90",
+          "bytes": 15274,
+          "format": "docx",
+          "kind": "preserved",
+          "selectedRecords": 26,
+          "slides": null,
+          "figures": 1,
+          "extractedTextSha256": "aaf3cb909d7c67042ffde410e7217433812c737775d29e44e56f359569f47f3c"
+        },
+        {
+          "name": "legacy-long.docx",
+          "sha256": "13affcb2284c1be1835912a74895c96c8245146b48d5e08a97e5a925c0696a3e",
+          "bytes": 9415,
+          "format": "docx",
+          "kind": "legacy",
+          "selectedRecords": 25,
+          "slides": null,
+          "figures": 0,
+          "extractedTextSha256": "e74e9e767adeefc4b232c8aae273b6dd79de420de3daa959f44f15b6d0e5dad5"
+        }
+      ]
+    }
+  },
+  "artifact": {
+    "id": 14141083647,
+    "name": "wp07-check-9235894b095a2cf4a90184b4606949f75a70279d-1",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14141083647",
+    "zip_bytes": 88372,
+    "zip_sha256": "d2a3e938cdd14248f766f9fde51f7de67e2232ef85252ab4e2e0f56a59c5d833",
+    "download": "Returned GitHub MCP download URI only; ZIP digest verified before extraction",
+    "product_sha_verified": true,
+    "product_tree_verified": true,
+    "guard_base_verified": true
+  },
+  "job_log": {
+    "job_id": 132659187470,
+    "canonical_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663977131/job/132659187470",
+    "bytes": 146646,
+    "sha256": "a11cd1241a8b12fd83ad051787847ab2b286362b19827c9ee0c33c4188bd35d8",
+    "retention": "Raw output remains analysis material; repository receipt preserves actual diagnostics, guard findings and immutable artifact identities."
+  },
+  "scope": "Exact source8-tree CHECK through the existing unchanged interface. FAIL remains for source; this is not a compiler45 check on composedW6. No shared/compiler45 or Agenda39 live path changed. Exports are synthetic inspection fixtures, not successful Reports browser journeys."
+}

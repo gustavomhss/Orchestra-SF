@@ -1,0 +1,319 @@
+{
+  "schema": "sf-mission48-installed-post-body-read-review-v1",
+  "state": "NO_CAUSE_DEMONSTRATED_BY_READ_ONLY_REVIEW",
+  "observed": {
+    "evidence": "evidence/diagnostic-07-transport.json",
+    "request": {
+      "method": "POST",
+      "mode": "review-agenda",
+      "sameOrigin": true,
+      "samePath": true,
+      "observedAtMs": 40
+    },
+    "responseObserved": false,
+    "requestFailedAtMs": 176249,
+    "totalMs": 176250,
+    "failureCode": "net::ERR_CONNECTION_REFUSED",
+    "limit": "Failure coincides with timeout/teardown and is not proof of initial connection refusal. Browser request event does not prove server handler entry or body EOF."
+  },
+  "chain": [
+    {
+      "stage": "CLI listener",
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "finding": "Node createServer adapted by NodeHttpServer.layer; not a direct Bun.serve listener."
+    },
+    {
+      "stage": "Effect installation adapter",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "finding": "HttpServerRequest.toWeb(incoming), then installation.handler(new Request(web,{signal})); no explicit json/text/formData/body reader or clone/cancel before handler."
+    },
+    {
+      "stage": "Global middleware",
+      "paths": [
+        "packages/server/src/body-limit.ts",
+        "packages/server/src/host-policy.ts",
+        "packages/server/src/cors.ts"
+      ],
+      "finding": "BodyLimit checks declared length and provides MaxBodySize; host/CORS inspect headers. No explicit payload read in reviewed repository middleware."
+    },
+    {
+      "stage": "Local installation",
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "finding": "For /dashboard, auth handler returns before body access; operator.prepare is empty; identity.person reads session storage. Utility body readers are gated to notifications/backups. POST JSON response bypasses localChrome."
+    },
+    {
+      "stage": "Module application",
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "finding": "application.product(request,surface) is awaited before readCommand and before page transaction. If product handles the request, generic body parser never runs."
+    },
+    {
+      "stage": "Installed dispatcher chain",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "finding": "Analysis, decision, procurement scenario, portfolio/reconciliation, baseline, memory, work and extended analysis-choice handlers all return for sf=review-agenda before touching body."
+    },
+    {
+      "stage": "Extended review read scope",
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "finding": "run establishes AsyncLocalStorage request state only; it does not hold a LocalStore/SQLite transaction while body is read."
+    },
+    {
+      "stage": "Reports body consumer",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "finding": "The first observed consumer gets request.body.getReader and awaits reader.read repeatedly until done (lines58-68), then parses bytes and admits/create agenda. There is no second consumer on this route."
+    }
+  ],
+  "effect_adapter": {
+    "root_catalog": "effect and @effect/platform-node 4.0.0-beta.83, Bun packageManager1.3.14",
+    "sequence": [
+      "HttpServerRequest.toWeb uses current Effect context and toWebResult.",
+      "toWebResult creates RequestInit.body=Stream.toReadableStreamWith(self.stream,context), duplex=half.",
+      "NodeHttpIncomingMessage.stream wraps NodeStream.fromReadable(evaluate=>this.source).",
+      "NodeStream readableToPullUnsafe checks readableEnded, consumes read(), and observes readable/end/error.",
+      "Stream.toReadableStreamWith enqueues chunks on pull and closes/errors the Web stream when its worker fiber ends."
+    ],
+    "conclusion": "This is a real streaming boundary absent from the passing direct handler test. Source review does not demonstrate an unconditional deadlock, body double-read, missing end event or failed cancellation during this run.",
+    "repository_patch": "patches/effect@4.0.0-beta.83.patch changes interruption core, HttpApiSchema and Socket; no direct edits to the inspected body stream adapter."
+  },
+  "comparison_with_pass": {
+    "test": "test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+    "call": "extended.productHttp(new Request(...,{method:'POST',body:JSON.stringify(payload)}),'dashboard')",
+    "proven": "Real agenda and preserve factories succeed with a preconstructed JSON body and one Budget Overview section.",
+    "not_proven": [
+      "Actual CLI Node/Effect/IncomingMessage adapter",
+      "Browser TCP delivery/body EOF",
+      "Local-operator session/secrets wrapper",
+      "Three-topic25-record workload"
+    ],
+    "no_result_transfer": true
+  },
+  "bounded_wait": {
+    "point": "reviews/http.ts reader.read() at line63 is an await without a body-specific deadline.",
+    "conditional": "A never-ending input stream could keep this await pending.",
+    "evidence_limit": "No server phase markers, byte counts or EOF observation exist in actual07; this conditional possibility is not a diagnosis and does not justify a speculative code change."
+  },
+  "C27": {
+    "installation_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "local_operator_path": "No transport configured, so sanitized===incoming, request===web; the same toWeb/new Request body adaptation is retained.",
+    "status": "Root's C27 hosted diagnostic remains required; no outcome asserted here."
+  },
+  "sources": [
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+      "coverage": "full"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "coverage": "full"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "coverage": "request handler and product composition; utility body reader gating"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "coverage": "full"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "modules/sucafina/Sucafinav1/index.ts",
+      "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+      "coverage": "full"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "coverage": "routing through product before generic body parser and transaction"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "packages/server/src/routes.ts",
+      "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+      "coverage": "full composition"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "packages/server/src/body-limit.ts",
+      "blob": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+      "coverage": "full"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "packages/server/src/host-policy.ts",
+      "blob": "c30e73a6c87799cd870af893cf8c60a9a3b47be9",
+      "coverage": "full"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "packages/server/src/cors.ts",
+      "blob": "767f94807b1c6437467f6f1e35bd784fbd004b16",
+      "coverage": "full"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "coverage": "exact productHttp chain and factory origins"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "blob": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "blob": "ba5bb69269f8bb5d679515b7de6c76a1768e1a63",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/baseline-services.ts",
+      "blob": "72f36763f25188b0304e9a9e513d1ae61c3c600a",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/memory-http.ts",
+      "blob": "f727d5250024df7338491321c36e7055d7c18f74",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/work-http.ts",
+      "blob": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/analysis-choice-http.ts",
+      "blob": "ade98212eba04a8fe35624ea7e96214ec00a92ce",
+      "coverage": "route guard before payload consumption"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "blob": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "coverage": "productHttp composition"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "blob": "000e1aaedcc929f94e0dcb45d1e63267f1401531",
+      "coverage": "body reader and review-agenda branch"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "package.json",
+      "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "coverage": "exact runtime dependency catalogue and patch registry"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "path": "patches/effect@4.0.0-beta.83.patch",
+      "blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+      "coverage": "changed paths and core delta"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/effect/src/unstable/http/HttpServerRequest.ts",
+      "blob": "83e6c3e6f9d0f12ce2eb4ccec969459f9f99c7a4",
+      "coverage": "toWebResult/toWeb"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/effect/src/Stream.ts",
+      "blob": "ebeb0909c00a3ea84354eefa14c5cd4c56ef1c17",
+      "coverage": "toReadableStreamWith"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/platform-node/src/NodeHttpServer.ts",
+      "blob": "f6838fb329942f4db1f3894eecf5e3d3ee57b28a",
+      "coverage": "request construction, request fiber and close interrupt"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/platform-node/src/NodeHttpIncomingMessage.ts",
+      "blob": "2461e86c785d6f7435c8e4cc533f450329d9cc44",
+      "coverage": "full"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/platform-node/src/NodeStream.ts",
+      "blob": "c98e67d0ca3372705e5a8ab40b3e91609e8d43b0",
+      "coverage": "re-export"
+    },
+    {
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/platform-node-shared/src/NodeStream.ts",
+      "blob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+      "coverage": "fromReadable/fromReadableChannel/readableToPullUnsafe"
+    }
+  ],
+  "actions": {
+    "product_edits": false,
+    "speculative_patch": false,
+    "local_tests": false,
+    "remote_tests": false,
+    "remote_writes": false
+  },
+  "conclusion": "Hypothesis of duplicate or circular body consumption is not supported by inspected code. A pending streaming read remains distinguishable only with server phase evidence; do not attribute nominal07 to it."
+}

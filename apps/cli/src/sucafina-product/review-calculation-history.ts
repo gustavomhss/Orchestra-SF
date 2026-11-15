@@ -8,7 +8,7 @@ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract
 
 /** Proves the original run and current case access; it never reissues a fresh calculation. */
 export function createSfReviewCalculationHistory(input: {
-  authority: ReturnType<typeof createSfProductAuthority>
+  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state">
   authorizeCase?: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
 }) {
   return async (ref: Extract<BusinessEvidenceRef, { kind: "calculation" }>, call: TrustedDomainContext) => {

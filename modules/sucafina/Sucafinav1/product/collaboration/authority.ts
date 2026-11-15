@@ -42,6 +42,25 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     if (!authorize || !validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
     return await authorize(selected.reviewContext!, selected, context).catch(() => false) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
   }
+  // Read authorization preserves uncertainty separately from explicit refusal.
+  // Legacy boolean probes below still negotiate actor-scoped reissue; these
+  // strict readers never grant access from an incomplete provider response.
+  const readSources = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, historical = false) => {
+    if (!refs.length || refs.some((ref) => !ref || typeof ref !== "object" || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) || !await input.host.revalidate(context)) return false
+    const resolved = await input.evidence.context({ refs: structuredClone(refs) }, context)
+    if (!await input.host.revalidate(context) || resolved.some((item) => ["revoked", "replaced", "missing", "invalid"].includes(item.state))) return false
+    if (resolved.length !== refs.length || resolved.some((item) => item.state !== "fresh" && !(historical && item.state === "historical" && !!item.currentRef && !!item.authorizedProjection && !!item.differences))) throw new Error("COLLABORATION_SOURCE_READ_UNAVAILABLE")
+    return resolved.every((item, index) => item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(refs[index])) && await input.host.revalidate(context)
+  }
+  const readHistoricalSources = (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => readSources(refs, context, true)
+  const readReviewThreadBasis = async (basis: ThreadSourceContext, context: TrustedDomainContext) => {
+    if (!basis.reviewContext) return true
+    const authorize = input.authorizeReviewThreadContext
+    const selected = structuredClone(basis)
+    if (!validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
+    if (!authorize) throw new Error("COLLABORATION_REVIEW_AUTHORITY_UNAVAILABLE")
+    return await authorize(selected.reviewContext!, selected, context) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
+  }
   const reviewRecipientSources = async (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext, requireSelfLease = false) => {
     const selected = structuredClone(basis)
     if (!recipientRef.trim() || !selected.reviewContext || !validThreadSourceContext(selected) || !await reviewThreadBasis(selected, context) || !await historicalSources(selected.evidenceRefs, context)) return false
@@ -70,7 +89,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     return true
   }
   const recipientSources = createRecipientSourceAuthorizer({ sources, revalidate: input.host.revalidate, recipientAuthority: input.recipientAuthority })
-  const recipient = async (id: string, context: TrustedDomainContext) => {
+  const recipient = async (id: string, context: TrustedDomainContext, strictRead = false) => {
     const request = input.host.requestFor(context)
     if (!request || !id.trim() || !await input.host.revalidate(context)) return undefined
     const environment = await input.host.environment(request)
@@ -80,7 +99,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       const actor = await input.host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
       const access = object(snapshot.data.access)
       return { commit: false, value: !!actor && actor.id === context.binding.principalRef && !actor.id.startsWith("local:") && Object.hasOwn(access, id) && !!access[id] && typeof access[id] === "object" && !Array.isArray(access[id]) }
-    }, { signal: request.signal }).catch(() => false)
+    }, { signal: request.signal }).catch((error: unknown) => { if (strictRead) throw error; return false })
     if (!allowed || !await input.host.revalidate(context)) return undefined
     return { id: person.id, name: person.name }
   }
@@ -88,7 +107,11 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     sources,
     historicalSources,
     reviewThreadBasis,
+    readSources,
+    readHistoricalSources,
+    readReviewThreadBasis,
     recipient,
+    readRecipient: (id: string, context: TrustedDomainContext) => recipient(id, context, true),
     recipientSources,
     reviewRecipientSources,
     checkRecipientAtCommit: createRecipientCommitCheck(input.recipientAuthority),
@@ -105,12 +128,12 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       if (!Array.isArray(thread.evidenceRefs) || thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
       const pin = thread.messages ? thread.messages[0]?.sourceContext?.reviewContext : thread.reviewContext
       const basis = pin ? { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: thread.evidenceRefs, reviewContext: pin } : undefined
-      if (basis && (!validThreadSourceContext(basis) || !await reviewThreadBasis(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
-      const authorizeSources = pin ? historicalSources : sources
+      if (basis && (!validThreadSourceContext(basis) || !await (mode === "read" ? readReviewThreadBasis : reviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
+      const authorizeSources = mode === "read" ? pin ? readHistoricalSources : readSources : pin ? historicalSources : sources
       if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await authorizeSources(thread.evidenceRefs, context)) return false
       const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
       if (messageRefs.length && !await authorizeSources(messageRefs, context)) return false
-      if (thread.recipientRef && (!await recipient(thread.recipientRef, context) || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
+      if (thread.recipientRef && (!await recipient(thread.recipientRef, context, mode === "read") || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
       if (!thread.messages) return mode === "write"
       return thread.recipientRef === context.binding.principalRef || thread.messages.some((message) => message.authorRef === context.binding.principalRef)
     },

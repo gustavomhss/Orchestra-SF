@@ -30,6 +30,21 @@ export function createReviewServices(input: {
     now: input.now,
     requestFor: input.host.requestFor,
     ...input.selection,
+    revalidateReadAccess: input.host.revalidate,
+    revalidateReadEvidence: async (context, refs) => {
+      const references = new Map(refs.map((ref) => [canonicalSfValue(ref), structuredClone(ref)]))
+      if (!await input.host.revalidate(context)) return false
+      const resolutions = await Promise.all([...references].map(async ([expected, ref]) => {
+        const result = await input.evidence.resolve(ref, context).catch(() => undefined)
+        if (!result) return "unavailable"
+        if (["revoked", "replaced", "missing", "invalid"].includes(result.state)) return "denied"
+        if (result.state !== "fresh" && result.state !== "historical") return "unavailable"
+        return result.accessRevision === context.binding.accessRevision && canonicalSfValue(result.ref) === expected ? "ok" : "denied"
+      }))
+      if (!await input.host.revalidate(context) || resolutions.includes("denied")) return false
+      if (resolutions.some((status) => status !== "ok")) throw new Error("REVIEW_EVIDENCE_READ_UNAVAILABLE")
+      return true
+    },
     revalidateEvidence: async (context, refs) => {
       // Many captured cells refer to the same immutable source. Resolve each complete
       // reference once per pass; never reuse authorization across passes or requests.

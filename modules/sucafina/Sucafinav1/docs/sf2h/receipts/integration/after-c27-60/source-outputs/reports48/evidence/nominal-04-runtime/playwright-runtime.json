@@ -1,0 +1,430 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+    "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "bundle": "production",
+      "ci": {
+        "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+        "commitHash": "f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+        "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43657599973"
+      },
+      "gitCommit": {
+        "shortHash": "f6793f03",
+        "hash": "f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+        "subject": "test(ci): qualify all four Reports journeys after causal form repair",
+        "body": "test(ci): qualify all four Reports journeys after causal form repair",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794701964000
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794701964000
+        },
+        "branch": "ci-run-linux-astra-wp07-c44a3b80-37251a43-m48-04"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "bundle": "production",
+          "ci": {
+            "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+            "commitHash": "f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+            "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43657599973"
+          },
+          "gitCommit": {
+            "shortHash": "f6793f03",
+            "hash": "f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+            "subject": "test(ci): qualify all four Reports journeys after causal form repair",
+            "body": "test(ci): qualify all four Reports journeys after causal form repair",
+            "author": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794701964000
+            },
+            "committer": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794701964000
+            },
+            "branch": "ci-run-linux-astra-wp07-c44a3b80-37251a43-m48-04"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+        "testIgnore": [
+          "performance/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html"
+      ],
+      [
+        "line"
+      ],
+      [
+        "json"
+      ],
+      [
+        "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "sucafina/reports.spec.ts",
+      "file": "sucafina/reports.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CI-UI-REPORTS · real preserved dossier",
+          "file": "sucafina/reports.spec.ts",
+          "line": 19,
+          "column": 13,
+          "specs": [
+            {
+              "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10692,
+                      "error": {
+                        "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n",
+                        "stack": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:24:23",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                          "column": 90,
+                          "line": 37
+                        },
+                        "snippet": "   at sucafina/reports-support/review-flow.ts:37\n\n\u001b[0m \u001b[90m 35 |\u001b[39m   \u001b[90m// This journey uses that installed composition and its preserved selection.\u001b[39m\n \u001b[90m 36 |\u001b[39m   \u001b[36mconst\u001b[39m preparation \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"region\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Prepare review\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 37 |\u001b[39m   \u001b[36mawait\u001b[39m expect(preparation\u001b[33m,\u001b[39m \u001b[32m\"Generate Report opens the installed ReviewPreparationView\"\u001b[39m)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 38 |\u001b[39m   \u001b[36mconst\u001b[39m load \u001b[33m=\u001b[39m preparation\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Load selection\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n \u001b[90m 39 |\u001b[39m   \u001b[36mawait\u001b[39m expect(load)\u001b[33m.\u001b[39mtoBeEnabled()\n \u001b[90m 40 |\u001b[39m   \u001b[36mconst\u001b[39m pendingAgenda \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForResponse(responseFor(app\u001b[33m.\u001b[39mdashboardURL\u001b[33m,\u001b[39m \u001b[32m\"review-agenda\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"POST\"\u001b[39m))\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 90,
+                            "line": 37
+                          },
+                          "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:37\n\n  35 |   // This journey uses that installed composition and its preserved selection.\n  36 |   const preparation = page.getByRole(\"region\", { name: \"Prepare review\", exact: true })\n> 37 |   await expect(preparation, \"Generate Report opens the installed ReviewPreparationView\").toBeVisible()\n     |                                                                                          ^\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n  40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:24:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Prepare and explicitly preserve the authorized dossier",
+                          "duration": 10624,
+                          "error": {
+                            "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n",
+                            "stack": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:24:23",
+                            "location": {
+                              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                              "column": 90,
+                              "line": 37
+                            },
+                            "snippet": "   at sucafina/reports-support/review-flow.ts:37\n\n\u001b[0m \u001b[90m 35 |\u001b[39m   \u001b[90m// This journey uses that installed composition and its preserved selection.\u001b[39m\n \u001b[90m 36 |\u001b[39m   \u001b[36mconst\u001b[39m preparation \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"region\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Prepare review\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 37 |\u001b[39m   \u001b[36mawait\u001b[39m expect(preparation\u001b[33m,\u001b[39m \u001b[32m\"Generate Report opens the installed ReviewPreparationView\"\u001b[39m)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 38 |\u001b[39m   \u001b[36mconst\u001b[39m load \u001b[33m=\u001b[39m preparation\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Load selection\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n \u001b[90m 39 |\u001b[39m   \u001b[36mawait\u001b[39m expect(load)\u001b[33m.\u001b[39mtoBeEnabled()\n \u001b[90m 40 |\u001b[39m   \u001b[36mconst\u001b[39m pendingAgenda \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForResponse(responseFor(app\u001b[33m.\u001b[39mdashboardURL\u001b[33m,\u001b[39m \u001b[32m\"review-agenda\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"POST\"\u001b[39m))\u001b[0m"
+                          }
+                        }
+                      ],
+                      "startTime": "2026-11-15T00:22:14.709Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6MWY4YmYwNmMtMzU3My00Yzg5LTliYjItMTNkNjM1OGNhNzgwOjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiZjY3OTNmMDM4ZWZmODhkYmE1YjYzMjllZWJjOGVhNTBjYzVmM2Y4MiIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                        "column": 90,
+                        "line": 37
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-fd019dc4c55e77b430c2",
+              "file": "sucafina/reports.spec.ts",
+              "line": 22,
+              "column": 3
+            },
+            {
+              "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10730,
+                      "error": {
+                        "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n",
+                        "stack": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:38:23",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                          "column": 90,
+                          "line": 37
+                        },
+                        "snippet": "   at sucafina/reports-support/review-flow.ts:37\n\n\u001b[0m \u001b[90m 35 |\u001b[39m   \u001b[90m// This journey uses that installed composition and its preserved selection.\u001b[39m\n \u001b[90m 36 |\u001b[39m   \u001b[36mconst\u001b[39m preparation \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"region\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Prepare review\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 37 |\u001b[39m   \u001b[36mawait\u001b[39m expect(preparation\u001b[33m,\u001b[39m \u001b[32m\"Generate Report opens the installed ReviewPreparationView\"\u001b[39m)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 38 |\u001b[39m   \u001b[36mconst\u001b[39m load \u001b[33m=\u001b[39m preparation\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Load selection\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n \u001b[90m 39 |\u001b[39m   \u001b[36mawait\u001b[39m expect(load)\u001b[33m.\u001b[39mtoBeEnabled()\n \u001b[90m 40 |\u001b[39m   \u001b[36mconst\u001b[39m pendingAgenda \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForResponse(responseFor(app\u001b[33m.\u001b[39mdashboardURL\u001b[33m,\u001b[39m \u001b[32m\"review-agenda\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"POST\"\u001b[39m))\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 90,
+                            "line": 37
+                          },
+                          "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:37\n\n  35 |   // This journey uses that installed composition and its preserved selection.\n  36 |   const preparation = page.getByRole(\"region\", { name: \"Prepare review\", exact: true })\n> 37 |   await expect(preparation, \"Generate Report opens the installed ReviewPreparationView\").toBeVisible()\n     |                                                                                          ^\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n  40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:38:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T00:22:32.307Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6NTJhZTc1NWEtOWJlNi00N2NlLTg5ZDMtYTdjOTlkNjNiNmY2OjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiZjY3OTNmMDM4ZWZmODhkYmE1YjYzMjllZWJjOGVhNTBjYzVmM2Y4MiIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                        "column": 90,
+                        "line": 37
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-ee07c0ba4c7252737c4b",
+              "file": "sucafina/reports.spec.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10769,
+                      "error": {
+                        "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n",
+                        "stack": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:104:23",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                          "column": 90,
+                          "line": 37
+                        },
+                        "snippet": "   at sucafina/reports-support/review-flow.ts:37\n\n\u001b[0m \u001b[90m 35 |\u001b[39m   \u001b[90m// This journey uses that installed composition and its preserved selection.\u001b[39m\n \u001b[90m 36 |\u001b[39m   \u001b[36mconst\u001b[39m preparation \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"region\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Prepare review\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 37 |\u001b[39m   \u001b[36mawait\u001b[39m expect(preparation\u001b[33m,\u001b[39m \u001b[32m\"Generate Report opens the installed ReviewPreparationView\"\u001b[39m)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 38 |\u001b[39m   \u001b[36mconst\u001b[39m load \u001b[33m=\u001b[39m preparation\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Load selection\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n \u001b[90m 39 |\u001b[39m   \u001b[36mawait\u001b[39m expect(load)\u001b[33m.\u001b[39mtoBeEnabled()\n \u001b[90m 40 |\u001b[39m   \u001b[36mconst\u001b[39m pendingAgenda \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForResponse(responseFor(app\u001b[33m.\u001b[39mdashboardURL\u001b[33m,\u001b[39m \u001b[32m\"review-agenda\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"POST\"\u001b[39m))\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 90,
+                            "line": 37
+                          },
+                          "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:37\n\n  35 |   // This journey uses that installed composition and its preserved selection.\n  36 |   const preparation = page.getByRole(\"region\", { name: \"Prepare review\", exact: true })\n> 37 |   await expect(preparation, \"Generate Report opens the installed ReviewPreparationView\").toBeVisible()\n     |                                                                                          ^\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n  40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:104:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T00:22:46.858Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6N2FkYmQ3YzQtYjg2My00Mzk0LTkwOTItMDRlNTkwY2YwMjhkOjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiZjY3OTNmMDM4ZWZmODhkYmE1YjYzMjllZWJjOGVhNTBjYzVmM2Y4MiIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                        "column": 90,
+                        "line": 37
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-effa19c87d0feea601e1",
+              "file": "sucafina/reports.spec.ts",
+              "line": 101,
+              "column": 3
+            },
+            {
+              "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10729,
+                      "error": {
+                        "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n",
+                        "stack": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:118:23",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                          "column": 90,
+                          "line": 37
+                        },
+                        "snippet": "   at sucafina/reports-support/review-flow.ts:37\n\n\u001b[0m \u001b[90m 35 |\u001b[39m   \u001b[90m// This journey uses that installed composition and its preserved selection.\u001b[39m\n \u001b[90m 36 |\u001b[39m   \u001b[36mconst\u001b[39m preparation \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"region\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Prepare review\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 37 |\u001b[39m   \u001b[36mawait\u001b[39m expect(preparation\u001b[33m,\u001b[39m \u001b[32m\"Generate Report opens the installed ReviewPreparationView\"\u001b[39m)\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 38 |\u001b[39m   \u001b[36mconst\u001b[39m load \u001b[33m=\u001b[39m preparation\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Load selection\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n \u001b[90m 39 |\u001b[39m   \u001b[36mawait\u001b[39m expect(load)\u001b[33m.\u001b[39mtoBeEnabled()\n \u001b[90m 40 |\u001b[39m   \u001b[36mconst\u001b[39m pendingAgenda \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForResponse(responseFor(app\u001b[33m.\u001b[39mdashboardURL\u001b[33m,\u001b[39m \u001b[32m\"review-agenda\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"POST\"\u001b[39m))\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 90,
+                            "line": 37
+                          },
+                          "message": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:37\n\n  35 |   // This journey uses that installed composition and its preserved selection.\n  36 |   const preparation = page.getByRole(\"region\", { name: \"Prepare review\", exact: true })\n> 37 |   await expect(preparation, \"Generate Report opens the installed ReviewPreparationView\").toBeVisible()\n     |                                                                                          ^\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n  40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:37:90)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:118:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T00:23:01.530Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6MDE4YTliNDctM2ZiMy00ZjQ1LWE3YjItODg3OTA1ZmU1YjljOjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiZjY3OTNmMDM4ZWZmODhkYmE1YjYzMjllZWJjOGVhNTBjYzVmM2Y4MiIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                        "column": 90,
+                        "line": 37
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-bf67b9f1725920a5f8ec",
+              "file": "sucafina/reports.spec.ts",
+              "line": 116,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T00:21:44.322Z",
+    "duration": 91410.316,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

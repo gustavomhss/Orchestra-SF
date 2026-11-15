@@ -32,12 +32,16 @@ export function createCollaborationHttp(input: {
     const keys = [...route.keys, ...(route.optional ?? [])]
     if (Object.keys(payload).some((key) => !keys.includes(key)) || route.keys.some((key) => !Object.hasOwn(payload, key)) || route.validate && !route.validate(payload)) return reply({ status: "needs-input", reason: "invalid-collaboration-payload" })
     if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
-    const admitted = await (route.action ? input.human.admit(request, route.action, payload) : input.admitRead(request, route.read!, payload)).catch(() => ({ status: "denied" as const, reason: "collaboration-authority-unavailable" }))
+    const admitted = await (route.action ? input.human.admit(request, route.action, payload) : input.admitRead(request, route.read!, payload)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-authority-unavailable" }))
     if (admitted.status !== "ok") return reply(admitted)
     try {
+      // An expected revision is an identity fence, never an access grant. The
+      // host digest already binds installation, project, principal and scope.
+      const expectedBinding = request.headers.get("X-SF-Review-Binding")
+      if (expectedBinding !== null && (!/^[a-f0-9]{64}$/.test(expectedBinding) || expectedBinding !== admitted.value.binding.accessRevision)) return reply({ status: "denied", reason: "review-discussion-binding-changed" })
       const result = await Promise.resolve().then(() => route.invoke(payload, admitted.value)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-operation-unavailable" }))
       if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
-      return reply(result)
+      return reply(result, undefined, expectedBinding === null ? undefined : admitted.value.binding.accessRevision)
     } finally {
       if (route.action) input.human.finish(admitted.value)
       if (!route.action) input.finishRead(admitted.value)
@@ -45,8 +49,8 @@ export function createCollaborationHttp(input: {
   }
 }
 
-function reply(result: PortResult<unknown>, status = result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : ["stale", "conflict", "provider-conflict"].includes(result.status) ? 409 : 503) {
-  return Response.json(result, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+function reply(result: PortResult<unknown>, status = result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : ["stale", "conflict", "provider-conflict"].includes(result.status) ? 409 : 503, reviewBinding?: string) {
+  return Response.json(result, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", ...(reviewBinding === undefined ? {} : { "X-SF-Review-Binding": reviewBinding }) } })
 }
 
 async function bounded(request: Request, limit: number) {

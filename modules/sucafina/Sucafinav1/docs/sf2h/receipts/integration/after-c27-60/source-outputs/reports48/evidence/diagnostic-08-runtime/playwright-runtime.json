@@ -1,0 +1,204 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+    "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "bundle": "production",
+      "ci": {
+        "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/1c773176439c6761505e5b9063b0f5e84ef52e20",
+        "commitHash": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+        "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663209925"
+      },
+      "gitCommit": {
+        "shortHash": "1c773176",
+        "hash": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+        "subject": "test(sf2): requalify Reports agenda prerequisite request08 on C27 W6",
+        "body": "test(sf2): requalify Reports agenda prerequisite request08 on C27 W6",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794706074000
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794706074000
+        },
+        "branch": "ci-run-linux-astra-wp07-910a0a2d-1e6da53d-m48-08"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "bundle": "production",
+          "ci": {
+            "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/1c773176439c6761505e5b9063b0f5e84ef52e20",
+            "commitHash": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+            "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663209925"
+          },
+          "gitCommit": {
+            "shortHash": "1c773176",
+            "hash": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+            "subject": "test(sf2): requalify Reports agenda prerequisite request08 on C27 W6",
+            "body": "test(sf2): requalify Reports agenda prerequisite request08 on C27 W6",
+            "author": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794706074000
+            },
+            "committer": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794706074000
+            },
+            "branch": "ci-run-linux-astra-wp07-910a0a2d-1e6da53d-m48-08"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+        "testIgnore": [
+          "performance/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html"
+      ],
+      [
+        "line"
+      ],
+      [
+        "json"
+      ],
+      [
+        "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "sucafina/reports-support/agenda-transport.spec.ts",
+      "file": "sucafina/reports-support/agenda-transport.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CI-UI-REPORTS · agenda transport diagnosis",
+          "file": "sucafina/reports-support/agenda-transport.spec.ts",
+          "line": 8,
+          "column": 13,
+          "specs": [
+            {
+              "title": "RPT-DIAG-AGENDA-01 observes actual agenda transport and preserves the authorized dossier",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 180025,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 40,
+                            "line": 391
+                          },
+                          "message": "Error: Actual review-agenda POST transport failed: net::ERR_CONNECTION_REFUSED\n\n   at sucafina/reports-support/review-flow.ts:391\n\n  389 |     const failure = causes(value.failure()?.errorText ?? \"\")\n  390 |     if (relevant(value)) add(\"requestfailed\", { ...destination(value.url()), method: value.method(), ...failure })\n> 391 |     if (matching(value)) rejectFailure(new Error(\"Actual review-agenda POST transport failed: \" +\n      |                                        ^\n  392 |       [...failure.codes, ...failure.categories].join(\", \")))\n  393 |   }\n  394 |   const pageerror = (value: Error) => add(\"pageerror\", {\n    at Page.requestfailed (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:391:40)"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T01:30:44.149Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6MTJjYzI4YWMtMjg4MC00OWY0LTgwNGEtYmNiZTA4ZDY5NjdlOjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiMWM3NzMxNzY0MzljNjc2MTUwNWU1YjkwNjNiMGY1ZTg0ZWY1MmUyMCIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "reports-agenda-transport",
+                          "contentType": "application/json",
+                          "body": "ewogICJiZWZvcmUiOiB7CiAgICAic2FtZU9yaWdpbiI6IHRydWUsCiAgICAic2FtZVBhdGgiOiB0cnVlLAogICAgInJvdXRlIjogImRhc2hib2FyZCIsCiAgICAibW9kZSI6ICJhYnNlbnQiCiAgfSwKICAiYWZ0ZXIiOiB7CiAgICAic2FtZU9yaWdpbiI6IHRydWUsCiAgICAic2FtZVBhdGgiOiB0cnVlLAogICAgInJvdXRlIjogImRhc2hib2FyZCIsCiAgICAibW9kZSI6ICJhYnNlbnQiCiAgfSwKICAiZXhwZWN0ZWQiOiB7CiAgICAibWV0aG9kIjogIlBPU1QiLAogICAgIm1vZGUiOiAicmV2aWV3LWFnZW5kYSIKICB9LAogICJlbGFwc2VkTXMiOiAxNzU4OTAsCiAgImVudHJpZXMiOiBbCiAgICB7CiAgICAgICJraW5kIjogInJlcXVlc3QiLAogICAgICAiZWxhcHNlZE1zIjogNDMsCiAgICAgICJzYW1lT3JpZ2luIjogdHJ1ZSwKICAgICAgInNhbWVQYXRoIjogdHJ1ZSwKICAgICAgInJvdXRlIjogImRhc2hib2FyZCIsCiAgICAgICJtb2RlIjogInJldmlldy1hZ2VuZGEiLAogICAgICAibWV0aG9kIjogIlBPU1QiLAogICAgICAicmVzb3VyY2UiOiAiZmV0Y2giCiAgICB9LAogICAgewogICAgICAia2luZCI6ICJyZXF1ZXN0ZmFpbGVkIiwKICAgICAgImVsYXBzZWRNcyI6IDE3NTg4OSwKICAgICAgInNhbWVPcmlnaW4iOiB0cnVlLAogICAgICAic2FtZVBhdGgiOiB0cnVlLAogICAgICAicm91dGUiOiAiZGFzaGJvYXJkIiwKICAgICAgIm1vZGUiOiAicmV2aWV3LWFnZW5kYSIsCiAgICAgICJtZXRob2QiOiAiUE9TVCIsCiAgICAgICJjb2RlcyI6IFsKICAgICAgICAibmV0OjpFUlJfQ09OTkVDVElPTl9SRUZVU0VEIgogICAgICBdLAogICAgICAiY2F0ZWdvcmllcyI6IFtdCiAgICB9CiAgXSwKICAiZHJvcHBlZCI6IDAsCiAgImNsaSI6ICJObyByZWNvZ25pemVkIHRyYW5zcG9ydCBlcnJvciBvciByZXBvc2l0b3J5IHN0YWNrIGxvY2F0aW9uIGluIHRoZSBib3VuZGVkIENMSSB0YWlsLiIKfQ=="
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-support-a-3746f-rves-the-authorized-dossier-chromium/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f7bcb1259249b0b4cf6f-c472a490ba5cf6ecaecd",
+              "file": "sucafina/reports-support/agenda-transport.spec.ts",
+              "line": 11,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T01:30:11.791Z",
+    "duration": 218923.507,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

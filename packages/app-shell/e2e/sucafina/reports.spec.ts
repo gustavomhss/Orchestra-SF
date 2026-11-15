@@ -5,15 +5,19 @@ import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
 import { confirmHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed } from "./reports-support/human-answer-flow.ts"
 import { object, readReview, responseFor } from "./reports-support/model.ts"
 import { revokeReportsSession } from "./reports-support/revocation.ts"
+import { reconcilePrivateDraftsAfterReadLoss } from "./reports-support/read-reconciliation.ts"
 
 // Nominal CI-UI-REPORTS: e2e/playwright.production.config.ts, this file only,
 // workers=1, retries=0. The fixture launches the real CLI installation in Actions.
-// Missing producer composition fails the assertions; it is never skip/xfail or PASS.
+// These four scenarios exercise the explicitly manifested composed candidate.
+// Missing authority resources fail the assertions; no scenario becomes skip/xfail.
+// These worker options must be set at file scope. Real operator credentials
+// must never enter retained Playwright API/network traces; explicit synthetic
+// content receipts and downloaded reports remain the evidence.
+reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
+
 reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest.describe.configure({ retries: 0, timeout: 180_000 })
-  // Real operator credentials must never enter retained Playwright API/network traces.
-  // Explicit synthetic-content receipts and downloaded reports remain the evidence.
-  reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
 
   reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
     const { app, corpus } = reports
@@ -34,7 +38,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     const { saved } = await prepareReview(page, app, corpus, info)
     await changeForecast(page, app, corpus)
     await openAndReopenMeeting(page, app, saved)
-    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info))
+    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info, { loseReplyResponse: true, loseCreatedThreadRead: true }))
     const beforeReload = await api.version()
     const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
     const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
@@ -53,8 +57,10 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       expect(await api.version()).toBe(beforeReload)
       await expectConfirmedAnswerVisible(page, answer)
     })
+    await reportsTest.step("Keep question, reply and edit drafts through repeated authorized read loss without sending", () =>
+      reconcilePrivateDraftsAfterReadLoss(page, app, api, answer, info))
     const edited = await reportsTest.step("Edit once through Review; reject old selector/reuse and read the exact original through history", () => editHumanAnswer(page, app, api, answer,
-      `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`))
+      `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`, { recoverRequestFailure: true, info }))
     expect(edited.incarnation).toBe(answer.message.incarnation)
     expect(edited.version).toBe(answer.message.version + 1)
     expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
@@ -64,6 +70,32 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
       originalVersion: answer.message.version, currentVersion: edited.version,
       oldSelector: "stale", oldConfirmation: "unavailable", historicalMessage: "unchanged", preservedReview: "unchanged",
     }, null, 2), contentType: "application/json" })
+    const recovered = await reportsTest.step("Recover a committed edit after its response is lost, using only the exact original intent", () =>
+      editHumanAnswer(page, app, api, { ...answer, message: edited },
+        "Second explicit human edit retained through response loss. REPORTS_HUMAN_EDIT_LOST_RESPONSE", { loseResponse: true, info }))
+    expect(recovered.incarnation).toBe(answer.message.incarnation)
+    expect(recovered.version).toBe(answer.message.version + 2)
+    const beforeReopen = await api.version()
+    const threadRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
+    const reviewRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+    await page.reload()
+    const [threadResponse, reviewResponse] = await Promise.all([threadRead, reviewRead])
+    expect(threadResponse.status()).toBe(200)
+    expect(reviewResponse.status()).toBe(200)
+    expect(object(await reviewResponse.json()).value).toEqual(saved)
+    const currentThread = object(object(await threadResponse.json()).value)
+    const reopenedMessages = (currentThread.messages as unknown[]).map(object).filter((message) => message.id === answer.message.id)
+    expect(reopenedMessages).toHaveLength(1)
+    expect(reopenedMessages).toMatchObject([recovered])
+    await expect(page.getByRole("region", { name: "Review discussion", exact: true })
+      .getByRole("article", { name: `Message ${answer.message.id}`, exact: true })).toContainText(recovered.body)
+    expect(await api.version(), "Reopening after receipt recovery cannot write another edit").toBe(beforeReopen)
+    for (const prior of [answer.message, edited]) {
+      const historical = object(await api.ok("collaboration-thread-history", {
+        id: answer.questionId, messageId: prior.id, incarnation: prior.incarnation, version: prior.version,
+      }))
+      expect(historical.message).toMatchObject(prior)
+    }
   })
 
   reportsTest("RPT-03 removes one authorized record without editing its source and creates only an explicit new revision", async ({ page, reports }, info) => {

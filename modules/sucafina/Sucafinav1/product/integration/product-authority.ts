@@ -179,7 +179,13 @@ export function createSfProductAuthority(input: {
     privateCommands: [...sfHumanActions.map((action) => `sf-human:${action}`), ...Object.keys(collaborationReads).map((action) => `sf-read:${action}`)],
     createId: input.createId, now: input.now, commandIdentity: input.commandIdentity,
     authorize: async (request, operation) => {
-      const actor = await resolve(request).catch(() => undefined)
+      // Read uncertainty must reach its HTTP/producer boundary. Undefined is
+      // still an explicit negative; write and native admission keep their gates.
+      const readAction = operation.startsWith("sf-read:") ? operation.slice("sf-read:".length) :
+        operation.startsWith("sf-human:") ? operation.slice("sf-human:".length) : undefined
+      const readOperation = operation === "sf_review_prepare" ||
+        readAction !== undefined && Object.hasOwn(collaborationReads, readAction)
+      const actor = readOperation ? await resolve(request) : await resolve(request).catch(() => undefined)
       if (operation.startsWith("sf-read:")) {
         const read = collaborationReads[operation.slice("sf-read:".length)]
         if (!actor || !read || !actor.grant.operations.includes(read.operation) || read.namespaces.some((namespace) => !actor.grant.namespaces.includes(namespace))) return undefined

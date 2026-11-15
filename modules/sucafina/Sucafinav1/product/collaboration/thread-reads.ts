@@ -9,6 +9,9 @@ export function createRecipientAwareThreadReads(threads: Pick<ReturnType<typeof 
   return { read: async (id: string, context: TrustedDomainContext) => {
     if (recipientThread) {
       const projected = await recipientThread(id, context)
+      // A fallback cannot overrule denial or hide an inconclusive read. The
+      // canonical reader remains available for unsupported source projections.
+      if (projected.status === "denied" || projected.status === "stale" || projected.status === "unavailable" && projected.reason === "thread-read-unavailable") return projected
       if (projected.status === "ok") {
         const period = projected.value.current.sourceRef.target.period
         const observed = projected.value.observed.period
@@ -23,6 +26,7 @@ export function createRecipientAwareThreadReads(threads: Pick<ReturnType<typeof 
   }, readHistorical: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
     if (recipientThread) {
       const projected = await recipientThread(id, context)
+      if (projected.status === "denied" || projected.status === "stale" || projected.status === "unavailable" && projected.reason === "thread-read-unavailable") return projected
       if (projected.status === "ok" && projected.value.historical) return { status: "ok", value: { id: projected.value.id, kind: projected.value.kind, ...(projected.value.recipientRef ? { recipientRef: projected.value.recipientRef } : {}), state: projected.value.state, messages: projected.value.messages, ...projected.value.historical } }
     }
     return threads.read(id, context)

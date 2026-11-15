@@ -1,0 +1,46 @@
+{
+  "before": {
+    "sameOrigin": true,
+    "samePath": true,
+    "route": "dashboard",
+    "mode": "absent"
+  },
+  "after": {
+    "sameOrigin": true,
+    "samePath": true,
+    "route": "dashboard",
+    "mode": "absent"
+  },
+  "expected": {
+    "method": "POST",
+    "mode": "review-agenda"
+  },
+  "elapsedMs": 176250,
+  "entries": [
+    {
+      "kind": "request",
+      "elapsedMs": 40,
+      "sameOrigin": true,
+      "samePath": true,
+      "route": "dashboard",
+      "mode": "review-agenda",
+      "method": "POST",
+      "resource": "fetch"
+    },
+    {
+      "kind": "requestfailed",
+      "elapsedMs": 176249,
+      "sameOrigin": true,
+      "samePath": true,
+      "route": "dashboard",
+      "mode": "review-agenda",
+      "method": "POST",
+      "codes": [
+        "net::ERR_CONNECTION_REFUSED"
+      ],
+      "categories": []
+    }
+  ],
+  "dropped": 0,
+  "cli": "No recognized transport error or repository stack location in the bounded CLI tail."
+}

@@ -109,7 +109,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const baseSelections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
   const caseSelection = input.caseSelectionWrites ? createCaseWorkSelection({ host: input.host, state: input.state, cases: input.cases, authority, human: input.human, fence: createCollaborationMutationFence(input.host), fallback: baseSelections, reissue, refreshWorkSource, workCaseAuthority: input.workCaseAuthority, target: input.creationTarget, createId: input.createId, caseSelectionWrites: input.caseSelectionWrites }) : undefined
   const selections = caseSelection?.port ?? baseSelections
-  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshThreadSource, authorize: authority.sources, authorizeHistorical: authority.historicalSources, authorizeContext: authority.reviewThreadBasis }) : undefined
+  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshThreadSource, authorize: authority.readSources, authorizeHistorical: authority.readHistoricalSources, authorizeContext: authority.readReviewThreadBasis }) : undefined
   const authorizeThreadSourceContinuity = reissue ? createThreadSourceContinuity({ host: input.host, reissue, refresh: refreshThreadSource, authorizeHistorical: authority.historicalSources }) : undefined
   const confirmation = (() => {
     if (!input.confirmationSource || typeof input.confirmationSource.verifyManifest !== "function" || typeof input.confirmationSource.fenceManifest !== "function") return undefined
@@ -163,7 +163,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   }
   const recipientActions = recipientThread ? createRecipientThreadActions({ state: input.state, host: input.host, human: input.human, mutationFence: createCollaborationMutationFence(input.host), read: recipientThread, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, answerWork: answerWork?.project, creationTarget: input.creationTarget, createId: input.createId, now: input.now }) : undefined
   const answerEvidence = createThreadAnswerEvidence(threadReads)
-  const threadHistory = input.threadHistoryWrites ? createThreadHistory({ host: input.host, state: input.state, read: threadReads.read, readHistorical: threadReads.readHistorical, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, authorizeSources: async (basis, context) => await authority.historicalSources(basis.evidenceRefs, context) && await authority.reviewThreadBasis(basis, context), human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
+  const threadHistory = input.threadHistoryWrites ? createThreadHistory({ host: input.host, state: input.state, read: threadReads.read, readHistorical: threadReads.readHistorical, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, authorizeSources: async (basis, context) => await authority.readHistoricalSources(basis.evidenceRefs, context) && await authority.readReviewThreadBasis(basis, context), human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
   const storageVersion = async (namespace: "threads" | "relations" | "confirmations", context: TrustedDomainContext): Promise<PortResult<number>> => {
     const request = input.host.requestFor(context)
     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "collaboration-state-unavailable" }
@@ -178,8 +178,8 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     const directory = (await input.host.environment(request)).directory
     if (directory.length > 1000) return { status: "unavailable", reason: "recipient-directory-unavailable" }
     const candidates = directory.filter((person) => person.id.trim() && person.name.trim() && directory.filter((other) => other.id === person.id).length === 1)
-    const permitted = await Promise.all(candidates.map((person) => authority.recipient(person.id, context)))
-    const confirmed = await Promise.all(permitted.filter((person): person is { id: string; name: string } => !!person).map((person) => authority.recipient(person.id, context)))
+    const permitted = await Promise.all(candidates.map((person) => authority.readRecipient(person.id, context)))
+    const confirmed = await Promise.all(permitted.filter((person): person is { id: string; name: string } => !!person).map((person) => authority.readRecipient(person.id, context)))
     const current = (await input.host.environment(request)).directory
     if (confirmed.some((person) => !person) || digestSfValue(current) !== digestSfValue(directory) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "recipient-directory-unavailable" }
     return { status: "ok", value: confirmed.filter((person): person is { id: string; name: string } => !!person).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id)) }

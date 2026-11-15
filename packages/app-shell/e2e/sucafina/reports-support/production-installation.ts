@@ -1,13 +1,10 @@
-import { AppProcess } from "@orchestra/core/process"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
 import type { Page } from "@playwright/test"
-import { Deferred, Effect, Stream } from "effect"
-import { ChildProcess } from "effect/unstable/process"
 import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
 
 /** This fixture starts the existing CLI installation, never a fixture HTTP server. */
 export type ReportsInstallation = {
@@ -22,6 +19,8 @@ export type ReportsInstallation = {
   setup: (operation: string, args?: readonly string[]) => Promise<string>
   /** Redeems a new, real, single-use operator enrollment without tracing its code. */
   signIn: (page: Page) => Promise<void>
+  /** Bounded, allowlisted CLI transport errors; contains no raw stdout/stderr. */
+  diagnostics?: () => string
 }
 
 type InstallationInput = {
@@ -42,6 +41,18 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
   const repository = path.resolve(support, "../../../../..")
   const entry = path.resolve(support, input.setupEntry)
   if (path.dirname(entry) !== support || !entry.endsWith(".ts")) throw new Error("Reports setup must stay in reports-support")
+  // Playwright lists this file under Node before any fixture is admitted. Core's
+  // process graph reaches platform/global initialization, so load it only for
+  // this real fixture; listing must not initialize process services or state.
+  const [{ AppProcess }, { LayerNode }, { Deferred, Effect, Stream }, { ChildProcess }] = await Promise.all([
+    import("@orchestra/core/process"),
+    import("@orchestra/core/effect/layer-node"),
+    import("effect"),
+    import("effect/unstable/process"),
+  ]).catch((error: unknown) => {
+    const detail = error instanceof Error ? error.stack ?? error.message : String(error)
+    throw new Error(`Reports fixture dependencies failed to load: ${redact(detail)}`)
+  })
   const local = path.join(repository, "modules/sucafina/Sucafinav1/local")
   const owned: { child?: ChildProcessHandle } = {}
 
@@ -130,7 +141,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
         Stream.splitLines,
         Stream.runForEach((line) => {
           tail.value = `${tail.value}\n${redact(line)}`.slice(-8192)
-          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]):4110\/?$/.test(line.trim())
+          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]|::1):4110\/?$/.test(line.trim())
             ? Deferred.succeed(ready, undefined)
             : Effect.void
         }),
@@ -145,6 +156,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
 
       const authenticated = {
         ...installation,
+        diagnostics: () => diagnosticTail(tail.value),
         signIn: (page: Page) => track(async () => {
           if (!enrollment.prepared) await run(["run", path.join(local, "enroll.ts"), config])
           await redeemOperatorEnrollment(page, installation,
@@ -209,14 +221,13 @@ async function redeemOperatorEnrollment(page: Page, installation: Omit<ReportsIn
     throw new Error("Production operator enrollment transport failed")
   })
   if (response.status !== 303 || response.headers.get("location") !== `${installation.mount}/dashboard`) throw new Error(`Production operator enrollment failed (${response.status})`)
-  const cookies = response.headers.getSetCookie()
-  const match = cookies.length === 1 ? /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=(\/sucafina); HttpOnly; SameSite=Lax; Max-Age=(28800)$/.exec(cookies[0]!) : undefined
-  if (!match) throw new Error("Production operator enrollment did not issue the expected scoped session")
+  // Reuse the transport-normalization fix qualified by Decisions44. It keeps
+  // the exact cookie policy while accepting Effect's attribute serialization.
+  const cookie = readOperatorSessionCookie(response.headers)
   signal.throwIfAborted()
   await page.context().addCookies([{
-    name: match[1]!, value: match[2]!, domain: new URL(installation.origin).hostname,
-    path: match[3]!, httpOnly: true, sameSite: "Lax", secure: false,
-    expires: Math.floor(Date.now() / 1000) + Number(match[4]),
+    ...cookie, domain: new URL(installation.origin).hostname,
+    expires: Math.floor(Date.now() / 1000) + 28_800,
   }])
   signal.throwIfAborted()
   await rm(artifact)
@@ -224,4 +235,21 @@ async function redeemOperatorEnrollment(page: Page, installation: Omit<ReportsIn
 
 function redact(value: string) {
   return value.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/(code=)[^&\s"']+/g, "$1[redacted]")
+}
+
+/** Only recognized transport errors and repository stack locations leave the fixture. */
+function diagnosticTail(value: string) {
+  const lines: string[] = []
+  for (const incoming of value.split("\n")) {
+    const line = incoming.replace(/\u001b\[[0-9;]*m/g, "")
+    const timeout = /(?:(?:\[Bun\.serve\]|Bun\.serve\(\))[: ]*)?request timed out after \d+(?:\.\d+)? seconds\.?/i.exec(line)?.[0]
+    if (timeout) lines.push(timeout)
+    const message = /\b(?:TypeError|ReferenceError|RangeError|SyntaxError): (?:Cannot read properties of (?:undefined|null)(?: \(reading '[A-Za-z_$][\w$]*'\))?|[A-Za-z_$][\w.$]* is not (?:a function|defined)|Invalid URL|Body already used)/.exec(line)?.[0]
+    if (message) lines.push(message)
+    const codes = line.match(/\b(?:SF_[A-Z0-9_]+|ERR_[A-Z0-9_]+|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EADDRINUSE|EPIPE)\b/g) ?? []
+    lines.push(...codes.slice(0, 5))
+    const locations = line.match(/(?:apps\/cli|modules\/sucafina|packages\/[a-z-]+)\/[A-Za-z0-9_./-]+:\d+:\d+/g) ?? []
+    lines.push(...locations.slice(0, 3))
+  }
+  return [...new Set(lines)].slice(-20).join("\n").slice(-4096) || "No recognized transport error or repository stack location in the bounded CLI tail."
 }

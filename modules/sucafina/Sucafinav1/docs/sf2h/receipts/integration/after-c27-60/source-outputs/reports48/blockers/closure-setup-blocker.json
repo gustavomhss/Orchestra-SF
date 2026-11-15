@@ -1,0 +1,70 @@
+{
+  "schema": "orchestra-sf.mission48.closure-setup-causal-review.v1",
+  "status": "BLOCKED_EXISTING_PRODUCER_CREATE_CONTRACT",
+  "test": "review-closure admission unavailability is not converted to authorization loss",
+  "candidate": "9647675e5a08f86393d478602897657a3b8d478a",
+  "snapshot": "071aab991a79134f9aadbfe5e65c7e750d8e4e04",
+  "run_id": 43654508667,
+  "job_id": 132629975340,
+  "actual_failure": {
+    "status": "unavailable",
+    "reason": "action-create-identity-unavailable",
+    "stage": "Fixture close() before the positive HTTP 200 baseline and before injected admission failures",
+    "log": "mission48/evidence/boundary-01.log",
+    "log_lines": [872, 882],
+    "aggregate": "75 pass / 3 fail; 78 tests across 13 files; 70.72 seconds"
+  },
+  "causal_path": [
+    "review-read-boundary-fixture.close -> createReviewClosurePort.confirm",
+    "closure.confirm -> fixture.port.handoff.create",
+    "createCollaborationComposition -> createHotTopicPort(createCollaborationHotTopicHost(...))",
+    "createHotTopicPort.create: a correlation without an existing producer receipt returns unavailable/action-create-identity-unavailable unconditionally",
+    "createCollaborationHotTopicHost: commit=false returns outcome.value without an alternate creation hook"
+  ],
+  "source_evidence": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+      "blob": "051be54adbf197a0f4b290ab6bc6aaa9f0f563d5",
+      "read_at": ["31578c35c1e66371647f1e00ceefff1cdb85fed3", "9647675e5a08f86393d478602897657a3b8d478a"],
+      "finding": "New action creation is deliberately unavailable until the host exposes atomic creation/identity binding. The current function exposes no operationIdentity parameter that could fix this fixture."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+      "blob": "7222e35f290d46f68d7ab2aefdfd1780774140ae",
+      "read_at": ["31578c35c1e66371647f1e00ceefff1cdb85fed3"],
+      "finding": "The real collaboration fixture composes the same legacy Hot Topic creator."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+      "blob": "aaae9db90459f8e6b34d9a1a2a1aedfda2a4affb",
+      "read_at": ["31578c35c1e66371647f1e00ceefff1cdb85fed3"],
+      "finding": "No alternate creator handles the explicit unavailable result."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-handoffs.ts",
+      "blob": "5e797c295fdd3f0f3ddbd691aed943f82adb2d4c",
+      "read_at": ["31578c35c1e66371647f1e00ceefff1cdb85fed3"],
+      "finding": "The installed review adapter delegates to the same collaboration.handoff.create and additionally verifies correlation proof; it cannot supply a missing action creation receipt."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-work.test.ts",
+      "blob": "859fa816542c2a4e07f5d3a5d39cfd6665983344",
+      "read_at": ["31578c35c1e66371647f1e00ceefff1cdb85fed3"],
+      "finding": "Existing fixture example delegates to the same creator; copying it cannot resolve this failure. No execution of this unrelated file is claimed."
+    }
+  ],
+  "fixture_unchanged": {
+    "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+    "git_blob": "6d03d60364ea5cac477fa0623e749c7f9ba947bc",
+    "sha256": "2627103111d38dde7c75891be73bdc82a51f27ee48d34e6291fecde983c5194d"
+  },
+  "limits": [
+    "No product or test file was changed during this causal review.",
+    "No local tests, remote writes, grant synthesis, receipt seeding or closure seeding were performed.",
+    "Replacing the baseline 200 with 403 would remove the real positive closure assertion and was not done.",
+    "Creating a real domain action and adapting an unrelated linked result to an existing creation result would introduce a new fixture composition; it would not prove the installed create contract and was not done.",
+    "The HTTP admission uncertainty fix is not disproved by this setup failure; this specific closure route case has not reached its admission fault assertions.",
+    "A producer correction or a separately approved redefinition of this test scope is required before a positive closure journey can be claimed."
+  ],
+  "handoff": "Root/integrator47 and the canonical WP02 Hot Topic owner must reconcile the existing creation contract. Keep this failure in actuals until a coherent hosted candidate proves the positive closure setup and unchanged admission assertions."
+}

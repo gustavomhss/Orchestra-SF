@@ -12,7 +12,7 @@ import { createSfReviewCalculationHistory } from "./review-calculation-history.t
 
 /** Read-only history is anchored in immutable review bodies and their atomic C08 receipts. */
 export function createSfReviewHistory(input: {
-  authority: ReturnType<typeof createSfProductAuthority>
+  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "creationTarget">
   persistence: SfScopedSourcePort
   evidence: BusinessContextService
   authorizeCase?: Parameters<typeof createSfReviewCalculationHistory>[0]["authorizeCase"]
@@ -68,7 +68,10 @@ export function createSfReviewHistory(input: {
           value.schema === undefined && value.id === review.id && Array.isArray(value.sections) && Array.isArray(value.sourceRefs) && digestSfValue(value) === digestSfValue(review)
       })).map((review) => structuredClone(review))
     })
-    return found.status === "ok" && found.value && !request.signal.aborted && await host.revalidate(call) ? found.value : undefined
+    if (request.signal.aborted || host.requestFor(call) !== request || !await host.revalidate(call) || host.requestFor(call) !== request) return undefined
+    if (found.status === "denied") return undefined
+    if (found.status !== "ok") throw new Error("REVIEW_HISTORY_READ_UNAVAILABLE")
+    return found.value
   }
   const historicalSource = async (ref: SourceRef, call: TrustedDomainContext) => {
     const first = await captures(call)
@@ -78,7 +81,9 @@ export function createSfReviewHistory(input: {
     const again = await captures(call)
     if (!current || !again || matching.some((review) => !again.some((value) => same(review, value)))) return false
     const checked = await scoped(ref, call)
-    return !!checked && same(current, checked) && await host.revalidate(call)
+    if (!checked || !await host.revalidate(call)) return false
+    if (!same(current, checked)) throw new Error("REVIEW_HISTORY_CHANGED")
+    return true
   }
   const currentSource = async (ref: SourceRef, call: TrustedDomainContext) => (await scoped(ref, call))?.version === ref.version
   const resolve: BusinessContextService["resolve"] = async (ref, call) => {

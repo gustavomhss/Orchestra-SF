@@ -9,13 +9,15 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 
 type ReviewResult = PortResult<PreservedReview>
+type ReadFailure = Exclude<ReviewResult, { status: "ok" }>
+type SnapshotProof = { digest: string; receipt: string; access: string; fence: string }
 type ReadProof = { fence: string; result: ReviewResult }
 type ReadScope = { request: Request; open: boolean; calls: WeakMap<TrustedDomainContext, Map<string, ReadProof>>;
   delegated: WeakMap<TrustedDomainContext, Set<string>> }
 
 /** Every consumer reopens the body's own C08 receipt, in addition to producer ACL checks. */
 export function protectSfReviewReads(input: {
-  authority: ReturnType<typeof createSfProductAuthority>
+  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "creationTarget">
   reviews: ReturnType<typeof createReviewPort>
   /** Only the default installation readers have their entire authority in these snapshots. */
   localSnapshotReaders?: boolean
@@ -39,89 +41,126 @@ export function protectSfReviewReads(input: {
     })
     return receipts.length ? digestSfValue(receipts) : undefined
   }
-  const snapshot = async (id: string, call: TrustedDomainContext, scope: ReadScope, binding: string) => {
-    if (!sameCall(scope, call, binding) || !await host.revalidate(call) || !sameCall(scope, call, binding)) return undefined
-    const checked = await authority.state.read(scope.request, "reviews", async (state, actor) => {
-      if (!sameCall(scope, call, binding) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
-        actor.policyVersion !== call.binding.policyVersion) return undefined
-      const snapshots = host.persistence.currentSnapshots?.()
-      const review = state.reviews[id]
-      if (!snapshots || !review) return undefined
-      const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest)
-      if (!receipt) return undefined
-      // Reauthenticate the actual domain principals as well as the C08 reader.
-      // Full snapshots include unversioned case/body/receipt changes and source metadata.
-      const principals = await Promise.all((["dashboard", "planner", "procurement"] as const).map(async (surface) =>
-        [surface, await host.authenticate(scope.request, { surface, roleMap: roleMap(snapshots[surface], surface) })] as const))
-      const at = (await host.environment(scope.request)).at
-      if (!Number.isFinite(Date.parse(at)) || !await host.revalidate(call) || !sameCall(scope, call, binding) ||
-        digestSfValue(host.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return undefined
-      return { digest, fence: digestSfValue({ snapshots, actor, principals, binding, day: new Date(at).toISOString().slice(0, 10), id, digest, receipt }) }
-    })
-    // C08 reauthorizes after its callback. Do not await again after that fence.
-    return checked.status === "ok" && sameCall(scope, call, binding) ? checked.value : undefined
+  const denied = (): ReadFailure => ({ status: "denied", reason: "review-integrity-unavailable" })
+  const unavailable = (): ReadFailure => ({ status: "unavailable", reason: "review-integrity-unavailable" })
+  const changed = (): ReadFailure => ({ status: "stale", reason: "review-read-changed" })
+  const snapshot = async (id: string, call: TrustedDomainContext, scope: ReadScope, binding: string): Promise<PortResult<SnapshotProof>> => {
+    const current = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
+    try {
+      if (!await current()) return denied()
+      const checked = await authority.state.read(scope.request, "reviews", async (state, actor): Promise<PortResult<SnapshotProof>> => {
+        if (!sameCall(scope, call, binding) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
+          actor.policyVersion !== call.binding.policyVersion) return denied()
+        const snapshots = host.persistence.currentSnapshots?.()
+        const review = state.reviews[id]
+        if (!review || review.id !== id) return denied()
+        if (!snapshots) return unavailable()
+        const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest)
+        if (!receipt) return denied()
+        // Reauthenticate the actual domain principals as well as the C08 reader.
+        // Full snapshots include unversioned case/body/receipt changes and source metadata.
+        const principals = await Promise.all((["dashboard", "planner", "procurement"] as const).map(async (surface) =>
+          [surface, await host.authenticate(scope.request, { surface, roleMap: roleMap(snapshots[surface], surface) })] as const))
+        const at = (await host.environment(scope.request)).at
+        if (!await current()) return denied()
+        if (!Number.isFinite(Date.parse(at))) return unavailable()
+        if (digestSfValue(host.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return changed()
+        return { status: "ok", value: { digest, receipt, access: digestSfValue({ actor, principals, binding }),
+          fence: digestSfValue({ snapshots, actor, principals, binding, day: new Date(at).toISOString().slice(0, 10), id, digest, receipt }) } }
+      })
+      // C08 reauthorizes after its callback. Successful proofs have no later await;
+      // failed reads revalidate again before preserving an uncertain result.
+      if (!sameCall(scope, call, binding)) return denied()
+      if ("reason" in checked) return checked.status === "denied" || await current() ? checked : denied()
+      return checked.status === "ok" ? checked.value : unavailable()
+    } catch {
+      const authorized = await current().catch(() => undefined)
+      return authorized === false ? denied() : unavailable()
+    }
   }
   const legacyRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
-    const denied = (): PortResult<PreservedReview> => ({ status: "denied", reason: "review-integrity-unavailable" })
+    const request = host.requestFor(call)
+    const binding = digestSfValue([call.kind, call.binding])
+    const pinned = () => !!request && host.requestFor(call) === request && !request.signal.aborted && binding === digestSfValue([call.kind, call.binding])
+    const currentAccess = async () => pinned() && await host.revalidate(call) && pinned()
     try {
-      const request = authority.host.requestFor(call)
-      if (!request || request.signal.aborted || !await authority.host.revalidate(call)) return denied()
-      const binding = digestSfValue([call.kind, call.binding])
+      if (!request || !await currentAccess()) return denied()
       const first = await read(id, call)
+      if (!await currentAccess()) return denied()
       if (first.status !== "ok") return first
       const digest = digestSfValue(first.value)
-      const proof = () => authority.state.read(request, "reviews", (state, actor) => {
-        if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
-          !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return undefined
-        // The original writer may differ from the current authorized reader.
-        return receiptDigest(state, id, digest)
-      })
+      const proof = async (): Promise<PortResult<string>> => {
+        if (!await currentAccess()) return denied()
+        const checked = await authority.state.read(request, "reviews", (state, actor): PortResult<string> => {
+          if (!pinned() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
+            !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return denied()
+          // The original writer may differ from the current authorized reader.
+          const receipt = receiptDigest(state, id, digest)
+          return receipt ? { status: "ok", value: receipt } : denied()
+        })
+        if (!pinned()) return denied()
+        if ("reason" in checked) return checked.status === "denied" || await currentAccess() ? checked : denied()
+        return checked.status === "ok" ? checked.value : unavailable()
+      }
       const before = await proof()
-      if (before.status !== "ok" || !before.value) return denied()
+      if (before.status !== "ok") return before
       const current = await read(id, call)
+      if (!await currentAccess()) return denied()
+      if (current.status !== "ok") return current
+      if (digestSfValue(current.value) !== digest) return denied()
       const after = await proof()
-      if (current.status !== "ok" || digestSfValue(current.value) !== digest || after.status !== "ok" || after.value !== before.value ||
-        request.signal.aborted || binding !== digestSfValue([call.kind, call.binding]) || !await authority.host.revalidate(call)) return denied()
+      if (!await currentAccess()) return denied()
+      if (after.status !== "ok") return after
+      if (after.value !== before.value) return denied()
       return first
-    } catch { return denied() }
+    } catch {
+      const authorized = await currentAccess().catch(() => undefined)
+      return authorized === false ? denied() : unavailable()
+    }
   }
   const protectedRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
     const scope = execution.getStore()
     if (!scope || !input.localSnapshotReaders) return legacyRead(id, call)
-    const denied = (): ReviewResult => ({ status: "denied", reason: "review-integrity-unavailable" })
     const binding = digestSfValue([call.kind, call.binding])
+    const currentAccess = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
     try {
-      if (!sameCall(scope, call, binding)) return denied()
+      if (!await currentAccess()) return denied()
       let proofs = scope.calls.get(call)
       if (!proofs) { proofs = new Map(); scope.calls.set(call, proofs) }
       const prior = proofs.get(id)
       const before = await snapshot(id, call, scope, binding)
-      if (before && prior?.fence === before.fence) return structuredClone(prior.result)
+      if (before.status === "ok" && prior?.fence === before.value.fence) return structuredClone(prior.result)
       proofs.delete(id)
+      if (before.status !== "ok") return before
       // A canonical producer can materialize scoped source metadata. Never invoke
       // it from the final read-only C08 group when its complete proof has changed.
-      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
-      let first = before
+      // A missing proof is uncertainty, not evidence of lost authorization.
+      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : unavailable()
+      let first = before.value
       for (let attempt = 0; attempt < 2; attempt++) {
         const result = structuredClone(await read(id, call))
+        if (result.status !== "ok") return await currentAccess() ? result : denied()
         const after = await snapshot(id, call, scope, binding)
-        if (!sameCall(scope, call, binding)) return denied()
-        if (first && after?.fence === first.fence && (result.status !== "ok" ||
-          digestSfValue(result.value) === after.digest && snapshotBoundReview(result.value))) {
-          proofs.set(id, { fence: after.fence, result: structuredClone(result) })
+        if (after.status !== "ok") return after
+        if (first.digest !== after.value.digest || first.receipt !== after.value.receipt || first.access !== after.value.access ||
+          digestSfValue(result.value) !== after.value.digest) return denied()
+        if (first.fence === after.value.fence && snapshotBoundReview(result.value)) {
+          proofs.set(id, { fence: after.value.fence, result: structuredClone(result) })
           return result
         }
-        if (result.status !== "ok") return result
         if (!snapshotBoundReview(result.value)) {
           let delegated = scope.delegated.get(call)
           if (!delegated) { delegated = new Set(); scope.delegated.set(call, delegated) }
           delegated.add(id)
           return legacyRead(id, call)
         }
-        first = after
+        first = after.value
       }
-      return denied()
-    } catch { return denied() }
+      return changed()
+    } catch {
+      const authorized = await currentAccess().catch(() => undefined)
+      return authorized === false ? denied() : unavailable()
+    }
   }
   reviews.read = protectedRead
   return {

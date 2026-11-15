@@ -35,12 +35,15 @@ export function createReviewThreadContext(input: {
     const current = () => input.reviews === reviews && input.host === host && reviews.read === readReview && host.revalidate === revalidate
     if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
     const first = await readReview.call(reviews, selected.selection.reviewRef, context)
-    if (!current() || first.status !== "ok") return { status: "denied", reason: "review-thread-context-unavailable" }
+    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+    if (first.status !== "ok") return first
     const review = structuredClone(first.value)
     const pin: ReviewThreadContext = { reviewRef: review.id, reviewVersion: review.version, reviewDigest: digestSfValue(review), sectionId: selected.selection.sectionId }
     if (!isReviewThreadContext(pin) || pin.reviewRef !== selected.selection.reviewRef || selected.expected && digestSfValue(selected.expected) !== digestSfValue(pin) || !containsBasis(review, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
     const again = await readReview.call(reviews, selected.selection.reviewRef, context)
-    if (!current() || again.status !== "ok" || digestSfValue(again.value) !== pin.reviewDigest || !containsBasis(again.value, pin, selected.basis) || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+    if (again.status !== "ok") return again
+    if (digestSfValue(again.value) !== pin.reviewDigest || !containsBasis(again.value, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
     return { status: "ok", value: { pin, review } }
   }
   return {
@@ -56,7 +59,9 @@ export function createReviewThreadContext(input: {
     },
     authorize: async (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext): Promise<boolean> => {
       if (!isReviewThreadContext(pin)) return false
-      return read({ reviewRef: pin.reviewRef, sectionId: pin.sectionId }, basis, context, pin).then((result) => result.status === "ok", () => false)
+      const result = await read({ reviewRef: pin.reviewRef, sectionId: pin.sectionId }, basis, context, pin)
+      if (result.status !== "ok" && result.status !== "denied" && result.status !== "needs-input") throw new Error("REVIEW_THREAD_CONTEXT_READ_UNAVAILABLE")
+      return result.status === "ok"
     },
   }
 }

@@ -1,0 +1,900 @@
+{
+  "schema": "sf-mission48-source-check-documentary-triage-v1",
+  "reviewer": "/root/cold_review",
+  "reviewed_at_utc": "2026-11-15T00:54:47.093051+00:00",
+  "verdict": "SOURCE_CHECK_FAILED_CLASSIFIED_NO_INDEPENDENT_OWN_TYPE_DEFECT_IDENTIFIED",
+  "source_check": {
+    "run_id": 43659849107,
+    "job_id": 132646486974,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659849107/job/132646486974",
+    "checkout": "4e9997f7e9a285975c4c7735dcf9b2c18cc2185d",
+    "source_parent": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+    "both_tree": "0fc313477baa7e2602361e2fef6c8cc4a6ea766c",
+    "tree_equality": "Independently verified via GitHub MCP Git commit reads.",
+    "status": "FAIL",
+    "type_diagnostics": 186,
+    "log_sha256": "e1b636ec3f169713407364fe445aaa561f159a70505c65d77878832da71c6f6f",
+    "diagnostics_sha256": "5958f8e350e1396e2d320e0cff2e64b555e9e0ab8cd72961ecb549bb2d8e91e0",
+    "prior_run": 43647268470,
+    "prior_checkout": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+    "prior_type_diagnostics": 137,
+    "comparison": "Independent log parsing and multiset comparison of path/code/message, ignoring only runner timestamps and source coordinates.",
+    "unchanged_diagnostics": 136,
+    "added_messages": 50,
+    "removed_messages": 1,
+    "added_own_diagnostics": 49,
+    "net_increase": 49
+  },
+  "own_diagnostic_counts": {
+    "by_path": {
+      "test/product/reports-draft-reconciliation/history-provider-read.test.ts": 12,
+      "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts": 5,
+      "test/product/reports-draft-reconciliation/installed-review-entry.test.ts": 3,
+      "test/product/reports-draft-reconciliation/read-boundary-fixture.ts": 16,
+      "test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts": 6,
+      "test/product/reports-draft-reconciliation/review-read-boundary.test.ts": 7
+    },
+    "by_code": {
+      "TS2307": 14,
+      "TS7006": 18,
+      "TS18046": 7,
+      "TS2724": 1,
+      "TS2353": 1,
+      "TS2339": 8
+    },
+    "by_classification": {
+      "UNRESOLVED_COMPOSITION_IMPORT": 14,
+      "CONTEXTUAL_TYPE_CASCADE": 25,
+      "MISSING_DEPENDENCY_EXPORT": 1,
+      "MISSING_DEPENDENCY_API": 9
+    },
+    "summary": "14 unresolved imports to 10 distinct dependency files; one unavailable export; nine unavailable threadContext API diagnostics; 25 contextual-type cascades (18 implicit-any, seven unknown)."
+  },
+  "findings": [
+    {
+      "id": "SC48-01",
+      "status": "COMPOSITION_GAP",
+      "assessment": "The 49 own diagnostics refer to missing companion producers/fixtures/APIs on the intentionally partial source tree. Relevant callback/member uses were read in all six affected own files. The imports and API names are valid on C19; none of these observed diagnostics demonstrates an independent typo or source-level fix needed in mission48 own code."
+    },
+    {
+      "id": "SC48-02",
+      "status": "PREEXISTING",
+      "path": "test/product/wp06/imports/end-to-end.test.ts",
+      "line": 56,
+      "column": 72,
+      "code": "TS2345",
+      "prior_and_current_file_blob": "a52f968be176a250436e89eb19f61ec7728cba5c",
+      "assessment": "The same transaction-result incompatibility existed in prior36. GitHub MCP confirms byte-identical file blobs. The diagnostic rendering gained readonly and abbreviated a value shape; describing this as only union reordering would be imprecise. This is not a new independent mission48 defect."
+    },
+    {
+      "id": "SC48-03",
+      "status": "GUARD_REMEDIATION_APPROPRIATE_WITH_LIMITS",
+      "assessment": "Deleting the four current mission48 raw logs from the current tree follows the actual agent-scratch rule. Retaining exact historical commit/blob links plus hashes and structured results is traceable evidence preservation, not a renamed log or bypass. The action is scoped to authorized mission48 paths."
+    }
+  ],
+  "composition_proof": {
+    "target": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "dependency_files_and_exports": [
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "sha": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts",
+        "sha": "be15f9ad9c6477491fd0c9418ac776ea97199d68",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "sha": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+        "sha": "be5780125d823cc73323f16683d52e962d79d5a5",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-fixture.ts",
+        "sha": "aa5deb4cf23c5e2324bc1b282c2269ca7972327a",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+        "sha": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "sha": "4cadc40037fefb895a7c77d53125922fa747b479",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+        "sha": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+        "sha": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+        "sha": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true,
+        "sfHumanReadActions": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "sha": "f37a2c540b009a8c5bed90365c267b95303e646b",
+        "ref": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "present": true,
+        "threadContext": [
+          "  return { reviews, threadContext: createReviewThreadContext({ reviews, host: input.host }), artifacts, descriptors: createReviewCapabilities({ reviews, artifacts, authority: input.authority, requiredAuthority: input.requiredAuthority }) }"
+        ]
+      }
+    ],
+    "partial_source_api_reads": [
+      {
+        "kind": "api",
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "ref": "4e9997f7e9a285975c4c7735dcf9b2c18cc2185d",
+        "blob": "ad72a4d73e2b31003deb028a6f761e164b7a860d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4e9997f7e9a285975c4c7735dcf9b2c18cc2185d/modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "has_sfHumanReadActions": false,
+        "has_threadContext": false
+      },
+      {
+        "kind": "api",
+        "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "ref": "4e9997f7e9a285975c4c7735dcf9b2c18cc2185d",
+        "blob": "072d49caa29b32020def8b65c6fb46849e48e154",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4e9997f7e9a285975c4c7735dcf9b2c18cc2185d/modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "has_sfHumanReadActions": false,
+        "has_threadContext": false
+      },
+      {
+        "kind": "api",
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "ref": "4e9997f7e9a285975c4c7735dcf9b2c18cc2185d",
+        "blob": "3411fe33f7e907cdb98c35841161342fda43a3c8",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4e9997f7e9a285975c4c7735dcf9b2c18cc2185d/modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "has_sfHumanReadActions": false,
+        "has_threadContext": false
+      }
+    ],
+    "thread_context_http_contract": "C19 preimage of modules/sucafina/Sucafinav1/product/reviews/http.ts, blob ce0e5655f19d7d60246024af013c811bf921b042, declares threadContext?: ReturnType<typeof createReviewThreadContext>.",
+    "runtime_note": "Root separately reported the four installed W4 cases passing 4/0 with 103 assertions. That runtime result does not constitute a TypeScript pass and is not substituted for the failed source check."
+  },
+  "guard_assessment": {
+    "actual_run_findings": {
+      "gate": 7,
+      "warn": 12,
+      "rule_engine_errors": 0
+    },
+    "rule": "agent-scratch",
+    "reported_instruction": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+    "own_current_logs": [
+      {
+        "kind": "log",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.log",
+        "ref": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+        "blob": "0651be1c7acc96ea3fb1aa1bdf45fb7601d0e483",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.log",
+        "bytes": 85621,
+        "sha256": "fece97d8911683776c8a37f74a00a011e9bc96c7218a3f79c95098238e6489a8",
+        "local_matches_immutable_blob": true
+      },
+      {
+        "kind": "log",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.log",
+        "ref": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+        "blob": "aa50805006425eeb9d2e47d17e26cf4d7254442b",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.log",
+        "bytes": 69209,
+        "sha256": "ec7fd6217c9ed327d9bf9f521b851aabb0e841ef353feee2e71a0220e5c28198",
+        "local_matches_immutable_blob": true
+      },
+      {
+        "kind": "log",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.log",
+        "ref": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+        "blob": "97113843f8c332ca7bf2e8d02d1736f3de5b4a13",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.log",
+        "bytes": 110287,
+        "sha256": "3eda052c4534e371ccee225406ac662a67c38080069a5560143407c32008a2c3",
+        "local_matches_immutable_blob": true
+      },
+      {
+        "kind": "log",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.log",
+        "ref": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+        "blob": "1a216c37ff6883e903165d94ce4f9fe2866d5aba",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.log",
+        "bytes": 112261,
+        "sha256": "8dbe7208f13684091d2159c267d5934ca1b73fbbf019aabf782c1d8cf0ac4ba1",
+        "local_matches_immutable_blob": true
+      }
+    ],
+    "immutable_evidence_verification": "All four local raw log Git blob hashes exactly equal the immutable d1 commit blobs fetched via GitHub MCP; local byte sizes and SHA-256 are recorded above.",
+    "proposed_action": "Root removes only these four current-tree mission48 raw-log paths and keeps an index containing immutable commit/blob references, SHA-256, run/job identity, structured results and original failure status.",
+    "forbidden_shortcuts": "Do not rename logs, re-encode raw output as another file type, alter guard configuration, rewrite historical evidence, suppress diagnostics, weaken assertions or add fake type stubs to make the partial tree green.",
+    "historical_outside_mission48_write_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/client-and-collection.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/nominal-03.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/source-guards.log"
+    ],
+    "remaining_expected_gates": 3,
+    "limit": "Removal was evaluated as a proposed root action, not performed or re-run by this reviewer. A global guard PASS cannot be claimed from removing only the four owned logs; the three inherited gates require integrator ownership."
+  },
+  "per_diagnostic_triage": [
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 2,
+      "column": 39,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../../../apps/cli/src/sucafina-product/review-history.ts' or its corresponding type declarations.",
+      "log_line": 743,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 10,
+      "column": 44,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/review-answers-fixture.ts' or its corresponding type declarations.",
+      "log_line": 744,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 18,
+      "column": 50,
+      "code": "TS7006",
+      "message": "Parameter 'ref' implicitly has an 'any' type.",
+      "log_line": 745,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 20,
+      "column": 84,
+      "code": "TS7006",
+      "message": "Parameter 'state' implicitly has an 'any' type.",
+      "log_line": 746,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 21,
+      "column": 26,
+      "code": "TS18046",
+      "message": "'entry' is of type 'unknown'.",
+      "log_line": 747,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "Object.values/Object.entries receives data reached through an unresolved fixture; typed C19 actors, transactions or message records supply the missing type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 22,
+      "column": 12,
+      "code": "TS18046",
+      "message": "'entry' is of type 'unknown'.",
+      "log_line": 748,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "Object.values/Object.entries receives data reached through an unresolved fixture; typed C19 actors, transactions or message records supply the missing type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 22,
+      "column": 45,
+      "code": "TS18046",
+      "message": "'entry' is of type 'unknown'.",
+      "log_line": 749,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "Object.values/Object.entries receives data reached through an unresolved fixture; typed C19 actors, transactions or message records supply the missing type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 22,
+      "column": 107,
+      "code": "TS18046",
+      "message": "'entry' is of type 'unknown'.",
+      "log_line": 750,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "Object.values/Object.entries receives data reached through an unresolved fixture; typed C19 actors, transactions or message records supply the missing type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 22,
+      "column": 157,
+      "code": "TS18046",
+      "message": "'entry' is of type 'unknown'.",
+      "log_line": 751,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "Object.values/Object.entries receives data reached through an unresolved fixture; typed C19 actors, transactions or message records supply the missing type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 131,
+      "column": 65,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 752,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 135,
+      "column": 89,
+      "code": "TS7006",
+      "message": "Parameter 'state' implicitly has an 'any' type.",
+      "log_line": 753,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "line": 135,
+      "column": 158,
+      "code": "TS18046",
+      "message": "'entry' is of type 'unknown'.",
+      "log_line": 754,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "Object.values/Object.entries receives data reached through an unresolved fixture; typed C19 actors, transactions or message records supply the missing type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "line": 2,
+      "column": 38,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../../../apps/cli/src/sucafina-product/review-read-integrity.ts' or its corresponding type declarations.",
+      "log_line": 755,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "line": 5,
+      "column": 27,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/relations-fixture.ts' or its corresponding type declarations.",
+      "log_line": 756,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "line": 6,
+      "column": 33,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/recipient-receipt-fixture.ts' or its corresponding type declarations.",
+      "log_line": 757,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "line": 35,
+      "column": 80,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 758,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "line": 90,
+      "column": 43,
+      "code": "TS7006",
+      "message": "Parameter 'message' implicitly has an 'any' type.",
+      "log_line": 759,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "line": 4,
+      "column": 40,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../../../apps/cli/src/sucafina-product/extended-assets.ts' or its corresponding type declarations.",
+      "log_line": 760,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "line": 5,
+      "column": 50,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts' or its corresponding type declarations.",
+      "log_line": 761,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "line": 6,
+      "column": 45,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp10/integration/financial-composition-fixture.ts' or its corresponding type declarations.",
+      "log_line": 762,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 2,
+      "column": 41,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../product/collaboration/http.ts' or its corresponding type declarations.",
+      "log_line": 763,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 3,
+      "column": 34,
+      "code": "TS2724",
+      "message": "'\"../../../product/integration/human-authority.ts\"' has no exported member named 'sfHumanReadActions'. Did you mean 'sfHumanActions'?",
+      "log_line": 764,
+      "classification": "MISSING_DEPENDENCY_EXPORT",
+      "assessment": "The partial source human-authority lacks sfHumanReadActions; C19 exports it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 5,
+      "column": 43,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/thread-actors-fixture.ts' or its corresponding type declarations.",
+      "log_line": 765,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 6,
+      "column": 33,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/recipient-receipt-fixture.ts' or its corresponding type declarations.",
+      "log_line": 766,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 7,
+      "column": 27,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/relations-fixture.ts' or its corresponding type declarations.",
+      "log_line": 767,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 17,
+      "column": 61,
+      "code": "TS18046",
+      "message": "'actor' is of type 'unknown'.",
+      "log_line": 768,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "Object.values/Object.entries receives data reached through an unresolved fixture; typed C19 actors, transactions or message records supply the missing type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 27,
+      "column": 31,
+      "code": "TS7006",
+      "message": "Parameter 'request' implicitly has an 'any' type.",
+      "log_line": 769,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 27,
+      "column": 40,
+      "code": "TS7006",
+      "message": "Parameter 'namespace' implicitly has an 'any' type.",
+      "log_line": 770,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 27,
+      "column": 51,
+      "code": "TS7006",
+      "message": "Parameter 'inspect' implicitly has an 'any' type.",
+      "log_line": 771,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 41,
+      "column": 37,
+      "code": "TS7006",
+      "message": "Parameter 'selection' implicitly has an 'any' type.",
+      "log_line": 772,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 41,
+      "column": 48,
+      "code": "TS7006",
+      "message": "Parameter 'context' implicitly has an 'any' type.",
+      "log_line": 773,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 48,
+      "column": 24,
+      "code": "TS7006",
+      "message": "Parameter 'resolution' implicitly has an 'any' type.",
+      "log_line": 774,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 58,
+      "column": 23,
+      "code": "TS7006",
+      "message": "Parameter 'request' implicitly has an 'any' type.",
+      "log_line": 775,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 58,
+      "column": 32,
+      "code": "TS7006",
+      "message": "Parameter 'operation' implicitly has an 'any' type.",
+      "log_line": 776,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 58,
+      "column": 43,
+      "code": "TS7006",
+      "message": "Parameter 'payload' implicitly has an 'any' type.",
+      "log_line": 777,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+      "line": 60,
+      "column": 47,
+      "code": "TS7006",
+      "message": "Parameter 'value' implicitly has an 'any' type.",
+      "log_line": 778,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+      "line": 13,
+      "column": 44,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/review-answers-fixture.ts' or its corresponding type declarations.",
+      "log_line": 779,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+      "line": 14,
+      "column": 27,
+      "code": "TS2307",
+      "message": "Cannot find module '../wp08/relations-fixture.ts' or its corresponding type declarations.",
+      "log_line": 780,
+      "classification": "UNRESOLVED_COMPOSITION_IMPORT",
+      "assessment": "The reported import resolves to an existing C19 file; the partial source check does not contain that dependency.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+      "line": 25,
+      "column": 108,
+      "code": "TS7006",
+      "message": "Parameter 'source' implicitly has an 'any' type.",
+      "log_line": 781,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+      "line": 80,
+      "column": 5,
+      "code": "TS2353",
+      "message": "Object literal may only specify known properties, and 'threadContext' does not exist in type '{ origin: string; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<PortResult<TrustedUiContext>>; ... 6 more ...; finish(context: TrustedUiContext): void; }; ... 10 more ...; maxBodyBytes: number; }'.",
+      "log_line": 782,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewHttp input lacks threadContext; the C19 contract contains it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+      "line": 80,
+      "column": 29,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 783,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+      "line": 110,
+      "column": 65,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "log_line": 784,
+      "classification": "CONTEXTUAL_TYPE_CASCADE",
+      "assessment": "The imported fixture/factory is unresolved, so the dependent callback has no contextual parameter type.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "line": 43,
+      "column": 31,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 785,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "line": 49,
+      "column": 36,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 786,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "line": 60,
+      "column": 31,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 787,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "line": 69,
+      "column": 29,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 788,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "line": 74,
+      "column": 29,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 789,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "line": 89,
+      "column": 31,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 790,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+      "line": 94,
+      "column": 31,
+      "code": "TS2339",
+      "message": "Property 'threadContext' does not exist on type '{ reviews: { preview(selectionRef: string, incomingRefs: readonly string[], binding: TrustedDomainContext, period?: Period | undefined): Promise<PortResult<readonly ReviewSection[]>>; preserve(incoming: { ...; }, binding: TrustedDomainContext): Promise<...>; read(id: string, binding: TrustedDomainContext): Promise<....'.",
+      "log_line": 791,
+      "classification": "MISSING_DEPENDENCY_API",
+      "assessment": "The partial source createReviewServices result lacks threadContext; the C19 factory returns it.",
+      "independent_own_source_fix_demonstrated": false
+    },
+    {
+      "path": "test/product/wp06/imports/end-to-end.test.ts",
+      "line": 56,
+      "column": 72,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "log_line": 812,
+      "classification": "PREEXISTING_DIAGNOSTIC_RENDERING_CHANGE",
+      "assessment": "Same WP06 file, coordinates and TS2345 failure as prior36; success value is still incompatible with the inferred unavailable-only transaction result. The file blob is identical. New formatting includes readonly and abbreviation changes.",
+      "independent_own_source_fix_demonstrated": false
+    }
+  ],
+  "limits": [
+    "The check remains a real FAIL with 186 diagnostics. The comparison explains its delta; it does not waive or turn the result green.",
+    "Resolving dependency gaps can reveal additional type diagnostics. Static triage cannot certify that a composed TypeScript check would pass.",
+    "Hosted Bun runtime results do not replace static type checking. No compiler, build, product test, local product server or gate was executed by this reviewer.",
+    "Do not copy shared producer implementations into owned source paths or replace real fixtures with stubs merely to satisfy this partial-tree check; keep the authorized atomic composition and integrator handoff.",
+    "Only the stated 49 new own diagnostics and the one changed WP06 message were classified; the 136 inherited diagnostics were counted, not repaired or re-audited.",
+    "No remote write, dispatch, source-code edit or raw-log deletion was performed by this reviewer."
+  ],
+  "recommended_own_code_changes_from_observed_diagnostics": [],
+  "reviewer_written_paths": [
+    "mission48/final/SOURCE-CHECK-TRIAGE.json"
+  ],
+  "root_remediation_observation": {
+    "source": "d9e2b517b05526f1ef89abfc357a474ba1e51bfe",
+    "tree": "9f3a58d4756e0f41877f28463c50f44702c85511",
+    "active_product_or_test_changes": 0,
+    "action": "Removed exactly four own raw log artifacts from current source HEAD; immutable d1 source and Git blob references preserve exact historical bytes. No raw log renaming or history rewrite.",
+    "retired_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.log"
+    ],
+    "preservation_index": "EVIDENCE-INDEX.json",
+    "historical_check01_gate_count": 7,
+    "not_a_rerun": true,
+    "remaining_legacy_paths_count": 3,
+    "remaining_legacy_paths_scope": "Historical expected3 residuals, now independently confirmed byCHECK02 actual. Outside mission48 writes; no deletion by48.",
+    "later_same_product_source": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+    "later_source_delta": "Historical source7 added3 own E2E observability files and receipts. Final source8 was checked by actualCHECK02; see root_terminal_observation."
+  },
+  "root_terminal_observation": {
+    "recorded_at": "2026-11-15T01:48:33.065199+00:00",
+    "receipt": {
+      "path": "evidence/source-check-02.json",
+      "sha256": "4c725eda2e7f206860593c41d0cc4273909c2fb9d3a0894915ef03ef500d07f0",
+      "bytes": 6688
+    },
+    "diagnostics": {
+      "path": "evidence/source-check-02-diagnostics.json",
+      "sha256": "466a2099fbc7123c73c649e73cdbed48008e8f4a458b19ff9fa2e3428c3a02da",
+      "bytes": 129003
+    },
+    "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "executed_sha": "9235894b095a2cf4a90184b4606949f75a70279d",
+    "source_and_executed_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+    "result": "FAIL",
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "exit_code": 2,
+      "diagnostics": 186,
+      "prior36_diagnostics": 137,
+      "identical_path_code_message": 136,
+      "new_test_diagnostics": 49,
+      "changed_text_on_unchanged_wp06_file": 1,
+      "diagnostic_receipt": "evidence/source-check-02-diagnostics.json",
+      "assessment": "The186 diagnostic headlines are exactly equal in order to source-CHECK01. This remains a FAIL on the uncomposed source lane; earlier triage49 missing dependency/API or derivative own-test errors still does not prove a composed typecheck PASS.",
+      "prior_check01_diagnostics": 186,
+      "identical_ordered_diagnostic_headlines": true,
+      "typecheck_artifact_bytes_identical_to_check01": true
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "exit_code": 1,
+      "rules": 78,
+      "changed_paths": 950,
+      "gate": 3,
+      "warn": 12,
+      "errors": 0,
+      "findings": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/client-and-collection.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "log_line": 884,
+          "mission48_owned": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/nominal-03.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "log_line": 885,
+          "mission48_owned": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/source-guards.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "log_line": 886,
+          "mission48_owned": false
+        }
+      ],
+      "own_mission48_gates": 0,
+      "historical_out_of_scope_gates": 3,
+      "causal_remediation": "Four own raw logs were retired at source6 d9e2b517 with exact immutable history references. CHECK02 now confirms the reduction7→3; no suppression, renaming or legacy-path deletion."
+    },
+    "interpretation": "CHECK02 confirms4 own raw-log gates removed:7→3. All3 remaining paths are legacy36 outside48writes. Typecheck remains186 and byte-identical toCHECK01. Do not infer source PASS, composed compiler PASS, or nominal browser proof."
+  }
+}

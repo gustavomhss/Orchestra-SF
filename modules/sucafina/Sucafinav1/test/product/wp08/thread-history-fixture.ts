@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto"
+import { object } from "../../../runtime/contract.ts"
 import { createSfDomainAuthority } from "../../../product/integration/ui-authority.ts"
 import { createSfExecutionBindingRegistry } from "../../../product/host-binding/execution-context.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
@@ -21,7 +22,18 @@ export async function createThreadHistoryFixture(options: { supplement?: { refer
   const historical = { allowed: false }
   const archive = new Map<string, { ref: BusinessEvidenceRef; projection: DomainProjection }>()
   const issue = createDashboardConfirmationIssuer({ host: fixture.host, scopedSources: fixture.persistence })
-  const issueForActor: NonNullable<Parameters<typeof createCollaborationHost>[0]["issueForActor"]> = (target, context) => issue({ recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
+  const issueForActor: NonNullable<Parameters<typeof createCollaborationHost>[0]["issueForActor"]> = async (target, context) => {
+    if (target.surface === "dashboard" && target.recordType !== "dashboard-page" && target.period) {
+      // Scoped versions follow the original selector page. The real issuer still authenticates the current actor.
+      const page = await fixture.persistence.transaction("dashboard", async (snapshot) => {
+        const entries = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.incarnation === target.incarnation && entry.scope.recordType === target.recordType && entry.scope.recordId === target.recordId)
+        return { commit: false, value: entries.length === 1 ? object(entries[0]!.scope.selector).page : undefined }
+      })
+      if (typeof page !== "string" || !page) return { status: "unavailable", reason: "history-source-selector-unavailable" }
+      return fixture.records.issue({ page, recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
+    }
+    return issue({ recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
+  }
   const refresh = createWorkSourceRefresh({ host: fixture.host, issueForActor, authorize: (ref, context) => fixture.authority.sources([ref], context) })
   const currentForHistory = (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => options.currentTarget ? issueForActor(options.currentTarget(structuredClone(ref), fixture.clock.at), context) : refresh(ref, context)
   const source = createDashboardConfirmationObserver({ host: fixture.host, scopedSources: fixture.persistence, readProjection: (selection, context) => fixture.records.read(selection.reference, context) })

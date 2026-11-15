@@ -1,0 +1,80 @@
+{
+  "id": "E-M48-NOMINAL-04",
+  "run": 43657599973,
+  "job": 132639507850,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43657599973",
+  "source": "2a5ced326a20bc67ac50b40cb756c8d6f4e5c6fa",
+  "W": "c44a3b80da2549c6a3bc4cbdb186a275d93370ab",
+  "W_tree": "f108d2f99eb5b6530e444a694eb38d2de519c687",
+  "S": "f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+  "S_tree": "68aa2329580b7e97f17904b2f5e943b342f1cade",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/reports.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "request_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 4,
+  "total": 4,
+  "started": 4,
+  "selected_files": [
+    "e2e/sucafina/reports.spec.ts"
+  ],
+  "case_results": [
+    {
+      "case_id": "RPT-01",
+      "runtime_status": "FAIL",
+      "duration_ms": 10692,
+      "log_line": 1083,
+      "blocking_stage": "After real Generate Report submit, installed Prepare review region absent; preservation/agenda/reconciliation not reached",
+      "assertions_reached": "Real Workbench entry, Reports form, Format/Year readiness and exact values, title, exact topic checkboxes and Generate Report. Preparation visibility oracle fails."
+    },
+    {
+      "case_id": "RPT-02",
+      "runtime_status": "FAIL",
+      "duration_ms": 10730,
+      "log_line": 1115,
+      "blocking_stage": "After real Generate Report submit, installed Prepare review region absent; preservation/agenda/reconciliation not reached",
+      "assertions_reached": "Real Workbench entry, Reports form, Format/Year readiness and exact values, title, exact topic checkboxes and Generate Report. Preparation visibility oracle fails."
+    },
+    {
+      "case_id": "RPT-03",
+      "runtime_status": "FAIL",
+      "duration_ms": 10769,
+      "log_line": 1147,
+      "blocking_stage": "After real Generate Report submit, installed Prepare review region absent; preservation/agenda/reconciliation not reached",
+      "assertions_reached": "Real Workbench entry, Reports form, Format/Year readiness and exact values, title, exact topic checkboxes and Generate Report. Preparation visibility oracle fails."
+    },
+    {
+      "case_id": "RPT-04",
+      "runtime_status": "FAIL",
+      "duration_ms": 10729,
+      "log_line": 1179,
+      "blocking_stage": "After real Generate Report submit, installed Prepare review region absent; preservation/agenda/reconciliation not reached",
+      "assertions_reached": "Real Workbench entry, Reports form, Format/Year readiness and exact values, title, exact topic checkboxes and Generate Report. Preparation visibility oracle fails."
+    }
+  ],
+  "log": "evidence/nominal-04.log",
+  "runtime_receipt": "evidence/nominal-04-runtime/playwright-runtime.json",
+  "duration_ms": 91410.316,
+  "controls": {
+    "workers": 1,
+    "retries": 0,
+    "timeout_ms": 180000,
+    "expect_timeout_ms": 10000,
+    "trace": "off",
+    "video": "off",
+    "screenshot": "off"
+  },
+  "scope": "Actual four nominal failures at preserved preparation mounting. Locator fix proved its intended controls. No completed business journey and no draft/revocation browser proof. Do not rerun without causal change."
+}

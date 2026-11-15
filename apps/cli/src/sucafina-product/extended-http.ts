@@ -34,6 +34,7 @@ export function createSfExtendedHttp(input: {
   assets: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
 }) {
   const { authority, business } = input
+  const readStatus = (status: string) => status === "ok" ? 200 : status === "denied" ? 403 : status === "needs-input" ? 400 : status === "stale" || status === "conflict" ? 409 : 503
   const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
   const options = createSfExtendedBiOptions(input)
   const reviewCycle = createSfExtendedReviewCycle(input)
@@ -45,8 +46,12 @@ export function createSfExtendedHttp(input: {
     const reviewed = await input.reviews?.http(request, surface)
     if (reviewed) return reviewed
     const url = new URL(request.url)
-    const reportsEntry = !url.searchParams.has("sf") && url.searchParams.get("page") === "Generate Report" && url.searchParams.has("download")
+    // The installed Reports form keeps its originating dashboard page in the
+    // hidden page field. Office exports enter the preserved review flow here.
+    const reportsEntry = !url.searchParams.has("sf") && url.searchParams.has("download") &&
+      (url.searchParams.get("page") === "Generate Report" || ["docx", "pptx"].includes(url.searchParams.get("download") ?? ""))
     const mode = reportsEntry ? "review" : url.searchParams.get("sf")
+    const reviewRead = mode === "review" || mode === "review-update" || mode === "review-source"
     if (!["bi", "bi-data", "bi-source", "bi-decision", "bi-options", "review", "review-update", "review-source"].includes(mode ?? "")) return undefined
     const json = (value: unknown, status = 200) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
@@ -72,16 +77,21 @@ export function createSfExtendedHttp(input: {
     const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef"), baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), previousReviewRef: url.searchParams.get("previousReviewRef"), sectionId: url.searchParams.get("sectionId"), referenceId: url.searchParams.get("referenceId"), valueId: url.searchParams.get("valueId"), referenceDigest: url.searchParams.get("referenceDigest") }
     const digest = digestSfValue(reportsEntry ? { ...bootstrap, reportTopics, reportYear, requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : mode === "bi-decision" ? { ...bootstrap, snapshot: url.searchParams.get("snapshot"), target: url.searchParams.get("target") } : bootstrap)
     const action = mode?.startsWith("review") ? "sf_review_prepare" : "sf_dashboard_read"
-    const admitted = await authority.ui.admit(request, action, digest)
-    if (admitted.status !== "ok") return json(admitted, 403)
+    const admitted = await authority.ui.admit(request, action, digest).catch((error: unknown) => {
+      if (!reviewRead) throw error
+      return { status: "unavailable" as const, reason: "review-authority-unavailable" }
+    })
+    if (admitted.status !== "ok") return json(admitted, reviewRead ? readStatus(admitted.status) : 403)
     const call = admitted.value
+    let validated = false
     try {
       if (!await authority.ui.validate(call, action, digest)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
+      validated = true
       if (mode === "review-update") {
         const reference = url.searchParams.get("reviewRef")
         if (!reference || reference.length > 2048) return json({ status: "needs-input", reason: "invalid-review-reference" }, 400)
         const result = await reviewCycle.update(reference, call)
-        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : 409)
+        return json(result, readStatus(result.status))
       }
       if (mode === "review-source") {
         const reference = url.searchParams.get("reviewRef"), referenceId = url.searchParams.get("referenceId")
@@ -209,12 +219,12 @@ export function createSfExtendedHttp(input: {
           data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
         } else if (url.searchParams.has("previousReviewRef")) {
           const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
-          if (updated.status !== "ok") return json(updated, updated.status === "denied" ? 403 : 409)
+          if (updated.status !== "ok") return json(updated, readStatus(updated.status))
           data = updated.value
           const captured = digestSfValue(updated.value)
           verifyReviewBootstrap = async () => {
             const again = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
-            if (again.status !== "ok") return json(again, again.status === "denied" ? 403 : 409)
+            if (again.status !== "ok") return json(again, readStatus(again.status))
             if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-update-changed-before-display" }, 409)
             return undefined
           }
@@ -257,6 +267,14 @@ export function createSfExtendedHttp(input: {
         // or bootstrap as substitutions of the surrounding document.
         .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
+    } catch (error) {
+      if (!reviewRead) throw error
+      // Before validate consumes the lease, requestFor is intentionally empty.
+      // An interrupted authorization check must not masquerade as lost access.
+      const authorized = await authority.ui.revalidate(call).catch(() => undefined)
+      if (request.signal.aborted || authorized === false || validated && authority.ui.requestFor(call) !== request)
+        return json({ status: "denied", reason: "authority-unavailable" }, 403)
+      return json({ status: "unavailable", reason: "review-read-unavailable" }, 503)
     } finally { authority.ui.finish(call) }
   }
   return (request: Request, surface: string) => input.reviews?.readScope

@@ -1,0 +1,97 @@
+{
+  "schema": "orchestra-sf.mission48.terminal-authority.v1",
+  "mission": 48,
+  "actor": "S3-A",
+  "lease_epoch": "reports-reconciliation-browser48",
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "recorded_at": "2026-11-15T01:50:58.858424+00:00",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "branch": "astra-wp07",
+  "PR": 27,
+  "writer": "Root48 sole remote writer; assistants read/review only; no delegation of branch authority",
+  "predecessor36": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+  "ACK48": {
+    "commit": "20aa42350d674fb2850dc6926d5fcaa8aeb3e567",
+    "path": "AUTHORITY-ACK.json",
+    "initial_HEAD_reconciled_before_ACK": true,
+    "historical_ACK_retained": true,
+    "superseded_by": "This terminal authority on successful CAS"
+  },
+  "package": {
+    "pin": "bd045542ebb287cd5f25ce36e676ce90cbce320f",
+    "blob": "a141d28ed8bb3f5235bcfeac4f100cb24a7072b2",
+    "closing_control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "closing_blob": "a141d28ed8bb3f5235bcfeac4f100cb24a7072b2",
+    "unchanged": true
+  },
+  "HEAD_reconciliation": {
+    "source_expected": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+    "CHECK_child_parent_for_terminal": "9235894b095a2cf4a90184b4606949f75a70279d",
+    "CHECK_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+    "source_to_CHECK_changed_files": 0,
+    "stack_terminal57": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "C27_material": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "stack_delta": "14 receipt additions only; no C27 material change",
+    "remote_receipt": "REMOTE-CLOSING-OBSERVATIONS.json"
+  },
+  "source_release": {
+    "path": "CONSUMER-RELEASE.json",
+    "unit_sha256": "f5e52888ff9ec676d4c85e70a3f6a523a035aa61d36280ff9cefb1c0d40ae636",
+    "kind": "COMPLETE_ATOMIC_SOURCE_AND_PATCH_HANDOFF",
+    "qualification": "HOLD",
+    "consumer_ACK": "REQUESTED_NOT_RECEIVED"
+  },
+  "consumer_route": {
+    "requested_consumer": 47,
+    "last_accepted_integrator": 57,
+    "last_integrator_lease": "ENDED",
+    "last_integrator_terminal": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "current_active_integrator": null,
+    "designated_successor": 60,
+    "successor_state": "PREPARED_NOT_STARTED",
+    "successor_epoch": "S0-C-e12-browser60",
+    "successor_ACK_observed": false,
+    "control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "successor_package_blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+    "consumer_ACK": "REQUESTED_IN_TERMINAL_HANDOFF_NOT_RECEIVED",
+    "rule": "The requested47 handoff follows formal succession.57 ended;60 is prepared only. A successor must reconcile current HEAD/control/authority and publish its own ACK. No active writer or consumption is inferred from a prepared mission.",
+    "activation": "HOLD: a new integrator ACK alone does not qualify this source package. Complete qualifying evidence and integrator review remain required before material activation under the successor60 package."
+  },
+  "lease": {
+    "state": "ENDED",
+    "effective_on": "Successful CAS of the containing terminal commit to astra-wp07",
+    "further_product_or_test_writes": false,
+    "allowed_closure": "Readback, exact immutable final identity, PR27 body and final user report only",
+    "continuation": "A future source session must reconcile this explicit terminal authority/current HEAD/current control and publish a new ACK before material writes. No silent resume or ownership transfer."
+  },
+  "publication": {
+    "method": "GitHub MCP create_tree/create_commit/update_ref expected_sha force:false",
+    "expected_source_ref": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "parent": "9235894b095a2cf4a90184b4606949f75a70279d",
+    "terminal_identity": "Containing immutable commit/tree; exact values published in PR27 after CAS readback, never self-referentially invented"
+  },
+  "execution": {
+    "product_CI_attempts": 9,
+    "separate_source_CHECK_attempts": 2,
+    "local_product_tests": 0,
+    "local_typechecks_builds_servers": 0,
+    "epic": 0,
+    "workflow_edits": 0,
+    "Agenda39_active_path_edits": 0,
+    "active_shared_source_edits": 0,
+    "sf2_stack_writes": 0,
+    "other_source_branch_writes": 0,
+    "external_messages": 0,
+    "merge_deploy_credentials_restarts": 0
+  },
+  "acceptance": {
+    "criteria86": "NOT_ESTABLISHED",
+    "four_nominal_journeys": "HOLD",
+    "composed_checks": "NOT_RUN",
+    "GLOBAL_RELEASE": false
+  }
+}

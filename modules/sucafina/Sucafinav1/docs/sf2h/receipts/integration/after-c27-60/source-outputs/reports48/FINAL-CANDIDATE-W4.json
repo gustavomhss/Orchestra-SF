@@ -1,0 +1,53 @@
+{
+  "source": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+  "source_product": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+  "source_e2e": "2a5ced326a20bc67ac50b40cb756c8d6f4e5c6fa",
+  "source_tree": "0fc313477baa7e2602361e2fef6c8cc4a6ea766c",
+  "W": "25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+  "W_tree": "2a3442a86ab02a9739303575d31c5d9093fd8049",
+  "composition_baseline": {
+    "symbol": "C19",
+    "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+    "message": "fix(sf2): integrate released Memory40 reauthorization candidate C19 [skip ci]"
+  },
+  "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/VALIDATION-W-04.json@25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+  "verified_blob_count": 45,
+  "material_changed_paths": 45,
+  "shared_patch_sha256": "d4c4bc8930692289259359a1448fc6ea8dbe7d072ce929266f0210d5599dcbd1",
+  "from_W3_delta": {
+    "method": "Independent exact blob reads, common C19 parent, compare to C19 with zero unexpected paths; not sibling merge-base diff.",
+    "changed_runtime": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+        "pre": null,
+        "post": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "pre": "543b22b66eb73882fc7e59eeafc1be6a0a16d3a0",
+        "post": "000e1aaedcc929f94e0dcb45d1e63267f1401531"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "pre": "d8e0d149e37c640db8957f3e917f867088923d93",
+        "post": "acfd548c15231bdc92a588b48462d580d220cad3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "pre": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "post": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+        "pre": "cdbcf2d09cd82e352c41e5eb0b38055956f101e2",
+        "post": "6960533cbb8cb128ec4e6d90583903107b5eeb0c"
+      }
+    ],
+    "manifest_replacement": [
+      "VALIDATION-W-03.json",
+      "VALIDATION-W-04.json"
+    ],
+    "otherwise_equal": 40
+  }
+}

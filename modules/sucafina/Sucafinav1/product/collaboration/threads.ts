@@ -59,7 +59,10 @@ export function createThreadPort(input: {
       const request = input.host.requestFor(context)
       if (!request || !await input.human.authorize(context, "collaboration.thread.create", selected) || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
       const review = selected.draft.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
-      if (selected.draft.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
+      if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
+      if (review && "reason" in review) return review
+      if (selected.draft.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
+      if (review?.status === "ok" && !review.value) return { status: "denied", reason: "review-thread-context-unavailable" }
       const sourceContext: ThreadSourceContext | undefined = selected.draft.reviewContext ? { sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, evidenceRefs: selected.draft.evidenceRefs, reviewContext: selected.draft.reviewContext } : undefined
       const prepareReviewFence = input.prepareReviewThreadFence
       const checkReviewRecipient = input.checkReviewRecipientAtCommit
@@ -76,7 +79,10 @@ export function createThreadPort(input: {
       })
       if (saved.status === "preview") return { status: "conflict", reason: "thread-not-committed" }
       if ("reason" in saved) return saved
-      if (!saved.value || !await input.host.revalidate(context) || !await input.authorize(saved.value, context, "read")) return { status: "unavailable", reason: "thread-access-unavailable" }
+      if (!saved.value) return { status: "unavailable", reason: "thread-read-unavailable" }
+      const readable = await input.authorize(saved.value, context, "read").catch(() => undefined)
+      if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-access-unavailable" }
+      if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
       return { status: "ok", value: publicThreadProjection(saved.value) }
     },
     reply: (id: string, body: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "reply", body }, mutation, context),
@@ -84,14 +90,37 @@ export function createThreadPort(input: {
     read: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
       if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
       const request = input.host.requestFor(context)
-      if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
-      const read = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
-      if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
-      if ("reason" in read) return read
-      if (!isThread(read.value) || read.value.id !== id || !await input.authorize(read.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
-      const again = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
-      if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(read.value) || !await input.authorize(again.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
-      return { status: "ok", value: publicThreadProjection(read.value) }
+      const current = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
+      try {
+        if (!request || !await current()) return { status: "denied", reason: "thread-access-unavailable" }
+        const read = () => input.state.read(request, "threads", (state, authority) => {
+          const bound = authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion
+          return { bound, thread: bound ? state.threads[id] : undefined }
+        })
+        const first = await read()
+        if (!await current()) return { status: "denied", reason: "thread-access-unavailable" }
+        if (first.status !== "ok") return "reason" in first ? first : { status: "unavailable", reason: "thread-read-unavailable" }
+        if (!first.value.bound) return { status: "denied", reason: "thread-access-binding-changed" }
+        if (first.value.thread === undefined) return { status: "denied", reason: "thread-target-changed" }
+        if (!isThread(first.value.thread)) return { status: "unavailable", reason: "thread-read-unavailable" }
+        const thread = first.value.thread
+        if (thread.id !== id || !await input.authorize(thread, context, "read") || !await current()) return { status: "denied", reason: "thread-access-unavailable" }
+        const again = await read()
+        // A new read may fail or observe a legitimate reply. Neither proves that
+        // access was revoked; actual authority loss takes precedence over drift.
+        if (!await current()) return { status: "denied", reason: "thread-access-unavailable" }
+        if (again.status !== "ok") return "reason" in again ? again : { status: "unavailable", reason: "thread-read-unavailable" }
+        if (!again.value.bound) return { status: "denied", reason: "thread-access-binding-changed" }
+        if (again.value.thread === undefined) return { status: "denied", reason: "thread-target-changed" }
+        if (!isThread(again.value.thread)) return { status: "unavailable", reason: "thread-read-unavailable" }
+        if (!sameThreadReadScope(thread, again.value.thread) || !await input.authorize(again.value.thread, context, "read") || !await current()) return { status: "denied", reason: "thread-access-unavailable" }
+        if (digestSfValue(again.value.thread) !== digestSfValue(thread)) return { status: "stale", reason: "thread-content-changed" }
+        return { status: "ok", value: publicThreadProjection(thread) }
+      } catch {
+        const authorized = await current().catch(() => undefined)
+        if (authorized === false) return { status: "denied", reason: "thread-access-unavailable" }
+        return { status: "unavailable", reason: "thread-read-unavailable" }
+      }
     },
   }
 
@@ -109,7 +138,10 @@ export function createThreadPort(input: {
     if (!isThread(read.value) || read.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
     const prior = read.value
     const review = prior.messages[0]?.sourceContext?.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
-    if (prior.messages[0]?.sourceContext?.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
+    if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
+    if (review && "reason" in review) return review
+    if (prior.messages[0]?.sourceContext?.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
+    if (review?.status === "ok" && !review.value) return { status: "denied", reason: "review-thread-context-unavailable" }
     const reviewBasis = prior.messages[0]?.sourceContext?.reviewContext ? prior.messages[0].sourceContext : undefined
     const prepareReviewFence = input.prepareReviewThreadFence
     const checkReviewRecipient = input.checkReviewRecipientAtCommit
@@ -129,9 +161,21 @@ export function createThreadPort(input: {
     })
     if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
     if ("reason" in saved) return saved
-    if (!saved.value || !await input.host.revalidate(context) || !await input.authorize(saved.value, context, "read")) return { status: "unavailable", reason: "thread-access-unavailable" }
+    if (!saved.value) return { status: "unavailable", reason: "thread-read-unavailable" }
+    const readable = await input.authorize(saved.value, context, "read").catch(() => undefined)
+    if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-access-unavailable" }
+    if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
     return { status: "ok", value: publicThreadProjection(saved.value) }
   }
+}
+
+/** Replies and edits may change content, but cannot retarget the retained discussion. */
+export function sameThreadReadScope(previous: CollaborationThread, current: CollaborationThread) {
+  const scope = (thread: CollaborationThread) => ({ id: thread.id, kind: thread.kind, sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, recipientRef: thread.recipientRef ?? null, evidenceRefs: thread.evidenceRefs })
+  return digestSfValue(scope(previous)) === digestSfValue(scope(current)) && previous.messages.every((message) => {
+    const next = current.messages.find((entry) => entry.id === message.id)
+    return !!next && next.incarnation === message.incarnation && next.authorRef === message.authorRef && digestSfValue(threadMessageContext(previous, message)) === digestSfValue(threadMessageContext(current, next))
+  })
 }
 
 /** Case provenance and stored revisions have separate, currently authorized readers. */

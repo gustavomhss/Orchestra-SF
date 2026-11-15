@@ -1,0 +1,2571 @@
+{
+  "schema": "orchestra-sf.reports48.closing-remote-observations.v1",
+  "observed_at": "2026-11-15 01:46:28 UTC",
+  "source_ref": {
+    "ref": "refs/heads/astra-wp07",
+    "node_id": "REF_kwDOVsSYprVyZWZzL2hlYWRzL2FzdHJhLXdwMDc",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-wp07",
+    "object": {
+      "sha": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/ac72112c576edf20ef1bc3b53ee10dce26b00ac7"
+    }
+  },
+  "check_ref": {
+    "ref": "refs/heads/astra-check-wp07",
+    "node_id": "REF_kwDOVsSYprtyZWZzL2hlYWRzL2FzdHJhLWNoZWNrLXdwMDc",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-check-wp07",
+    "object": {
+      "sha": "9235894b095a2cf4a90184b4606949f75a70279d",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/9235894b095a2cf4a90184b4606949f75a70279d"
+    }
+  },
+  "stack": {
+    "sha": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "tree": "69cf88239d09ee164b12fecd482c6da3350b8b71",
+    "parents": [
+      "b10c424a6b318879fc30f11d03ba1cfeffda7d1a"
+    ],
+    "message": "docs(sucafina): close mission57 with C27 candidate and exact validation queue [skip ci]",
+    "changed_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/AUTHORITY.json",
+        "status": "added",
+        "blob": "5f2009672caed4b729924e88033b639fae8df7ee"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/HANDOFF.md",
+        "status": "added",
+        "blob": "91ae527cffe5315a8e67ec77efd88aede798b1a0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/candidates-final.json",
+        "status": "added",
+        "blob": "0177aeaf88c754253ca66b5361cc97fcbccbe127"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/consumer-acks-final.json",
+        "status": "added",
+        "blob": "3bf87797a44af3efcd3119bcdd40d460f27604d3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/dependency-closure-final.json",
+        "status": "added",
+        "blob": "9025e3397c3e7232e256d377520e90fa05002603"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/errata-final.json",
+        "status": "added",
+        "blob": "dfbc2e606d4451ac93af5d76037e4031861622fb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/finding-routing-final.json",
+        "status": "added",
+        "blob": "cf1ede548bb3e1a528ca642a3be3b6d42f82954c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/gate-queue-final.json",
+        "status": "added",
+        "blob": "cd79edc9c0f55cd1ce97144ee659f3a2318a7844"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/pending-owners-final.json",
+        "status": "added",
+        "blob": "de84f6269706a16644c99012518f4073ada48ab3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/read-coverage-final.json",
+        "status": "added",
+        "blob": "0f3374a4665e05c6d52b93012dc76cb4a0ee06fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-census-final.json",
+        "status": "added",
+        "blob": "48e89628d496b1120fb79e05c4573b937cc2b0d3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-output-manifest-final.json",
+        "status": "added",
+        "blob": "f8a9012cd4cd27c39c728d6b7d77c738e57e2a97"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/validation-inputs-final.json",
+        "status": "added",
+        "blob": "16d6f42db0dea560d682cc99bf18d4a1cd59d757"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/verification-final.json",
+        "status": "added",
+        "blob": "ac2b2f5be801e5a755d4366f526cd034af0c508d"
+      }
+    ]
+  },
+  "source36_to_source8": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+    "head": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "status": "ahead",
+    "ahead_by": 10,
+    "behind_by": 0,
+    "total_commits": 10,
+    "too_large": null,
+    "base_commit": {
+      "sha": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64"
+    },
+    "merge_base_commit": {
+      "sha": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64"
+    },
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/AUTHORITY-ACK.json",
+        "status": "added",
+        "additions": 73,
+        "deletions": 0,
+        "changes": 73,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/C27-DEPENDENCY-RECONCILIATION.json",
+        "status": "added",
+        "additions": 88,
+        "deletions": 0,
+        "changes": 88,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/C27-REBASE-REVIEW.json",
+        "status": "added",
+        "additions": 28,
+        "deletions": 0,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/COLD-REVIEW.json",
+        "status": "added",
+        "additions": 566,
+        "deletions": 0,
+        "changes": 566,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/COMPOSITION-PLAN.json",
+        "status": "added",
+        "additions": 594,
+        "deletions": 0,
+        "changes": 594,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/E2E-INPUTS.json",
+        "status": "added",
+        "additions": 426,
+        "deletions": 0,
+        "changes": 426,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/EVIDENCE-INDEX.json",
+        "status": "added",
+        "additions": 67,
+        "deletions": 0,
+        "changes": 67,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/FINAL-CANDIDATE-W4.json",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0,
+        "changes": 53,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/FINAL-CANDIDATE-W5.json",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0,
+        "changes": 42,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/IMPLEMENTATION-01.json",
+        "status": "added",
+        "additions": 24,
+        "deletions": 0,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/INSTALLED-ENTRY-REVIEW.json",
+        "status": "added",
+        "additions": 125,
+        "deletions": 0,
+        "changes": 125,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/READINGS.json",
+        "status": "added",
+        "additions": 148,
+        "deletions": 0,
+        "changes": 148,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SCOPE-AUDIT-W4.json",
+        "status": "added",
+        "additions": 37,
+        "deletions": 0,
+        "changes": 37,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SHARED-AGENTS.json",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0,
+        "changes": 42,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SOURCE-CHECK-TRIAGE.json",
+        "status": "added",
+        "additions": 831,
+        "deletions": 0,
+        "changes": 831,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/TEST-INPUTS.json",
+        "status": "added",
+        "additions": 237,
+        "deletions": 0,
+        "changes": 237,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/blockers/closure-setup-blocker.json",
+        "status": "added",
+        "additions": 70,
+        "deletions": 0,
+        "changes": 70,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/dependencies/operator-session-cookie.ts.txt",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/case-fixture-regression.md",
+        "status": "added",
+        "additions": 13,
+        "deletions": 0,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/installed-review-bridge/DIAGNOSIS.md",
+        "status": "added",
+        "additions": 46,
+        "deletions": 0,
+        "changes": 46,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/installed-review-bridge/READ-ACK.json",
+        "status": "added",
+        "additions": 43,
+        "deletions": 0,
+        "changes": 43,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/installed-review-bridge/installed-review-entry-manifest.json",
+        "status": "added",
+        "additions": 23,
+        "deletions": 0,
+        "changes": 23,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/installed-review-bridge/reviews-http-consumption-delta.patch",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/REVIEW.json",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0,
+        "changes": 48,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/agenda-transport.patch",
+        "status": "added",
+        "additions": 165,
+        "deletions": 0,
+        "changes": 165,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/manifest.json",
+        "status": "added",
+        "additions": 55,
+        "deletions": 0,
+        "changes": 55,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/postimage/packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts.txt",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/postimage/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+        "status": "added",
+        "additions": 255,
+        "deletions": 0,
+        "changes": 255,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/postimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+        "status": "added",
+        "additions": 414,
+        "deletions": 0,
+        "changes": 414,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/preimage/packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/preimage/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+        "status": "added",
+        "additions": 235,
+        "deletions": 0,
+        "changes": 235,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal06-agenda/preimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+        "status": "added",
+        "additions": 331,
+        "deletions": 0,
+        "changes": 331,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/prepare-review-mount/locator-review.json",
+        "status": "added",
+        "additions": 198,
+        "deletions": 0,
+        "changes": 198,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/report-form-locators/causal-report.json",
+        "status": "added",
+        "additions": 188,
+        "deletions": 0,
+        "changes": 188,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/report-form-locators/review-flow.patch",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/thread-history-fixture.json",
+        "status": "added",
+        "additions": 67,
+        "deletions": 0,
+        "changes": 67,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.json",
+        "status": "added",
+        "additions": 71,
+        "deletions": 0,
+        "changes": 71,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.json",
+        "status": "added",
+        "additions": 41,
+        "deletions": 0,
+        "changes": 41,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-07-context/sucafina-reports-support-a-3746f-rves-the-authorized-dossier-chromium.md",
+        "status": "added",
+        "additions": 186,
+        "deletions": 0,
+        "changes": 186,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-07-runtime/benchmark-runtime.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-07-runtime/playwright-runtime.json",
+        "status": "added",
+        "additions": 204,
+        "deletions": 0,
+        "changes": 204,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-07-runtime/playwright-selection.json",
+        "status": "added",
+        "additions": 103,
+        "deletions": 0,
+        "changes": 103,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-07-runtime/request.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-07-transport.json",
+        "status": "added",
+        "additions": 46,
+        "deletions": 0,
+        "changes": 46,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-07.json",
+        "status": "added",
+        "additions": 206,
+        "deletions": 0,
+        "changes": 206,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/envelopes-verified.json",
+        "status": "added",
+        "additions": 32,
+        "deletions": 0,
+        "changes": 32,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/installed-05.json",
+        "status": "added",
+        "additions": 51,
+        "deletions": 0,
+        "changes": 51,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium.md",
+        "status": "added",
+        "additions": 515,
+        "deletions": 0,
+        "changes": 515,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium.md",
+        "status": "added",
+        "additions": 515,
+        "deletions": 0,
+        "changes": 515,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium.md",
+        "status": "added",
+        "additions": 515,
+        "deletions": 0,
+        "changes": 515,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium.md",
+        "status": "added",
+        "additions": 515,
+        "deletions": 0,
+        "changes": 515,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-runtime/benchmark-runtime.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-runtime/playwright-runtime.json",
+        "status": "added",
+        "additions": 398,
+        "deletions": 0,
+        "changes": 398,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-runtime/playwright-selection.json",
+        "status": "added",
+        "additions": 163,
+        "deletions": 0,
+        "changes": 163,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03-runtime/request.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.json",
+        "status": "added",
+        "additions": 77,
+        "deletions": 0,
+        "changes": 77,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium.md",
+        "status": "added",
+        "additions": 539,
+        "deletions": 0,
+        "changes": 539,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium.md",
+        "status": "added",
+        "additions": 539,
+        "deletions": 0,
+        "changes": 539,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium.md",
+        "status": "added",
+        "additions": 539,
+        "deletions": 0,
+        "changes": 539,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium.md",
+        "status": "added",
+        "additions": 539,
+        "deletions": 0,
+        "changes": 539,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-runtime/benchmark-runtime.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-runtime/playwright-runtime.json",
+        "status": "added",
+        "additions": 430,
+        "deletions": 0,
+        "changes": 430,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-runtime/playwright-selection.json",
+        "status": "added",
+        "additions": 163,
+        "deletions": 0,
+        "changes": 163,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04-runtime/request.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.json",
+        "status": "added",
+        "additions": 80,
+        "deletions": 0,
+        "changes": 80,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-context/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium.md",
+        "status": "added",
+        "additions": 201,
+        "deletions": 0,
+        "changes": 201,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-context/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium.md",
+        "status": "added",
+        "additions": 201,
+        "deletions": 0,
+        "changes": 201,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-context/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium.md",
+        "status": "added",
+        "additions": 201,
+        "deletions": 0,
+        "changes": 201,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-context/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium.md",
+        "status": "added",
+        "additions": 201,
+        "deletions": 0,
+        "changes": 201,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-runtime/benchmark-runtime.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-runtime/playwright-runtime.json",
+        "status": "added",
+        "additions": 398,
+        "deletions": 0,
+        "changes": 398,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-runtime/playwright-selection.json",
+        "status": "added",
+        "additions": 163,
+        "deletions": 0,
+        "changes": 163,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06-runtime/request.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-06.json",
+        "status": "added",
+        "additions": 289,
+        "deletions": 0,
+        "changes": 289,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/source-check-01-diagnostics.json",
+        "status": "added",
+        "additions": 1902,
+        "deletions": 0,
+        "changes": 1902,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/source-check-01.json",
+        "status": "added",
+        "additions": 168,
+        "deletions": 0,
+        "changes": 168,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/cumulative-owned.patch",
+        "status": "added",
+        "additions": 3356,
+        "deletions": 0,
+        "changes": 3356,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/manifest.json",
+        "status": "added",
+        "additions": 299,
+        "deletions": 0,
+        "changes": 299,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts.txt",
+        "status": "added",
+        "additions": 162,
+        "deletions": 0,
+        "changes": 162,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts.txt",
+        "status": "added",
+        "additions": 473,
+        "deletions": 0,
+        "changes": 473,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts.txt",
+        "status": "added",
+        "additions": 297,
+        "deletions": 0,
+        "changes": 297,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts.txt",
+        "status": "added",
+        "additions": 49,
+        "deletions": 0,
+        "changes": 49,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts.txt",
+        "status": "added",
+        "additions": 77,
+        "deletions": 0,
+        "changes": 77,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts.txt",
+        "status": "added",
+        "additions": 142,
+        "deletions": 0,
+        "changes": 142,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts.txt",
+        "status": "added",
+        "additions": 119,
+        "deletions": 0,
+        "changes": 119,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts.txt",
+        "status": "added",
+        "additions": 234,
+        "deletions": 0,
+        "changes": 234,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts.txt",
+        "status": "added",
+        "additions": 52,
+        "deletions": 0,
+        "changes": 52,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts.txt",
+        "status": "added",
+        "additions": 119,
+        "deletions": 0,
+        "changes": 119,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts.txt",
+        "status": "added",
+        "additions": 90,
+        "deletions": 0,
+        "changes": 90,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts.txt",
+        "status": "added",
+        "additions": 121,
+        "deletions": 0,
+        "changes": 121,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts.txt",
+        "status": "added",
+        "additions": 128,
+        "deletions": 0,
+        "changes": 128,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts.txt",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts.txt",
+        "status": "added",
+        "additions": 112,
+        "deletions": 0,
+        "changes": 112,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports-support/revocation.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/postimage/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/preimage/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/preimage/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/preimage/packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/preimage/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/preimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/preimage/packages/app-shell/e2e/sucafina/reports-support/revocation.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/preimage/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/packages/app-shell/e2e/sucafina/reports-support/revocation.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/source36-preimage/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/protocol-C19.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/protocol-C27.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/CAUSAL-READ.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/REVIEW.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/manifest.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/merge-deltas/extended-browser.ts.C27-to-M48.patch",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/merge-deltas/extended-browser.ts.M48-to-composed-C27.patch",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/merge-deltas/extended-http.ts.C27-to-M48.patch",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/merge-deltas/extended-http.ts.M48-to-composed-C27.patch",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/apps/cli/src/sucafina-product/extended-http.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/apps/cli/src/sucafina-product/extended-review-cycle.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/apps/cli/src/sucafina-product/review-calculation-history.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/apps/cli/src/sucafina-product/review-history.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/apps/cli/src/sucafina-product/review-read-integrity.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/collaboration/authority.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/collaboration/host.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/collaboration/threads.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/integration/product-authority.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/reviews/port.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/reviews/services.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/product/reviews/thread-context.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/postimage/modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/apps/cli/src/sucafina-product/extended-http.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/apps/cli/src/sucafina-product/extended-review-cycle.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/apps/cli/src/sucafina-product/review-calculation-history.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/apps/cli/src/sucafina-product/review-history.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/apps/cli/src/sucafina-product/review-read-integrity.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/collaboration/authority.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/collaboration/host.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/collaboration/threads.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/integration/product-authority.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/reviews/port.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/reviews/services.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/product/reviews/thread-context.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/preimage/modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/producer-contract.patch",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      }
+    ]
+  },
+  "check_same_tree": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "head": "9235894b095a2cf4a90184b4606949f75a70279d",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ac72112c576edf20ef1bc3b53ee10dce26b00ac7"
+    },
+    "merge_base_commit": {
+      "sha": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ac72112c576edf20ef1bc3b53ee10dce26b00ac7"
+    },
+    "files": []
+  },
+  "control_ref": {
+    "ref": "refs/heads/sf2-control",
+    "node_id": "REF_kwDOVsSYprZyZWZzL2hlYWRzL3NmMi1jb250cm9s",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf2-control",
+    "object": {
+      "sha": "afa3079d74d819f1afb3add83cf50eba63069f16",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/afa3079d74d819f1afb3add83cf50eba63069f16"
+    }
+  },
+  "control_delta": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+    "head": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "status": "ahead",
+    "ahead_by": 2,
+    "behind_by": 0,
+    "total_commits": 2,
+    "too_large": null,
+    "base_commit": {
+      "sha": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/1809a32ad042a0f98a5d93dc90447a7e13e78434",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/1809a32ad042a0f98a5d93dc90447a7e13e78434"
+    },
+    "merge_base_commit": {
+      "sha": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/1809a32ad042a0f98a5d93dc90447a7e13e78434",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/1809a32ad042a0f98a5d93dc90447a7e13e78434"
+    },
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/integration-after-c27.json",
+        "status": "added",
+        "additions": 43,
+        "deletions": 0,
+        "changes": 43,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/runtime-readonly-root.json",
+        "status": "added",
+        "additions": 49,
+        "deletions": 0,
+        "changes": 49,
+        "previous_filename": null
+      }
+    ]
+  },
+  "mission48": {
+    "pin": "bd045542ebb287cd5f25ce36e676ce90cbce320f",
+    "pinned_blob": "a141d28ed8bb3f5235bcfeac4f100cb24a7072b2",
+    "current_blob": "a141d28ed8bb3f5235bcfeac4f100cb24a7072b2",
+    "unchanged": true
+  },
+  "authority57": {
+    "ref": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "blob": "5f2009672caed4b729924e88033b639fae8df7ee",
+    "value": {
+      "schema": "sf2h.closure-intake-57.authority.v1",
+      "mission": 57,
+      "actor": "S0-C",
+      "epoch": "S0-C-e11-browser57",
+      "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+      "recorded_at": "2026-11-15 01:24:22 UTC",
+      "campaign": "sf2h-integral-20261112",
+      "T0": "2026-11-13T04:01:10Z",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+      "authority_source": {
+        "user": "Mission57 as55 successor, sole writer sf2-stack/PR65, explicit complete releases, GitHub MCP/CAS, no tests/checks/CI/AM.",
+        "package": "44f01d333618712213d2189157ca6aeace4d6d2e",
+        "mission_blob": "9e7748018bde0e65d0daa2b0732be75ebaa3d108",
+        "closing_control": {
+          "branch": "sf2-control",
+          "expected": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+          "observed": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+          "advanced": false,
+          "fullComparisonRequired": false,
+          "mission57": {
+            "ref": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/released-closure-intake.json",
+            "blob": "9e7748018bde0e65d0daa2b0732be75ebaa3d108",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1809a32ad042a0f98a5d93dc90447a7e13e78434/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/released-closure-intake.json"
+          },
+          "mission57BlobUnchangedFromOriginal44f01": true,
+          "mission58": {
+            "ref": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-runtime-qualification.json",
+            "blob": "0b7e47921496525a22d904a44006f13bf5735726",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1809a32ad042a0f98a5d93dc90447a7e13e78434/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-runtime-qualification.json"
+          },
+          "disposition": "57 sole stack writer;58 Portfolio/P03 successor54;45 checks;S0 epic and acceptance"
+        }
+      },
+      "predecessor": {
+        "mission": 55,
+        "terminal": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+        "explicitly_ended": true,
+        "initial_HEAD_matched": true
+      },
+      "ACK57": {
+        "sha": "666ed28668ad3fc0bb9c89fdb57a0da33c57e2e4",
+        "tree": "ff045186aaba85395f4e4a8e219a445bab068744",
+        "blob": "2572ec24161d5749987ae92d15405295add10ad6",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/ACK57.json",
+        "before_material": true
+      },
+      "writer": "Root57 only for sf2-stack. Three helpers remote read-only; no producer/workflow authority transferred.",
+      "latest_material": {
+        "symbol": "C27",
+        "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+        "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+        "material_paths": 9,
+        "archive": 31
+      },
+      "material_candidates": [
+        {
+          "symbol": "C24",
+          "sha": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+          "tree": "97500d1435255a2790b1e6833e5a9391ca70d860",
+          "parent": "666ed28668ad3fc0bb9c89fdb57a0da33c57e2e4",
+          "material_paths": 7,
+          "archive": 63
+        },
+        {
+          "symbol": "C25",
+          "sha": "4b15af2d8f8a5b96cdd0a8117951939bde0b9d02",
+          "tree": "ad67f4c0101b341e08de075c2c8ba8e599c4b3a2",
+          "parent": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+          "material_paths": 9,
+          "archive": 0
+        },
+        {
+          "symbol": "C26",
+          "sha": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+          "tree": "ab41682ea4879c5921242889dac20f4b5cec2d07",
+          "parent": "4b15af2d8f8a5b96cdd0a8117951939bde0b9d02",
+          "material_paths": 2,
+          "archive": 43
+        },
+        {
+          "symbol": "C27",
+          "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+          "parent": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+          "material_paths": 9,
+          "archive": 31
+        }
+      ],
+      "intake_status": "FOUR_COHERENT_MATERIAL_INCREMENTS_PUBLISHED_ALL_AVAILABLE_QUALIFIED_RELEASE_INTAKES_COMPLETE",
+      "sources": {
+        "53": {
+          "terminal": "0ad96d0ffa97d309c90847211e943e59893040cc",
+          "W": "179a766bb1e3b6b15523ba6c2be8553207d543fd",
+          "tree": "7c93fb5495e89055e4a9f2a0363d9cfc97702cf6"
+        },
+        "54": {
+          "terminal": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+          "W": "06df1210f0f2049c972dfb2852396de34f31c683",
+          "tree": "7150512610093d91f252fd300d4d4ceb5e06588d",
+          "tested_W": "a233ec7e4ed4c55eeca6feb0344b5ec20b4880fb"
+        },
+        "56": {
+          "terminal": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+          "W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+          "tree": "f629c4cd1e73c090de2e820c4c1a214b8ca99e9e"
+        }
+      },
+      "closing_census": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-census-final.json",
+        "observed_heads_at": "2026-11-15 01:17:05 UTC",
+        "evidence_completed_at": "2026-11-15 01:20:05 UTC",
+        "new_complete_release_requires_intake": false
+      },
+      "publication": {
+        "branch": "sf2-stack",
+        "PR": 65,
+        "expected_parent": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "expected_parent_tree": "31be8f81803b77f03e9089e09118f78218b26262",
+        "remote": "GitHub MCP create_tree/create_commit/update_ref expected_sha force:false",
+        "scope": "Fourteen new own terminal receipt files; no change to C27 material, original intakes, producer/control/workflow refs or dev."
+      },
+      "terminal_identity": "Containing commit/tree. Exact values recorded after CAS readback in PR65/final answer. Documentation child is not C28, a CI snapshot or accepted D/G8.",
+      "lease": {
+        "epoch": "S0-C-e11-browser57",
+        "state": "ENDED",
+        "effective_on": "Successful CAS publication of this terminal documentation commit",
+        "further_product_writes": false,
+        "continuation_rule": "Later integrator must reconcile terminal HEAD/current control/explicit source authorities, then publish successor ACK before material writes. Readback/PR65 metadata closure does not extend product-write lease."
+      },
+      "preserved": {
+        "C23_and_all_prior_intakes": true,
+        "original56_items_and_digests": true,
+        "original17_findings": true,
+        "source_failures": true,
+        "Microsoft49_C22": true,
+        "P02": true,
+        "P03_original72_assertions_180000ms": true,
+        "M31_original_requirement": "OPEN",
+        "MI07_original_requirement": "OPEN",
+        "Reports36_ambiguous503_purge": "HOLD",
+        "Native41_real_admission_and_continuation": "HOLD",
+        "all1610criteria": true
+      },
+      "next": {
+        "A45": "Supported compiler/generation/program/preflight/spawn/guards lane on exact candidate; interface pending.",
+        "Portfolio58": "Diagnose isolated54+56 P03 failure; no unchanged retry from new SHA alone.",
+        "sources48_52": "Keep source scopes; no active snapshot consumption.",
+        "S0": "Epic/freeze, eight recipes/inherited suites, AM01-06, three FINAL reviews and final acceptance."
+      },
+      "execution": {
+        "tests": "NOT_RUN",
+        "typechecks": "NOT_RUN",
+        "builds": "NOT_RUN",
+        "guards": "NOT_RUN",
+        "preflights": "NOT_RUN",
+        "validator_invocations": 0,
+        "CI_dispatches": 0,
+        "epic_dispatches": 0,
+        "AM": "NOT_RUN",
+        "producer_branch_writes": 0,
+        "workflow_ref_writes": 0,
+        "dev_merge": false,
+        "deploy": false,
+        "Azure": false,
+        "external_messages": false
+      },
+      "gates": {
+        "checks_owner": 45,
+        "epic_owner": "S0",
+        "final_acceptance": "S0",
+        "C_G7": "OPEN",
+        "D_G8": "OPEN",
+        "AM01_AM06": "OPEN",
+        "three_FINAL_reviews": "OPEN",
+        "eight_functional_selections": "OPEN",
+        "target_tests": "NOT_RUN",
+        "GLOBAL_RELEASE": false
+      },
+      "GLOBAL_RELEASE": false
+    }
+  },
+  "successor60": {
+    "control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+    "value": {
+      "number": 60,
+      "id": "integration-after-c27",
+      "state": "PREPARED_NOT_STARTED",
+      "session_id": null,
+      "model_effective": null,
+      "campaign": "sf2h-integral-20261112",
+      "T0": "2026-11-13T04:01:10Z",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+      "actor": "S0-C integration successor",
+      "actor_pack": "execution/actors/S0-C.json",
+      "branch": "sf2-stack",
+      "pr": 65,
+      "expected_head": "d6d9816bb09f7595330862616305e0791e23e61e",
+      "lease_epoch": "S0-C-e12-browser60",
+      "authority": "57 explicitly ended via closure-intake-57/HANDOFF.md and AUTHORITY.json in terminald6d9816bb09f7595330862616305e0791e23e61e. ReconcileactualHEAD,newerauthoritiesandcontrolbeforeACK; only60stackwriterafteraccepted succession. A preparedmissionisnotrunning. No secondS0/Goal/controller or resurrectionofinterruptedworkers.",
+      "inputs": {
+        "terminal57": "d6d9816bb09f7595330862616305e0791e23e61e",
+        "C27": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "C27tree": "31be8f81803b77f03e9089e09118f78218b26262",
+        "source58terminal": "00813b2ebacf5b0cd1c69d871c7a757ac323ebb4",
+        "runtime59branch": "runtime-read-scope",
+        "planningbranch": "sf-sidebar-plan",
+        "active_or_unreleased": "Reports48/PR27;Decisions52/PR40;Compiler45/PR32. ReconcileactualsourceACKs/terminalreleases,neverinferfinishedfromsilence."
+      },
+      "mission": "Takeintegrationcustodyafter57andcontinueusefulintakeandconsumerwiringonactualreleasedoutputs. PreserveallC27productandfour57increments. Reconcilecurrent48/52proposalsandrouteactionablepreimage/APIchangesnow;activateonlyexplicitcompletequalifyingrelease. Intake59afterterminalqualifiedrelease. Do notannounceprogresssolelyfromauthorityreceipts.",
+      "write_paths": [
+        "sf2-stack target only: selectively accepted released product/test/config changes and modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/"
+      ],
+      "execution": [
+        "ReadAGENTS,pinnedSTART/WORKFLOW/COMMON/fullS0Cpack+annexes,and57fullhandoff/authority/closure/pending/census/gatequeue/verification/errata. Preserve56pendingIDs/digests andallpriorfindings/receipts. Sourceproductcode/dependenciesmustbereadbeforeactivation.",
+        "Verifycurrentactual48/52releaseauthorityandcompletecandidatepatches. Prepared/proposedorlatestCIgreenisnotrelease; contractReports4PASS103assertionsisnotfourbrowserjourneys. Preserveknownambiguous503draftpurgeanddenialboundaries. Correctedreleaseconsumedatomicallywithallhost/client/APIdependencies.",
+        "52transport/routes/batchpatchesmayoverlapC22MicrosoftandC25Procurement; reviewreconciledpreimagesandexplicitfailureevidence, preserveauth/origin/privacy, sourcefreshnessandno-financialpolicyexpansion. A sourcepatchnotqualifiedincomposedruntimecannotbecomePASSthroughintegration. Do notalterfinancialpolicyorclaimcanonicaledit/submit/approvefulfillsunsupportedpostapprovalreplacement.",
+        "59isnewsourcewriterforreadonlyruntime/contract/wrappercapability.56alreadyinC27; no needrepeatintake56.58terminalisdiagnostic-onlyP03FAIL;archivewithoutdocumentonlycandidate. NeworiginalP03requiresmaterialqualified59orotherreviewedproducerfix; do notrerunsame54/56closure.",
+        "Sidebarbranchisplanning-onlyperuser. Readpublishedplanwhenavailableandrecordimpact/dependencies; no nativeUIimplementationorplanmergeasproductdeliverywithoutsubsequentauthorization. KeepAzurevaultPR70separatefromSFproductintake, no opportunisticAzurechanges.",
+        "Publishcoherentmaterialincrementsimmediatelywhenreadywithsource/pre/post/blob/mode/dependencyclosure/consumerACK andcandidateSHA/tree. Reviewallcurrentproducerreleasepinsanddelivercompactactionableintake/preimagefeedbackwithoutsourceediting. PreservehistoricalFAILandrawreceipts, appendownreceipts.",
+        "45 exclusivelyownscompile/generation/guards/preflightinterface; S0finalepic/AM/acceptance.60performsno tests/typechecks/builds/guards/preflights/CI/AMdispatch/workflowrefmoves. Prepareexactcandidateandreadyrequestqueuefortheactualexecutor, no pretendgategreen orseizingidle45authority.",
+        "Do notblockalreadyreleasedindependentworkbehindfutureoutputs. Whenreadyintakesandboundedpreimage/closureworkfinishandnoauthorisednextactionexists, publishdurablehandoff/pendingqueueandexplicitterminalauthority; no busyloop/polling/no-opcommits orassumedfutureworkers."
+      ],
+      "handoff": "SamePR65 exactacceptedcandidate(s), sourceandconsumerACKs, coherentpatchmaps/importclosure, preservedmaterial/receipts, holdswithactualfilecauseandowner, gatequeueandnextreadyaction, finalcensusandterminalauthority. All15WPs74tasks17contracts1610criteria,8finalCIselections,AM01–06,3FINALreviews,C/G7D/G8andremoteproof remainrequired. GLOBAL_RELEASEfalseuntilactualfullpredicate.",
+      "limits": "RemoteGitHubMCPonly/CAS;no gh/gitpush/force/devmerge/deploy/Azure/Teams/credentials/enginepolicychanges/restarts/thirdpartymessages/newGoal/supervisor. No sourcebranchwrites/controlmerge/localproducttests/heavychecks/fullEPIC."
+    },
+    "observed_ack": false,
+    "scope": "Prepared successor only; sf2-stack remains terminal57, no active60 authority inferred."
+  },
+  "runtime59": {
+    "control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "blob": "6719755c2510dc60c9d0c4abedc4ebf3e8e78bec",
+    "number": 59,
+    "state": "PREPARED_NOT_STARTED",
+    "no_reports48_scope": true
+  },
+  "W6_readback": {
+    "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+    "tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+    "verified_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+        "sha": "d9c4f9472fee1865a349bdffa8190abdece1a873"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "sha": "ce0f54a96d5d3a02671b20c52e1c0b3832504f42"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+        "sha": "f316969255bea603f9187800a0af111c716bdc65"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+        "sha": "6c05d1de35d2176530cc70ecfa1f849afe95ff0d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+        "sha": "291e72cf1c356d76f1671ec971eac5b44a70edd0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+        "sha": "65dd8c157ad31d288ee0f9142e1b41e08221de7c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+        "sha": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+        "sha": "ae37b110099b63ddde6188b9d89be4947408b087"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+        "sha": "5e24513ec7f015e52d0b944011ae25d1529ac6e2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+        "sha": "332b91ee3bac6303073f397e72d7f09afcd134da"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+        "sha": "6d03d60364ea5cac477fa0623e749c7f9ba947bc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+        "sha": "c874e2070e7d92b118eaa8fffe0caf6baf9b0144"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+        "sha": "c2948d5b96ba06172227c446e1c6e15fc174b2d6"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+        "sha": "9db3ae6a537a45d86089f5637d150a5ea1a713fc"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
+        "sha": "dc1d4849a24a0b42756978daaa76930ab99d52e6"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
+        "sha": "ebbf5b9365e6f5268f00004c1bdf766ecfca4dad"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "sha": "494fe03f46beea037cff45e70259ac875758e3b6"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+        "sha": "b145caac8a47e029aded4418253488d250d680e1"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+        "sha": "857f339fe477839986e6e70cf4781c9f4f16e009"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "sha": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+        "sha": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+        "sha": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+        "sha": "604bd5d8bd9cd66370d3f15e6477fe4186951e49"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+        "sha": "a15b1f6e52e4a5418a13bb850255711b1ca70186"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "sha": "b7f69a1b71e40af5204280054cb83d0c2e2970c6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+        "sha": "438cbf76c6b230ed5a9b3328ef67cbecc73106c6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+        "sha": "134b3bb6dd682c23eceb2c525ba35aa0c0584c39"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+        "sha": "59a923fbf7f04b212b24cd4c32f09d67620bccda"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+        "sha": "ccae839a2bc35634554a2ac2721d345671c16f77"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "sha": "000e1aaedcc929f94e0dcb45d1e63267f1401531"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+        "sha": "c4199da735c14b4c08ad6c1848c1b36ca9de8c26"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "sha": "bde64fb8cb1a25e8f10eb979ed5ff111cdb2042e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+        "sha": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "sha": "5123063a55dbb7ab8935ff95e432b8bf1a77fd0d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "sha": "1290845a260606bd6e2b30594ba4247724ed7290"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "sha": "b4e16a0c948d1232cc73f2785a6ee1d2bc0e3dd7"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "sha": "0db2a444c14986cb6d0fec6eb60b279a8e26729d"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "sha": "d879d52e12945465a965986280bef3a242962a50"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+        "sha": "d3b87293664682a380188239baf0f82e14a21db9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+        "sha": "11162741f8021b7d79a23c1022c06f636a393f26"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+        "sha": "aae326accb08bc5645a408271688052a725a30a5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts",
+        "sha": "7f99dee8c6995dd685272a150b939d74a75fd653"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "sha": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "sha": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+        "sha": "6960533cbb8cb128ec4e6d90583903107b5eeb0c"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+        "sha": "81a6863f68fc2b83c4b331c19920c59267b5d060"
+      }
+    ],
+    "compare": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "head": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/b10c424a6b318879fc30f11d03ba1cfeffda7d1a"
+      },
+      "merge_base_commit": {
+        "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/b10c424a6b318879fc30f11d03ba1cfeffda7d1a"
+      },
+      "files": [
+        {
+          "filename": "apps/cli/src/sucafina-product/extended-browser.ts",
+          "status": "modified",
+          "additions": 6,
+          "deletions": 1,
+          "changes": 7,
+          "previous_filename": null
+        },
+        {
+          "filename": "apps/cli/src/sucafina-product/extended-http.ts",
+          "status": "modified",
+          "additions": 24,
+          "deletions": 6,
+          "changes": 30,
+          "previous_filename": null
+        },
+        {
+          "filename": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+          "status": "modified",
+          "additions": 35,
+          "deletions": 26,
+          "changes": 61,
+          "previous_filename": null
+        },
+        {
+          "filename": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 1,
+          "changes": 2,
+          "previous_filename": null
+        },
+        {
+          "filename": "apps/cli/src/sucafina-product/review-history.ts",
+          "status": "modified",
+          "additions": 8,
+          "deletions": 3,
+          "changes": 11,
+          "previous_filename": null
+        },
+        {
+          "filename": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+          "status": "modified",
+          "additions": 88,
+          "deletions": 49,
+          "changes": 137,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/VALIDATION-W-06.json",
+          "status": "added",
+          "additions": 617,
+          "deletions": 0,
+          "changes": 617,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+          "status": "modified",
+          "additions": 28,
+          "deletions": 5,
+          "changes": 33,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "status": "modified",
+          "additions": 4,
+          "deletions": 4,
+          "changes": 8,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+          "status": "modified",
+          "additions": 8,
+          "deletions": 4,
+          "changes": 12,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+          "status": "modified",
+          "additions": 68,
+          "deletions": 37,
+          "changes": 105,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+          "status": "modified",
+          "additions": 60,
+          "deletions": 24,
+          "changes": 84,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+          "status": "modified",
+          "additions": 4,
+          "deletions": 0,
+          "changes": 4,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+          "status": "modified",
+          "additions": 56,
+          "deletions": 12,
+          "changes": 68,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "status": "modified",
+          "additions": 7,
+          "deletions": 1,
+          "changes": 8,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+          "status": "modified",
+          "additions": 82,
+          "deletions": 18,
+          "changes": 100,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+          "status": "modified",
+          "additions": 316,
+          "deletions": 69,
+          "changes": 385,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+          "status": "modified",
+          "additions": 46,
+          "deletions": 17,
+          "changes": 63,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+          "status": "modified",
+          "additions": 46,
+          "deletions": 31,
+          "changes": 77,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+          "status": "modified",
+          "additions": 15,
+          "deletions": 0,
+          "changes": 15,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+          "status": "modified",
+          "additions": 8,
+          "deletions": 3,
+          "changes": 11,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+          "status": "added",
+          "additions": 297,
+          "deletions": 0,
+          "changes": 297,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+          "status": "added",
+          "additions": 49,
+          "deletions": 0,
+          "changes": 49,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+          "status": "added",
+          "additions": 77,
+          "deletions": 0,
+          "changes": 77,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+          "status": "added",
+          "additions": 142,
+          "deletions": 0,
+          "changes": 142,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+          "status": "added",
+          "additions": 119,
+          "deletions": 0,
+          "changes": 119,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "status": "added",
+          "additions": 234,
+          "deletions": 0,
+          "changes": 234,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+          "status": "added",
+          "additions": 52,
+          "deletions": 0,
+          "changes": 52,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+          "status": "added",
+          "additions": 119,
+          "deletions": 0,
+          "changes": 119,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+          "status": "added",
+          "additions": 90,
+          "deletions": 0,
+          "changes": 90,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+          "status": "added",
+          "additions": 121,
+          "deletions": 0,
+          "changes": 121,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+          "status": "added",
+          "additions": 128,
+          "deletions": 0,
+          "changes": 128,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+          "status": "modified",
+          "additions": 4,
+          "deletions": 1,
+          "changes": 5,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts",
+          "status": "modified",
+          "additions": 13,
+          "deletions": 1,
+          "changes": 14,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "status": "modified",
+          "additions": 8,
+          "deletions": 3,
+          "changes": 11,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+          "status": "added",
+          "additions": 14,
+          "deletions": 0,
+          "changes": 14,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+          "status": "added",
+          "additions": 112,
+          "deletions": 0,
+          "changes": 112,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+          "status": "modified",
+          "additions": 21,
+          "deletions": 7,
+          "changes": 28,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
+          "status": "added",
+          "additions": 144,
+          "deletions": 0,
+          "changes": 144,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
+          "status": "added",
+          "additions": 116,
+          "deletions": 0,
+          "changes": 116,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+          "status": "added",
+          "additions": 125,
+          "deletions": 0,
+          "changes": 125,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "status": "modified",
+          "additions": 39,
+          "deletions": 11,
+          "changes": 50,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+          "status": "added",
+          "additions": 112,
+          "deletions": 0,
+          "changes": 112,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+          "status": "modified",
+          "additions": 125,
+          "deletions": 8,
+          "changes": 133,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+          "status": "modified",
+          "additions": 106,
+          "deletions": 5,
+          "changes": 111,
+          "previous_filename": null
+        },
+        {
+          "filename": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "status": "modified",
+          "additions": 38,
+          "deletions": 6,
+          "changes": 44,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "claim": "Remote readbacks and same-parent metadata only; no product execution or consumer ACK. Latest stack is14 own57 receipt additions after exactC27; material preimages remain C27."
+}

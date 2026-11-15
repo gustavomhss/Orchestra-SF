@@ -1,0 +1,42 @@
+{
+  "source": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+  "source_product": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+  "source_e2e": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+  "source_tree": "4b275a76464168b2432cd66c512d65b5ecdcd65f",
+  "W": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+  "W_tree": "bee9af4d7386920ef9356b0e874fee243feb1a38",
+  "composition_baseline": {
+    "symbol": "C19",
+    "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c"
+  },
+  "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/VALIDATION-W-05.json@7621664e70df4f98388b1280b72c99a4c1e874b7",
+  "verified_blob_count": 46,
+  "material_changed_paths": 46,
+  "shared_patch_sha256": "d4c4bc8930692289259359a1448fc6ea8dbe7d072ce929266f0210d5599dcbd1",
+  "from_W4_delta": {
+    "method": "Independent exact blob reads on W4 and W5, common C19 parent, compare C19 to W5 with zero unexpected paths; no sibling merge-base inference.",
+    "changed_runtime": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+        "pre": null,
+        "post": "c2948d5b96ba06172227c446e1c6e15fc174b2d6"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "pre": "977dc142768d8e7d79d6862a3b2353934dfb833a",
+        "post": "494fe03f46beea037cff45e70259ac875758e3b6"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "pre": "6f77c86427ec23b3cd2b3675a0294a736495dac4",
+        "post": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5"
+      }
+    ],
+    "otherwise_equal": 43,
+    "manifest_replacement": [
+      "VALIDATION-W-04.json",
+      "VALIDATION-W-05.json"
+    ]
+  }
+}

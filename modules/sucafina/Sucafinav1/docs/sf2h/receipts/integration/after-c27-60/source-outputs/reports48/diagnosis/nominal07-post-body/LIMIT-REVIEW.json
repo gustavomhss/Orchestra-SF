@@ -1,0 +1,116 @@
+{
+  "schema": "sf-mission48-agenda-body-limit-review-v1",
+  "state": "OVERSIZE_CANCELLATION_HYPOTHESIS_NOT_SUPPORTED_FOR_FIRST_LOAD",
+  "scope": "First Load selection in diagnostic07 / nominal06, before user edits/removals or preserving.",
+  "outgoing_shape": {
+    "envelope": "{items:[...]}",
+    "items": 3,
+    "fields": [
+      "kind",
+      "id",
+      "topic",
+      "selectionRef",
+      "period"
+    ],
+    "recordRefs": "optional in helper, absent in first section constructed by dashboard discovery",
+    "excluded_from_request": [
+      "selected projection",
+      "project rows",
+      "recordCount",
+      "discovered records detail",
+      "report title",
+      "evidence objects"
+    ],
+    "selector": "sf-source:<randomUUID36>:<positive safe integer version>",
+    "does_project_count_increase_initial_body": false,
+    "workspace": "initial state.items is structuredClone(input.items); remainingItems returns state.items before any successful selection"
+  },
+  "static_size_calculation": {
+    "actual_body_captured": false,
+    "product_code_executed": false,
+    "method": "JSON shape length with fixed public topic/page strings, year2026,36ASCII selector incarnation characters, one-digit or max-safe versions; all characters ASCII so length equals UTF8 bytes.",
+    "bytes_if_each_version_one_digit": 581,
+    "upper_bound_with_three_max_safe_versions": 626,
+    "configured_max_bytes": 262144
+  },
+  "limit_paths": [
+    {
+      "location": "reviews/http.ts:56-57",
+      "condition": "Content-Length invalid or greater than configured limit",
+      "behavior": "return413 immediately before getReader; does not await reader.cancel"
+    },
+    {
+      "location": "reviews/http.ts:62-68",
+      "condition": "accumulated body bytes exceed configured limit",
+      "behavior": "await reader.cancel(), then return413"
+    },
+    {
+      "location": "reviews/http.ts:62-68",
+      "condition": "normal small body",
+      "behavior": "await reader.read until done; no cancel"
+    },
+    {
+      "location": "reviews/http.ts:72",
+      "condition": "body completed",
+      "behavior": "parse buffered bytes using new Response(bytes).json"
+    }
+  ],
+  "conclusion": "The initial Reports request is a small selector envelope independent of Projects25 projection size. No inspected producer serializes a projection into selectionRef or initial items. Oversize cancellation cannot explain this route under its verified construction; actual07 still lacks a server-stage/EOF observation.",
+  "uncertainty": "No claim is made about where the real request stopped or that body delivery completed. The general EOF wait remains an unobserved stage, not a diagnosis.",
+  "sources": [
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+      "coverage": "discover: agendaRequest has id/title/selectionRef/topic/period only; returned section is that object, recordCount separate"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+      "coverage": "createDashboardSourceIssuer: compact dashboardSourceSelector(current.incarnation,current.version)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "coverage": "dashboardSourceSelector: sf-source:<URI-encoded incarnation>:<version>; safe integer version required"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "coverage": "scoped incarnation obtained directly from injected createId"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "coverage": "source persistence createId is randomUUID"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+      "coverage": "recordRefs and projections returned in selector result, not assigned into incoming section"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "ref": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "blob": "000e1aaedcc929f94e0dcb45d1e63267f1401531",
+      "coverage": "body reader and threshold: declared oversize returns before getReader; streamed oversize alone awaits cancel"
+    }
+  ],
+  "additional_exact_sources": {
+    "item_helper": "proposal-read-boundary21-C27/postimage/apps/cli/src/sucafina-product/extended-review-cycle.ts.txt",
+    "workspace": "diagnosis/prepare-review-mount/workspace-W3-read-only.ts.txt (same pre-C27 source used by diagnostic07)",
+    "browser": "modules/sucafina/Sucafinav1/product/reviews/browser.ts blob ea194a5c8cf0624c278c8dc2bf81c0dac6222887",
+    "test_flow": "diagnosis/nominal06-agenda/postimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt"
+  },
+  "actions": {
+    "code_edits": false,
+    "limit_or_budget_changes": false,
+    "private_payload_capture": false,
+    "local_or_remote_tests": false
+  }
+}

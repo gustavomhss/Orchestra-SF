@@ -1,0 +1,1895 @@
+{
+  "schema": "sf2h.mission60.reports48.final-source-supplement.v1",
+  "review_scope": "Bounded documentary delta ac72112c to c4f6676. Reuses prior45-file production/preimage/postimage review; no product execution.",
+  "source": {
+    "prior": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "sha": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+    "tree": "3453b9a7c7e9d88b1221b9597b11b52b103ed277",
+    "parent": "9235894b095a2cf4a90184b4606949f75a70279d",
+    "committed_at": "2026-11-15T01:52:46Z",
+    "namespace": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation",
+    "namespace_tree": "fa82597f7ff482745bcbc27d73f33d46c1a5976e",
+    "namespace_mode": "040000",
+    "namespace_entries": 306,
+    "namespace_truncated": false,
+    "namespace_blob_files": 200,
+    "namespace_tree_provenance": [
+      {
+        "parent_tree": "3453b9a7c7e9d88b1221b9597b11b52b103ed277",
+        "path": "modules",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "125a48817666072d481f576978221de53e1f85e8",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/125a48817666072d481f576978221de53e1f85e8"
+      },
+      {
+        "parent_tree": "125a48817666072d481f576978221de53e1f85e8",
+        "path": "sucafina",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "3461ded56a5ed6cdde10dfb0cf379c5a21bca927",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/3461ded56a5ed6cdde10dfb0cf379c5a21bca927"
+      },
+      {
+        "parent_tree": "3461ded56a5ed6cdde10dfb0cf379c5a21bca927",
+        "path": "Sucafinav1",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "2b63577121d84daf20b3844674fd3fd03fdb77f8",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/2b63577121d84daf20b3844674fd3fd03fdb77f8"
+      },
+      {
+        "parent_tree": "2b63577121d84daf20b3844674fd3fd03fdb77f8",
+        "path": "docs",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "47dd21d37f91aeb7dc1504386ab43f722a2efb1f",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/47dd21d37f91aeb7dc1504386ab43f722a2efb1f"
+      },
+      {
+        "parent_tree": "47dd21d37f91aeb7dc1504386ab43f722a2efb1f",
+        "path": "sf2h",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "bacd70262c3b21603e4ac52206e1cb944b71605d",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/bacd70262c3b21603e4ac52206e1cb944b71605d"
+      },
+      {
+        "parent_tree": "bacd70262c3b21603e4ac52206e1cb944b71605d",
+        "path": "receipts",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ec81a507fb8011a5860208825aecfc2829833e75",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/ec81a507fb8011a5860208825aecfc2829833e75"
+      },
+      {
+        "parent_tree": "ec81a507fb8011a5860208825aecfc2829833e75",
+        "path": "reports-draft-reconciliation",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "fa82597f7ff482745bcbc27d73f33d46c1a5976e",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/fa82597f7ff482745bcbc27d73f33d46c1a5976e"
+      }
+    ]
+  },
+  "delta": {
+    "ahead_by": 2,
+    "behind_by": 0,
+    "merge_base": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "changed_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/AUTHORITY-FINAL.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "b1e4cbb602886fd1f0ab5ec99f7925cfff356cf9",
+        "post_mode": "100644",
+        "post_bytes": 4628
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/C27-DEPENDENCY-RECONCILIATION.json",
+        "status": "modified",
+        "pre_blob": "7e757d4657bbce01dfad7c4aa7b3d49e1a3aa9e0",
+        "post_blob": "8de73a166ca488a070918c3e0746dc06ff1730e3",
+        "post_mode": "100644",
+        "post_bytes": 5779
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/COMPOSITION-PLAN.json",
+        "status": "modified",
+        "pre_blob": "a9dacf83c5c65e71d13b8a5009f6325e2ed61e48",
+        "post_blob": "a8a2ce02f6d553381f52a75b476922b78ed584a4",
+        "post_mode": "100644",
+        "post_bytes": 35470
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CONSUMER-RELEASE.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "af0409c826382c083f848ccf710efbb4863ac1b7",
+        "post_mode": "100644",
+        "post_bytes": 40943
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CRITERIA-preservation.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "aee52352fdbcfbd73c0a60c58fdc9ec9f508fd01",
+        "post_mode": "100644",
+        "post_bytes": 1185
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CRITERIA-track-reconciliation.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "c8f3395fff6c7b2158bfe9fc8f13e4eeb43b2dea",
+        "post_mode": "100644",
+        "post_bytes": 6511
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CRITERIA.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "6e77738a6a8b19941ce1863ad6a6335938b62a2a",
+        "post_mode": "100644",
+        "post_bytes": 1164486
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/E2E-INPUTS.json",
+        "status": "modified",
+        "pre_blob": "ba2ab8e21c791e79b1524bdc730e891d8c5fc889",
+        "post_blob": "c032e918ae0cd0d8950388e534d019ff1976dd81",
+        "post_mode": "100644",
+        "post_bytes": 23607
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/EVIDENCE-INDEX.json",
+        "status": "modified",
+        "pre_blob": "8b64df8638c8bf94fc5c7a196ca08e756c9b0997",
+        "post_blob": "e7f5f7daa37db7a56ade8999772ceed800640714",
+        "post_mode": "100644",
+        "post_bytes": 16921
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/FINAL-CANDIDATE-W6.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "be67d183f407206bef8834d7cef4290bf8e30b2b",
+        "post_mode": "100644",
+        "post_bytes": 1149
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/HANDOFF-FINAL.md",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "562d7c7ebaf95b43c61449e60dedfd1808403031",
+        "post_mode": "100644",
+        "post_bytes": 13644
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/INPUT-CLOSURE.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "0226ceab8b039524dab3796ad25637ba79beba50",
+        "post_mode": "100644",
+        "post_bytes": 113645
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/QUALIFICATION.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "de73dc02e936288f66784e0d2d7a04fa12ba20f9",
+        "post_mode": "100644",
+        "post_bytes": 127556
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REMOTE-CLOSING-OBSERVATIONS.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "c86458be4258ca8cbb2ddabc1c3ba8dd97e8b8d5",
+        "post_mode": "100644",
+        "post_bytes": 105555
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REPORTS-PREPARATION-BLOCKER.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "a44dea9de8a0f52ad470f822d4748d21021fdb9f",
+        "post_mode": "100644",
+        "post_bytes": 25664
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SCOPE-AUDIT-FINAL.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "1e181e67e461b1c82451b40ab3e3f01b48c810ed",
+        "post_mode": "100644",
+        "post_bytes": 65115
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SOURCE-CHECK-TRIAGE.json",
+        "status": "modified",
+        "pre_blob": "01348f5662232259322265759ccfe57679d4a59d",
+        "post_blob": "b285d1b1d59488738deb0be67f0f983deb049dc4",
+        "post_mode": "100644",
+        "post_bytes": 48290
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/TERMINAL-ROUTE.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "d8b295ae5acd3d5399213fe45cb2bba3a44efdf3",
+        "post_mode": "100644",
+        "post_bytes": 1018
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/TEST-INPUTS.json",
+        "status": "modified",
+        "pre_blob": "00ec1eafe9f6abcbfa96d81418866125edae2302",
+        "post_blob": "df4450140bff05d733cb2df0b2a85a89fae11441",
+        "post_mode": "100644",
+        "post_bytes": 14879
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal07-post-body/LIMIT-REVIEW.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "de2862398708e898c7fa7ff087fa954369c08f07",
+        "post_mode": "100644",
+        "post_bytes": 5555
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/diagnosis/nominal07-post-body/READ-REVIEW.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "18b477aab904e834459ec28a94227f3b2c758ce6",
+        "post_mode": "100644",
+        "post_bytes": 14431
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08-context/sucafina-reports-support-a-3746f-rves-the-authorized-dossier-chromium.md",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "ce78f04b22bd7e4ebd04a5afcfc64b9ab7d095a6",
+        "post_mode": "100644",
+        "post_bytes": 12782
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08-runtime/benchmark-runtime.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "9e26dfeeb6e641a33dae4961196235bdb965b21b",
+        "post_mode": "100644",
+        "post_bytes": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08-runtime/playwright-runtime.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "94a15ed7c4019cf72772ac70f89b04b61731711b",
+        "post_mode": "100644",
+        "post_bytes": 9864
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08-runtime/playwright-selection.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "c4d0c46704b81b34956473761f319ae7addb7178",
+        "post_mode": "100644",
+        "post_bytes": 2803
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08-runtime/request.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "9628f6899d8075d71c90ea7af3f0129d674d5a9f",
+        "post_mode": "100644",
+        "post_bytes": 345
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08-transport.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "a4cd427c011f4077bf2e5595b001599199ef5409",
+        "post_mode": "100644",
+        "post_bytes": 961
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "9a333fed3648994a791566a0dcc8f5afbe0a8126",
+        "post_mode": "100644",
+        "post_bytes": 9978
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/installed-09.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "383641976a5fb16deb07d184fb2137455e0c91d5",
+        "post_mode": "100644",
+        "post_bytes": 5304
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/source-check-02-diagnostics.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "235d79d411270ebc59f96e090d8050575c805740",
+        "post_mode": "100644",
+        "post_bytes": 129003
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/source-check-02.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "001621c75454b3672465b3fc7529cd43caeda85b",
+        "post_mode": "100644",
+        "post_bytes": 6688
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/requests/agenda-transport.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "70b49a8117513630b084f07d3f16c63f06035dfb",
+        "post_mode": "100644",
+        "post_bytes": 252
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/requests/installed-entry.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "6d6515f2a5666c7fb5dd13aad55fde98484b344c",
+        "post_mode": "100644",
+        "post_bytes": 230
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/requests/nominal.json",
+        "status": "added",
+        "pre_blob": null,
+        "post_blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+        "post_mode": "100644",
+        "post_bytes": 274
+      }
+    ],
+    "changed_path_count": 34,
+    "all_inside_receipt_namespace": true,
+    "material_path_changes": 0,
+    "patch_or_manifest_changes": 0
+  },
+  "authority": {
+    "receipt": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/AUTHORITY-FINAL.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "b1e4cbb602886fd1f0ab5ec99f7925cfff356cf9",
+      "mode": "100644",
+      "bytes": 4628,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/AUTHORITY-FINAL.json"
+    },
+    "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "source_lease_ended": true,
+    "previous_ACK_superseded": true,
+    "release": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CONSUMER-RELEASE.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "af0409c826382c083f848ccf710efbb4863ac1b7",
+      "mode": "100644",
+      "bytes": 40943,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CONSUMER-RELEASE.json"
+    },
+    "release_state": "RELEASED_COMPLETE_ATOMIC_SOURCE_AND_PATCH_PACKAGE_WITH_QUALIFICATION_HOLD",
+    "unit_sha256": "f5e52888ff9ec676d4c85e70a3f6a523a035aa61d36280ff9cefb1c0d40ae636",
+    "release_state_authority": "This explicit root terminal receipt supersedes preparation/proposal-only state labels in the immutable construction manifests for the exact material identified here. It does not supersede qualification HOLD or authorize a partial subset.",
+    "activation": {
+      "state": "HOLD",
+      "permitted_now": "Custody, code review, dependency/preimage reconciliation and preparation of an authorized qualifying candidate as one coherent unit. No partial activation or accepted-runtime claim.",
+      "requires": [
+        "Formal successor authority/ACK after current HEAD/control reconciliation",
+        "Resolution and qualification of Reports preparation; all4 nominal journeys on exact coherent candidate",
+        "Real producer correction for blocked positive closure/admission proof",
+        "Supported compiler45 checks on exact composed candidate and owner handling of legacy36 source gates",
+        "Integrator review of full producer→HTTP→client/view contract and complete exact patch set"
+      ],
+      "old14_targets_independent_activation": false,
+      "GLOBAL_RELEASE": false
+    },
+    "qualification": "PARTIAL_COMPONENT_QUALIFICATION_REPORTS_HOLD",
+    "stale_route_observation": "Source closing observations at01:50:58 record60 PREPARED and no ACK; root60 must bind current accepted epoch/HEAD. They are historical source observations, not authority to invalidate a later real ACK60."
+  },
+  "consumption_decision": {
+    "explicit_complete_source_release_now_exists": true,
+    "functional_qualified_release": false,
+    "fully_qualified_runtime_activation_now": false,
+    "coherent_unqualified_candidate_preparation_authorized": true,
+    "root_decision": "Prepare all45 overlays as C28 material candidate, not qualified; preserve activation/runtime acceptance HOLD.",
+    "basis": [
+      "User explicitly requires coherent candidates before final validation gates.",
+      "Release.activation.permitted_now explicitly permits preparation of an authorized qualifying candidate as one coherent unit.",
+      "Release supersedes immutable PREPARED manifest labels only for this complete exact unit.",
+      "No partial subset, accepted-runtime claim, source PASS transfer or test dispatch is permitted."
+    ],
+    "consumption_scope": "Atomic preparation of45material overlays plus unchangedexistingcookie; retain all baselineC27 and predecessor receipts. Functional activation and acceptance remain HOLD."
+  },
+  "unit_verification": {
+    "count": 45,
+    "all45_pre_match_prior": true,
+    "all45_post_match_prior": true,
+    "exact_rows": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+        "pre": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+        "post": "d9c4f9472fee1865a349bdffa8190abdece1a873",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "pre": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+        "post": "ce0f54a96d5d3a02671b20c52e1c0b3832504f42",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+        "pre": null,
+        "post": "f316969255bea603f9187800a0af111c716bdc65",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+        "pre": null,
+        "post": "6c05d1de35d2176530cc70ecfa1f849afe95ff0d",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+        "pre": null,
+        "post": "291e72cf1c356d76f1671ec971eac5b44a70edd0",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+        "pre": null,
+        "post": "65dd8c157ad31d288ee0f9142e1b41e08221de7c",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+        "pre": null,
+        "post": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+        "pre": null,
+        "post": "ae37b110099b63ddde6188b9d89be4947408b087",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+        "pre": null,
+        "post": "5e24513ec7f015e52d0b944011ae25d1529ac6e2",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+        "pre": null,
+        "post": "332b91ee3bac6303073f397e72d7f09afcd134da",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+        "pre": null,
+        "post": "6d03d60364ea5cac477fa0623e749c7f9ba947bc",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+        "pre": null,
+        "post": "c874e2070e7d92b118eaa8fffe0caf6baf9b0144",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+        "pre": null,
+        "post": "c2948d5b96ba06172227c446e1c6e15fc174b2d6",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+        "pre": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+        "post": "9db3ae6a537a45d86089f5637d150a5ea1a713fc",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
+        "pre": null,
+        "post": "dc1d4849a24a0b42756978daaa76930ab99d52e6",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
+        "pre": null,
+        "post": "ebbf5b9365e6f5268f00004c1bdf766ecfca4dad",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "pre": "40591b3e4e2f672a80a898ac6d6238fa08f4d565",
+        "post": "494fe03f46beea037cff45e70259ac875758e3b6",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+        "pre": null,
+        "post": "b145caac8a47e029aded4418253488d250d680e1",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+        "pre": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+        "post": "857f339fe477839986e6e70cf4781c9f4f16e009",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "pre": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+        "post": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+        "pre": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+        "post": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+        "pre": null,
+        "post": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+        "pre": null,
+        "post": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+        "pre": null,
+        "post": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "pre": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+        "post": "b7f69a1b71e40af5204280054cb83d0c2e2970c6",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+        "pre": "2d5cc3832da8d26ad1e30978f6f49c80191620c3",
+        "post": "438cbf76c6b230ed5a9b3328ef67cbecc73106c6",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+        "pre": "5d3ad37709fff05625877ecd90768d7253ce3735",
+        "post": "134b3bb6dd682c23eceb2c525ba35aa0c0584c39",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+        "pre": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+        "post": "59a923fbf7f04b212b24cd4c32f09d67620bccda",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+        "pre": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+        "post": "ccae839a2bc35634554a2ac2721d345671c16f77",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "pre": "ce0e5655f19d7d60246024af013c811bf921b042",
+        "post": "000e1aaedcc929f94e0dcb45d1e63267f1401531",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+        "pre": "480dcc9c1b299542552e8a6a2e4e3ce2a659db10",
+        "post": "c4199da735c14b4c08ad6c1848c1b36ca9de8c26",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "pre": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+        "post": "bde64fb8cb1a25e8f10eb979ed5ff111cdb2042e",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+        "pre": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+        "post": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "pre": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+        "post": "5123063a55dbb7ab8935ff95e432b8bf1a77fd0d",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "pre": "62db836fd93e349f19d007e1933396420a3540ff",
+        "post": "1290845a260606bd6e2b30594ba4247724ed7290",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "pre": "f37a2c540b009a8c5bed90365c267b95303e646b",
+        "post": "b4e16a0c948d1232cc73f2785a6ee1d2bc0e3dd7",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "pre": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+        "post": "0db2a444c14986cb6d0fec6eb60b279a8e26729d",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "pre": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+        "post": "d879d52e12945465a965986280bef3a242962a50",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+        "pre": "012c83ed8b6382bebc0046526985f2f900f04035",
+        "post": "d3b87293664682a380188239baf0f82e14a21db9",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+        "pre": "62cb309bd8f192f8cedc6801869df1b0ad4ba458",
+        "post": "11162741f8021b7d79a23c1022c06f636a393f26",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+        "pre": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+        "post": "aae326accb08bc5645a408271688052a725a30a5",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts",
+        "pre": "2f55115067511ae38c17b6220592f4e6cdb42090",
+        "post": "7f99dee8c6995dd685272a150b939d74a75fd653",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "pre": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09",
+        "post": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "pre": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "post": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+        "pre": "cdbcf2d09cd82e352c41e5eb0b38055956f101e2",
+        "post": "6960533cbb8cb128ec4e6d90583903107b5eeb0c",
+        "pre_matches_prior": true,
+        "post_matches_prior": true
+      }
+    ],
+    "owned_manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/manifest.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "21186c2343f97e5cb8bc30915b6b8906bf60db90",
+      "mode": "100644",
+      "bytes": 16808,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/manifest.json"
+    },
+    "shared_manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/manifest.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "5fedcf4cdf88b0ddc4b179f951c985ce00d913c7",
+      "mode": "100644",
+      "bytes": 20284,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/manifest.json"
+    },
+    "owned_patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/cumulative-owned.patch",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "bee7554eb67dc9edfb782e89eb3883b8a7454719",
+      "mode": "100644",
+      "bytes": 206255,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/own-overlay/cumulative-owned.patch"
+    },
+    "shared_patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/producer-contract.patch",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "908c4533ed468d72329b93a3611e522065b929c3",
+      "mode": "100644",
+      "bytes": 122972,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/shared-patches/read-authority/producer-contract.patch"
+    },
+    "shared_patch_sha256": "27126424e90de7ec7b6e93154beb5d060932477596283409174b06bb8fc0641f",
+    "owned_patch_sha256": "e41b316c1714fd5005528faafb47b8d0989393c48db6fb100be2576b59fc3ac2",
+    "cookie44": {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+      "blob": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+      "release44": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+      "disposition": "Already unchanged in exactC27; no overlay or source44 edit"
+    },
+    "additional_material_overlay_declared": 0,
+    "protocol_dependencies": {
+      "file": {
+        "local_path": "prepared/protocol-C27.json",
+        "bytes": 764,
+        "sha256": "e2a7c3a66091d1a5e80751f053b8a408f76e2f659b367f6f0e611f58988d8cc3",
+        "git_blob": "c40c203a98e3b96564ce274693c7da339fb009e5"
+      },
+      "blobs": {
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "files": {
+          ".github/workflows/test-ci.yml": "9f078f4e37b758691bcd073e5590f05d5444392a",
+          "script/test-ci.ts": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+          "script/test-ci-request.ts": "5007e48270b80c83eb719d35cec9e6343206a195",
+          "script/test-ci-location.ts": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+          "script/test-ci-package.ts": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+          "script/module-registry.json": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+          "packages/app-shell/e2e/playwright.production.config.ts": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+          "packages/app-shell/playwright.config.ts": "d935c68f5b996c0e53195ec832b969c217fcf858"
+        },
+        "unchanged_from_C19": true
+      }
+    },
+    "existing_C27_dependencies_preserved": true
+  },
+  "source_W6": {
+    "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "source_product": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+    "source_e2e": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+    "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+    "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+    "W_tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+    "composition_baseline": {
+      "symbol": "C27",
+      "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+    },
+    "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/VALIDATION-W-06.json@910a0a2d2a5718838a3226ffe3043af9bf23c411",
+    "verified_blob_count": 46,
+    "material_changed_paths": 46,
+    "shared_patch_sha256": "27126424e90de7ec7b6e93154beb5d060932477596283409174b06bb8fc0641f",
+    "current_integrator": 57,
+    "requested_consumer": 47,
+    "previous_W": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+    "dependency_reconciliation": "C27-DEPENDENCY-RECONCILIATION.json",
+    "rebase_review": "C27-REBASE-REVIEW.json",
+    "source8_active_code_delta_from_source7": 0,
+    "shared_postimage_delta_from_C19_unit": 2,
+    "validation_manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/VALIDATION-W-06.json",
+      "ref": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "blob": "433f5a5e8118e948d989e03cf1df903c48764ae5"
+    },
+    "scope": "W6 is a previous immutable source validation composition, not root60 C28 and not a current stack acceptance."
+  },
+  "documents": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/AUTHORITY-FINAL.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "b1e4cbb602886fd1f0ab5ec99f7925cfff356cf9",
+      "mode": "100644",
+      "bytes": 4628,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/AUTHORITY-FINAL.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CONSUMER-RELEASE.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "af0409c826382c083f848ccf710efbb4863ac1b7",
+      "mode": "100644",
+      "bytes": 40943,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CONSUMER-RELEASE.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/INPUT-CLOSURE.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "0226ceab8b039524dab3796ad25637ba79beba50",
+      "mode": "100644",
+      "bytes": 113645,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/INPUT-CLOSURE.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/QUALIFICATION.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "de73dc02e936288f66784e0d2d7a04fa12ba20f9",
+      "mode": "100644",
+      "bytes": 127556,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/QUALIFICATION.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/HANDOFF-FINAL.md",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "562d7c7ebaf95b43c61449e60dedfd1808403031",
+      "mode": "100644",
+      "bytes": 13644,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/HANDOFF-FINAL.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/FINAL-CANDIDATE-W6.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "be67d183f407206bef8834d7cef4290bf8e30b2b",
+      "mode": "100644",
+      "bytes": 1149,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/FINAL-CANDIDATE-W6.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REPORTS-PREPARATION-BLOCKER.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "a44dea9de8a0f52ad470f822d4748d21021fdb9f",
+      "mode": "100644",
+      "bytes": 25664,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REPORTS-PREPARATION-BLOCKER.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CRITERIA-preservation.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "aee52352fdbcfbd73c0a60c58fdc9ec9f508fd01",
+      "mode": "100644",
+      "bytes": 1185,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/CRITERIA-preservation.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/EVIDENCE-INDEX.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "e7f5f7daa37db7a56ade8999772ceed800640714",
+      "mode": "100644",
+      "bytes": 16921,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/EVIDENCE-INDEX.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SOURCE-CHECK-TRIAGE.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "b285d1b1d59488738deb0be67f0f983deb049dc4",
+      "mode": "100644",
+      "bytes": 48290,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SOURCE-CHECK-TRIAGE.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REMOTE-CLOSING-OBSERVATIONS.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "c86458be4258ca8cbb2ddabc1c3ba8dd97e8b8d5",
+      "mode": "100644",
+      "bytes": 105555,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REMOTE-CLOSING-OBSERVATIONS.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SCOPE-AUDIT-FINAL.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "1e181e67e461b1c82451b40ab3e3f01b48c810ed",
+      "mode": "100644",
+      "bytes": 65115,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/SCOPE-AUDIT-FINAL.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/TERMINAL-ROUTE.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "d8b295ae5acd3d5399213fe45cb2bba3a44efdf3",
+      "mode": "100644",
+      "bytes": 1018,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/TERMINAL-ROUTE.json"
+    }
+  ],
+  "closure_metadata": {
+    "state": "COMPLETE_IDENTITY_BOUND_ATOMIC_SOURCE_UNIT_WITH_QUALIFICATION_HOLD",
+    "counts": {
+      "owned_overlays": 24,
+      "shared_overlays": 21,
+      "material_overlays": 45,
+      "validation_manifest_paths": 1,
+      "cookie_dependencies_already_in_base": 1,
+      "changed_paths_including_validation_manifest": 46,
+      "verified_code_dependency_blobs": 46,
+      "source48_mutations": 21,
+      "inherited_own_overlay_paths": 3,
+      "semantics": {
+        "verified_blobs": "own postimages + shared postimages + unchanged cookie44 in exact C27; excludes validation manifest",
+        "material_changed_paths": "own overlays + shared overlays + validation manifest; excludes unchanged cookie44",
+        "source5_delta_reported_by_root": {
+          "new_active_own_paths": 1,
+          "receipt_paths": 30,
+          "total_changed_paths": 31,
+          "active_shared_changes": 0,
+          "evidence_kind": "Root GitHub MCP read-back report; not a new local or remote scope audit by the document generator"
+        },
+        "source8_delta": {
+          "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+          "parent": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+          "receipt_paths": 27,
+          "active_code_or_test_paths": 0,
+          "verification": "Actual GitHub MCP compare parent to source8"
+        }
+      }
+    },
+    "dependencies": {
+      "cookie44": {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+        "local_file": "prepared/dependencies/operator-session-cookie.ts.txt",
+        "blob": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+        "release44": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+        "disposition": "ALREADY_IN_C27_PRESERVED_NO_DEPENDENCY_OVERLAY",
+        "reason": "Use mission44's operator-session cookie serialization; do not repeat the known enrollment failure or copy the whole source44 snapshot.",
+        "file": {
+          "local_path": "prepared/dependencies/operator-session-cookie.ts.txt",
+          "bytes": 981,
+          "sha256": "c544459449f16159041d8f20964978e0e943a9fd4283c830bc9747dffb3fbeb2",
+          "git_blob": "81a6863f68fc2b83c4b331c19920c59267b5d060"
+        }
+      }
+    },
+    "atomicity": "All24 own and21 shared postimages plus exact unchanged cookie44 are one unit. Old14targets, producer-only or client/view-only activation is prohibited. Integrator47 or formal successor must reconcile current authority/HEAD/preimages;57 ended,60 is prepared only. Qualification HOLD remains.",
+    "acceptance": "NOT_ESTABLISHED",
+    "delivery_layout": {
+      "final/": "Receipt root, except documentary scripts are analysis-only",
+      "prepared/": "Receipt root",
+      "evidence/": "Same relative receipt path; raw logs resolve through EVIDENCE-INDEX and job/artifact URLs",
+      "requests/": "Delivered as requests/ canonical semantic request inputs"
+    },
+    "closure_limit": "INPUT-CLOSURE48 records the atomic unit and evidence but is not a complete import-edge graph. candidate-closure.json supplies root60 direct textual import closure."
+  },
+  "qualification_metadata": {
+    "state": "PARTIAL_COMPONENT_QUALIFICATION_REPORTS_HOLD",
+    "root_adjudication": {
+      "at": "2026-11-15T01:50:58.858424+00:00",
+      "source_package_complete": true,
+      "source_release": "CONSUMER-RELEASE.json",
+      "unit_sha256": "f5e52888ff9ec676d4c85e70a3f6a523a035aa61d36280ff9cefb1c0d40ae636",
+      "material_activation": "HOLD_PENDING_QUALIFYING_EVIDENCE_AND_AUTHORIZED_CONSUMER_REVIEW",
+      "functional_acceptance": "NOT_ESTABLISHED",
+      "global_acceptance": false,
+      "terminal_authority_route": {
+        "requested_consumer": 47,
+        "last_accepted_integrator": 57,
+        "last_integrator_lease": "ENDED",
+        "last_integrator_terminal": "d6d9816bb09f7595330862616305e0791e23e61e",
+        "current_active_integrator": null,
+        "designated_successor": 60,
+        "successor_state": "PREPARED_NOT_STARTED",
+        "successor_epoch": "S0-C-e12-browser60",
+        "successor_ACK_observed": false,
+        "control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+        "successor_package_blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+        "consumer_ACK": "REQUESTED_IN_TERMINAL_HANDOFF_NOT_RECEIVED",
+        "rule": "The requested47 handoff follows formal succession.57 ended;60 is prepared only. A successor must reconcile current HEAD/control/authority and publish its own ACK. No active writer or consumption is inferred from a prepared mission.",
+        "activation": "HOLD: a new integrator ACK alone does not qualify this source package. Complete qualifying evidence and integrator review remain required before material activation under the successor60 package."
+      },
+      "current_candidate_integrator_field_scope": "W6 candidate/manifest records57 as the integrator at construction; closing57 ENDED and prepared60 observations supersede that historical authority field."
+    },
+    "limitations": [
+      "Os 86 critérios canônicos continuam NOT_ESTABLISHED; PASS por teste e revisão estática não aprovam critérios automaticamente.",
+      "Boundary01 em W1 continua FAIL 75/3 de 78 casos. Causal02 em W2 é 2/0 e não substitui aquele run nem prova a admissão de closure bloqueada.",
+      "O setup de closure para em action-create-identity-unavailable antes da baseline HTTP 200 e da injeção de falhas de admissão. A fixture e a assertion positiva permanecem; WP02/47 precisam resolver o contrato real do creator.",
+      "CHECK da fonte não qualifica candidato composto corrente ou alterações compartilhadas; nenhum CHECK compiler45 sobre candidato composto corrente foi fornecido.",
+      "A revisão estática de installed-entry não é evidência de execução. A fixture do alias sf-human prova interrupção de I/O e depois negativa real por grant ausente; não prova a jornada positiva autorizada desse alias.",
+      "Estes receipts cirúrgicos não estabelecem aceite native/private-MCP/effect-parity, segundo destinatário corporativo instalado, matriz visual/export completa, epic/campanha ou usabilidade humana.",
+      "Resultados conservam identidades exatas de source/W/tree/S/tree/request/run/job. Execuções históricas nunca são reclassificadas como execução no W6 corrente.",
+      "Só o integrador atualmente autorizado pode consumir os targets compartilhados na stack live. Liberação, encerramento de lease e ACK de consumo exigem receipts reais e explícitos.",
+      "57 encerrou;60 está PREPARED_NOT_STARTED sem ACK observado. Liberação desta fonte não ativa a stack, não satisfaz o pacote60 por si só e não concede aceite global."
+    ],
+    "diagnostic_policy": {
+      "case_id": "RPT-DIAG-AGENDA-01",
+      "nominal_journey_credit": false,
+      "criterion_acceptance_credit": false,
+      "execution_refs": [
+        "E-M48-DIAGNOSTIC-07",
+        "E-M48-DIAGNOSTIC-08"
+      ]
+    },
+    "criteria_snapshot": {
+      "file": {
+        "local_path": "final/CRITERIA.json",
+        "bytes": 1164486,
+        "sha256": "8fb8fc18f52de0f2180476fb72f8071e2ee8c398ced52211d53da99b34de1e05",
+        "git_blob": "6e77738a6a8b19941ce1863ad6a6335938b62a2a"
+      },
+      "canonical_count": 86,
+      "acceptance_counts": {
+        "NOT_ESTABLISHED": 86
+      },
+      "by_entity": {
+        "WP07": 16,
+        "WP07.T01": 13,
+        "WP07.T02": 22,
+        "WP07.T03": 14,
+        "WP07.T04": 21
+      },
+      "criteria_approved_by_generator": 0,
+      "predecessor_matrix": {
+        "mission": 36,
+        "state_scope": "HISTORICAL_ONLY",
+        "ref": "#/historical_matrices/mission36",
+        "local_path": "evidence/CRITERIA36.json",
+        "bytes": 482988,
+        "sha256": "8d1a13f9c730c67d53b701d56ae692c47bd2462ff351407d56ad8149d4742aae",
+        "git_blob": "3181f132deb3b3eb0dc0f75b72aac644c94a209d",
+        "canonical_json_sha256": "309123d1d7f430238c7f5e0574f1c3dcc573d3b935ff822665fca07523ef1b70",
+        "preservation": "Full decoded JSON preserved without removing or altering any value, including all86 criteria, proof bindings, maps, oracles, gaps and receipt history."
+      },
+      "historical36_file": {
+        "local_path": "evidence/CRITERIA36.json",
+        "bytes": 482988,
+        "sha256": "8d1a13f9c730c67d53b701d56ae692c47bd2462ff351407d56ad8149d4742aae",
+        "git_blob": "3181f132deb3b3eb0dc0f75b72aac644c94a209d"
+      },
+      "historical36_preserved_exactly": true,
+      "gap_status": [
+        {
+          "gap_id": "G01",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/0",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G02",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/1",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G03",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/2",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G04",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/3",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G05",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/4",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G06",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/5",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G07",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/6",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G08",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/7",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G09",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/8",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G10",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/9",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G11",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/10",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G12",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/11",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G13",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/12",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G14",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/13",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G15",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/14",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G16",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/15",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G17",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/16",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G18",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/17",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G19",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/18",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G20",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/19",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G21",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/20",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G22",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/21",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G23",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/22",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        },
+        {
+          "gap_id": "G24",
+          "historical_ref": "#/historical_matrices/mission36/gap_catalog/23",
+          "mission48_status": "NOT_CLOSED_BY_MISSION48_TERMINAL",
+          "current_acceptance_credit": false
+        }
+      ],
+      "matrix_not_mutated": true
+    },
+    "delivery_layout": {
+      "final/": "Receipt root, except documentary scripts are analysis-only",
+      "prepared/": "Receipt root",
+      "evidence/": "Same relative receipt path; raw logs resolve through EVIDENCE-INDEX and job/artifact URLs",
+      "requests/": "Delivered as requests/ canonical semantic request inputs"
+    }
+  },
+  "new_outcomes": [
+    {
+      "receipt": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08.json",
+        "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+        "blob": "9a333fed3648994a791566a0dcc8f5afbe0a8126",
+        "mode": "100644",
+        "bytes": 9978,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/diagnostic-08.json"
+      },
+      "id": "E-M48-DIAGNOSTIC-08",
+      "kind": "diagnostic",
+      "run": 43663209925,
+      "job": 132656858318,
+      "cleanup_job": 132658274162,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663209925",
+      "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+      "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "W_tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+      "S": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+      "S_tree": "46cdfdf0eee4ea7ae2e3bc4396a0eabc9318d82d",
+      "request": {
+        "package": "app",
+        "packageSelector": "packages/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/reports-support/agenda-transport.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "request_sha256": "1e6da53d110967854023b0d46a57864dc6ebcc6244e39db8fe95943da1d43df3",
+      "request_blob": "70b49a8117513630b084f07d3f16c63f06035dfb",
+      "request_bytes": 252,
+      "request_trailing_lf": false,
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "total": 1,
+      "started": 1,
+      "skip": 0,
+      "selected_files": [
+        "e2e/sucafina/reports-support/agenda-transport.spec.ts"
+      ],
+      "case_results": [
+        {
+          "case_id": "RPT-DIAG-AGENDA-01",
+          "title_from_runtime": "RPT-DIAG-AGENDA-01 observes actual agenda transport and preserves the authorized dossier",
+          "runtime_status": "TIMED_OUT",
+          "runtime_status_raw": "timedOut",
+          "duration_ms": 180025,
+          "start_time": "2026-11-15T01:30:44.149Z",
+          "retry": 0,
+          "log_line": 1083,
+          "runtime_json_pointer": "/suites/0/suites/0/specs/0/tests/0/results/0",
+          "runtime_report_sha256": "ea7f9c55d70665209dabd5c90b1f8ac207c8378fe151cb674c178bb1231561ab",
+          "blocking_stage": "The single agenda-transport diagnostic timed out at its 180000 ms case budget. The late requestfailed handler produced the second error at review-flow.ts:391:40; no review-agenda response event is present in the captured observer.",
+          "assertions_reached": "The browser observed the correct same-origin, same-path review-agenda POST. Prepare review and Agenda topics are present in the final context. Successful agenda response and authorized dossier preservation were not established; visible retention text is not nominal or criterion proof.",
+          "observed_ui_status": "Selection unavailable: agenda-unavailable. Your topics, records and order are retained. Discover and refresh changed sources, then preview and confirm again.",
+          "ui_status_context_line": 53,
+          "ui_status_is_proven_cause": false,
+          "context_receipt": {
+            "local_path": "evidence/diagnostic-08-context/sucafina-reports-support-a-3746f-rves-the-authorized-dossier-chromium.md",
+            "bytes": 12782,
+            "sha256": "ea9691d6bc0f0f9e1fedb08bd1a2df2b84ee3942ab47a509214fe58e66dd2099"
+          },
+          "error": {
+            "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+            "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+          },
+          "errors": [
+            {
+              "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+            },
+            {
+              "location": {
+                "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                "column": 40,
+                "line": 391
+              },
+              "message": "Error: Actual review-agenda POST transport failed: net::ERR_CONNECTION_REFUSED\n\n   at sucafina/reports-support/review-flow.ts:391\n\n  389 |     const failure = causes(value.failure()?.errorText ?? \"\")\n  390 |     if (relevant(value)) add(\"requestfailed\", { ...destination(value.url()), method: value.method(), ...failure })\n> 391 |     if (matching(value)) rejectFailure(new Error(\"Actual review-agenda POST transport failed: \" +\n      |                                        ^\n  392 |       [...failure.codes, ...failure.categories].join(\", \")))\n  393 |   }\n  394 |   const pageerror = (value: Error) => add(\"pageerror\", {\n    at Page.requestfailed (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:391:40)"
+            }
+          ],
+          "step_errors": [],
+          "criterion_acceptance_credit": false,
+          "nominal_journey_credit": false,
+          "business_journey_completed": false
+        }
+      ],
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false,
+      "log": "evidence/diagnostic-08.log",
+      "log_receipt": {
+        "local_path": "evidence/diagnostic-08.log",
+        "bytes": 101797,
+        "sha256": "d3ac304fe4a8a7327efc2f00aa8235113616ca724a812ddf96a25d1aa7e1dd70"
+      },
+      "runtime_receipt": "evidence/diagnostic-08-runtime/playwright-runtime.json",
+      "runtime_report": {
+        "local_path": "evidence/diagnostic-08-runtime/playwright-runtime.json",
+        "bytes": 9864,
+        "sha256": "ea7f9c55d70665209dabd5c90b1f8ac207c8378fe151cb674c178bb1231561ab"
+      },
+      "runtime_request": {
+        "local_path": "evidence/diagnostic-08-runtime/request.json",
+        "bytes": 345,
+        "sha256": "6f05c8e6e5fd840908ec05dd104e374f28394cf0543e248397cbac14ae6421cc"
+      },
+      "selection_receipt": {
+        "local_path": "evidence/diagnostic-08-runtime/playwright-selection.json",
+        "bytes": 2803,
+        "sha256": "d5ad1fe0d5f85e89f7c57cd39c88a24459b301410627804176ddace2d06d07c4"
+      },
+      "runtime_stats": {
+        "startTime": "2026-11-15T01:30:11.791Z",
+        "duration": 218923.507,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "runtime_global_errors": [],
+      "duration_ms": 218923.507,
+      "controls": {
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "timeout_ms": 180000
+      },
+      "controls_provenance": "Verified from actual runtime configuration and the individual diagnostic test record; no budget change is implied.",
+      "artifact": {
+        "id": 14140864138,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663209925/artifacts/14140864138",
+        "archive": {
+          "local_path": "evidence/diagnostic-08.zip",
+          "bytes": 217589,
+          "sha256": "c47cce6a43edf6de605727ef1bc9ecbb26b9a4ae493fa9e4c9c6633a492bc809"
+        }
+      },
+      "transport_receipt": {
+        "local_path": "evidence/diagnostic-08-transport.json",
+        "bytes": 961,
+        "sha256": "8122b0a7eed0d318be74cb5d46713db3aded58eec18439520c5c9bbfac74aaa5"
+      },
+      "transport_observation": {
+        "before": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "after": {
+          "sameOrigin": true,
+          "samePath": true,
+          "route": "dashboard",
+          "mode": "absent"
+        },
+        "expected": {
+          "method": "POST",
+          "mode": "review-agenda"
+        },
+        "elapsedMs": 175890,
+        "entries": [
+          {
+            "kind": "request",
+            "elapsedMs": 43,
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "method": "POST",
+            "resource": "fetch"
+          },
+          {
+            "kind": "requestfailed",
+            "elapsedMs": 175889,
+            "sameOrigin": true,
+            "samePath": true,
+            "route": "dashboard",
+            "mode": "review-agenda",
+            "method": "POST",
+            "codes": [
+              "net::ERR_CONNECTION_REFUSED"
+            ],
+            "categories": []
+          }
+        ],
+        "dropped": 0,
+        "cli": "No recognized transport error or repository stack location in the bounded CLI tail."
+      },
+      "causality": {
+        "root_cause": "NOT_ESTABLISHED",
+        "request_observed_ms": 43,
+        "response_event_observed": false,
+        "late_requestfailed_observed_ms": 175889,
+        "observer_duration_ms": 175890,
+        "interpretation_limit": "ERR_CONNECTION_REFUSED was recorded only near the observer/test shutdown, not at initial submission. The trace does not establish initial connection refusal, server death, HTTP response status, authorization loss or a proven cause of the missing response.",
+        "cli_observation": "No recognized transport error or repository stack location in the bounded CLI tail.",
+        "cli_observation_limit": "Only the bounded CLI tail was inspected by the diagnostic; absence of a recognized error there is not proof of process health or a successful request."
+      },
+      "identity_provenance": {
+        "source_W_S_trees_run_jobs": "Exact candidateW6 local identities and root-provided S/run/job identities; no new remote verification by this receipt author.",
+        "runtime_S_and_run": "Matched actual runtime metadata and request envelope.",
+        "request_content": "Compact request is exactly252 bytes without LF; its SHA256 and Git blob equal the supplied identities.",
+        "artifact": "Artifact ID matches log lines1139-1141; local ZIP SHA256 matches root-provided digest.",
+        "transport": "Local transport JSON equals the decoded reports-agenda-transport attachment in the runtime report.",
+        "cleanup_job": "Root-provided cleanup identity; no cleanup outcome is inferred.",
+        "request_only_diff": "No independent remote envelope verification performed by this local receipt author."
+      },
+      "scope": "Actual single W6/C27 diagnostic FAIL0/1 (timedOut180025 ms), separate from all four nominal Reports journeys. Correct review-agenda POST appears at43 ms, no response event is captured, and ERR_CONNECTION_REFUSED appears only at175889 ms near shutdown. The observed blocker persists after the C27 rebase; its cause remains NOT_ESTABLISHED. All runtime errors and prior results are preserved; no nominal or criterion credit.",
+      "composition_baseline": {
+        "symbol": "C27",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+      },
+      "comparison_to_prior_diagnostic": {
+        "execution_ref": "E-M48-DIAGNOSTIC-07",
+        "disposition": "Preserve the W5 FAIL0/1 as a separate actual. W6/C27 also timed out; the rebase did not clear this observed blocker and does not identify its cause."
+      }
+    },
+    {
+      "receipt": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/installed-09.json",
+        "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+        "blob": "383641976a5fb16deb07d184fb2137455e0c91d5",
+        "mode": "100644",
+        "bytes": 5304,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/installed-09.json"
+      },
+      "id": "E-M48-INSTALLED-09",
+      "run": 43663795167,
+      "job": 132658631801,
+      "cleanup_job": 132658973800,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663795167",
+      "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+      "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "W_tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+      "S": "c5f14d262afda882f0fd6a0878ee04a974919864",
+      "S_tree": "ec54d16eac86d56c2085a02b5f4ed97bdb332227",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "--timeout",
+          "60000"
+        ],
+        "env": {}
+      },
+      "request_sha256": "cd3364e7e257575d574f06e62c7b865bae97aa053046934516492299c10e7c66",
+      "request_blob": "6d6515f2a5666c7fb5dd13aad55fde98484b344c",
+      "request_only_diff": [
+        ".ci-run.json"
+      ],
+      "conclusion": "success",
+      "pass": 4,
+      "fail": 0,
+      "total": 4,
+      "selected_files": [
+        "Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts"
+      ],
+      "expect_calls": 103,
+      "duration_seconds": 12.55,
+      "log": "evidence/installed-09.log",
+      "omni": {
+        "nonce": "a2ed8666b33f324ccf85bbb8aed14958",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "log_line": 820
+      },
+      "scope": "Actual four installed-composition tests on exact W6/C27 with its coherent21 shared patches. PASS4/0 covers only installed-review-entry.test.ts; it does not qualify the unchanged78-case boundary gate, four nominal Reports journeys, diagnostics, source/composed compiler gate, any criterion or global acceptance.",
+      "limitations": [
+        "The installed sf-human alias case proves resolver uncertainty then real missing-grant denial; positive-authorized alias is not claimed by that fixture.",
+        "The preserved-review cycle uses actual agenda/preserve HTTP and C05/receipt; no C05/receipt or positive authorization was fabricated.",
+        "All four new cases retain 60000ms individual budgets; no existing assertion/budget changed."
+      ],
+      "shared_patch_sha256": "27126424e90de7ec7b6e93154beb5d060932477596283409174b06bb8fc0641f",
+      "kind": "boundary",
+      "composition_baseline": {
+        "symbol": "C27",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+      },
+      "case_results": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "title_from_log": "the installed Reports form route mounts its actual review bootstrap and keeps query validation",
+          "file_case_ordinal": 1,
+          "runtime_status": "PASS",
+          "duration_ms": 2209.3,
+          "log_line": 811,
+          "criterion_acceptance_credit": false,
+          "nominal_journey_credit": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "title_from_log": "an actual preserved review keeps update and successor focus recoverable when its second read is interrupted",
+          "file_case_ordinal": 2,
+          "runtime_status": "PASS",
+          "duration_ms": 9279.05,
+          "log_line": 812,
+          "criterion_acceptance_credit": false,
+          "nominal_journey_credit": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "title_from_log": "the Reports focus route preserves real command identity unavailability and still denies a revoked actor",
+          "file_case_ordinal": 3,
+          "runtime_status": "PASS",
+          "duration_ms": 234.67,
+          "log_line": 813,
+          "criterion_acceptance_credit": false,
+          "nominal_journey_credit": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "title_from_log": "installed Reports authorization I/O remains recoverable before consumption and before page delivery",
+          "file_case_ordinal": 4,
+          "runtime_status": "PASS",
+          "duration_ms": 488.38,
+          "log_line": 814,
+          "criterion_acceptance_credit": false,
+          "nominal_journey_credit": false
+        }
+      ],
+      "log_receipt": {
+        "local_path": "evidence/installed-09.log",
+        "bytes": 69388,
+        "sha256": "dd8a5954e8d964500219c3537b3e33b5edf5065cc88403e3031906122710e32a"
+      },
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false,
+      "identity_provenance": {
+        "source_W_trees": "Copied from exact FINAL-CANDIDATE-W6.json supplied by root; no new remote verification by this receipt author.",
+        "S_trees_run_jobs": "Exact root-provided identities.",
+        "request_only_diff": "Root explicitly verified S differs from W only at .ci-run.json.",
+        "request_content": "Local compact request SHA256 and Git blob equal the root-provided values.",
+        "cleanup_job": "Root-provided cleanup identity; no cleanup outcome is inferred.",
+        "actual_counts_and_durations": "Parsed from the hosted installed09 log, including all four case result lines and aggregate summary."
+      }
+    },
+    {
+      "receipt": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/source-check-02.json",
+        "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+        "blob": "001621c75454b3672465b3fc7529cd43caeda85b",
+        "mode": "100644",
+        "bytes": 6688,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/source-check-02.json"
+      },
+      "schema": "orchestra-sf.reports48.source-check.v1",
+      "id": "E-M48-SOURCE-CHECK-02",
+      "run": 43663977131,
+      "job": 132659187470,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663977131",
+      "conclusion": "failure",
+      "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+      "executed_sha": "9235894b095a2cf4a90184b4606949f75a70279d",
+      "executed_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+      "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "ref": "astra-check-wp07",
+      "workflow": ".github/workflows/astra-wp07-check.yml",
+      "workflow_blob": "28c453f4b7735f944e1237715e399e955d86546c",
+      "source_equivalence": {
+        "method": "GitHub MCP source8 ac72112c to same-tree validation child9235894b; zero changed files",
+        "changed_files": 0
+      },
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "exit_code": 2,
+        "diagnostics": 186,
+        "prior36_diagnostics": 137,
+        "identical_path_code_message": 136,
+        "new_test_diagnostics": 49,
+        "changed_text_on_unchanged_wp06_file": 1,
+        "diagnostic_receipt": "evidence/source-check-02-diagnostics.json",
+        "assessment": "The186 diagnostic headlines are exactly equal in order to source-CHECK01. This remains a FAIL on the uncomposed source lane; earlier triage49 missing dependency/API or derivative own-test errors still does not prove a composed typecheck PASS.",
+        "prior_check01_diagnostics": 186,
+        "identical_ordered_diagnostic_headlines": true,
+        "typecheck_artifact_bytes_identical_to_check01": true
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "directory": ".",
+        "exit_code": 1,
+        "rules": 78,
+        "changed_paths": 950,
+        "gate": 3,
+        "warn": 12,
+        "errors": 0,
+        "findings": [
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/client-and-collection.log",
+            "rule": "agent-scratch",
+            "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+            "log_line": 884,
+            "mission48_owned": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/nominal-03.log",
+            "rule": "agent-scratch",
+            "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+            "log_line": 885,
+            "mission48_owned": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/source-guards.log",
+            "rule": "agent-scratch",
+            "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+            "log_line": 886,
+            "mission48_owned": false
+          }
+        ],
+        "own_mission48_gates": 0,
+        "historical_out_of_scope_gates": 3,
+        "causal_remediation": "Four own raw logs were retired at source6 d9e2b517 with exact immutable history references. CHECK02 now confirms the reduction7→3; no suppression, renaming or legacy-path deletion."
+      },
+      "export_fixtures": {
+        "status": "generated",
+        "command": "bun run modules/sucafina/Sucafinav1/test/product/wp07/generate-export-fixtures.ts",
+        "exit_code": 0,
+        "visual_or_browser_credit": false,
+        "manifest": {
+          "schema": "wp07-export-inspection-v1",
+          "fixture": "explicit synthetic data; 25 projects, long notes, monthly financial trajectory, empty section and preserved human comment",
+          "productSha": "9235894b095a2cf4a90184b4606949f75a70279d",
+          "runId": "43663977131",
+          "runAttempt": "1",
+          "contentExtraction": "passed",
+          "visualInspection": "pending; render and inspect these exact files",
+          "files": [
+            {
+              "name": "preserved-long.pptx",
+              "sha256": "f737782e7d2925ef61fd39b28cf855f24f5bb69c35ae4f26697367acc90593c7",
+              "bytes": 1063233,
+              "format": "pptx",
+              "kind": "preserved",
+              "selectedRecords": 26,
+              "slides": 39,
+              "figures": 1,
+              "extractedTextSha256": "7de5d5ada23b1b52bc7868bd3e3e253da6c768f674b1827becdb91e132121d3a"
+            },
+            {
+              "name": "legacy-long.pptx",
+              "sha256": "088d65f10843ea4cb323a550d83349809355787a07d30d04d83f69ba30550ede",
+              "bytes": 399219,
+              "format": "pptx",
+              "kind": "legacy",
+              "selectedRecords": 25,
+              "slides": 26,
+              "figures": 0,
+              "extractedTextSha256": "916d6aa734ed022187d7f7381fc0a9e4361d01ee1d8c718bab3209636676dbe6"
+            },
+            {
+              "name": "preserved-long.docx",
+              "sha256": "0e31e581abf5e4588e2f383e68eda1bb62c5811cd756c99824efb1a9602e9e90",
+              "bytes": 15274,
+              "format": "docx",
+              "kind": "preserved",
+              "selectedRecords": 26,
+              "slides": null,
+              "figures": 1,
+              "extractedTextSha256": "aaf3cb909d7c67042ffde410e7217433812c737775d29e44e56f359569f47f3c"
+            },
+            {
+              "name": "legacy-long.docx",
+              "sha256": "13affcb2284c1be1835912a74895c96c8245146b48d5e08a97e5a925c0696a3e",
+              "bytes": 9415,
+              "format": "docx",
+              "kind": "legacy",
+              "selectedRecords": 25,
+              "slides": null,
+              "figures": 0,
+              "extractedTextSha256": "e74e9e767adeefc4b232c8aae273b6dd79de420de3daa959f44f15b6d0e5dad5"
+            }
+          ]
+        }
+      },
+      "artifact": {
+        "id": 14141083647,
+        "name": "wp07-check-9235894b095a2cf4a90184b4606949f75a70279d-1",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14141083647",
+        "zip_bytes": 88372,
+        "zip_sha256": "d2a3e938cdd14248f766f9fde51f7de67e2232ef85252ab4e2e0f56a59c5d833",
+        "download": "Returned GitHub MCP download URI only; ZIP digest verified before extraction",
+        "product_sha_verified": true,
+        "product_tree_verified": true,
+        "guard_base_verified": true
+      },
+      "job_log": {
+        "job_id": 132659187470,
+        "canonical_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663977131/job/132659187470",
+        "bytes": 146646,
+        "sha256": "a11cd1241a8b12fd83ad051787847ab2b286362b19827c9ee0c33c4188bd35d8",
+        "retention": "Raw output remains analysis material; repository receipt preserves actual diagnostics, guard findings and immutable artifact identities."
+      },
+      "scope": "Exact source8-tree CHECK through the existing unchanged interface. FAIL remains for source; this is not a compiler45 check on composedW6. No shared/compiler45 or Agenda39 live path changed. Exports are synthetic inspection fixtures, not successful Reports browser journeys."
+    }
+  ],
+  "preparation_blocker": {
+    "receipt": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REPORTS-PREPARATION-BLOCKER.json",
+      "ref": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+      "blob": "a44dea9de8a0f52ad470f822d4748d21021fdb9f",
+      "mode": "100644",
+      "bytes": 25664,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4f6676325f2549b29719fd5ce86132ad34212bc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/REPORTS-PREPARATION-BLOCKER.json"
+    },
+    "id": "M48-REPORTS-PREPARATION-POST-NO-RESPONSE",
+    "state": "BLOCKED_REQUIRES_CAUSAL_SERVER_OBSERVATION",
+    "problem": {
+      "stage": "Installed Reports preparation, after Generate Report mounts Prepare review and the user clicks Load selection.",
+      "expected": "The actual same-origin same-path POST with sf=review-agenda returns a response, then the unchanged parser and selected-source assertions complete before explicit dossier preservation.",
+      "observed": "Nominal06 has four actual timeouts at the agenda response wait. Diagnostic07 and diagnostic08 each observe the correct POST immediately after click, no response event until the case deadline, and ERR_CONNECTION_REFUSED only near teardown.",
+      "root_cause": "NOT_ESTABLISHED",
+      "persisted_after_C27_rebase": true,
+      "causal_limit": "The C27 diagnostic did not clear the observed blocker. That observation does not assign the cause to Runtime56, performance, body adaptation, payload size, authorization or the listener."
+    },
+    "causality": {
+      "state": "NOT_ESTABLISHED",
+      "established": [
+        "The preparation view mounts and Load selection is reached.",
+        "The diagnostic observer records the intended same-origin same-path review-agenda POST at 40 ms on W5 and 43 ms on W6.",
+        "Neither diagnostic records a response event before its deadline.",
+        "ERR_CONNECTION_REFUSED appears only at 176249 ms / 175889 ms, one millisecond before each observer finishes during deadline/teardown.",
+        "All four nominal06 journeys remain incomplete; neither one-case diagnostic gives nominal or acceptance credit."
+      ],
+      "not_established": [
+        "Initial connection refusal",
+        "Server process death",
+        "Arrival of the request at the listener or product handler",
+        "Body EOF delivery",
+        "A particular HTTP response status",
+        "Authorization loss",
+        "A body consumption deadlock",
+        "Oversize body rejection or cancellation",
+        "Performance as the root cause"
+      ],
+      "cli_limit": "The bounded allowlisted CLI tail has no recognized transport error or repository stack location; this is not proof of a healthy process or completed request.",
+      "ui_limit": "agenda-unavailable and the C27 retention text are observed UI states, not proven backend causes or proof that discussion drafts/intents were exercised."
+    },
+    "read_only_analysis": {
+      "receipts": [
+        {
+          "local_path": "diagnosis/nominal07-post-body/READ-REVIEW.json",
+          "bytes": 14431,
+          "sha256": "e2e1febf8c98cbea06c4ce6913b5dc511f50d543525dfd4487c0c716ab811acb"
+        },
+        {
+          "local_path": "diagnosis/nominal07-post-body/LIMIT-REVIEW.json",
+          "bytes": 5555,
+          "sha256": "632f75b8475c7de22514f0fe1aa908463b8d096e1a742b0ffe0408155b99f225"
+        }
+      ],
+      "body_review": "No duplicate body consumer or unconditional circular await was demonstrated in the inspected CLI/Effect/installation/product path. reviews/http has an EOF wait, but the runtime does not show whether that stage was reached or stalled.",
+      "size_review": "The initial three-topic selector envelope contains no projections or Projects25 rows. Its verified constructor shape has a static upper bound of 626 bytes versus 262144 configured bytes; this is not a captured body. The oversize-cancel hypothesis is unsupported for this first load.",
+      "performance_review": "Runtime56 source receipts and the C27 rebase do not establish Reports latency or the cause of the missing response.",
+      "code_changed": false,
+      "product_executed": false
+    },
+    "acceptance_impact": {
+      "RPT_01": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+      "RPT_02": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+      "RPT_03": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+      "RPT_04": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+      "nominal_positive_credit": 0,
+      "browser_draft_reconciliation_credit": false,
+      "browser_true_revocation_purge_credit": false,
+      "four_journeys_required_on_coherent_candidate": true,
+      "independent_gates": {
+        "installed_four_on_W6": {
+          "state": "PASS_4_OF_4",
+          "receipt": "evidence/installed-09.json",
+          "run": 43663795167,
+          "job": 132658631801,
+          "scope": "Four installed entry/provider cases only;103expects,12.55s"
+        },
+        "final_CHECK": {
+          "state": "FAIL",
+          "receipt": "evidence/source-check-02.json",
+          "run": 43663977131,
+          "job": 132659187470,
+          "scope": "Uncomposed source8 exact tree;186TypeScript/3legacygates"
+        },
+        "limit": "Neither result establishes the browser POST response or nominal journey completion."
+      },
+      "GLOBAL_RELEASE": false
+    },
+    "next_authorized_work": {
+      "owner": "Requested integrator47 or formally acknowledged successor (60 prepared at closing) coordinates server/bridge and Reports owners.57 has ended.",
+      "before_any_repeat": "Establish a causal discriminant or correction. Do not repeat the unchanged failing fixture just to obtain another timeout.",
+      "observation": "Add approved, bounded server/bridge phase observations for the existing request without capturing body content, cookie/header values, private URLs, grants or command keys.",
+      "phase_boundaries": [
+        "Listener receives request",
+        "Effect incoming-to-Web adaptation completes",
+        "Local installation reaches product dispatcher",
+        "Reports body reader begins and reaches EOF, reporting byte count only",
+        "UI admission/validation begins and completes",
+        "Agenda producer begins and completes",
+        "Response is returned to the bridge and handed to the actual listener"
+      ],
+      "purpose": "Locate the first missing phase, including the possibility that the request never enters the server; distinguish transport/body/authorization/producer/response waits using evidence.",
+      "after_cause": "Apply the smallest authorized causal correction atomically with current dependencies. Preserve the complete earlier evidence.",
+      "qualification_order": [
+        "Obtain a positive installed preparation with the same three sections, 25 real projects and unchanged assertions/budget.",
+        "Then execute all four original Reports nominal journeys on the exact coherent candidate, without filters/skips, retries, fixture reduction or assertion/budget changes."
+      ],
+      "mutation_policy": "No automatic mutation replay; any continuation retains explicit user intent and the existing idempotency contract."
+    }
+  },
+  "feedback_reconciliation": {
+    "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/27#issuecomment-6887592278",
+    "comment_created_at": "2026-11-15T01:55:00Z",
+    "bounded_comments_read": 1,
+    "producer_response_comment_observed": false,
+    "chronology": "Terminalc4f6676 at01:52:46 precedes root60 feedback01:55. Do not claim this terminal is a reply or consumer ACK of that comment.",
+    "superseded_feedback_claim": "The old ac72112c NOT_RELEASED observation remains correct for that pin; it is superseded by this new explicit terminal release.",
+    "convergent_finding": "HANDOFF-FINAL and C27 review independently retain GET/HEAD review-agenda admission!=ok→403 as Agenda39-owned preparation selection risk; neither declares it the pending POST cause."
+  },
+  "new_findings": [
+    {
+      "id": "M48-REPORTS-PREPARATION-POST-NO-RESPONSE",
+      "owner": "Server/bridge and Reports successor coordinated byroot60",
+      "state": "BLOCKED_REQUIRES_CAUSAL_SERVER_OBSERVATION",
+      "detail": "Diagnostic08 confirms blocker persists on C27 but not its cause. Request43ms, noresponse, late ERR_CONNECTION_REFUSED175889ms. Before repeat, establish bounded causal phase observation/correction."
+    },
+    {
+      "id": "M60-R48-QUALIFICATION-SCOPE-RECONCILIATION",
+      "state": "PRESERVE_HOLD_WITH_CANDIDATE_PREPARATION",
+      "detail": "Explicit complete release exists; installed09component4PASS is not fourjourney success; CHECK02FAIL and all86NOT_ESTABLISHED retained. Candidate construction may proceed under rootdecision without functional activation."
+    }
+  ],
+  "documentary_path_normalization": {
+    "prepared_prefix": "INPUT-CLOSURE/QUALIFICATION.delivery_layout maps prepared/ to receipt root; release manifests prepared/own-overlay and prepared/shared-patches are documentary local prefixes, not missing repository manifests.",
+    "final_prefix": "Maps final/ to receipt root except analysis-only documentary scripts; no material dependency added."
+  },
+  "preservation": {
+    "prior_material45_reopened": false,
+    "prior_boundary01_75pass3fail_retained": true,
+    "nominal06_0pass4fail_retained": true,
+    "nominals_on_W6": "NOT_RUN_AFTER_FAILED_PREPARATION_PREREQUISITE",
+    "criteria86": "NOT_ESTABLISHED",
+    "source56_not_reintaken": true,
+    "criteria_large_document_handling": "CRITERIA.json blob6e77738a6a8b19941ce1863ad6a6335938b62a2a size1164486 is archived byte-exact via namespace tree. This bounded supplement reads preservation/track summaries, not a new semantic audit of the full matrix."
+  },
+  "execution": {
+    "GitHub_MCP_GET_only": true,
+    "remote_writes": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "product_execution": 0
+  },
+  "GLOBAL_RELEASE": false
+}

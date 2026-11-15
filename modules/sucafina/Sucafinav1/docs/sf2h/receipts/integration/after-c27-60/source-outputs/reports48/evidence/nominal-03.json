@@ -1,0 +1,77 @@
+{
+  "id": "E-M48-NOMINAL-03",
+  "run": 43655931507,
+  "job": 132634322740,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655931507",
+  "source": "07ac4e6f6d6d88e0c30050a0e54af24da39060b1",
+  "W": "1b404dc1fda7eff08334124552c6570755fba161",
+  "W_tree": "f7f3bd0c05b4fca235e7a4fdf49be136e510b06d",
+  "S": "046e805f2d9635a4527c58b4d4874749b6010304",
+  "S_tree": "07304bfec0abac234509cad5bff98530ae227e85",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/reports.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "request_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 4,
+  "total": 4,
+  "started": 4,
+  "selected_files": [
+    "e2e/sucafina/reports.spec.ts"
+  ],
+  "case_results": [
+    {
+      "case_id": "RPT-01",
+      "runtime_status": "TIMED_OUT",
+      "log_line": 1091,
+      "blocking_stage": "prepareReview / form.report-form Format locator; baseline source selection/preservation not reached",
+      "assertions_reached": "Report form count1; no business journey completion"
+    },
+    {
+      "case_id": "RPT-02",
+      "runtime_status": "TIMED_OUT",
+      "log_line": 1116,
+      "blocking_stage": "prepareReview / form.report-form Format locator; baseline source selection/preservation not reached",
+      "assertions_reached": "Report form count1; no business journey completion"
+    },
+    {
+      "case_id": "RPT-03",
+      "runtime_status": "TIMED_OUT",
+      "log_line": 1141,
+      "blocking_stage": "prepareReview / form.report-form Format locator; baseline source selection/preservation not reached",
+      "assertions_reached": "Report form count1; no business journey completion"
+    },
+    {
+      "case_id": "RPT-04",
+      "runtime_status": "TIMED_OUT",
+      "log_line": 1166,
+      "blocking_stage": "prepareReview / form.report-form Format locator; baseline source selection/preservation not reached",
+      "assertions_reached": "Report form count1; no business journey completion"
+    }
+  ],
+  "log": "evidence/nominal-03.log",
+  "controls": {
+    "workers": 1,
+    "retries": 0,
+    "timeout_ms": 180000,
+    "trace": "off",
+    "video": "off",
+    "screenshot": "off"
+  },
+  "request_blob": "b216b474fff3eb0dbb720678080899908fab5a0c",
+  "request_only_diff": [
+    ".ci-run.json"
+  ],
+  "scope": "Actual four nominal tests started and timed out at the same Format locator before preserved-review business assertions. No RPT02 draft-reconciliation or RPT04 revocation browser credit. No retry without causal fixture change."
+}

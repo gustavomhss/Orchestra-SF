@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test"
-import type { APIRequestContext, Page, TestInfo } from "@playwright/test"
+import type { APIRequestContext, Page, TestInfo, Request, Response, ConsoleMessage } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ReviewAgendaPreview } from "../../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
@@ -15,23 +15,36 @@ export async function prepareReview(page: Page, app: ReportsInstallation, corpus
   await page.getByText("Reports and backup", { exact: true }).click()
   const form = page.locator("form.report-form")
   await expect(form).toHaveCount(1)
-  await form.getByLabel("Format", { exact: true }).selectOption("docx")
-  await form.getByLabel("Year", { exact: true }).selectOption(String(corpus.year))
+  // These labels wrap their selects and option text. Use the exact accessible
+  // combobox names exposed by the installed Reports form.
+  const format = form.getByRole("combobox", { name: "Format", exact: true })
+  const year = form.getByRole("combobox", { name: "Year", exact: true })
+  await expect(format).toBeEnabled()
+  await format.selectOption("docx")
+  await expect(format).toHaveValue("docx")
+  await expect(year).toBeEnabled()
+  await year.selectOption(String(corpus.year))
+  await expect(year).toHaveValue(String(corpus.year))
   await form.getByLabel("Title", { exact: true }).fill("Isolated Reports preserved dossier")
   for (const checkbox of await form.getByRole("checkbox").all()) await checkbox.uncheck()
   for (const title of ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"])
     await form.getByRole("checkbox", { name: title, exact: true }).check()
   await form.getByRole("button", { name: "Generate Report", exact: true }).click()
 
-  // WP07 already exports this exact view. WP10 must mount it from the existing entry;
-  // a legacy live-data download is not accepted as a preserved-review journey.
+  // C6 mounts the delivered preparation view from the existing Reports entry.
+  // This journey uses that installed composition and its preserved selection.
   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
-  await expect(preparation, "BLOCKED_COMPOSITION: Generate Report must mount the real ReviewPreparationView").toBeVisible()
+  await expect(preparation, "Generate Report opens the installed ReviewPreparationView").toBeVisible()
   const load = preparation.getByRole("button", { name: "Load selection", exact: true })
   await expect(load).toBeEnabled()
+  const transport = observeAgendaTransport(page, app)
   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
-  await load.click()
-  const selected = await agendaResult(await pendingAgenda)
+  const selected = await (async () => {
+    try {
+      const [, response] = await Promise.all([load.click(), Promise.race([pendingAgenda, transport.failed])])
+      return await agendaResult(response)
+    } finally { await transport.finish(info) }
+  })()
   expect(selected.sections.map((section) => section.title).sort()).toEqual(["Budget", "Hot Topics", "Projects"])
   const projects = selected.sections.filter((section) => section.title === "Projects")
   expect(projects).toHaveLength(1)
@@ -224,6 +237,11 @@ export async function exportReview(page: Page, app: ReportsInstallation, saved: 
   expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
   const link = preparation.getByRole("link", { name: "Download generated report", exact: true })
   await expect(link).toHaveCount(1)
+  const expectedDownload = new URL(app.dashboardURL)
+  expectedDownload.search = new URLSearchParams({ sf: "review-download", artifactRef: artifact }).toString()
+  // A previous format remains visible while this response is processed. Wait
+  // for this artifact, not merely the already existing download link.
+  await expect(link).toHaveAttribute("href", expectedDownload.toString())
   const href = new URL(text(await link.getAttribute("href")), page.url())
   expect(href.origin).toBe(app.origin)
   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
@@ -283,8 +301,29 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
   const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+  const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
   await link.click()
   expect(object(await (await read).json()).value).toEqual(saved)
+  const resolved = await resolution
+  expect(resolved.status()).toBe(200)
+  expect(resolved.headers()["cache-control"]).toBe("no-store")
+  const links = object(await resolved.json()).links
+  expect(Array.isArray(links)).toBe(true)
+  expect(links).toHaveLength(1)
+  const authorized = object((links as unknown[])[0])
+  const destination = new URL(text(authorized.url), app.dashboardURL)
+  expect(destination.origin).toBe(app.origin)
+  expect(destination.pathname).toBe(new URL(app.dashboardURL).pathname)
+  expect(destination.searchParams.get("page")).toBe("Budget Overview")
+  expect(destination.searchParams.get("year")).toBe(String(corpus.year))
+  // The host offers the producer-authorized destination for an explicit choice.
+  // Opening the evidence button alone does not navigate away from the review.
+  const sources = page.getByRole("navigation", { name: "Origens autorizadas da revisão", exact: true })
+  const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
+  await expect(open).toHaveCount(1)
+  await expect(open).toHaveAttribute("href", destination.toString())
+  await open.click()
+  await expect(page).toHaveURL(destination.toString())
   await expect(page.locator("#content").getByRole("heading", { name: "Budget Overview", exact: true })).toBeVisible()
   const target = new URL(page.url())
   expect(target.origin).toBe(app.origin)
@@ -294,4 +333,82 @@ export async function followBudgetSource(page: Page, app: ReportsInstallation, s
   await expect(page.locator("article.metric").filter({ has: page.getByText("Known forecast — 12 months", { exact: true }) }).locator("strong"))
     .toHaveText(`$${corpus.after}`)
   expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
+}
+
+/** Observe transport only: never serialize headers, bodies, cookies or query values. */
+function observeAgendaTransport(page: Page, app: ReportsInstallation) {
+  const expected = new URL(app.dashboardURL)
+  const started = Date.now()
+  const entries: Record<string, unknown>[] = []
+  let dropped = 0
+  const add = (kind: string, value: Record<string, unknown>) => {
+    if (entries.length >= 40) { dropped += 1; return }
+    entries.push({ kind, elapsedMs: Date.now() - started, ...value })
+  }
+  const destination = (raw: string) => {
+    try {
+      const url = new URL(raw)
+      const mode = url.searchParams.get("sf")
+      return {
+        sameOrigin: url.origin === expected.origin,
+        samePath: url.pathname === expected.pathname,
+        route: url.pathname === expected.pathname ? "dashboard" :
+          /\/auth\/(?:login|logout|local)$/.test(url.pathname) ? "authentication" : "other",
+        mode: mode && mode.length <= 64 && /^review(?:-[a-z]+)*$/.test(mode) ? mode : mode === null ? "absent" : "other",
+      }
+    } catch { return { sameOrigin: false, samePath: false, route: "invalid", mode: "other" } }
+  }
+  const matching = (request: Request) => {
+    const route = destination(request.url())
+    return route.sameOrigin && route.samePath && route.mode === "review-agenda" && request.method() === "POST"
+  }
+  const relevant = (request: Request) => request.method() === "POST" || destination(request.url()).mode.startsWith("review")
+  const causes = (value: string) => ({
+    codes: [...new Set(value.match(/\b(?:net::)?ERR_[A-Z0-9_]+\b/g) ?? [])].slice(0, 5).map((code) => code.slice(0, 80)),
+    categories: [
+      /content security policy|CSP|connect-src|default-src/i.test(value) ? "content-security-policy" : undefined,
+      /CORS|cross-origin/i.test(value) ? "cross-origin" : undefined,
+      /mixed content/i.test(value) ? "mixed-content" : undefined,
+      /failed to fetch|NetworkError|load failed/i.test(value) ? "network-failure" : undefined,
+      /abort/i.test(value) ? "aborted" : undefined,
+      /timeout|timed out/i.test(value) ? "timeout" : undefined,
+    ].filter((entry): entry is string => entry !== undefined),
+  })
+  let rejectFailure!: (error: Error) => void
+  const failed = new Promise<never>((_resolve, reject) => { rejectFailure = reject })
+  // The original response waiter remains the success oracle. This branch only
+  // rejects sooner when its exact request has an observed transport failure.
+  void failed.catch(() => undefined)
+  const request = (value: Request) => {
+    if (relevant(value)) add("request", { ...destination(value.url()), method: value.method(), resource: value.resourceType() })
+  }
+  const response = (value: Response) => {
+    if (relevant(value.request())) add("response", { ...destination(value.url()), method: value.request().method(), status: value.status() })
+  }
+  const requestfailed = (value: Request) => {
+    const failure = causes(value.failure()?.errorText ?? "")
+    if (relevant(value)) add("requestfailed", { ...destination(value.url()), method: value.method(), ...failure })
+    if (matching(value)) rejectFailure(new Error("Actual review-agenda POST transport failed: " +
+      [...failure.codes, ...failure.categories].join(", ")))
+  }
+  const pageerror = (value: Error) => add("pageerror", {
+    name: value.name.length <= 40 && /^[A-Za-z]*Error$/.test(value.name) ? value.name : "Error", ...causes(value.message),
+  })
+  const consoleEvent = (value: ConsoleMessage) => {
+    if (value.type() === "error" || value.type() === "warning") add("console", { type: value.type(), ...causes(value.text()) })
+  }
+  const before = destination(page.url())
+  page.on("request", request); page.on("response", response); page.on("requestfailed", requestfailed)
+  page.on("pageerror", pageerror); page.on("console", consoleEvent)
+  return {
+    failed,
+    finish: async (info: TestInfo) => {
+      page.off("request", request); page.off("response", response); page.off("requestfailed", requestfailed)
+      page.off("pageerror", pageerror); page.off("console", consoleEvent)
+      await info.attach("reports-agenda-transport", { contentType: "application/json", body: JSON.stringify({
+        before, after: destination(page.url()), expected: { method: "POST", mode: "review-agenda" },
+        elapsedMs: Date.now() - started, entries, dropped, cli: app.diagnostics?.() ?? "diagnostics-unavailable",
+      }, null, 2) }).catch(() => undefined)
+    },
+  }
 }

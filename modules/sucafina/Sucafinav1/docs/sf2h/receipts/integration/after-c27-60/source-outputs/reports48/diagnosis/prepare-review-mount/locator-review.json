@@ -1,0 +1,198 @@
+{
+  "schema": "orchestra-sf.mission48.nominal04-locator-review.v1",
+  "finding": "M48-NOMINAL04-PREPARATION-NOT-MOUNTED",
+  "state": "LOCATOR_VERIFIED_CORRECT_BRIDGE_INVESTIGATION_DELEGATED",
+  "prepared_at": "2026-11-15T00:25:11.319693Z",
+  "actual_execution": {
+    "run": 43657599973,
+    "job": 132639507850,
+    "W": "c44a3b80da2549c6a3bc4cbdb186a275d93370ab",
+    "S": "f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "packages/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/reports.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "stats": {
+      "startTime": "2026-11-15T00:21:44.322Z",
+      "duration": 91410.316,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 4,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+        "timeout": 180000,
+        "status": "failed",
+        "retry": 0,
+        "duration_ms": 10692,
+        "error": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n"
+      },
+      {
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "timeout": 180000,
+        "status": "failed",
+        "retry": 0,
+        "duration_ms": 10730,
+        "error": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n"
+      },
+      {
+        "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+        "timeout": 180000,
+        "status": "failed",
+        "retry": 0,
+        "duration_ms": 10769,
+        "error": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n"
+      },
+      {
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+        "timeout": 180000,
+        "status": "failed",
+        "retry": 0,
+        "duration_ms": 10729,
+        "error": "Error: Generate Report opens the installed ReviewPreparationView\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Prepare review', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Generate Report opens the installed ReviewPreparationView with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Prepare review', exact: true })\u001b[22m\n"
+      }
+    ],
+    "log": {
+      "path": "mission48/evidence/nominal-04.log",
+      "bytes": 112261,
+      "sha256": "8dbe7208f13684091d2159c267d5934ca1b73fbbf019aabf782c1d8cf0ac4ba1",
+      "git_blob": "1a216c37ff6883e903165d94ce4f9fe2866d5aba"
+    },
+    "runtime": {
+      "path": "mission48/evidence/nominal-04-runtime/playwright-runtime.json",
+      "bytes": 40497,
+      "sha256": "22a60916dcfb2b7fe55bad60ba081ae31aeba5da6b8fc5e9e6f7b7da426be2f3",
+      "git_blob": "b59bc73b8d33811b5569a65a3d321eae14434387"
+    },
+    "artifact_sha256": "ce1b5d13c19203207e6fd4b3ef58b357901d2c45113c772400b5be12dd569bee",
+    "contexts": [
+      {
+        "path": "mission48/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium.md",
+        "bytes": 29030,
+        "sha256": "726ab559e08a47fa90add5176db367ca130c90028474d6052606ddf462ecb0e2",
+        "git_blob": "33dd43b120d12e35b579867ec96f1449d6e0ec3f",
+        "observed": {
+          "Budget_Overview_heading": true,
+          "Word_selected": true,
+          "Year2026_selected": true,
+          "Title_filled": true,
+          "Generate_Report_active": true,
+          "Prepare_review_region": false,
+          "Load_selection_button": false,
+          "alternate_entry_present": true
+        }
+      },
+      {
+        "path": "mission48/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium.md",
+        "bytes": 29027,
+        "sha256": "c0c2029f61f34cf991eb347d18b5a5fc12ca98b18ad914c7266d51905785129a",
+        "git_blob": "b6f26fab46404d172c5c06cb7d8522a375766f8f",
+        "observed": {
+          "Budget_Overview_heading": true,
+          "Word_selected": true,
+          "Year2026_selected": true,
+          "Title_filled": true,
+          "Generate_Report_active": true,
+          "Prepare_review_region": false,
+          "Load_selection_button": false,
+          "alternate_entry_present": true
+        }
+      },
+      {
+        "path": "mission48/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium.md",
+        "bytes": 29013,
+        "sha256": "59ed43b57e73b7a8c8a72c01a107ca6180d048754ed3e72139747d35c9a191ca",
+        "git_blob": "9ed93a9d09e7b612fb80e691850774a812c12b43",
+        "observed": {
+          "Budget_Overview_heading": true,
+          "Word_selected": true,
+          "Year2026_selected": true,
+          "Title_filled": true,
+          "Generate_Report_active": true,
+          "Prepare_review_region": false,
+          "Load_selection_button": false,
+          "alternate_entry_present": true
+        }
+      },
+      {
+        "path": "mission48/evidence/nominal-04-context/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium.md",
+        "bytes": 29010,
+        "sha256": "3971d2f26e1bc170c3e032eff5da64b44d0c2fc20ed3c9c9245b655323ba5d2b",
+        "git_blob": "6783f93e935bb30ecc9dd3de9d3d0384b7a36b8b",
+        "observed": {
+          "Budget_Overview_heading": true,
+          "Word_selected": true,
+          "Year2026_selected": true,
+          "Title_filled": true,
+          "Generate_Report_active": true,
+          "Prepare_review_region": false,
+          "Load_selection_button": false,
+          "alternate_entry_present": true
+        }
+      }
+    ]
+  },
+  "actual_interface": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "ref": "c44a3b80da2549c6a3bc4cbdb186a275d93370ab",
+    "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+    "blob": "8530268bff37cad2f9158a78f80a3dc4529d32aa",
+    "local_read_copy": {
+      "path": "mission48/diagnosis/prepare-review-mount/workspace-W3-read-only.ts.txt",
+      "bytes": 21899,
+      "sha256": "fdeb3ae80ab53d5103df5a43790370524c0cabec569f92c4ec6f31e51646070d",
+      "git_blob": "8530268bff37cad2f9158a78f80a3dc4529d32aa"
+    },
+    "proof": [
+      {
+        "line": 17,
+        "code": "const root = document.createElement(\"section\")"
+      },
+      {
+        "line": 18,
+        "code": "root.setAttribute(\"aria-label\", \"Prepare review\")"
+      },
+      {
+        "line": 35,
+        "code": "root.replaceChildren(node(\"h2\", state.reviewRef ? \"Preserved review\" : \"Prepare review\"))"
+      },
+      {
+        "line": 41,
+        "code": "Initial non-routine state appends the Load selection button"
+      }
+    ]
+  },
+  "conclusions": [
+    "The form interaction repair is reached successfully: Word, year and title are selected before the real Generate Report button is clicked.",
+    "The existing region locator exactly matches the actual named section constructed by createReviewPreparationView; no renamed accessible interface is evidenced.",
+    "All four snapshots show the original Budget Overview and filled Reports form after the click, with no preparation region and no Load selection button.",
+    "This is an observed failure to reach or mount the preparation view; the supplied artifacts do not identify whether submit handling, navigation or a script exception caused it.",
+    "No alternative entry link is substituted: doing so would bypass the required Generate Report entry being qualified."
+  ],
+  "coordination": {
+    "owner": "/root/producer_contract",
+    "scope": "Trace mounted submit bridge/router/bootstrap and supply a causal product/shared patch if justified.",
+    "sent": "Exact workspace blob/interface and snapshot observations supplied to producer_contract and root."
+  },
+  "disposition": {
+    "E2E_oracle": "RETAIN_UNCHANGED",
+    "own_fix": "NONE_JUSTIFIED_BY_LOCATOR_EVIDENCE",
+    "Agenda39_paths": "READ_ONLY_NO_EDITS",
+    "budgets": "UNCHANGED",
+    "local_tests": "NOT_RUN",
+    "remote_writes": "NONE",
+    "test_source_blob_retained": "6f77c86427ec23b3cd2b3675a0294a736495dac4"
+  },
+  "limits": "No PASS, no timeout increase, no direct HTTP bypass, no grant synthesis and no claim that the existing preparation module is absent from composition."
+}

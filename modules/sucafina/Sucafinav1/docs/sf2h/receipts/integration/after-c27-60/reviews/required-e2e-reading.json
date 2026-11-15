@@ -1,0 +1,284 @@
+{
+  "schema": "sf2h.after-c27-60.required-reading-playwright-static-hygiene.v1",
+  "reviewer": "decisions52_review",
+  "purpose": "Required official Playwright reading and limited hygiene review of already reviewed/released Reports48 E2E material before C28 preparation.",
+  "status": "REQUIRED_READING_COMPLETE_NO_NEW_STATIC_HYGIENE_BLOCKER_IDENTIFIED",
+  "trigger": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "ref": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "AGENTS": [
+      {
+        "path": "packages/app-shell/AGENTS.md",
+        "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+        "read_in_full": true
+      },
+      {
+        "path": "packages/app-shell/e2e/AGENTS.md",
+        "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+        "read_in_full": true
+      }
+    ],
+    "required_reading": "E2E AGENTS requires Best Practices/Auto-waiting/Assertions before reviewing tests, and Locators/Network/Isolation for those concerns.",
+    "priority": "Explicit user mission60 preservation of original oracles/budgets/configuration and zero execution overrides generic suggestions to run tools, add retries/traces, expand matrices, upgrade dependencies or collect performance baselines."
+  },
+  "documentation": [
+    {
+      "title": "Best Practices",
+      "repository": "microsoft/playwright",
+      "ref": "b4d016aadc5cbd2b898a284307975fe73e05483d",
+      "path": "docs/src/best-practices-js.md",
+      "blob": "02e1e4db6baea68e725040646396e09a29584420",
+      "url": "https://github.com/microsoft/playwright/blob/b4d016aadc5cbd2b898a284307975fe73e05483d/docs/src/best-practices-js.md",
+      "read_in_full": true,
+      "characters": 19866,
+      "principles": [
+        "Exercise user-visible behavior with independent tests and deterministic data.",
+        "Prefer user-facing or explicit-contract locators, scoped by chaining/filtering; use awaited web-first assertions for asynchronous UI.",
+        "Generic tooling, trace, browser-matrix, dependency-update, lint, CI and parallelism suggestions are guidance, not authority to change this mission's fixed configuration."
+      ]
+    },
+    {
+      "title": "Auto-waiting",
+      "repository": "microsoft/playwright",
+      "ref": "b4d016aadc5cbd2b898a284307975fe73e05483d",
+      "path": "docs/src/actionability.md",
+      "blob": "848df596771406a7c4d7b2e6120f95b01330a756",
+      "url": "https://github.com/microsoft/playwright/blob/b4d016aadc5cbd2b898a284307975fe73e05483d/docs/src/actionability.md",
+      "read_in_full": true,
+      "characters": 6813,
+      "principles": [
+        "Locator actions wait for their applicable actionability checks; failed checks produce a timeout rather than proving a business outcome.",
+        "Do not bypass actionability with force to hide an unavailable control.",
+        "Visibility or an action completing does not replace exact application-state assertions."
+      ]
+    },
+    {
+      "title": "Assertions",
+      "repository": "microsoft/playwright",
+      "ref": "b4d016aadc5cbd2b898a284307975fe73e05483d",
+      "path": "docs/src/test-assertions-js.md",
+      "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+      "url": "https://github.com/microsoft/playwright/blob/b4d016aadc5cbd2b898a284307975fe73e05483d/docs/src/test-assertions-js.md",
+      "read_in_full": true,
+      "characters": 18952,
+      "principles": [
+        "Await Playwright locator/page assertions so they can retry observations within the existing budget.",
+        "Generic expect assertions do not retry; they are appropriate for already-observed immutable response values, payload identities and exact snapshots.",
+        "Polling/toPass must not introduce repeated mutations, longer budgets, soft acceptance, weaker matches or additional retries into original journeys."
+      ]
+    },
+    {
+      "title": "Locators",
+      "repository": "microsoft/playwright",
+      "ref": "b4d016aadc5cbd2b898a284307975fe73e05483d",
+      "path": "docs/src/locators.md",
+      "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+      "url": "https://github.com/microsoft/playwright/blob/b4d016aadc5cbd2b898a284307975fe73e05483d/docs/src/locators.md",
+      "read_in_full": true,
+      "characters": 47212,
+      "principles": [
+        "Prefer role plus accessible name, labels, text and explicit testing contracts; narrow within the relevant region.",
+        "Locators resolve fresh DOM nodes for each action; strictness is useful evidence of ambiguous targets.",
+        "Do not use first/last/nth merely to hide ambiguity. Existing explicit form/record anchors may remain where the original oracle depends on the real installed contract."
+      ]
+    },
+    {
+      "title": "Network",
+      "repository": "microsoft/playwright",
+      "ref": "b4d016aadc5cbd2b898a284307975fe73e05483d",
+      "path": "docs/src/network.md",
+      "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+      "url": "https://github.com/microsoft/playwright/blob/b4d016aadc5cbd2b898a284307975fe73e05483d/docs/src/network.md",
+      "read_in_full": true,
+      "characters": 25671,
+      "principles": [
+        "Register response/request/download waits before the action that triggers them; use exact method and same-origin/path/operation predicates.",
+        "Monitoring an event and proving the response/application body are separate observations.",
+        "Routing can continue, abort or fulfill; mission-specific faults must preserve genuine producer authorization/results and must not fabricate a successful business response.",
+        "Network-stack credentials, redirects and service-worker behavior limit what routed events demonstrate; the guide does not authorize changing authentication, service-worker policy or redirects here."
+      ]
+    },
+    {
+      "title": "Isolation",
+      "repository": "microsoft/playwright",
+      "ref": "b4d016aadc5cbd2b898a284307975fe73e05483d",
+      "path": "docs/src/browser-contexts.md",
+      "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+      "url": "https://github.com/microsoft/playwright/blob/b4d016aadc5cbd2b898a284307975fe73e05483d/docs/src/browser-contexts.md",
+      "read_in_full": true,
+      "characters": 6485,
+      "principles": [
+        "Use a clean browser context per test with separate cookie/storage state and independently initialized data.",
+        "Additional contexts within one scenario may intentionally represent an old credential and a fresh user; close them explicitly.",
+        "Browser isolation alone is not database/process isolation; fixture ownership and cleanup remain relevant."
+      ]
+    }
+  ],
+  "documentation_version_limit": "Official docs were read at one immutable current main commit. This is not a claim that every API described there exists in the repository's installed Playwright version. No new API, dependency or configuration was introduced.",
+  "source_material": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "reports_release": "c4f6676325f2549b29719fd5ce86132ad34212bc",
+    "prior_reconciled_bundle": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "relation": "Reports48 reviewer confirms all45 released pre/postimages unchanged from previously reconciled bundle; this review is limited to hygiene of the seven paths listed.",
+    "paths": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+        "blob": "857f339fe477839986e6e70cf4781c9f4f16e009",
+        "mode": "100644",
+        "content_read_in_full": true,
+        "source": "GitHub MCP immutable blob read; release48 postimage mapping supplied by reports48 reviewer and already reconciled by root."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "blob": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5",
+        "mode": "100644",
+        "content_read_in_full": true,
+        "source": "GitHub MCP immutable blob read; release48 postimage mapping supplied by reports48 reviewer and already reconciled by root."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "blob": "494fe03f46beea037cff45e70259ac875758e3b6",
+        "mode": "100644",
+        "content_read_in_full": true,
+        "source": "GitHub MCP immutable blob read; release48 postimage mapping supplied by reports48 reviewer and already reconciled by root."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+        "blob": "b145caac8a47e029aded4418253488d250d680e1",
+        "mode": "100644",
+        "content_read_in_full": true,
+        "source": "GitHub MCP immutable blob read; release48 postimage mapping supplied by reports48 reviewer and already reconciled by root."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+        "blob": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4",
+        "mode": "100644",
+        "content_read_in_full": true,
+        "source": "GitHub MCP immutable blob read; release48 postimage mapping supplied by reports48 reviewer and already reconciled by root."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+        "blob": "2a53115e2f116f49dc23c779aff2349cd149dc1c",
+        "mode": "100644",
+        "content_read_in_full": true,
+        "source": "Direct GitHub MCP file read at C27; reports48 reviewer confirms absent from45overlays and unchanged in proposed C28."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/model.ts",
+        "blob": "dc4c34866e35b8eee0911897b79396dce51a600e",
+        "mode": "100644",
+        "content_read_in_full": true,
+        "source": "Direct GitHub MCP file read at C27; reports48 reviewer confirms absent from45overlays and unchanged in proposed C28."
+      }
+    ]
+  },
+  "static_observations": [
+    {
+      "topic": "Original nominal scope",
+      "files": [
+        "reports.spec.ts",
+        "fixture.ts"
+      ],
+      "observation": "Four named Reports business cases remain present with original180000ms case budget, retries0 and fixture requirement of1worker/production bundle. Privacy capture remains trace/video/screenshot off. Preservation of86criteria comes from existing Reports48 release/reconciliation review; this pass does not claim an executed assertion count."
+    },
+    {
+      "topic": "Locators and readiness",
+      "files": [
+        "reports.spec.ts",
+        "review-flow.ts",
+        "read-reconciliation.ts",
+        "revocation.ts"
+      ],
+      "observation": "Uses scoped regions, exact accessible button/textbox/combobox names and web-first count/text/value/attribute/enabled assertions. Existing form/data-record/CSS anchors remain paired with exact identity/value checks. No first/last escape, forced click or fixed-delay readiness loop was found in these reviewed contents."
+    },
+    {
+      "topic": "Wait ordering",
+      "files": [
+        "reports.spec.ts",
+        "review-flow.ts",
+        "read-reconciliation.ts",
+        "revocation.ts",
+        "model.ts"
+      ],
+      "observation": "Response/download/requestfailed waits are created before corresponding click/reload. responseFor constrains origin, pathname, sf mode and HTTP method. Response status/body, exact preserved review, source selection, record counts and payload identities remain separate assertions."
+    },
+    {
+      "topic": "Agenda observer",
+      "files": [
+        "review-flow.ts"
+      ],
+      "observation": "Original response/body oracle remains the only success path. Promise.race adds rejection on an observed failure of the exact POST, without synthesizing a response or extending the budget. Observer removes listeners in finally; retained fields are allowlisted timing/classification rather than headers, cookies or raw bodies."
+    },
+    {
+      "topic": "Controlled transport faults",
+      "files": [
+        "read-reconciliation.ts",
+        "revocation.ts"
+      ],
+      "observation": "Read-loss fault executes the genuine producer via route.fetch with maxRetries0/maxRedirects0, requires200/ok/no-store, then discards response. Pending-reply fault aborts before fetch/continue and asserts zero durable effect. Routes are limited/cleaned and listeners removed. No successful business response is fabricated."
+    },
+    {
+      "topic": "Mutation and retry semantics",
+      "files": [
+        "reports.spec.ts",
+        "read-reconciliation.ts",
+        "revocation.ts"
+      ],
+      "observation": "Recovery/retry of the exact user intention is an explicit preserved business idempotency oracle, not an automatic suite/flakiness retry. Tests require matching keys/payloads, unchanged versions after reads and no duplicate effects. Generic no-retry guidance does not authorize removing this original obligation."
+    },
+    {
+      "topic": "Browser and data isolation",
+      "files": [
+        "fixture.ts",
+        "production-installation.ts",
+        "revocation.ts"
+      ],
+      "observation": "Fixture is test-scoped and creates a fresh private temporary root with0700 directories and isolated DB/config/cache/state/environment. It starts the real owned CLI installation, fails on port conflict, waits for observed readiness, drains tracked children and removes private root only after child termination. Old/fresh revocation contexts are intentional within one test and closed in finally."
+    },
+    {
+      "topic": "Credential/source/financial boundaries",
+      "files": [
+        "production-installation.ts",
+        "revocation.ts",
+        "review-flow.ts"
+      ],
+      "observation": "Uses real local-operator enrollment/cookie, keeps one-use code outside retained Playwright traces, never fabricates session authority. Source edit follows real preview/confirm UI. Revocation tests retain old real credentials only in memory and require both denial and independent fresh positive control. No Microsoft cloud fallback or financial policy change is introduced by this hygiene review."
+    },
+    {
+      "topic": "Evidence limits",
+      "files": [
+        "reports.spec.ts",
+        "review-flow.ts"
+      ],
+      "observation": "Generic asserts on already fetched JSON compare exact observations; web-first asserts cover async UI. Static inspection cannot prove runtime readiness, no response timeout, all four journeys, privacy under every interleaving or S0 acceptance. Existing failures and transport cause uncertainty remain."
+    }
+  ],
+  "prohibited_actions_preserved": [
+    "No tests, typechecks, guards, builds, CI or AM execution/dispatch.",
+    "No browser, server, CLI product process, locator generator, inspector, trace viewer or package-manager command run.",
+    "No test source, oracle, timeout, body limit, assertion, retry count, worker count, privacy setting or policy changed.",
+    "No new performance requirement, benchmark or mandatory browser matrix introduced.",
+    "No producer branch or other remote write."
+  ],
+  "qualification": {
+    "hygiene_result": "No new concrete static hygiene blocker identified in these seven reviewed paths.",
+    "runtime_result": "NOT_RUN",
+    "candidate_C28_acceptance": "NOT_GRANTED",
+    "reports_activation": "HOLD_PER_RELEASE_AND_ROOT_AUTHORITY_UNTIL_REQUIRED_QUALIFICATION",
+    "source_greens_transfer": false,
+    "checks_owner": 45,
+    "final_acceptance_owner": "S0"
+  },
+  "execution": {
+    "product_execution": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "remote_writes": 0,
+    "source_edits": 0
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -124,7 +124,10 @@ export async function createThreadActorsFixture(options: Pick<Parameters<typeof 
     },
   }
   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
-  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
+  // This collaboration fixture composes no scenario-operation authority. Its
+  // selected cases must remain empty of alternatives, choices and prepared writes.
+  const verifyScenarioOperations = async (value: DecisionCase, context: TrustedDomainContext) => value.alternatives.length === 0 && value.choices.length === 0 && value.preparedChanges.length === 0 && await host.revalidate(context)
+  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations, evidence, createId: randomUUID, now: () => at })
   const compose = () => createCollaborationHost({ reviewContexts: options.reviewContexts, prepareReviewThreadFence: options.prepareReviewThreadFence, authorizeReviewThreadContext: options.authorizeReviewThreadContext, reviewRecipientAuthority: options.reviewRecipientAuthority, reviewAnswerSource: options.reviewAnswerSource, host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
     workSignals: async (_selection, period, context) => {
       const issued = await createDashboardSourceIssuer({ host, scopedSources: base.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)

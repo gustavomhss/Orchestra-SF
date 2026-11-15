@@ -1,0 +1,67 @@
+{
+  "schema": "mission48-targeted-failure-diagnosis-v1",
+  "reviewer": "/root/cold_review",
+  "status": "CAUSAL_PATCH_PROPOSED_RUNTIME_NOT_RUN",
+  "runtime_failure": {
+    "run_id": "43654508667",
+    "job_id": "132629975340",
+    "log": "mission48/evidence/boundary-01.log",
+    "test": "thread-history-continuity.test.ts:45",
+    "expected": "current.current.sourceRef.target.version > source.target.version (1)",
+    "received": 1
+  },
+  "exact_source_ref": "9647675e5a08f86393d478602897657a3b8d478a",
+  "target": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts",
+  "preimage_git_blob_sha1": "2f55115067511ae38c17b6220592f4e6cdb42090",
+  "preimage_sha256": "cf08a96fefb3306b22e6f58f15f2717be5f1ac26859fb2e6ad0d3960e894f7fa",
+  "postimage_sha256": "8185d70ac1db1f01fb844ac416dc594041b034831857dc2b00c83c2309e5ac75",
+  "patch_sha256": "05a3a6d5889b49cabfb93e26cbbe23e464c4ee09a48d8ae0e9e03f168050ec0f",
+  "cause": "The original project evidence is issued for All Projects. The history fixture routes issueForActor through createDashboardConfirmationIssuer, whose projects default is Portfolio Dashboard. selector.page participates in digestSfValue(scope); the alternate page creates a new scoped incarnation whose version starts at 1. Historical continuity may be correct while its new scoped version is 1.",
+  "causal_sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "git_blob_sha1": "2493b4d16cdec9a0798fc6627a02b07f9859ad4d",
+      "finding": "projects maps to Portfolio Dashboard"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "git_blob_sha1": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "finding": "readScopedSnapshot keys by full scope digest; absent prior uses version 1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "git_blob_sha1": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "finding": "records.issue calls the real source issuer and resolve; both current authorization and scope selection remain enforced"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-source-refresh.ts",
+      "git_blob_sha1": "1a6076b3588296f3e19e85fe9504c832f8c0dc89",
+      "finding": "refresh returns the real issued current ref after physical identity, scope, authorization and mutation-fence checks"
+    }
+  ],
+  "scope_of_fix": "Fixture composition only: read the original scoped source selector page by exact incarnation/type/id, then issue current evidence through fixture.records.issue with requested fields and period. Preserve the existing fallback for non-dashboard/page/absent-period targets.",
+  "preserved": [
+    "all test assertions including version > 1",
+    "real record source issuer",
+    "current actor authorization",
+    "original/current physical identity checks",
+    "historical access and reissue fences",
+    "all receipts and append/archive assertions",
+    "requested target fields and period"
+  ],
+  "not_changed": [
+    "producer renew or reissue implementation",
+    "host source refresh implementation",
+    "numeric versions or fabricated references",
+    "grants or ACLs",
+    "remote repository"
+  ],
+  "verification": {
+    "static_read": "COMPLETE",
+    "exact_preimage_hash": "MATCH",
+    "local_tests": "NOT_RUN",
+    "hosted_rerun": "PENDING_ROOT"
+  },
+  "acceptance": "The original hosted thread-history-continuity.test.ts must pass unchanged, including >1, immutable history, exact replay, preserved business snapshots, access denial and physical replacement denial.",
+  "local_read_copy_note": "proposal-tests/read/thread-history-fixture.ts has one extra trailing newline. This proposal uses the exact MCP Git blob preimage, not the local read copy."
+}
