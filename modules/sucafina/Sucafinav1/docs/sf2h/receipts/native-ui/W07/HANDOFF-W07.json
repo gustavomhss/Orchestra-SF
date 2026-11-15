@@ -1,0 +1,177 @@
+{
+  "schema": "sf2h.native-ui.W07.handoff.v1",
+  "mission": "UX20-W07",
+  "work_order": "S02",
+  "output": "SfMonthlyGrid",
+  "status": "BLOCKED_ADMISSION_WITH_COMPLETE_INERT_IMPLEMENTATION_PROPOSAL",
+  "product_artifact_ready": false,
+  "integrated": false,
+  "qualified": false,
+  "global_release": false,
+  "writer": {
+    "requested_label": "Astra",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "actor": "gustavomhss",
+    "branch": "sf-ux-w07",
+    "epoch": "ux-native-w07-e1",
+    "lease": "RESERVED_NOT_ACTIVE",
+    "ack_commit": "bd5a996f1e633df229f1cbde915c6fc4b0dfbdbf",
+    "ack_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/ACK-W07.json"
+  },
+  "source": {
+    "cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "cohort_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+    "product_material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux_normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "branch_protocol_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "normative_protocol_blob": "0151a8e62... (exact pinned in packet; branch contains updated coordinator references, COMMON overrides outdated 105/101/45)",
+    "component_signatures_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component_locks_blob": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "component_contracts_blob": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "source_planner_http": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+    "source_monthly_edit": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+    "source_monthly_host": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5"
+  },
+  "staging": {
+    "why": "No S0/114 per-output W07/S02 GO or activated lease was observed; receipt-only text source is inert and cannot be imported, compiled, discovered by Bun's *.test.ts scan, or mistaken for integrated product.",
+    "stagedFiles": [
+      {
+        "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/types.ts",
+        "staged": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/staged/types.ts.txt",
+        "postimage": "c6764437b9021c4eccae91329df7f4710409eefe",
+        "preimage": null
+      },
+      {
+        "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+        "staged": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/staged/index.tsx.txt",
+        "postimage": "116584617a26e21d48952ce0d5767d804e73f0fd",
+        "preimage": null
+      },
+      {
+        "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/monthly-grid.css",
+        "staged": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/staged/monthly-grid.css.txt",
+        "postimage": "81849360c8972c68edf5c1e5e8d00a903257f084",
+        "preimage": null
+      },
+      {
+        "target": "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+        "staged": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/staged/sf-s02.ts.txt",
+        "postimage": "2ce5a8747c99df7aff33bce7b0a41172664bd498",
+        "preimage": null
+      },
+      {
+        "target": "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+        "staged": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/staged/s02.test.ts.txt",
+        "postimage": "232365ecba46cb94933618ff97932dfeb9119a83",
+        "preimage": null
+      }
+    ],
+    "promotable_only_after": "114 explicitly publishes S02 W07 admission binding writer/lease/contract/source and checks target preimages and composed HEAD",
+    "promotion_owner": "authorized W07 actor after GO, or 114 explicit controlled intake respecting sole-integrator policy",
+    "no_source_copy_from_producer": true
+  },
+  "integrator_shared_changes": [
+    {
+      "target": "packages/app-shell/src/i18n/orchestra.ts",
+      "preimage": "2eeaa42e02a45b3301fc765c6c92635af5101079",
+      "proposed_postimage": "b2ed4f1adbaab1b6469c53f52e6b484cd24f0029",
+      "full_postimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/shared/orchestra.ts.postimage.txt",
+      "unified_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/shared/orchestra.ts.patch.txt",
+      "patch_blob": "1069cc3cd463021cb911b541d3576bf501fde23a",
+      "note": "114 must reconcile with live registry; do not copy stale postimage blindly or take shared path lease."
+    }
+  ],
+  "invariants": [
+    "Public props, exact coordinates, statuses and callbacks from frozen component-signatures.ts; presentation only",
+    "MonthId 0..11 never becomes 1..12 here; A02 converts precisely once at MonthlyDraft source boundary",
+    "Original TSV including CRLF, tabs, trailing blanks and invalid raw characters forwarded unmodified if geometry is valid; shape errors retain original locally",
+    "No client financial calculation, number parsing, actuals mutation, source permission bypass, or implicit save",
+    "Per-row revision/ready/invalid/locked/applied/conflict/failed states remain producer-supplied; apply forwards only clean ready rows and retry forwards only explicit failed/conflict rows",
+    "No producer retry or automatic replay on unknown outcome; user-supplied callbacks own refetch/re-auth and post-apply reconciliation",
+    "Zero displayed separately from missing/null/inherited; draft text is never coerced to number here",
+    "Closed, actual, noneditable and global-readonly cells cannot open inline editing",
+    "Keyboard single tabstop, arrows no wrap, shift range, Enter/F2, Escape, Enter/Tab/Shift+Tab semantics; 320px 12-month mobile reader",
+    "Current private cells hidden on denied/session-expired"
+  ],
+  "tests": {
+    "status": "NOT_RUN",
+    "runner": "120 via GitHub Actions only after authorized integration",
+    "compiler": "119 only",
+    "owner_test_target": "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+    "test_families": [
+      "zero/null/inherited vs missing",
+      "keyboard selection/no wrap",
+      "locked/actual/closed edits",
+      "TSV 2x3 CRLF, empty trailing",
+      "overflow/irregular",
+      "partial apply / CAS revision forwarded / retry failed-only",
+      "mobile alternate",
+      "session expired hides projections"
+    ],
+    "github_actions_runs": [],
+    "result_claims": []
+  },
+  "acceptance": {
+    "S02-AC01": "PROPOSED_UNVERIFIED",
+    "S02-AC02": "PROPOSED_UNVERIFIED",
+    "S02-AC03": "PROPOSED_UNVERIFIED",
+    "WP01.T02": "PROPOSED_UNVERIFIED",
+    "WP03.T02": "PROPOSED_UNVERIFIED"
+  },
+  "blockers": [
+    {
+      "code": "BLOCKED_ADMISSION",
+      "authority": "S0/114",
+      "detail": "Integrating actor ACK-114 and C58 queue observed, but no S02/W07 output admission or active lease. Cohort PREPARED is not GO.",
+      "next": "114 publish exact admitted output/lease/source/owner or causal refusal; then direct authored product files can be committed under allowlist"
+    },
+    {
+      "code": "BLOCKED_INTEGRATION",
+      "authority": "F01/F03/A02 and 114",
+      "detail": "APP context alias, F03 common copy and planner adapter callbacks are not installed on W07 base; no stubs or parallel domain/client engine",
+      "next": "114 composes F01/F03/A02 and imports SF_S02_COPY/BR on an accepted same-C tree"
+    },
+    {
+      "code": "FROZEN_CONTRACT_DISPLAY_GAP",
+      "authority": "114 + A02 + UX contract owner",
+      "detail": "SfPasteState carries original TSV, per-row result/revision/issues only; real producer preview also returns before/after, but frozen props do not carry it. W07 deliberately does not compute a client-side before/after or change frozen signature.",
+      "next": "Place producer's before/after comparison in owning review surface, or obtain controlled contract amendment; do not fabricate the simulation"
+    },
+    {
+      "code": "NO_HOSTED_PROOF",
+      "authority": "120/119",
+      "detail": "No Actions tests or compiler/guard run; all staged code unverified",
+      "next": "Run surgical selectors only after same-C composed UI and producer are admitted; report run/job/result in 120/119 receipts"
+    }
+  ],
+  "scope": {
+    "writes": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/ACK-W07.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/staged/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/shared/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/HANDOFF-W07.json"
+    ],
+    "forbidden": [
+      "product targets before admission",
+      "other writers' files",
+      "shared registry direct edits",
+      "generated SDK",
+      "CI dispatch",
+      "local validators/tests/typecheck",
+      "merge/deploy/Azure"
+    ]
+  },
+  "consumers": [
+    "S0/114 PR65",
+    "A02/W15",
+    "F01/W02",
+    "F03/W04",
+    "120 PR106",
+    "119 PR107"
+  ],
+  "handoff": "Inert full source delivered now; writer lease remains unactivated; NOT ARTIFACT_READY nor qualification. No inferred release/expiry."
+}
