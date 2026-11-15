@@ -128,11 +128,13 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
         <form class="sf-n28-form" onSubmit={(event) => { event.preventDefault(); void read() }}>
           <label class="sf-n28-field" for={uid + "-previous"}>{t("sf.u32.previous")}
             <input id={uid + "-previous"} required maxlength="2048" autocomplete="off"
-              value={store.previousRef} onInput={(event) => setStore("previousRef", event.currentTarget.value)} />
+              value={store.previousRef} onInput={(event) => setStore({ previousRef: event.currentTarget.value,
+                previous: undefined, current: undefined, state: "ready" })} />
           </label>
           <label class="sf-n28-field" for={uid + "-current"}>{t("sf.u32.current")}
             <input id={uid + "-current"} required maxlength="2048" autocomplete="off"
-              value={store.currentRef} onInput={(event) => setStore("currentRef", event.currentTarget.value)} />
+              value={store.currentRef} onInput={(event) => setStore({ currentRef: event.currentTarget.value,
+                previous: undefined, current: undefined, state: "ready" })} />
           </label>
           <button class="mx-btn" type="submit" disabled={store.busy || !owner.ready()}>{t("sf.u32.readCompare")}</button>
         </form>
@@ -164,7 +166,7 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                       return <section class="mx-card sf-n28-section" data-section-id={before.id}>
                         <h4>{before.title}</h4>
                         <Show when={after() && (rows().length > 0 || before.count !== after()!.count || before.title !== after()!.title)}>
-                          <div class="sf-n28-scroll" role="region" aria-label={before.title} tabindex="0">
+                          <div class="sf-n28-scroll" role="region" aria-label={before.title} tabIndex={0}>
                             <table>
                               <caption>{t("sf.u32.diff")}</caption>
                               <thead><tr><th scope="col">{t("sf.u32.value")}</th>

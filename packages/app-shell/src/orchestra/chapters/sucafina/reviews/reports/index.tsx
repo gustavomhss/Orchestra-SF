@@ -35,6 +35,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     operationState: "idle" as "idle" | "preparing" | "unavailable" | "outcome-unknown",
     retry: 0,
   })
+  let requestAbort: AbortController | undefined
   const ref = () => props.route.kind === "entry" ? props.route.params.reviewRef : undefined
   const sameOwner = (generation: number, ownerKey: string) =>
     owner.generation() === generation && owner.state().status === "ready" && owner.state().ownerKey === ownerKey
@@ -50,6 +51,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     const state = owner.state(), access = owner.ready(), reviewRef = ref()
     store.retry
     const controller = new AbortController()
+    requestAbort?.abort()
     setStore({
       review: undefined, selected: [], operationState: "idle",
       readState: state.status === "denied" ? "denied"
@@ -80,7 +82,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
         }
       })()
     } else if (state.status === "ready" && !reviewRef) setStore("readState", "unavailable")
-    onCleanup(() => controller.abort())
+    onCleanup(() => { controller.abort(); requestAbort?.abort() })
   })
   const validSelection = () => !!store.review && store.selected.length >= 1 &&
     store.selected.length <= 40 && new Set(store.selected).size === store.selected.length &&
@@ -92,7 +94,9 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     if (!access || state.status !== "ready" || !exportAdmitted() || !validSelection() ||
         store.operationState === "preparing" || store.operationState === "outcome-unknown") return
     const generation = owner.generation(), ownerKey = state.ownerKey
+    requestAbort?.abort()
     const controller = new AbortController()
+    requestAbort = controller
     const input = { year: store.year, topic: [...store.selected], ...(store.title ? { title: store.title } : {}) }
     setStore("operationState", "preparing")
     try {
@@ -102,16 +106,17 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
       } else {
         await client["reviews.export.pptx"](input, { signal: controller.signal })
       }
-      if (!sameOwner(generation, ownerKey)) return
+      if (controller.signal.aborted || !sameOwner(generation, ownerKey)) return
       // Both frozen A07 methods return contract-unavailable. A navigation or
       // future JSON response still cannot be interpreted as Office bytes.
       setStore("operationState", "unavailable")
     } catch (error) {
-      if (!sameOwner(generation, ownerKey)) return
+      if (controller.signal.aborted || !sameOwner(generation, ownerKey)) return
       console.error("Sucafina Office report preparation failed", error instanceof Error ? error.name : "unknown")
       setStore("operationState", "unavailable")
     }
   }
+  onCleanup(() => requestAbort?.abort())
   return (
     <SfPageFrame titleKey={key("sf.ui50.title")} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
@@ -194,7 +199,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
             </section>
             <section class="sf-n28-section" aria-label={t("sf.u33.download")}>
               <h2>{t("sf.u33.download")}</h2>
-              <Show when={!exportAdmitted() || store.operationState === "unavailable"}>
+              <Show when={true /* A07 has no real Office bytes, regardless of host readiness */}>
                 <p role="status" data-sf-file-unavailable>{t("sf.u33.notAvailable")}</p>
                 <p>{t("sf.u33.noReceipt")}</p>
               </Show>

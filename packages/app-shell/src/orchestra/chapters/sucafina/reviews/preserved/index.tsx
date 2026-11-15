@@ -32,6 +32,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   })
   const ref = () => props.route.kind === "entry" || props.route.kind === "present"
     ? props.route.params.reviewRef : undefined
+  let successorAbort: AbortController | undefined
   const current = (generation: number, ownerKey: string) =>
     owner.generation() === generation && owner.state().status === "ready" && owner.state().ownerKey === ownerKey
   createEffect(() => {
@@ -50,6 +51,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         : state.status === "resolving" ? "loading" : "unavailable",
     })
     const controller = new AbortController()
+    successorAbort?.abort()
     if (state.status === "ready" && active && reviewRef) {
       void (async () => {
         try {
@@ -75,19 +77,21 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     } else if (state.status === "ready" && !reviewRef) {
       setStore("status", "unavailable")
     }
-    onCleanup(() => controller.abort())
+    onCleanup(() => { controller.abort(); successorAbort?.abort() })
   })
   const update = async () => {
     const active = owner.ready(), state = owner.state(), review = store.review
     if (!active || state.status !== "ready" || !review || store.updateStatus === "loading") return
     const generation = owner.generation()
+    successorAbort?.abort()
     const controller = new AbortController()
+    successorAbort = controller
     setStore({ updateStatus: "loading", successor: undefined })
     try {
       const result = await createSfReviewsClient(active.transport)["reviews.review-update"](
         { reviewRef: review.id }, { signal: controller.signal },
       )
-      if (!current(generation, state.ownerKey)) return
+      if (controller.signal.aborted || !current(generation, state.ownerKey)) return
       if (result.kind === "response" && result.body.status === "ok" &&
           result.body.value.previousReviewRef === review.id) {
         setStore({ updateStatus: "ready", successor: result.body.value })
@@ -97,11 +101,12 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         setStore("updateStatus", status)
       }
     } catch (error) {
-      if (!current(generation, state.ownerKey)) return
+      if (controller.signal.aborted || !current(generation, state.ownerKey)) return
       console.error("Sucafina preserved review successor read failed", error instanceof Error ? error.name : "unknown")
       setStore("updateStatus", "unavailable")
     }
   }
+  onCleanup(() => successorAbort?.abort())
   return (
     <SfPageFrame
       titleKey={key("sf.ui48.title")} context={[]} tabs={[]} activeTab={null}
