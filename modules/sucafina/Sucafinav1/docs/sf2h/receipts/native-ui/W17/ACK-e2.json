@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.native-ui.successor-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission_id": "UX20-W17-R2",
+  "seat": "W17",
+  "order": "A05",
+  "output": "A05",
+  "actor": {
+    "github_login": "gustavomhss",
+    "effective_model": "GPT-6",
+    "requested_label": "Astra",
+    "session_id": null,
+    "session_id_reason": "Not exposed to this ChatGPT/GitHub session"
+  },
+  "branch": "sf-ux-w17",
+  "observed_head": "7f82184799d70ae95c3f02d8ed8509df70b37670",
+  "observed_tree": "ea3a5c7b215674af7c510b00a1ec67e10821d173",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/S0-FENCE-e2.json",
+    "fence_head": "7f82184799d70ae95c3f02d8ed8509df70b37670",
+    "previous_head": "50a3f3c94b1c702742f7b24289b26977bc002b81",
+    "revoked_epoch": "ux-native-w17-e1",
+    "active_epoch": "ux-native-w17-e2"
+  },
+  "admission": {
+    "authority_commit": "8852ed4a060f6eb3b49c142b894852d0af49740f",
+    "kind": "S0_EXCLUSIVE_OUTPUT_AUTHORING",
+    "integration_owner": "114 / S0-C-e17-browser114"
+  },
+  "scope": {
+    "write_paths": [
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "packages/client/src/sucafina/portfolio.ts",
+      "packages/client/src/sucafina/portfolio/**",
+      "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+      "apps/cli/src/sucafina-product/native-ui/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+    ],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/"
+  },
+  "sources": {
+    "producer_path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+    "observed_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "semantic_delta": "SAME_BLOB"
+  },
+  "frozen_contracts": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "state": "ACK_PUBLISHED_E2_AUTHORING",
+  "checks": {
+    "local_tests": "NOT_RUN",
+    "hosted_ci": "NOT_REQUESTED",
+    "compiler": "NOT_RUN"
+  },
+  "global_release": false
+}
