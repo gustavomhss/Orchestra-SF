@@ -111,7 +111,8 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   createEffect(() => {
     const ready = model.owner.ready()
     const current = record()
-    const revision = current && page()?.versions["versions:" + current.id]?.version
+    const revision = current && page()
+      ? page()!.versions["versions:" + current.id]?.version ?? 0 : undefined
     if (!ready || !current || revision === undefined || !model.can("save")) {
       setScreen({ draftId: undefined, draft: undefined })
       return
@@ -140,13 +141,15 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     const state = screen.draft?.snapshot()
     return state?.availability === "active" ? state.value : undefined
   }
+  // Original producer contract.ts conflict() and renderer revision() both
+  // define a never-written CAS key as revision zero, not "not authorized".
+  // Record presence and model.can() remain mandatory before a command.
   const currentCas = (item: PlannerVersion, action: CommandAction): number | undefined =>
-    page()?.versions[action === "official" ? "officials:" + item.year : "versions:" + item.id]?.version
+    page() ? page()!.versions[action === "official" ? "officials:" + item.year : "versions:" + item.id]?.version ?? 0 : undefined
 
   const allowed = (item: PlannerVersion | null, action: CommandAction, first = false) => {
     if (!page() || screen.busy || screen.outcome === "unknown" || !model.can(action)) return false
-    if (first) return action === "save" && page()!.data.versions.length === 0 &&
-      page()!.versions["versions:first"] !== undefined
+    if (first) return action === "save" && page()!.data.versions.length === 0
     if (!item || currentCas(item, action) === undefined) return false
     if ((action === "unlock" || action === "delete") && item.official) return false
     if (action === "lock" && item.locked) return false
@@ -155,7 +158,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   }
   const begin = (action: CommandAction, version: PlannerVersion | null, first = false) => {
     if (!allowed(version, action, first)) return
-    const revision = first ? page()?.versions["versions:first"]?.version
+    const revision = first ? page()?.versions["versions:first"]?.version ?? 0
       : version && currentCas(version, action)
     if (revision === undefined) return
     const draft = draftValue()
@@ -186,7 +189,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     const active = model.owner.state()
     if (!ready || active.status !== "ready" || !model.can(request.action)) return
     if (request.first) {
-      if (page()?.data.versions.length !== 0 || page()?.versions["versions:first"]?.version !== request.expected) return
+      if (page()?.data.versions.length !== 0 || (page()?.versions["versions:first"]?.version ?? 0) !== request.expected) return
     } else {
       const fresh = page()?.data.versions.find((version) => version.id === request.versionId)
       if (!fresh || currentCas(fresh, request.action) !== request.expected) {
