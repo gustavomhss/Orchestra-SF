@@ -1,0 +1,196 @@
+{
+  "schema": "sf2h.integration.source-consumption.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "source_missions": [
+    165,
+    166,
+    167,
+    168,
+    169,
+    170
+  ],
+  "source_head": {
+    "165": "1a28bc587548f7bce8c514715db2ce122fe8b7c0",
+    "166": "88febfc1248b5fb6b1a76737d41c9a57e144646a",
+    "167": "7b766859a90aa7b028240dc7013ce9ee77983958",
+    "168": "0dcf98aeb738374ac91b6291b00691e305122ce4",
+    "169": "2080abb393f2f03bc3cf313e67802b3935dc609f",
+    "170": "83c0401dc15e811834bb3495d56a60787bd5c33b"
+  },
+  "source_release": "terminal released, proof code only; author-owned upstream untouched",
+  "batch_commits": [
+    {
+      "commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "tree": "fb51c8cdd0a6e1cc550c4c23b7fa3a330686edc2",
+      "missions": [
+        165,
+        166,
+        167
+      ]
+    },
+    {
+      "commit": "ab27388769c5cc8da1766efc3b6c37b42698d3a7",
+      "tree": "4a4b3870c241d7756e57cb084627ccf541dd6905",
+      "missions": [
+        168,
+        169,
+        170
+      ]
+    }
+  ],
+  "source_to_consumer": [
+    {
+      "mission": 165,
+      "source_sha": "1a28bc587548f7bce8c514715db2ce122fe8b7c0",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+      "consumer_post_blob": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+      "consumer_commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 165,
+      "source_sha": "1a28bc587548f7bce8c514715db2ce122fe8b7c0",
+      "path": "script/sf2h/proofs/am01/correlate-hosted-evidence.ts",
+      "pre_blob": null,
+      "source_post_blob": "45332299e15db0259c3b4cfd735ba6c99bf96e7a",
+      "consumer_post_blob": "45332299e15db0259c3b4cfd735ba6c99bf96e7a",
+      "consumer_commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 166,
+      "source_sha": "88febfc1248b5fb6b1a76737d41c9a57e144646a",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+      "consumer_post_blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+      "consumer_commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 166,
+      "source_sha": "88febfc1248b5fb6b1a76737d41c9a57e144646a",
+      "path": "script/sf2h/proofs/am02/qualify.ts",
+      "pre_blob": null,
+      "source_post_blob": "86870360f94d77e57b4a21dcff9455934b324804",
+      "consumer_post_blob": "86870360f94d77e57b4a21dcff9455934b324804",
+      "consumer_commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 167,
+      "source_sha": "7b766859a90aa7b028240dc7013ce9ee77983958",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+      "consumer_post_blob": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+      "consumer_commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 167,
+      "source_sha": "7b766859a90aa7b028240dc7013ce9ee77983958",
+      "path": "script/sf2h/proofs/am03/correlation.ts",
+      "pre_blob": null,
+      "source_post_blob": "29c6806d5da75ffa019a21b11971833f436925f7",
+      "consumer_post_blob": "29c6806d5da75ffa019a21b11971833f436925f7",
+      "consumer_commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 167,
+      "source_sha": "7b766859a90aa7b028240dc7013ce9ee77983958",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "2d6e1156b90fb4379b624368064e10e95df6495b",
+      "consumer_post_blob": "2d6e1156b90fb4379b624368064e10e95df6495b",
+      "consumer_commit": "53d27b5fd7060756a23f45305998977ddfcbcfff",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 168,
+      "source_sha": "0dcf98aeb738374ac91b6291b00691e305122ce4",
+      "path": "script/sf2h/proofs/am04/correlate.ts",
+      "pre_blob": null,
+      "source_post_blob": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+      "consumer_post_blob": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+      "consumer_commit": "ab27388769c5cc8da1766efc3b6c37b42698d3a7",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 168,
+      "source_sha": "0dcf98aeb738374ac91b6291b00691e305122ce4",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08",
+      "consumer_post_blob": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08",
+      "consumer_commit": "ab27388769c5cc8da1766efc3b6c37b42698d3a7",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 169,
+      "source_sha": "2080abb393f2f03bc3cf313e67802b3935dc609f",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+      "consumer_post_blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+      "consumer_commit": "ab27388769c5cc8da1766efc3b6c37b42698d3a7",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 170,
+      "source_sha": "83c0401dc15e811834bb3495d56a60787bd5c33b",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.ts",
+      "pre_blob": null,
+      "source_post_blob": "a0b079929cb010d8943c9042275408903174c1b9",
+      "consumer_post_blob": "a0b079929cb010d8943c9042275408903174c1b9",
+      "consumer_commit": "ab27388769c5cc8da1766efc3b6c37b42698d3a7",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 170,
+      "source_sha": "83c0401dc15e811834bb3495d56a60787bd5c33b",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "0e8edac9d862cd68db387695d8aa476ad775c235",
+      "consumer_post_blob": "0e8edac9d862cd68db387695d8aa476ad775c235",
+      "consumer_commit": "ab27388769c5cc8da1766efc3b6c37b42698d3a7",
+      "remote_readback": "MATCH"
+    },
+    {
+      "mission": 170,
+      "source_sha": "83c0401dc15e811834bb3495d56a60787bd5c33b",
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+      "pre_blob": null,
+      "source_post_blob": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+      "consumer_post_blob": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+      "consumer_commit": "ab27388769c5cc8da1766efc3b6c37b42698d3a7",
+      "remote_readback": "MATCH"
+    }
+  ],
+  "source_preimages": "13 confirmed absent",
+  "source_postimages": "13 exact SHA read",
+  "consumer_readbacks": "13 exact SHA match",
+  "baseline_existing_modules": "Unchanged; do not copy existing test/Atlas/engine files or whole author PR histories",
+  "qualifications": {
+    "AM01": "NOT_RUN_REAL_MODEL_OR_SKILLS",
+    "AM02": "NOT_RUN_REAL_39_MCP_OPERATIONS",
+    "AM03": "NOT_RUN_REAL_TWO_SESSIONS_PROVIDER_RESTART",
+    "AM04": "NOT_RUN_REAL_COMMIT_RETRY",
+    "AM05": "NOT_RUN_REAL_ATLAS_SCANNER",
+    "AM06": "NOT_RUN_REAL_RELAY_TASK_UI"
+  },
+  "next_by_owner": {
+    "compiler190": "Causal hosted typecheck + SDK/guards on latest coherent W, not prior compiler result",
+    "ci191": "Actual non-skipped existing test:ci selectors; correlate real runtime host evidence, not catalog/mock or completed source",
+    "integrator189": "Apply 161 durable terminal seam after authority review and consume remaining ready sources; do not dispatch tests"
+  },
+  "local_test": "NOT_RUN",
+  "hosted_test": "NOT_RUN",
+  "global_release": false,
+  "native_goal": "paused"
+}
