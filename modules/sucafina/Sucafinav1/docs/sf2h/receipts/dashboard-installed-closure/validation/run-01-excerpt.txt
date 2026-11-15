@@ -1,0 +1,53 @@
+(pass) Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice [29260.95ms]
+(pass) Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed [12383.09ms]
+(pass) Dashboard discovery fences participant removal after options were assembled [72.74ms]
+(pass) Dashboard discovery resolves real ticket months and Executive signal records [417.24ms]
+(pass) Dashboard contextual draft retains edits when current write authority is withdrawn [1935.09ms]
+(pass) C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority [1054.40ms]
+(pass) signals omit ambiguous IDs within each authorized collection only [0.81ms]
+(pass) unavailable pages emit no signals [0.15ms]
+(pass) executive signals open authorized canonical records and fail closed without evidence [177.68ms]
+(pass) historical record reissue permits material changes and a new day but rejects replacement [141.09ms]
+(pass) historical dated entries keep the original competence after the observation year changes [40.83ms]
+(pass) historical security captures revalidate current observation fields after the year changes [65.46ms]
+(pass) Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation [2616.50ms]
+(pass) WP02 Attention retains numeric risk and contract identities through canonical reads, deletion and SQLite reopen [468.97ms]
+(pass) WP02 signal UTC boundaries match canonical evidence for offset clocks and preserve the ninety-day rule [168.98ms]
+(pass) WP02 ambiguous normalized signal identities are suppressed and cannot commit as durable C17 identities [154.04ms]
+(pass) WP02 F04 retains read continuity when writing is withdrawn, with no domain effect or substituted grant [78.25ms]
+(pass) WP02 private source proof follows current material through SQLite reopen while the original write version stays unchanged [86.20ms]
+(pass) WP02 rejects a different authenticated principal, tampered scope and delete/recreate without deleting unrelated records [161.09ms]
+(pass) WP02 private read fence rejects late source mutation and logout without reusing an earlier observation [108.34ms]
+(pass) WP02 interrupted requests and unavailable SQLite are recoverable reads, while actual read revocation is denied [80.48ms]
+(pass) C06 real admissions retain the original observation while monthly material and dependencies advance independently [435.77ms]
+(pass) C06 actual absence and recorded zero remain distinct under the real source projection and a durable domain command [202.17ms]
+(fail) C06 real authority and source replacement cannot revive a previous observation or its locked fence [68.62ms]
+(fail) C06 real authority and source replacement cannot revive a previous observation or its locked fence [68.62ms]
+ 23 pass
+ 1 fail
+ 484 expect() calls
+Ran 24 tests across 9 files. [50.82s]
+omni positive control [nonce-redacted]: pass (declared: 4 test(s) in Sucafinav1/test/product/wp02/host-workbench.test.ts, Sucafinav1/test/product/wp02/dashboard-browser.test.ts); 4 omni spawn(s), 0 delegated.
+
+Failure excerpt:
+163 |       const denied = await f.observer.observe(scope, context)
+164 |       expect(denied).toEqual({ state: "access-unavailable", sourceVersion: 0 })
+165 |       expect(JSON.stringify(denied)).not.toContain("Private operator context")
+166 |       expect(await lockedFence(f, scope, original, context)).toBe(false)
+167 |       f.policies.owner.readable = true
+168 |       expect((await f.observer.observe(scope, context)).state).toBe("available")
+      ^
+error: expect(received).toBe(expected)
+
+Expected: "available"
+Received: "access-unavailable"
+
+      at toBe (unknown:1:1)
+      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts:168:64
+      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts:89:18
+      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts:140:13
+      at processTicksAndRejections (unknown:7:39)
+(fail) C06 real authority and source replacement cannot revive a previous observation or its locked fence [68.62ms]
+
+1 tests failed:
+(fail) C06 real authority and source replacement cannot revive a previous observation or its locked fence [68.62ms]

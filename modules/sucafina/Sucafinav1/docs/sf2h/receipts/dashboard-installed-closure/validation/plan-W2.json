@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.mission67.hosted-plan.v1",
+  "status": "EXECUTING",
+  "target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "interface": ".github/workflows/test-ci.yml + script/test-ci-request.ts",
+  "soleWriter": "/root",
+  "maxInFlightWp67": 1,
+  "requests": [
+    "bun-request.json",
+    "playwright-request.json"
+  ],
+  "testBudget": "Existing per-test deadlines preserved; Playwright 1 worker, 0 retries, 1 repeat, each spec 180s",
+  "instructions": [
+    "Create W on exact current target with source payload and complete external overlays; do not advance sf2-stack",
+    "S child W changes only .ci-run.json; create unique ci-run-linux-astra-wp67-Wshort-requesthash-attempt directly at S",
+    "Deduplicate by W/tree/selection/config/env and inspect actual run head_sha",
+    "Record all failures, test titles and omni verdict; do not call empty/cancelled selection pass",
+    "Compiler45 owns bun typecheck/guards interface; submit exact W and requested packages; no workflow modifications by67"
+  ],
+  "limitations": [
+    "Source PASS is not integrated consumer proof or EPIC acceptance",
+    "C06 observer tests are not a confirmation-registry completion claim",
+    "C12 first-save outcome recovery and case-advance recovery remain cross-owner obligations until executed and reconciled"
+  ],
+  "observedTargetAdvance": "C28 Reports48: 1 commit, 45 material files and 207 receipt files; no six Dashboard producer overlap",
+  "runs": [
+    {
+      "attempt": 1,
+      "runId": 43668733882,
+      "status": "FAIL",
+      "passed": 23,
+      "failed": 1
+    },
+    {
+      "attempt": 2,
+      "runId": 43669059549,
+      "status": "FAIL",
+      "passed": 0,
+      "failed": 2
+    }
+  ],
+  "next": "W2 normalized exact Bun paths plus two real consumer tests and corrected old-lease assertion",
+  "bunNormalization": "W1 raw paths selected exactly nine files but were filters; W2 uses canonical ./ full-file paths and preserves failed W1"
+}

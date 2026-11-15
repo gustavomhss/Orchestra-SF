@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
-import { addTopic, command, confirmDialog, dashboardUrl, hostCommand, openTopic, topicRow, topicsPage } from "./support"
+import { addTopic, command, confirmDialog, dashboardUrl, hostCommand, observeDashboardRequests, openTopic, topicRow, topicsPage } from "./support"
 
 // The existing production fixture enrolls an operator, runs the installed CLI and
 // owns an isolated durable store. Never retain the session cookie in a trace.
@@ -13,6 +13,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
   page.on("pageerror", (error) => errors.push(error.message))
   const other = await page.context().newPage()
   other.on("pageerror", (error) => errors.push(error.message))
+  const transport = observeDashboardRequests(info, [{ page, label: "primary" }, { page: other, label: "other" }])
   const topics = dashboardUrl(installation.origin, topicsPage)
   const original = "M67 Installed original action"
   const edited = "M67 Installed reviewed action"
@@ -38,7 +39,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       await expect(workbench.locator("[data-dashboard-status]")).toContainText("Opções carregadas.")
       await hostCommand(page, workbench.getByRole("button", { name: "Pré-visualizar pauta", exact: true }), "dashboard-agenda")
       await expect(workbench.locator("[data-dashboard-agenda-view]")).toContainText(original)
-      await workbench.getByLabel("Registro para preservar", { exact: true }).selectOption({ label: original })
+      await workbench.getByRole("combobox", { name: "Registro para preservar", exact: true }).selectOption({ label: original })
       await hostCommand(page, workbench.getByRole("button", { name: "Preservar retrato", exact: true }), "dashboard-capture")
       await expect(workbench.locator("[data-dashboard-status]")).toHaveText("Retrato do registro preservado.")
       await page.goto(topics)
@@ -99,7 +100,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       const workbench = page.getByRole("region", { name: "Revisão e ações do Dashboard", exact: true })
       await hostCommand(page, workbench.getByRole("button", { name: "Carregar opções", exact: true }), "dashboard-workbench")
       await expect(workbench.locator("[data-dashboard-status]")).toContainText("Opções carregadas.")
-      const history = workbench.getByLabel("Reunião ou retrato preservado", { exact: true })
+      const history = workbench.getByRole("combobox", { name: "Reunião ou retrato preservado", exact: true })
       const option = history.locator("option").filter({ hasText: original })
       await expect(option).toHaveCount(1)
       const value = await option.getAttribute("value")
@@ -118,9 +119,9 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
       const risk = page.locator('form[data-page="IT Risks"][data-command="save"][data-record=""]')
       await risk.getByLabel("Risk title", { exact: true }).fill("M67 Installed high risk")
       await risk.getByLabel("Risk description", { exact: true }).fill("Installed operational risk")
-      await risk.getByLabel("Impact", { exact: true }).selectOption("4")
-      await risk.getByLabel("Probability", { exact: true }).selectOption("4")
-      await risk.getByLabel("Status", { exact: true }).selectOption("open")
+      await risk.getByRole("combobox", { name: "Impact", exact: true }).selectOption("4")
+      await risk.getByRole("combobox", { name: "Probability", exact: true }).selectOption("4")
+      await risk.getByRole("combobox", { name: "Status", exact: true }).selectOption("open")
       await command(page, risk.getByRole("button", { name: "Add record", exact: true }), "save")
       await expect(page.getByRole("cell", { name: "M67 Installed high risk", exact: true })).toBeVisible()
       const executive = dashboardUrl(installation.origin, "Executive Dashboard", { execYear: "2026", executiveMonth: "11" })
@@ -155,7 +156,7 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
     await test.step("withdraw the confirmed record and preserve unrelated records after reload", async () => {
       await page.goto(topics)
       const pending = page.waitForResponse((response) => response.request().method() === "POST" &&
-        new URL(response.url()).pathname === "/sucafina/dashboard" && response.request().postDataJSON()?.action === "delete")
+        new URL(response.url()).pathname === "/sucafina/dashboard" && response.request().postDataJSON()?.action === "delete", { timeout: 15_000 })
       await confirmDialog(page, topicRow(page, topic).getByRole("button", { name: "Delete", exact: true }), "Confirm this change?", true)
       const response = await pending
       expect(response.status()).toBe(200)
@@ -171,6 +172,6 @@ test("installed Dashboard preserves records, conflicts, signals and authorized h
     })
     expect(errors).toEqual([])
   } finally {
-    try { await other.close() } finally { await installation.stop() }
+    try { await transport() } finally { try { await other.close() } finally { await installation.stop() } }
   }
 })

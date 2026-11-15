@@ -1,0 +1,4189 @@
+{
+  "schema": "sf2h.mission67.criteria-traceability.v1",
+  "mission": "67-dashboard-installed-closure",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "dashboard-installed-proof",
+  "status": "evidence_pending",
+  "execution": "NOT_RUN",
+  "notGlobalAcceptance": true,
+  "globalRelease": false,
+  "criterionCount": 78,
+  "canonicalTextPreserved": true,
+  "counts": {
+    "evidence_pending": 46,
+    "preserved_not_requalified": 19,
+    "external_owner_hold": 13
+  },
+  "sources": {
+    "criteriaReport": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/criteria-review.json",
+    "localCriteriaReport": "/workspace/scratch/d76689cc7e80/criteria-review/criteria-review.json",
+    "criteriaReportSha256": "d1e727f71ce48e9f782216066764fe2635b2fff4c8478ae4af76151c7a5b71ea",
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "missionCommit": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "actorPath": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S1-B.json",
+    "actorBlob": "02d1ac8d4e01e52574b726df446c6b72057abb7e",
+    "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "materialTarget": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "authorityDocumentationCommit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "authorityDocsDoNotQualifyMaterial": true,
+    "localReadProvenance": "Canonical report and existing test snapshots were obtained earlier in this session via GitHub MCP; new tests are current authorized local mission67 postimages. No remote calls or product/test execution were performed for this mapping.",
+    "consumerTraceabilityUpdate": "Two current W2 consumer scenarios and helper added; final hashes include Response import without alias, genuine403 body capture and exact-role combobox selector."
+  },
+  "classificationRules": {
+    "evidence_pending": "Affected obligation or slice has exact named tests selected; no actual witness/result is recorded by this map.",
+    "preserved_not_requalified": "The literal obligation is unmodified or its required fixture is not selected. Any linked test is supporting context only; no renewed qualification is claimed.",
+    "external_owner_hold": "A material part requires another explicitly authorized owner. A partial source/UI authority or provenance slice may still have tests here; an external status is never a blanket exclusion of .10/.18.",
+    "coverage": "Every partial entry names what is targeted and what remains unproved; no entry is PASS. Literal criteria remain mandatory even when this mission does not requalify them."
+  },
+  "validationSelection": {
+    "sourceTests": 11,
+    "existingRegressionTests": 13,
+    "installedTests": 2,
+    "totalNamedTests": 28,
+    "sourceFiles": 3,
+    "existingRegressionFiles": 6,
+    "installedFiles": 2,
+    "plan": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/plan-W2.json",
+    "bunRequest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-03-request.json",
+    "playwrightRequest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/playwright-request.json",
+    "requiredEvidence": [
+      "Exact material W/head tree and request S/head with selected configuration/environment",
+      "Actual hosted run head_sha, run/job IDs and complete named-test outcomes",
+      "Preserved original positive assertions, no skip/substitute for known failures",
+      "Installed consumer artifacts with actual production services/persistence",
+      "Compiler45 interface and exact material candidate checks separately recorded"
+    ],
+    "resultsMustBeReconciledByOwner": "67 and explicitly authorized integration successor; this pre-execution map does not ingest or assert later results.",
+    "newConsumerBrowserTests": 2,
+    "newMission67Tests": 13,
+    "bunSelectedTests": 26,
+    "newConsumerBrowserFiles": 1,
+    "bunSelectedFiles": 10,
+    "selectionUpdate": "W2 selection includes consumer-read.test.ts; original11 producer tests and13 existing regressions remain selected unchanged. The two installed scenarios remain separately accounted."
+  },
+  "responsibilities": {
+    "45": {
+      "responsibility": "Compiler/guard acceptance and a concrete allowed validation interface for the exact material candidate.",
+      "status": "CONFIRM_WITH_45; no compiler or E2E-program PASS inferred from this map."
+    },
+    "48": {
+      "responsibility": "Preserve Reports48 C28 material and dependency facts; assess any report-related changes under fresh explicit owner authority.",
+      "status": "48 is terminal; no renewed writing or automatic ownership of Dashboard canonical creation is assumed."
+    },
+    "59": {
+      "responsibility": "Runtime source release and material/consumer evidence when those inputs are required by integrated delivery.",
+      "status": "Its qualified source evidence does not transfer automatically to C28 or mission67 material candidate; terminal release/closure must be reconciled."
+    },
+    "65": {
+      "responsibility": "Coordinate opaque first-draft outcome lookup and original C12 application receipt/reload recovery across decision consumers.",
+      "status": "F01/F03 require their own original positive proof; installed apply-preview recovery is not that proof."
+    },
+    "67": {
+      "responsibility": "Authorized Dashboard producers/tests/receipts and complete shared-consumer handoff; surgical source and installed proof only.",
+      "authority": "Explicit mission67 on dashboard-installed-proof; does not authorize sf2-stack mutation, shell redesign or BI62 changes."
+    },
+    "60_successor": {
+      "responsibility": "Receive terminal source handoff addressed to60, reconcile/integrate complete overlays and qualify the resulting exact candidate only after explicit authorization.",
+      "status": "60 is HANDOFF_TERMINAL_LEASE_ENDED at faa30fddb7e7b61696b66fd069f51cf18c51125f; successor authority is not presumed."
+    },
+    "S0": {
+      "responsibility": "Assign any new owner required for canonical creation/runtime/native work; own EPIC/AM/final recipes, final reviews and global acceptance.",
+      "status": "Global acceptance and native/AM obligations are outside this surgical67 qualification."
+    },
+    "WP06_WP07": {
+      "responsibility": "Keep import/export delegated to canonical owners and preserve installation/private-reference contracts.",
+      "status": "No new import/export qualification is made by67; Reports48 terminal authority remains respected."
+    }
+  },
+  "codeGroups": {
+    "confirmation": {
+      "role": "owned67_producer",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts"
+      ]
+    },
+    "signals": {
+      "role": "owned67_producer_and_existing_domain_dependencies",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/records.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+      ]
+    },
+    "domain_commands": {
+      "role": "owned67_read_review_no_additional_change_claim",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/records.ts"
+      ]
+    },
+    "authority_c17_c08": {
+      "role": "existing_domain_dependencies_not_new_authority",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+      ]
+    },
+    "shared_dashboard_consumer": {
+      "role": "complete_inert_postimages_for_explicitly_authorized_integration",
+      "paths": [
+        "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts"
+      ]
+    },
+    "canonical_hot_topic_creation": {
+      "role": "outside_mission67_writable_paths",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts"
+      ]
+    },
+    "private_draft_dependency": {
+      "role": "existing_cross_owner_dependency",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/hot-topic-draft.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+      ]
+    },
+    "hosted_evidence": {
+      "role": "planned_evidence_not_execution",
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/plan.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/bun-request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/playwright-request.json"
+      ]
+    },
+    "authority_terminal60": {
+      "role": "read_only_authority_context_at_faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/future-source-inputs.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/validation-inputs-final.json"
+      ]
+    }
+  },
+  "files": {
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts": {
+      "sha256": "c5cd06d5960ab47a26e43686b45891267aaefc6b62cb6f4f4547d0045cdbf150",
+      "gitBlobSha1": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+      "kind": "new_source",
+      "localRead": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "testCount": 5
+    },
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts": {
+      "sha256": "efb435a0db2eafc85e40b1aaf08b496d6e2bd0c9f6f004bd4fd9ff543ef7dc95",
+      "gitBlobSha1": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+      "kind": "new_source",
+      "localRead": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "testCount": 3
+    },
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts": {
+      "sha256": "690d1b7454e7abf26423dd6aa18a3da1aceaac59910d19c40f418aca8f01b3c7",
+      "gitBlobSha1": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+      "kind": "new_source",
+      "localRead": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "testCount": 3
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts": {
+      "sha256": "5329a623ab8e51692d7e070b958886288f63559bab045e26f324af827a7fe3fc",
+      "gitBlobSha1": "b695ce2a506df9c0a6afa90b275620b48c1c25c6",
+      "kind": "existing_regression",
+      "localRead": "/workspace/scratch/d76689cc7e80/base/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "testCount": 5
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts": {
+      "sha256": "95b0c3bf77745cd32d7844c9bd89d72814bf4f8de27ef5311172366e326448fd",
+      "gitBlobSha1": "d544289913c6fa85d3f5f14fb0f6925f2c4600f1",
+      "kind": "existing_regression",
+      "localRead": "/workspace/scratch/d76689cc7e80/base/modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "testCount": 1
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts": {
+      "sha256": "7a12199f13034dd0fc17a9f43fae661d58c265b819cba6b359344cbe155135e2",
+      "gitBlobSha1": "524c46284dffbe1c58d78a76d6d6fbe5362c05ef",
+      "kind": "existing_regression",
+      "localRead": "/workspace/scratch/d76689cc7e80/domain-review/modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "testCount": 3
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts": {
+      "sha256": "72d9e4b3cc13057272a125a06eb1440462db165198ffd542cea53fd5cd671be8",
+      "gitBlobSha1": "3ceb705f4ef43c224245c8e73a20dfa5b88cd434",
+      "kind": "existing_regression",
+      "localRead": "/workspace/scratch/d76689cc7e80/domain-review/modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "testCount": 2
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp02/signal-evidence.test.ts": {
+      "sha256": "1b0d2e01c4e604ad3a4bebc38c31cfe7ebbd50995d494fe192eba1c23a4cb0f6",
+      "gitBlobSha1": "26a86a4e80af5a7ee2dbd68c1ba32ced1ca414cb",
+      "kind": "existing_regression",
+      "localRead": "/workspace/scratch/d76689cc7e80/domain-review/modules/sucafina/Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+      "testCount": 1
+    },
+    "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts": {
+      "sha256": "a9bf0d34e3a51eb7ff60cc0339d508d433417e32b00989da1075ba2f4412c7e2",
+      "gitBlobSha1": "49bf7727502b2ddf154cd75bc3e043ceaa62e1e7",
+      "kind": "existing_regression",
+      "localRead": "/workspace/scratch/d76689cc7e80/domain-review/modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "testCount": 1
+    },
+    "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts": {
+      "sha256": "96fc8c19728c931340b1fa6389cfa980aba45147343f8b9191da0535a1bc5195",
+      "gitBlobSha1": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+      "kind": "new_installed",
+      "localRead": "/workspace/scratch/d76689cc7e80/repo/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "testCount": 1
+    },
+    "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts": {
+      "sha256": "07198a115369d507afbf0be18b4933eb93a9e2ad25bd8ff88d9378372f292695",
+      "gitBlobSha1": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+      "kind": "new_installed",
+      "localRead": "/workspace/scratch/d76689cc7e80/repo/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "testCount": 1
+    },
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts": {
+      "sha256": "61ddfa7455cee7941543bf8b19136e22fb8b1ee92c9846f177db41faa081e7af",
+      "gitBlobSha1": "cd63e19210c01d7251e562ef135b554982a24be2",
+      "kind": "new_consumer_browser",
+      "localRead": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "testCount": 2
+    },
+    "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts": {
+      "sha256": "8d35dc4d0cb311da9e0a20931ab9cfff92389938ad45ef95bff104cf8c665280",
+      "gitBlobSha1": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+      "kind": "new_consumer_fixture",
+      "localRead": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "testCount": 0
+    }
+  },
+  "tests": [
+    {
+      "id": "S01",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 F04 retains read continuity when writing is withdrawn, with no domain effect or substituted grant",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission, production authority/C08/source producers, HTTP domain commands and SQLite; only starting business data and explicit permission/clock changes are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Write-only withdrawal preserves current read for the same principal and physical record.",
+        "Issued evidence is current and read-only; original evidence remains unchanged; C08 fence required; denied write has no data/version/audit effect."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.DOD.10",
+        "WP02.INV.10",
+        "WP02.QLT.02",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.SUC.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.18",
+        "WP02.T01.CMP.18",
+        "WP02.T02.CHK.03",
+        "WP02.T02.INV.01",
+        "WP02.T02.QLT.02",
+        "WP02.T03.INV.01",
+        "WP02.T03.QLT.02",
+        "WP02.T04.CHK.02",
+        "WP02.T04.DOD.02",
+        "WP02.T04.INV.01",
+        "WP02.T04.INV.02",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "S02",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 private source proof follows current material through SQLite reopen while the original write version stays unchanged",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission, production authority/C08/source producers, HTTP domain commands and SQLite; only starting business data and explicit permission/clock changes are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "A real update survives SQLite reopen and the next observation day.",
+        "Private read returns current material; original evidence keeps its prior period/version; stale original write receives 409 and changes no data."
+      ],
+      "criterionRefs": [
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.SUC.01",
+        "WP02.SUC.02",
+        "WP02.T01.QLT.01",
+        "WP02.T02.CHK.02",
+        "WP02.T02.INV.01",
+        "WP02.T02.INV.02",
+        "WP02.T03.INV.02",
+        "WP02.T04.INV.01",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "S03",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 rejects a different authenticated principal, tampered scope and delete/recreate without deleting unrelated records",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission, production authority/C08/source producers, HTTP domain commands and SQLite; only starting business data and explicit permission/clock changes are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Other authenticated principal, forged version, altered digest and field scope are rejected.",
+        "Canonical delete then durable recreate with the same textual ID cannot inherit old physical identity; unrelated record remains."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.10",
+        "WP02.INV.02",
+        "WP02.INV.10",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.QLT.18",
+        "WP02.T01.CMP.02",
+        "WP02.T01.CMP.18",
+        "WP02.T02.INV.01",
+        "WP02.T03.INV.02",
+        "WP02.T04.CHK.03",
+        "WP02.T04.INV.02",
+        "WP02.T04.QLT.01",
+        "WP02.T04.QLT.02",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "S04",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 private read fence rejects late source mutation and logout without reusing an earlier observation",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission, production authority/C08/source producers, HTTP domain commands and SQLite; only starting business data and explicit permission/clock changes are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Late real source mutation invalidates the private fence.",
+        "Real logout invalidates fence and subsequent read; private values do not escape; another authorized principal retains own access."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.10",
+        "WP02.INV.02",
+        "WP02.INV.10",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.CMP.18",
+        "WP02.T03.INV.02",
+        "WP02.T04.INV.02",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "S05",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "title": "WP02 interrupted requests and unavailable SQLite are recoverable reads, while actual read revocation is denied",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission, production authority/C08/source producers, HTTP domain commands and SQLite; only starting business data and explicit permission/clock changes are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Aborted request and disconnected SQLite are unavailable and recoverable after reopen.",
+        "Actual read revocation is denied with no private values and the real page rejects access."
+      ],
+      "criterionRefs": [
+        "WP02.INV.10",
+        "WP02.QLT.02",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.QLT.18",
+        "WP02.T01.CMP.02",
+        "WP02.T01.CMP.18",
+        "WP02.T02.QLT.02",
+        "WP02.T03.INV.02",
+        "WP02.T04.INV.02",
+        "WP02.T04.QLT.01",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "S06",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "title": "WP02 Attention retains numeric risk and contract identities through canonical reads, deletion and SQLite reopen",
+      "kind": "new_source",
+      "fixture": "Real operator authority, canonical C02/record evidence, production C17 source persistence and SQLite; the collision rejection also inspects an uncommitted snapshot.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Risk IDs 0 and 7 and contract ID 8 become exact canonical string identities with digest-backed record evidence.",
+        "Read is side-effect free; real deletion removes only the chosen risk and its signal; data and remaining signals survive SQLite reopen."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.INV.01",
+        "WP02.INV.02",
+        "WP02.QLT.01",
+        "WP02.QLT.10",
+        "WP02.CMP.10",
+        "WP02.SUC.01",
+        "WP02.SUC.02",
+        "WP02.SUC.10",
+        "WP02.T01.DOD.01",
+        "WP02.T01.DOD.02",
+        "WP02.T01.DOD.18",
+        "WP02.T01.QLT.18",
+        "WP02.T01.SUC.02",
+        "WP02.T01.SUC.18",
+        "WP02.T02.INV.01",
+        "WP02.T03.CHK.02",
+        "WP02.T03.CHK.03",
+        "WP02.T03.DOD.01",
+        "WP02.T03.INV.01",
+        "WP02.T03.QLT.01",
+        "WP02.T03.SUC.01",
+        "WP02.T04.DOD.01",
+        "WP02.T04.DOD.02",
+        "WP02.T04.INV.01",
+        "WP02.T04.CMP.01",
+        "WP02.T04.SUC.01"
+      ]
+    },
+    {
+      "id": "S07",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "title": "WP02 signal UTC boundaries match canonical evidence for offset clocks and preserve the ninety-day rule",
+      "kind": "new_source",
+      "fixture": "Real operator authority, canonical C02/record evidence, production C17 source persistence and SQLite; the collision rejection also inspects an uncommitted snapshot.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "UTC observation day for offset clocks agrees with canonical target period.",
+        "Renewal day 0 and day 90 are eligible; expired and day 91 are not; read revocation suppresses values."
+      ],
+      "criterionRefs": [
+        "WP02.INV.01",
+        "WP02.QLT.01",
+        "WP02.SUC.02",
+        "WP02.T01.DOD.01",
+        "WP02.T01.DOD.02",
+        "WP02.T01.QLT.01",
+        "WP02.T01.SUC.02",
+        "WP02.T03.CHK.03",
+        "WP02.T03.INV.01",
+        "WP02.T03.QLT.01",
+        "WP02.T03.QLT.03",
+        "WP02.T03.SUC.01"
+      ]
+    },
+    {
+      "id": "S08",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "title": "WP02 ambiguous normalized signal identities are suppressed and cannot commit as durable C17 identities",
+      "kind": "new_source",
+      "fixture": "Real operator authority, canonical C02/record evidence, production C17 source persistence and SQLite; the collision rejection also inspects an uncommitted snapshot.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Numeric/textual normalized duplicate IDs are suppressed within their collections.",
+        "Ambiguous identity cannot commit to durable C17 state; unrelated canonical signals remain and business data is unchanged."
+      ],
+      "criterionRefs": [
+        "WP02.INV.01",
+        "WP02.T01.DOD.02",
+        "WP02.T02.INV.01",
+        "WP02.T03.CHK.03",
+        "WP02.T03.INV.01",
+        "WP02.T03.QLT.01",
+        "WP02.T04.QLT.02"
+      ]
+    },
+    {
+      "id": "S09",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "title": "C06 real admissions retain the original observation while monthly material and dependencies advance independently",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission and C06 observer over production C02/C17/C08 and SQLite; material changes use real HTTP domain commands.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "January original observation and scope remain immutable; February-only mutation keeps scope fingerprint valid.",
+        "Selected dependency mutation and January material mutation are classified independently; old fences fail and fresh ones work only in C08; current observation persists across SQLite reopen."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.DOD.10",
+        "WP02.INV.01",
+        "WP02.QLT.01",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.SUC.10",
+        "WP02.T01.CHK.01",
+        "WP02.T01.DOD.01",
+        "WP02.T01.DOD.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.QLT.01",
+        "WP02.T01.QLT.18",
+        "WP02.T01.SUC.18",
+        "WP02.T02.INV.02",
+        "WP02.T04.DOD.02"
+      ]
+    },
+    {
+      "id": "S10",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "title": "C06 actual absence and recorded zero remain distinct under the real source projection and a durable domain command",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission and C06 observer over production C02/C17/C08 and SQLite; material changes use real HTTP domain commands.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Actual absence is null/absent and differs from durable explicitly entered zero.",
+        "Zero changes material fingerprint/version; observation never fills the missing value and the original snapshot stays unchanged; persisted zero survives reopen."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.INV.01",
+        "WP02.QLT.01",
+        "WP02.CMP.02",
+        "WP02.SUC.01",
+        "WP02.T01.CHK.01",
+        "WP02.T01.DOD.01",
+        "WP02.T01.INV.01",
+        "WP02.T01.QLT.18"
+      ]
+    },
+    {
+      "id": "S11",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "title": "C06 real authority and source replacement cannot revive a previous observation or its locked fence",
+      "kind": "new_source",
+      "fixture": "Real encrypted operator admission and C06 observer over production C02/C17/C08 and SQLite; material changes use real HTTP domain commands.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Real read withdrawal returns access-unavailable without values; restoring policy does not revive the old admission.",
+        "Fresh admission rechecks current material; delete/recreate never inherits physical identity; real logout invalidates current observation/fence."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.DOD.10",
+        "WP02.INV.02",
+        "WP02.INV.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.CMP.02",
+        "WP02.T01.CMP.18",
+        "WP02.T03.INV.02",
+        "WP02.T04.CHK.03",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "H01",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "kind": "existing_regression",
+      "fixture": "Production browser/module, encrypted operator session, actual C08/source persistence and composition; seeded business data and an already chosen conditioned C12 scenario are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Authorized case discovery excludes unrelated confidential case and private technical identity.",
+        "Preserve agenda and record, reopen old values under current access, save real draft, prepare/review/confirm one existing C12 choice and observe one receipt and canonical update."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.SUC.01",
+        "WP02.SUC.02",
+        "WP02.SUC.10",
+        "WP02.T01.INV.02",
+        "WP02.T01.QLT.01",
+        "WP02.T01.SUC.18",
+        "WP02.T02.DOD.01",
+        "WP02.T02.DOD.02",
+        "WP02.T03.INV.02",
+        "WP02.T04.CHK.02",
+        "WP02.T04.DOD.01",
+        "WP02.T04.DOD.02",
+        "WP02.T04.INV.01",
+        "WP02.T04.CMP.01"
+      ]
+    },
+    {
+      "id": "H02",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "kind": "existing_regression",
+      "fixture": "Production browser/module, encrypted operator session, actual C08/source persistence and composition; seeded business data and an already chosen conditioned C12 scenario are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Two actual tabs save competing versions of the same private draft; stale save returns 409 and local action/notes remain.",
+        "Explicit current-base review/checkbox precedes saving same id/incarnation; independent draft with same target remains separate; source record does not change."
+      ],
+      "criterionRefs": [
+        "WP02.QLT.02",
+        "WP02.CMP.02",
+        "WP02.T02.CHK.02",
+        "WP02.T02.DOD.01",
+        "WP02.T02.INV.01",
+        "WP02.T02.INV.02",
+        "WP02.T02.QLT.01",
+        "WP02.T02.QLT.02",
+        "WP02.T02.SUC.02",
+        "WP02.T04.CHK.01",
+        "WP02.T04.INV.01",
+        "WP02.T04.QLT.01",
+        "WP02.T04.QLT.02",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "H03",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard discovery fences participant removal after options were assembled",
+      "kind": "existing_regression",
+      "fixture": "Production browser/module, encrypted operator session, actual C08/source persistence and composition; seeded business data and an already chosen conditioned C12 scenario are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Participant removal after options are assembled forces stale discovery with no private case ID/objective."
+      ],
+      "criterionRefs": [
+        "WP02.INV.02",
+        "WP02.INV.10",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.CMP.18",
+        "WP02.T04.INV.02",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "H04",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard discovery resolves real ticket months and Executive signal records",
+      "kind": "existing_regression",
+      "fixture": "Production browser/module, encrypted operator session, actual C08/source persistence and composition; seeded business data and an already chosen conditioned C12 scenario are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Real ticket month and absent ticket field retain precise field/period evidence.",
+        "Executive discovery resolves the canonical overdue Hot Topic source."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.01",
+        "WP02.QLT.01",
+        "WP02.SUC.02",
+        "WP02.T01.CHK.05",
+        "WP02.T01.DOD.01",
+        "WP02.T01.INV.01",
+        "WP02.T01.QLT.01",
+        "WP02.T03.CHK.01",
+        "WP02.T03.CMP.01"
+      ]
+    },
+    {
+      "id": "H05",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "title": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "kind": "existing_regression",
+      "fixture": "Production browser/module, encrypted operator session, actual C08/source persistence and composition; seeded business data and an already chosen conditioned C12 scenario are fixtures.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Original F04 positive oracle: write withdrawal retains Unsaved operator wording and data-dirty=true.",
+        "Refresh retains draft while save/capture are disabled; no private draft writes or source writes; forged capture is rejected."
+      ],
+      "criterionRefs": [
+        "WP02.INV.10",
+        "WP02.QLT.02",
+        "WP02.QLT.10",
+        "WP02.SUC.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.18",
+        "WP02.T01.CMP.18",
+        "WP02.T02.CHK.03",
+        "WP02.T02.DOD.01",
+        "WP02.T02.INV.01",
+        "WP02.T02.QLT.02",
+        "WP02.T03.QLT.02",
+        "WP02.T04.CHK.02",
+        "WP02.T04.INV.02",
+        "WP02.T04.QLT.01",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "B01",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "title": "Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation",
+      "kind": "existing_regression",
+      "fixture": "Real browser, encrypted operator identity, production module and SQLite; business seed/clock fixed; one successful response is delayed rather than fabricated.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Monthly stale write preserves budget/actual/forecast and committed competing version; explicit conflict review precedes preview/apply.",
+        "Three values and deviation explanation persist in the same period, while other month/owner remain unchanged; later edits survive delayed save response.",
+        "Portfolio/All Projects preserve filter/year/exact record without duplicate rows; invalid Year amount keeps input; 21 eligible signals show coverage and user priority survives reload and record navigation."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.01",
+        "WP02.INV.01",
+        "WP02.QLT.01",
+        "WP02.QLT.02",
+        "WP02.CMP.02",
+        "WP02.SUC.01",
+        "WP02.SUC.02",
+        "WP02.T01.SUC.02",
+        "WP02.T02.CHK.01",
+        "WP02.T02.CHK.02",
+        "WP02.T02.CHK.03",
+        "WP02.T02.DOD.01",
+        "WP02.T02.DOD.02",
+        "WP02.T02.INV.01",
+        "WP02.T02.INV.02",
+        "WP02.T02.QLT.01",
+        "WP02.T02.QLT.02",
+        "WP02.T02.CMP.01",
+        "WP02.T02.SUC.01",
+        "WP02.T02.SUC.02",
+        "WP02.T03.CHK.01",
+        "WP02.T03.CHK.02",
+        "WP02.T03.DOD.01",
+        "WP02.T03.DOD.02",
+        "WP02.T03.INV.01",
+        "WP02.T03.QLT.01",
+        "WP02.T03.QLT.02",
+        "WP02.T03.QLT.03",
+        "WP02.T03.CMP.02",
+        "WP02.T03.SUC.01",
+        "WP02.T03.SUC.02"
+      ]
+    },
+    {
+      "id": "R01",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "title": "historical record reissue permits material changes and a new day but rejects replacement",
+      "kind": "existing_regression",
+      "fixture": "Real source persistence/SQLite with a controlled DomainPortHost and constructed TrustedDomainContext; this is a regression oracle, not a real-admission or installed proof.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Historical record reissue permits material/day/principal changes only under current authorized reissue rules; C08 fence rejects revocation, later mutation, forged digest/project and physical replacement."
+      ],
+      "criterionRefs": [
+        "WP02.SUC.02",
+        "WP02.T03.INV.02"
+      ]
+    },
+    {
+      "id": "R02",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "title": "historical dated entries keep the original competence after the observation year changes",
+      "kind": "existing_regression",
+      "fixture": "Real source persistence/SQLite with a controlled DomainPortHost and constructed TrustedDomainContext; this is a regression oracle, not a real-admission or installed proof.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Dated monthly entry retains its original competence when the observation year changes."
+      ],
+      "criterionRefs": [
+        "WP02.SUC.02",
+        "WP02.T01.QLT.01",
+        "WP02.T03.INV.02"
+      ]
+    },
+    {
+      "id": "R03",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "title": "historical security captures revalidate current observation fields after the year changes",
+      "kind": "existing_regression",
+      "fixture": "Real source persistence/SQLite with a controlled DomainPortHost and constructed TrustedDomainContext; this is a regression oracle, not a real-admission or installed proof.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Historical security action/incident/phishing evidence revalidates permitted current observation fields across year change."
+      ],
+      "criterionRefs": [
+        "WP02.T01.QLT.01",
+        "WP02.T03.INV.02"
+      ]
+    },
+    {
+      "id": "A01",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "title": "signals omit ambiguous IDs within each authorized collection only",
+      "kind": "existing_regression",
+      "fixture": "Pure signal producer with explicit Snapshot/actor fixtures; no real authentication or installed claim.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Duplicate textual or normalized IDs are omitted within their collection; identical IDs across different collections remain distinct; unauthorized collection is excluded."
+      ],
+      "criterionRefs": [
+        "WP02.T01.DOD.02",
+        "WP02.T01.SUC.02",
+        "WP02.T03.CHK.03",
+        "WP02.T03.QLT.01"
+      ]
+    },
+    {
+      "id": "A02",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "title": "unavailable pages emit no signals",
+      "kind": "existing_regression",
+      "fixture": "Pure signal producer with explicit Snapshot/actor fixtures; no real authentication or installed claim.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Viewer with no readable signal pages receives no signals."
+      ],
+      "criterionRefs": [
+        "WP02.T01.DOD.02",
+        "WP02.T01.CMP.02",
+        "WP02.T03.CHK.03",
+        "WP02.T03.CMP.01"
+      ]
+    },
+    {
+      "id": "E01",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+      "title": "executive signals open authorized canonical records and fail closed without evidence",
+      "kind": "existing_regression",
+      "fixture": "Real source persistence/SQLite with controlled DomainPortHost and constructed context; record evidence and C02 producers are real.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Without canonical record evidence C02 returns signal-evidence-unavailable.",
+        "Hot Topic, risk and contract rules carry exact record drilldown/sourceRefs; removal of domain role prevents reading."
+      ],
+      "criterionRefs": [
+        "WP02.INV.02",
+        "WP02.QLT.01",
+        "WP02.T01.DOD.01",
+        "WP02.T01.DOD.02",
+        "WP02.T01.DOD.18",
+        "WP02.T01.QLT.18",
+        "WP02.T01.CMP.02",
+        "WP02.T01.SUC.02",
+        "WP02.T03.CHK.02",
+        "WP02.T03.CHK.03",
+        "WP02.T03.DOD.01",
+        "WP02.T03.QLT.01",
+        "WP02.T03.SUC.01",
+        "WP02.T04.SUC.01"
+      ]
+    },
+    {
+      "id": "C01",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "title": "C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority",
+      "kind": "existing_regression",
+      "fixture": "Real source persistence/SQLite with controlled DomainPortHost and constructed contexts; supplements real-admission source tests and does not replace them.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "C06 rejects unknown definitions, fields and foreign dependency surface.",
+        "Independent authorized reviewers share scope fingerprint but not scoped incarnation; physical identity remains private; same-physical reissue needs C08.",
+        "Dependency readability, month/dependency/material changes, old source replacement, authority loss and source/projection privacy are discriminated."
+      ],
+      "criterionRefs": [
+        "WP02.QLT.10",
+        "WP02.T01.INV.02",
+        "WP02.T01.QLT.18",
+        "WP02.T01.CMP.02",
+        "WP02.T04.INV.02"
+      ]
+    },
+    {
+      "id": "P01",
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "title": "installed Dashboard preserves records, conflicts, signals and authorized history",
+      "kind": "new_installed",
+      "fixture": "Existing production installation fixture enrolls an operator and launches installed CLI with isolated durable store; real mounted commands/browser and reloads.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Create and reload existing canonical Hot Topics; preserve real agenda and record capture.",
+        "Actual competing save returns 409; explicit current-version comparison preserves local input and saves on same record.",
+        "Cancel deletion makes no request; cancel discard retains input and confirm discard affects only unsaved changes.",
+        "Historical capture reopens original values after source change/reload under current authorization.",
+        "Create eligible risk, persist user signal priority, open exact record with period context and navigate mounted applications.",
+        "Confirmed withdrawal removes target and its signal after reload while unrelated Hot Topic/risk remain."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.01",
+        "WP02.DOD.02",
+        "WP02.DOD.10",
+        "WP02.INV.02",
+        "WP02.QLT.01",
+        "WP02.QLT.02",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.SUC.01",
+        "WP02.SUC.02",
+        "WP02.SUC.10",
+        "WP02.T01.DOD.01",
+        "WP02.T01.DOD.02",
+        "WP02.T01.SUC.02",
+        "WP02.T01.SUC.18",
+        "WP02.T02.CHK.02",
+        "WP02.T02.DOD.01",
+        "WP02.T02.INV.01",
+        "WP02.T02.QLT.01",
+        "WP02.T02.QLT.02",
+        "WP02.T02.CMP.01",
+        "WP02.T02.SUC.02",
+        "WP02.T03.CHK.02",
+        "WP02.T03.DOD.01",
+        "WP02.T03.DOD.02",
+        "WP02.T03.INV.01",
+        "WP02.T03.INV.02",
+        "WP02.T03.QLT.01",
+        "WP02.T03.QLT.02",
+        "WP02.T03.QLT.03",
+        "WP02.T03.SUC.01",
+        "WP02.T04.CHK.02",
+        "WP02.T04.DOD.01",
+        "WP02.T04.DOD.02",
+        "WP02.T04.INV.01",
+        "WP02.T04.QLT.01",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02",
+        "WP02.T04.SUC.01"
+      ]
+    },
+    {
+      "id": "P02",
+      "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "title": "installed Dashboard confirms exact monthly changes and purges late results after real logout",
+      "kind": "new_installed",
+      "fixture": "Installed CLI, real operator and durable store; intercepted responses first execute against actual server and only their delivery is dropped or delayed.",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Monthly preview lists three proposed values but cancel creates no saved month and no apply request.",
+        "Real apply response is lost; read-preview retrieves the same previewRef/applied outcome without a second apply; values persist across pages/reload and unrelated months/owner remain absent.",
+        "Real logout occurs while an authorized preview response is delayed; refresh purges forms/history; late response cannot restore private values; old apply is forbidden."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.DOD.10",
+        "WP02.INV.10",
+        "WP02.QLT.02",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.SUC.01",
+        "WP02.SUC.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.QLT.18",
+        "WP02.T01.SUC.18",
+        "WP02.T02.CHK.01",
+        "WP02.T02.CHK.03",
+        "WP02.T02.DOD.01",
+        "WP02.T02.DOD.02",
+        "WP02.T02.INV.01",
+        "WP02.T02.INV.02",
+        "WP02.T02.QLT.01",
+        "WP02.T02.CMP.01",
+        "WP02.T02.SUC.01",
+        "WP02.T03.INV.02",
+        "WP02.T03.QLT.02",
+        "WP02.T04.DOD.02",
+        "WP02.T04.INV.02",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "U01",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "title": "Dashboard reads the current source and active private proposal while preserving dirty values until explicit review",
+      "kind": "new_consumer_browser",
+      "fixture": "Existing Node-owned BrowserDriver, actual module/composed business services, encrypted operator identities, production authority/C08/source producers and real SQLite. Policies only restrict authenticated authority. route.fetch always reaches the genuine server; fulfill forwards that APIResponse unchanged and abort changes delivery only.",
+      "helperPath": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "Two real browser pages write the same saved private proposal; first page submits original draftRef/expectedVersion/targetEvidence and receives409.",
+        "Real canonical source mutation makes ordinary active-draft discovery stale; dashboard-draft-read returns the same private draft identity at active version2 plus current source fields and evidence.",
+        "Original/current/local proposal table and separate current authorized source table appear; dirty local values remain and saving is disabled until the explicit checkbox.",
+        "Before checkbox no preference mutation occurs; after confirmation the genuine write uses active version2/current evidence and persists version3 under the same id/incarnation, without changing canonical source values."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.INV.10",
+        "WP02.QLT.02",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.SUC.10",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.QLT.18",
+        "WP02.T01.CMP.02",
+        "WP02.T02.CHK.02",
+        "WP02.T02.DOD.01",
+        "WP02.T02.DOD.02",
+        "WP02.T02.INV.01",
+        "WP02.T02.INV.02",
+        "WP02.T02.QLT.01",
+        "WP02.T02.QLT.02",
+        "WP02.T02.SUC.02",
+        "WP02.T03.INV.02",
+        "WP02.T04.INV.02",
+        "WP02.T04.QLT.02",
+        "WP02.T04.CMP.02"
+      ]
+    },
+    {
+      "id": "U02",
+      "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "title": "Dashboard keeps dirty values through interrupted reads and fences write withdrawal between admissions before purging actual read loss",
+      "kind": "new_consumer_browser",
+      "fixture": "Existing Node-owned BrowserDriver, actual module/composed business services, encrypted operator identities, production authority/C08/source producers and real SQLite. Policies only restrict authenticated authority. route.fetch always reaches the genuine server; fulfill forwards that APIResponse unchanged and abort changes delivery only.",
+      "helperPath": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "status": "evidence_pending",
+      "execution": "NOT_RUN",
+      "actualResult": null,
+      "actualWitness": null,
+      "intendedAssertions": [
+        "A real authorized dashboard-draft-read completes before route.abort interrupts only response delivery; dirty values remain, actions disable and no access purge occurs.",
+        "A fresh genuine read restores permitted actions.",
+        "First discovery response is genuine under write authority; policy.writable becomes false before its delivery and a new real private read returns all write permissions false. UI intersects permissions, retains readable fields, disables edit/save/capture and creates no private draft.",
+        "First discovery under read access completes; policy.readable becomes false before delivery. The second request is genuinely denied403; response body is observed through APIResponse before forwarding, and actual sf-access-revoked shell purge removes the workbench, private text and draft browser-state references."
+      ],
+      "criterionRefs": [
+        "WP02.DOD.02",
+        "WP02.DOD.10",
+        "WP02.INV.10",
+        "WP02.QLT.02",
+        "WP02.QLT.10",
+        "WP02.CMP.02",
+        "WP02.CMP.10",
+        "WP02.SUC.10",
+        "WP02.T01.CHK.18",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T01.QLT.18",
+        "WP02.T01.CMP.02",
+        "WP02.T01.CMP.18",
+        "WP02.T01.SUC.18",
+        "WP02.T02.DOD.01",
+        "WP02.T02.INV.01",
+        "WP02.T02.QLT.02",
+        "WP02.T03.INV.02",
+        "WP02.T03.QLT.02",
+        "WP02.T04.INV.02",
+        "WP02.T04.CMP.02"
+      ]
+    }
+  ],
+  "criteria": [
+    {
+      "id": "WP02.DOD.01",
+      "text": "As 16 capacidades estão acessíveis por suas chaves publicadas, com leitura, manutenção permitida e delegação explícita de importação/relatório aos seus owners.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Published capability inventory and import/report delegation are retained; selected Dashboard flows are regression context only.",
+      "testRefs": [
+        "H04",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No enumeration of all16 keys or requalification of WP06/WP07 delegation in this selection."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "WP06_WP07",
+        "48"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.DOD.02",
+      "text": "As portas C02/C03/C04/C06 executam comportamento de domínio verificável; a composição no app é entregue para prova real do WP10, sem ser declarada concluída por mocks.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Qualify real C02/record/C06 observer and consumer behavior with production admission/persistence, while separating source and installed evidence.",
+      "testRefs": [
+        "S01",
+        "S06",
+        "S09",
+        "S10",
+        "S11",
+        "H01",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Does not complete every C02/C03/C04/C06 behavior, the confirmation registry, or WP10 global composition."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "60_successor",
+        "59",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "signals",
+        "authority_c17_c08",
+        "shared_dashboard_consumer",
+        "hosted_evidence"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.DOD.10",
+      "text": "As entregas residentes atribuídas a WP02 têm produção, consumo e provas reais completos.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Resident boundary is partially exercised by real authority, immutable evidence and installed consumption; complete resident production/consumption remains separately qualified.",
+      "testRefs": [
+        "S01",
+        "S03",
+        "S04",
+        "S09",
+        "S11",
+        "P01",
+        "P02",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Native/MCP, AM, runtime release and resident completion are not exercised by all required consumers."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "59",
+        "60_successor",
+        "45",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.INV.01",
+      "text": "Mesmos dados e contexto produzem os valores do motor aprovado; qualquer correção de semântica exige a decisão correspondente do WP00, sem mudança silenciosa.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Preserve existing material rules while repairing normalized signal identity/UTC date and read continuity; independent month/dependency changes remain discriminated.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "B01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No change of approved business semantics is authorized; complete numerical motor corpus and WP00 decisions are not requalified."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "confirmation",
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.INV.02",
+      "text": "A leitura mantém restrições de talento e de função; PMO, CAPEX e contratos continuam entidades distintas, e Hot Topics continua a ação operacional canônica.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Keep private current-read boundary and canonical Hot Topic/contract/risk record identity.",
+      "testRefs": [
+        "S03",
+        "S04",
+        "S06",
+        "S11",
+        "E01",
+        "H03",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Talent/role private cls/outlook/notes combinations and PMO/CAPEX separation remain preserved without fresh full proof."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "signals",
+        "authority_c17_c08"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.INV.10",
+      "text": "WP02 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "No new grant or technical identity: same-principal physical continuity issues read-only current evidence; writes and disclosure retain current authority.",
+      "testRefs": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "S11",
+        "H03",
+        "H05",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "This is partial authority/provenance proof, not new ownership or native/MCP parity."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.QLT.01",
+      "text": "Indicadores mostram competência, origem e condição de ausência; sinais explicam sua regra e abrem o registro correspondente.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected monthly values retain absence/period/source and signal rule/evidence links resolve the canonical record.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "S09",
+        "S10",
+        "H04",
+        "E01",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Complete indicator inventory and all financial reconciliation cases remain outside this selection."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.QLT.02",
+      "text": "A manutenção distingue leitura e edição, conserva a posição/contexto do usuário e explica validação ou conflito sem apagar o rascunho.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Dirty fields survive conflict/write-only withdrawal; explicit review changes the base, while real read loss purges protected presentation.",
+      "testRefs": [
+        "S01",
+        "S05",
+        "H02",
+        "H05",
+        "B01",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "U01 now targets saved active-proposal/current-source explicit rebase; U02 targets interrupted delivery, permission withdrawal between admissions and actual read-loss purge. Results remain pending.",
+        "Arbitrary saved extraRefs without current case coverage remain unavailable. HTTP producer503/namespace drift/final-C08 concurrent mutation permutations are not all exercised."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "65",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "shared_dashboard_consumer",
+        "private_draft_dependency"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Current source/ref digests, scope, explicit denied/unavailable/stale states and C08 fences are observable at source and intended UI consumers.",
+      "testRefs": [
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S09",
+        "C01",
+        "H03",
+        "H05",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "All resident interfaces and native/MCP comparability remain unqualified; static route review is not execution."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "45",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.CMP.01",
+      "text": "O inventário cobre Executive, Hot Topics, as três páginas de orçamento, as três de pessoas, as duas de projetos, Operations, Security, Risks, Contracts, Stakeholders e Performance.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Full sixteen-capability inventory is unchanged by mission67.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "This surgical plan does not enumerate or open all16 capabilities."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.CMP.02",
+      "text": "As provas contemplam leitor autorizado e recusado, registro existente e ausente, período independente, dados incompletos e edição concorrente.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected real-authority positive/negative reads, deletion/replacement, independent months, absence and concurrent edits.",
+      "testRefs": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S09",
+        "S10",
+        "S11",
+        "H02",
+        "H03",
+        "B01",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "This selected matrix does not exhaust every domain/role/period combination."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "This map assigns paths/consumers/discriminants for affected C17, authority and output obligations; other 5/18/8 obligations retain their owners.",
+      "testRefs": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S09",
+        "S11",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Completeness of every5/18/8/C17 resident contract requires the full execution/owner matrix and integrated evidence beyond67."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "45",
+        "59",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "authority_c17_c08",
+        "shared_dashboard_consumer",
+        "hosted_evidence",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.SUC.01",
+      "text": "Um contribuidor autorizado atualiza registros do seu domínio e consegue observar a projeção correspondente sem redigitar o mesmo dado.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Actual selected monthly/Hot Topic updates are visible after reload/canonical reread without a duplicate data entry.",
+      "testRefs": [
+        "S02",
+        "S06",
+        "S10",
+        "H01",
+        "B01",
+        "P01",
+        "P02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "All contributor/domain-leader role combinations are not requalified."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.SUC.02",
+      "text": "André parte de um sinal para sua evidência ou registro e distingue o período observado de um retrato histórico que não existe.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Signal navigation preserves exact evidence/record/period, and preserved history shows observed values separately from current material.",
+      "testRefs": [
+        "S02",
+        "S06",
+        "S07",
+        "R01",
+        "R02",
+        "H01",
+        "H04",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No fabricated global historical snapshot is claimed; not every capability/history variant is selected."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Real source and installed consumers have named reproducible scenarios; proof must be tied to exact hosted candidate and selection.",
+      "testRefs": [
+        "S01",
+        "S06",
+        "S09",
+        "H01",
+        "H05",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Pending actual hosted artifacts; no source-to-installed transfer, C28 acceptance, native parity or EPIC acceptance."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "45",
+        "59",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "hosted_evidence",
+        "shared_dashboard_consumer",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.CHK.01",
+      "text": "Com orçamento anual 1200 e override de janeiro 200, a projeção deve reconciliar 1300 de orçamento efetivo; remover uma entrada não pode fazê-la aparecer como coleta observada de valor zero.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "The absence-versus-recorded-zero slice is targeted using real January data and durable commands.",
+      "testRefs": [
+        "S09",
+        "S10"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "The exact annual1200 plus January200 equals1300 reconciliation and entry-removal branch are not asserted by these tests; fixture numbers alone are not proof."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.CHK.02",
+      "text": "Ler os mesmos membros como admin e como não admin: cls, outlook e notes privados devem desaparecer da resposta não autorizada, inclusive componentes e sinais derivados.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Talent cls/outlook/notes privacy semantics are unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "No selected test compares the same members as admin/non-admin including derived components/signals."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T01.CHK.03",
+      "text": "Solicitar cada uma das 16 chaves e uma chave inválida: todas as válidas devolvem o domínio/contexto previsto; a inválida não produz uma tela vazia com aparência de sucesso.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Capability keys are unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "All16 valid keys and explicit invalid-key result are not enumerated here."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T01.CHK.04",
+      "text": "Budget100 e valor120 produzem razão120% e sinal correspondente, mesmo se a barra for limitada visualmente; budgetzero/ausente tem tratamento explícito.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Budget ratio/visual-bar motor remains unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "No exact budget100/value120/ratio120% or zero/absent budget assertion in selected tests."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T01.CHK.05",
+      "text": "Tickets com saldo inicial20, abertos10 e fechados15 mostram backlog15 e variação−5; sem saldo inicial a projeção não fabrica backlogzero.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Ticket backlog/net-change arithmetic remains unchanged.",
+      "testRefs": [
+        "H04"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "H04 only checks a real month/field and absence; it does not prove20+10-15=15 or net-5/no-initial-backlog."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T01.CHK.18",
+      "text": "Executar sf_dashboard_read, sf_kpi_explain pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "UI sf_dashboard_read current-authority, revocation and real production-source slices are targeted.",
+      "testRefs": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "S11",
+        "H03",
+        "H05",
+        "P02",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Both sf_dashboard_read and sf_kpi_explain across UI/native/MCP, common handler/version and direct-call grant negatives are not fully executed."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "59",
+        "60_successor",
+        "45",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "authority_c17_c08",
+        "confirmation",
+        "shared_dashboard_consumer",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.DOD.01",
+      "text": "A leitura C02 devolve as 16 capacidades com valores produzidos pelos motores existentes e referência suficiente para abrir o registro.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected real C02 projections and canonical record references are exercised for financial values, Hot Topics, risks and contracts.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "S09",
+        "S10",
+        "H04",
+        "E01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "All16 capability values are not re-enumerated or reconciled."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "confirmation",
+        "authority_c17_c08"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.DOD.02",
+      "text": "Cada sinal devolvido contém a regra que o tornou elegível e os registros que o sustentam.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Eligible signal output retains rule/sourceRefs and exact canonical drilldown; missing evidence fails closed.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "S08",
+        "A01",
+        "A02",
+        "E01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No claim that every possible eligibility combination is exhaustively covered."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.DOD.18",
+      "text": "Descritores C16 de sf_dashboard_read, sf_kpi_explain são implementados e consumidos por T06 com referências reais.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Real Dashboard evidence references used by downstream reads are exercised; no fictitious reference replaces them.",
+      "testRefs": [
+        "S06",
+        "S09",
+        "E01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "C16 descriptors for both exports and T06 consumption are not directly exercised by this selection."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "59",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "authority_c17_c08",
+        "signals",
+        "confirmation",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.INV.01",
+      "text": "Ausência de entrada e zero informado permanecem distinguíveis mesmo quando um total legado usa fallback aritmético.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Real monthly projection distinguishes missing actual from observed zero and does not fill missing data during observation.",
+      "testRefs": [
+        "S10",
+        "H04"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Other legacy aggregate fallback combinations remain unchanged, not requalified."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.INV.02",
+      "text": "Nenhum campo restrito ou decisão inferida é acrescentado à projeção autorizada.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Private dependency details/physical IDs/private source values do not escape current authorized projections and failed reads.",
+      "testRefs": [
+        "S03",
+        "S04",
+        "S05",
+        "S09",
+        "S11",
+        "C01",
+        "H01",
+        "H03",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "The selected proof does not replace full talent restrictions or all derived-decision negatives."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Domain admission/C08/current permissions remain authoritative; continuity provides no write capability or substituted grant.",
+      "testRefs": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "S11",
+        "H05",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Domain authority is partially covered even though native/MCP transport parity remains external."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "domain_commands",
+        "authority_c17_c08",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.QLT.01",
+      "text": "Valores agregados trazem componentes reconciliáveis e indicação do contexto temporal utilizado.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected observations and historical references preserve their competence, period and scoped provenance.",
+      "testRefs": [
+        "S02",
+        "S07",
+        "S09",
+        "R02",
+        "R03",
+        "H04",
+        "H01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "These assertions do not recompose all financial aggregates from published components."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.QLT.02",
+      "text": "Moeda não especificada na origem é declarada como tal, sem converter o prefixo legado de dólar em uma taxa ou moeda presumida.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Currency-unspecified behavior is unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "No selected assertion proves unspecified currency versus legacy dollar prefix; no exchange rule is introduced."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T01.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Closed selected evidence fields, digest validity, missing data and explicit failure states support partial provenance/authority qualification.",
+      "testRefs": [
+        "S03",
+        "S05",
+        "S06",
+        "S09",
+        "S10",
+        "C01",
+        "E01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Complete closed-schema and UI/native/MCP equivalence are not requalified; source states do not constitute native acceptance."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "45",
+        "59",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "signals",
+        "authority_c17_c08",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.CMP.01",
+      "text": "A projeção cobre dados financeiros, pessoas, projetos, operação, segurança, riscos, contratos, stakeholders, performance e ações.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Cross-domain projection inventory is unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "Selection does not exercise every financial/people/project/operations/security/stakeholder/performance capability."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T01.CMP.02",
+      "text": "Há resultados definidos para coleção vazia, referência inexistente, ator sem leitura e contexto de período incompatível.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "No-readable-page, actual read loss, removed/replaced source and invalid scoped source are explicit rather than successful empty values.",
+      "testRefs": [
+        "S03",
+        "S05",
+        "S11",
+        "A02",
+        "E01",
+        "C01",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Full period-incompatibility and every collection-empty outcome are not separately executed."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "signals",
+        "authority_c17_c08"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.CMP.18",
+      "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Authorized/stale/unavailable/denied Dashboard read slices are targeted with actual production authority.",
+      "testRefs": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "S11",
+        "H03",
+        "H05",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "The two-export matrix, especially sf_kpi_explain/direct native/MCP calls, remains incomplete."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "59",
+        "60_successor",
+        "45",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.SUC.01",
+      "text": "Um consumidor recompõe o total financeiro da prova a partir dos componentes publicados sem implementar outra fórmula.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Financial component recomposition contract is unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "No selected consumer reconstructs the complete financial total from published components."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T01.SUC.02",
+      "text": "O consumidor identifica por que um risco, ação vencida ou renovação foi sinalizado sem consultar texto inventado.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Signals use explicit domain eligibility/UTC boundaries and canonical supporting records for risk/overdue/renewal facts.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "E01",
+        "A01",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No invented executive decision or explanation is permitted; exhaustive original three-way fixture is not requalified."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T01.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Selected UI and installed flows observe real production data without duplicate effects.",
+      "testRefs": [
+        "S06",
+        "S09",
+        "H01",
+        "P01",
+        "P02",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Same capability/result across native and MCP requires their consumer owners and exact integrated runtime evidence."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "59",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "confirmation",
+        "shared_dashboard_consumer",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.CHK.01",
+      "text": "Aplicar Year amount e Annual Entry na mesma fixture: cada prévia deve coincidir com sua aplicação real, inclusive distribuição, arredondamento e células não alteradas; os dois comandos não podem ser tratados como equivalentes.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Year amount and Annual Entry semantics are unchanged.",
+      "testRefs": [
+        "B01",
+        "P02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Invalid Year amount and an interrupted Year amount preview do not prove equivalent preview/application for both commands, distribution or rounding."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T02.CHK.02",
+      "text": "Submeter edição com versão antiga após atualização de outro ator: o registro persistido não é sobrescrito, o conflito identifica a diferença e a entrada local permanece recuperável.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Stale versions do not overwrite concurrent canonical/private-draft updates; differences and retained local input precede explicit base acceptance.",
+      "testRefs": [
+        "S02",
+        "H02",
+        "B01",
+        "P01",
+        "U01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Current hosted execution is required; source proof alone does not close browser draft retention."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "confirmation",
+        "shared_dashboard_consumer",
+        "private_draft_dependency"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.CHK.03",
+      "text": "Editar uma linha financeira atribuída e outra não atribuída ao mesmo domain leader: só a primeira é aceita; uma edição de mês não altera o ano vizinho.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected denied writes and month/owner isolation remain enforced.",
+      "testRefs": [
+        "S01",
+        "H05",
+        "B01",
+        "P02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Exact assigned/unassigned domain-leader pair and neighboring-year case are not in this selection; preserve baseline without claiming that full criterion passed."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "confirmation",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.CHK.04",
+      "text": "Para os quatro tipos Dashboard, comparar estado simulado e aplicação autorizada do mesmo comando: campos/meses atingidos, ignorados e remoções coincidem; simular não grava, coleção auxiliar não vira domínio e entrada não autorizada não é prévia de sucesso.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Four Dashboard import simulation/application semantics remain with the canonical import producer.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "No four-type import preview/apply/removal/permission comparison is selected."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "WP06_WP07"
+      ],
+      "codeGroupRefs": [
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T02.DOD.01",
+      "text": "A edição contextual alcança os mesmos campos e comandos autorizados da baseline, sem exigir formulário expandido para ler indicadores.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected monthly and Hot Topic contextual controls use actual commands and retain readable indicators outside the editor.",
+      "testRefs": [
+        "H01",
+        "H02",
+        "H05",
+        "B01",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "This is selected-field proof, not a full editor inventory across every domain."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.DOD.02",
+      "text": "Operações amplas mostram os registros afetados antes da confirmação e apresentam o resultado efetivamente aplicado.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Monthly preview and C12 existing-choice review display affected values before explicit confirmation and show actual saved outcome.",
+      "testRefs": [
+        "H01",
+        "B01",
+        "P02",
+        "U01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "All wide operations/imports/annual distribution are not qualified; C12 lost-response/reload proof belongs to original F03/65."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "65"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.INV.01",
+      "text": "Campos fora do comando, permissões e períodos não selecionados não são alterados.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Denied/stale/cancelled/read-only paths cause no effect; accepted selected changes preserve other rows/months and private identities.",
+      "testRefs": [
+        "S01",
+        "S02",
+        "S03",
+        "S06",
+        "S08",
+        "H02",
+        "H05",
+        "B01",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "All command-field and role/period combinations remain baseline obligations."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "confirmation",
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.INV.02",
+      "text": "A prévia usa a mesma regra do comando real e uma base desatualizada não é aplicada silenciosamente.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Actual stale writes are rejected and selected preview/read-outcome uses the real domain result without silently replacing the write binding.",
+      "testRefs": [
+        "S02",
+        "S09",
+        "H02",
+        "B01",
+        "P02",
+        "U01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No full Year amount/Annual Entry/import equivalence or arbitrary saved-draft extraRef positive claim."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "confirmation",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.QLT.01",
+      "text": "O editor mantém registro, período e posição de trabalho identificáveis antes e depois de salvar.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Current editor record/year and local input survive conflict/reload, and exact signal navigation preserves period/filter.",
+      "testRefs": [
+        "H02",
+        "B01",
+        "P01",
+        "P02",
+        "U01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "All editor positions across the16-capability inventory are not requalified."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "shared_dashboard_consumer",
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.QLT.02",
+      "text": "Erros apontam o campo ou conflito e conservam os valores digitados para correção.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Conflict/validation/write-only withdrawal retain typed values; unavailable reads are distinct from actual denied reads.",
+      "testRefs": [
+        "S01",
+        "S05",
+        "H02",
+        "H05",
+        "B01",
+        "P01",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "U02 targets recoverable interrupted delivery and actual denied-read purge; U01 targets a saved proposal/source conflict with retained local values. Both remain evidence_pending.",
+        "No claim for every backend503, namespace drift or concurrent private-state race permutation. Actual read denial intentionally removes protected view."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.CMP.01",
+      "text": "Os editores cobrem orçamento, ações, pessoas, projetos/marcos, operações, segurança, riscos, contratos, stakeholders e performance conforme suas permissões reais.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "All-domain editor inventory and permission contracts are unchanged.",
+      "testRefs": [
+        "B01",
+        "P01",
+        "P02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Selected budget/action/risk flows do not requalify every editor in the literal inventory."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T02.CMP.02",
+      "text": "Importação e exportação permanecem acessíveis por portas para WP06/WP07, sem uma segunda implementação dentro do WP02.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "WP06/WP07 import/export delegation remains unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "No duplicate import/export implementation is added; no current end-to-end delegation requalification."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "WP06_WP07",
+        "48"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T02.CMP.03",
+      "text": "Os quatro tipos de importação Dashboard têm produtor puro nomeado e contraprova de permissão/remoção; a preservação de instalação/referências privadas segue a preparação WP06.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Named pure import producers and installation/private-reference preservation remain unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "All four import types and permission/removal negatives require WP06 evidence outside this selection."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "WP06_WP07"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T02.SUC.01",
+      "text": "O usuário altera três valores e uma justificativa de um período sem perder o contexto e sem modificar valores alheios.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Real browser changes three January values and a deviation explanation while preserving current context and other financial rows/months.",
+      "testRefs": [
+        "B01",
+        "P02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "B01 is the direct four-field/justification scenario; P02 independently qualifies installed three-value preview/apply only."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T02.SUC.02",
+      "text": "Um conflito concorrente pode ser compreendido e corrigido sem redigitar o rascunho inteiro.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Concurrent private draft and canonical record conflicts show the current revision and retain edits through explicit confirmation.",
+      "testRefs": [
+        "H02",
+        "B01",
+        "P01",
+        "U01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Do not infer closure from a message alone; original post-timeout tail must run."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "shared_dashboard_consumer",
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.CHK.01",
+      "text": "Abrir executivo com mês próprio distinto do mês de operações e com headcount de estado atual: cada bloco deve declarar sua referência, sem se apresentar como snapshot histórico único.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Independent executive/operations/headcount temporal model is unchanged.",
+      "testRefs": [
+        "H04",
+        "B01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Ticket/Executive navigation and period assertions do not instantiate the exact distinct-month plus current-headcount fixture."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T03.CHK.02",
+      "text": "Abrir um sinal e um projeto filtrado na vista de revisão: o destino conserva registro e filtro; a vista All Projects alcança o mesmo conjunto canônico sem duplicar projetos.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Portfolio-to-All Projects keeps filter/year/exact record and signal navigation keeps canonical target and executive period.",
+      "testRefs": [
+        "B01",
+        "P01",
+        "S06",
+        "E01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Selected projects and signal records are targeted; all navigation combinations remain outside the selection."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.CHK.03",
+      "text": "Usar risco elevado, data de renovação ausente e ação vencida concluída: só os sinais elegíveis por regra explícita aparecem, sem classificar automaticamente qualquer deles como decisão do CIO.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "High/closed risk and renewal UTC interval eligibility are explicit; invalid/ambiguous or unreadable signals are suppressed.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "S08",
+        "A01",
+        "A02",
+        "E01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "The exact absent-renewal plus completed-overdue action combination is not asserted in selected tests; no CIO decision inference is introduced."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.DOD.01",
+      "text": "Executive Dashboard oferece fatos revisáveis com evidência e destinos; Portfolio e All Projects apresentam trabalhos distintos sobre os mesmos registros.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Executive facts carry canonical evidence/destinations and selected Portfolio/All Projects navigation shares the existing project records.",
+      "testRefs": [
+        "S06",
+        "E01",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "This does not requalify every executive fact or entire Portfolio/milestone experience."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.DOD.02",
+      "text": "Os destinos de todas as capacidades permanecem publicados para a composição de navegação.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "All capability destination publication is retained.",
+      "testRefs": [
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Selected signal/application links do not enumerate every published capability destination; shell redesign is outside67."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T03.INV.01",
+      "text": "Uma vista resumida não exclui, copia nem muda o estado de registros para produzir sua apresentação.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Signal reads/projections are side-effect free and navigation does not mutate or duplicate canonical records.",
+      "testRefs": [
+        "S01",
+        "S06",
+        "S07",
+        "S08",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Confirmed canonical deletion is a separate explicit mutation; no summary-side mutation is implied."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "domain_commands",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.INV.02",
+      "text": "Mudanças de período ou filtro não ampliam leitura nem fabricam um histórico inexistente.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Current read authority and physical/source scope gate historical reissue; observed snapshots remain distinct from new current material.",
+      "testRefs": [
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S11",
+        "R01",
+        "R02",
+        "R03",
+        "H01",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No global snapshot is fabricated; saved-draft extraRefs not covered by current case evidence remain unavailable."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "65"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.QLT.01",
+      "text": "Cada sinal mostra fato, motivo de inclusão, período e origem; sinais equivalentes do mesmo fato não se multiplicam sem justificativa.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Stable normalized signal identities, UTC periods and rule/sourceRefs avoid ambiguity and support canonical navigation.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "S08",
+        "A01",
+        "E01",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Every fact type/presentation combination is not requalified."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.QLT.02",
+      "text": "A leitura prioriza informação e mantém manutenção em detalhe, sem ocultar a ação autorizada correspondente.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected readable Dashboard views expose authorized contextual actions while read-only authority disables mutation without dropping legitimate draft text.",
+      "testRefs": [
+        "S01",
+        "H05",
+        "B01",
+        "P01",
+        "P02",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Full native visual shell and all maintenance surfaces remain separately planned/owned."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "shared_dashboard_consumer",
+        "confirmation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.QLT.03",
+      "text": "Sinais numerosos são ordenados por prazo, dependência ou condição verificável, com total/cobertura e prioridade fixada pelo usuário; não usar score executivo opaco.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Existing21-signal regression and installed flow retain visible coverage, verifiable order and user-set priority across reload and navigation.",
+      "testRefs": [
+        "B01",
+        "P01",
+        "S07"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No opaque executive score is introduced; all dependency-order combinations are not enumerated."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.CMP.01",
+      "text": "A revisão contempla finanças, entrega, operação, segurança, riscos e compromissos, com estados vazios ou sem dados explícitos.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Broad executive review domain inventory and explicit empty-state contracts are unchanged.",
+      "testRefs": [
+        "A02",
+        "H04"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "An unavailable signal page and absent ticket field do not requalify all finance/delivery/operations/security/risk/commitment states."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T03.CMP.02",
+      "text": "Portfolio conserva acesso a marcos/watchlist e All Projects conserva busca, filtros e manutenção da coleção única.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected Portfolio watchlist/search/year link targets the unique All Projects record and preserves filters.",
+      "testRefs": [
+        "B01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Milestone editing and full All Projects collection maintenance are unchanged but not requalified."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.SUC.01",
+      "text": "O usuário chega de um sinal ao registro correto em uma ação e reconhece o período que está revisando.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Signal Open record goes to the exact canonical record in one action, with executive year/month carried forward.",
+      "testRefs": [
+        "S06",
+        "S07",
+        "E01",
+        "B01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "All signal kinds are not individually clicked in installed proof."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "signals",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T03.SUC.02",
+      "text": "O mesmo projeto aparece uma única vez no cadastro mesmo quando participa de vários recortes executivos.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected Portfolio/All Projects cross-view navigation retains the original canonical project IDs with no added rows.",
+      "testRefs": [
+        "B01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Every project recut is not requalified; assertion is limited to the selected two-record fixture."
+      ],
+      "responsibilityRefs": [
+        "67"
+      ],
+      "codeGroupRefs": [
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.CHK.01",
+      "text": "Reenviar a mesma intenção/correlação após uma resposta perdida: deve retornar a mesma referência e existir somente um Hot Topic; intenções diferentes não podem ser fundidas apenas porque têm o mesmo título.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Private draft identity/isolation is regression context; canonical Hot Topic CREATE correlation must be fixed and proved by its explicitly authorized owner.",
+      "testRefs": [
+        "H02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "H02 is private-draft identity, not T04 creation/retry proof. No selected test proves same forwarded intent after lost response returns one canonical Hot Topic, or distinct intents with same title.",
+        "C28 known positive creator fails action-create-identity-unavailable; no guessed or post-commit incarnation bind is allowed."
+      ],
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "65",
+        "67"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "private_draft_dependency",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.CHK.02",
+      "text": "Tentar encaminhar como contributor sem escrita de Hot Topics e como domain leader autorizado: a primeira tentativa não cria ação; a segunda preserva owner, prazo e contexto permitido.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Actual write withdrawal refuses effect, while authorized existing-record/context flows remain targeted.",
+      "testRefs": [
+        "S01",
+        "H05",
+        "H01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "No selected test qualifies contributor versus domain-leader forwarded CREATE with owner/due/context; installed legacy creation is not the canonical T04 forwarding port."
+      ],
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "67"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "confirmation",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.CHK.03",
+      "text": "Concluir a ação por seu comando canônico e reler pela referência: todos os consumidores recebem o estado concluído; uma projeção antiga não reabre nem duplica a ação.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Canonical completion/read identity behavior is unchanged.",
+      "testRefs": [
+        "S03",
+        "S11"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Replacement/non-revival negatives do not prove canonical completion or all consumers observing completed state; no completion-command test is selected."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "S0",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "canonical_hot_topic_creation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    },
+    {
+      "id": "WP02.T04.DOD.01",
+      "text": "A porta devolve referência de um Hot Topic real, com correlação de reenvio e resultado de escrita verificável.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Existing-record evidence and real update results are covered only as adjacent scope.",
+      "testRefs": [
+        "S06",
+        "H01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "The canonical creation port and correlation-bound durable CREATE result remain a specific external positive obligation."
+      ],
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "67"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.DOD.02",
+      "text": "As provas e o handoff distinguem a porta de domínio implementada da composição do host ainda reservada ao WP10.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Traceability distinguishes real domain/source scenarios from installed CLI composition and external integration authority.",
+      "testRefs": [
+        "S01",
+        "S06",
+        "S09",
+        "H01",
+        "P01",
+        "P02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "NOT_RUN inventory is not a runtime proof; C28/global/native integration acceptance remains outside67."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "45",
+        "59",
+        "60_successor",
+        "S0"
+      ],
+      "codeGroupRefs": [
+        "hosted_evidence",
+        "shared_dashboard_consumer",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.INV.01",
+      "text": "Encaminhar não aprova compra, não muda orçamento e não cria uma tarefa operacional fora de Hot Topics.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Selected existing Hot Topic/financial reads and updates preserve unrelated records; C12 review uses an existing conditioned choice without inventing a financial claim.",
+      "testRefs": [
+        "S01",
+        "S02",
+        "S06",
+        "H01",
+        "H02",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "This is not a positive forwarding/CREATE proof or complete procurement/budget cross-surface side-effect audit."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "S0",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "domain_commands",
+        "shared_dashboard_consumer",
+        "canonical_hot_topic_creation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.INV.02",
+      "text": "O contexto anexado respeita leitura e escrita atuais; conteúdo de talento restrito não é copiado automaticamente para uma ação mais ampla.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Read/write authority, same-principal scope and linked current source evidence gate private draft continuity and consumption.",
+      "testRefs": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "H03",
+        "H05",
+        "C01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Restricted talent-to-Hot-Topic copying and canonical forwarded context remain unqualified; saved arbitrary extraRefs without current case coverage are unavailable."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "65",
+        "S0",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer",
+        "canonical_hot_topic_creation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.QLT.01",
+      "text": "O resultado informa criada, já existente, recusada ou em conflito, com referência utilizável quando houver ação.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Real existing-record/draft denied/conflict states are observable, with usable canonical references in adjacent read/update flows.",
+      "testRefs": [
+        "S03",
+        "S05",
+        "H02",
+        "H05",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Full created/already-existing/denied/conflict result contract of the canonical forwarding port requires the external creator positive proof."
+      ],
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "67"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "shared_dashboard_consumer"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.QLT.02",
+      "text": "Correlação identifica a intenção explícita; igualdade de nomes de pessoas ou registros não serve como identidade.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Scoped source and private draft identity do not rely on matching display names or targets.",
+      "testRefs": [
+        "S03",
+        "S08",
+        "H02",
+        "U01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Canonical forwarding correlation is a separate explicit-intent obligation; these source/draft identities do not prove it."
+      ],
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "65",
+        "67"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "private_draft_dependency",
+        "authority_c17_c08"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.CMP.01",
+      "text": "Criação, reenvio, leitura, atualização e conclusão usam a mesma identidade canônica de ação.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Canonical existing record reads/updates/deletes and physical identity continuity are targeted.",
+      "testRefs": [
+        "S02",
+        "S03",
+        "S06",
+        "H01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Canonical CREATE, re-send and completion chain on the same action identity is not covered completely; creator atomicity remains external."
+      ],
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "67"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "domain_commands",
+        "confirmation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.CMP.02",
+      "text": "Há tratamento observável para ator sem capacidade, origem não legível, referência removida e versão concorrente.",
+      "status": "evidence_pending",
+      "coverage": "partial",
+      "mission67Obligation": "Current write/read denial, source removal/replacement and concurrent version are explicit for Dashboard source/draft consumers.",
+      "testRefs": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S11",
+        "H02",
+        "H03",
+        "H05",
+        "P01",
+        "P02",
+        "U01",
+        "U02"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "These source/consumer negatives do not qualify every invocation of the canonical forwarding port; its positive creation remains held."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "S0",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "confirmation",
+        "authority_c17_c08",
+        "shared_dashboard_consumer",
+        "canonical_hot_topic_creation"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.SUC.01",
+      "text": "Uma intenção reenviada produz uma única ação operacional e pode ser aberta no Hot Topics existente.",
+      "status": "external_owner_hold",
+      "coverage": "partial",
+      "mission67Obligation": "Existing Hot Topic can be opened through real canonical record navigation.",
+      "testRefs": [
+        "S06",
+        "E01",
+        "P01"
+      ],
+      "unprovedOrPreservedRemainder": [
+        "Exactly one canonical action after forwarded-intent retry remains unproved and cannot be inferred from preview or draft idempotency."
+      ],
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "65",
+        "67"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "authority_terminal60"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "selected_partial_evidence_pending"
+    },
+    {
+      "id": "WP02.T04.SUC.02",
+      "text": "O consumidor acompanha a conclusão pela referência original, sem manter um status operacional independente.",
+      "status": "preserved_not_requalified",
+      "coverage": "not_requalified",
+      "mission67Obligation": "Consumer canonical completion tracking remains unchanged.",
+      "testRefs": [],
+      "unprovedOrPreservedRemainder": [
+        "No selected test proves completion observed through the original ref with no independent operational status; creator identity prerequisite remains held."
+      ],
+      "responsibilityRefs": [
+        "67",
+        "S0",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation",
+        "domain_commands"
+      ],
+      "currentEvidence": {
+        "execution": "NOT_RUN",
+        "result": null,
+        "witness": null
+      },
+      "testRole": "supporting_context_only_not_literal_criterion_requalification"
+    }
+  ],
+  "confirmationScopeAnnex": {
+    "oracle": "CONFIRM-SCOPE",
+    "normativeSource": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S1-B.json",
+    "status": "partial_evidence_pending",
+    "implementation": "Observer/source and C08 fence only; no confirmation-registry completion claim.",
+    "branches": [
+      {
+        "id": "FEB_ONLY",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S09",
+          "C01"
+        ],
+        "limitation": "Same scope fingerprint/locked validity is targeted; no confirmation registry evaluated-version ledger, zero-review-request or zero-MyWork-item assertion.",
+        "normativeExpectation": {
+          "sameScopeFingerprint": true,
+          "state": "valid",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "newReviewRequests": 0,
+          "newMyWorkItems": 0,
+          "historicalAuditUnchanged": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "JAN_MATERIAL",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S09",
+          "C01"
+        ],
+        "limitation": "Material classification/old-fence refusal is targeted; creation of exactly one canonical review request and retry deduplication are not proven.",
+        "normativeExpectation": {
+          "sameScopeFingerprint": false,
+          "state": "stale",
+          "reason": "material-change",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "newCanonicalReviewRequests": 1,
+          "repeatRunAdditionalRequests": 0,
+          "historicalAuditUnchanged": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "DEPENDENCY_CHANGE",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S09",
+          "C01"
+        ],
+        "limitation": "Independent selected dependency fingerprint/classification is targeted; canonical review request creation is not proven.",
+        "normativeExpectation": {
+          "sameScopeFingerprint": false,
+          "state": "stale",
+          "reason": "dependency-change",
+          "newCanonicalReviewRequests": 1
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "RACE_MATERIAL",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S04",
+          "S09",
+          "H02",
+          "B01",
+          "P01"
+        ],
+        "limitation": "Locked source fence and contextual conflict retention are targeted; actual confirmation-registry commit race is not executed.",
+        "normativeExpectation": {
+          "confirmationCommand": "conflict",
+          "confirmationCommitted": false,
+          "draftPreserved": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "RACE_IRRELEVANT",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S09",
+          "C01"
+        ],
+        "limitation": "Irrelevant month change keeps the scope/fence valid; registry accepted command under fresh storage CAS and observed/evaluated ledger are not asserted.",
+        "normativeExpectation": {
+          "confirmationCommand": "accepted-only-after-scope-equality-check",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "state": "valid",
+          "claimReviewedFebruary": false
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "ACCESS_REVOKED",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S04",
+          "S05",
+          "S11",
+          "C01",
+          "P02"
+        ],
+        "limitation": "No values and invalidated fence/current view are targeted; protected confirmation audit and downstream review/MyWork dispatch are not asserted.",
+        "normativeExpectation": {
+          "state": "unavailable",
+          "reason": "access-unavailable",
+          "restrictedValuesExposed": false,
+          "restrictedFingerprintExposed": false,
+          "restrictedLinksExposed": false,
+          "newRequestToUnauthorizedActor": false,
+          "protectedAuditPreserved": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "REPLACED",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S03",
+          "S11",
+          "R01",
+          "C01"
+        ],
+        "limitation": "Old source cannot inherit new physical incarnation or values; confirmation registry audit/state transition is not directly qualified.",
+        "normativeExpectation": {
+          "state": "stale-or-unavailable-according-to-current-projection",
+          "valid": false,
+          "reasonWhenReadable": "source-replaced",
+          "idReuseRestoresValidity": false,
+          "historicalAuditUnchanged": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "SOURCE_REMOVED",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S03",
+          "S06",
+          "S11",
+          "P01"
+        ],
+        "limitation": "Real deletion, old-proof refusal and surviving unrelated records/signals are targeted; registry removal-readable reason and historical audit are not asserted.",
+        "normativeExpectation": {
+          "valid": false,
+          "state": "stale-if-removal-readable-otherwise-unavailable",
+          "reasonWhenReadable": "source-removed",
+          "historicalAuditUnchanged": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "ACCESS_RESTORED",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S05",
+          "S11"
+        ],
+        "limitation": "Fresh actual admission/reopen rechecks current evidence; old admission cannot resurrect; downstream confirmation registry cache behavior is not directly tested.",
+        "normativeExpectation": {
+          "automaticReuseFromCache": false,
+          "validOnlyIfSameIncarnationAndSameScope": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      },
+      {
+        "id": "ABSENT_VS_ZERO",
+        "status": "evidence_pending",
+        "coverage": "partial",
+        "testRefs": [
+          "S10",
+          "H04"
+        ],
+        "limitation": "Real absent/zero projections and unchanged original observation are targeted; confirmation command/source-age/audit integration remains unqualified.",
+        "normativeExpectation": {
+          "absenceStillVisible": true,
+          "zeroStillDistinct": true,
+          "sourceAgeUnchanged": true,
+          "confirmationDoesNotFillData": true
+        },
+        "requiredConsumers": [
+          "WP08.T03",
+          "WP08.T04",
+          "WP09.T02",
+          "WP09.T03"
+        ],
+        "externalResponsibilityRefs": [
+          "S0",
+          "60_successor",
+          "65"
+        ]
+      }
+    ]
+  },
+  "historicalFindings": [
+    {
+      "id": "WP02-F04-new-draft-source-continuity",
+      "status": "evidence_pending",
+      "testRefs": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "H05",
+        "U01",
+        "U02"
+      ],
+      "priorEvidence": {
+        "id": "WP02-F04-new-draft-source-continuity",
+        "file": "write-scope-continuity-w9.md",
+        "detail": "Only write authority withdrawn changes scoped C17 incarnation while physical source/current read remain. Old UI cannot prove continuity, purges positive draft.",
+        "W": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+        "S": "7f9657d7217ba5ceccdbf09b9ed5ec0cf866169c",
+        "run": 43586466170,
+        "job": 132421925833,
+        "status": "FAIL",
+        "test": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+        "testFile": "test/product/wp02/host-workbench.test.ts",
+        "notObserved": "Unsaved operator wording,dirty=true,no-writes tail did not execute after message timeout",
+        "seam": "reauthorizeDraftSource(originalEvidenceRef) privately resolves persisted original scope, same principal and physical incarnation/no tombstone, current field access and current projection; final fence/egress required"
+      },
+      "currentClaim": "Named source, original F04 browser and new consumer scenarios are mapped with pending results. U01 adds saved-proposal/current-source recovery; U02 adds genuine interrupted delivery and inter-admission write/read withdrawal. The original positive F04 tail remains required."
+    },
+    {
+      "id": "WP02-F01-new-draft-outcome-lookup",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "65",
+        "60_successor",
+        "S0"
+      ],
+      "testRefs": [],
+      "currentClaim": "First committed private-draft save lost before draftRef needs authorized lookup by opaque original intent; selected apply-preview recovery does not prove this."
+    },
+    {
+      "id": "WP02-F02-CREATE-incarnation",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "S0",
+        "60_successor"
+      ],
+      "codeGroupRefs": [
+        "canonical_hot_topic_creation"
+      ],
+      "testRefs": [],
+      "currentClaim": "Canonical CREATE must bind targetIncarnation atomically; known C28 positive creation is action-create-identity-unavailable. A new explicit creator owner is required; neither48 nor60 automatically resumes."
+    },
+    {
+      "id": "WP02-F03/C12-reload",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "65",
+        "60_successor"
+      ],
+      "testRefs": [
+        "H01"
+      ],
+      "unselectedOriginalTitle": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "currentClaim": "H01 applies an existing choice with delayed response but no lost-response/reload recovery oracle; P02 checks legacy apply-preview, a different receipt path."
+    },
+    {
+      "id": "D06_DASHBOARD_CAPTURE_SCOPE_PAGE",
+      "status": "evidence_pending",
+      "testRefs": [
+        "C01",
+        "R01",
+        "R02",
+        "R03",
+        "H01",
+        "P01"
+      ],
+      "currentClaim": "Scope/page identity and historical paths have relevant regression coverage, but the exact Budget Overview captured-record/page fixture is not separately selected; old source PASS does not transfer."
+    }
+  ],
+  "knownEvidenceGaps": [
+    {
+      "id": "C06_REGISTRY",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "S0",
+        "60_successor",
+        "65"
+      ],
+      "detail": "Source observer classification does not prove confirmation registry observed/evaluated version ledger, exactly-one review request, MyWork behavior, audit preservation or actual confirmation command races."
+    },
+    {
+      "id": "NATIVE_RESIDENT_AM",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "S0",
+        "59",
+        "60_successor",
+        "45"
+      ],
+      "detail": "No native/MCP two-export parity, AM01-06, final8 selections, final reviews or C/G7/D/G8/global acceptance result is recorded."
+    },
+    {
+      "id": "SAVED_DRAFT_EXTRA_REFS",
+      "status": "evidence_pending",
+      "responsibilityRefs": [
+        "67",
+        "65",
+        "60_successor"
+      ],
+      "detail": "U01 targets the actual saved historical/active private proposal with the ordinary singleton target evidence plus a materially changed current source. Arbitrary additional sourceRefs outside current canonical case coverage still return unavailable; no generic grant or positive acceptance is claimed for that unsupported branch.",
+      "testRefs": [
+        "U01"
+      ]
+    },
+    {
+      "id": "HTTP_TRANSIENT_READ_UI",
+      "status": "evidence_pending",
+      "responsibilityRefs": [
+        "67",
+        "60_successor"
+      ],
+      "testRefs": [
+        "S05",
+        "H05",
+        "U02"
+      ],
+      "detail": "U02 now directly targets a completed real read whose delivery is interrupted, fresh recovery, changed write authority between first discovery and second private read, and actual denied-read outer purge. Source S05 targets abort/SQLite outage. Backend HTTP503/namespace drift and every saved/new draft combination remain unqualified; all new consumer results are evidence_pending."
+    },
+    {
+      "id": "PRIVATE_READ_C08_CONSUMER",
+      "status": "evidence_pending",
+      "responsibilityRefs": [
+        "67",
+        "60_successor"
+      ],
+      "testRefs": [
+        "S04",
+        "H02",
+        "H03",
+        "H05",
+        "U01",
+        "U02"
+      ],
+      "detail": "U01 exercises the full saved-proposal/current-source consumer success path over real C08 and U02 the authority transition path. They do not deterministically inject every mutation between full-snapshot capture, double cases.read and final locked egress. No source-to-consumer PASS transfer and no claim that unrelated-change conservative stale is a denial."
+    },
+    {
+      "id": "T04_CANONICAL_CREATE",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "S0",
+        "60_successor"
+      ],
+      "detail": "Current installed legacy Hot Topic creation/update/navigation do not substitute for atomic canonical forwarding CREATE with same-intent retry and physical incarnation."
+    },
+    {
+      "id": "COMPILER_INTERFACE",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "45",
+        "S0"
+      ],
+      "detail": "Only45 may settle the concrete compiler/guard interface for exact material. This map neither dispatches compiler checks nor treats a functional recipe as compiler-only authorization."
+    },
+    {
+      "id": "TARGET_INTEGRATION",
+      "status": "external_owner_hold",
+      "responsibilityRefs": [
+        "60_successor",
+        "59",
+        "48",
+        "S0"
+      ],
+      "detail": "faa30 docs end60 lease and retain C28 HOLD_NOT_RUN.67 can finish source draft PR/terminal handoff; target integration/requalification needs explicit successor authority and reconciled source releases."
+    }
+  ],
+  "executionAudit": {
+    "productTestsRun": 0,
+    "compilerChecksRun": 0,
+    "remoteCalls": 0,
+    "remoteWrites": 0,
+    "localProductEdits": 0,
+    "localArtifactWriteOnly": [
+      "criteria-review/mission67-criteria-map.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/mission67-criteria-map.json"
+    ],
+    "mechanicalValidationOnly": [
+      "JSON parses",
+      "78 unique exact canonical id/text pairs",
+      "All test/owner/code references resolve",
+      "28 test titles match reviewed local source files",
+      "Allowed classification statuses only"
+    ],
+    "resultReconciliation": "This review agent executed no tests. Root records actual hosted outcomes, including reported first installed attempts that failed before scenario assertions, in separate validation receipts; this map does not label those attempts PASS or transfer their outcome to new consumer tests."
+  },
+  "consumerColdReview": {
+    "execution": "NOT_RUN",
+    "scope": "Read-only static review against current authorized consumer postimages and same-session dependency snapshots. No remote calls, browser, tests or product edits.",
+    "files": {
+      "fixture": {
+        "localRead": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+        "sha256": "8d35dc4d0cb311da9e0a20931ab9cfff92389938ad45ef95bff104cf8c665280",
+        "gitBlobSha1": "d5ffdc24f23b20557613383d38cc03155e5e68c4"
+      },
+      "consumerTests": {
+        "localRead": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "sha256": "61ddfa7455cee7941543bf8b19136e22fb8b1ee92c9846f177db41faa081e7af",
+        "gitBlobSha1": "cd63e19210c01d7251e562ef135b554982a24be2"
+      },
+      "dashboardWorkbench": {
+        "localRead": "/workspace/scratch/d76689cc7e80/external/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "sha256": "104d9619daad6f54a3413420ba973458abbd80c56b30cf2d2e91ffd954e3f751",
+        "gitBlobSha1": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778"
+      },
+      "dashboardDecisions": {
+        "localRead": "/workspace/scratch/d76689cc7e80/external/apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "sha256": "5b53e463d81af387a1e4380b126e794f6d43fc66c164746035970d92c2b015a9",
+        "gitBlobSha1": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8"
+      },
+      "dashboardHttp": {
+        "localRead": "/workspace/scratch/d76689cc7e80/external/apps/cli/src/sucafina-product/dashboard-http.ts",
+        "sha256": "e59960793e19f64ce03bbab8d827ee0f6671b6ccf3e6b1bf63e2e3d197a958e3",
+        "gitBlobSha1": "13f808e8b5041e062451e15bd3f77432630c5a06"
+      },
+      "draftStoreDependency": {
+        "localRead": "/workspace/scratch/d76689cc7e80/base/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "sha256": "8f3b4354f9d56227dc20348c348ed08f3910a2d921de2eca213b94fea417be1f",
+        "gitBlobSha1": "16d06505a712b79b34289a322a898eca020c29e5"
+      },
+      "caseReadDependency": {
+        "localRead": "/workspace/scratch/d76689cc7e80/base/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "sha256": "4bab273136fee8ee51ed361e64fbcfe48d82c6f38dd8908a469561da1f17dd3c",
+        "gitBlobSha1": "034b6f7d24a0e968736e3a3d94e0bfff8f4613c6"
+      },
+      "outerShellPurgeDependency": {
+        "localRead": "/workspace/scratch/d76689cc7e80/test-review/current/modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+        "sha256": "f646cfa7da6b0950c28db3f4baed58cf3ea4d015a258ecf8a4c4809a95adf2a5",
+        "gitBlobSha1": "d297d35f336e499de3c9f88ca89a49d4ab0c9a7a"
+      },
+      "applicationDispatchDependency": {
+        "localRead": "/workspace/scratch/d76689cc7e80/test-review/current/modules/sucafina/Sucafinav1/runtime/application.ts",
+        "sha256": "e8e3f4390a9df5d98291021cfafee7dfc1c5896b67b47d642a2c0d683aef7c9a",
+        "gitBlobSha1": "f57e98d2e446730e6fd3c844650750c011132e36"
+      }
+    },
+    "findings": [
+      {
+        "id": "TEST_403_BODY_ABORT_RACE",
+        "status": "corrected_static_not_executed",
+        "observation": "The sf-access-revoked listener aborts all controllers, including the request whose403 headers triggered the event. Requiring BrowserResponse.json after that event can race aborted body delivery.",
+        "correctionVerified": "Current observeDenial performs genuine route.fetch and APIResponse.json before route.fulfill({response}); test separately requires browser403, genuine denied body and actual outer purge."
+      },
+      {
+        "id": "ENCLOSING_SELECT_LABEL_TEXT",
+        "status": "corrected_static_not_executed",
+        "observation": "A label wrapping a select can include option text in getByLabel matching. Root reported an installed scenario blocked by the analogous exact-label selector.",
+        "correctionVerified": "Current consumer test selects Registro para preservar through exact combobox role/name, preserving the real choice rather than weakening its assertion."
+      }
+    ],
+    "checks": [
+      {
+        "id": "CASE_VERSION",
+        "result": "no_static_defect_identified",
+        "detail": "These scenarios change preferences draft versions and canonical source data; they do not mutate DecisionCase.version. initialCaseRef version1 is therefore consistent with list/readCurrent/register. Canonical case.read allows current UI read by same id/incarnation; the draft write still requires exact current case version. This scenario does not qualify a case-version-advance branch."
+      },
+      {
+        "id": "GENUINE_ROUTE_RESPONSES",
+        "result": "no_static_defect_identified",
+        "detail": "Each fulfilled response is the actual APIResponse from route.fetch. Policy switches occur after the first real response has completed and before delivery, forcing a separate current admission for dashboard-draft-read; no synthetic positive or denied response is returned."
+      },
+      {
+        "id": "OUTER_PURGE_SELECTORS",
+        "result": "no_static_defect_identified",
+        "detail": "Workbench dispatches sf-access-revoked on non-mutation403; shell-state closes admission, queues a microtask to replace body with main[data-access-unavailable], clears history and removes workbench. Tests wait for that main and assert private text/selectors are absent. Array/object-safe history assertions accept the actual null state."
+      },
+      {
+        "id": "PRIVATE_PROPOSAL_CURRENT_SOURCE",
+        "result": "no_static_defect_identified",
+        "detail": "Saved draft changes active version1 to2 independently from canonical source. New route proves both old saved source references, returns active proposal metadata plus current authorized source fields, and UI compares two tables before checkbox enables replacing the write binding. Test expects version2/current evidence in the subsequent real write."
+      },
+      {
+        "id": "SELECTORS",
+        "result": "no_static_defect_identified",
+        "detail": "Buttons, status text and two table headings match current workbench. Registro para preservar uses exact combobox role/name to avoid embedded option text in an enclosing-label selector. The record selector remains usable in read-only state while capture is disabled; typed-field assertions are scoped to the unique workbench."
+      }
+    ],
+    "limitations": [
+      "Static consistency does not imply hosted execution succeeds or satisfy compiler45.",
+      "Test fixtures do not advance the case version, create additional sourceRefs or force a final-C08 private-state race.",
+      "HTTP read delivery interruption is distinct from a backend503; the latter is not represented by a fabricated response."
+    ]
+  }
+}

@@ -147,7 +147,7 @@ test("C06 actual absence and recorded zero remain distinct under the real source
 test("C06 real authority and source replacement cannot revive a previous observation or its locked fence", async () => {
   const f = await createDashboardProofFixture()
   try {
-    await f.read(async (context) => {
+    const proof = await f.read(async (context) => {
       const day = new Date(f.clock.at).toISOString().slice(0, 10)
       const fields = ["action", "owner", "due", "priority", "notes"]
       const issued = await f.records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "topic", fields, period: { start: day, end: day } }, context)
@@ -165,8 +165,21 @@ test("C06 real authority and source replacement cannot revive a previous observa
       expect(JSON.stringify(denied)).not.toContain("Private operator context")
       expect(await lockedFence(f, scope, original, context)).toBe(false)
       f.policies.owner.readable = true
-      expect((await f.observer.observe(scope, context)).state).toBe("available")
+      // Revalidation closes the old admission. Restoring policy cannot resurrect
+      // that request's lease; subsequent reads require a fresh real admission.
+      expect(await f.observer.observe(scope, context)).toEqual({ state: "access-unavailable", sourceVersion: 0 })
+      expect(await lockedFence(f, scope, original, context)).toBe(false)
+      expect(original).toEqual(originalBefore)
+      return { day, fields, target, scope, original, originalBefore }
+    })
 
+    await f.read(async (context) => {
+      const { day, fields, target, scope, original, originalBefore } = proof
+      const readmitted = available(await f.observer.observe(scope, context))
+      expect(readmitted.scopeFingerprint).toBe(original.scopeFingerprint)
+      expect(readmitted.sourceVersion).toBe(original.sourceVersion)
+      expect(readmitted.physicalIncarnation).toBe(original.physicalIncarnation)
+      expect(await lockedFence(f, scope, readmitted, context)).toBe(true)
       const removed = await f.command({ page: "Hot Topics & Actions", action: "delete", id: "topic", version: 0, values: {}, confirmed: true })
       expect(removed.status).toBe(200)
       expect((await f.observer.observe(scope, context)).state).not.toBe("available")
@@ -178,7 +191,9 @@ test("C06 real authority and source replacement cannot revive a previous observa
         return { commit: true, value: undefined }
       })
       const replaced = await f.observer.observe(scope, context)
-      expect(replaced.state).toBe("replaced")
+      // Replacement also supersedes the old scoped incarnation. An unknown old
+      // selection is unavailable; it must never acquire the replacement's values.
+      expect(replaced).toEqual({ state: "access-unavailable", sourceVersion: 0 })
       expect(JSON.stringify(replaced)).not.toContain("Replacement private context")
       expect(await lockedFence(f, scope, original, context)).toBe(false)
       const newSource = await f.records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "topic", fields, period: { start: day, end: day } }, context)

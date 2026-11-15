@@ -1,0 +1,203 @@
+{
+  "schema": "sf2h.mission67.hosted-run.v1",
+  "lane": "bun-domain-host",
+  "attempt": 1,
+  "status": "FAIL",
+  "W": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+  "Wtree": "b11fee7674c0c69cc58ebf58cde69a94bd048670",
+  "S": "56736466e7deb2973ac4f37540503da51057a8de",
+  "Stree": "a053369bbf0e49bbd4b86a55361490353da2c7b5",
+  "source": "eb9cafd10b6aacca4ab9a1de8615dbecebb06f1a",
+  "sourceTree": "ed0b2610d58363e08aba62a335dc111f5c9515c5",
+  "consumerTarget": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "Sucafinav1/test/product/wp02/signals-identity.test.ts",
+      "Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+      "Sucafinav1/test/product/wp02/confirmation.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "requestSha256": "7e47a7c4383a62e08d22d3953598d459250dbd9a0c81beb7c91edf8cccca37a6",
+  "branch": "ci-run-linux-astra-wp67-0b00fa5b-7e47a7c4-01",
+  "run": 43668733882,
+  "job": 132673813569,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668733882",
+  "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668733882/job/132673813569",
+  "headShaVerified": true,
+  "WSdiff": [
+    {
+      "path": ".ci-run.json",
+      "sha": "ca5060602d84e8f84a4e03df416a3ca1b4356315"
+    }
+  ],
+  "counts": {
+    "pass": 23,
+    "fail": 1,
+    "expect": 484,
+    "files": 9,
+    "seconds": 50.82
+  },
+  "omni": {
+    "verdict": "pass",
+    "declaredTests": 4,
+    "realSpawns": 4,
+    "delegated": 0
+  },
+  "runtime": {
+    "bun": "1.3.14",
+    "node": "24.22.2",
+    "playwright": "1.59.1",
+    "chromium": "157.0.8103.50",
+    "browserBoundary": "AppProcess/omni",
+    "transport": "playwright-unix-pipe-node-websocket"
+  },
+  "tests": [
+    {
+      "status": "pass",
+      "title": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "durationMs": 29260.95
+    },
+    {
+      "status": "pass",
+      "title": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "durationMs": 12383.09
+    },
+    {
+      "status": "pass",
+      "title": "Dashboard discovery fences participant removal after options were assembled",
+      "durationMs": 72.74
+    },
+    {
+      "status": "pass",
+      "title": "Dashboard discovery resolves real ticket months and Executive signal records",
+      "durationMs": 417.24
+    },
+    {
+      "status": "pass",
+      "title": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "durationMs": 1935.09
+    },
+    {
+      "status": "pass",
+      "title": "C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority",
+      "durationMs": 1054.4
+    },
+    {
+      "status": "pass",
+      "title": "signals omit ambiguous IDs within each authorized collection only",
+      "durationMs": 0.81
+    },
+    {
+      "status": "pass",
+      "title": "unavailable pages emit no signals",
+      "durationMs": 0.15
+    },
+    {
+      "status": "pass",
+      "title": "executive signals open authorized canonical records and fail closed without evidence",
+      "durationMs": 177.68
+    },
+    {
+      "status": "pass",
+      "title": "historical record reissue permits material changes and a new day but rejects replacement",
+      "durationMs": 141.09
+    },
+    {
+      "status": "pass",
+      "title": "historical dated entries keep the original competence after the observation year changes",
+      "durationMs": 40.83
+    },
+    {
+      "status": "pass",
+      "title": "historical security captures revalidate current observation fields after the year changes",
+      "durationMs": 65.46
+    },
+    {
+      "status": "pass",
+      "title": "Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation",
+      "durationMs": 2616.5
+    },
+    {
+      "status": "pass",
+      "title": "WP02 Attention retains numeric risk and contract identities through canonical reads, deletion and SQLite reopen",
+      "durationMs": 468.97
+    },
+    {
+      "status": "pass",
+      "title": "WP02 signal UTC boundaries match canonical evidence for offset clocks and preserve the ninety-day rule",
+      "durationMs": 168.98
+    },
+    {
+      "status": "pass",
+      "title": "WP02 ambiguous normalized signal identities are suppressed and cannot commit as durable C17 identities",
+      "durationMs": 154.04
+    },
+    {
+      "status": "pass",
+      "title": "WP02 F04 retains read continuity when writing is withdrawn, with no domain effect or substituted grant",
+      "durationMs": 78.25
+    },
+    {
+      "status": "pass",
+      "title": "WP02 private source proof follows current material through SQLite reopen while the original write version stays unchanged",
+      "durationMs": 86.2
+    },
+    {
+      "status": "pass",
+      "title": "WP02 rejects a different authenticated principal, tampered scope and delete/recreate without deleting unrelated records",
+      "durationMs": 161.09
+    },
+    {
+      "status": "pass",
+      "title": "WP02 private read fence rejects late source mutation and logout without reusing an earlier observation",
+      "durationMs": 108.34
+    },
+    {
+      "status": "pass",
+      "title": "WP02 interrupted requests and unavailable SQLite are recoverable reads, while actual read revocation is denied",
+      "durationMs": 80.48
+    },
+    {
+      "status": "pass",
+      "title": "C06 real admissions retain the original observation while monthly material and dependencies advance independently",
+      "durationMs": 435.77
+    },
+    {
+      "status": "pass",
+      "title": "C06 actual absence and recorded zero remain distinct under the real source projection and a durable domain command",
+      "durationMs": 202.17
+    },
+    {
+      "status": "fail",
+      "title": "C06 real authority and source replacement cannot revive a previous observation or its locked fence",
+      "durationMs": 68.62
+    }
+  ],
+  "failure": {
+    "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+    "line": 168,
+    "expected": "available",
+    "received": "access-unavailable",
+    "classification": "test oracle incorrectly reused an invalidated admission",
+    "notExecuted": "Later delete/recreate/logout assertions in this test",
+    "next": "Assert invalidated context remains unavailable; acquire a new actual admission. Rerun on a new W/S without weakening the negative."
+  },
+  "limitations": [
+    "Whole run remains FAIL; individual PASS is scoped to this exact W/S.",
+    "Not installed CLI proof; not C28 integrated proof; not compiler/typecheck/guards; not C06 confirmation-registry write proof.",
+    "No global acceptance inherited."
+  ]
+}

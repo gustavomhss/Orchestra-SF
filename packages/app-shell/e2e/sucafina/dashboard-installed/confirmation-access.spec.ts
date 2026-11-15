@@ -1,6 +1,6 @@
 import { expect, test, type Request } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
-import { addOwner, command, confirmDialog, dashboardUrl, monthlyForm, openForm, openMonth } from "./support"
+import { addOwner, command, confirmDialog, dashboardUrl, monthlyForm, observeDashboardRequests, openForm, openMonth } from "./support"
 
 test.use({ trace: "off" })
 
@@ -14,6 +14,7 @@ test("installed Dashboard confirms exact monthly changes and purges late results
   page.on("pageerror", (error) => errors.push(error.message))
   const reader = await page.context().newPage()
   reader.on("pageerror", (error) => errors.push(error.message))
+  const transport = observeDashboardRequests(info, [{ page, label: "primary" }, { page: reader, label: "reader" }])
   const url = dashboardUrl(installation.origin, "OPEX Detail")
   let owner = "", unrelated = "", applications = 0
   const lateDelivery: { release?: () => void } = {}
@@ -124,7 +125,7 @@ test("installed Dashboard confirms exact monthly changes and purges late results
       expect(late.status).toBe(200)
       expect(late.previewRef).toBeTruthy()
       await expect(year.getByLabel("Year amount", { exact: true })).toHaveValue("777")
-      const signedOut = reader.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/auth/logout")
+      const signedOut = reader.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/auth/logout", { timeout: 15_000 })
       await reader.getByRole("button", { name: "Sign out", exact: true }).click()
       expect((await signedOut).status()).toBe(204)
       await expect(reader).toHaveURL(`${installation.origin}/sucafina/auth/login`)
@@ -155,6 +156,6 @@ test("installed Dashboard confirms exact monthly changes and purges late results
   } finally {
     lateDelivery.release?.()
     page.off("request", countApplications)
-    try { await reader.close() } finally { await installation.stop() }
+    try { await transport() } finally { try { await reader.close() } finally { await installation.stop() } }
   }
 })
