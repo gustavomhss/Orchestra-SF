@@ -1,0 +1,96 @@
+{
+  "schema": "sf2h.pre-r01.recheck.v1",
+  "mission": 146,
+  "epoch": "pre-r01-e1-browser146",
+  "material": "8094e599e3d18609e269548d24619a3246fbc735",
+  "material_tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+  "mode": "GITHUB_PINNED_BLOBS_STATIC_ONLY",
+  "legacy_issues": [
+    {
+      "prior": [
+        "PR100/R1-91-001"
+      ],
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+      "preimage": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+      "current_blob": "d1d12abb1a4c460bdcd9ccf26353f7d0b4a74afb",
+      "lines": "40-70,110-159,186-225",
+      "source_state": "CORRECTION_PRESENT_CODE_ONLY",
+      "details": "Opaque owner-scoped key persisted before POST to browser storage; exact original key checked via authorized GET; loss/reload no automatic replay with new key",
+      "remaining": "Installed lost-ACK/reload/restart, principal scope/access revocation and one-effect evidence NOT_RUN",
+      "owner": "original case/UI writer; 132 integration; 150 proof"
+    },
+    {
+      "prior": [
+        "PR100/R1-91-002",
+        "PR97/F92-EGRESS-01"
+      ],
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "preimage": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+      "current_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "lines": "705-813, especially 784-806",
+      "source_state": "CORRECTION_PRESENT_CODE_ONLY",
+      "details": "Re-authenticate current actor after generation; reject role change (403), source digest mismatch (409) before byte emission; matches prior PR86 proposed blob",
+      "remaining": "Installed paused export/revoke/source-update race, no private bytes and positive control on same final C NOT_RUN",
+      "owner": "legacy export owner; 132 compose; 150 proof"
+    },
+    {
+      "prior": [
+        "PR97/F92-FIRSTSAVE-03"
+      ],
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "preimage": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a",
+      "current_blob": "d880fe5a5f7fd3c9c4fa249dbc374620a39a43a7",
+      "lines": "131-189",
+      "source_state": "SOURCE_PRODUCER_PRESENT_COMPOSITION_AND_PROOF_PENDING",
+      "details": "lookupFirstSave reads original transaction key/receipt and revalidates source, current case, authority; equals proposed producer SHA",
+      "remaining": "Full consumer route, final-C frozen proof, first-save lost ACK/reload/restart/revocation still NOT_RUN",
+      "owner": "first-save producer+UI consumer; 132 compose; 150 proof"
+    },
+    {
+      "prior": [
+        "PR97/F92-PURE-02"
+      ],
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "preimage": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+          "current_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+          "lines": "58,89,169"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+          "preimage": "790e7c98820df61306ad67bd5897b1301118d335",
+          "current_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+          "lines": "50"
+        }
+      ],
+      "source_state": "UNCHANGED_OPEN_STATIC",
+      "details": "WP14 files still invoke state.transaction within originally identified pure boundary",
+      "remaining": "Owner design repair and same-C acceptance, no source fix observed",
+      "owner": "WP14/WP10 writer; 132 integration"
+    },
+    {
+      "prior": [
+        "PR97/F92-C10-04"
+      ],
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "preimage": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+      "current_blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+      "source_state": "UNCHANGED_PROOF_GAP",
+      "details": "Existing source blob unchanged; no proof promotion from historic nonidentical snapshot",
+      "remaining": "All numeric/permission current C gates NOT_RUN",
+      "owner": "financial oracle owner; 132; 150"
+    }
+  ],
+  "new_native_findings_recheck": {
+    "findings_ref": "FINDINGS-146.json",
+    "source_sha": "04bf1711d4ccbed43e7b2bc84d1499ceffefb315",
+    "postsource_sha": "8094e599e3d18609e269548d24619a3246fbc735",
+    "material_delta": "04bf->8094 changes docx/office sources and receipts only; none of six cited source paths changed",
+    "verified_fixed": 0,
+    "source_status": "STILL_OPEN_SOURCE_STATIC",
+    "runtime_validation": "NOT_RUN"
+  },
+  "existing_review_dedup": "PR100/97/98 issue identities preserved, not repeated as new F146",
+  "release_state": "NOT_APPROVED"
+}
