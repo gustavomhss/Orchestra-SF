@@ -27,7 +27,7 @@ import "./frame.css"
 export type {
   SfAction, SfChartFrameProps, SfContextBarProps, SfCopyKey, SfCoverage,
   SfDensity, SfDisplayValue, SfLayoutMode, SfMessage, SfPageFrameProps,
-  SfPlotSeries, SfRunStateProps, SfStatePanelProps, SfText, SfUiState,
+  SfPlotSeries, SfRunStateProps, SfStatePanelProps, SfText, SfUiState, SfUnit,
 } from "./types"
 
 // W is the observed *usable content width* after the shell sidebar and page insets.
