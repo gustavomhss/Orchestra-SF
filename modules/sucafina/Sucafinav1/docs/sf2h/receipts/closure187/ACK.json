@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.closure187.ack.v1",
+  "mission": 187,
+  "order": "F04",
+  "epoch": "closure-e1-browser187",
+  "status": "ACK_AUTHORING",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w05",
+  "pr": 120,
+  "expected_head": "d300e495d309c1083a35e34755b04cf3c6f06ae5",
+  "confirmed_head": "d300e495d309c1083a35e34755b04cf3c6f06ae5",
+  "confirmed_tree": "34d011a67586ec42802066f68d6d71fe4c27054e",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/S0-FENCE.json",
+    "blob": "203d4377b409879edc71fbebc4ea86dd0e04236e",
+    "previous_epoch": "ux-native-w05-e2",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_PACKET_PATHS"
+  },
+  "actor": {
+    "github_connection": "gustavomhss",
+    "github_connection_is_session_identity": false,
+    "effective_model": "GPT-6",
+    "requested_label": "Astra",
+    "session_id": null,
+    "session_id_status": "NOT_EXPOSED"
+  },
+  "input_sha": {
+    "package_commit": "8100bdc01566bf88532f2b497690cec3c84b551c",
+    "package_blob": "38e97b695af1db7d5bb31fa68dcdeeced297cc73",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "source_base": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "previous_artifact_blob": "3c873187006beb458a714ed8ed75f3dc662f7c96"
+  },
+  "observed_source_blobs": {
+    "fixture.ts": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+    "fixture/corpus.ts": "44826d9003eb1f1c1f5cfa12c8d4da73f74d4c07",
+    "fixture/scratch.ts": "75181ca2d425dd71b9fb032773be16e48883c775",
+    "fixture/readiness.ts": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+    "fixture/response-faults.ts": "abfa55b1e87622ecee4fdbb1ca962b35039dd326",
+    "fixture/selection.ts": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+    "test-browser/fixture/selection.test.ts": "c4c4db3c8542f1cda9e83afad026266335e4e141"
+  },
+  "permissions": {
+    "write_paths": [
+      "packages/app-shell/e2e/sucafina/native/fixture/**",
+      "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "packages/app-shell/test-browser/sucafina-native/fixture/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/**"
+    ],
+    "other_owner_paths": "NO_WRITE",
+    "same_pr": true,
+    "integrator": 162
+  },
+  "execution": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "build": "NOT_RUN",
+    "desktop": "NOT_RUN_D01",
+    "no_local_execution": true,
+    "global_release": false
+  },
+  "validity": "ACK only; not a readiness or product proof"
+}
