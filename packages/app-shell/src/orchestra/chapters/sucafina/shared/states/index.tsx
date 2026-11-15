@@ -128,7 +128,7 @@ export function SfRunState(props: SfRunStateProps): JSX.Element {
           aria-live={active() ? "off" : "polite"}
         >{t(sfCommonKey(RUN_LABELS[props.state]))}</span>
       </header>
-      <Show when={props.modelSession}>
+      <Show when={props.identity.kind === "run" ? props.modelSession : undefined}>
         {(session) => (
           <p class="sf-run-model">
             <SfTextValue value={session().modelLabel} />

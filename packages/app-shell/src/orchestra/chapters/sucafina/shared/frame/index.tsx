@@ -172,12 +172,10 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
             </nav>
           </Show>
           <Show when={props.secondaryActions.length > 0}>
-            <div class="sf-secondary-actions" role="group" aria-label={t(sfCommonKey("sf.common.showDetails"))}>
+            {/* Keep secondary actions visible and keyboard reachable at every width.
+                COPY-01 has no "More actions" key; do not mislabel them as "Show details". */}
+            <div class="sf-secondary-actions">
               <div class="sf-secondary-inline">{secondary()}</div>
-              <details class="sf-secondary-menu">
-                <summary>{t(sfCommonKey("sf.common.showDetails"))}</summary>
-                <div class="sf-secondary-menu-content">{secondary()}</div>
-              </details>
             </div>
           </Show>
           <div class="sf-frame-body" data-sf-content={props.layout}>
@@ -237,9 +235,13 @@ export function SfContextBar(props: SfContextBarProps): JSX.Element {
                 aria-describedby={group.reason ? `sf-locked-${id}-${group.control}` : undefined}
                 onChange={(event) => {
                   const optionId = event.currentTarget.value
-                  if (group.reason || optionId === group.selection?.optionId) return
-                  if (group.options.some((option) => option.id === optionId && option.available))
+                  if (!group.reason && optionId !== group.selection?.optionId &&
+                      group.options.some((option) => option.id === optionId && option.available)) {
                     props.onRequestChange({ control: group.control, optionId })
+                  }
+                  // The owner must admit the request before a selection changes.
+                  // Never leave an optimistic native <select> showing another context.
+                  event.currentTarget.value = group.picked?.id ?? ""
                 }}
               >
                 <Show when={!group.picked}>
@@ -273,12 +275,13 @@ export function SfContextBar(props: SfContextBarProps): JSX.Element {
 export function SfChartFrame(props: SfChartFrameProps): JSX.Element {
   const { t } = useSfPresentation()
   const id = createUniqueId()
+  const privateState = () => props.state === "denied" || props.state === "session-expired"
   return (
     <section class="sf-chart-frame" data-sf-chart-state={props.state} aria-labelledby={`sf-chart-${id}`}>
       <header class="sf-chart-header">
         <h2 id={`sf-chart-${id}`}>{t(props.titleKey)}</h2>
         <p>{t(props.questionKey)}</p>
-        <Show when={props.context.length > 0}>
+        <Show when={!privateState() && props.context.length > 0}>
           <dl class="sf-chart-context">
             <For each={props.context}>
               {(entry) => (

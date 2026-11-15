@@ -145,6 +145,30 @@ if (process.env.SF_F03_DOM !== "1") {
       select.value = "last"
       select.dispatchEvent(new Event("change", { bubbles: true }))
       expect(changes).toEqual(["last"])
+      // A selection change is a request; without owner acceptance the current
+      // control must keep displaying the authorized option.
+      expect(select.value).toBe("this")
+    } finally { screen.close() }
+  })
+
+  test("denied chart does not expose its previous owner's context or SVG", () => {
+    const screen = mount(() => createComponent(frame.SfChartFrame, {
+      titleKey: key("sf.common.currentSource"),
+      questionKey: key("sf.common.partial"),
+      context: [{ label: message("sf.common.source"), value: { kind: "data", text: "PRIVATE_CONTEXT" } }],
+      coverage: emptyCoverage,
+      series: [],
+      table: { caption: message("sf.common.currentSource"), columns: [], rows: [] },
+      selection: null,
+      state: "denied",
+      onSelect: () => { throw new Error("unauthorized select") },
+      onOpenSource: () => { throw new Error("unauthorized source") },
+      children: document.createTextNode("PRIVATE_CHART"),
+    }))
+    try {
+      expect(screen.host.textContent).not.toContain("PRIVATE_CONTEXT")
+      expect(screen.host.textContent).not.toContain("PRIVATE_CHART")
+      expect(screen.host.textContent).not.toContain("Partial coverage")
     } finally { screen.close() }
   })
 

@@ -181,12 +181,11 @@
   .sf-page-frame .mx-heading h1 { font-size: var(--orchestra-font-size-2xl); }
   .sf-page-frame .mx-heading > div:first-child { flex-basis: auto; }
   .sf-page-frame .mx-heading > div:last-child .sf-action { inline-size: 100%; }
-  .sf-tabs-inline, .sf-secondary-inline { display: none; }
+  .sf-tabs-inline { display: none; }
   .sf-tabs-compact { display: flex; gap: 8px; align-items: center; justify-content: space-between; min-inline-size: 0; }
-  .sf-secondary-menu { display: block; inline-size: 100%; }
   .sf-tabs-menu-content { flex-direction: column; align-items: flex-start; }
-  .sf-secondary-menu-content { flex-direction: column; align-items: stretch; }
-  .sf-secondary-menu-content .sf-action, .sf-secondary-menu-content button { inline-size: 100%; }
+  .sf-secondary-inline { flex-direction: column; align-items: stretch; inline-size: 100%; }
+  .sf-secondary-inline .sf-action, .sf-secondary-inline button { inline-size: 100%; }
   .sf-secondary-actions { justify-content: stretch; }
   .sf-context-control { flex-basis: 100%; }
   .sf-page-context-item { flex: 1 1 100%; }
