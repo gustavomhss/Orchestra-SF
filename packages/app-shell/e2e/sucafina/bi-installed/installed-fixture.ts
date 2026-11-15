@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from "@playwright/test"
+import { expect, type Locator, type Page, type Request, type Response } from "@playwright/test"
 import { randomUUID } from "node:crypto"
 import { asRecord, caseIdentity, clickCommand, enterWorkbench, fillDecision } from "../decisions-support/journey"
 
@@ -320,13 +320,67 @@ async function addLine(page: Page, name: string, amount: number, actorId: string
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
   await expect(button).toBeEnabled()
-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
-  await button.click()
-  const response = await pending
-  expect(response.status()).toBe(200)
-  expect(response.headers()["content-type"]).toContain("application/json")
-  expect(asRecord(await response.json()).ok).toBe(true)
-  observations.push({ stage: "planner-command", action, httpStatus: response.status() })
+  const intent = await button.evaluate((element) => {
+    const form = element.closest<HTMLFormElement>("form[data-command]")
+    if (!form) throw new Error("Planner command form is unavailable")
+    return { page: form.dataset.page, action: form.dataset.command, record: form.dataset.record ?? "", version: form.dataset.version }
+  })
+  expect(intent.action).toBe(action)
+  // runtime/ui.form always supplies data-version; screen-shell serializes its
+  // numeric value. An absent token is not an equivalent command or safe replay.
+  expect(intent.version, "Planner command form must expose its canonical version token").toMatch(/^(0|[1-9]\d*)$/)
+  expect(Number.isSafeInteger(Number(intent.version))).toBe(true)
+  const observed: { response?: Response; failure?: string; unknown: boolean } = { unknown: false }
+  const matches = (request: Request) => {
+    if (request.method() !== "POST" || new URL(request.url()).pathname !== "/sucafina/planner") return false
+    try {
+      const payload: unknown = request.postDataJSON()
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false
+      const body = payload as Record<string, unknown>
+      return body.action === action && body.page === intent.page && (body.id ?? "") === intent.record &&
+        typeof body.version === "number" && String(body.version) === intent.version
+    } catch { return false }
+  }
+  const onResponse = (response: Response) => {
+    if (!matches(response.request())) return
+    observed.response = response
+    observations.push({ stage: "planner-command-response", ...intent, httpStatus: response.status(), contentType: response.headers()["content-type"] ?? null })
+  }
+  const onFailed = (request: Request) => {
+    if (!matches(request)) return
+    observed.failure = request.failure()?.errorText ?? "request-failed"
+    observations.push({ stage: "planner-command-request-failed", ...intent, failure: observed.failure })
+  }
+  page.on("response", onResponse)
+  page.on("requestfailed", onFailed)
+  try {
+    await button.click()
+    // R4 proved that the shell can abort this request at 10s without receiving
+    // headers. A response-only wait would then consume the entire 180s test.
+    // Observe the real terminal network/UI state; never retry this mutation.
+    await expect.poll(async () => {
+      if (observed.failure) return "request-failed"
+      if (observed.response) return "response"
+      observed.unknown = await page.locator("form[data-command]").evaluateAll((forms, expected) => forms.some((element) => {
+        const form = element as HTMLFormElement
+        return form.dataset.page === expected.page && form.dataset.command === expected.action &&
+          (form.dataset.record ?? "") === expected.record && form.dataset.version === expected.version && form.dataset.resultUncertain === "true"
+      }), intent)
+      return observed.unknown ? "outcome-unknown" : "pending"
+    }, { message: `Planner ${intent.page}/${action} must produce a response or an explicit transport/UI outcome`, timeout: 15_000 }).not.toBe("pending")
+    if (observed.failure || observed.unknown) {
+      observations.push({ stage: "planner-command-unconfirmed", ...intent, outcome: observed.failure ? "request-failed" : "outcome-unknown", retried: false })
+      throw new Error(`Planner ${intent.page}/${action} was not confirmed (${observed.failure ?? "UI outcome unknown"}); the command was not resent.`)
+    }
+    const response = observed.response!
+    expect(response.status()).toBe(200)
+    expect(response.headers()["content-type"]).toContain("application/json")
+    expect(asRecord(await response.json()).ok).toBe(true)
+    observations.push({ stage: "planner-command", action, httpStatus: response.status() })
+  } finally {
+    page.off("response", onResponse)
+    page.off("requestfailed", onFailed)
+  }
 }
 
 async function readControls(page: Page, origin: string, reference: string, source?: string) {
