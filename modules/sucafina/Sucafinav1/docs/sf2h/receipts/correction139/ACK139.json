@@ -1,0 +1,47 @@
+{
+  "schema": "sf2h.correction-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 139,
+  "title": "Tabela S01 — JSX válido",
+  "status": "ACK_PUBLISHED_AUTHORING_PREFLIGHT",
+  "actor": "ChatGPT using authorized GitHub connector",
+  "actual_model": "GPT-6",
+  "session_id": "not-exposed",
+  "fresh_session": true,
+  "branch": "sf-ux-w06",
+  "pr": 125,
+  "lease_epoch": "ux-native-w06-e2",
+  "previous_epoch": "ux-native-w06-e1",
+  "previous_future_authority": "REVOKED_BY_S0",
+  "head_before_ack": "fa7a4d2f51b10d47668406b2bc3bb2f91895b1a9",
+  "tree_before_ack": "6c866969f33fa737f606d1747fd5a7158be2bab1",
+  "s0_fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/S0-FENCE.json",
+    "blob": "12fd8c2df494ca090b59afb4ee64fd2658c36a50",
+    "commit": "fa7a4d2f51b10d47668406b2bc3bb2f91895b1a9"
+  },
+  "packet": {
+    "commit": "40d425d6727dd9672a1f2a5830da03e59252cdfd",
+    "blob": "9a21fccf46f16e653430a2c708ae72c73534bec6"
+  },
+  "checked_preimages": {
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+    "packages/app-shell/test-browser/sucafina-native/s01.test.ts": "f0323b6b0711f7b034686214b1371747351a492d"
+  },
+  "authorization": {
+    "write_paths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+      "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/**"
+    ],
+    "protected": "All other paths; only 132 integrates, 128 compiles/generates SDK, 129 runs CI",
+    "no_reset_force_merge_deploy_local_tests": true,
+    "goal": "paused",
+    "global_release": false
+  },
+  "task_state": "AUTHORING_NOT_YET_QUALIFIED",
+  "integrator": 132,
+  "compiler": 128,
+  "product_ci": 129,
+  "observed_old_actor_activity_after_fence": "none-at-ACK-head; no runtime termination claimed"
+}
