@@ -1,0 +1,122 @@
+{
+  "schema": "sf2h.product-ci129.findings.v1",
+  "mission": 129,
+  "repo": "gustavomhss/Orchestra-SF",
+  "global_release": false,
+  "inherited_open": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ci-after-c53-120/RECONCILED-QUEUE-120.json",
+  "outstanding": [
+    {
+      "id": "C58-117-TIMEOUTS",
+      "run": 43726371640,
+      "job": 132849072764,
+      "S": "00a4fd99a2b8db196bf5011ceac5822d31526491",
+      "finding": "119 PASS / 5 FAIL: 3 cooperative deadlines 165000ms BI10x2 mixedx1, 2 Bun timeouts 180000ms M69",
+      "owner": "PR113",
+      "comment": 6898001148,
+      "status": "OPEN_CAUSAL_INVESTIGATION"
+    },
+    {
+      "id": "C64-A02-PLANNER",
+      "run": 43738115971,
+      "job": 132885115197,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "packages/schema/src/sucafina/planner.ts:15 Schema.isBetweenLength undefined -> spec import error",
+      "owner": "PR116",
+      "comment": 6898026590,
+      "status": "FAIL"
+    },
+    {
+      "id": "C64-A04-DECISIONS",
+      "run": 43738115971,
+      "job": 132885115197,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "packages/schema/src/sucafina/decisions/source-contracts.ts:16:262 Unexpected > parse; zero Decisions assertions executed",
+      "owner": "PR135",
+      "comment": 6898027071,
+      "status": "FAIL"
+    },
+    {
+      "id": "C64-A05-PORTFOLIO",
+      "run": 43738115971,
+      "job": 132885115197,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "portfolio.test.ts:37,54,68 excess property/strict refusal not rejected; 4PASS/3FAIL in A05",
+      "owner": "PR134",
+      "comment": 6898027474,
+      "status": "FAIL"
+    },
+    {
+      "id": "C64-F03-FRAME",
+      "run": 43738907064,
+      "job": 132887516559,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "page-frame.test.ts nested 1PASS/7FAIL; Platform context must be used within context provider",
+      "owner": "PR129",
+      "comment": 6898154158,
+      "status": "FAIL"
+    },
+    {
+      "id": "C64-S01-TABLE",
+      "run": 43738907064,
+      "job": 132887516559,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "shared/table/index.tsx:240:30 Babel UnwrappedAdjacentJSXElements, nested browser lane aborted",
+      "owner": "PR125",
+      "comment": 6898154672,
+      "status": "FAIL"
+    },
+    {
+      "id": "C64-S02-MONTHLY",
+      "run": 43738907064,
+      "job": 132887516559,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "s02.test.ts:202 range anchor expected row-r1 received row-r2 under Shift+ArrowDown, 9PASS/1FAIL nested",
+      "owner": "PR124",
+      "comment": 6898155134,
+      "status": "FAIL"
+    },
+    {
+      "id": "C64-S05-COLLAB",
+      "run": 43738907064,
+      "job": 132887516559,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "s05.test.ts five cases fail Platform context outside provider; F03 upstream same error; diagnose shared fixture",
+      "owner": "PR119",
+      "comment": 6898155695,
+      "status": "FAIL"
+    },
+    {
+      "id": "C64-APP-SHELL-REQUEST",
+      "run": 43738654236,
+      "job": 132886763986,
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "first Bun request missing ./ path prefix -> selected no tests; corrected request S45d23ab9 run43738907064",
+      "owner": "129",
+      "status": "REQUEST_CORRECTED_NOT_PRODUCT_FAIL"
+    },
+    {
+      "id": "WP01-BROWSER-ORDER",
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "previous_run": 43724652351,
+      "finding": "C54 same ordered args did not enforce startup->consumers->lifecycle; shared pool finalizer ran before consumer",
+      "owner": "PR117",
+      "comment": 6898001615,
+      "status": "HOLD_NO_DISPATCH"
+    },
+    {
+      "id": "NATIVE_INSTALLED",
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "finding": "I00 canonical codecs, host/desktop/real actors, Q01/Q02 not ready, cannot certify installed",
+      "owner": "PR65",
+      "status": "HOLD_NO_DISPATCH"
+    }
+  ],
+  "release_gates": [
+    "Q01/Q02 installed",
+    "C64 hosted compiler by128",
+    "I00 host authoritative codecs and principals",
+    "120 historical WP and downstream",
+    "3 FINAL independent",
+    "no dev merge/deploy/Goal"
+  ]
+}

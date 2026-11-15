@@ -1,0 +1,189 @@
+{
+  "schema": "sf2h.product-ci129.requests.v1",
+  "mission": 129,
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "lease": "product-ci-e2-browser129",
+  "workflow": ".github/workflows/test-ci.yml",
+  "operating_system": "ubuntu-24.04",
+  "source_snapshot": "121/122/125+120 dedup",
+  "dedup_key": "W/material tree + ordered args + runner/OS/config/env + workflow/runtime/fixtures",
+  "snapshots": [
+    {
+      "id": "C62-CREATION-HTTP121",
+      "W": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+      "tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+      "S": "e35a701571949660a3b54bce462fce686c5026ec",
+      "S_tree": "f89c72fa2a3886f5eb3de23269f998446e80a8ec",
+      "request_blob": "a22fecd1e56257c487e387a00c196eee517c2e50",
+      "branch": "ci-run-linux-sf129-c62-creation-http-1",
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "env": {},
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+        "Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts"
+      ],
+      "changed_files": [
+        ".ci-run.json"
+      ],
+      "run": 43737725978
+    },
+    {
+      "id": "C62-REPORTS122",
+      "W": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+      "tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+      "S": "ac781faf2c9f4b5982179eae5a9aa73a02022562",
+      "S_tree": "e6d5247b30444ce39070f1596582c2cbf51b1587",
+      "request_blob": "e39a9312f9aad75f38a3da2daea81bb6bf810604",
+      "branch": "ci-run-linux-sf129-c62-reports122-1",
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "env": {},
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+        "Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts"
+      ],
+      "changed_files": [
+        ".ci-run.json"
+      ],
+      "run": 43737735283
+    },
+    {
+      "id": "C64-NATIVE-ADAPTERS",
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+      "S": "3eec4c810a2a8d0c03e28d4abf60e1f582fe335f",
+      "S_tree": "1b551d9a8eb4796ca553f37920ea37ddd389726d",
+      "request_blob": "cd2459c4a4c25d75b246511306f47c68ff51c98c",
+      "branch": "ci-run-linux-sf129-c64-native-adapters-1",
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "env": {},
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/native-ui-contract/transport.test.ts",
+        "Sucafinav1/test/native-ui-contract/procurement.test.ts",
+        "Sucafinav1/test/native-ui-contract/planner.test.ts",
+        "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+        "Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+      ],
+      "changed_files": [
+        ".ci-run.json"
+      ],
+      "run": 43738115971
+    },
+    {
+      "id": "C64-EXPORTS122",
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+      "S": "599fe4e482d19dc0907e420937f81a015a6b7f2f",
+      "S_tree": "d437fde534c791fe2956140801b72e771a41285b",
+      "request_blob": "ba1741119effdb254fc56f7684fd2afe62f98ed8",
+      "branch": "ci-run-linux-sf129-c64-exports122-1",
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "env": {},
+      "args": [
+        "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts"
+      ],
+      "changed_files": [
+        ".ci-run.json"
+      ],
+      "run": 43738222564
+    },
+    {
+      "id": "C64-APP-SHELL-BAD-FILTER",
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+      "S": "daa98eb65669b9ff6449596de697d618d91229b3",
+      "S_tree": "8557bcbf5e1c7d5ec1ba720d60ede0397d0a6ba5",
+      "request_blob": "19f8b27e6559a9c288bf4a6a0e72c2328a94d010",
+      "branch": "ci-run-linux-sf129-c64-app-shell-1",
+      "runner": "bun",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "env": {},
+      "args": [
+        "--timeout",
+        "240000",
+        "test-browser/sucafina-native/context.test.ts",
+        "test-browser/sucafina-native/page-frame.test.ts",
+        "test-browser/sucafina-native/s01.test.ts",
+        "test-browser/sucafina-native/s02.test.ts",
+        "test-browser/sucafina-native/s03.test.ts",
+        "test-browser/sucafina-native/s04.test.ts",
+        "test-browser/sucafina-native/s05.test.ts",
+        "test-browser/sucafina-native/fixture/selection.test.ts"
+      ],
+      "changed_files": [
+        ".ci-run.json"
+      ],
+      "run": 43738654236
+    },
+    {
+      "id": "C64-APP-SHELL-PATHFIX",
+      "W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+      "S": "45d23ab943fed842ce470cb0df8914f48696a46a",
+      "S_tree": "97c3abb36105444ffdf0d47b6d3043cdd00c726a",
+      "request_blob": "218a735cd7542d970ab2d9479dbe7cb721cbd24d",
+      "branch": "ci-run-linux-sf129-c64-app-shell-pathfix-2",
+      "runner": "bun",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "env": {},
+      "args": [
+        "--timeout",
+        "240000",
+        "./test-browser/sucafina-native/context.test.ts",
+        "./test-browser/sucafina-native/page-frame.test.ts",
+        "./test-browser/sucafina-native/s01.test.ts",
+        "./test-browser/sucafina-native/s02.test.ts",
+        "./test-browser/sucafina-native/s03.test.ts",
+        "./test-browser/sucafina-native/s04.test.ts",
+        "./test-browser/sucafina-native/s05.test.ts",
+        "./test-browser/sucafina-native/fixture/selection.test.ts"
+      ],
+      "changed_files": [
+        ".ci-run.json"
+      ],
+      "run": 43738907064
+    }
+  ],
+  "held": [
+    {
+      "id": "121-C64-BROWSER",
+      "reason": "C54 args were ordered but Bun ran lifecycle before consumers; wait owner 121 deterministic execution arrangement",
+      "owner": "121/PR117",
+      "status": "HOLD_NOT_RUN",
+      "required_order": [
+        "wp01/browser-startup.test.ts",
+        "creation-reload-fix/creation-browser.test.ts",
+        "creation-recovery-link/recovery-browser.test.ts",
+        "wp01/browser-lifecycle.test.ts"
+      ]
+    },
+    {
+      "id": "Q01-Q02-INSTALLED",
+      "owner": "125/PR65,126,127",
+      "status": "HOLD_NOT_RUN",
+      "reason": "I00 codecs/desktop host/real identities and installed proof pending"
+    }
+  ],
+  "global_release": false
+}
