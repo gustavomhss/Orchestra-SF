@@ -1,0 +1,40 @@
+{
+  "schema": "sf2h.m94.compiler-guards-request.v1",
+  "mission": 94,
+  "state": "REQUESTED_NOT_RUN",
+  "owner": 45,
+  "interface": "existing hosted compiler/guards, no additional workflow or takeover",
+  "source": {
+    "W": "a4e11b554e8c953da60040ec37f370e6e11ebe49",
+    "tree": "858865f14918468d3801b79af96c28b1816a759a",
+    "product_blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+    "test_blob": "b41718d11a98fb57b0d7c0ff82b63d2f6b6cfa1d"
+  },
+  "commands": [
+    {
+      "cwd": "apps/cli",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "dev_observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "dev_actual": null,
+  "merge_base_actual": null,
+  "request_comment_PR32": 6889434956,
+  "dedup": "Reuse only identical finalized product/test programs + config, commands, effective runtime/deps and actual origin/dev merge-base; no inheritance of R79 or R74.",
+  "evidence": {
+    "S": null,
+    "run": null,
+    "job": null,
+    "result": null
+  },
+  "scope_limit": "No generation/config/workflow/package change from mission94. Host 71/S0 must repeat relevant checks for composed C.",
+  "GLOBAL_RELEASE": false
+}

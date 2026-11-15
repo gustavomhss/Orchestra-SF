@@ -1,0 +1,57 @@
+{
+  "schema": "sf2h.m94.handoff71.v1",
+  "mission": 94,
+  "lease": "http-abort-browser94",
+  "state": "SOURCE_RELEASED_FOR_EXACT_INTEGRATOR_INTAKE_GATES_PENDING",
+  "from": {
+    "PR": 85,
+    "branch": "http-body-limit-fix",
+    "source_W": "a4e11b554e8c953da60040ec37f370e6e11ebe49",
+    "source_tree": "858865f14918468d3801b79af96c28b1816a759a",
+    "model": "GPT-6",
+    "astra_native_session_id": null
+  },
+  "to": {
+    "integrator": 71,
+    "PR": 65,
+    "target_observed_C": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "target_tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "ACK": "REQUESTED_NOT_OBSERVED"
+  },
+  "problem": "Bun fixed version hangs Request body when reconstructing new Request(existingRequest,init) despite Node/Effect EOF; source74 already avoids it. Disconnect only broke final Request.signal despite rejected reader.94 adopts 79 causal abort delta with queued-error guard/cleanup.",
+  "complete_files": [
+    "apps/cli/src/sucafina-product/installation.ts",
+    "modules/sucafina/Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json"
+  ],
+  "source_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/SOURCE94.json",
+  "composition_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/composition/MANIFEST.json",
+  "patch_complete": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/patches/source94-complete.patch.txt",
+  "map_prepost_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/composition/microsoft-map-C45.delta.patch.txt",
+  "source_test_state": "REQUESTED_NOT_RUN",
+  "dispatcher_request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/checks/REQUEST-TEST94.json",
+  "compiler_request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/checks/REQUEST-45.json",
+  "historical79_run": {
+    "id": 43675862594,
+    "job": 132695751973,
+    "pass": 11,
+    "expect_calls": 333,
+    "limit": "Instrumented V2, not exact W94/C."
+  },
+  "consumer_restarts": {
+    "52": "AFTER 71 composes three exact blobs and hosted checks on C: replay its interrupted Workbench/first-save/post-reload save journeys once, with original operator/idempotency/case identity; no authority to mark success now.",
+    "67": "AFTER composed C and acceptance of HTTP path: resume its already registered installed HTTP POST/dashboard/decisions journeys with original budgets and request identity; do not re-trigger unchanged 180s suites before dependency ready.",
+    "BI": "AFTER C and hosted POST qualification: rerun blocked BI/Dashboard installed read/write consumers through the same transport with existing provenance and budget; not permission to reclassify historical BI result as C proof."
+  },
+  "source_owner_next_writes": false,
+  "requested_ACK": "71: confirm exact C+3blob intake, selected run/job results or missing proofs, and transfer to52/67/BI. 52/67/BI each ACK only after own C-qualified execution.",
+  "external_owner_changes": "none; 79 instrumentation/delta reuses author evidence, map to71 only; no auth/application, UI, native90, P03/89, reader88, workflow45 changes.",
+  "holds": [
+    "25MiB global preflight not fixed",
+    "Procurement cap policy not decided",
+    "C composed HTTP+Microsoft checks pending",
+    "45 typecheck/guards pending",
+    "S0 final campaigns/independent reviews pending"
+  ],
+  "GLOBAL_RELEASE": false
+}

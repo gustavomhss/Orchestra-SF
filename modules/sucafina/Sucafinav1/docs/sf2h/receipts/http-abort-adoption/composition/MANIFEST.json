@@ -1,0 +1,103 @@
+{
+  "schema": "sf2h.m94.composition71-manifest.v1",
+  "mission": 94,
+  "state": "INERT_COMPLETE_REBIND_TO_OWNER71_NOT_APPLIED",
+  "source": {
+    "W": "a4e11b554e8c953da60040ec37f370e6e11ebe49",
+    "tree": "858865f14918468d3801b79af96c28b1816a759a",
+    "branch": "http-body-limit-fix"
+  },
+  "target_observed": {
+    "C": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "branch": "sf2-stack",
+    "PR": 65,
+    "note": "Target may advance. Recheck all preimages and current composition authority before editing C."
+  },
+  "atomic_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "preimage": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+      "postimage": "34d74d6651031c5194db1d22c823baae60e9a260",
+      "mode": "100644",
+      "role": "production"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+      "preimage": null,
+      "postimage": "b41718d11a98fb57b0d7c0ff82b63d2f6b6cfa1d",
+      "mode": "100644",
+      "role": "owned test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "preimage": "764b7223c3842855764c6832826708ba9eccc2b0",
+      "postimage": "75a96c0c2f8df772727ff1c71d2cc7a2b7085cf2",
+      "mode": "100644",
+      "role": "normative test map, ONLY owner71 integrates"
+    }
+  ],
+  "map_patch": {
+    "preimage": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/composition/microsoft-map-C45.preimage.json.txt",
+      "blob": "764b7223c3842855764c6832826708ba9eccc2b0",
+      "bytes": 3390
+    },
+    "postimage": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/composition/microsoft-map-C45.postimage.json.txt",
+      "blob": "75a96c0c2f8df772727ff1c71d2cc7a2b7085cf2",
+      "bytes": 3391
+    },
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/composition/microsoft-map-C45.delta.patch.txt",
+      "blob": "fbedcab49ec9bfb51ad5ec99f79448ffcc0abed3",
+      "bytes": 1058
+    },
+    "changed_fields_only": [
+      "files[1].postimage_blob",
+      "files[1].postimage_sha256",
+      "files[1].bytes"
+    ],
+    "preserves_other_map_fields": true
+  },
+  "unchanged_critical": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "authority": "72"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+      "note": "Already reads the active map74 by path; do not replace with old source fixture."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+      "blob": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "blob": "302334c0e5a50c681005d6c6463132abce84d8b1"
+    }
+  ],
+  "invariants": "Keep source49 manifest and archive pins, three mapped files exact, auth72 entry map, origin/proxy gates, helper74/HTTP74 bytes. No second fixture rewrite; no instrumentation or old map6586.",
+  "integration_readback_required": [
+    "read exact C,parent/tree and all3 preimages",
+    "compose 3 postimages atomically by71 GitHub MCP/CAS",
+    "compare no unrelated path regressions",
+    "run scoped listener/Microsoft plus compiler via45 on exact composed C",
+    "handoff ACK from71 and consumers, without assuming ingestion"
+  ],
+  "holds": [
+    "H74-25MIB",
+    "H74-PROCUREMENT",
+    "H79ABORT-composed-C",
+    "compiler45",
+    "final reviews & S0"
+  ],
+  "GLOBAL_RELEASE": false
+}

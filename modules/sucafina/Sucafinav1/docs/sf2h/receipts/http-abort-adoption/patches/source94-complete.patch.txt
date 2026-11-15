@@ -1,0 +1,266 @@
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -57,42 +57,77 @@
+         : maximum
+     const response = yield* Effect.tryPromise({
+       try: async (signal) => {
+-        // Reject the hint before creating a stream/fiber or allocating from caller-controlled sizes.
+-        const declared = (() => {
+-          try { return requestBodyLength(sanitized.headers["content-length"] ?? null, limit) }
+-          catch (error) {
++        const node = source ? undefined : NodeHttpServerRequest.toIncomingMessage(sanitized)
++        const nodeAbort = node ? new AbortController() : undefined
++        const nodeState = { released: false, immediate: undefined as ReturnType<typeof setImmediate> | undefined }
++        const absorbNodeError = () => {}
++        const abortNode = () => nodeAbort?.abort()
++        const releaseNode = () => {
++          if (nodeState.released) return
++          nodeState.released = true
++          if (nodeState.immediate) {
++            clearImmediate(nodeState.immediate)
++            nodeState.immediate = undefined
++          }
++          node?.off("aborted", abortNode)
++          node?.off("error", absorbNodeError)
++          node?.off("close", releaseNode)
++        }
++        const releaseClosedNode = () => {
++          // closed can become true before Node emits its queued error and close.
++          if (node?.closed && !nodeState.released && !nodeState.immediate) {
++            nodeState.immediate = setImmediate(releaseNode)
++            nodeState.immediate.unref()
++          }
++        }
++        try {
++          // Body cancellation can remove the adapter's error listener before the
++          // transport emits its queued error. Keep this guard until actual close.
++          node?.on("error", absorbNodeError)
++          node?.once("close", releaseNode)
++          node?.once("aborted", abortNode)
++          if (node?.aborted) abortNode()
++          releaseClosedNode()
++          // Reject the hint before creating a stream/fiber or allocating from caller-controlled sizes.
++          const declared = (() => {
++            try { return requestBodyLength(sanitized.headers["content-length"] ?? null, limit) }
++            catch (error) {
++              if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
++              throw error
++            }
++          })()
++          const boundSignal = source ? AbortSignal.any([signal, source.signal]) : nodeAbort ? AbortSignal.any([signal, nodeAbort.signal]) : signal
++          if (boundSignal.aborted) {
+             if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
+-            throw error
++            return bodyFailure(400)
+           }
+-        })()
+-        const boundSignal = source ? AbortSignal.any([signal, source.signal]) : signal
+-        if (boundSignal.aborted) {
+-          if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
+-          return bodyFailure(400)
++          const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : Stream.toReadableStream(
++            NodeStream.fromReadable<Uint8Array, RequestBodyError>({
++              evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
++              // Cancelling the reader must not destroy the socket before the 413 response is flushed.
++              closeOnDone: false,
++              onError: () => new RequestBodyError(400),
++            }), { strategy: { highWaterMark: 0 } },
++          )
++          const bounded = limitRequestBody(raw, { limit, declared, signal: boundSignal })
++          try {
++            if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
++            const web = new Request(url, { method: incoming.method, headers: sanitized.headers, body: bounded.body, signal: boundSignal, redirect: source?.redirect ?? "follow", ...(bounded.body ? { duplex: "half" } : {}) })
++            const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
++            const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })) : new Response(null, { status: 403 })
++            // Some domain parsers classify reader errors themselves. Only this private budget can override them.
++            const failure = bounded.failure()
++            if (failure) return bodyFailure(failure.status)
++            const reply = result ?? new Response(null, { status: request ? 404 : 403 })
++            if (bounded.complete()) return reply
++            const closed = new Response(reply.body, reply)
++            closed.headers.set("connection", "close")
++            return closed
++          } finally { bounded.dispose() }
++        } finally {
++          node?.off("aborted", abortNode)
++          releaseClosedNode()
+         }
+-        const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : Stream.toReadableStream(
+-          NodeStream.fromReadable<Uint8Array, RequestBodyError>({
+-            evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
+-            // Cancelling the reader must not destroy the socket before the 413 response is flushed.
+-            closeOnDone: false,
+-            onError: () => new RequestBodyError(400),
+-          }), { strategy: { highWaterMark: 0 } },
+-        )
+-        const bounded = limitRequestBody(raw, { limit, declared, signal: boundSignal })
+-        try {
+-          if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
+-          const web = new Request(url, { method: incoming.method, headers: sanitized.headers, body: bounded.body, signal: boundSignal, redirect: source?.redirect ?? "follow", ...(bounded.body ? { duplex: "half" } : {}) })
+-          const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+-          const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })) : new Response(null, { status: 403 })
+-          // Some domain parsers classify reader errors themselves. Only this private budget can override them.
+-          const failure = bounded.failure()
+-          if (failure) return bodyFailure(failure.status)
+-          const reply = result ?? new Response(null, { status: request ? 404 : 403 })
+-          if (bounded.complete()) return reply
+-          const closed = new Response(reply.body, reply)
+-          closed.headers.set("connection", "close")
+-          return closed
+-        } finally { bounded.dispose() }
+       },
+       catch: (error) => error instanceof RequestBodyError ? error : "installation-unavailable" as const,
+     }).pipe(Effect.catch((error) => Effect.succeed(error instanceof RequestBodyError ? bodyFailure(error.status) : new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", connection: "close" } }))))
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-abort-adoption/listener.test.ts
+@@ -0,0 +1,150 @@
++import { expect, test } from "bun:test"
++import { createServer, request, type IncomingMessage } from "node:http"
++import { createRequire } from "node:module"
++import { pathToFileURL } from "node:url"
++import path from "node:path"
++import { Effect, Layer } from "effect"
++import { HttpRouter, HttpServer } from "effect/unstable/http"
++import { BodyLimit } from "../../../../../../packages/server/src/body-limit.ts"
++import { composeSfInstallation } from "../../../../../../apps/cli/src/sucafina-product/installation.ts"
++
++type NodeServer = { layer: (evaluate: () => ReturnType<typeof createServer>, options: { host: string; port: number }) => Layer.Layer<HttpServer.HttpServer, unknown> }
++
++function latch() {
++  const state = { resolve: () => {} }
++  const promise = new Promise<void>((resolve) => { state.resolve = resolve })
++  return { promise, open: () => state.resolve() }
++}
++
++async function within<T>(work: Promise<T>, label: string): Promise<T> {
++  const timer = { value: undefined as ReturnType<typeof setTimeout> | undefined }
++  try {
++    return await Promise.race([work, new Promise<never>((_, reject) => {
++      timer.value = setTimeout(() => reject(new Error(`HTTP_ABORT_94_${label}_DEADLINE`)), 5000)
++    })])
++  } finally { clearTimeout(timer.value) }
++}
++
++async function turn() { await new Promise<void>((resolve) => setImmediate(resolve)) }
++
++/** Actual NodeHttpServer/Effect listener and the production installation adapter. No server-side error/data observer. */
++async function withListener(
++  handler: (web: Request) => Promise<Response>,
++  run: (ctx: { origin: string; incoming: IncomingMessage[]; web: Request[] }) => Promise<void>,
++) {
++  const cli = createRequire(path.resolve(import.meta.dir, "../../../../../../apps/cli/package.json"))
++  const platform = await import(pathToFileURL(cli.resolve("@effect/platform-node")).href) as { NodeHttpServer: NodeServer }
++  const server = createServer()
++  const incoming: IncomingMessage[] = []
++  const web: Request[] = []
++  server.on("request", (source) => { incoming.push(source) })
++  try {
++    await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
++      const service = yield* HttpServer.HttpServer
++      if (service.address._tag !== "TcpAddress") throw new Error("HTTP_ABORT_94_TCP_REQUIRED")
++      const origin = `http://127.0.0.1:${service.address.port}`
++      const installation = yield* Effect.promise(() => composeSfInstallation({
++        mount: "/probe",
++        dispose() {},
++        handler: (value: Request) => { web.push(value); return handler(value) },
++      }, origin))
++      yield* Layer.build(HttpRouter.serve(Layer.mergeAll(BodyLimit.layer, installation.layer), { disableLogger: true, disableListenLog: true }).pipe(Layer.provide(installation.privacy)))
++      yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections?.()))
++      yield* Effect.promise(() => run({ origin, incoming, web }))
++    })).pipe(Effect.provide(platform.NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal: AbortSignal.timeout(18000) })
++  } finally { server.closeAllConnections?.() }
++}
++
++test("HTTP abort94: normal POST reaches real EOF without aborting the final Request, then cleans up", async () => {
++  const body = Buffer.from('{"action":"list","scope":{}}')
++  expect(body.byteLength).toBe(28)
++  await withListener(async (web) => {
++    const bytes = await web.arrayBuffer()
++    return Response.json({ received: bytes.byteLength })
++  }, async ({ origin, incoming, web }) => {
++    const result = await within(new Promise<{ status: number; body: string }>((resolve, reject) => {
++      const outgoing = request(`${origin}/probe`, { method: "POST", agent: false, headers: {
++        "content-length": String(body.byteLength), connection: "close",
++      } }, (response) => {
++        const chunks: Buffer[] = []
++        response.on("data", (chunk: Buffer) => chunks.push(chunk))
++        response.once("error", reject)
++        response.once("end", () => resolve({ status: response.statusCode ?? 0, body: Buffer.concat(chunks).toString("utf8") }))
++      })
++      outgoing.once("error", reject)
++      outgoing.end(body)
++    }), "NORMAL_POST")
++    expect(result.status).toBe(200)
++    expect(JSON.parse(result.body)).toEqual({ received: 28 })
++    expect(incoming).toHaveLength(1)
++    expect(web).toHaveLength(1)
++    await turn()
++    await turn()
++    expect(incoming[0]!.complete).toBe(true)
++    expect(incoming[0]!.aborted).toBe(false)
++    expect(web[0]!.signal.aborted).toBe(false)
++    expect(incoming[0]!.listenerCount("aborted")).toBe(0)
++    if (incoming[0]!.closed) {
++      expect(incoming[0]!.listenerCount("error")).toBe(0)
++      expect(incoming[0]!.listenerCount("close")).toBe(0)
++    }
++  })
++}, 22000)
++
++test("HTTP abort94: partial disconnect aborts the FINAL Request and rejects/releases its reader without queued-error crash", async () => {
++  const first = latch()
++  const settled = latch()
++  const state = { rejected: false, eof: 0, postRead: 0, unlocked: false, bytes: 0 }
++  await withListener(async (web) => {
++    const stream = web.body
++    if (!stream) throw new Error("HTTP_ABORT_94_BODY_REQUIRED")
++    const reader = stream.getReader()
++    try {
++      while (true) {
++        const item = await reader.read()
++        if (item.done) { state.eof++; break }
++        state.bytes += item.value.byteLength
++        first.open()
++      }
++      state.postRead++
++      return new Response(null, { status: 200 })
++    } catch {
++      state.rejected = true
++      return new Response(null, { status: 400 })
++    } finally {
++      reader.releaseLock()
++      state.unlocked = !stream.locked
++      settled.open()
++    }
++  }, async ({ origin, incoming, web }) => {
++    const outgoing = request(`${origin}/probe`, { method: "POST", agent: false, headers: {
++      "content-length": "4096", connection: "close",
++    } })
++    // Intentional client disconnect; do not attach a diagnostic error handler to server IncomingMessage.
++    outgoing.on("error", () => {})
++    try {
++      outgoing.write(Buffer.from("partial-94"))
++      await within(first.promise, "FIRST_BODY_READ")
++      expect(state.bytes).toBe(10)
++      expect(web).toHaveLength(1)
++      outgoing.destroy()
++      await within(settled.promise, "ABORTED_READER_SETTLED")
++      await turn()
++      await turn()
++      expect(state.rejected).toBe(true)
++      expect(state.eof).toBe(0)
++      expect(state.postRead).toBe(0)
++      expect(state.unlocked).toBe(true)
++      expect(web[0]!.signal.aborted).toBe(true)
++      expect(incoming).toHaveLength(1)
++      expect(incoming[0]!.complete).toBe(false)
++      expect(incoming[0]!.aborted).toBe(true)
++      expect(incoming[0]!.destroyed).toBe(true)
++      expect(incoming[0]!.listenerCount("data")).toBe(0)
++      expect(incoming[0]!.listenerCount("readable")).toBe(0)
++      expect(incoming[0]!.listenerCount("error")).toBe(0)
++      expect(incoming[0]!.listenerCount("aborted")).toBe(0)
++      expect(incoming[0]!.listenerCount("close")).toBe(0)
++    } finally { outgoing.destroy() }
++  })
++}, 22000)

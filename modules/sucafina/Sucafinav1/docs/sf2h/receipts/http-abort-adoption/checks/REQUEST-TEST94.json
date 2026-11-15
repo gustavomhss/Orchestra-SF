@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.m94.test-ci-request.v1",
+  "mission": 94,
+  "status": "REQUESTED_NOT_RUN",
+  "no_local_test": true,
+  "dispatcher": "single_existing_test-ci/request",
+  "source": {
+    "W": "a4e11b554e8c953da60040ec37f370e6e11ebe49",
+    "tree": "858865f14918468d3801b79af96c28b1816a759a",
+    "branch": "http-body-limit-fix",
+    "PR": 85,
+    "product_postimage_blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+    "test_postimage_blob": "b41718d11a98fb57b0d7c0ff82b63d2f6b6cfa1d"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "--timeout",
+      "30000"
+    ],
+    "env": {}
+  },
+  "os": "linux",
+  "selection_policy": "Only this scoped transport and Microsoft bridge set; no unrelated owner journeys, epic, suite, or 180s tests.",
+  "request_snapshot_if_admitted": "S must have exactly one W parent and only .ci-run.json. The dispatcher must readback the exact S tree and normalized selection.",
+  "validator": {
+    "path": "script/test-ci-request.ts",
+    "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+  },
+  "workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+  },
+  "dedup": {
+    "known_matching_run_for_W": false,
+    "head_sha_query_result": 0,
+    "limitation": "Same material may be in foreign snapshot S; dispatcher must search all exact normalized in-flight inputs and do not issue duplicate.",
+    "key_fields": [
+      "W_tree",
+      "request.normalized",
+      "runner",
+      "os",
+      "workflow",
+      "validator",
+      "runtime",
+      "config",
+      "dependency_tree"
+    ]
+  },
+  "requested_at_PR32_comment_id": 6889434956,
+  "evidence": {
+    "S": null,
+    "run": null,
+    "job": null,
+    "attempt": null,
+    "results": null,
+    "omni": null,
+    "artifacts": null
+  },
+  "historical_not_transferable": [
+    {
+      "source": "79 instrumented overlay V2",
+      "run": 43675862594,
+      "job": 132695751973,
+      "verdict": "11PASS/333 assertions, not W94"
+    },
+    {
+      "source": "74 original transport",
+      "run": 43673697145,
+      "job": 132689107232,
+      "verdict": "15PASS/341 assertions before94"
+    }
+  ],
+  "GLOBAL_RELEASE": false
+}

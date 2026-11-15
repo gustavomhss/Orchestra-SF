@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h.m94.source-manifest.v1",
+  "mission": 94,
+  "lease": "http-abort-browser94",
+  "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source": {
+    "branch": "http-body-limit-fix",
+    "PR": 85,
+    "W": "a4e11b554e8c953da60040ec37f370e6e11ebe49",
+    "Wtree": "858865f14918468d3801b79af96c28b1816a759a",
+    "parent": "c8a1eb36e51efcd869aa247f43f3f9fb7f6a73fd",
+    "parent_tree": "49a018c57a74bbd5b185ac8450f01a06f98f50e1",
+    "compare": "https://github.com/gustavomhss/Orchestra-SF/compare/c8a1eb36e51efcd869aa247f43f3f9fb7f6a73fd...a4e11b554e8c953da60040ec37f370e6e11ebe49"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "change": "modified",
+      "mode": "100644",
+      "preimage_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+      "preimage_bytes": 9786,
+      "postimage_blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+      "postimage_bytes": 11483,
+      "postimage_sha256": "f38d0b8a880dd540052f10639d8a41640480e2dbaa65327135cc8d4dbcd13a3f",
+      "note": "Exact uninstrumented proposal from mission79, no other source changes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "b41718d11a98fb57b0d7c0ff82b63d2f6b6cfa1d",
+      "postimage_bytes": 6964,
+      "tests": 2,
+      "note": "Real Node/Effect listener: normal EOF and partial client disconnect with final signal and reader cleanup."
+    }
+  ],
+  "unchanged_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1"
+    }
+  ],
+  "complete_source_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/patches/source94-complete.patch.txt",
+    "blob": "a6b3dd37d57c3e133490426d98801ce30cf46963",
+    "bytes": 14416,
+    "files": 2
+  },
+  "minimal_delta": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/patches/abort-signal-delta.patch.txt",
+    "blob": "e1175fbc90f11429e97bf9d1efec536b8aefd83b",
+    "note": "This is exact installed74 preimage8a62→proposed34d diff released by79."
+  },
+  "guard_rails": {
+    "single_final_Request": true,
+    "node_aborted_composed_with_effect_signal": true,
+    "queued_node_error_guard_until_close": true,
+    "idempotent_cleanup": true,
+    "no_abort_on_normal_end": true,
+    "backpressure_unchanged": true,
+    "body_budget_unchanged": true,
+    "microsoft_transport_unchanged": true,
+    "no_New_Request_existing_plus_init": true
+  },
+  "runtime_validation": {
+    "source_W_test_state": "REQUESTED_NOT_RUN",
+    "historical79_V2": {
+      "run": 43675862594,
+      "job": 132695751973,
+      "pass": 11,
+      "assertions": 333,
+      "scope": "Instrumented overlay with same uninstrumented installation proposal; no production certification."
+    }
+  },
+  "no_package_lock_config_workflow_changes": true,
+  "GLOBAL_RELEASE": false
+}
