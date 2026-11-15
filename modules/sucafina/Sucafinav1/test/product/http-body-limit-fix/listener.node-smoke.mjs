@@ -6,35 +6,32 @@ import { createRequire } from "node:module"
 import { pathToFileURL } from "node:url"
 
 const cli = createRequire(new URL("../../../../../../apps/cli/package.json", import.meta.url))
-const { Effect, FileSystem, Layer, Tracer } = await import(pathToFileURL(cli.resolve("effect")).href)
+const { Effect, FileSystem, Layer } = await import(pathToFileURL(cli.resolve("effect")).href)
 const { HttpRouter, HttpServer, HttpServerRequest } = await import(pathToFileURL(cli.resolve("effect/unstable/http")).href)
 const { NodeHttpServer } = await import(pathToFileURL(cli.resolve("@effect/platform-node")).href)
 const { composeSfInstallation } = await import(new URL("../../../../../../apps/cli/src/sucafina-product/installation.ts", import.meta.url).href)
 
-/** Network probe only: real Node/Effect/production bridge; this is not business or Microsoft authentication proof. */
+/** Real Node/Effect/production bridge with the local installation boundary.
+ * Microsoft identity/privacy is exercised separately by microsoft-bridge.test.ts on the existing Bun domain graph.
+ * That graph's bare JSON imports require Bun; this probe neither rewrites them nor supplies a substitute loader.
+ */
 async function listener(run, maximum = 16 * 1024 * 1024, signal) {
   const server = createServer()
   const received = []
   server.on("request", (incoming) => received.push(incoming))
-  const observed = { requests: [], completed: [], aborted: Promise.withResolvers(), reading: Promise.withResolvers(), spans: [] }
-  const tracer = Tracer.make({ span(options) { const span = new Tracer.NativeSpan(options); observed.spans.push(span); return span } })
+  const observed = { requests: [], completed: [], aborted: Promise.withResolvers(), reading: Promise.withResolvers() }
   try {
     await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
       const bound = yield* HttpServer.HttpServer
       assert.equal(bound.address._tag, "TcpAddress")
       const origin = `http://127.0.0.1:${bound.address.port}`
-      const ingressOrigin = "http://ingress.body-limit.test"
-      const publicOrigin = "https://body-limit.test"
       const installation = yield* Effect.promise(() => composeSfInstallation({
         mount: "/sucafina",
         dispose() {},
-        transport: { kind: "explicit-https-proxy", listenerOrigin: origin, ingressOrigin, publicOrigin },
         async handler(incoming) {
           observed.requests.push(incoming)
-          assert.equal(new URL(incoming.url).origin, publicOrigin)
-          assert.equal(incoming.headers.get("host"), new URL(publicOrigin).host)
-          assert.equal(incoming.headers.get("forwarded"), null)
-          assert.equal(incoming.headers.get("x-forwarded-proto"), null)
+          assert.equal(new URL(incoming.url).origin, origin)
+          assert.equal(incoming.headers.get("host"), new URL(origin).host)
           const url = new URL(incoming.url)
           if (url.pathname.endsWith("/unread")) return new Response(null, { status: 403 })
           if (url.pathname.endsWith("/throw")) throw new Error("private-body-token-must-not-escape")
@@ -56,10 +53,9 @@ async function listener(run, maximum = 16 * 1024 * 1024, signal) {
       const budget = HttpRouter.middleware((effect) => effect.pipe(Effect.provideService(HttpServerRequest.MaxBodySize, FileSystem.Size(maximum))), { global: true })
       yield* Layer.build(HttpRouter.serve(Layer.merge(installation.layer, budget), { disableLogger: true, disableListenLog: true }).pipe(
         Layer.provide(installation.privacy),
-        Layer.provide(Layer.succeed(Tracer.Tracer)(tracer)),
       ))
       yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections()))
-      yield* Effect.promise(() => run({ origin, publicOrigin, ingressOrigin, observed, received }))
+      yield* Effect.promise(() => run({ origin, observed, received }))
     })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal })
   } finally { server.closeAllConnections() }
 }
@@ -68,8 +64,7 @@ function send(f, body, { path = "/sucafina/dashboard?sf=workbench-command", head
   return new Promise((resolve, reject) => {
     const outgoing = request(f.origin + path, {
       method: "POST",
-      headers: { host: new URL(f.ingressOrigin).host, origin: f.publicOrigin, "content-type": "application/json", connection: "close",
-        forwarded: "proto=https;host=evil.example", "x-forwarded-proto": "https", ...headers },
+      headers: { host: new URL(f.origin).host, origin: f.origin, "content-type": "application/json", connection: "close", ...headers },
     }, (response) => {
       const chunks = []
       response.on("data", (chunk) => chunks.push(chunk))
@@ -87,6 +82,14 @@ function send(f, body, { path = "/sucafina/dashboard?sf=workbench-command", head
   })
 }
 
+async function released(incoming) {
+  if (!incoming.destroyed) await new Promise((resolve) => incoming.once("close", resolve))
+  await new Promise(setImmediate)
+  assert.equal(incoming.destroyed, true)
+  assert.equal(incoming.listenerCount("data"), 0)
+  assert.equal(incoming.listenerCount("readable"), 0)
+}
+
 test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency and private error responses", { timeout: 20000 }, async (t) => {
   t.diagnostic(`Runtime ${process.release.name} ${process.version}; production NodeHttpServer and SF composition`)
   assert.equal(process.versions.bun, undefined)
@@ -101,6 +104,7 @@ test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency 
 
     const bad = await send(f, Buffer.from("{"))
     assert.equal(bad.status, 400)
+    assert.equal(bad.body, '{"status":"invalid"}')
     const over = Buffer.from(JSON.stringify({ objective: "☕".repeat(24000) }))
     assert.ok(over.length > 65536)
     const oversized = await send(f, over, { end: false })
@@ -132,7 +136,9 @@ test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency 
 
     const denied = await send(f, null, { headers: { host: "evil.example" } })
     assert.equal(denied.status, 403)
-    assert.equal(f.observed.spans.length, 0)
+    const forged = await send(f, null, { headers: { "x-forwarded-proto": "https" } })
+    assert.equal(forged.status, 403)
+    for (const incoming of f.received) await released(incoming)
   }, undefined, t.signal)
 })
 
@@ -148,12 +154,13 @@ test("Node runtime: global stream budget cuts off chunked data and preserves bin
     const contract = await send(f, Buffer.alloc(4097), { path: "/sucafina/dashboard?upload=contract", end: false })
     assert.equal(contract.status, 413)
     assert.equal(f.observed.completed.length, 1)
+    for (const incoming of f.received) await released(incoming)
   }, 4096, t.signal)
 })
 
 test("Node runtime: disconnected/truncated input aborts the original Request and releases its reader", { timeout: 10000 }, async (t) => {
   await listener(async (f) => {
-    const outgoing = request(f.origin + "/sucafina/abort", { method: "POST", headers: { host: new URL(f.ingressOrigin).host, "content-length": "4096", connection: "close" } })
+    const outgoing = request(f.origin + "/sucafina/abort", { method: "POST", headers: { host: new URL(f.origin).host, "content-length": "4096", connection: "close" } })
     outgoing.on("error", () => {})
     outgoing.write(Buffer.from("truncated"))
     const active = await f.observed.reading.promise
@@ -166,5 +173,6 @@ test("Node runtime: disconnected/truncated input aborts the original Request and
     assert.equal(f.observed.completed.length, 0)
     assert.equal(f.received[0].complete, false)
     assert.equal(f.received[0].listenerCount("readable"), 0)
+    await released(f.received[0])
   }, undefined, t.signal)
 })

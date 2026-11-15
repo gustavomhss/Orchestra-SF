@@ -1,5 +1,5 @@
 import { beforeAll, expect, test } from "bun:test"
-import { createServer, request, type IncomingHttpHeaders, type IncomingMessage } from "node:http"
+import { createServer, request, type IncomingHttpHeaders, type IncomingMessage, type ServerResponse } from "node:http"
 import { connect } from "node:net"
 import { createRequire } from "node:module"
 import { pathToFileURL } from "node:url"
@@ -20,7 +20,7 @@ beforeAll(async () => {
   NodeHttpServer = platform.NodeHttpServer
 })
 
-type Incoming = { source: IncomingMessage; closed: Promise<void> }
+type Incoming = { source: IncomingMessage; closed: Promise<void>; response: ServerResponse; responseClosed: Promise<void>; events: { finish: boolean; close: boolean }; index: number }
 type Listener = { origin: string; port: number; incoming: Incoming[]; web: Request[]; server: ReturnType<typeof createServer> }
 type Application = { handler: (request: Request) => Promise<Response | undefined>; close: () => Promise<void> }
 
@@ -29,9 +29,12 @@ async function withListener<F extends Application>(make: (origin: string) => Pro
   const incoming: Incoming[] = []
   const web: Request[] = []
   // Observe lifecycle only; adding a data handler here would change the body consumer under test.
-  server.on("request", (source) => {
+  server.on("request", (source, response) => {
     const closed = new Promise<void>((resolve) => source.once("close", resolve))
-    incoming.push({ source, closed })
+    const events = { finish: false, close: false }
+    response.once("finish", () => { events.finish = true })
+    const responseClosed = new Promise<void>((resolve) => response.once("close", () => { events.close = true; resolve() }))
+    incoming.push({ source, closed, response, responseClosed, events, index: incoming.length })
   })
   try {
     await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
@@ -57,7 +60,7 @@ const domainHeaders = (f: { origin: string; cookie: string }, type = "applicatio
 
 function post(origin: string, pathname: string, headers: Record<string, string>, body: readonly Uint8Array[]) {
   return new Promise<{ status: number; headers: IncomingHttpHeaders; bytes: Buffer }>((resolve, reject) => {
-    const outgoing = request(`${origin}${pathname}`, { method: "POST", agent: false, headers: { connection: "close", "transfer-encoding": "chunked", ...headers } }, (response) => {
+    const outgoing = request(`${origin}${pathname}`, { method: "POST", agent: false, headers: { connection: "close", ...headers } }, (response) => {
       const result: Buffer[] = []
       response.on("data", (chunk: Buffer) => result.push(chunk))
       response.once("error", reject)
@@ -76,18 +79,20 @@ function answerWithoutEof(listener: Listener, head: string, body: readonly Uint8
     const socket = connect(listener.port, "127.0.0.1")
     let received = ""
     let answered = false
-    const timer = setTimeout(() => { socket.destroy(); reject(new Error("Expected a response before body EOF")) }, 8000)
-    const finish = () => {
+    let remoteEof = false
+    const timer = setTimeout(() => finish(new Error("Expected the complete response and remote EOF before body EOF")), 8000)
+    const finish = (error?: Error) => {
       if (answered) return
       answered = true
       clearTimeout(timer)
-      socket.destroy()
-      if (received.includes("\r\n\r\n")) resolve(received)
-      else reject(new Error("Socket closed before HTTP response headers"))
+      if (error) { socket.destroy(); reject(error); return }
+      if (remoteEof && socket.destroyed && received.includes("\r\n\r\n")) resolve(received)
+      else reject(new Error(`Remote response was incomplete: ${JSON.stringify({ bytes: received.length, remoteEof, destroyed: socket.destroyed })}`))
     }
-    socket.on("data", (bytes) => { received += bytes.toString("latin1"); if (received.includes("\r\n\r\n")) finish() })
-    socket.once("error", finish)
-    socket.once("close", finish)
+    socket.on("data", (bytes) => { received += bytes.toString("latin1") })
+    socket.once("end", () => { remoteEof = true })
+    socket.once("error", () => finish(new Error("Socket failed before the complete remote response")))
+    socket.once("close", () => finish())
     socket.once("connect", () => { socket.write(head); for (const bytes of body) socket.write(bytes) })
   })
 }
@@ -96,10 +101,31 @@ function rawHead(listener: Listener, pathname: string, headers: Record<string, s
   return `POST ${pathname} HTTP/1.1\r\nHost: ${new URL(listener.origin).host}\r\nConnection: close\r\n${Object.entries(headers).map(([name, value]) => `${name}: ${value}\r\n`).join("")}\r\n`
 }
 
+function lifecycle(request: Incoming) {
+  return JSON.stringify({ index: request.index, complete: request.source.complete, destroyed: request.source.destroyed,
+    readableEnded: request.source.readableEnded, dataListeners: request.source.listenerCount("data"), readableListeners: request.source.listenerCount("readable"),
+    responseFinished: request.response.writableFinished, responseClosed: request.events.close })
+}
+
+async function responded(request: Incoming) {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    // Bun 1.3.14 detaches the response socket before its remote close and may omit IncomingMessage.close.
+    // Observe the response's actual finish/close and the adapter's reader cleanup; Node24 separately requires request destruction.
+    await Promise.race([request.responseClosed, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Response was not released: ${lifecycle(request)}`)), 8000) })])
+    await new Promise<void>((resolve) => setImmediate(resolve))
+    expect(request.events.finish).toBe(true)
+    expect(request.events.close).toBe(true)
+    expect(request.response.writableFinished).toBe(true)
+    expect(request.source.listenerCount("data")).toBe(0)
+    expect(request.source.listenerCount("readable")).toBe(0)
+  } finally { clearTimeout(timer) }
+}
+
 async function released(request: Incoming) {
   let timer: ReturnType<typeof setTimeout> | undefined
   try {
-    await Promise.race([request.closed, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Incoming request was not released")), 8000) })])
+    await Promise.race([request.closed, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Incoming request was not released: ${lifecycle(request)}`)), 8000) })])
     await new Promise<void>((resolve) => setImmediate(resolve))
     expect(request.source.destroyed).toBe(true)
     expect(request.source.listenerCount("data")).toBe(0)
@@ -127,13 +153,14 @@ test("Actual Node/Effect listener accepts the 65536-byte Workbench boundary and 
     for (const body of [new TextEncoder().encode("{"), invalidUtf8]) {
       const invalid = await post(listener.origin, workbenchPath, { ...domainHeaders(f), "idempotency-key": "listener-invalid-74" }, chunks(body, 3))
       expect(invalid.status).toBe(400)
+      expect(invalid.bytes.toString()).toBe('{"status":"invalid"}')
       expect(JSON.parse(invalid.bytes.toString())).toEqual({ status: "invalid" })
       expect(await f.snapshot()).toEqual(before)
     }
     expect(f.observed.admissions).toHaveLength(1)
     expect(f.observed.commands).toHaveLength(1)
     expect(f.observed.dispatches).toHaveLength(1)
-    for (const request of listener.incoming) { await released(request); expect(request.source.complete).toBe(true) }
+    for (const request of listener.incoming) { await responded(request); expect(request.source.complete).toBe(true) }
   })
 }, 30000)
 
@@ -149,13 +176,15 @@ test("Actual Node/Effect listener refuses chunked UTF-8 excess and a false lengt
     expect(excess).toMatch(/^HTTP\/1\.1 413/)
     expect(excess.toLowerCase()).toContain("connection: close")
     expect(excess.toLowerCase()).toContain("cache-control: no-store")
+    expect(excess.slice(excess.indexOf("\r\n\r\n") + 4)).toContain('{"status":"invalid"}')
     expect(listener.incoming[0]?.source.complete).toBe(false)
-    await released(listener.incoming[0]!)
+    await responded(listener.incoming[0]!)
 
     const declared = await answerWithoutEof(listener, rawHead(listener, workbenchPath, { ...domainHeaders(f), "content-length": "65537" }))
     expect(declared).toMatch(/^HTTP\/1\.1 413/)
+    expect(declared.slice(declared.indexOf("\r\n\r\n") + 4)).toContain('{"status":"invalid"}')
     expect(listener.incoming[1]?.source.complete).toBe(false)
-    await released(listener.incoming[1]!)
+    await responded(listener.incoming[1]!)
     expect(listener.web).toHaveLength(1) // An excessive declared hint never enters the application.
     expect(f.observed.admissions).toHaveLength(0)
     expect(f.observed.commands).toHaveLength(0)
@@ -227,6 +256,6 @@ test("Actual Node/Effect listener preserves an authorized binary upload above 65
     expect(forbidden.status).toBe(403)
     expect(f.scans).toHaveLength(scansBefore)
     expect(await f.state()).toEqual(committed)
-    for (const request of listener.incoming) await released(request)
+    for (const request of listener.incoming) await responded(request)
   })
 }, 30000)
