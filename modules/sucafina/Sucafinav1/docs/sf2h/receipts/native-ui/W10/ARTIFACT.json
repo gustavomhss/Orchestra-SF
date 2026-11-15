@@ -1,0 +1,158 @@
+{
+  "schema": "sf2h.native-ui.S05.delivery.v1",
+  "campaign": "sf2h-native-ui",
+  "mission_id": "UX20-W10",
+  "work_order": "S05",
+  "owner": "W10",
+  "status": "AUTHOR_SOURCE_DELIVERED_PENDING_114_ADMISSION_AND_INTEGRATION",
+  "qualification": "NOT_RUN_NOT_QUALIFIED",
+  "authority": {
+    "integrator": "114",
+    "integrator_epoch": "S0-C-e17-browser114",
+    "dispatch120": "SOLE_PRODUCT_ACTIONS_RUNNER",
+    "compiler119": "SOLE_COMPILER_GUARDS_RUNNER",
+    "per_output_admission": "PENDING_114",
+    "lease_state": "ACK_RESERVATION_ONLY_NO_ADMISSION_CLAIM",
+    "ACK": "56a84d3e009d8e88057a279f285fd277991cf0b2"
+  },
+  "ref": {
+    "branch": "sf-ux-w10",
+    "initial_sha": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "source_snapshot_before_receipt_sha": "398a9c4e2aff57089a35bd53840d7f425a8f4cbb",
+    "source_snapshot_before_receipt_tree": "10ca51ea43f8fc972612cc3f7ee2a1c26958b71b",
+    "base_for_integration": "sf2-stack",
+    "material_C58": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "canonical_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "inventory": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/ACK.json",
+      "preimage": null,
+      "blob": "20362a42f857dee3d34223ae6c55a9a3382d3db2",
+      "chars": 3035,
+      "kind": "receipt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/HANDOFF.md",
+      "preimage": null,
+      "blob": "3afaa6ab402da54e4dc98f02b3e3b71bf2f0d89c",
+      "chars": 7103,
+      "kind": "receipt"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+      "preimage": null,
+      "blob": "286b5a63e9955d55c06795de6c686a95bb1790cc",
+      "chars": 4630,
+      "kind": "product"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/types.ts",
+      "preimage": null,
+      "blob": "6651d1c4e79e21b9acf2f2782d0f3347de88c0b0",
+      "chars": 3375,
+      "kind": "product"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "preimage": null,
+      "blob": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+      "chars": 25194,
+      "kind": "product"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/collaboration.css",
+      "preimage": null,
+      "blob": "5ee1fb851fe913c4663ecbdba02037af640b3f9c",
+      "chars": 6644,
+      "kind": "product"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "preimage": null,
+      "blob": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+      "chars": 12505,
+      "kind": "fixture_test"
+    }
+  ],
+  "changed_files_expected_count": 7,
+  "exports": [
+    "SfRelations",
+    "SfThread",
+    "SfQuestion",
+    "SfConfirmation"
+  ],
+  "typed_exports": [
+    "SfRelationsProps",
+    "SfThreadProps",
+    "SfQuestionProps",
+    "SfConfirmationProps",
+    "SfCoverage",
+    "SfText",
+    "SfMessage",
+    "SfUiState",
+    "SfRelation",
+    "SfThreadMessage",
+    "SfQuestionDraft"
+  ],
+  "surfaces": [
+    "UI51",
+    "UI52",
+    "UI53"
+  ],
+  "task_refs": [
+    "WP08.T01",
+    "WP08.T02",
+    "WP08.T03",
+    "WP08.T06"
+  ],
+  "source_pins": {
+    "collaboration_http": "ccae839a2bc35634554a2ac2721d345671c16f77",
+    "collaboration_routes": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+    "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component_contracts": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "component_locks": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "execution_protocol_expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "execution_protocol_observed": "4a50abfee84335d2ca4db7e3351af144248c9fd1"
+  },
+  "integration_handoff": {
+    "recipient": "114",
+    "fragments": [
+      "import and spread SF_S05_COPY/SF_S05_COPY_BR into i18n/orchestra.ts",
+      "U44 imports SfRelations/SfThread/SfQuestion/SfConfirmation via collaboration/index.tsx"
+    ],
+    "no_shared_path_modified": true,
+    "blockers": [
+      "F01 schema/context must be present in 114 composed tree",
+      "F03 shared frame and sf.common copy must be present in 114 tree",
+      "S05 leaf i18n not yet registered in orchestra.ts",
+      "U44 consumer and A13 real server transport not installed here",
+      "onSubmit requires U44 real frozen prepared operation, no prep token in S05 props",
+      "per-output 114 admission not yet confirmed",
+      "Actions120 and compiler119 not executed"
+    ]
+  },
+  "tests": {
+    "authored": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+    "cases": 5,
+    "evidence_kind": "COMPONENT_FIXTURES_ONLY_NOT_INSTALLED_PROOF",
+    "run": false,
+    "runner": "120 GitHub Actions ONLY",
+    "requested_selector": "exact S05 test path, after F01/F03/U44 composition",
+    "compiler": "119 hosted bun typecheck packages/app-shell"
+  },
+  "policy": {
+    "local_tests": false,
+    "gh_actions_dispatched": false,
+    "merge": false,
+    "deploy": false,
+    "Azure": false,
+    "external_messages": false,
+    "stubs": false,
+    "second_dispatcher": false,
+    "CI_PASS_claim": false,
+    "PRODUCTION_PROOF_claim": false
+  },
+  "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/HANDOFF.md"
+}
