@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h.native-ui.author-output-terminal.v1",
+  "seat": "W03",
+  "mission_id": "UX20-W03-R2",
+  "order": "F02",
+  "output": "F02",
+  "lease_epoch": "ux-native-w03-e2",
+  "product_commit": "7c1a365c01d5e9cc72554f3258117a33db9f59fe",
+  "product_tree": "a0a3d7cd2ce8b68362eccb15ef48fe78c7f32445",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w03",
+  "pr": 122,
+  "original_head": "b44099f05b470ea783bf0f5aa2e69862f78ea62e",
+  "ack_commit": "c873a5bddbbfa4ea0f089a9cf0bf13d86a523922",
+  "source_pins": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contracts": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route_signatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "identity_C58": "473b9dbfe56092af26f0de2927767b8d64b79e1b"
+  },
+  "status": "ARTIFACT_READY",
+  "integration_status": "NOT_INTEGRATED",
+  "qualification_status": "NOT_QUALIFIED",
+  "ci": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "global_release": false,
+  "artifact_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/SOURCE-MANIFEST-e2.json",
+  "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/HANDOFF-e2.md",
+  "shared_fragments": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/SHARED-FRAGMENTS-e2.md",
+  "code_materialized": true,
+  "created_paths": [
+    "packages/schema/src/sucafina/common.ts",
+    "packages/client/src/sucafina/transport.ts",
+    "apps/cli/src/sucafina-product/native-ui/router.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+  ],
+  "tests": {
+    "status": "NOT_RUN",
+    "ownership": "120",
+    "selection": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+    "cases_written": 7
+  },
+  "compiler": {
+    "status": "NOT_RUN",
+    "ownership": "119",
+    "packages": [
+      "packages/schema",
+      "packages/client",
+      "apps/cli"
+    ]
+  },
+  "outstanding": [
+    "F01 actual context producer",
+    "I00 305 metadata/valid codec bindings",
+    "I00 shared host mount",
+    "I00 auth return-intents/transactional fence",
+    "D01/F04 bytes/broker"
+  ],
+  "prior_epoch_revoked": true,
+  "ack_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/ACK-e2.json",
+  "terminal_lease": {
+    "epoch": "ux-native-w03-e2",
+    "state": "TERMINAL_HANDOFF_TO_114",
+    "no_concurrent_author": false,
+    "requires_new_epoch_for_future_writer": true
+  }
+}
