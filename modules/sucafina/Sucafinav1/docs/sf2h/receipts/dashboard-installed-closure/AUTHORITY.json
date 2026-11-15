@@ -1,0 +1,70 @@
+{
+  "schema": "sf2h.dashboard-installed-closure.authority.v1",
+  "mission": 67,
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "lease_epoch": "dashboard-browser67",
+  "branch": "dashboard-installed-proof",
+  "writer": "/root",
+  "effective": "The containing terminal commit ends this source lease atomically when published by CAS from the exact source parent. Its SHA/tree are the Git commit envelope and PR head, not a self-referential field.",
+  "containingCommit": "TERMINAL_DOCUMENTARY_COMMIT",
+  "expectedParent": {
+    "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+    "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+  },
+  "materialSource": {
+    "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+    "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+  },
+  "finalValidation": {
+    "source": {
+      "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+      "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+    },
+    "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+    "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+    "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+    "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+    "runId": 43672573836,
+    "jobId": 132685657101,
+    "counts": {
+      "passed": 26,
+      "failed": 0,
+      "assertions": 593,
+      "files": 10,
+      "durationSeconds": 55.31
+    },
+    "requestSha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+    "receipt": "validation/run-06.json"
+  },
+  "recordedAt": "2026-11-15 03:39:14 UTC",
+  "supersedesForCurrentLiveness": "ACK67.json ACTIVE is an immutable historical acknowledgement; it does not authorize writes after this terminal commit.",
+  "consumer": {
+    "original": 60,
+    "currentlyObservedSuccessor": 71,
+    "lease": "S0-C-e13-browser71",
+    "authorityEvidence": "review/target-reconciliation-terminal.json",
+    "consumerAck": "REQUESTED_NOT_RECEIVED"
+  },
+  "actorLimits": {
+    "configuredModel": "GPT-6 Astra Pro",
+    "modelSource": "developer context",
+    "providerResponseModel": null,
+    "actualSessionId": null,
+    "observedCollaborationPath": "/root",
+    "noInventedProviderIdentity": true
+  },
+  "sourceRelease": "EXPLICIT_BOUNDED_SOURCE_RELEASE_FOR_HELD_CANDIDATE_PREPARATION",
+  "qualified": {
+    "namedDomainAndConsumerSelectionAtW4": true,
+    "installedProduction": false,
+    "compiler45": false,
+    "targetC35": false,
+    "all78Criteria": false,
+    "native": false,
+    "AM": false,
+    "G7": false,
+    "G8": false,
+    "GLOBAL_RELEASE": false
+  },
+  "continuation": "No implicit restart by67 or60. A new source change after terminal requires explicit authority and a new candidate/receipt.71 owns target intake;45 owns compiler/check interface; S0 retains final acceptance."
+}

@@ -1,0 +1,97 @@
+{
+  "schema": "sf2h.mission67.consumer-release.v1",
+  "mission": 67,
+  "state": "EXPLICIT_BOUNDED_SOURCE_RELEASE_FOR_HELD_CANDIDATE_PREPARATION",
+  "releaseCommit": "CONTAINING_TERMINAL_COMMIT",
+  "source": {
+    "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+    "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+  },
+  "branch": "dashboard-installed-proof",
+  "pullRequest": 82,
+  "base": "sf2-stack",
+  "draft": true,
+  "consumer": {
+    "requestedOriginal": 60,
+    "currentSuccessor": 71,
+    "lease": "S0-C-e13-browser71",
+    "qualification": "No automatic consumer ACK or acceptance inferred."
+  },
+  "exactUnit": {
+    "manifest": "delivery/attempt-03/manifest.json",
+    "bytes": 14737,
+    "sha256": "51d4d6fb9992c757981b97f2bacd4320063d589cf18b52bd909855ff3c0f9199",
+    "gitBlobSha": "260d35a2388edb58aaf8cbfb2983a798fe1adcbe",
+    "patch": "delivery/attempt-03/complete.patch",
+    "patchMeta": {
+      "bytes": 171431,
+      "sha256": "c6c013b654ed6bf79da19945b0b370d93ed89b963d027678f6c84943f65a4173",
+      "gitBlobSha": "bf64898d90e03e232344b820a22b0285f5c99bac"
+    },
+    "materialFiles": 17,
+    "activeOwnFiles": 12,
+    "externalFilesInertOnSource": 5,
+    "sourceFiles": [
+      "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts"
+    ],
+    "externalFiles": [
+      "apps/cli/src/sucafina-product/business-services.ts",
+      "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "packages/app-shell/e2e/tsconfig.json"
+    ],
+    "protectedInstallationExcluded": true
+  },
+  "importRule": [
+    "Review the exact17-path unit and dependency closure. Recheck actual target preimages and absence of added paths. Source branch contains only its12 active own material files plus receipts; five external paths are complete inert proposals there.",
+    "For clean matching preimages, apply the complete17-file patch once. Alternatively compose12 own source blobs and then only the five external deltas. Never apply the full patch again after cherry-picking its material, and never replace the whole target tree with source/W4.",
+    "Reconcile C35 runtime59/Decisions65/other changes semantically; matching seven immediate preimages is not enough for a composed PASS. Intake receipts may be archived separately under the consumer namespace.",
+    "delivery/attempt-03 is the authoritative corrected packet. Earlier packets remain historical. Three host preimage hashes in earlier packets were invalid due one extra final LF; delivery/preimage-erratum-W4.json revokes those claims. W4 reran the normalized exact final postimages.",
+    "The separate proposals/installation52 unit is UNVALIDATED and NOT_APPLIED, excluded from release. Only the authorized52/74 owner in coordination with71 can assess and compose it, then qualify it with45 and the existing hosted lane."
+  ],
+  "sourceEvidence": {
+    "source": {
+      "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+      "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+    },
+    "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+    "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+    "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+    "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+    "runId": 43672573836,
+    "jobId": 132685657101,
+    "counts": {
+      "passed": 26,
+      "failed": 0,
+      "assertions": 593,
+      "files": 10,
+      "durationSeconds": 55.31
+    },
+    "requestSha256": "7e6f223a3f72375467650e3486c2643958fc56a3685cf106469e4ede0233d1bc",
+    "receipt": "validation/run-06.json"
+  },
+  "mandatoryHolds": [
+    "Installed production POST delivery F05",
+    "Compiler45 exact effective programs/guards NOT_RUN",
+    "Fresh composed target qualification",
+    "F01 first-save outcome lookup",
+    "F02/T04 canonical CREATE physical incarnation",
+    "F03 original C12 lost-response/reload oracle",
+    "D06 literal Budget Overview capture fixture",
+    "Full C06 registry/review request/MyWork/ledger",
+    "Native/resident parity, AM01-06, final eight selections, three FINAL reviews, C-G7/D-G8"
+  ],
+  "GLOBAL_RELEASE": false
+}

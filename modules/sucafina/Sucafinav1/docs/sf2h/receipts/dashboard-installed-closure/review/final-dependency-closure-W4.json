@@ -1,0 +1,2893 @@
+{
+  "schema": "sf2h.mission67.dependency-closure-review.v2",
+  "reviewer": "astra-mission67/domain-review",
+  "status": "W4_EXACT_NAMED_SOURCE_PROOFS_PASS_INSTALLED_HOLD_COMPILER_NOT_RUN",
+  "repository": "gustavomhss/Orchestra-SF",
+  "purpose": "Final bounded producer/consumer material closure at normalized W4, with exact hashes, protected ownership, hosted evidence and preserved mandatory gaps. This is neither a complete WP02/global acceptance nor authorization to integrate protected material.",
+  "authority": {
+    "mission": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/dashboard-installed-closure.json",
+      "commit": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "blob": "da7bf719c7dcfde318fc4ab715ee3b4d4f013bc4"
+    },
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "sourceBranch": "dashboard-installed-proof",
+    "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "ack": "bce4d89e252159d8574301834a72ec91f2acd791",
+    "draftPr": 82,
+    "target": "sf2-stack",
+    "targetCheckpoint": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "integrationAuthority": "Root MCP read of ACK71 blob4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2 confirms71 as sole successor of60, lease S0-C-e13-browser71. This child attributes that current-authority observation to root.67 performs no target integration.",
+    "compilerAndGuardOwner": "45",
+    "protectedInstallationOwner": "52",
+    "ownProducerPaths": [
+      "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/records.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/signals.ts"
+    ],
+    "ownSourcePaths": [
+      "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts"
+    ],
+    "externalFive": [
+      "apps/cli/src/sucafina-product/business-services.ts",
+      "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "packages/app-shell/e2e/tsconfig.json"
+    ],
+    "externalRule": "60 lease ended in faa30fdd; integration requires a newly authorized writer; 67 does not apply external paths on its source branch",
+    "protectedRule": "The installation52 candidate is archived as an inert complete owner proposal only. It was not applied to mission67 source, target, W1, W2, W3, W4 or S6.",
+    "noBi62Edits": true,
+    "noShellRedesign": true,
+    "qualifiedTargetCheckpoint": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "latestTargetReportedByRoot": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "terminalConsumer": "71, explicit successor of60"
+  },
+  "exactBinding": {
+    "source": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+    "sourceTree": "78c26fb63de7d5210786dd01a66ca2916057e7ac",
+    "sourceParent": "14bf8d828c492e8783f9a7936a52c911a2abdaec",
+    "target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "targetTree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "materialBaseC28": {
+      "name": "C28",
+      "symbol": "C28",
+      "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+      "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "material_paths": 45,
+      "qualification": "HOLD_NOT_RUN"
+    },
+    "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+    "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+    "WParent": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+    "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+    "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+    "SParent": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+    "run": 43672573836,
+    "job": 132685657101,
+    "cleanupJob": 132686291657,
+    "sourceCheckpointMeaning": "f411493f is the exact producer/delivery checkpoint used for this W4. A later receipt-only terminal commit is not silently substituted for this material source pin.",
+    "targetCompare": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/faa30fddb7e7b61696b66fd069f51cf18c51125f...454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "status": "ahead",
+      "aheadBy": 3,
+      "behindBy": 0,
+      "mergeBase": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "totalCommits": 3,
+      "filesReturned": 133,
+      "belowFileCap": true,
+      "liveMaterialTestConfig": 17,
+      "receiptNamespaceOnly": 116,
+      "commitChain": [
+        {
+          "sha": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+          "tree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+          "parents": [
+            "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+          ]
+        },
+        {
+          "sha": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+          "tree": "99610113060b1ba7c56e719a68cdad451c4c9a34",
+          "parents": [
+            "1a3a3c20dacf3518759bf254e1bf1ff9c6167809"
+          ]
+        },
+        {
+          "sha": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+          "tree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+          "parents": [
+            "49a8f0d546289255407f65eae7dfe4747e3d9ca6"
+          ]
+        }
+      ]
+    },
+    "W3ToW4": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/49a8f0d546289255407f65eae7dfe4747e3d9ca6...454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "status": "ahead",
+      "filesReturned": 41,
+      "liveFiles": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+          "patch": "@@ -722,4 +722,3 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c\n     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),\n     dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }\n }\n-"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+          "blob": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+          "patch": "@@ -486,4 +486,3 @@ function bindingCurrent(snapshot: Snapshot, binding: DashboardPreparedBinding, c\n     digestSfValue(active) === digestSfValue(binding.draft) && digestSfValue(historical) === digestSfValue(binding.draft) &&\n     digestSfValue(preferences[preparedKey(binding.changeId)]) === digestSfValue(binding)\n }\n-"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "blob": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+          "patch": "@@ -151,4 +151,3 @@ async function boundedJson(request: Request): Promise<unknown> {\n   } catch { return undefined }\n   finally { reader.releaseLock() }\n }\n-"
+        }
+      ],
+      "conclusion": "Exactly the three external CLI postimages lose one redundant finalLF. No code token, own producer, protected path, test, shell or policy changes in this material delta."
+    },
+    "WToS": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/454100ddc351dc316d0ff1714df0ab01356b5c66...c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+      "status": "ahead",
+      "aheadBy": 1,
+      "behindBy": 0,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "blob": "b813f69318c75702ba939e7b74c94326f56913b3"
+        }
+      ],
+      "conclusion": "Only .ci-run.json is added. S6 executes exact W4 material."
+    },
+    "sourceOwnReadback": {
+      "source": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+      "pathsVerified": 12,
+      "allMatch": true,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+          "sourceBlob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+          "manifestBlob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+          "sourceBlob": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+          "manifestBlob": "a90aa78a30feadc5ac57e2def9aba69617884b9f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+          "sourceBlob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+          "manifestBlob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+          "sourceBlob": "cd63e19210c01d7251e562ef135b554982a24be2",
+          "manifestBlob": "cd63e19210c01d7251e562ef135b554982a24be2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+          "sourceBlob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+          "manifestBlob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+          "sourceBlob": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+          "manifestBlob": "d5ffdc24f23b20557613383d38cc03155e5e68c4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+          "sourceBlob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+          "manifestBlob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "sourceBlob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+          "manifestBlob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+          "sourceBlob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+          "manifestBlob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+          "sourceBlob": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+          "manifestBlob": "5b2371c4048b38cefdaa252b17cd60191b00fddd"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+          "sourceBlob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+          "manifestBlob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+          "sourceBlob": "07a62a71e797278803b8bd3a9308f8f751a69196",
+          "manifestBlob": "07a62a71e797278803b8bd3a9308f8f751a69196"
+        }
+      ]
+    },
+    "qualificationBoundary": "Immutable W4/faa30f composition only. The later material C35 target e87e22d is not this qualified tree and receives no transferred PASS."
+  },
+  "delivery": {
+    "packet": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/",
+    "manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/manifest.json",
+      "blob": "260d35a2388edb58aaf8cbfb2983a798fe1adcbe"
+    },
+    "completePatch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/complete.patch",
+      "bytes": 171431,
+      "sha256": "c6c013b654ed6bf79da19945b0b370d93ed89b963d027678f6c84943f65a4173",
+      "blob": "bf64898d90e03e232344b820a22b0285f5c99bac"
+    },
+    "ownPaths": 12,
+    "externalPaths": 5,
+    "totalLivePostimages": 17,
+    "changedOwnProducers": 2,
+    "unchangedOwnProducers": 4,
+    "all17PostimagesMatchW4Compare": true,
+    "archiveVerification": {
+      "postimages": 17,
+      "preimages": 7,
+      "allGitBlobSha256AndByteCountsMatch": true,
+      "completePatchMatch": true
+    },
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "area": "source",
+        "preimage": {
+          "bytes": 28021,
+          "sha256": "8c80486f9c928b850e7e26a9a9b74c038def3446f559ee073cb6e5cb68f6ea1b",
+          "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa"
+        },
+        "postimage": {
+          "bytes": 37351,
+          "sha256": "c9a3c3ce60ae56279d0fc31e73aaecc50b9789fae103adee16c1d589c71974ca",
+          "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0"
+        },
+        "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "required": true,
+        "role": "Own producer: add preparePrivateDraftRead; authenticate the original private source against persisted C17 and current physical record, return current read evidence plus a lock-bound egress fence.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "area": "source",
+        "preimage": {
+          "bytes": 3375,
+          "sha256": "377f0a553d9c6784c1b064ea3f0a5405e0cb8e54ceb8b4c8a6a5a76b0e19fb55",
+          "blob": "c729de5019c0756b4191a6674a38a523f1768683"
+        },
+        "postimage": {
+          "bytes": 3762,
+          "sha256": "6010fb35c7f043f378ccf531eef3c9260a342fab9456657482b8259ce4e491be",
+          "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f"
+        },
+        "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "required": true,
+        "role": "Own producer: canonicalize finite numeric source IDs, reject ambiguous normalized identities, and use the UTC date of the effective clock.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 14782,
+          "sha256": "690d1b7454e7abf26423dd6aa18a3da1aceaac59910d19c40f418aca8f01b3c7",
+          "blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt",
+        "required": true,
+        "role": "Real persistence/domain/consumer proof fixture or test.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 19897,
+          "sha256": "61ddfa7455cee7941543bf8b19136e22fb8b1ee92c9846f177db41faa081e7af",
+          "blob": "cd63e19210c01d7251e562ef135b554982a24be2"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts.postimage.txt",
+        "required": true,
+        "role": "Real persistence/domain/consumer proof fixture or test.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 9537,
+          "sha256": "523474a93de75d20612c55f1df33993f6ba4cfbeb04605ae1d46f6fce56696b1",
+          "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt",
+        "required": true,
+        "role": "Real persistence/domain/consumer proof fixture or test.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 9508,
+          "sha256": "8d35dc4d0cb311da9e0a20931ab9cfff92389938ad45ef95bff104cf8c665280",
+          "blob": "d5ffdc24f23b20557613383d38cc03155e5e68c4"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts.postimage.txt",
+        "required": true,
+        "role": "Real persistence/domain/consumer proof fixture or test.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 8996,
+          "sha256": "efb435a0db2eafc85e40b1aaf08b496d6e2bd0c9f6f004bd4fd9ff543ef7dc95",
+          "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt",
+        "required": true,
+        "role": "Real persistence/domain/consumer proof fixture or test.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 11309,
+          "sha256": "c5cd06d5960ab47a26e43686b45891267aaefc6b62cb6f4f4547d0045cdbf150",
+          "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt",
+        "required": true,
+        "role": "Real persistence/domain/consumer proof fixture or test.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 10417,
+          "sha256": "07198a115369d507afbf0be18b4933eb93a9e2ad25bd8ff88d9378372f292695",
+          "blob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt",
+        "required": true,
+        "role": "Real installed browser journey/support.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 12862,
+          "sha256": "96fc8c19728c931340b1fa6389cfa980aba45147343f8b9191da0535a1bc5195",
+          "blob": "5b2371c4048b38cefdaa252b17cd60191b00fddd"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt",
+        "required": true,
+        "role": "Real installed browser journey/support.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 9646,
+          "sha256": "9cc11ee16ff5f3e0884c7294b4ace3154e40395c568490da33cacfa3ce3eb29b",
+          "blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt",
+        "required": true,
+        "role": "Real installed browser journey/support.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+        "area": "source",
+        "preimage": null,
+        "postimage": {
+          "bytes": 10918,
+          "sha256": "3407ce26592ef1276e4e35fafe80bdf07832cf91b262b5d5fbf48ae8f458dd80",
+          "blob": "07a62a71e797278803b8bd3a9308f8f751a69196"
+        },
+        "archivedPreimage": null,
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts.postimage.txt",
+        "required": true,
+        "role": "Read-only installed transport diagnosis; never counted as business acceptance.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "area": "external-for60",
+        "preimage": {
+          "bytes": 71752,
+          "sha256": "b09992087f3aed42da28b527bd07682fe244b639dd6804ec954a3fc109ceda71",
+          "blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+        },
+        "postimage": {
+          "bytes": 71829,
+          "sha256": "4112d234c0157b12c53c15f59bdb5401e15f1e132f077ce51bad4af440f67fc8",
+          "blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d"
+        },
+        "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "required": true,
+        "role": "External composition: provide the actual observer/private-read port to the Dashboard Decisions factory.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "area": "external-for60",
+        "preimage": {
+          "bytes": 38305,
+          "sha256": "faa9602f7f7465e2748ac2fc0fe31a2ced07679a3522c4b4fea603e1dfff1726",
+          "blob": "3061f529e1417ba29f9976c3f132c1a08ead0742"
+        },
+        "postimage": {
+          "bytes": 48184,
+          "sha256": "029e9d64ea15b8192a4b7589cfad479b3d1297a38434f91a58e62d32b56f1fa3",
+          "blob": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8"
+        },
+        "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "required": true,
+        "role": "External consumer: revalidate private draft read against current case participation, protected persisted draft, source evidence and final C08 snapshots.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "area": "external-for60",
+        "preimage": {
+          "bytes": 13995,
+          "sha256": "eb0e6bc5cd0b4d41541bc9eef8c0bfc8cd4ffcf0e09a33b4cde91d2efa1bd068",
+          "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c"
+        },
+        "postimage": {
+          "bytes": 16194,
+          "sha256": "2dccb66d6c5114366468ee1e743dbb87aeada1c1163739cf109b18949ef824c9",
+          "blob": "12e9cb870edcbc8c67e641915f033b6af4f8890c"
+        },
+        "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "required": true,
+        "role": "External HTTP adapter: expose bounded POST ?sf=dashboard-draft-read with current read admission and denial/unavailability distinction.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "area": "external-for60",
+        "preimage": {
+          "bytes": 45621,
+          "sha256": "1053f79eb226cee627591418294e2c12e60de5ff3fc4ec0f91ecde3546534bd6",
+          "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41"
+        },
+        "postimage": {
+          "bytes": 48419,
+          "sha256": "104d9619daad6f54a3413420ba973458abbd80c56b30cf2d2e91ffd954e3f751",
+          "blob": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778"
+        },
+        "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "required": true,
+        "role": "External browser consumer: preserve unsaved draft through write withdrawal and current-readable source drift; require explicit comparison/rebind, purge proven access loss, suppress obsolete async generations.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "area": "external-for60",
+        "preimage": {
+          "bytes": 2547,
+          "sha256": "ffc94903b67390b43bd79b8b43f0f682e9274b122f79cfd4178e8572a26c1024",
+          "blob": "2bb15622053039562aab716f9afce410071afaf3"
+        },
+        "postimage": {
+          "bytes": 2593,
+          "sha256": "3a20f94de208caeadfeff36fb31e5b399aefbb16febea812c6f9081ef4316bff",
+          "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b"
+        },
+        "archivedPreimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+        "archivedPostimage": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "required": true,
+        "role": "External compiler program membership: include ./sucafina/dashboard-installed/**/*.ts.",
+        "verifiedInW4": true,
+        "verifiedArchiveBytes": true
+      }
+    ],
+    "immutableDeltaInventory": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "status": "modified",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "blob": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+        "status": "modified",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "blob": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+        "status": "modified",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/ACK67.json",
+        "blob": "94eb9905abbc519a36b2311fbedc27accde4300e",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/complete.patch",
+        "blob": "e47c72a094decbf07a6442cb3d6df772d22654f6",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "blob": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+        "blob": "9aa0b7eb894a0d709b4873cebd1b120ff6a209aa",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "blob": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+        "blob": "311814305139a0be1d3f52f59835b8810e51de8e",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "blob": "13f808e8b5041e062451e15bd3f77432630c5a06",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+        "blob": "840e5607bda4251e6e62d5ada8573b1bac584859",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "blob": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+        "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+        "blob": "2bb15622053039562aab716f9afce410071afaf3",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/manifest.json",
+        "blob": "0168dea1d54dccc7ab41d62905a984e4424e3224",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+        "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+        "blob": "c729de5019c0756b4191a6674a38a523f1768683",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt",
+        "blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts.postimage.txt",
+        "blob": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt",
+        "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts.postimage.txt",
+        "blob": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt",
+        "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt",
+        "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt",
+        "blob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt",
+        "blob": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt",
+        "blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/complete.patch",
+        "blob": "bf64898d90e03e232344b820a22b0285f5c99bac",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+        "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "blob": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+        "blob": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "blob": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+        "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "blob": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+        "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+        "blob": "2bb15622053039562aab716f9afce410071afaf3",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/manifest.json",
+        "blob": "260d35a2388edb58aaf8cbfb2983a798fe1adcbe",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+        "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+        "blob": "c729de5019c0756b4191a6674a38a523f1768683",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt",
+        "blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts.postimage.txt",
+        "blob": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt",
+        "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts.postimage.txt",
+        "blob": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt",
+        "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt",
+        "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt",
+        "blob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt",
+        "blob": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt",
+        "blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts.postimage.txt",
+        "blob": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/complete.patch",
+        "blob": "6970df1e09e2822395295943fcd9b369b50e255b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "blob": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+        "blob": "9aa0b7eb894a0d709b4873cebd1b120ff6a209aa",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "blob": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+        "blob": "311814305139a0be1d3f52f59835b8810e51de8e",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "blob": "13f808e8b5041e062451e15bd3f77432630c5a06",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+        "blob": "840e5607bda4251e6e62d5ada8573b1bac584859",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "blob": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+        "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+        "blob": "2bb15622053039562aab716f9afce410071afaf3",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/manifest.json",
+        "blob": "10e8159ee4e2c9f9f4a5b52c360e8d9df8d0c5e3",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/preimage-erratum-W4.json",
+        "blob": "1d509a2d3dd8e4a69dd0e95d64bdcf3ae8292283",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+        "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+        "blob": "c729de5019c0756b4191a6674a38a523f1768683",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt",
+        "blob": "8d1a3e412156295578d7f277d2e3d95c4f8bbd3b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt",
+        "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt",
+        "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt",
+        "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt",
+        "blob": "99c62eecfa40450fe795251913a3062814a0faf4",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt",
+        "blob": "7b78c999c1f96b758c2b2cc71b4c3f45b6df6842",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt",
+        "blob": "1187e2b63475c763f37c75885e43366d7e835305",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/diagnostics/transport-probe-W3.ts.postimage.txt",
+        "blob": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/findings/F05-installed-post-no-response-W2.json",
+        "blob": "19f42d4ee3cf2ca7ecc4ea165c05dbad4ca75f1d",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/findings/F05-transport-diagnostic-W3.json",
+        "blob": "03efac0a366681fd83d0590b668b9ce426571231",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/bun-eof-hypothesis.json",
+        "blob": "8de60cbf8e29d5edfcda9d1cf383bf36318a6605",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/installation-node-stream.patch",
+        "blob": "f0a26a051b29a482e46d763f841b098d080c4211",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/installation.ts.postimage.txt",
+        "blob": "dea81619aa870b238a6ad004397cf47b1c92457d",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/installation.ts.preimage.txt",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/manifest.json",
+        "blob": "eb417b7a9a52cf9b541db42da52a8a7ce332b5fa",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/rationale.json",
+        "blob": "ddbe8f553cdc48d16d3ee722239b790a407486ca",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/criteria-review.json",
+        "blob": "82da472c93ee0e561bd5504cd0c1a6755fadd64b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/mission67-criteria-map.json",
+        "blob": "c35fc9125a1a934608324068ff8320a34fff6f0a",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/mission67-criteria-results-W2.json",
+        "blob": "9c798b1a239051a01c86d105ac5e7faf427f8a62",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/observer-consumer-cold-review.json",
+        "blob": "6c283ff793868527881377564e533a913617dc52",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/producer-cold-review.json",
+        "blob": "63905cbaf253486ea0f203256eabfeeeb96f4586",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/W1-W2-product-blob-equality.json",
+        "blob": "3abbb288344a76e2de2937b759172d9114170223",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/bun-request.json",
+        "blob": "ca5060602d84e8f84a4e03df416a3ca1b4356315",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/compiler45-request-W2.json",
+        "blob": "f79364a9a3252a15e79ed1d1f7651f61c9a5c532",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/composition-W1.json",
+        "blob": "f09b799ed826504dfe60ce0403707645b6feaf59",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/composition-W2.json",
+        "blob": "731b90162000aa043ad4148eefd5678f98c4efb6",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/composition-W3.json",
+        "blob": "d3c8a1c7e9620ceb1c40c7d545e67741f9719045",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/composition-W4.json",
+        "blob": "5cc5825f1368c37164c1b53faae71f1c7602a463",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/plan-W2.json",
+        "blob": "696a4b0c4bc4addffdb43417bb8bb028e6996d57",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/plan-W3.json",
+        "blob": "b3efe09c654bfc84c38a6459322b7e63bedb86a4",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/plan.json",
+        "blob": "732ef0d240c6204be7a79a3081fed6546998bdd8",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/playwright-request.json",
+        "blob": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-01-excerpt.txt",
+        "blob": "90d89c99ce634ade2b762532fca0addc8d1d682b",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-01-request.json",
+        "blob": "ca5060602d84e8f84a4e03df416a3ca1b4356315",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-01.json",
+        "blob": "e89834d2338ffd2767ba32e59027bf33828dd494",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-02-observed-tests.json",
+        "blob": "d07a8170803d902141f5d3a6f0b9687ecb01021c",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-02-request.json",
+        "blob": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-02.json",
+        "blob": "582173222d8a3aa303749067efe09eb27f8cdbd8",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-03-excerpt.txt",
+        "blob": "ed2034e459ce7489ac10c71af3295d81db4eb4de",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-03-request.json",
+        "blob": "b813f69318c75702ba939e7b74c94326f56913b3",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-03.json",
+        "blob": "72b487eb8ff1c7ac17699e50924d7827d9912408",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-04-request.json",
+        "blob": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-04.json",
+        "blob": "6515cbbdb20dd9c30cf20794fbd899083df1d623",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-05-request.json",
+        "blob": "16f026e4f9ca9b28511c9a20dca7e4b1cdacecdf",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-05.json",
+        "blob": "3c25ed24f60d60ecc9236da47923723b10533707",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-06-request.json",
+        "blob": "b813f69318c75702ba939e7b74c94326f56913b3",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/w2-delta.json",
+        "blob": "541f3308edb22db18b5cfd776f95f4e76cca524c",
+        "status": "added",
+        "classification": "mission67-receipt-archive"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "modified",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "modified",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "blob": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "modified",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "blob": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+        "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+        "blob": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+        "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+        "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+        "blob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "blob": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+        "blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+        "blob": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "status": "added",
+        "classification": "live-material-test-config"
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "modified",
+        "classification": "live-material-test-config"
+      }
+    ]
+  },
+  "preimageErratum": {
+    "status": "THREE_HISTORICAL_TARGET_PREIMAGE_CLAIMS_EXPLICITLY_CORRECTED",
+    "authoritativeReceipt": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/preimage-erratum-W4.json",
+      "blob": "1d509a2d3dd8e4a69dd0e95d64bdcf3ae8292283"
+    },
+    "corrections": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "oldPreimage": "9aa0b7eb894a0d709b4873cebd1b120ff6a209aa",
+        "canonicalPreimage": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "oldPostimage": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b",
+        "normalizedPostimage": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "change": "remove exactly one final LF from preimage and postimage; no code tokens changed",
+        "oldPreimageStatus": "ARCHIVED_TEXT_WITH_EXTRA_FINAL_LF_NOT_CANONICAL_TARGET_BLOB",
+        "canonicalRead": {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "providerBlob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+          "localContentHashVerified": true
+        },
+        "verification": {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "canonicalPreimage": {
+            "bytes": 71752,
+            "sha256": "b09992087f3aed42da28b527bd07682fe244b639dd6804ec954a3fc109ceda71",
+            "blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+          },
+          "oldPreimageWasCanonical": false,
+          "oldPreimageIsCanonicalPlusOneLf": true,
+          "oldPostimageIsNormalizedPlusOneLf": true,
+          "normalizedPostimage": {
+            "bytes": 71829,
+            "sha256": "4112d234c0157b12c53c15f59bdb5401e15f1e132f077ce51bad4af440f67fc8",
+            "blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d"
+          }
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "oldPreimage": "311814305139a0be1d3f52f59835b8810e51de8e",
+        "canonicalPreimage": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+        "oldPostimage": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8",
+        "normalizedPostimage": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+        "change": "remove exactly one final LF from preimage and postimage; no code tokens changed",
+        "oldPreimageStatus": "ARCHIVED_TEXT_WITH_EXTRA_FINAL_LF_NOT_CANONICAL_TARGET_BLOB",
+        "canonicalRead": {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "providerBlob": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+          "localContentHashVerified": true
+        },
+        "verification": {
+          "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+          "canonicalPreimage": {
+            "bytes": 38305,
+            "sha256": "faa9602f7f7465e2748ac2fc0fe31a2ced07679a3522c4b4fea603e1dfff1726",
+            "blob": "3061f529e1417ba29f9976c3f132c1a08ead0742"
+          },
+          "oldPreimageWasCanonical": false,
+          "oldPreimageIsCanonicalPlusOneLf": true,
+          "oldPostimageIsNormalizedPlusOneLf": true,
+          "normalizedPostimage": {
+            "bytes": 48184,
+            "sha256": "029e9d64ea15b8192a4b7589cfad479b3d1297a38434f91a58e62d32b56f1fa3",
+            "blob": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8"
+          }
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "oldPreimage": "840e5607bda4251e6e62d5ada8573b1bac584859",
+        "canonicalPreimage": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+        "oldPostimage": "13f808e8b5041e062451e15bd3f77432630c5a06",
+        "normalizedPostimage": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+        "change": "remove exactly one final LF from preimage and postimage; no code tokens changed",
+        "oldPreimageStatus": "ARCHIVED_TEXT_WITH_EXTRA_FINAL_LF_NOT_CANONICAL_TARGET_BLOB",
+        "canonicalRead": {
+          "ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "providerBlob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+          "localContentHashVerified": true
+        },
+        "verification": {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "canonicalPreimage": {
+            "bytes": 13995,
+            "sha256": "eb0e6bc5cd0b4d41541bc9eef8c0bfc8cd4ffcf0e09a33b4cde91d2efa1bd068",
+            "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c"
+          },
+          "oldPreimageWasCanonical": false,
+          "oldPreimageIsCanonicalPlusOneLf": true,
+          "oldPostimageIsNormalizedPlusOneLf": true,
+          "normalizedPostimage": {
+            "bytes": 16194,
+            "sha256": "2dccb66d6c5114366468ee1e743dbb87aeada1c1163739cf109b18949ef824c9",
+            "blob": "12e9cb870edcbc8c67e641915f033b6af4f8890c"
+          }
+        }
+      }
+    ],
+    "invalidatedHistoricalClaims": "The preimage blob/SHA256/bytecount fields for these three paths in delivery/manifest.json, delivery/attempt-02/manifest.json and the historical domain-review/final-dependency-closure.json identify archived text with an extra finalLF. They are not actual target preimage pins and must not be used for target CAS.",
+    "replacementForApplication": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/manifest.json",
+    "verification": "For each affected file, the complete canonical content was fetched independently from the exact target via GitHub MCP. Its computed Git blob equals provider metadata and attempt03. Old archived preimage equals exact canonical bytes plus one LF; old archived postimage equals normalized W4 bytes plus one LF.",
+    "priorReceiptsPreserved": true,
+    "oldPostimageEvidencePreserved": "The W1/W2/W3 actual postimages and test attempts remain real historical bytes/results. They are not rewritten or retroactively granted W4 identity.",
+    "newQualification": "Normalized postimages are separately exercised by successful W4/S6/run06."
+  },
+  "requiredGraph": {
+    "scope": "Six authorized own producers, exactly five external requirements, canonical inspected dependencies and semantic integration edges. This is an incremental closure overlay on the inherited C28 receipt, not a fresh compiler or exhaustive transitive-import result.",
+    "ownProducers": {
+      "changed": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+          "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+          "role": "Own producer: add preparePrivateDraftRead; authenticate the original private source against persisted C17 and current physical record, return current read evidence plus a lock-bound egress fence."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+          "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+          "role": "Own producer: canonicalize finite numeric source IDs, reject ambiguous normalized identities, and use the UTC date of the effective clock."
+        }
+      ],
+      "unchanged": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+          "status": "unchanged",
+          "blob": "2f1b6f341817cbe618fe4751e2373957e34d2203",
+          "required": true,
+          "proof": "Cold reviewed at the ACK/base; absent from the complete target-to-W1 delta."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+          "status": "unchanged",
+          "blob": "2493b4d16cdec9a0798fc6627a02b07f9859ad4d",
+          "required": true,
+          "proof": "Cold reviewed at the ACK/base; absent from the complete target-to-W1 delta."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts",
+          "status": "unchanged",
+          "blob": "4fc3df00edbc488852bae21c929e8b94846badf8",
+          "required": true,
+          "proof": "Cold reviewed at the ACK/base; absent from the complete target-to-W1 delta."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/records.ts",
+          "status": "unchanged",
+          "blob": "4f718fcf7e496ca7928583bf0b94995edf7a7887",
+          "required": true,
+          "proof": "Cold reviewed at the ACK/base; absent from the complete target-to-W1 delta."
+        }
+      ]
+    },
+    "externalFive": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "canonicalPreimage": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "normalizedPostimage": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "role": "External composition: provide the actual observer/private-read port to the Dashboard Decisions factory."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "canonicalPreimage": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+        "normalizedPostimage": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+        "role": "External consumer: revalidate private draft read against current case participation, protected persisted draft, source evidence and final C08 snapshots."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "canonicalPreimage": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+        "normalizedPostimage": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+        "role": "External HTTP adapter: expose bounded POST ?sf=dashboard-draft-read with current read admission and denial/unavailability distinction."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "canonicalPreimage": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+        "normalizedPostimage": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "role": "External browser consumer: preserve unsaved draft through write withdrawal and current-readable source drift; require explicit comparison/rebind, purge proven access loss, suppress obsolete async generations."
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "canonicalPreimage": "2bb15622053039562aab716f9afce410071afaf3",
+        "normalizedPostimage": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "role": "External compiler program membership: include ./sucafina/dashboard-installed/**/*.ts."
+      }
+    ],
+    "canonicalDependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+        "role": "Canonical Dashboard read/evidence production and normalized observation time.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+        "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+        "role": "C17 source encoding, equality and lifecycle relationships.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+        "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+        "role": "Authorized canonical Dashboard projection and issued source references.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/prepared.ts",
+        "blob": "ffcf2027769a8800b6804b94ff22df0cea2bbb87",
+        "role": "Prepared Dashboard draft mutations retain canonical validation and version checks.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/prepared-review.ts",
+        "blob": "fd3639ec521dd858e5d1b427af358f32394f6409",
+        "role": "Protected prepared-change review remains the write path.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+        "role": "Canonical operational records and commands remain the persistence producer.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+        "role": "Canonical monthly budget/realized records and mutation semantics.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+        "role": "Current C28 authority/C08 fence inherited from Reports48; no restoration to the older source base.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+        "role": "Read/write grants and current UI authority.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "role": "Actual authenticated operator admission.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+        "role": "Existing protected per-principal state provider.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "role": "Current case membership and read authorization.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "blob": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a",
+        "role": "Persistent private draft identity and version.",
+        "status": "unchanged_by_67",
+        "proof": "Previously inspected immutable baseline, inherited current C28 where stated, and absent from complete W1 delta."
+      }
+    ],
+    "semanticEdges": [
+      {
+        "from": "apps/cli/src/sucafina-product/business-services.ts",
+        "to": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "relationship": "compose",
+        "invariant": "Instantiate the real source observer against actual authority and persisted source lifecycle."
+      },
+      {
+        "from": "apps/cli/src/sucafina-product/business-services.ts",
+        "to": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "relationship": "inject",
+        "invariant": "Inject the observer/private-read seam alongside existing canonical Dashboard services."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "to": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "relationship": "POST ?sf=dashboard-draft-read",
+        "invariant": "Send original evidence/draft/case identity; never synthesize a current grant or silently replace the original binding."
+      },
+      {
+        "from": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "to": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "relationship": "revalidateDraftRead",
+        "invariant": "Perform admitted private source read and preserve proven denial versus transient unavailability."
+      },
+      {
+        "from": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "to": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "relationship": "preparePrivateDraftRead",
+        "invariant": "Obtain same-principal/same-physical current evidence and lock-bound fence."
+      },
+      {
+        "from": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "to": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "relationship": "canonical case read",
+        "invariant": "Recheck participant access and source references instead of trusting old discovery or a browser DTO."
+      },
+      {
+        "from": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "to": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "relationship": "persisted draft verification",
+        "invariant": "Match protected historical/active draft identity and digests before returning any proposal."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "to": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "relationship": "persisted C17/physical proof",
+        "invariant": "Original principal, fields, period, target, incarnation and current physical lifecycle must remain congruent."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "to": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "relationship": "transactionAll/currentSnapshots",
+        "invariant": "Current source evidence and final egress fence execute under the real C08 snapshot boundary."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "to": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+        "relationship": "current authorized projection",
+        "invariant": "Read current canonical values for UTC today; returned evidence has no write capabilities."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "to": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+        "relationship": "existing confirmation",
+        "invariant": "Retain original C06 actor/source/scope binding; the private read does not create a confirmation."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+        "to": "modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts",
+        "relationship": "existing command contract",
+        "invariant": "Actual command impact remains covered by issued original scopes and current grants."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/dashboard/records.ts",
+        "to": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "relationship": "existing canonical records",
+        "invariant": "Record navigation and persistence remain on the existing domain routes."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "to": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "relationship": "Attention derivation",
+        "invariant": "Canonical read snapshots feed normalized identities and UTC-bound signals."
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/src/dashboard-screen.ts",
+        "to": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "relationship": "existing screen read",
+        "invariant": "The existing Dashboard shell uses current canonical Dashboard data; no shell redesign."
+      },
+      {
+        "from": "packages/app-shell/e2e/tsconfig.json",
+        "to": "packages/app-shell/e2e/sucafina/dashboard-installed/",
+        "relationship": "include",
+        "invariant": "The new installed specs and support module must enter compiler45's typed program."
+      }
+    ],
+    "inheritedGraph": {
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/dependency-closure-final.json",
+      "blob": "4b0456690ed32e15eea476b3d2885687ec4afa5b",
+      "graph": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/dependency-closure-reports48.json",
+        "blob": "1391550f859cbd335fad16301cd89f05fb8ff2c9",
+        "containing_material_commit": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+        "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+        "summary": {
+          "files": 45,
+          "preimage_matches": 45,
+          "postimages_match_W6": 45,
+          "direct_imports": 461,
+          "relative_repository": 413,
+          "workspace_package_exports": 5,
+          "external_package": 23,
+          "node_builtins": 10,
+          "bun_test_builtins": 10,
+          "inherited57_edges": 287,
+          "inherited57_rebindings": 3,
+          "inherited_base_mismatches": 0,
+          "inherited_missing": 0,
+          "combined_direct_edge_count": 748,
+          "unique_repository_targets": 239,
+          "unresolved_real_repository_count": 0,
+          "nonliteral_imports": 0,
+          "unmatched_import_starts": 0,
+          "additional_required_material_overlays": 0
+        }
+      },
+      "inherited57": {
+        "commit": "d6d9816bb09f7595330862616305e0791e23e61e",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/dependency-closure-final.json",
+        "blob": "9025e3397c3e7232e256d377520e90fa05002603",
+        "state": "IMMUTABLE_BASELINE287_NOT_RELABELLED_AS_C28"
+      },
+      "claimLimit": "The inherited 748-edge/239-target static graph remains attributed to integration60. Mission67 independently compared the bounded W1 delta and inspected its new source/consumer seams; it did not rerun that complete graph."
+    },
+    "typeProgramInclude": {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+      "requiredGlob": "./sucafina/dashboard-installed/**/*.ts",
+      "compiler45Status": "NOT_RUN"
+    },
+    "noAdapterOverlay": "The protected installation52 proposal is not a sixth material dependency applied in this graph. Its unavailable approved release is an installed qualification blocker."
+  },
+  "protectedPaths": {
+    "proof": "Independent GitHub MCP immutable compare faa30fddb7e7b61696b66fd069f51cf18c51125f...454100ddc351dc316d0ff1714df0ab01356b5c66 returns all133 changed files, below the300-file cap. Exactly17 are the manifest's live material/test/config paths; the other116 are within mission67's receipt namespace. Zero intersections are verified for every protected set below, so unchanged relative to the observed target is established without consuming a protected candidate.",
+    "runtime59": {
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/runtime59-latest.json",
+      "receiptBlob": "6c2f7f0d13009887648b3b3227e28a11cff87120",
+      "source": {
+        "branch": "runtime-read-scope",
+        "pin": "1b861df306260deed5e6af8a8e49e5da45c11b67",
+        "tree": "58e41bcdf63150cbdabae12a300c4b8667fc29d7",
+        "PR": 72
+      },
+      "state": "HOLD_MATERIAL_INTAKE_UNTIL_EXPLICIT_COMPLETE_CONSUMER_RELEASE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts"
+      ],
+      "currentProductionPreimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "C28_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "release_preimage": "9e9bac976b503409de65868a366f352ca1e65071",
+          "equal": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "C28_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "release_preimage": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "equal": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "C28_blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+          "release_preimage": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+          "equal": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+          "C28_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+          "release_preimage": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+          "equal": true
+        }
+      ],
+      "intersections": [],
+      "candidateConsumed": false
+    },
+    "reports48": {
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/dependency-closure-final.json",
+      "receiptBlob": "4b0456690ed32e15eea476b3d2885687ec4afa5b",
+      "materialCommit": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+          "inheritedPostimage": "b7f69a1b71e40af5204280054cb83d0c2e2970c6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+          "inheritedPostimage": "438cbf76c6b230ed5a9b3328ef67cbecc73106c6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+          "inheritedPostimage": "134b3bb6dd682c23eceb2c525ba35aa0c0584c39"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+          "inheritedPostimage": "59a923fbf7f04b212b24cd4c32f09d67620bccda"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+          "inheritedPostimage": "ccae839a2bc35634554a2ac2721d345671c16f77"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+          "inheritedPostimage": "000e1aaedcc929f94e0dcb45d1e63267f1401531"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+          "inheritedPostimage": "c4199da735c14b4c08ad6c1848c1b36ca9de8c26"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+          "inheritedPostimage": "bde64fb8cb1a25e8f10eb979ed5ff111cdb2042e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "inheritedPostimage": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+          "inheritedPostimage": "5123063a55dbb7ab8935ff95e432b8bf1a77fd0d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+          "inheritedPostimage": "1290845a260606bd6e2b30594ba4247724ed7290"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+          "inheritedPostimage": "b4e16a0c948d1232cc73f2785a6ee1d2bc0e3dd7"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+          "inheritedPostimage": "0db2a444c14986cb6d0fec6eb60b279a8e26729d"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-history.ts",
+          "inheritedPostimage": "d879d52e12945465a965986280bef3a242962a50"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+          "inheritedPostimage": "d3b87293664682a380188239baf0f82e14a21db9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "inheritedPostimage": "11162741f8021b7d79a23c1022c06f636a393f26"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+          "inheritedPostimage": "aae326accb08bc5645a408271688052a725a30a5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts",
+          "inheritedPostimage": "7f99dee8c6995dd685272a150b939d74a75fd653"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "inheritedPostimage": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "inheritedPostimage": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+          "inheritedPostimage": "6960533cbb8cb128ec4e6d90583903107b5eeb0c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+          "inheritedPostimage": "d9c4f9472fee1865a349bdffa8190abdece1a873"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+          "inheritedPostimage": "ce0f54a96d5d3a02671b20c52e1c0b3832504f42"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+          "inheritedPostimage": "f316969255bea603f9187800a0af111c716bdc65"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+          "inheritedPostimage": "6c05d1de35d2176530cc70ecfa1f849afe95ff0d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+          "inheritedPostimage": "291e72cf1c356d76f1671ec971eac5b44a70edd0"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+          "inheritedPostimage": "65dd8c157ad31d288ee0f9142e1b41e08221de7c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "inheritedPostimage": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+          "inheritedPostimage": "ae37b110099b63ddde6188b9d89be4947408b087"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+          "inheritedPostimage": "5e24513ec7f015e52d0b944011ae25d1529ac6e2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+          "inheritedPostimage": "332b91ee3bac6303073f397e72d7f09afcd134da"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+          "inheritedPostimage": "6d03d60364ea5cac477fa0623e749c7f9ba947bc"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+          "inheritedPostimage": "c874e2070e7d92b118eaa8fffe0caf6baf9b0144"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+          "inheritedPostimage": "c2948d5b96ba06172227c446e1c6e15fc174b2d6"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+          "inheritedPostimage": "9db3ae6a537a45d86089f5637d150a5ea1a713fc"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
+          "inheritedPostimage": "dc1d4849a24a0b42756978daaa76930ab99d52e6"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
+          "inheritedPostimage": "ebbf5b9365e6f5268f00004c1bdf766ecfca4dad"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "inheritedPostimage": "494fe03f46beea037cff45e70259ac875758e3b6"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+          "inheritedPostimage": "b145caac8a47e029aded4418253488d250d680e1"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "inheritedPostimage": "857f339fe477839986e6e70cf4781c9f4f16e009"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+          "inheritedPostimage": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+          "inheritedPostimage": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+          "inheritedPostimage": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+          "inheritedPostimage": "604bd5d8bd9cd66370d3f15e6477fe4186951e49"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+          "inheritedPostimage": "a15b1f6e52e4a5418a13bb850255711b1ca70186"
+        }
+      ],
+      "intersections": [],
+      "conclusion": "All 45 already-composed Reports48 material paths retain their exact target postimages, including product-authority."
+    },
+    "decisions52": {
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/decisions52-final.json",
+      "receiptBlob": "0dba9ae60f01a9d5d6dac8d5ff1231b60637b641",
+      "source": "c688f16d8d2d45f22fe72bf4ddc8df3dc4370381",
+      "manifestBlob": "d18aae0da5078cc3e46dc37e938d2c2de0a8fdd8",
+      "state": "HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE",
+      "paths": [
+        "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+        "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+        "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "apps/cli/src/sucafina-product/installation.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+        "apps/cli/src/sucafina-product/decision-case-http.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts"
+      ],
+      "intersections": [],
+      "candidateConsumed": false,
+      "excludedDiagnosticPaths": [
+        "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+      ],
+      "note": "No intersection with its nine owned or seven shared paths. In particular installation.ts and the historical Microsoft49 map are unchanged; diagnostic Planner and temporary portfolio/Decisions variants were not overlaid.",
+      "excludedDiagnosticIntersections": [],
+      "installation": {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "observedW4Blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "expectedUnchangedBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "changedInW4": false,
+        "proposedPostimage": "dea81619aa870b238a6ad004397cf47b1c92457d",
+        "proposedPostimageApplied": false,
+        "status": "PROTECTED_OWNER52_HOLD; INERT_OWNER_PROPOSAL_ONLY",
+        "requirement": "Explicit owner52 release and authorization from integration60 or its newly authorized successor are required even before isolated validation of an adapter change.",
+        "latestTargetRootRead": {
+          "target": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+          "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "reader": "root via GitHub MCP",
+          "release": "not observed"
+        }
+      }
+    },
+    "bi62": {
+      "mission": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/installed-bi-closure.json",
+      "missionCommit": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "missionBlob": "62a3c54a06d45371019f19d7cf8894d75b804ce7",
+      "branch": "installed-bi-proof",
+      "pathsAndPrefixes": [
+        "apps/cli/src/sucafina-product/bi-services.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+        "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/",
+        "packages/app-shell/e2e/sucafina/bi-installed/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/"
+      ],
+      "intersections": []
+    },
+    "shell": {
+      "paths": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "apps/cli/src/sucafina-product/installation.ts",
+        "apps/cli/src/commands/handlers/serve.ts"
+      ],
+      "intersections": [],
+      "conclusion": "No shell/native/CLI adapter material changes in W1."
+    },
+    "currentTargetLimit": "Zero intersections are independently verified only for complete faa30f...W4. The newer target compare hit300files. Root directly verified all seven package preimages and installation21236af8 unchanged at C35, but this does not establish unchanged protected runtime/other dependency paths or candidate qualification."
+  },
+  "fences": {
+    "sourceProof": [
+      "Original evidence must validate its digest, selector/schema/kind, Dashboard Hot Topics target, safe positive version, one-day period and allowed original fields; all five editable fields are required.",
+      "The original persisted C17 ref must belong to the same authenticated principal and original record type/id/page/fields/period. A claimed future version is invalid; equal version requires matching input digest.",
+      "The current physical record must be alive with the same physical incarnation as the original persisted scope. Delete/recreate cannot inherit source continuity or a previous confirmation.",
+      "A historical lower source version may identify the same retained private scope; it does not attest historical values or silently rebind the proposal.",
+      "Read current authorized canonical projection for UTC today, issue current C17 evidence with capabilities [], and return no write grant or internal physical identifier.",
+      "Capture the actual request identity and revalidate current authentication, source and snapshot under transactionAll; the returned fence is valid only in the current C08 snapshot boundary."
+    ],
+    "consumerProof": [
+      "Persisted drafts require current canonical case access, protected per-principal persisted identity/digest and valid historical/active draft relationship.",
+      "Original and active target evidence are separately proven; any extra source reference must exactly match current authorized case evidence.",
+      "After source issuance, capture C08 snapshots, repeat canonical case authorization, then compare snapshots/raw case/private entries and run both source fences under the final C08 transaction.",
+      "The private HTTP route does not await a generic check after the final source fence; a synchronous request/abort check completes egress.",
+      "Current capabilities are the intersection of current read evidence and current workbench permissions; private read alone never restores a mutation grant.",
+      "Dirty refresh retains operator edits and the original binding. A material A-to-B source change is readable for the same principal/physical record, but adopting current write evidence requires explicit comparison and confirmation."
+    ],
+    "denialAndAsync": [
+      "Abort, missing/expired request context, boolean revalidation failure without revocation proof and transient driver/auth/clock exceptions remain unavailable or stale; they do not themselves authorize a destructive UI purge.",
+      "Proven principal/scope/field/physical/case-participation/read denial withholds private values and permits the linked UI purge without changing unrelated records.",
+      "A data-free current case probe distinguishes failed admission caused by actual access loss from temporary unavailable state.",
+      "Browser epoch/generation and abort checks prevent a late formerly authorized response from restoring purged values; stale/unavailable retains the dirty draft with writing disabled."
+    ],
+    "signalIdentity": [
+      "Finite numeric source IDs are canonicalized to strings, including zero; nonempty actual string identities are preserved.",
+      "Duplicate normalized identities such as 7 and '7' are suppressed rather than assigned ambiguous durable source evidence.",
+      "Signal date calculations use the UTC date of the effective clock, agreeing with the canonical Dashboard evidence port and existing ninety-day rule."
+    ],
+    "compatibilityLimit": "Whole-snapshot comparison is deliberately conservative and may return stale for unrelated concurrent changes. No freshness/authorization guarantee is weakened to make a fixture pass."
+  },
+  "exactHostedEvidence": {
+    "run06": {
+      "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+      "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+      "sourceCommit": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+      "sourceTree": "78c26fb63de7d5210786dd01a66ca2916057e7ac",
+      "run": 43672573836,
+      "job": 132685657101,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672573836",
+      "status": "PASS",
+      "counts": {
+        "passed": 26,
+        "failed": 0,
+        "assertions": 593,
+        "files": 10,
+        "durationSeconds": 55.31
+      },
+      "receipt": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-06.json",
+        "blob": "57ec0f4c9f27f3f258b2e4865b9b48b7f8e26adc",
+        "containedInW4": false
+      },
+      "metadataVerifiedByThisReviewer": {
+        "run": 43672573836,
+        "headSha": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+        "status": "completed",
+        "conclusion": "success",
+        "branch": "ci-run-linux-astra-wp67-454100dd-7e6f223a-06"
+      },
+      "resultEvidenceAttribution": "Root fetched/verified exact job logs and artifacts; child read the complete local receipt, checked the exact S/head/conclusion through GitHub MCP and verified its JSON/blob. Detailed result counts and lifecycles are attributed to that root receipt.",
+      "omni": {
+        "uniqueEnvironmentNonceCount": 1,
+        "matchingVerdictCount": 1,
+        "declaredTests": 6,
+        "spawns": 6,
+        "delegated": 0,
+        "status": "PASS"
+      },
+      "cleanup": {
+        "jobId": 132686291657,
+        "status": "success",
+        "temporaryBranchRemoved": true
+      },
+      "tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "title": "WP02 F04 retains read continuity when writing is withdrawn, with no domain effect or substituted grant",
+          "status": "PASS",
+          "durationMs": 144.77
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "title": "WP02 private source proof follows current material through SQLite reopen while the original write version stays unchanged",
+          "status": "PASS",
+          "durationMs": 105.64
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "title": "WP02 rejects a different authenticated principal, tampered scope and delete/recreate without deleting unrelated records",
+          "status": "PASS",
+          "durationMs": 166.96
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "title": "WP02 private read fence rejects late source mutation and logout without reusing an earlier observation",
+          "status": "PASS",
+          "durationMs": 112.86
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+          "title": "WP02 interrupted requests and unavailable SQLite are recoverable reads, while actual read revocation is denied",
+          "status": "PASS",
+          "durationMs": 135.78
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+          "title": "WP02 Attention retains numeric risk and contract identities through canonical reads, deletion and SQLite reopen",
+          "status": "PASS",
+          "durationMs": 422.32
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+          "title": "WP02 signal UTC boundaries match canonical evidence for offset clocks and preserve the ninety-day rule",
+          "status": "PASS",
+          "durationMs": 171.37
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+          "title": "WP02 ambiguous normalized signal identities are suppressed and cannot commit as durable C17 identities",
+          "status": "PASS",
+          "durationMs": 153.27
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+          "title": "C06 real admissions retain the original observation while monthly material and dependencies advance independently",
+          "status": "PASS",
+          "durationMs": 431.05
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+          "title": "C06 actual absence and recorded zero remain distinct under the real source projection and a durable domain command",
+          "status": "PASS",
+          "durationMs": 184.56
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+          "title": "C06 real authority and source replacement cannot revive a previous observation or its locked fence",
+          "status": "PASS",
+          "durationMs": 171.16
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+          "title": "Dashboard reads the current source and active private proposal while preserving dirty values until explicit review",
+          "status": "PASS",
+          "durationMs": 13117.69
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+          "title": "Dashboard keeps dirty values through interrupted reads and fences write withdrawal between admissions before purging actual read loss",
+          "status": "PASS",
+          "durationMs": 2627.85
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "title": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+          "status": "PASS",
+          "durationMs": 17992.89
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "title": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+          "status": "PASS",
+          "durationMs": 11989.91
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "title": "Dashboard discovery fences participant removal after options were assembled",
+          "status": "PASS",
+          "durationMs": 66.33
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "title": "Dashboard discovery resolves real ticket months and Executive signal records",
+          "status": "PASS",
+          "durationMs": 541.4
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "title": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+          "status": "PASS",
+          "durationMs": 1896.04
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+          "title": "Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation",
+          "status": "PASS",
+          "durationMs": 2643.66
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+          "title": "historical record reissue permits material changes and a new day but rejects replacement",
+          "status": "PASS",
+          "durationMs": 51.48
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+          "title": "historical dated entries keep the original competence after the observation year changes",
+          "status": "PASS",
+          "durationMs": 218.61
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+          "title": "historical security captures revalidate current observation fields after the year changes",
+          "status": "PASS",
+          "durationMs": 325.78
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+          "title": "signals omit ambiguous IDs within each authorized collection only",
+          "status": "PASS",
+          "durationMs": 0.54
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/signals-identity.test.ts",
+          "title": "unavailable pages emit no signals",
+          "status": "PASS",
+          "durationMs": 0.17
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/signal-evidence.test.ts",
+          "title": "executive signals open authorized canonical records and fail closed without evidence",
+          "status": "PASS",
+          "durationMs": 184.7
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+          "title": "C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority",
+          "status": "PASS",
+          "durationMs": 847.88
+        }
+      ],
+      "browserLifecycles": [
+        {
+          "consumer": "host-draft-conflict",
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-write-authority",
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-contextual-controls",
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-draft-conflict",
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-write-authority",
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "dashboard-monthly",
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      ],
+      "qualification": "Named domain/consumer tests at exact W4/S6 only. Installed production remains HOLD from W2/W3; compiler45 NOT_RUN; all78criteria, C06 registry, AM, G7/G8 and global acceptance not granted.",
+      "receiptPublicationLimit": "run-06.json records an event after W4 was created; its local blob is bound here without falsely claiming that the result receipt already exists inside W4's tree. Integration handoff may publish it in a later receipt-only source commit."
+    },
+    "history": {
+      "W1": {
+        "W": "0b00fa5b23ad9ae3fd87de0e6b2b86836a19c816",
+        "WTree": "b11fee7674c0c69cc58ebf58cde69a94bd048670",
+        "S": "56736466e7deb2973ac4f37540503da51057a8de",
+        "STree": "a053369bbf0e49bbd4b86a55361490353da2c7b5",
+        "run": 43668733882,
+        "job": 132673813569,
+        "status": "FAIL",
+        "counts": {
+          "passed": 23,
+          "failed": 1,
+          "assertions": 484,
+          "files": 9,
+          "durationSeconds": 50.82
+        },
+        "namedFailure": "C06 real authority and source replacement cannot revive a previous observation or its locked fence",
+        "causeAssessment": "The fixture attempted to restore readable=true and reuse an authority lease already invalidated by revalidation. Correct denial must remain. New-session/source-replacement/logout assertions after the failure were not reached in W1.",
+        "sourceContinuityPass": 5,
+        "signalsPass": 3,
+        "noRetroactivePass": true,
+        "receipt": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-01.json",
+          "blob": "e89834d2338ffd2767ba32e59027bf33828dd494"
+        },
+        "oldClosure": {
+          "localPath": "domain-review/final-dependency-closure.json",
+          "sha256": "95901f93a1a6e38ab77c7d68135ef4bed2d3f1ecd52c9e6049bf684f65b09896",
+          "state": "PRESERVED_HISTORICAL_WITH_EXPLICIT_THREE_PREIMAGE_ERRATUM"
+        },
+        "evidenceLimit": "The old three archived preimages were not target Git blobs. W1 actual postimage and run evidence remain attributed to W1's actual bytes, which contained the extra finalLF; they are not relabelled as W4."
+      },
+      "W2Run03": {
+        "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+        "WTree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+        "S": "461f1794edb80d9b29017ed18adb4019675a61a9",
+        "STree": "d4004df01abe75fbd1c6cc98b016b7e4fca02120",
+        "sourceCommit": "8ed803706d5585dba1724f3df7b3f920a45e78ec",
+        "sourceTree": "b21a153c00c20ef27280ef0c8fa50faa0743dc6e",
+        "run": 43670302513,
+        "job": 132678661399,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670302513",
+        "status": "PASS",
+        "counts": {
+          "passed": 26,
+          "failed": 0,
+          "assertions": 593,
+          "files": 10,
+          "durationSeconds": 68.02
+        },
+        "receipt": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-03.json",
+          "blob": "72b487eb8ff1c7ac17699e50924d7827d9912408",
+          "containedInW4": true
+        },
+        "scope": "real domain, SQLite, C08, canonical HTTP and BrowserDriver consumer closure",
+        "omni": {
+          "uniqueEnvironmentNonceCount": 1,
+          "matchingVerdictCount": 1,
+          "declaredTests": 6,
+          "spawns": 6,
+          "delegated": 0,
+          "status": "PASS"
+        },
+        "qualification": "Only the named tests at this exact W/S; no compiler45, installed production, AM, full78criteria, G7/G8 or global acceptance implied."
+      },
+      "installedRun04": {
+        "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+        "WTree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+        "S": "72032511a410840d86c6b7b76be73275a22828ca",
+        "STree": "f483fe0924426faa6356097ff241e76a1f8b529e",
+        "sourceCommit": "8ed803706d5585dba1724f3df7b3f920a45e78ec",
+        "sourceTree": "b21a153c00c20ef27280ef0c8fa50faa0743dc6e",
+        "run": 43670694769,
+        "job": 132679854352,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670694769",
+        "status": "FAIL",
+        "counts": {
+          "passed": 0,
+          "failed": 2,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "receipt": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-04.json",
+          "blob": "6515cbbdb20dd9c30cf20794fbd899083df1d623",
+          "containedInW4": true
+        },
+        "scope": "installed production Playwright with corrected accessible selects",
+        "effective": {
+          "workers": 1,
+          "retries": 0,
+          "repeatEach": 1,
+          "timeoutMs": 180000,
+          "playwright": "1.59.1"
+        },
+        "tests": [
+          {
+            "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+            "title": "installed Dashboard confirms exact monthly changes and purges late results after real logout",
+            "status": "failed",
+            "durationMs": 16765,
+            "timeoutMs": 180000,
+            "retry": 0,
+            "steps": [
+              {
+                "title": "create real fiscal lines and cancel a preview without changing saved months",
+                "error": "Error: Dashboard request failed: net::ERR_ABORTED"
+              }
+            ]
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+            "title": "installed Dashboard preserves records, conflicts, signals and authorized history",
+            "status": "failed",
+            "durationMs": 16736,
+            "timeoutMs": 180000,
+            "retry": 0,
+            "steps": [
+              {
+                "title": "create durable Hot Topics through the mounted Dashboard",
+                "error": "Error: Dashboard request failed: net::ERR_ABORTED"
+              }
+            ]
+          }
+        ],
+        "observed": "Both real installed GET controls returned200; product read and canonical save POSTs received no HTTP response before the existing10s client abort. Corrected accessible selectors reached Save. No downstream journey assertions are credited.",
+        "statusMeaning": "INSTALLED_FAIL; no approved adapter candidate was applied.",
+        "interpretation": "Both installed GET controls returned200. Product and domain POSTs received no HTTP response and were aborted by the existing10s client deadline; no CSP/CORS event. The corrected Hot Topics selector reached Save. Actual internal body/adapter failure location is not yet proven. No installed behavioral PASS; no timeout increase or fake response."
+      },
+      "diagnosticRun05": {
+        "W": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+        "WTree": "99610113060b1ba7c56e719a68cdad451c4c9a34",
+        "S": "5814c5f3a026d95e651244329cf461bf265fa587",
+        "STree": "4d7e39b2741d32a7a2e5416f3ff0128c097f106f",
+        "sourceCommit": "14bf8d828c492e8783f9a7936a52c911a2abdaec",
+        "sourceTree": "57908b466fcf6e3d22c2575c60b498c721d607f6",
+        "run": 43671673378,
+        "job": 132682862827,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671673378",
+        "status": "FAIL",
+        "counts": {
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "diagnosticObservations": 8
+        },
+        "receipt": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-05.json",
+          "blob": "3c25ed24f60d60ecc9236da47923723b10533707",
+          "containedInW4": true
+        },
+        "diagnosticOnly": true,
+        "effective": {
+          "workers": 1,
+          "retries": 0,
+          "repeatEach": 1,
+          "totalTimeoutMs": 180000,
+          "requestDeadlineMs": 15000
+        },
+        "observations": [
+          {
+            "client": "node",
+            "probe": "get-dashboard",
+            "outcome": "response",
+            "elapsedMs": 32,
+            "status": 200,
+            "contentType": "html"
+          },
+          {
+            "client": "browser",
+            "probe": "get-dashboard",
+            "outcome": "response",
+            "elapsedMs": 10,
+            "status": 200,
+            "contentType": "html"
+          },
+          {
+            "client": "node",
+            "probe": "post-empty-json",
+            "outcome": "error",
+            "elapsedMs": 15001,
+            "errorKind": "aborted"
+          },
+          {
+            "client": "browser",
+            "probe": "post-empty-json",
+            "outcome": "error",
+            "elapsedMs": 15001,
+            "errorKind": "aborted"
+          },
+          {
+            "client": "node",
+            "probe": "post-malformed-json",
+            "outcome": "error",
+            "elapsedMs": 15001,
+            "errorKind": "aborted"
+          },
+          {
+            "client": "browser",
+            "probe": "post-malformed-json",
+            "outcome": "error",
+            "elapsedMs": 15000,
+            "errorKind": "aborted"
+          },
+          {
+            "client": "node",
+            "probe": "post-views-list",
+            "outcome": "error",
+            "elapsedMs": 15001,
+            "errorKind": "aborted"
+          },
+          {
+            "client": "browser",
+            "probe": "post-views-list",
+            "outcome": "error",
+            "elapsedMs": 15000,
+            "errorKind": "aborted"
+          }
+        ],
+        "protectedInstallationBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "interpretation": "Node and browser GET200; all six POSTs empty/malformed/valid receive noresponse before the15s diagnostic abort. Not browser/CSP-specific; doesnotlocate internalstage or prove Effect/Bun rootcause. No business writes or installed acceptance.",
+        "authorityHold": "Protected52 adapter cannotbeapplied eveninisolatedW without explicitrelease/intakeauthorization."
+      },
+      "additionalRetainedAttempt": "run-02.json remains a historical failed installed attempt; run03/06 source passes do not erase it."
+    },
+    "proofBoundaries": {
+      "namedDomainAndConsumerSourceTests": "PASS at exact W4/S6,26 named tests across10 files with593 assertions.",
+      "installedProduction": "HOLD. Run04 has two failures and run05 has one diagnostic failure with all six POST controls aborted; W4 did not apply an adapter correction or rerun installed qualification successfully.",
+      "sourceFixtures": "Real LocalStore SQLite, authenticated local operator sessions, canonical producers, C17 and C08 with BrowserDriver consumers. These are not a substitution for the failed real CLI installation.",
+      "confirmation": "The repaired C06 lease fixture retains denial of the invalidated context and uses a fresh admitted context for subsequent replacement/logout checks; its complete named test now passes. This does not grant the full C06 registry or all WP02criteria.",
+      "compiler45": "NOT_RUN",
+      "fullWP02AndGlobal": "NOT_GRANTED"
+    }
+  },
+  "installedOwnerProposal": {
+    "status": "UNVALIDATED_OWNER_PROPOSAL_NOT_APPLIED",
+    "protectedPath": "apps/cli/src/sucafina-product/installation.ts",
+    "preimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "proposedPostimage": "dea81619aa870b238a6ad004397cf47b1c92457d",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/bun-eof-hypothesis.json",
+        "blob": "8de60cbf8e29d5edfcda9d1cf383bf36318a6605"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/installation-node-stream.patch",
+        "blob": "f0a26a051b29a482e46d763f841b098d080c4211"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/installation.ts.postimage.txt",
+        "blob": "dea81619aa870b238a6ad004397cf47b1c92457d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/installation.ts.preimage.txt",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/manifest.json",
+        "blob": "eb417b7a9a52cf9b541db42da52a8a7ce332b5fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/proposals/installation52/rationale.json",
+        "blob": "ddbe8f553cdc48d16d3ee722239b790a407486ca"
+      }
+    ],
+    "rationale": "A complete streaming NodeIncomingMessage\u2192Readable.toWeb alternative with native Web fallback is archived for the protected owner. It avoids constructing two body consumers and preserves existing host/origin/proxy, handler signal, disposal and body parsers; none of these static claims establishes runtime correctness.",
+    "coldReview": "Independent criteria_review found no confirmed new static permission relaxation, while retaining EOF/cancel/early-denial/keep-alive/type risks and unvalidated status.",
+    "unresolvedDiagnosis": "The six failed Node/browser empty/malformed/list POST controls do not identify the internal stage; body bridge, EOF propagation and lazy service initialization remain hypotheses. The separate Bun EOF source finding is not asserted as the observed root cause.",
+    "prerequisite": "Protected owner52 release and explicit intake by71 as successor60, coordinated with74 bounded transport under mission71, precede any candidate application. No source or W overlay is authorized by this report.",
+    "protectedMaterialPreserved": true
+  },
+  "mandatoryLimits": {
+    "T04": {
+      "state": "NOT_GLOBALLY_CLOSED; INSTALLED_HOLD",
+      "requirements": [
+        "Canonical persisted Hot Topic identity and opaque create/application correlation.",
+        "Same opaque intent plus the same payload recovers the same durable effect/receipt; different intents with the same title remain distinct.",
+        "Retry/reload must use current access and current canonical source evidence.",
+        "Delete/recreate cannot inherit original confirmation, correlation or receipt applicability.",
+        "Completion refers to the original canonical record instead of a parallel Dashboard-only operational status."
+      ],
+      "claimLimit": "Named source/domain/consumer cases pass in W2/run03 and again at normalized W4/run06. The installed first-save/response-loss/reload/idempotency journey does not pass; T04's full installed acceptance remains unclosed."
+    },
+    "F01": {
+      "id": "WP02-F01-new-draft-outcome-lookup",
+      "state": "PENDING_OWNER65_AND_FINAL_INSTALLED_PROOF",
+      "requirement": "After the first save commits but its response is lost before the browser receives draftRef, discover the durable outcome by the original opaque intent with current read authorization; never infer by title, target or list position.",
+      "reasonNotClosed": "preparePrivateDraftRead requires original evidence and, for saved drafts, persisted draft identity. It is not the missing first-save outcome-discovery API."
+    },
+    "F03": {
+      "id": "C12_RELOAD_AFTER_COMMITTED_RESPONSE_LOSS",
+      "state": "HISTORICAL_FAILURE_RETAINED; NO_W4_CLOSURE_CLAIM",
+      "historicalW": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+      "historicalS": "91938040fb95c0e2fdfd3e0e8f149a9ec05ae19e",
+      "run": 43587346579,
+      "job": 132424575339,
+      "result": {
+        "pass": 33,
+        "fail": 1
+      },
+      "title": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "observed": "Domain and receipt applied with HTTP 200 before a lost response; reload discovery timed out. Tail assertions for original receipt/version/no second effect were not executed.",
+      "required": "Coordinate the canonical outcome path with owner65 and obtain exact current installed evidence; retain the historical failure."
+    },
+    "F04": {
+      "id": "WP02-F04-new-draft-source-continuity",
+      "historicalFailure": {
+        "run": 43586466170,
+        "job": 132421925833,
+        "title": "Dashboard contextual draft retains edits when current write authority is withdrawn"
+      },
+      "W4": "Five dedicated source-continuity cases and the exact historical source BrowserDriver title pass at W4/S6/run06. Installed production remains HOLD after run04 and diagnostic run05; their failed downstream assertions are not credited."
+    },
+    "global": [
+      "Final eight selections and AM/native qualification remain separate.",
+      "Three final reviews, C/G7 and D/G8 are not granted by this report.",
+      "Original WP02 criteria and the wider campaign criteria remain in force; mission67 is not a replacement acceptance set.",
+      "Source producer passes do not qualify integrated C27/C28 or a later candidate."
+    ],
+    "compiler45": {
+      "state": "NOT_RUN; REQUIRED_FOR_FINAL_TYPED_CANDIDATE",
+      "requiredExternalPath": "packages/app-shell/e2e/tsconfig.json",
+      "requiredInclude": "./sucafina/dashboard-installed/**/*.ts",
+      "requiredPrograms": "The exact final composed candidate must include the new E2E specs and support code in the applicable typed program, then satisfy the authorized hosted package typecheck/guard/generation gate owned by 45.",
+      "prohibitedShortcut": "No exclusion, narrower program, skipped assertions, local product check or repurposed compiler45 ref may stand in for the gate.",
+      "evidenceLimit": "W4's26 Bun runtime cases and six BrowserDriver lifecycles are not a compiler/guard result. The exact glob also includes the diagnostic spec; no exclusion is authorized."
+    }
+  },
+  "terminalHandoff": {
+    "status": "BOUNDED_SOURCE_PROOF_COMPLETE; INSTALLED_AND_COMPILER_HOLD",
+    "consumer": "71, explicit sole successor of60 under ACK71/S0-C-e13-browser71",
+    "exactMaterialReady": "attempt03 full17-postimage packet and corrected canonical preimages; no automatic application.",
+    "requiredActions": [
+      "Root confirms ACK71/current lease and direct equality of the seven canonical package preimages plus installation21236af8 at C35/e87e22d.71 must still reconcile the changed dependency graph and qualify its resulting candidate. The300-file truncated comparison cannot prove absence of all intersections; W4/faa30f PASS does not transfer.",
+      "Accept or reject the five external consumer/config postimages as one reviewed graph with the two own producers and required tests.",
+      "Keep installation52 unchanged pending its explicit owner release;71 must reconcile its Node-body proposal with74 bounded transport. Source branches are read-only in the successor intake and this packet is a terminal release for review, not permission to apply the archived proposal.",
+      "Resolve installed POST delivery with owner-controlled evidence, then rerun original installed Dashboard journeys without weakening assertions or production timeouts.",
+      "Coordinate F01/F03 canonical outcome recovery with owner65 and retain all historical failure receipts.",
+      "Run owner45's authorized typed-program and guard gates with the new E2E include; preserve the wider criteria, final selections/AM/reviews/G7/G8 requirements.",
+      "Publish the post-W4 run06 receipt and this closure in the terminal receipt-only handoff, preserving f411493f/W4/S6 as material/proof identities."
+    ],
+    "consumerAck": null,
+    "integratedCandidate": null,
+    "globalRelease": false,
+    "currentTargetIntake": "HOLD_CHANGED_DEPENDENCY_GRAPH_AND_TARGET_NOT_RUN; SEVEN_PREIMAGES_MATCH_BY_ROOT",
+    "latestTargetReportedByRoot": "e87e22d163924635bf0b41785c9bc80bf780ac0a"
+  },
+  "execution": {
+    "remoteMutationsByThisReview": 0,
+    "testsDispatchedByThisReview": 0,
+    "localProductTests": 0,
+    "localTypecheckGuardBuild": 0,
+    "productEditsDuringThisReview": 0,
+    "remoteOperations": "Read-only GitHub MCP exact compares, source metadata, canonical file bodies, protected installation readback and run06 status/head metadata.",
+    "staticLocalOperations": "JSON parsing, UTF-8 byte counts, Git blob/SHA256 calculation and exact single-LF comparisons only.",
+    "artifact": "domain-review/final-dependency-closure-W4.json",
+    "finalState": "No test dispatch, integration, adapter application or target write performed by this reviewer."
+  },
+  "newTargetObservation": {
+    "status": "SEVEN_PREIMAGES_MATCH_BY_ROOT; MATERIAL_DEPENDENCY_RECONCILIATION_STILL_REQUIRED",
+    "attribution": "Root performed the current C35 target/ACK71/preimage reads through GitHub MCP. This child records those supplied observations separately from its independent W4/faa30f verification.",
+    "branch": "sf2-stack",
+    "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "commitsAfterQualifiedTarget": 8,
+    "reportedSuccession": "71; C29 through C35",
+    "reportedMaterialAreas": [
+      "runtime59",
+      "native64",
+      "C12-65"
+    ],
+    "fullDiffLimit": {
+      "returnedFileCap": 300,
+      "completeInventoryEstablished": false,
+      "absenceOfIntersectionProven": false
+    },
+    "qualificationBoundary": "All zero-intersection and exact-source PASS statements in this report are bound to faa30fddb7e7b61696b66fd069f51cf18c51125f plus W4. They do not establish compatibility, current preimage equality, owner authority, installed behavior or acceptance of C35/e87e22d.",
+    "required": "71 must reconcile the changed transitive graph and its own current target authority before intake. Seven equal preimages establish textual applicability at the observed head, not runtime compatibility or a transferred PASS.52 remains protected;71 coordinates its Node-body boundary with74 bounded transport.",
+    "W4PassTransfersToC35": false,
+    "newTargetIntegratedBy67": false,
+    "rootVerifiedCurrentEvidence": {
+      "target": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "targetTree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+      "sevenPreimagesIdenticalToCanonicalFaa30": true,
+      "preimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+          "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+          "blob": "c729de5019c0756b4191a6674a38a523f1768683"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+          "blob": "3061f529e1417ba29f9976c3f132c1a08ead0742"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+          "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41"
+        },
+        {
+          "path": "packages/app-shell/e2e/tsconfig.json",
+          "blob": "2bb15622053039562aab716f9afce410071afaf3"
+        }
+      ],
+      "installationBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "ack71Blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+      "successor": "71 is the explicit sole successor of60",
+      "lease": "S0-C-e13-browser71",
+      "controlCommit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+      "mission": "integration-release-wave",
+      "missionBlob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+      "protected52Release": "NOT_OBSERVED; remains on hold",
+      "missionBoundary": "71 reconciles52 Node-body material with74 bounded transport; source branches are read-only and only terminal releases are accepted.",
+      "targetQualification": "NOT_RUN",
+      "evidenceReader": "root; not this child"
+    }
+  }
+}

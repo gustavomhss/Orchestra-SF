@@ -1,0 +1,156 @@
+{
+  "schema": "sf2h.mission67.target-reconciliation.v1",
+  "observedAt": "2026-11-15 03:39:14 UTC",
+  "source": {
+    "sha": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+    "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+  },
+  "testedTarget": {
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "material": "C28 d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "authority60": "HANDOFF_TERMINAL_LEASE_ENDED"
+  },
+  "observedTarget": {
+    "sha": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "candidate": "C35",
+    "qualification": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN"
+  },
+  "delta": {
+    "apiCompareFilesCapped": true,
+    "returnedFiles": 300,
+    "commits": [
+      {
+        "sha": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+        "message": "docs(sucafina): acknowledge mission71 succession and released-source census [skip ci]"
+      },
+      {
+        "sha": "342f04688aa173914f36a81e80e6781242616e82",
+        "message": "feat(sucafina): compose released runtime59 read scope as C29 [skip ci]"
+      },
+      {
+        "sha": "947a4add941893c8247b95a5ce6386468313838b",
+        "message": "fix(sucafina): compose released operations63 scanner unit as C30 [skip ci]"
+      },
+      {
+        "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "message": "feat(sucafina): compose released native64 with activation held as C31 [skip ci]"
+      },
+      {
+        "sha": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+        "message": "fix(sucafina): compose released mixed-source61 contracts as C32 [skip ci]"
+      },
+      {
+        "sha": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+        "message": "fix(sucafina): compose released C12 recovery65 as C33 [skip ci]"
+      },
+      {
+        "sha": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+        "message": "fix(sucafina): compose released export artifact66 unit as C34 [skip ci]"
+      },
+      {
+        "sha": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+        "message": "fix(sucafina): compose released workbench and skill68 boundaries as C35 [skip ci]"
+      }
+    ],
+    "limitation": "The compare API returned its 300-file cap. This is not a complete file inventory and cannot establish absence of other dependency changes. Seven relevant existing preimages and protected installation.ts were read directly instead."
+  },
+  "preimageReadbacks": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+      "canonicalPreimage": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+      "matchesCanonicalPreimage": true,
+      "scope": "Seven existing material preimages, direct MCP file read at exact C35"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+      "blob": "c729de5019c0756b4191a6674a38a523f1768683",
+      "canonicalPreimage": "c729de5019c0756b4191a6674a38a523f1768683",
+      "matchesCanonicalPreimage": true,
+      "scope": "Seven existing material preimages, direct MCP file read at exact C35"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "canonicalPreimage": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "matchesCanonicalPreimage": true,
+      "scope": "Seven existing material preimages, direct MCP file read at exact C35"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "blob": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+      "canonicalPreimage": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+      "matchesCanonicalPreimage": true,
+      "scope": "Seven existing material preimages, direct MCP file read at exact C35"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "canonicalPreimage": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "matchesCanonicalPreimage": true,
+      "scope": "Seven existing material preimages, direct MCP file read at exact C35"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+      "canonicalPreimage": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+      "matchesCanonicalPreimage": true,
+      "scope": "Seven existing material preimages, direct MCP file read at exact C35"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob": "2bb15622053039562aab716f9afce410071afaf3",
+      "canonicalPreimage": "2bb15622053039562aab716f9afce410071afaf3",
+      "matchesCanonicalPreimage": true,
+      "scope": "Seven existing material preimages, direct MCP file read at exact C35"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "canonicalPreimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "matchesCanonicalPreimage": true,
+      "scope": "Protected installation adapter, direct MCP file read at exact C35"
+    }
+  ],
+  "authority": {
+    "predecessor": 60,
+    "successor": 71,
+    "state": "ACK71_ACCEPTED_BOUNDED_SUCCESSION",
+    "lease": "S0-C-e13-browser71",
+    "ack": {
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/ACK71.json",
+      "blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2"
+    },
+    "control": {
+      "ref": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/integration-release-wave.json",
+      "blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7"
+    },
+    "sourceWriteAuthorityExpanded": false
+  },
+  "transportRouting": {
+    "owner": 74,
+    "coordinateWith": [
+      52,
+      71,
+      45
+    ],
+    "routingBlob": "280b4b8be816afd95f29d5b390e5c581930b8f01",
+    "routingPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/findings70-routing.json",
+    "finding": "M70-HTTP-01",
+    "mission67Finding": "M67-F05-INSTALLED-POST-NO-RESPONSE",
+    "sameDefectProven": false,
+    "proposalApplied": false,
+    "source52ReleaseObservedInCensus71": false
+  },
+  "disposition": "EXACT_SOURCE_RELEASE_FOR_BOUNDED_INTAKE_ONLY; current target changed materially. Matching preimages do not prove runtime compatibility or composed PASS. Integrator71 must reconcile full dependency closure, 65 first-save proposal, 52/74 transport and fresh candidate qualification. No target write or source reset performed by67.",
+  "qualification": {
+    "W4Source": "26 named PASS",
+    "installedW4": "NOT_RUN_HOLD",
+    "C35": "NOT_QUALIFIED_BY67",
+    "globalRelease": false
+  }
+}

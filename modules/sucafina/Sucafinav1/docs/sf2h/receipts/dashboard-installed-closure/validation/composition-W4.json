@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.mission67.validation-composition.v1",
+  "attempt": 4,
+  "purpose": "final normalized Dashboard payload and exact canonical preimages",
+  "parentW": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+  "parentWTree": "99610113060b1ba7c56e719a68cdad451c4c9a34",
+  "target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "sourceCommit": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+  "sourceTree": "78c26fb63de7d5210786dd01a66ca2916057e7ac",
+  "completeManifest": "delivery/attempt-03/manifest.json",
+  "deltaFromW3": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "oldPreimage": "9aa0b7eb894a0d709b4873cebd1b120ff6a209aa",
+      "canonicalPreimage": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "oldPostimage": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b",
+      "normalizedPostimage": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+      "change": "remove exactly one final LF from preimage and postimage; no code tokens changed"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "oldPreimage": "311814305139a0be1d3f52f59835b8810e51de8e",
+      "canonicalPreimage": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+      "oldPostimage": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8",
+      "normalizedPostimage": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+      "change": "remove exactly one final LF from preimage and postimage; no code tokens changed"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "oldPreimage": "840e5607bda4251e6e62d5ada8573b1bac584859",
+      "canonicalPreimage": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "oldPostimage": "13f808e8b5041e062451e15bd3f77432630c5a06",
+      "normalizedPostimage": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+      "change": "remove exactly one final LF from preimage and postimage; no code tokens changed"
+    }
+  ],
+  "productionCodeTokenChangesFromW2": false,
+  "externalPaths": [
+    "apps/cli/src/sucafina-product/business-services.ts",
+    "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+    "apps/cli/src/sucafina-product/dashboard-http.ts",
+    "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+    "packages/app-shell/e2e/tsconfig.json"
+  ],
+  "protectedAdapter": {
+    "path": "apps/cli/src/sucafina-product/installation.ts",
+    "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "changed": false,
+    "proposalOnly": "proposals/installation52/manifest.json",
+    "applied": false
+  },
+  "sourceProof": {
+    "state": "PASS_EXACT_NAMED_SELECTION",
+    "run": 43672573836,
+    "job": 132685657101,
+    "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+    "passed": 26,
+    "failed": 0,
+    "assertions": 593,
+    "files": 10,
+    "seconds": 55.31,
+    "receipt": "run-06.json"
+  },
+  "installedQualification": "HOLD; failures observed at W2/W3; protected owner release is required",
+  "globalRelease": false,
+  "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+  "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928"
+}

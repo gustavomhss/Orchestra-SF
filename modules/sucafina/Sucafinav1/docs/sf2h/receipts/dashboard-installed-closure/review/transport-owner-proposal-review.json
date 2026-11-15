@@ -1,0 +1,577 @@
+{
+  "schema": "sf2h.mission67.transport-owner-proposal-review.v1",
+  "status": "UNVALIDATED_OWNER_PROPOSAL",
+  "reviewer": "criteria_review",
+  "reviewedAtUtc": "2026-11-15T03:29:41+00:00",
+  "scope": "Independent static review of the inert owner52 Node request-body streaming proposal; no candidate application, compiler run, hosted test or runtime diagnosis.",
+  "targetPath": "apps/cli/src/sucafina-product/installation.ts",
+  "decision": {
+    "newConfirmedBoundaryRelaxationIdentified": false,
+    "staticConclusion": "The proposed diff preserves the existing host, proxy-header, exact-origin, Microsoft transport, native fallback and external Effect AbortSignal code paths. It substitutes one Node body adapter. Static preservation is not runtime qualification or release.",
+    "candidateApplied": false,
+    "candidateValidated": false,
+    "causalFixClaim": false,
+    "rootCauseEstablished": false,
+    "installedQualification": "HOLD",
+    "missionFullPass": false,
+    "integrationAuthorizedByThisReview": false
+  },
+  "authority": {
+    "protectedOwner": "52",
+    "owner52State": "HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE",
+    "terminalIntake": "60 or an explicitly authorized successor",
+    "owner60State": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "sourceApplyAuthorized": false,
+    "isolatedValidationApplyAuthorized": false,
+    "compiler45Interface": "CONFIRM_WITH_45",
+    "requiredBeforeAnyApplication": "Explicit qualified owner52 release and explicit active intake authority, exact-preimage CAS, plus the authorized compiler/test interface. Terminal handoff to60 does not reactivate60 or transfer protected ownership.",
+    "currentAction": "Archive proposal and review as inert evidence; leave source and isolated validation trees unchanged."
+  },
+  "proposalFingerprints": {
+    "preimage": {
+      "bytes": 5315,
+      "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+      "localGitBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "localPath": "/workspace/scratch/d76689cc7e80/domain-review/transport-proposal/installation.ts.preimage.txt",
+      "manifestMatches": true
+    },
+    "postimage": {
+      "bytes": 6127,
+      "sha256": "68699b559bd5fcd226c9db1a9dbfe237f79b985b59c509b59a6417ebcb501519",
+      "localGitBlob": "dea81619aa870b238a6ad004397cf47b1c92457d",
+      "localPath": "/workspace/scratch/d76689cc7e80/domain-review/transport-proposal/installation.ts.postimage.txt",
+      "manifestMatches": true
+    },
+    "patch": {
+      "bytes": 3371,
+      "sha256": "ebc2141537142ce3dfcb8f3b88c9601c9e35aef9e4d0846ced39c7b066607b43",
+      "localGitBlob": "f0a26a051b29a482e46d763f841b098d080c4211",
+      "localPath": "/workspace/scratch/d76689cc7e80/domain-review/transport-proposal/installation-node-stream.patch",
+      "manifestMatches": true
+    },
+    "manifest": {
+      "bytes": 1508,
+      "sha256": "07fb42ea230dab7d67f5a274da344649acc927aabf410df7112e9284413c5131",
+      "localGitBlob": "eb417b7a9a52cf9b541db42da52a8a7ce332b5fa",
+      "localPath": "/workspace/scratch/d76689cc7e80/domain-review/transport-proposal/manifest.json"
+    },
+    "rationale": {
+      "bytes": 9282,
+      "sha256": "63b8eb56896020c05a403862d73b24cb65b082a43eefa679a397782de05d2f0e",
+      "localGitBlob": "ddbe8f553cdc48d16d3ee722239b790a407486ca",
+      "localPath": "/workspace/scratch/d76689cc7e80/domain-review/transport-proposal/rationale.json"
+    },
+    "hypothesis": {
+      "bytes": 3692,
+      "sha256": "8acdd46c14329b5cc64305bedef92da73dcd7f796c185ec53aff91c7d640e0cc",
+      "localGitBlob": "8de60cbf8e29d5edfcda9d1cf383bf36318a6605",
+      "localPath": "/workspace/scratch/d76689cc7e80/domain-review/transport-proposal/bun-eof-hypothesis.json"
+    }
+  },
+  "materialComparison": {
+    "exactDeterministicUnifiedDiff": true,
+    "contextLines": 5,
+    "preimageCanonicalCommit": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+    "preimageCanonicalCommitRole": "S from run02/W1; do not relabel this retrieval as W2.",
+    "preimageCanonicalBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "currentW3Equality": "Parent root attests the protected preimage is unchanged in W3/run05. This reviewer did not independently retrieve installation.ts from W3.",
+    "preimageMatchesAuthorSourceCopy": true,
+    "changes": [
+      "Import concrete IncomingMessage, Readable and Option APIs.",
+      "For a concrete IncomingMessage source, use a single native Readable.toWeb body; retain Effect toWeb for all other source types.",
+      "Add a helper using the pinned HttpServerRequest.toURL, request method and sanitized headers, with duplex half for non-GET/HEAD bodies."
+    ],
+    "unchanged": "Installation factory validation, transport validation, host/origin gates, Microsoft adapter invocation, privacy layer, mount, contribution/disposal return values, handler invocation with actual Effect signal, response mapping and route catchCause remain outside the substantive diff."
+  },
+  "boundaryReview": [
+    {
+      "boundary": "host",
+      "status": "UNCHANGED_STATIC",
+      "evidence": [
+        "installation pre/postimage route"
+      ],
+      "finding": "Exact lowercased host equality against requestOrigin remains before conversion; absent or mismatched Host still returns403.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "proxy metadata",
+      "status": "UNCHANGED_STATIC",
+      "evidence": [
+        "installation pre/postimage sanitized",
+        "HttpServerRequest.toURL"
+      ],
+      "finding": "The explicit transport branch still erases forwarded and x-forwarded-* headers before the URL helper. The helper retains the exact pinned URL derivation; it adds no newly trusted forwarded header.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "origin and Microsoft transport",
+      "status": "UNCHANGED_STATIC",
+      "evidence": [
+        "installation pre/postimage requestOrigin, origin gate, readTransport, microsoftRequest call"
+      ],
+      "finding": "Exact web origin equality, fixed-origin transport validation, Microsoft normalization invocation and rejection of an absent normalized request remain unchanged. This review compares the unchanged call boundary, not a new qualification of every downstream Microsoft flow.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "source narrowing and native fallback",
+      "status": "PRESERVED_BY_STATIC_STRUCTURE",
+      "evidence": [
+        "installation postimage nodeSource branch",
+        "NodeHttpServer.ServerRequestImpl.modify",
+        "HttpServerRequest.toWebResult"
+      ],
+      "finding": "instanceof IncomingMessage narrows the actual Node source or subclass; modify retains its source with sanitized header overrides. Non-Node sources keep the old Effect toWeb, including its pre-existing native Request early return. No broad duck typing, fabricated source or arbitrary source cast is added.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "one body consumer and raw streaming",
+      "status": "PRESERVED_BY_STATIC_STRUCTURE",
+      "evidence": [
+        "installation postimage nodeWebRequest",
+        "Bun readable Readable.toWeb",
+        "Bun webstreams_adapters.newReadableStreamFromStreamReadable"
+      ],
+      "finding": "The Node branch never constructs the old Effect body stream before the native adapter. It forwards raw bytes as a stream, with no JSON transformation, full buffering, retry or synthetic response. GET/HEAD omit the body; other methods set duplex half. Native backpressure is pause/resume through desiredSize and the readable high-water mark.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "authorization and persistence",
+      "status": "NO_NEW_AUTHORITY_PATH",
+      "evidence": [
+        "installation pre/postimage handler invocation"
+      ],
+      "finding": "The candidate adds no grant, actor binding, domain mutation, persistence shortcut or alternate business handler. It does not prove that installed authorization or persistence succeeds.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "request signal",
+      "status": "UNCHANGED_EXTERNAL_SIGNAL_WITH_UNPROVEN_BODY_TERMINATION",
+      "evidence": [
+        "installation pre/postimage Effect.tryPromise",
+        "NodeHttpServer.makeHandler response close interruption"
+      ],
+      "finding": "The real Effect.tryPromise signal is still attached to the final Request passed to installation.handler. Preserving Request.signal does not establish that an arbitrary pending body reader terminates, or that cancellation reaches the underlying IncomingMessage promptly.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "EOF, error and cancellation lifecycle",
+      "status": "CHANGED_ADAPTER_REQUIRES_HOSTED_PROOF",
+      "evidence": [
+        "NodeStream.readableToPullUnsafe",
+        "Stream.toReadableStreamWith",
+        "Bun webstreams_adapters.newReadableStreamFromStreamReadable"
+      ],
+      "finding": "The body lifecycle changes from Effect readable.read/latch plus scope finalization to native data/pause/resume/finished/cancel. Native cancel destroys the Node source, and native completion still depends on source terminal events. There is no new explicit completion-time cancellation in the candidate. Empty/partial bodies, terminal error, disconnect and pending-body cancellation remain unproven.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "early denial and keep-alive",
+      "status": "REQUIRES_HOSTED_PROOF",
+      "evidence": [
+        "installation pre/postimage post-conversion gates",
+        "Bun webstreams_adapters paused body consumer"
+      ],
+      "finding": "An early response after construction may leave an unread body. The review cannot infer that listeners are released or that the next keep-alive request remains intact; test actual early rejection followed by another request without weakening domain authorization.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "body limits",
+      "status": "NO_LIMIT_EDIT_WITH_EXISTING_COVERAGE_LIMIT",
+      "evidence": [
+        "installation minimal diff",
+        "NodeHttpIncomingMessage.stream versus bounded text/arrayBuffer readers",
+        "proposal rationale limits"
+      ],
+      "finding": "No body-limit constant or downstream parser is edited. The inspected existing Effect stream path does not itself show the MaxBodySize enforcement used by its text/arrayBuffer readers. Do not claim either a new global cap regression or global chunked cap preservation from declared Content-Length rejection alone; validate the actual bounded product readers and declared oversized-body gate.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "errors, privacy, mount and disposal",
+      "status": "UNCHANGED_STATIC",
+      "evidence": [
+        "installation pre/postimage load/compose/catchCause/return"
+      ],
+      "finding": "The helper throws on an absent toURL result within the existing route catchCause; the503 fallback and403 origin gate remain. Privacy, mount pattern, original dispose and host contributions remain unchanged. No body, identity or header logging is added.",
+      "runtimeQualification": "NOT_RUN"
+    },
+    {
+      "boundary": "typed program and public APIs",
+      "status": "COMPILER45_NOT_RUN",
+      "evidence": [
+        "installation added imports and Request constructor",
+        "compiler45-request-W2.json"
+      ],
+      "finding": "The candidate uses concrete public APIs and no cast to hide stream compatibility. Actual node:stream/web ReadableStream assignability to the repository Bun/global Request BodyInit, RequestInit duplex typing and runtime class identity need the authorized exact-candidate typed-program/guard gate. The W2 compiler request does not qualify a future adapter candidate.",
+      "runtimeQualification": "NOT_RUN"
+    }
+  ],
+  "conditionalSourceHypothesis": {
+    "status": "SOURCE_OBSERVATION_WITH_RUNTIME_CAUSALITY_UNPROVEN",
+    "source": "oven-sh/bun bun-v1.3.14 src/js/node/_http_server.ts",
+    "canonicalGitBlob": "462b6019f341827b0a05dd5b24062152e79982ea",
+    "observed": "emitServerSocketEOFNT(self, req) sets req[eofInProgress] but queues emitServerSocketEOF with self only. The callback supplies request EOF and complete only when req is provided. IncomingMessage._read returns early while eofInProgress is true.",
+    "conditionalImplication": "If that completed-buffer resume branch is reached for the installed request and no alternate callback supplies its EOF, the request may lack its own terminal notification.",
+    "notEstablished": [
+      "The installed requests executed that exact branch.",
+      "No other runtime callback supplies EOF.",
+      "This conditional source defect caused run04 or run05.",
+      "Native Readable.toWeb avoids the branch or fixes the actual blockage."
+    ],
+    "lostWakeupClaim": "Not demonstrated for the actual Bun IncomingMessage. The normal synchronous read path defers readable/terminal notifications and the Effect adapter stores terminal exit before opening its latch.",
+    "candidateLimitation": "Native finished still depends on the underlying stream ending or failing. A different adapter/event ordering is a testable alternative, not a causal correction proved by static inspection.",
+    "additionalPlausibleStage": "Lazy installed service initialization or another handler wait before body reading remains possible; current observations do not isolate the internal phase."
+  },
+  "existingEvidence": {
+    "run03": {
+      "attempt": 3,
+      "status": "PASS",
+      "scope": "real domain, SQLite, C08, canonical HTTP and BrowserDriver consumer closure",
+      "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+      "WTree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+      "S": "461f1794edb80d9b29017ed18adb4019675a61a9",
+      "STree": "d4004df01abe75fbd1c6cc98b016b7e4fca02120",
+      "sourceCommit": "8ed803706d5585dba1724f3df7b3f920a45e78ec",
+      "sourceTree": "b21a153c00c20ef27280ef0c8fa50faa0743dc6e",
+      "runId": 43670302513,
+      "jobId": 132678661399,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670302513",
+      "counts": {
+        "passed": 26,
+        "failed": 0,
+        "assertions": 593,
+        "files": 10,
+        "durationSeconds": 68.02
+      },
+      "qualification": "Only the named tests at this exact W/S; no compiler45, installed production, AM, full78criteria, G7/G8 or global acceptance implied.",
+      "receipt": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-03.json",
+      "receiptFingerprint": {
+        "bytes": 13593,
+        "sha256": "717b7f36cde1d94373d259fda25060cc05605c2ed71df3451fd865fc52c819d2",
+        "localGitBlob": "72b487eb8ff1c7ac17699e50924d7827d9912408"
+      },
+      "reviewProvenance": "Existing current-session root receipt inspected read-only; this reviewer did not dispatch or execute the run."
+    },
+    "run04": {
+      "attempt": 4,
+      "status": "FAIL",
+      "scope": "installed production Playwright with corrected accessible selects",
+      "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+      "WTree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+      "S": "72032511a410840d86c6b7b76be73275a22828ca",
+      "STree": "f483fe0924426faa6356097ff241e76a1f8b529e",
+      "sourceCommit": "8ed803706d5585dba1724f3df7b3f920a45e78ec",
+      "sourceTree": "b21a153c00c20ef27280ef0c8fa50faa0743dc6e",
+      "runId": 43670694769,
+      "jobId": 132679854352,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670694769",
+      "counts": {
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0,
+        "flaky": 0
+      },
+      "interpretation": "Both installed GET controls returned200. Product and domain POSTs received no HTTP response and were aborted by the existing10s client deadline; no CSP/CORS event. The corrected Hot Topics selector reached Save. Actual internal body/adapter failure location is not yet proven. No installed behavioral PASS; no timeout increase or fake response.",
+      "receipt": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-04.json",
+      "receiptFingerprint": {
+        "bytes": 7947,
+        "sha256": "10b19ea851c03861c6a924ad0f0d2e1a84d516953b6e5044229dfb8a85417030",
+        "localGitBlob": "6515cbbdb20dd9c30cf20794fbd899083df1d623"
+      },
+      "reviewProvenance": "Existing current-session root receipt inspected read-only; this reviewer did not dispatch or execute the run."
+    },
+    "run05": {
+      "run": 43671673378,
+      "job": 132682862827,
+      "W": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+      "state": "FAILURE_OBSERVED_BY_ROOT",
+      "source": "Root independently downloaded/inspected run05 results and provided these values; this child did not re-execute or dispatch tests.",
+      "controls": {
+        "nodeGet": {
+          "status": 200,
+          "elapsedMs": 32
+        },
+        "browserGet": {
+          "status": 200,
+          "elapsedMs": 10
+        }
+      },
+      "postControls": {
+        "transports": [
+          "Node fetch",
+          "browser fetch"
+        ],
+        "payloads": [
+          "empty body",
+          "malformed JSON",
+          "valid read-only saved-view list"
+        ],
+        "attempts": 6,
+        "responses": 0,
+        "allAbortedAtMs": 15000
+      },
+      "conclusion": "The failure is not browser-specific and invalid JSON controls never reached a response. This does not identify the internal stage: lazy installed service initialization before body consumption remains possible.",
+      "reviewProvenance": "Parent-reported terminal observations repeated in the frozen author rationale. At review time run-05-request.json was present but no terminal run-05.json was present in the local receipt directory; this reviewer has not independently inspected the downloaded run05 artifact.",
+      "requestReceipt": "/workspace/scratch/d76689cc7e80/repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-05-request.json",
+      "requestFingerprint": {
+        "bytes": 313,
+        "sha256": "a64b0f696f3e9d6bf3a73c504e3b0025d26db2d1d7be568ce2a72ab72869085d",
+        "localGitBlob": "16f026e4f9ca9b28511c9a20dca7e4b1cdacecdf"
+      },
+      "S": "NOT_INDEPENDENTLY_ESTABLISHED_BY_THIS_REVIEW",
+      "doesNotProve": "The exact blocked internal phase, candidate success, installed business closure or any protected ownership release."
+    },
+    "failureHistory": "Retain run01 and run02 failures, run04 installed failure, and run05 diagnostic failure. Run03 does not replace failed installed evidence."
+  },
+  "requiredOwnerProof": [
+    {
+      "owner": "52 and active authorized intake",
+      "scope": "Release exact protected preimage and candidate; enforce CAS and do not infer an active60 lease from a terminal handoff.",
+      "status": "NOT_AUTHORIZED_BY_THIS_REVIEW"
+    },
+    {
+      "owner": "52 through the authorized hosted interface",
+      "scope": "Repeat the real Node/browser GET, empty POST, malformed JSON POST and valid read-only list controls unchanged; identify phase boundaries with payload-free observations only if needed. Preserve the failed run05 evidence.",
+      "status": "NOT_RUN_FOR_CANDIDATE"
+    },
+    {
+      "owner": "52 through the authorized hosted interface",
+      "scope": "Prove one-chunk and delayed split UTF-8 raw bodies, empty EOF, terminal errors, bounded parsers and declared oversized Content-Length behavior; do not invent chunked global-cap coverage.",
+      "status": "NOT_RUN_FOR_CANDIDATE"
+    },
+    {
+      "owner": "52 through the authorized hosted interface",
+      "scope": "Prove abort/disconnect during pending body, early authorization rejection without reading the full body, no domain effect, no unhandled rejection, and clean following keep-alive request.",
+      "status": "NOT_RUN_FOR_CANDIDATE"
+    },
+    {
+      "owner": "52 through the authorized hosted interface",
+      "scope": "Prove host/origin rejection, proxy-hint handling, Microsoft fixed-origin conversion and the native Web Request fallback on the actual supported runtime.",
+      "status": "NOT_RUN_FOR_CANDIDATE"
+    },
+    {
+      "owner": "45",
+      "scope": "Confirm the interface and run exact-candidate package typed-program/guard checks including effective installed E2E tsconfig membership; type safety cannot be inherited from W2 or papered over with casts.",
+      "status": "CONFIRM_WITH_45_NOT_RUN"
+    },
+    {
+      "owner": "67 or explicitly authorized successor through the hosted interface",
+      "scope": "After transport is qualified, rerun the two original installed Dashboard business journeys against the exact accepted W/S. Transport controls alone cannot qualify confirmation, withdrawal, conflicts, history/reopen, signals or authorization loss.",
+      "status": "INSTALLED_HOLD"
+    }
+  ],
+  "finalMissionScope": {
+    "sourceAndComposedConsumer": "Run03 qualifies only its26 named tests at W2/S461f1794: real domain, SQLite, C08, canonical HTTP and BrowserDriver fixture consumers. F04 is closed only for the named positive W2 oracle.",
+    "installed": "Run04 failed both installed journeys at their initial real save, after successful GET controls. Run05 observed both Node and browser POST controls without responses before15s. The installed required behavior remains unproved.",
+    "criteria": "Keep the78-ID result map partial/preserved/external-owner held as applicable. Do not convert all criteria, .10/.18 authority/provenance, resident/native/AM, T04 canonical creation, F01/F03, compiler45 or G7/G8 toPASS.",
+    "externalResponsibilities": {
+      "52": "Protected installed transport qualification/release.",
+      "45": "Compiler/guard interface and exact-candidate validation.",
+      "60": "Terminal intake only; active authority must be explicit.",
+      "S0": "Native/resident/AM and global acceptance or final recipe gates.",
+      "65": "F01/F03 lost-response/reload obligations.",
+      "48/59": "Preserved external producer obligations; no authority transfer or blanket requalification."
+    },
+    "permittedReport": "Completed source patch and named hosted proofs, installed HOLD with exact failures, inert owner52 proposal and explicit terminal handoff; no full mission PASS or automatic integration."
+  },
+  "sourceRegistry": [
+    {
+      "localPath": "Orchestra-SF/apps/cli/src/sucafina-product/installation.ts",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "gitBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e4a6587636c396d5052bbe848ed9b473ac1adb3/apps/cli/src/sucafina-product/installation.ts",
+      "content": "Full source; final trailing newline normalized when materialized.",
+      "localFingerprint": {
+        "bytes": 5315,
+        "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "localGitBlob": "21236af83e4de879242fd298d9e15a9923f3bf41"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Orchestra-SF/package.json",
+      "repository": "gustavomhss/Orchestra-SF",
+      "ref": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+      "path": "package.json",
+      "gitBlob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e4a6587636c396d5052bbe848ed9b473ac1adb3/package.json",
+      "content": "Full source; final trailing newline normalized when materialized.",
+      "localFingerprint": {
+        "bytes": 6526,
+        "sha256": "6e5c01f798f19ec5d6f3103f611cc9e57d4430f8da15c2fa49701a4c1d1509c8",
+        "localGitBlob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Effect-TS/effect/src/unstable/http/HttpServerRequest.ts",
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/effect/src/unstable/http/HttpServerRequest.ts",
+      "gitBlob": "83e6c3e6f9d0f12ce2eb4ccec969459f9f99c7a4",
+      "url": "https://github.com/Effect-TS/effect-smol/blob/effect@4.0.0-beta.83/packages/effect/src/unstable/http/HttpServerRequest.ts",
+      "content": "Full source; final trailing newline normalized when materialized.",
+      "localFingerprint": {
+        "bytes": 32043,
+        "sha256": "aba73f3fbfbf19095d7891da363c300c11cf293ae37d5d85d68569cd9a471847",
+        "localGitBlob": "83e6c3e6f9d0f12ce2eb4ccec969459f9f99c7a4"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Effect-TS/platform-node/src/NodeHttpServer.ts",
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/platform-node/src/NodeHttpServer.ts",
+      "gitBlob": "f6838fb329942f4db1f3894eecf5e3d3ee57b28a",
+      "url": "https://github.com/Effect-TS/effect-smol/blob/effect@4.0.0-beta.83/packages/platform-node/src/NodeHttpServer.ts",
+      "content": "Full source; final trailing newline normalized when materialized.",
+      "localFingerprint": {
+        "bytes": 21108,
+        "sha256": "c4f2c2d236dc785d7d4b76d35384333d82329e59623cd36bda005b0989fd730f",
+        "localGitBlob": "f6838fb329942f4db1f3894eecf5e3d3ee57b28a"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Effect-TS/platform-node/src/NodeHttpIncomingMessage.ts",
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/platform-node/src/NodeHttpIncomingMessage.ts",
+      "gitBlob": "2461e86c785d6f7435c8e4cc533f450329d9cc44",
+      "url": "https://github.com/Effect-TS/effect-smol/blob/effect@4.0.0-beta.83/packages/platform-node/src/NodeHttpIncomingMessage.ts",
+      "content": "Full source; final trailing newline normalized when materialized.",
+      "localFingerprint": {
+        "bytes": 4408,
+        "sha256": "f049f8be49a2aa894b13676bc15a0cd76cabaa77b36470a4c3b043bb6fc1e10b",
+        "localGitBlob": "2461e86c785d6f7435c8e4cc533f450329d9cc44"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Effect-TS/platform-node-shared/src/NodeStream.ts",
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/platform-node-shared/src/NodeStream.ts",
+      "gitBlob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+      "url": "https://github.com/Effect-TS/effect-smol/blob/effect@4.0.0-beta.83/packages/platform-node-shared/src/NodeStream.ts",
+      "content": "Full source; final trailing newline normalized when materialized.",
+      "localFingerprint": {
+        "bytes": 14751,
+        "sha256": "852b6d180f45f8487e49827517ec5b7afe50692e580778ca30c625163e2f08c1",
+        "localGitBlob": "342eeabadb49aeb5a9025911ba67b43fa641b590"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Bun/src/js/node/_http_incoming.ts",
+      "repository": "oven-sh/bun",
+      "ref": "bun-v1.3.14",
+      "path": "src/js/node/_http_incoming.ts",
+      "gitBlob": "83de7a47c71e9bdfdc7cb2cdd3af7f947e88db22",
+      "url": "https://github.com/oven-sh/bun/blob/bun-v1.3.14/src/js/node/_http_incoming.ts",
+      "content": "Full source; final trailing newline normalized when materialized.",
+      "localFingerprint": {
+        "bytes": 13045,
+        "sha256": "de1f2e02883589cf41e1d695eac722a28722f9c3960392a1d78c499cc932f08e",
+        "localGitBlob": "83de7a47c71e9bdfdc7cb2cdd3af7f947e88db22"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Effect-TS/effect/src/Stream.toReadableStreamWith.source-excerpt.txt",
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "path": "packages/effect/src/Stream.ts",
+      "gitBlob": "ebeb0909c00a3ea84354eefa14c5cd4c56ef1c17",
+      "startLine": 11145,
+      "endLine": 11200,
+      "content": "Exact source excerpt; no code execution.",
+      "localFingerprint": {
+        "bytes": 1787,
+        "sha256": "832601cf39691c549b9fdb941bcd2c07f0b4be3ba598ae5bf61d102de62cd6d1",
+        "localGitBlob": "33ad0f5a3bc1f0c9845193f223c39b243df5f72d"
+      },
+      "use": "Pinned source read for static comparison only; not execution evidence."
+    },
+    {
+      "localPath": "Bun/src/js/node/_http_server.ts",
+      "repository": "oven-sh/bun",
+      "ref": "bun-v1.3.14",
+      "localFingerprint": {
+        "bytes": 56998,
+        "sha256": "c59387bc265b85805bbb6b45c371ea9cb22848bb3d8222b5730280ab4e9b3d2b",
+        "localGitBlob": "462b6019f341827b0a05dd5b24062152e79982ea"
+      },
+      "use": "Author-materialized pinned primary-source file read in this review; local digest is not a new independent remote retrieval.",
+      "canonicalGitBlobFromProposalSourceRecord": "462b6019f341827b0a05dd5b24062152e79982ea"
+    },
+    {
+      "localPath": "Bun/src/js/internal/webstreams_adapters.ts",
+      "repository": "oven-sh/bun",
+      "ref": "bun-v1.3.14",
+      "localFingerprint": {
+        "bytes": 21813,
+        "sha256": "a1b5bce498f8b170335358f4bb81600ae6d6994833042062dd40fef62e9c531a",
+        "localGitBlob": "86bc91551f7b5e9c6eea379f05a61874f42cfec8"
+      },
+      "use": "Author-materialized pinned primary-source file read in this review; local digest is not a new independent remote retrieval.",
+      "canonicalGitBlobFromProposalSourceRecord": "86bc91551f7b5e9c6eea379f05a61874f42cfec8"
+    },
+    {
+      "localPath": "Bun/src/js/internal/streams/readable.ts",
+      "repository": "oven-sh/bun",
+      "ref": "bun-v1.3.14",
+      "localFingerprint": {
+        "bytes": 49856,
+        "sha256": "0fd7fcfecc8ee51b6bfecf25c97603d2728a8618c4c086f31e04ab867008395b",
+        "localGitBlob": "67fb16b260c017766e2aac01829d51f7ddda1d7a"
+      },
+      "use": "Author-materialized pinned primary-source file read in this review; local digest is not a new independent remote retrieval."
+    },
+    {
+      "localPath": "Effect-TS/effect/src/unstable/http/HttpEffect.ts",
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "localFingerprint": {
+        "bytes": 14308,
+        "sha256": "9309061346c156579e817a711078e904f564c020ca3a37c1ef8586bfd0327ab8",
+        "localGitBlob": "27afb26fff9674367313ae7f83d85764c26320b4"
+      },
+      "use": "Author-materialized pinned primary-source file read in this review; local digest is not a new independent remote retrieval."
+    },
+    {
+      "localPath": "Effect-TS/effect/src/internal/Latch.source-excerpt.txt",
+      "repository": "Effect-TS/effect-smol",
+      "ref": "effect@4.0.0-beta.83",
+      "localFingerprint": {
+        "bytes": 1799,
+        "sha256": "9a9bae25c69cf287efecdd6fabc665e470c2adaf52a53604c527f461111f1068",
+        "localGitBlob": "3ad7ae3ef7048e47b4b62e6ad4910df0d8c2214f"
+      },
+      "use": "Author-materialized pinned primary-source file read in this review; local digest is not a new independent remote retrieval."
+    }
+  ],
+  "inspectionAudit": {
+    "localProductTestsExecuted": 0,
+    "localNodeOrBunInvocations": 0,
+    "compilerInvocations": 0,
+    "hostedTestsDispatched": 0,
+    "remoteReadsForThisProposalReview": 0,
+    "remoteWrites": 0,
+    "productSourceEdits": 0,
+    "validationTreeEdits": 0,
+    "candidateApplications": 0,
+    "mechanicalWork": [
+      "Read current-session local source/proposal/receipt files.",
+      "Parse JSON and compute file bytes/SHA256/Git blob identities.",
+      "Verify the deterministic unified diff matches the proposed pre/postimages.",
+      "Write this local review artifact."
+    ],
+    "artifactsWritten": [
+      "/workspace/scratch/d76689cc7e80/criteria-review/transport-owner-proposal-review.json"
+    ],
+    "claimBoundary": "Static observations and recorded existing hosted results only; the proposed adapter has no runtime PASS."
+  }
+}

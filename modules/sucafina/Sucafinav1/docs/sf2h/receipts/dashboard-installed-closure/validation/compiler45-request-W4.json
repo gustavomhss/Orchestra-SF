@@ -1,0 +1,909 @@
+{
+  "schema": "sf2h.mission67.compiler45-request.v1",
+  "requestId": "M67-A45-W4-454100ddc351",
+  "requester": "67 Dashboard installed closure",
+  "recipient": "45 compiler/guards",
+  "state": "NOT_RUN",
+  "interfaceState": "CONFIRM_WITH_45",
+  "purpose": "Solicitar os gates de compilação/guards documentados pelo inventário terminal60 para o candidato material W4 exato, incluindo prova do programa E2E efetivo. Este documento não executa nem despacha checks.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "binding": {
+    "candidate": "W4",
+    "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+    "tree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+    "parent": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+    "source": {
+      "branch": "dashboard-installed-proof",
+      "commit": "f411493f5430437a003e0f9bb01b9246afdacaa9",
+      "tree": "78c26fb63de7d5210786dd01a66ca2916057e7ac"
+    },
+    "materialBase": {
+      "commit": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+      "context": "C28 Reports48 material; faa30 is terminal docs-only parent checkpoint."
+    },
+    "identityProvenance": "Exact W4/source commit and tree identities supplied by root after GitHub MCP/CAS candidate construction. This request generator made no remote calls; owner45 must verify the actual checkout identities before attributing evidence.",
+    "qualification": "HOLD_NOT_RUN_FOR_COMPILER45",
+    "sourcePassTransferForbidden": true,
+    "checkoutRule": "Compile exact W4 with all17 complete material postimages, including all5 consumer overlays already bound in its tree. Compiling only source f411493 does not qualify W4. The inert protected installation52 proposal is outside this candidate.",
+    "target": {
+      "branch": "sf2-stack",
+      "commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "state": "Historical material target used to construct W4. Live sf2-stack has since advanced materially through C29-C35; this request does not qualify or write the new target."
+    },
+    "candidateHistory": {
+      "previousCompilerRequest": {
+        "path": "criteria-review/compiler45-request-W2.json",
+        "sha256": "0cc0bd4e2f69995d51017d74ab6ec84f8d282aa162de68d06ded0f67d0a4b55b",
+        "W": "1a3a3c20dacf3518759bf254e1bf1ff9c6167809",
+        "tree": "155f91d60a7dfeb38c150bb40c60d5cec0841a30",
+        "state": "NOT_RUN"
+      },
+      "parentW3": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+      "historyRule": "Keep the prior request and run03 proof under their original identities. They confer no compiler PASS or automatic functional result on W4."
+    },
+    "currentTargetObservation": {
+      "branch": "sf2-stack",
+      "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "materialAdvance": "C29-C35",
+      "provenance": "Current-session root MCP readbacks and target-reconciliation-terminal.json inspected locally. The compare returned its300-file cap; no complete dependency equality is inferred.",
+      "qualifiedByThisRequest": false,
+      "required": "Explicitly authorized intake71 must reconcile against the current target and bind a new exact material candidate for fresh qualification; W4 compiler or functional evidence does not transfer.",
+      "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+      "candidate": "C35",
+      "state": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/review/target-reconciliation-terminal.json"
+    }
+  },
+  "normativeInputs": {
+    "authorityDocumentCommit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "validationInputPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/validation-inputs-final.json",
+    "validationInputBlob": "e3a4bdf1b55fbbd2d14d447117e2a5d05b6ef12c",
+    "authorityPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+    "handoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md",
+    "origin": "Previously read through GitHub MCP at exact faa30; reused locally for this request.",
+    "inventorySection": "A45_active_commands",
+    "interfaceSection": "A45_interface",
+    "e2eEvidenceSection": "A45_e2e_evidence_verifier",
+    "retainedCommandCount": 15,
+    "commandTransferRule": "C28 command definitions are retained literally, but all requested execution evidence must bind W4/tree1ad2480; inherited C28 identifiers remain provenance only."
+  },
+  "authority": {
+    "owner45Required": true,
+    "owner67Action": "Prepare inert request only; no checks, compiler workflow, branch trigger or remote write performed by this request.",
+    "owner60State": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "integrationRule": "60 remains terminal. Explicit successor71 has ACK71_ACCEPTED_BOUNDED_SUCCESSION under S0-C-e13-browser71 at the recorded control/ACK identities;71 integrates released exact units but does not dispatch tests/checks. Owner45 and the authorized source lane retain their validation roles. This inert request grants no new authority.",
+    "workflowSelection": {
+      "state": "CONFIRM_WITH_45",
+      "chosenWorkflow": null,
+      "dispatch": null,
+      "noInventedWorkflow": true,
+      "observedConstraints": {
+        "state": "CONFIRM_WITH_45",
+        "observed_active_workflows": [
+          ".github/workflows/sf2-epic.yml",
+          ".github/workflows/test-ci.yml"
+        ],
+        "absent_in_C21": [
+          ".github/workflows/sf2-scoped-check.yml",
+          "script/sf2h/scoped-checks/"
+        ],
+        "sf2_epic": {
+          "trigger": "push refs/heads/sf2-epic-c",
+          "repository_guard": "github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710'",
+          "manual_dispatch": false,
+          "restricted_to_owner": "S0",
+          "why_not_A45": "Runs functional matrices, recipe tests and inherited epic jobs as well as compiler gates; mission45 forbids using full epic for compiler proof."
+        },
+        "test_ci": {
+          "trigger": "push ci-run-*",
+          "role": "Functional test workflow; supported test runners are not a documented compiler-only interface.",
+          "uploader": "bun run test:ci / script/test-ci.ts uses remote git/gh and is not authorized as a remote channel in this campaign."
+        },
+        "mission45_example": {
+          "path": ".github/workflows/astra-wp10-check.yml",
+          "source_branch_named_by_mission": "astra-check-wp10",
+          "state": "Reference only, absent in C21; no branch or lease reuse authorized by this inventory."
+        },
+        "next_step": "A45 selects a documented authorized compiler-only interface or delivers the mission45-bounded workflow/tooling. Newly delivered gate files must be integrated and bound to a new exact material candidate before being presented as same-candidate proof."
+      },
+      "requestedNextStep": "45 identifies and documents its authorized compiler-only interface for this exact material candidate. If45 must deliver bounded workflow/tooling, record that authorization, integrate required files through the authorized owner and bind a new exact candidate before claiming same-candidate proof."
+    },
+    "restrictions": [
+      "Do not trigger sf2-epic-c as a compiler-only shortcut; its full EPIC/functional workflow belongs to S0.",
+      "Do not treat test-ci.yml supported functional runners as an established compiler-only interface.",
+      "Do not use bun run test:ci or script/test-ci.ts uploader as an alternative remote git/gh channel.",
+      "No reuse of an old example branch/lease, no workflow or gate weakening, and no suppression of compile errors to get a successful request.",
+      "No shell redesign, BI62 edit or material mutation on sf2-stack is authorized by this request."
+    ],
+    "currentIntegrationAuthority": {
+      "predecessor": 60,
+      "successor": 71,
+      "state": "ACK71_ACCEPTED_BOUNDED_SUCCESSION",
+      "lease": "S0-C-e13-browser71",
+      "ack": {
+        "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/ACK71.json",
+        "blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2"
+      },
+      "control": {
+        "ref": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/integration-release-wave.json",
+        "blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7"
+      },
+      "sourceWriteAuthorityExpanded": false,
+      "provenance": "Exact current-session root GitHub MCP readback recorded in target-reconciliation-terminal.json; local receipt inspected by criteria_review. No new remote call in this update."
+    }
+  },
+  "packages": [
+    {
+      "cwd": "modules/atlas/boundary",
+      "commandIds": [
+        "ATLAS_CHECK_GENERATED",
+        "ATLAS_GENERATE",
+        "ATLAS_CLEAN_DIFF",
+        "TYPECHECK_BOUNDARY"
+      ],
+      "scope": "inherited A45 candidate gate"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "commandIds": [
+        "TYPECHECK_SUCAFINA"
+      ],
+      "scope": "direct producer/module/new domain and consumer-test compilation"
+    },
+    {
+      "cwd": "packages/core",
+      "commandIds": [
+        "TYPECHECK_CORE"
+      ],
+      "scope": "inherited A45 candidate gate and production core dependencies"
+    },
+    {
+      "cwd": "apps/cli",
+      "commandIds": [
+        "TYPECHECK_CLI"
+      ],
+      "scope": "direct shared consumer/composition compilation"
+    },
+    {
+      "cwd": "packages/app-shell",
+      "commandIds": [
+        "TYPECHECK_APP-SHELL",
+        "SF_E2E_EFFECTIVE_CONFIG",
+        "SF_E2E_PROGRAM"
+      ],
+      "scope": "direct consumer package and separate effective Sucafina E2E program"
+    },
+    {
+      "cwd": ".",
+      "commandIds": [
+        "FINAL_BUNDLE_REPRODUCTION",
+        "FINAL_REQUEST_ADMISSION",
+        "SF_E2E_DECLARED_INPUT_PREFLIGHT",
+        "SPAWN_IMPORTS",
+        "GUARDS"
+      ],
+      "scope": "inherited static packaging/admission guards and candidate import/guard checks"
+    }
+  ],
+  "commands": [
+    {
+      "id": "ATLAS_CHECK_GENERATED",
+      "order": 1,
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run check:generated",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static",
+        "modules/atlas/boundary/package.json#scripts.check:generated"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Inherited A45 generated-boundary consistency gate.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "ATLAS_GENERATE",
+      "order": 2,
+      "cwd": "modules/atlas/boundary",
+      "command": "bun run generate",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static",
+        "modules/atlas/boundary/package.json#scripts.generate"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Inherited documented generation step; derived working-tree output must remain clean and cannot be published by this request.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "ATLAS_CLEAN_DIFF",
+      "order": 3,
+      "cwd": "modules/atlas/boundary",
+      "command": "git diff --exit-code -- .",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Record the real exit status and generated diff after ATLAS_GENERATE; no discarded diff or substituted clean-state claim.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "TYPECHECK_BOUNDARY",
+      "order": 4,
+      "cwd": "modules/atlas/boundary",
+      "command": "bun typecheck",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static",
+        "modules/atlas/boundary/package.json#scripts.typecheck"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Inherited boundary package gate retained for complete candidate qualification.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "TYPECHECK_SUCAFINA",
+      "order": 5,
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static",
+        "modules/sucafina/package.json#scripts.typecheck"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "direct_mission67_gate",
+      "purpose": "Directly affected: Dashboard producers, new domain/browser tests and module consumer.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "TYPECHECK_CORE",
+      "order": 6,
+      "cwd": "packages/core",
+      "command": "bun typecheck",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static",
+        "packages/core/package.json#scripts.typecheck"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Inherited core package gate retained; source tests import production core/browser driver contracts.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "TYPECHECK_CLI",
+      "order": 7,
+      "cwd": "apps/cli",
+      "command": "bun typecheck",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static",
+        "apps/cli/package.json#scripts.typecheck"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "direct_mission67_gate",
+      "purpose": "Directly affected: actual Dashboard decisions, HTTP route and business-services composition postimages.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "TYPECHECK_APP-SHELL",
+      "order": 8,
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck",
+      "documentedBy": [
+        ".github/workflows/sf2-epic.yml#sf-static",
+        "packages/app-shell/package.json#scripts.typecheck"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "direct_mission67_gate",
+      "purpose": "Directly affected consumer package; this alone is not proof that the separate Sucafina E2E program includes the new specs.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "SF_E2E_EFFECTIVE_CONFIG",
+      "order": 9,
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e --showConfig",
+      "documentedBy": [
+        "script/sf2h/final-bundle/README.md",
+        ".github/workflows/sf2-epic.yml#sf-e2e-typecheck"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "direct_mission67_gate",
+      "purpose": "Capture the actual compiler effective config, stderr and exit status. A declared include pattern alone is insufficient.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "SF_E2E_PROGRAM",
+      "order": 10,
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e --listFiles --pretty false",
+      "documentedBy": [
+        "script/sf2h/final-bundle/README.md",
+        ".github/workflows/sf2-epic.yml#sf-e2e-typecheck"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "direct_mission67_gate",
+      "purpose": "Run the real effective E2E TypeScript program and retain listFiles plus compiler diagnostics/exit status; do not accept listFiles with failing compilation as PASS.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "FINAL_BUNDLE_REPRODUCTION",
+      "order": 11,
+      "cwd": ".",
+      "command": "python3 script/sf2h/final-bundle/build-artifact.py --repo-root . --check",
+      "documentedBy": [
+        "script/sf2h/final-bundle/README.md"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Inherited compiler/static evidence packaging guard; --check does not confer G7/G8 or authorize functional recipes.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "FINAL_REQUEST_ADMISSION",
+      "order": 12,
+      "cwd": ".",
+      "command": "node script/sf2h/final-bundle/validate-requests.mjs",
+      "documentedBy": [
+        "script/sf2h/final-bundle/README.md"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Inherited static request-admission guard; does not dispatch the requests or assert their functional outcomes.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "SF_E2E_DECLARED_INPUT_PREFLIGHT",
+      "order": 13,
+      "cwd": ".",
+      "command": "node script/sf2h/final-bundle/verify-e2e-typecheck.mjs --inventory",
+      "documentedBy": [
+        "script/sf2h/final-bundle/README.md"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "inherited_A45_candidate_gate",
+      "purpose": "Inventory preflight is complementary to actual showConfig/listFiles and cannot replace them.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "SPAWN_IMPORTS",
+      "order": 14,
+      "cwd": ".",
+      "command": "bun run check:spawn-imports",
+      "documentedBy": [
+        "package.json#scripts.check:spawn-imports",
+        ".github/workflows/sf2-epic.yml#sf-static"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "direct_mission67_gate",
+      "purpose": "Required actual import-boundary guard on exact W4 tree.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    },
+    {
+      "id": "GUARDS",
+      "order": 15,
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "documentedBy": [
+        "script/sf2h/final-bundle/README.md",
+        ".github/workflows/sf2-epic.yml#sf-static"
+      ],
+      "requestedOwner": "45",
+      "execution": "NOT_RUN",
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "classification": "direct_mission67_gate",
+      "purpose": "Required actual guards on exact candidate with current origin/dev and merge-base identities reconfirmed at execution.",
+      "result": null,
+      "exitCode": null,
+      "evidence": null
+    }
+  ],
+  "materialInputs": {
+    "manifestPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/manifest.json",
+    "manifestSha256": "51d4d6fb9992c757981b97f2bacd4320063d589cf18b52bd909855ff3c0f9199",
+    "completePatch": {
+      "bytes": 171431,
+      "sha256": "c6c013b654ed6bf79da19945b0b370d93ed89b963d027678f6c84943f65a4173",
+      "blob": "bf64898d90e03e232344b820a22b0285f5c99bac"
+    },
+    "sourcePathCount": 12,
+    "externalOverlayCount": 5,
+    "expectedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 37351,
+          "sha256": "c9a3c3ce60ae56279d0fc31e73aaecc50b9789fae103adee16c1d589c71974ca",
+          "blob": "f90bf0c0d177a04d3fec2a6840b11de079b9def0"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "expectedCanonicalPreimage": {
+          "bytes": 28021,
+          "sha256": "8c80486f9c928b850e7e26a9a9b74c038def3446f559ee073cb6e5cb68f6ea1b",
+          "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa"
+        },
+        "preimageArchive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 3762,
+          "sha256": "6010fb35c7f043f378ccf531eef3c9260a342fab9456657482b8259ce4e491be",
+          "blob": "a90aa78a30feadc5ac57e2def9aba69617884b9f"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "expectedCanonicalPreimage": {
+          "bytes": 3375,
+          "sha256": "377f0a553d9c6784c1b064ea3f0a5405e0cb8e54ceb8b4c8a6a5a76b0e19fb55",
+          "blob": "c729de5019c0756b4191a6674a38a523f1768683"
+        },
+        "preimageArchive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 14782,
+          "sha256": "690d1b7454e7abf26423dd6aa18a3da1aceaac59910d19c40f418aca8f01b3c7",
+          "blob": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 19897,
+          "sha256": "61ddfa7455cee7941543bf8b19136e22fb8b1ee92c9846f177db41faa081e7af",
+          "blob": "cd63e19210c01d7251e562ef135b554982a24be2"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts.postimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 9537,
+          "sha256": "523474a93de75d20612c55f1df33993f6ba4cfbeb04605ae1d46f6fce56696b1",
+          "blob": "d37f9ff2166bc339aa62c4e4da53755edc0db11a"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 9508,
+          "sha256": "8d35dc4d0cb311da9e0a20931ab9cfff92389938ad45ef95bff104cf8c665280",
+          "blob": "d5ffdc24f23b20557613383d38cc03155e5e68c4"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts.postimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 8996,
+          "sha256": "efb435a0db2eafc85e40b1aaf08b496d6e2bd0c9f6f004bd4fd9ff543ef7dc95",
+          "blob": "7f1d3185262aa229cc8c7dd61e458d5823d289ab"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 11309,
+          "sha256": "c5cd06d5960ab47a26e43686b45891267aaefc6b62cb6f4f4547d0045cdbf150",
+          "blob": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 10417,
+          "sha256": "07198a115369d507afbf0be18b4933eb93a9e2ad25bd8ff88d9378372f292695",
+          "blob": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 12862,
+          "sha256": "96fc8c19728c931340b1fa6389cfa980aba45147343f8b9191da0535a1bc5195",
+          "blob": "5b2371c4048b38cefdaa252b17cd60191b00fddd"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 9646,
+          "sha256": "9cc11ee16ff5f3e0884c7294b4ace3154e40395c568490da33cacfa3ce3eb29b",
+          "blob": "c152f7ecb92cd814da8fbe221d7d87ae448f622f"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+        "area": "source",
+        "expectedPostimage": {
+          "bytes": 10918,
+          "sha256": "3407ce26592ef1276e4e35fafe80bdf07832cf91b262b5d5fbf48ae8f458dd80",
+          "blob": "07a62a71e797278803b8bd3a9308f8f751a69196"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts.postimage.txt"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "area": "external-for60",
+        "expectedPostimage": {
+          "bytes": 71829,
+          "sha256": "4112d234c0157b12c53c15f59bdb5401e15f1e132f077ce51bad4af440f67fc8",
+          "blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "expectedCanonicalPreimage": {
+          "bytes": 71752,
+          "sha256": "b09992087f3aed42da28b527bd07682fe244b639dd6804ec954a3fc109ceda71",
+          "blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+        },
+        "preimageArchive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "area": "external-for60",
+        "expectedPostimage": {
+          "bytes": 48184,
+          "sha256": "029e9d64ea15b8192a4b7589cfad479b3d1297a38434f91a58e62d32b56f1fa3",
+          "blob": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "expectedCanonicalPreimage": {
+          "bytes": 38305,
+          "sha256": "faa9602f7f7465e2748ac2fc0fe31a2ced07679a3522c4b4fea603e1dfff1726",
+          "blob": "3061f529e1417ba29f9976c3f132c1a08ead0742"
+        },
+        "preimageArchive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "area": "external-for60",
+        "expectedPostimage": {
+          "bytes": 16194,
+          "sha256": "2dccb66d6c5114366468ee1e743dbb87aeada1c1163739cf109b18949ef824c9",
+          "blob": "12e9cb870edcbc8c67e641915f033b6af4f8890c"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "expectedCanonicalPreimage": {
+          "bytes": 13995,
+          "sha256": "eb0e6bc5cd0b4d41541bc9eef8c0bfc8cd4ffcf0e09a33b4cde91d2efa1bd068",
+          "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c"
+        },
+        "preimageArchive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "area": "external-for60",
+        "expectedPostimage": {
+          "bytes": 48419,
+          "sha256": "104d9619daad6f54a3413420ba973458abbd80c56b30cf2d2e91ffd954e3f751",
+          "blob": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "expectedCanonicalPreimage": {
+          "bytes": 45621,
+          "sha256": "1053f79eb226cee627591418294e2c12e60de5ff3fc4ec0f91ecde3546534bd6",
+          "blob": "06a4f77b691aa921fde3eee2c70f892fa1d99f41"
+        },
+        "preimageArchive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt"
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "area": "external-for60",
+        "expectedPostimage": {
+          "bytes": 2593,
+          "sha256": "3a20f94de208caeadfeff36fb31e5b399aefbb16febea812c6f9081ef4316bff",
+          "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b"
+        },
+        "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "expectedCanonicalPreimage": {
+          "bytes": 2547,
+          "sha256": "ffc94903b67390b43bd79b8b43f0f682e9274b122f79cfd4178e8572a26c1024",
+          "blob": "2bb15622053039562aab716f9afce410071afaf3"
+        },
+        "preimageArchive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt"
+      }
+    ],
+    "recheckAtExecution": "Record actual checkout commit/tree and actual material files. A changed workflow/tooling/product input requires a new explicit candidate binding; no silent reattribution to W4.",
+    "postimageCount": 17,
+    "attempt03Revision": {
+      "rootReportedChange": "Three CLI consumer canonical preimages corrected and corresponding postimages normalized only by final newline; transport-probe.spec.ts is included as the fourth direct installed E2E program file. No protected installation.ts change.",
+      "canonicalPreimageCorrections": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "apps/cli/src/sucafina-product/dashboard-http.ts"
+      ],
+      "localVerification": "All17 archived postimages, all supplied archived preimages, and complete.patch match attempt-03 manifest byte counts, SHA256 and Git blob identities. This is mechanical file verification, not compilation, execution or independent remote checkout verification."
+    }
+  },
+  "effectiveE2EProgram": {
+    "status": "NOT_RUN",
+    "package": "packages/app-shell",
+    "configPath": "packages/app-shell/e2e/tsconfig.json",
+    "declaredConfigExpectedPostimage": {
+      "bytes": 2593,
+      "sha256": "3a20f94de208caeadfeff36fb31e5b399aefbb16febea812c6f9081ef4316bff",
+      "blob": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b"
+    },
+    "declaredInclude": "./sucafina/dashboard-installed/**/*.ts",
+    "declaredOnlyIsNotEvidence": true,
+    "requiredDirectProgramFiles": [
+      "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+      "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts"
+    ],
+    "requiredConfigAndImportedFixtureFiles": [
+      "packages/app-shell/e2e/playwright.production.config.ts",
+      "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts"
+    ],
+    "inheritedInclusionsRule": "Retain existing Reports/Operations and other effective program inputs; do not narrow, replace or exclude them to make the new specs compile.",
+    "proof": [
+      "SF_E2E_EFFECTIVE_CONFIG must emit real effective-config.json and config.stderr.log with the actual exit code.",
+      "SF_E2E_PROGRAM must produce real compiler/typecheck.log with --listFiles --pretty false, actual exit code and all diagnostics.",
+      "Normalize actual compiler file paths relative to the checkout only for comparison; record presence of every required direct file and actual production config/imported installation fixture in the effective program.",
+      "An include glob in source, empty/failing compiler output or static inventory alone cannot be recorded as successful inclusion.",
+      "Record the actual effective TS config, Bun/compiler versions and all transitive program inputs; do not replace the installed fixture or skip a spec.",
+      "Execute the documented verifier with actual output paths/statuses and retain its emitted inclusion.json and exit status.",
+      "The actual effective program must include all four direct dashboard-installed files, including transport-probe.spec.ts, plus the production config and imported installation fixture; a previous three-file inclusion record is insufficient for W4."
+    ],
+    "verifier": {
+      "cwd": ".",
+      "commandTemplate": "node script/sf2h/final-bundle/verify-e2e-typecheck.mjs --config \"$evidence/effective-config.json\" --log \"$evidence/typecheck.log\" --config-status \"$config_status\" --typecheck-status \"$typecheck_status\" --output \"$evidence/inclusion.json\"",
+      "documentedBy": ".github/workflows/sf2-epic.yml#sf-e2e-typecheck",
+      "placeholderBinding": "Variables are bound by the documented workflow to actual output paths and both compiler exit codes, not invented values.",
+      "requiredArtifacts": [
+        "GITHUB_SHA exact candidate",
+        "SF_PRODUCT_TREE exact checkout tree",
+        "GITHUB_RUN_ID",
+        "GITHUB_RUN_ATTEMPT",
+        "bun-version.txt",
+        "effective-config.json",
+        "config.stderr.log",
+        "typecheck.log",
+        "inclusion.json"
+      ],
+      "candidateW": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "candidateTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "execution": "NOT_RUN",
+      "invocation": null,
+      "exitCode": null
+    },
+    "requiredDirectProgramFileCount": 4
+  },
+  "guardBinding": {
+    "commandId": "GUARDS",
+    "command": "bun run check:guards --base origin/dev",
+    "mustReconfirmAtExecution": true,
+    "historicalReferenceOnly": {
+      "originDev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "forCandidate": "d088708276b48f896ad4e0ecd2a95cb73dc413b1"
+    },
+    "requiredCurrentRecord": [
+      "Current origin/dev commit actually used by guards",
+      "Actual merge-base against W4",
+      "Actual checked-out W4 and tree",
+      "Guard command, working directory, environment/tool versions, complete output and exit code"
+    ],
+    "noHistoricalBaseReuseClaim": true
+  },
+  "executionEvidenceRequired": {
+    "executionOwner": "45 under its actual authorized interface",
+    "requiredIdentity": [
+      "Exact requested W and tree",
+      "Actual checkout SHA/tree before checks",
+      "Source commit/tree and complete material manifest",
+      "Authorized interface/workflow path and version/commit",
+      "GITHUB_SHA",
+      "SF_PRODUCT_TREE",
+      "GITHUB_RUN_ID",
+      "GITHUB_RUN_ATTEMPT",
+      "Actual job IDs and step/command selection",
+      "Bun/compiler/runtime versions",
+      "Effective configuration and environment",
+      "Current guard base/merge-base"
+    ],
+    "perCommand": [
+      "Command ID and literal command",
+      "Working directory",
+      "Actual exit code and status",
+      "Complete stdout/stderr artifact references plus hashes",
+      "Start/end/attempt identity",
+      "Any NOT_RUN/skipped/dependency failure reason"
+    ],
+    "e2eArtifacts": [
+      "bun-version.txt",
+      "effective-config.json",
+      "config.stderr.log",
+      "typecheck.log",
+      "inclusion.json"
+    ],
+    "requestedReturn": [
+      "Exact-candidate compiler/guard verdict with every15 command outcome accounted",
+      "Separate effective-program inclusion verdict naming all required Dashboard files",
+      "Any diagnostics/failure ownership and concrete impacted paths",
+      "Whether a new tooling/material candidate was required; no evidence transferred across candidates"
+    ]
+  },
+  "acceptanceLimits": {
+    "requestOnly": true,
+    "compilerResult": null,
+    "installedFunctionalResultNotInThisRequest": true,
+    "sourceProofIsNotIntegratedProof": true,
+    "AM01to06": "NOT_QUALIFIED_BY_THIS_REQUEST",
+    "S0EightFinalRecipes": "NOT_REQUESTED_OR_QUALIFIED_BY_THIS_COMPILER_REQUEST",
+    "finalReviews": "NOT_QUALIFIED_BY_THIS_REQUEST",
+    "C_G7": "NO_ACCEPTANCE_CLAIM",
+    "D_G8": "NO_ACCEPTANCE_CLAIM",
+    "GLOBAL_RELEASE": false,
+    "globalAcceptance": false,
+    "rule": "Even successful compiler45 evidence would qualify only its recorded exact candidate/checks; functional proofs, native/resident integration, global release and G7/G8 remain with their explicit owners.",
+    "inertInstallation52ProposalQualified": false,
+    "currentC35TargetQualified": false
+  },
+  "executionAudit": {
+    "compilerChecks": 0,
+    "guards": 0,
+    "tests": 0,
+    "workflowDispatches": 0,
+    "remoteCalls": 0,
+    "remoteWrites": 0,
+    "localProductEdits": 0,
+    "localArtifactOnly": "criteria-review/compiler45-request-W4.json",
+    "metadataVerification": "JSON parsing, cryptographic fingerprints and manifest linkage only; no project command executed.",
+    "latestUpdate": "Actual run06 PASS reconciled, C35 material drift and exact ACK71/authority/routing74 recorded. Compiler checks remain NOT_RUN and all15 literal commands remain unchanged."
+  },
+  "createdAtUtc": "2026-11-15T03:32:12+00:00",
+  "protectedAdapterExclusion": {
+    "path": "apps/cli/src/sucafina-product/installation.ts",
+    "owner": "52",
+    "materialState": "UNCHANGED_IN_W4_AS_ATTESTED_BY_ROOT",
+    "expectedUnmodifiedBlob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "proposalPostimageBlob": "dea81619aa870b238a6ad004397cf47b1c92457d",
+    "proposalStatus": "UNVALIDATED_OWNER_PROPOSAL_NOT_APPLIED",
+    "proposalPartOfCandidate": false,
+    "compilerCandidateRule": "Compile the actual unchanged installation.ts as part of W4 dependencies. Do not apply, overlay or attribute compiler validation to the inert owner52 proposal. A future authorized proposal application requires a new exact material candidate and owner45 request.",
+    "releaseRule": "The inert proposal remains outside W4. Transport/body work is routed to74 coordinated with52,71 and45; source52 release was not observed in census71. This request confers no protected application or validation authority and does not assert that M70-HTTP-01 and M67-F05 have the same cause.",
+    "currentTransportRouting": {
+      "owner": 74,
+      "coordinateWith": [
+        52,
+        71,
+        45
+      ],
+      "routingBlob": "280b4b8be816afd95f29d5b390e5c581930b8f01",
+      "routingPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/findings70-routing.json",
+      "finding": "M70-HTTP-01",
+      "mission67Finding": "M67-F05-INSTALLED-POST-NO-RESPONSE",
+      "sameDefectProven": false,
+      "proposalApplied": false,
+      "source52ReleaseObservedInCensus71": false
+    }
+  },
+  "functionalEvidenceSeparation": {
+    "run03": "PASS26 exists only at W2/S461f1794edb80d9b29017ed18adb4019675a61a9; it is not compiler evidence for W4.",
+    "run04": "Installed journeys failed on W2; failure remains retained.",
+    "run05": "W3 run43671673378/job132682862827 completed FAIL: one diagnostic test, Node/browser GET200, six POST controls aborted without response. Frozen inert adapter proposal remains unvalidated.",
+    "run06": {
+      "state": "PASS_NAMED_TESTS_ONLY",
+      "W": "454100ddc351dc316d0ff1714df0ab01356b5c66",
+      "WTree": "1ad2480c8df2f1c9c7140ab1bd7f65608a21b928",
+      "S": "c19f1f46511c41c31c4ff42297fa32b5c376beb3",
+      "STree": "7fdf973f479b6c47f2df3e14bb8e8db5ec3ad24a",
+      "runId": 43672573836,
+      "jobId": 132685657101,
+      "result": "PASS",
+      "counts": {
+        "passed": 26,
+        "failed": 0,
+        "assertions": 593,
+        "files": 10,
+        "durationSeconds": 55.31
+      },
+      "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/validation/run-06.json",
+      "receiptSha256": "ae38c7af986dd1888eb4d2227e8ead57d27e79bd817bfae70e68197c56d01d1f",
+      "claim": "Actual26 named domain/consumer tests passed at exact W4/S6. This is separate functional evidence; compiler45 remains NOT_RUN and installed W4 remains NOT_RUN/HOLD."
+    },
+    "compilerStatus": "NOT_RUN",
+    "installedBusinessQualification": "HOLD",
+    "noAutomaticTransfer": true,
+    "currentTarget": {
+      "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "qualification": "NOT_QUALIFIED_BY_W4_OR_RUN06",
+      "intakeOwner": "71; ACK71_ACCEPTED_BOUNDED_SUCCESSION; S0-C-e13-browser71",
+      "noPassTransfer": true
+    }
+  }
+}
