@@ -1,0 +1,172 @@
+{
+  "schema": "sf2h.correction152.handoff.v1",
+  "mission": 152,
+  "order": "A09",
+  "title": "A09 — real schema helper import",
+  "campaign": "sf2h-integral-20261112",
+  "state": "ARTIFACT_READY",
+  "consumer_ack": "PENDING",
+  "qualification": "NOT_RUN",
+  "global_release": false,
+  "native_goal": "paused",
+  "actor": "ChatGPT via connected GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "epoch": "ux-native-a09-e2-browser152",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-a09",
+  "pr": 140,
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/140",
+  "pr_review_base": "sf-ux-next30-dispatch-20261115",
+  "final_consumer": "sf2-stack",
+  "s0_fence": {
+    "confirmed": true,
+    "old_authority": "ux-native-a09-e1 REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "predecessor_termination_not_claimed": true,
+    "ack_commit": "cf654ef4056b6dfd26e15a25416773902c64a571",
+    "initial_head": "8a9a252f44510f4b25e91387c7a5b8b1fd3dffb9",
+    "initial_tree": "c9c0e8440a85c125586ee83485a53f122f170fbb"
+  },
+  "source": {
+    "code_commit": "fd466e39c02385f576eb67ad4d0bd5550886f0e9",
+    "code_tree": "99c90b99f07ca70c1fa7fad474168d7ae7549901",
+    "parent_before_code": "cf654ef4056b6dfd26e15a25416773902c64a571",
+    "tree_before_code": "1896fa0a44526d45fa8653a9ebee074f482b1c8e"
+  },
+  "consumer_snapshot": {
+    "branch": "sf2-stack",
+    "head": "8094e599e3d18609e269548d24619a3246fbc735",
+    "tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+    "status": "PREIMAGES_MATCH_AT_OBSERVATION;RECHECK_AT_CONSUMPTION"
+  },
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts",
+      "source_preimage_blob": "5c6ec7e24e89d9f0ff4333359493108f32d61ba7",
+      "source_postimage_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee",
+      "consumer_preimage_blob": "5c6ec7e24e89d9f0ff4333359493108f32d61ba7",
+      "consumer_target_postimage_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee",
+      "kind": "modify",
+      "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/PATCH.diff"
+    },
+    {
+      "path": "packages/schema/src/sucafina/routines.ts",
+      "source_preimage_blob": "daaf552a1974b7120213b9636972ec3dda7ac6dc",
+      "source_postimage_blob": "9b6429dd66be4419e4f9d2b4f397a5485986170c",
+      "consumer_preimage_blob": "daaf552a1974b7120213b9636972ec3dda7ac6dc",
+      "consumer_target_postimage_blob": "9b6429dd66be4419e4f9d2b4f397a5485986170c",
+      "kind": "modify",
+      "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/PATCH.diff"
+    }
+  ],
+  "unchanged_owned": {
+    "client": {
+      "path": "packages/client/src/sucafina/routines.ts",
+      "blob": "c9ab1eca7c04994175c560e99985dc1b7c05a952"
+    },
+    "handlers": {
+      "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+      "blob": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6"
+    }
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction152/PATCH.diff",
+    "format": "git-unified-diff",
+    "consumer_dependency": "match recorded preimages",
+    "scope": "only two A09 paths",
+    "whole_branch_merge": false
+  },
+  "cause": {
+    "error": "Cannot find module '../../schema' from packages/schema/src/sucafina/routines.ts",
+    "observed_line": 2,
+    "fix": "../schema",
+    "helper_path": "packages/schema/src/schema.ts",
+    "helper_blob": "d19a39b9708cfcaeedc1d7c62503afbadfee5dd7",
+    "exports": [
+      "NonNegativeInt",
+      "optional"
+    ],
+    "no_shim": true,
+    "no_stub": true,
+    "comment": 6900999941,
+    "ci_run": 43758731378,
+    "job": 132948475697,
+    "attempt": 1,
+    "ci_snapshot": "b9e68821206cdd9510b1faa5d07f98140b1df581",
+    "ci_tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+    "ci_w": "926d82978652423ce8e211afd69c3d4dcb8c08e8"
+  },
+  "frozen_contracts": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+    "criteria-trace.json": "1dba83d77882073af587c031d63299ed472905e8"
+  },
+  "source_pins": {
+    "host-types": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+    "ports": "88b6efb4840b8731f707862a8baf14683526c7a9",
+    "routine-services": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+    "workbench-C60": "9c666e7463b49a7c0cdeadb705b3266089d10bfb"
+  },
+  "operations": [
+    "projection.routine",
+    "routines.catalog",
+    "routines.prepare-admission",
+    "routines.read-admission",
+    "routines.read-run",
+    "routines.run",
+    "schedules.create",
+    "schedules.list",
+    "schedules.pause",
+    "schedules.read",
+    "schedules.read-run",
+    "schedules.update"
+  ],
+  "inherited_tasks": [
+    "WP09.T01",
+    "WP09.T06",
+    "WP09.T07",
+    "WP10.T06",
+    "WP10.T07"
+  ],
+  "acceptance": {
+    "A09-AC01": "IMPLEMENTED_NEGATIVE_REGRESSION_AUTHORED_NOT_RUN",
+    "A09-AC02": "UNCHANGED_NEGATIVE_ASSERTIONS_NOT_RUN",
+    "A09-AC03": "UNCHANGED_OPERATION_VERSION_FENCES_NOT_RUN"
+  },
+  "tests": {
+    "past_ci": {
+      "run_id": 43758731378,
+      "job_id": 132948475697,
+      "status": "FAIL",
+      "pass": 48,
+      "fail": 7,
+      "import_errors": 2,
+      "expectations": 338
+    },
+    "correction_local": "NOT_RUN",
+    "correction_ci": "NOT_RUN",
+    "correction_compiler": "NOT_RUN",
+    "sdk": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "native_runtime": "NOT_RUN",
+    "policy": "only 149/150 after 132 integration"
+  },
+  "blockers": [
+    "132 shared registry/package exports and F01/F02 wiring not authored by 152",
+    "No verified installed ScheduleDetails reader or active Native41/Relay/Schedule",
+    "149/150 hosted qualification pending integration",
+    "A09 correction not equivalent to global release"
+  ],
+  "protected_unchanged": true,
+  "preserved_old_commits": true,
+  "routing": {
+    "integrator": "132/PR65",
+    "compiler": "149/PR107",
+    "ci": "150/PR106",
+    "dispatcher_created": false
+  },
+  "next_action": "132 check current sf2-stack preimages, consume PATCH.diff only, ACK; then 149 compiler/SDK/guards and 150 scoped hosted Actions on causally new integrated W."
+}

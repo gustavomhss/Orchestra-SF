@@ -1,0 +1,60 @@
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts
+index 5c6ec7e24e89d9f0ff4333359493108f32d61ba7..f5e8046200167c6e224ac4d5ff85e8e9ed2725ee 100644
+--- a/modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts
+@@ -1,8 +1,8 @@
+ import { describe, expect, test } from "bun:test"
+ import { Option, Schema } from "effect"
+ import {
+-  SfRoutines, SfRoutinesPrepareAdmission, SfRoutinesRun,
+-  SfSchedulesRead, SfSchedulesUpdate,
++  SfRoutineCaseRef, SfRoutineResult, SfRoutines, SfRoutinesPrepareAdmission, SfRoutinesRun,
++  SfSchedulesPause, SfSchedulesRead, SfSchedulesUpdate,
+ } from "@orchestra/schema/sucafina/routines"
+ import { createSfRoutinesHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
+ import type { SfNativeHostDependencies } from "../../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
+@@ -71,6 +71,32 @@ describe("A09 schema equivalence and authority boundary", () => {
+     ].sort())
+   })
+ 
++  test("loads canonical public numeric/optional helpers without losing wire semantics", () => {
++    const result = {
++      documentId: "recipe-1", publishedVersion: "publication-1",
++      principalRef: "principal-1", projectId: "project-1",
++      correlationId: "correlation-1", sourceRefs: [], pending: [],
++      admission: "preparing",
++    }
++    const decode = Schema.decodeUnknownOption(SfRoutineResult, {
++      onExcessProperty: "error",
++    })
++    const withoutOptionals = decode(result)
++    expect(Option.isSome(withoutOptionals)).toBe(true)
++    if (Option.isSome(withoutOptionals)) expect(withoutOptionals.value).toEqual(result)
++    expect(Option.isSome(decode({ ...result, admissionVersion: 0 }))).toBe(true)
++    expect(Option.isNone(decode({ ...result, admissionVersion: -1 }))).toBe(true)
++    expect(Option.isNone(Schema.decodeUnknownOption(SfRoutineCaseRef)(
++      { ...caseRef, version: -1 },
++    ))).toBe(true)
++    expect(Option.isSome(Schema.decodeUnknownOption(SfSchedulesPause.input)(
++      { scheduleRef: "schedule-1", expectedVersion: 0 },
++    ))).toBe(true)
++    expect(Option.isNone(Schema.decodeUnknownOption(SfSchedulesPause.input)(
++      { scheduleRef: "schedule-1", expectedVersion: -1 },
++    ))).toBe(true)
++  })
++
+   test("retains zero, null and absent independently without allowing private fields", () => {
+     const original = { caseRef, input: { publishedRecipeRef: "r1", planRevisionId: "p1",
+       writeScope: [], inputRefs: [],
+
+diff --git a/packages/schema/src/sucafina/routines.ts b/packages/schema/src/sucafina/routines.ts
+index daaf552a1974b7120213b9636972ec3dda7ac6dc..9b6429dd66be4419e4f9d2b4f397a5485986170c 100644
+--- a/packages/schema/src/sucafina/routines.ts
++++ b/packages/schema/src/sucafina/routines.ts
+@@ -1,5 +1,5 @@
+ import { Schema } from "effect"
+-import { NonNegativeInt, optional } from "../../schema"
++import { NonNegativeInt, optional } from "../schema"
+ 
+ /**
+  * A09 public wire bindings. Every output is an exact subset of the frozen
