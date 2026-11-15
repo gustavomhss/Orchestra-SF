@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "order": "A14",
+  "mission_id": "UX-A14",
+  "state": "AUTHORING",
+  "lease_epoch": "ux-native-a14-e1",
+  "actor": "ChatGPT via connected GitHub",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "github_actor": null,
+  "branch": "sf-ux-a14",
+  "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "observed_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "observed_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "packet_ref": "a82ba0f842b70f0786a9e2188543f78e25e12148",
+  "allowlist": [
+    "packages/schema/src/sucafina/memory.ts",
+    "packages/schema/src/sucafina/memory/**",
+    "packages/client/src/sucafina/memory.ts",
+    "packages/client/src/sucafina/memory/**",
+    "apps/cli/src/sucafina-product/native-ui/memory.ts",
+    "apps/cli/src/sucafina-product/native-ui/memory/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A14/**"
+  ],
+  "source_binding": {
+    "path": "apps/cli/src/sucafina-product/memory-http.ts",
+    "observed_blob": "f727d5250024df7338491321c36e7055d7c18f74",
+    "locked_blob": "f727d5250024df7338491321c36e7055d7c18f74",
+    "semantic_delta": "SAME_BLOB"
+  },
+  "frozen_contracts": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70"
+  },
+  "operation_ids": [
+    "intelligence.memory-catalog",
+    "intelligence.memory-condition",
+    "intelligence.memory-conditions",
+    "intelligence.memory-materiality",
+    "intelligence.memory-outcome",
+    "intelligence.memory-outcome-selection",
+    "intelligence.memory-signals"
+  ],
+  "downstream": {
+    "integrator": "114",
+    "ci": "120",
+    "compiler": "119"
+  },
+  "local_tests": "NOT_RUN",
+  "notes": "Packet authorizes exclusive leaf authoring after real ACK. No shared registry changes or producer rewrites. Actual GitHub login/session identifier not exposed to this executor."
+}
