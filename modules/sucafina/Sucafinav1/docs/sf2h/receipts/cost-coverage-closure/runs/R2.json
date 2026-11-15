@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h.cost-coverage-closure.actions-result.v1",
+  "mission": 80,
+  "attempt": "R2",
+  "state": "FAILED_RUN_WITH_21_OBSERVED_PASS_WITNESSES",
+  "W": "4df32a2de5b1ba27f44c6bf92eaeed9ae412e26a",
+  "W_tree": "a721dced9fa8566cc13dfb451911fe4f69d47858",
+  "S": "55c1e430ef06aee1692eba2e49ae1d8299ebe4cf",
+  "S_tree": "b56e81c05aae040bd065b1cad32e59ee3c61fac9",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
+      "Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts",
+      "Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "e3643c4f41d0eceabe654851a3fde0d7de7142dc03969f19f1743c9f2978a1e4",
+  "ref": "ci-run-linux-astra-wp80-4df32a2d-e3643c4f-r2",
+  "run_id": 43674446763,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43674446763",
+  "job_id": 132691397685,
+  "conclusion": "failure",
+  "tests": {
+    "pass": 21,
+    "fail": 2,
+    "total": 23,
+    "files": 7,
+    "expect_calls": 301,
+    "duration_seconds": 128.94
+  },
+  "omni_positive_control": {
+    "nonce": "55cb7c9ba6c29ddd1fe3ebd73706a489",
+    "verdict": "not applicable",
+    "reason": "focused: no declaring test ran"
+  },
+  "envelope": {
+    "ahead_by": 1,
+    "changed_files": [
+      ".ci-run.json"
+    ],
+    "product_identical": true
+  },
+  "actual_passes": [
+    "C10 captures each evidence resolution identity once across validation and assessment [19.54ms]",
+    "C10 numeric omitted training keeps canonical totals and stable reassessment [7081.92ms]",
+    "C10 numeric confirmed training keeps canonical totals and stable reassessment [7945.41ms]",
+    "C10 numeric zero training keeps canonical totals and stable reassessment [9072.26ms]",
+    "C10 numeric null training keeps canonical totals and stable reassessment [7885.41ms]",
+    "C10 numeric bundled training keeps canonical totals and stable reassessment [6858.59ms]",
+    "C10 refuses unsupported N/A and component currency, period or source changes [7799.33ms]",
+    "C10 source reassessment refuses changed quote bytes and source revocation with an active session [7961.84ms]",
+    "C10 keeps the real missing-FX Planner amount unavailable rather than zero [4711.50ms]",
+    "C10 stability: a genuinely unassigned component still prevents a complete seal [6.31ms]",
+    "C10 stability: assessment owns its horizon, entries and all evidence references [3.57ms]",
+    "C10 stability: reassessment detaches the complete scenario DTO from frozen borrowed inputs [6.59ms]",
+    "C10 stability: original entry identity reaches the real classifier and scenario alternative version is preserved [10.08ms]",
+    "C10 stability: a scenario getter and borrowed components cannot switch the assessed input during resolution [5.64ms]",
+    "C10 stability: an untrusted resolver cannot rewrite the expected evidence through its argument [3.27ms]",
+    "C10 stability: a classifier cannot approve a different borrowed entry after it returns [4.66ms]",
+    "AI-RENEWAL observes a confirmed 70000 implementation quote as 235000 total and 5000 savings with complete shared coverage [18267.78ms]",
+    "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion [42143.24ms]",
+    "conditioned scenarios cannot carry an incomplete coverage seal [0.60ms]",
+    "an unassigned scenario component prevents complete coverage [0.73ms]",
+    "reassessment uses scenario entries and keeps hypothetical totals conditioned [1.89ms]"
+  ],
+  "failed_tests": [
+    "C10 stability: included null and its normalized pending row reassess identically without zero filling",
+    "C10 persisted null registration survives canonical no-op reassessment without changing its case or classification"
+  ],
+  "failure_attribution": {
+    "runtime": "Bun1.3.14 (0d9b296a)",
+    "observed": [
+      "first null reassessment returned undefined after its input was passed to an asymmetric matcher",
+      "DataCloneError at structuredClone(persisted assessment entries), after same asymmetric matcher"
+    ],
+    "cause": "Bun toMatchObject calls jestDeepMatch(...,true), which replaces actual fields with asymmetric matcher host objects. Source isolation, not a product JSON-clone workaround, is required.",
+    "upstream_commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "upstream_files": [
+      {
+        "path": "src/test_runner/expect/toMatchObject.zig",
+        "blob": "e9b065e05ae7b3a69df56de0fae1897ba9e6bf47"
+      },
+      {
+        "path": "src/jsc/bindings/bindings.cpp",
+        "blob": "22ac38063376eac9b52bbdd7825c12732422e5ba"
+      }
+    ],
+    "upstream_issues": [
+      "https://github.com/oven-sh/bun/issues/3521",
+      "https://github.com/oven-sh/bun/issues/8109"
+    ],
+    "next_change": "Isolate only actual subjects of three asymmetric assertions via structuredClone; identical expected values and final full equality/input-integrity assertions remain. Product blob unchanged."
+  },
+  "reuse_for_R3": {
+    "unchanged_files": [
+      "cost-coverage-closure/resolution-stability.test.ts",
+      "cost-coverage-closure/numeric-coverage.test.ts",
+      "wp11/coverage-seal.test.ts",
+      "wp11/renewal-implementation-quote.test.ts",
+      "wp11/renewal-choice-history.test.ts"
+    ],
+    "passing_tests": 14,
+    "reason": "Only two test files change; product/fixtures/config and these five files remain byte-identical. R3 reruns the nine tests in changed files only."
+  },
+  "raw_test_log": {
+    "path": "runs/R2-tests.log",
+    "sha256": "675511277356e14f8f6a23b35abbc8337299212aaf54180babb945a6b3549e4c"
+  },
+  "artifacts": {
+    "count": 0,
+    "mandatory_bun_artifact": false
+  },
+  "GLOBAL_RELEASE": false
+}

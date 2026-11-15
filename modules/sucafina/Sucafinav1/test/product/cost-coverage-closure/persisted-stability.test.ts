@@ -62,7 +62,8 @@ test("C10 persisted null registration survives canonical no-op reassessment with
     const persisted = await baseline.resolveForecastCoverage(registered.value.coverageRef, fixture.context)
     const classification = await baseline.readClassification(registered.value.coverageRef, fixture.context)
     if (persisted.status !== "ok" || classification.status !== "ok") throw new Error("Persisted baseline or classification unavailable")
-    expect(persisted.value.assessment).toMatchObject({ coverageState: "pending", issues: [], derivedMissingCategoryIds: [],
+    // Keep Bun's asymmetric matcher replacement out of the persisted input.
+    expect(structuredClone(persisted.value.assessment)).toMatchObject({ coverageState: "pending", issues: [], derivedMissingCategoryIds: [],
       entries: expect.arrayContaining([{ categoryId: "training", status: "pending", reason: "component-unresolved" }]) })
     const preferences = await state.read(fixture.request, "preferences", (current) => current.preferences)
     expect(preferences.status).toBe("ok")

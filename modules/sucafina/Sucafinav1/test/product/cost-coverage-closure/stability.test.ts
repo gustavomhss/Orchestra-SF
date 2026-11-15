@@ -11,15 +11,20 @@ test("C10 stability: included null and its normalized pending row reassess ident
   freezeStabilityInput(fixture.input)
   freezeStabilityInput(fixture.scenario)
   freezeStabilityInput(fixture.assessment)
-  expect(fixture.assessment).toMatchObject({ coverageState: "pending", issues: [], derivedMissingCategoryIds: [],
+  // Bun 1.3.14 toMatchObject writes asymmetric matchers into its actual object.
+  // Isolate that assertion subject; the borrowed inputs remain the real data.
+  const assertionSubject = structuredClone(fixture.assessment)
+  expect(assertionSubject).toMatchObject({ coverageState: "pending", issues: [], derivedMissingCategoryIds: [],
     entries: expect.arrayContaining([{ categoryId: "training", status: "pending", reason: "component-unresolved" }]) })
+  console.info("[mission80 matcher-isolation]", JSON.stringify({ assertionEntriesArray: Array.isArray(assertionSubject.entries), borrowedEntriesArray: Array.isArray(fixture.assessment.entries) }))
+  expect(fixture.assessment).toEqual(before.assessment)
   const original = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
     baseline: fixture.assessment, entries: fixture.entries, resolveEvidence: fixture.resolveEvidence, supports: fixture.input.supports })
   const normalized = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
     baseline: fixture.assessment, entries: fixture.assessment.entries, resolveEvidence: fixture.resolveEvidence, supports: fixture.input.supports })
   expect(original).toBeDefined()
   expect(normalized).toEqual(original)
-  expect(normalized).toMatchObject({ knownSubtotal: null, total: null, comparisonStatus: "conditioned",
+  expect(structuredClone(normalized)).toMatchObject({ knownSubtotal: null, total: null, comparisonStatus: "conditioned",
     components: [expect.objectContaining({ amount: null, evidenceState: "absent" })], costCoverage: fixture.assessment })
   if (!normalized) throw new Error("Identical null coverage became unavailable")
   expect(validateScenarioCoverage(normalized, fixture.input.basis, normalized.costCoverage)).toBeUndefined()
