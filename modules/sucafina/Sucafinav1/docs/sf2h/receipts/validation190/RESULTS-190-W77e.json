@@ -1,0 +1,245 @@
+{
+  "schema": "sf2h.compiler190.hosted-results.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 190,
+  "epoch": "compiler-e5-browser190",
+  "status": "COMPILER_CHECKS_COMPLETED_WITH_FAILURE",
+  "compiler_branch": "sf-compiler-checks",
+  "compiler_pr": 107,
+  "source_owner": "189/S0-C-e21-browser189/PR65",
+  "source": {
+    "W": "77e58de895b5157b2a32e3427483bd12f40a7525",
+    "tree": "28feb531911172b68a5615e81510a00fda9cb1b8",
+    "integrated_units": [
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      171,
+      172
+    ],
+    "not_final_C": true,
+    "after_W_newer_source_not_covered": true
+  },
+  "workflow": {
+    "path": ".github/workflows/sf-compiler-c53.yml",
+    "S": "52ca2fe524bffcf460aca808e2499afec099ef3f",
+    "workflow_tree": "7353c847745bb495defe92fa24bc03b9276852ec",
+    "same_existing_workflow": true,
+    "dispatch": "ONE_PUSH_ONLY_NO_DUPLICATE"
+  },
+  "run": {
+    "id": 43772959867,
+    "job": 132992733158,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "runner": "ubuntu-24.04",
+    "bun": "1.3.14",
+    "node": "v24.22.2",
+    "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "artifact": {
+      "id": 14185067705,
+      "name": "sf-compiler-190-w77e-01",
+      "bytes_zip": 366503,
+      "digest": "sha256:10cc10bd1d742c06ce8cd87ea8d7b2b14dbb80fada9551c826e3f6383f70d547",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43772959867/artifacts/14185067705",
+      "expires_at": "2026-11-29T23:08:13Z"
+    }
+  },
+  "checks": {
+    "selected": 9,
+    "exit0": 3,
+    "failed": 6,
+    "ordered": [
+      {
+        "name": "e2e-inventory",
+        "cwd": ".",
+        "command": "node verify-e2e-typecheck.mjs --inventory",
+        "exit": 0
+      },
+      {
+        "name": "typecheck-schema",
+        "cwd": "packages/schema",
+        "command": "bun typecheck",
+        "exit": 2,
+        "ts_diagnostics": 1
+      },
+      {
+        "name": "typecheck-client",
+        "cwd": "packages/client",
+        "command": "bun typecheck",
+        "exit": 2,
+        "ts_diagnostics": 26
+      },
+      {
+        "name": "typecheck-sucafina",
+        "cwd": "modules/sucafina",
+        "command": "bun typecheck",
+        "exit": 2,
+        "ts_diagnostics": 109
+      },
+      {
+        "name": "typecheck-cli",
+        "cwd": "apps/cli",
+        "command": "bun typecheck",
+        "exit": 2,
+        "ts_diagnostics": 7
+      },
+      {
+        "name": "sf-e2e-showConfig",
+        "cwd": "packages/app-shell",
+        "command": "bun run typecheck:sf-e2e --showConfig",
+        "exit": 0
+      },
+      {
+        "name": "sf-e2e-listFiles",
+        "cwd": "packages/app-shell",
+        "command": "bun run typecheck:sf-e2e --listFiles --pretty false",
+        "exit": 2,
+        "ts_diagnostics": 1
+      },
+      {
+        "name": "sf-e2e-verify",
+        "cwd": ".",
+        "command": "node verify-e2e-typecheck.mjs (hosted actual config/output)",
+        "exit": 1
+      },
+      {
+        "name": "spawn-imports",
+        "cwd": ".",
+        "command": "bun run check:spawn-imports",
+        "exit": 0
+      }
+    ],
+    "note": "Raw TS diagnostics are transitive/repeated across packages and are not independent root defects."
+  },
+  "e2e": {
+    "status": "FAIL_COMPILER_ONLY",
+    "compiler_file_count": 3753,
+    "compiler_root_count": 131,
+    "declared_input_count": null,
+    "diagnostics": 1,
+    "coordinate": "modules/sucafina/Sucafinav1/runtime/workbooks.ts:384:3",
+    "code": "TS2322",
+    "reason": "8 | 9 not assignable to PaperSize | undefined",
+    "browser_e2e": "NOT_RUN_BY_190",
+    "omni_positive": "NOT_OBSERVED"
+  },
+  "top_causes": [
+    {
+      "id": "SCHEMA-WORK-171",
+      "owner": "171/A12 PR144",
+      "path": "packages/schema/src/sucafina/work.ts",
+      "line": 21,
+      "code": "TS2345",
+      "count_per_schema": 1,
+      "detail": "Schema.StructWithRest(shape,[Schema.Record(...)]) incompatible installed Effect ValidateRecords",
+      "source_blob": "3b3f87ed7c74a3e7965fbb8d3d00776d2ebba61a"
+    },
+    {
+      "id": "CLIENT-F02-TRANSPORT",
+      "owner": "F02 PR122 + integrator189 shared NAV-01",
+      "path": "packages/client/src/sucafina/transport.ts",
+      "count_client": 22,
+      "detail": "Decode generic TS2345, impossible union branches, maxRequestBytes absent on union and response status/body narrowing, private route typed authority",
+      "source_blob": "c9fc831156c94f062f0493a14458f84f61f7dff3"
+    },
+    {
+      "id": "CLIENT-CODECS",
+      "owner": "client original codec sources / PR65 routing",
+      "paths": [
+        "packages/client/src/sucafina/bindings.ts:36 TS2345",
+        "packages/client/src/sucafina/people.ts:18 TS2345",
+        "packages/client/src/sucafina/context.ts:9 TS2694"
+      ],
+      "count_client": 3,
+      "detail": "decoder signatures and SfTransportResult missing export"
+    },
+    {
+      "id": "CLI-DOMAIN-177",
+      "owner": "177/W14 PR133",
+      "path": "apps/cli/src/sucafina-product/native-ui/domain.ts",
+      "lines": [
+        9,
+        10,
+        265,
+        269
+      ],
+      "count_cli": 4,
+      "detail": "./domain/projection missing TS2307; operationId typed union mismatch TS2322",
+      "source_blob": "9c5eb4b4139315d20b5ae40a06d58f955984596a"
+    },
+    {
+      "id": "CLI-F01-172",
+      "owner": "172/F01 PR131 + 189 shared seam",
+      "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+      "lines": [
+        99,
+        152
+      ],
+      "count_cli": 2,
+      "detail": "TS7006 implicit any action; TS2322 availability resource discriminated union",
+      "source_blob": "03a47cf080fc5b9751dbadad272c14d17f5cfc34"
+    },
+    {
+      "id": "WORKBOOKS-TRANSITIVE",
+      "owner": "Existing Sucafina runtime producer / route via 189",
+      "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "line": 384,
+      "code": "TS2322",
+      "count_cli": 1,
+      "detail": "8|9 is not compatible with ExcelJS PaperSize; identical root blocks E2E compilation"
+    },
+    {
+      "id": "SUC-TESTS",
+      "owner": "Source fixture and test owners, 171/172/178 and existing contracts",
+      "count_sucafina": 109,
+      "examples": [
+        "test/native-ui-contract/live-context.test.ts:18 occurrences",
+        "test/native-ui-contract/work.test.ts:9",
+        "test/native-ui-contract/bi.test.ts:11",
+        "test/native-ui-contract/people.test.ts:4"
+      ],
+      "detail": "109 include 22 shared transport errors, 4 domain, 2 live-context, 1 schema work; many generic Schema decode/test fixtures. Do not weaken assertions or replace authorized test fixtures with mocks."
+    }
+  ],
+  "source_regression_dedup": {
+    "historic_163_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "historic_schema_diagnostics": 189,
+    "current_schema_diagnostics": 1,
+    "historic_client_diagnostics": 214,
+    "current_client_diagnostics": 26,
+    "historic_suc_diagnostics": 332,
+    "current_suc_diagnostics": 109,
+    "historic_cli_diagnostics": 38,
+    "current_cli_diagnostics": 7,
+    "context": "Counts on different W; indicative only, no cross-W qualified PASS",
+    "old_effect_minLength_planner_diagnostics_on_new_W": "NOT_OBSERVED"
+  },
+  "excluded_checks": {
+    "sdk_generation": "NOT_SELECTED: official Protocol HttpApi groups, ClientApi contract, codegen/build blob unchanged. NAV-01 operation registry/native transport changed; separately validate contract semantics; historical SDK artifact14182790522 remains UNCONSUMED.",
+    "guards": "NOT_RUN: 66 historical gates pending until authors185-188 outputs consumed and new scoped C/G7 evidence",
+    "other_packages": "NOT_SELECTED without causal new inputs",
+    "product_tests": "191 only",
+    "bundle": "unchanged builder/test-ci/requests/epic blobs; historical generated YAML not yet consumed"
+  },
+  "status_snapshot": {
+    "status_before": "clean",
+    "status_after_checks": "bun.lock changed in disposable hosted checkout; no source tracked generated changes",
+    "sdk_manifest_generated": false,
+    "generated_hand_edits": false,
+    "workflow_hosted_only": true,
+    "guard_waiver": false,
+    "local_tests": false
+  },
+  "global_release": false,
+  "native_goal": "paused",
+  "next": "Route TS work/transport/domain/live-context and workbook failures to actual owners; 189 integrates corrections; 190 repins only new W/tree and checks affected selectors. SDK real patch exact artifact, no manual change, 66 guard gates still HOLD."
+}
