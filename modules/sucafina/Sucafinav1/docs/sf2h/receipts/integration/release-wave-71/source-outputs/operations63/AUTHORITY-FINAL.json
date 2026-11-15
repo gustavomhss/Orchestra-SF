@@ -1,0 +1,69 @@
+{
+  "schema": "sf2h.operations63.authority-terminal.v1",
+  "mission": 63,
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "lease_epoch": "operations-scanner-browser63",
+  "branch": "operations-scanner-proof",
+  "PR": 78,
+  "session_id": null,
+  "session_id_observation": "Backend session identifier not exposed by available tools; no invented value.",
+  "execution_instance": "operations-scanner63-89fcdd2b00a2",
+  "model_declared_by_host": "GPT-6 Astra Pro",
+  "effective_model_introspection": "NOT_EXPOSED",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "control_sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "base_commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "ACK_commit": "4a8906bd638a51a95ff13b4c542f62ef7203f486",
+  "material_source_sha": "83aabd95ab423816002a623d1a998eb51bb89173",
+  "material_source_tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+  "terminal_identity": {
+    "commit": "CONTAINING_COMMIT",
+    "tree": "CONTAINING_COMMIT_TREE",
+    "expected_parent": "83aabd95ab423816002a623d1a998eb51bb89173",
+    "rule": "Exact terminal SHA/tree and readback appear externally after successful CAS; no self-reference or future PASS."
+  },
+  "activation": "Effective only on successful expected-SHA CAS publication on operations-scanner-proof. Then mission63 stops writing product under this lease. Any resumed work needs explicit authority and a new reconciled ACK; no successor named.",
+  "write_scope_preserved": true,
+  "shared_live_files_written": 0,
+  "terminal_delta": "New receipt files only; already published product/test/setup/receipt blobs remain byte-identical.",
+  "source_authority": "Root63 was the only remote writer of operations-scanner-proof. Delegated reviewers had bounded local artifact scope; no delegated remote mutations.",
+  "test_runs": [
+    {
+      "run": 43666600846,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 43666919712,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "run": 43667752670,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 43668156670,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "in_flight_owned_runs": 0,
+  "qualification": "MANDATORY_QUALIFICATION_BLOCKED; RESULTS-FINAL.json",
+  "consumer": "CONSUMER-RELEASE.json; requested60 or S0-authorized successor/resumption only",
+  "scope_limits": {
+    "local_product_tests": 0,
+    "global_service_install": 0,
+    "Azure_changes": 0,
+    "remote_non_MCP": 0,
+    "stack_ref_writes": 0,
+    "owner45_ref_writes": 0,
+    "merges": 0,
+    "deploys": 0,
+    "new_credentials": 0,
+    "epic_runs": 0,
+    "financial_or_C12_rule_changes": 0
+  },
+  "GLOBAL_RELEASE": false
+}

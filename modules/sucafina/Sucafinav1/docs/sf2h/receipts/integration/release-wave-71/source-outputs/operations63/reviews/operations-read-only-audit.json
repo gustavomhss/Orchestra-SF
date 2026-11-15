@@ -1,0 +1,176 @@
+{
+  "mission": "63 — Operations e scanner",
+  "audit": "Read-only product and journey audit",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "operations-scanner-proof",
+  "W": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "control": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "status": "STATIC_AUDIT_ONLY_NO_TEST_OR_CI_DISPATCH",
+  "safety": {
+    "localProductTests": 0,
+    "dispatches": 0,
+    "remoteWrites": 0,
+    "productEdits": 0,
+    "globalInstalls": 0,
+    "azureChanges": 0
+  },
+  "originalSelection": {
+    "file": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "describe": "CI-UI-OPERATIONS",
+    "testTimeoutMs": 60000,
+    "expectTimeoutMs": 10000,
+    "retries": 0,
+    "preserveAllFive": true,
+    "identities": [
+      {
+        "id": "OP-PROC-01",
+        "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+        "criteria": [
+          "WP04.T03.CHK.01",
+          "WP04.T01.INV.01",
+          "WP04.T01.CMP.02"
+        ],
+        "scannerRequired": false,
+        "assertion": "Exact J04 values/eligibility/ranking/reasons and real request-bound C02 drilldown."
+      },
+      {
+        "id": "OP-PROC-02",
+        "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+        "criteria": [
+          "WP04.T03.CHK.02",
+          "WP04.T03.CHK.03",
+          "WP04.T03.INV.02"
+        ],
+        "scannerRequired": false,
+        "assertion": "Pending sourcing retains 1.08 submitted FX/30240 USD while subsequent PO projection changes to FX 2/56000 USD; submitted source and C02 version remain stable."
+      },
+      {
+        "id": "OP-PROC-03",
+        "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+        "criteria": [
+          "WP04.T03.CHK.03",
+          "WP04.T03.CMP.01",
+          "WP04.CMP.02"
+        ],
+        "scannerRequired": false,
+        "assertion": "Missing JPY FX yields unavailable and 422 on one real submission without version/history/source changes."
+      },
+      {
+        "id": "OP-IMPORT-01",
+        "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+        "criteria": [
+          "WP06.T01.INV.01",
+          "WP06.T01.QLT.01",
+          "WP06.T02.INV.01",
+          "WP06.T02.INV.02",
+          "WP06.T02.QLT.18",
+          "WP06.T03.CHK.04",
+          "WP06.T03.INV.01",
+          "WP06.T03.INV.03",
+          "WP06.T03.QLT.02",
+          "WP06.T03.SUC.02",
+          "WP06.T04.CHK.02",
+          "WP06.T04.INV.01",
+          "WP06.T04.QLT.01"
+        ],
+        "scannerRequired": true,
+        "assertion": "Real XLSX admission, preview/detail, single Apply whose real response is lost, same receipt recovery, no duplicate effects or mutation on reload, read revocation purges preview/receipt."
+      },
+      {
+        "id": "OP-DOC-01",
+        "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+        "criteria": [
+          "WP06.T05.CHK.02",
+          "WP06.T05.CHK.19",
+          "WP06.T05.INV.01",
+          "WP06.T05.QLT.18",
+          "WP06.T05.QLT.19",
+          "WP06.T05.CMP.19",
+          "WP06.T05.SUC.19"
+        ],
+        "scannerRequired": true,
+        "assertion": "Real UTF-8 TXT upload, private download, real catalog/admission, explicit schema/extract/confirm, exact source digest and offsets, confirmation ref, actual source deletion and UI/evidence revocation."
+      }
+    ]
+  },
+  "auxiliaries": {
+    "originalCount": 7,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+        "names": [
+          "Operations mount denies unauthenticated workbenches without changing source data",
+          "Operations mount serves the real Planner and import/document workbenches",
+          "Operations viewer has no human import or document mutation authority",
+          "Operations source admission rejects an unissued selector and a revoked credential",
+          "Operations private upload fails closed with no scanner and preserves the source"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+        "names": [
+          "Operations fixture recognizes the canonical dispatcher arguments without changing selection",
+          "Operations fixture keeps Procurement support and excludes unrelated selections"
+        ]
+      }
+    ],
+    "additionalListOnlyControl": {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/selection.check.ts",
+      "doesNotReplaceOriginalSevenOrJourneys": true
+    }
+  },
+  "composition": {
+    "server": "Bun wp04/host.ts local-operator fixture on loopback",
+    "mounts": [
+      "/wp04/first",
+      "/wp04/second",
+      "/wp04/viewer"
+    ],
+    "productionFactories": [
+      "shared runtime assets with scanLocalFile",
+      "createSfImportServices",
+      "createSfDocumentServices",
+      "createSfDocumentTargetAuthority",
+      "createApplication",
+      "real local-operator identity/session service"
+    ],
+    "realPersistence": "Local SQLite / real source lifecycle and receipts",
+    "scannerEndpoint": "127.0.0.1 with validated SF_OPERATIONS_CLAMD_PORT; null fails closed",
+    "preconditions": "Fixture creates frozen J04 baseline using canonical domain commands; IMPORT helper uses API posts to create two declared isolated OPEX preconditions. These are not represented as user actions.",
+    "installedCliNodeComposition": false,
+    "nativeParityMeasured": false,
+    "humanTimingMeasured": false
+  },
+  "concreteFinding": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+    "originalBlob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+    "problem": "First NUL-delimited stream: OK prefix is accepted before peer close, without ruling out trailing data or an early response before complete request transmission.",
+    "disposition": "Reported to root; root owns scanner protocol patch and negative protocol tests. No duplicate patch made.",
+    "expectedFix": "Require complete INSTREAM send and a bounded, exact total NUL-framed OK response only after clean peer completion; reject all early/trailing/malformed/oversized/timeout/error outcomes."
+  },
+  "history": {
+    "oldRunId": "43639526175",
+    "oldJobId": "132583728635",
+    "oldW": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "oldOutcome": "Five failures before any journey action because operations.spec was absent from wp04BrowserSelected and manifest was missing.",
+    "currentStaticChange": "Current selector includes operations.spec, mount has real installation helper, upload cap is 16 MiB.",
+    "implication": "A hosted run of all five at current W is a new diagnosis; the prior missing-manifest outcome does not establish current setup failure."
+  },
+  "sharedBoundaries": {
+    "noConcreteAdditionalSharedProductDefectEstablished": true,
+    "noSharedProductPatchProposed": true,
+    "installedCookieEffectRouteNodeBodyPatches": "Not applied: this selection does not traverse the installed Node/Effect router path; applying them without a new relevant failure would not repair this fixture.",
+    "ciScannerSetup": "Shared45/60 ownership; separate CI audit handles the minimal ephemeral setup patch.",
+    "privateUploadDigestCache": "The application-level postscan digest check binds the bytes already sent to the real scanner before the final write lock. It is not an always-clean replacement."
+  },
+  "limits": [
+    "Static source inspection is not hosted evidence and cannot mark any nominal or integrated criterion PASS.",
+    "The real ClamD clean/EICAR/unavailable/error controls remain required.",
+    "The original DOC journey covers UTF-8 text; it does not prove PDF digital, DOCX, scanned/protected/invalid PDF behavior.",
+    "A confirmed-amount link is not confirmed material consumption. DOC does not click/consume the scenario link, and PROC observations explicitly do not close C06.",
+    "C06 requires validity scoped to material dependencies, ACL/incarnation and races/revocation; WP06.T05.CHK.20 requires the same confirmed evidenceRef in the WP09 consumer. Do not infer either from TXT/source PASS.",
+    "This local-operator fixture does not prove installed desktop, native, Entra/OIDC or human timing.",
+    "No source-budget increase, test rename, reduced selection, fake scanner verdict, skip or retry is warranted by this audit."
+  ],
+  "evidenceManifest": "input-manifest.json"
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.operations63.run.v1",
+  "mission": 63,
+  "selection": "ORIGINAL_SEVEN_AUXILIARY_CASES",
+  "W": "4a8906bd638a51a95ff13b4c542f62ef7203f486",
+  "W_tree": "60e5420af9e427e9047fb6cb387ebd4586148105",
+  "S": "f23937f385ceab4fb0d82d786e5243f5e81f875a",
+  "S_tree": "9dbfd3952a0505a784703a0e91adc9ac4d481eb7",
+  "branch": "ci-run-linux-operations63-4a8906bd-aux-r1",
+  "run_id": 43666600846,
+  "job_id": 132667253684,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666600846",
+  "conclusion": "success",
+  "pass": 7,
+  "fail": 0,
+  "assertions": 74,
+  "duration_ms": 795,
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "request_only_delta": [
+    {
+      "path": ".ci-run.json",
+      "status": "added",
+      "blob": "8bf469aaec130123b13ec020c1040b8e520d3d59"
+    }
+  ],
+  "omni": "not applicable (focused: no declaring test ran); no omni spawn",
+  "scope": "Seven original mount/selection controls, not scanner clean/EICAR or nominal browser journeys.",
+  "log": "logs/R1-auxiliary.log.txt",
+  "GLOBAL_RELEASE": false
+}
+

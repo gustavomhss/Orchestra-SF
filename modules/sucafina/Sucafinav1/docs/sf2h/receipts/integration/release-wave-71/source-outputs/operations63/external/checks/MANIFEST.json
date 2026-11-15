@@ -1,0 +1,33 @@
+{
+  "schema": "sf2h.operations63.external-checks.v1",
+  "status": "PREPARED_NOT_APPLIED_OR_EXECUTED",
+  "owner": [
+    "45",
+    "60"
+  ],
+  "source_ref": "astra-check-compose",
+  "source_commit": "771cf5896aa504620ab35a2e44cca2606b7e18c3",
+  "target": ".github/workflows/astra-compose-check.yml",
+  "preimage_blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+  "postimage_blob": "ba41d66a3b862eed2c4252c1a56b5afe8ebaa0fb",
+  "patch_sha256": "a2e881976659301121511a87a47372876a9d9af11a2be48b092573817c56bda9",
+  "requires": {
+    "packages/app-shell/package.json": "fed0414375fe5ad9553d1b6562f54972f2ed89f7"
+  },
+  "reason": "The owned Operations browser helper fixes must be typechecked through package scripts; the existing compiler lane lacks app-shell and its dedicated sf-e2e project. Sucafina, guards and existing generation are already present.",
+  "changes": [
+    "Adds bun typecheck in packages/app-shell",
+    "Adds package typecheck:sf-e2e without invoking tsc directly or running product tests"
+  ],
+  "unchanged": [
+    "45-owned branch/ref",
+    "exact product/envelope validation",
+    "contents:read permissions",
+    "all previous checks",
+    "guard base",
+    "concurrency and existing timeouts",
+    "upload artifact"
+  ],
+  "source_lane_not_in_own_product": "The workflow exists only in the owner45 check branch, not in the mission63 source tree. Owner45 must reconcile its real lease, envelope and ancestry before applying or dispatching; mission63 did not write this branch.",
+  "validation": "Text construction and exact preimage hash only; no YAML execution, typecheck or guard has run for mission63."
+}

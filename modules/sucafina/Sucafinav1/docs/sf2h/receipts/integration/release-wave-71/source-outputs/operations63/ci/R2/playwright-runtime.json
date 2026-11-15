@@ -1,0 +1,554 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+    "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "bundle": "production",
+      "ci": {
+        "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/98522c038cba67a2552890e9daf8898caf146c41",
+        "commitHash": "98522c038cba67a2552890e9daf8898caf146c41",
+        "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712"
+      },
+      "gitCommit": {
+        "shortHash": "98522c03",
+        "hash": "98522c038cba67a2552890e9daf8898caf146c41",
+        "subject": "test(sf2h): qualify five original Operations journeys on current composition",
+        "body": "test(sf2h): qualify five original Operations journeys on current composition",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794708928000
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794708928000
+        },
+        "branch": "ci-run-linux-operations63-4a8906bd-nominal-r2"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "bundle": "production",
+          "ci": {
+            "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/98522c038cba67a2552890e9daf8898caf146c41",
+            "commitHash": "98522c038cba67a2552890e9daf8898caf146c41",
+            "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712"
+          },
+          "gitCommit": {
+            "shortHash": "98522c03",
+            "hash": "98522c038cba67a2552890e9daf8898caf146c41",
+            "subject": "test(sf2h): qualify five original Operations journeys on current composition",
+            "body": "test(sf2h): qualify five original Operations journeys on current composition",
+            "author": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794708928000
+            },
+            "committer": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794708928000
+            },
+            "branch": "ci-run-linux-operations63-4a8906bd-nominal-r2"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+        "testIgnore": [
+          "performance/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html"
+      ],
+      [
+        "line"
+      ],
+      [
+        "json"
+      ],
+      [
+        "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "sucafina/operations.spec.ts",
+      "file": "sucafina/operations.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CI-UI-OPERATIONS",
+          "file": "sucafina/operations.spec.ts",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1326,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T02:18:10.425Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "operations-j04-comparison.json",
+                          "contentType": "application/json",
+                          "body": "eyJzZWxlY3Rpb24iOiJDSS1VSS1PUEVSQVRJT05TIiwidGVzdElkIjoiYjk0NGFkYWU0NmFiZWI0ZWZhNGYtMjJhZmI3N2QzY2EwZGY3MTIxYWQiLCJyZWNvcmRJZCI6IlBSLTIwMjYtMDAwMSIsInF1ZXVlIjp7ImlkIjoiUFItMjAyNi0wMDAxIiwiYW1vdW50IjoiMzI0MDAgVVNEIiwic291cmNlUmVmIjoiNjYyOGJjZDAtODA4Yy00OGZlLTlmNjUtYzQwODYyOWNkYjI2IiwicmVmRGlnZXN0IjoiZjdjYzIwZTQ1YmQyZjZiZWI3YThhMjdiZDMyYTExNjgxMDgwZTQyYmQ4ZWQwYmI4YjM1YzlhMjZmMjYxODIwZSIsInNvdXJjZVZlcnNpb24iOjF9LCJsaXRlcmFsT3JhY2xlIjp7InNlbGVjdGVkIjoiQSIsIm9yaWdpbmFsQiI6IjI4MDAwIEVVUiIsInN1Ym1pdHRlZFJhdGVCIjoxLjA4LCJiYXNlQiI6IjMwMjQwIFVTRCIsInJhbmsiOlsiQSIsIkIiXSwiZXhjbHVkZWQiOlsiQyJdLCJwcmVtaXVtIjoiMjE2MCBVU0QgKDcuMTQlKSJ9LCJjMDZNYXRlcmlhbENvbmZpcm1hdGlvbiI6Ik5PVF9FWEVSQ0lTRUQiLCJodW1hblRpbWluZ01lYXN1cmVkIjpmYWxzZSwibmF0aXZlUGFyaXR5TWVhc3VyZWQiOmZhbHNlfQ=="
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-22afb77d3ca0df7121ad",
+              "file": "sucafina/operations.spec.ts",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 14288,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\nExpected: \u001b[32m\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\"\u001b[39m\nReceived: \u001b[31m\"Current request value: 28000 EUR; base value: 30240\u001b[7m.000000000004\u001b[27m USD; FX: 1.08 (submitted).\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\u001b[22m\n\u001b[2m    14 × locator resolved to <p data-request-money=\"PR-2026-0002\">Current request value: 28000 EUR; base value: 302…</p>\u001b[22m\n\u001b[2m       - unexpected value \"Current request value: 28000 EUR; base value: 30240.000000000004 USD; FX: 1.08 (submitted).\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\nExpected: \u001b[32m\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\"\u001b[39m\nReceived: \u001b[31m\"Current request value: 28000 EUR; base value: 30240\u001b[7m.000000000004\u001b[27m USD; FX: 1.08 (submitted).\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\u001b[22m\n\u001b[2m    14 × locator resolved to <p data-request-money=\"PR-2026-0002\">Current request value: 28000 EUR; base value: 302…</p>\u001b[22m\n\u001b[2m       - unexpected value \"Current request value: 28000 EUR; base value: 30240.000000000004 USD; FX: 1.08 (submitted).\"\u001b[22m\n\n    at sourcingSnapshot (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:40:56)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:20:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+                          "column": 56,
+                          "line": 40
+                        },
+                        "snippet": "   at sucafina/operations-support/procurement-snapshot.ts:40\n\n\u001b[0m \u001b[90m 38 |\u001b[39m   \u001b[36mawait\u001b[39m requestAction(page\u001b[33m,\u001b[39m id\u001b[33m,\u001b[39m sourcing\u001b[33m.\u001b[39mlocator(\u001b[32m'form[data-command=\"submit_sourcing\"]'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m\"Submit sourcing\"\u001b[39m)\n \u001b[90m 39 |\u001b[39m   \u001b[36mawait\u001b[39m expect(detail\u001b[33m.\u001b[39mlocator(\u001b[32m\"[data-request-summary]\"\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m\"Sourcing approval\"\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 40 |\u001b[39m   \u001b[36mawait\u001b[39m expect(detail\u001b[33m.\u001b[39mlocator(\u001b[32m\"[data-request-money]\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\"\u001b[39m)\n \u001b[90m    |\u001b[39m                                                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 41 |\u001b[39m   \u001b[36mconst\u001b[39m pendingVersion \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetAttribute(\u001b[32m\"data-version\"\u001b[39m)\n \u001b[90m 42 |\u001b[39m   \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39mpendingVersion \u001b[33m||\u001b[39m \u001b[33m!\u001b[39m\u001b[35m/^[1-9]\\d*$/\u001b[39m\u001b[33m.\u001b[39mtest(pendingVersion)) \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"The submitted sourcing must have a positive domain version\"\u001b[39m)\n \u001b[90m 43 |\u001b[39m   \u001b[36mconst\u001b[39m before \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m queueIdentity(page\u001b[33m,\u001b[39m account\u001b[33m,\u001b[39m id\u001b[33m,\u001b[39m \u001b[32m\"30240 USD\"\u001b[39m)\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+                            "column": 56,
+                            "line": 40
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\nExpected: \u001b[32m\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\"\u001b[39m\nReceived: \u001b[31m\"Current request value: 28000 EUR; base value: 30240\u001b[7m.000000000004\u001b[27m USD; FX: 1.08 (submitted).\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\u001b[22m\n\u001b[2m    14 × locator resolved to <p data-request-money=\"PR-2026-0002\">Current request value: 28000 EUR; base value: 302…</p>\u001b[22m\n\u001b[2m       - unexpected value \"Current request value: 28000 EUR; base value: 30240.000000000004 USD; FX: 1.08 (submitted).\"\u001b[22m\n\n\n   at sucafina/operations-support/procurement-snapshot.ts:40\n\n  38 |   await requestAction(page, id, sourcing.locator('form[data-command=\"submit_sourcing\"]'), \"Submit sourcing\")\n  39 |   await expect(detail.locator(\"[data-request-summary]\")).toContainText(\"Sourcing approval\")\n> 40 |   await expect(detail.locator(\"[data-request-money]\")).toHaveText(\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\")\n     |                                                        ^\n  41 |   const pendingVersion = await form.getAttribute(\"data-version\")\n  42 |   if (!pendingVersion || !/^[1-9]\\d*$/.test(pendingVersion)) throw new Error(\"The submitted sourcing must have a positive domain version\")\n  43 |   const before = await queueIdentity(page, account, id, \"30240 USD\")\n    at sourcingSnapshot (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:40:56)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:20:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T02:18:14.041Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+                        "column": 56,
+                        "line": 40
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-05bfd53af44c9645acd5",
+              "file": "sucafina/operations.spec.ts",
+              "line": 18,
+              "column": 3
+            },
+            {
+              "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 15636,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAccessibleDescription\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\nExpected: \u001b[32m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[39m\nReceived: \u001b[31m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[7m Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAccessibleDescription\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to <input type=\"text\" value=\"JPY\" aria-invalid=\"true\" data-field-invalid=\"true\" name=\"sourcing.quotes.0.currency\" aria-labelledby=\"PR-2026-0003-save-label-sourcing.quotes.0.currency\" aria-describedby=\"PR-2026-0003-save-error-sourcing.quotes.0.currency field-error-a8f89090-aab9-4c66-802b-7e8af04c81c2-0\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Quote 1: no FX rate defined for JPY (Settings → Currencies) Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAccessibleDescription\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\nExpected: \u001b[32m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[39m\nReceived: \u001b[31m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[7m Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAccessibleDescription\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to <input type=\"text\" value=\"JPY\" aria-invalid=\"true\" data-field-invalid=\"true\" name=\"sourcing.quotes.0.currency\" aria-labelledby=\"PR-2026-0003-save-label-sourcing.quotes.0.currency\" aria-describedby=\"PR-2026-0003-save-error-sourcing.quotes.0.currency field-error-a8f89090-aab9-4c66-802b-7e8af04c81c2-0\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Quote 1: no FX rate defined for JPY (Settings → Currencies) Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[22m\n\n    at missingFxRefusal (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:59:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:25:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+                          "column": 26,
+                          "line": 59
+                        },
+                        "snippet": "   at sucafina/operations-support/procurement-refusal.ts:59\n\n\u001b[0m \u001b[90m 57 |\u001b[39m   \u001b[36mawait\u001b[39m expect(currency)\u001b[33m.\u001b[39mtoHaveValue(\u001b[32m\"JPY\"\u001b[39m)\n \u001b[90m 58 |\u001b[39m   \u001b[36mawait\u001b[39m expect(currency)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m\"aria-invalid\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"true\"\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 59 |\u001b[39m   \u001b[36mawait\u001b[39m expect(currency)\u001b[33m.\u001b[39mtoHaveAccessibleDescription(message)\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 60 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m\"data-version\"\u001b[39m\u001b[33m,\u001b[39m version)\n \u001b[90m 61 |\u001b[39m   \u001b[36mawait\u001b[39m expect(detail\u001b[33m.\u001b[39mlocator(\u001b[32m\"[data-request-summary]\"\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m\"Value unavailable\"\u001b[39m)\n \u001b[90m 62 |\u001b[39m   \u001b[36mawait\u001b[39m expect(detail\u001b[33m.\u001b[39mlocator(\u001b[32m\"[data-request-summary]\"\u001b[39m))\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContainText(\u001b[32m\"Sourcing approval\"\u001b[39m)\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+                            "column": 26,
+                            "line": 59
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAccessibleDescription\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\nExpected: \u001b[32m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[39m\nReceived: \u001b[31m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[7m Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAccessibleDescription\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to <input type=\"text\" value=\"JPY\" aria-invalid=\"true\" data-field-invalid=\"true\" name=\"sourcing.quotes.0.currency\" aria-labelledby=\"PR-2026-0003-save-label-sourcing.quotes.0.currency\" aria-describedby=\"PR-2026-0003-save-error-sourcing.quotes.0.currency field-error-a8f89090-aab9-4c66-802b-7e8af04c81c2-0\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Quote 1: no FX rate defined for JPY (Settings → Currencies) Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[22m\n\n\n   at sucafina/operations-support/procurement-refusal.ts:59\n\n  57 |   await expect(currency).toHaveValue(\"JPY\")\n  58 |   await expect(currency).toHaveAttribute(\"aria-invalid\", \"true\")\n> 59 |   await expect(currency).toHaveAccessibleDescription(message)\n     |                          ^\n  60 |   await expect(form).toHaveAttribute(\"data-version\", version)\n  61 |   await expect(detail.locator(\"[data-request-summary]\")).toContainText(\"Value unavailable\")\n  62 |   await expect(detail.locator(\"[data-request-summary]\")).not.toContainText(\"Sourcing approval\")\n    at missingFxRefusal (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:59:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:25:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T02:18:29.034Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+                        "column": 26,
+                        "line": 59
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-014331764edf948dc865",
+              "file": "sucafina/operations.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1647,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m403\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m403\u001b[39m\n    at valueOf (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:18:29)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:118:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+                          "column": 29,
+                          "line": 18
+                        },
+                        "snippet": "   at sucafina/operations-support/imports.ts:18\n\n\u001b[0m \u001b[90m 16 |\u001b[39m\n \u001b[90m 17 |\u001b[39m \u001b[36masync\u001b[39m \u001b[36mfunction\u001b[39m valueOf\u001b[33m<\u001b[39m\u001b[33mT\u001b[39m\u001b[33m>\u001b[39m(response\u001b[33m:\u001b[39m \u001b[33mAPIResponse\u001b[39m \u001b[33m|\u001b[39m \u001b[33mResponse\u001b[39m)\u001b[33m:\u001b[39m \u001b[33mPromise\u001b[39m\u001b[33m<\u001b[39m\u001b[33mT\u001b[39m\u001b[33m>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m   expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m200\u001b[39m)\n \u001b[90m    |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m   \u001b[36mconst\u001b[39m body \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson() \u001b[36mas\u001b[39m { status\u001b[33m:\u001b[39m string\u001b[33m;\u001b[39m value\u001b[33m:\u001b[39m \u001b[33mT\u001b[39m }\n \u001b[90m 20 |\u001b[39m   expect(body\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[32m\"ok\"\u001b[39m)\n \u001b[90m 21 |\u001b[39m   \u001b[36mreturn\u001b[39m body\u001b[33m.\u001b[39mvalue\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+                            "column": 29,
+                            "line": 18
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m403\u001b[39m\n\n   at sucafina/operations-support/imports.ts:18\n\n  16 |\n  17 | async function valueOf<T>(response: APIResponse | Response): Promise<T> {\n> 18 |   expect(response.status()).toBe(200)\n     |                             ^\n  19 |   const body = await response.json() as { status: string; value: T }\n  20 |   expect(body.status).toBe(\"ok\")\n  21 |   return body.value\n    at valueOf (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:18:29)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:118:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5"
+                        },
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+                            "column": 58,
+                            "line": 62
+                          },
+                          "message": "Error: page.waitForResponse: Test ended.\n\n   at sucafina/operations-support/imports.ts:62\n\n  60 |     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + \"/planner\" && candidate.searchParams.get(\"sf\") === mode\n  61 |   }\n> 62 |   const waiting = (mode: string, method = \"GET\") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)\n     |                                                          ^\n  63 |   expect((await page.goto(account.baseURL + \"/planner?page=Versions\"))?.status()).toBe(200)\n  64 |   const first = page.locator('form[data-page=\"Versions\"][data-command=\"save\"][data-record=\"\"]')\n  65 |   await expect(first).toHaveCount(1)\n    at waiting (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:62:58)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:116:72)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T02:18:45.453Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/test-failed-2.png"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/error-context.md"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/video.webm"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/video-1.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+                        "column": 29,
+                        "line": 18
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-e9566aebd8e9d1d91482",
+              "file": "sucafina/operations.spec.ts",
+              "line": 28,
+              "column": 3
+            },
+            {
+              "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 60333,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+                            "column": 59,
+                            "line": 43
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form[data-page=\"Suppliers\"][data-command=\"create\"]').getByLabel('Risk rating', { exact: true })\u001b[22m\n\n\n   at sucafina/operations-support/documents.ts:43\n\n  41 |     [\"Currency\", \"USD\"],\n  42 |   ]) await create.getByLabel(label!, { exact: true }).fill(value!)\n> 43 |   await create.getByLabel(\"Risk rating\", { exact: true }).selectOption(\"Low\")\n     |                                                           ^\n  44 |   const creation = commandResponse(page, \"create\")\n  45 |   await create.getByRole(\"button\", { name: \"Create supplier\", exact: true }).click()\n  46 |   const created = await creation\n    at documentJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/documents.ts:43:59)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:35:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T02:18:47.760Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-6f9d621cf244a785ed31",
+              "file": "sucafina/operations.spec.ts",
+              "line": 33,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T02:17:39.016Z",
+    "duration": 129431.27799999999,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

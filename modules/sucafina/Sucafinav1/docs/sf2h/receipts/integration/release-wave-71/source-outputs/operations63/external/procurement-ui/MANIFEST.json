@@ -1,0 +1,83 @@
+{
+  "schema": "sf2h.operations63.procurement-ui-bundle.v1",
+  "status": "PREPARED_NOT_APPLIED",
+  "qualification_status": "NOT_RUN",
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "observed_target": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "patches": [
+    {
+      "id": "OPS63-PROC-MONEY-PRESENTATION",
+      "manifest": "procurement-money.manifest.json",
+      "target": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "preimage_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "postimage_blob": "0a0dd9eb2299df05e8c6bc14cd4dc67313b64c25",
+      "patch_sha256": "83e61aa128772b65fbb87bb54eca2fb5cc351feed77d79e37a6960941b71bae1"
+    },
+    {
+      "id": "OPS63-PROC-FIELD-ERROR-DESCRIPTION",
+      "manifest": "field-errors.manifest.json",
+      "target": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "preimage_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "postimage_blob": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "patch_sha256": "39c06132831301a14f104f58a646bc3bfcf431db3fabf0beaae25d03af547694"
+    }
+  ],
+  "scope": "Two complete inert dependency patches for the two observed R2 Procurement UI failures. No shared production source is edited by mission63.",
+  "evidence": {
+    "selection": "five-original-Operations-nominals",
+    "result": "FAIL",
+    "work_commit": "4a8906bd638a51a95ff13b4c542f62ef7203f486",
+    "work_tree": "60e5420af9e427e9047fb6cb387ebd4586148105",
+    "snapshot_commit": "98522c038cba67a2552890e9daf8898caf146c41",
+    "snapshot_tree": "04073a1d41ddc00ff322bd1f769c50dca642b7d9",
+    "run": 43666919712,
+    "job": 132668237542,
+    "run_attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712",
+    "artifact_id": 14142630953,
+    "artifact_sha256": "b7c84acb5f299850b4238edd7991f55a5fbe493bfd6ff8ae30f74fbe33a193b1",
+    "log": "../../logs/R2-nominal.log.txt",
+    "log_sha256": "54a545451c1482685c7166049875c77a5a564a94687aeda53a79ed8a435cfc89",
+    "original_result": "../../ci/R2-result.json",
+    "post_patch_status": "NOT_RUN",
+    "source_pass_transfer": false
+  },
+  "ownership": {
+    "mission63": "Both target paths are outside its write_paths. Only receipt files are created.",
+    "mission59": {
+      "contract": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/runtime-readonly-root.json",
+      "ref": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "blob": "6719755c2510dc60c9d0c4abedc4ebf3e8e78bec",
+      "finding": "The bounded write list covers local-store.ts, additive contract.ts, read-snapshot.ts and source-lifecycle forwarding, not runtime/procurement.ts or src/screen-shell.ts."
+    },
+    "mission53": {
+      "contract": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/procurement-approval-closure.json",
+      "ref": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "blob": "9717864fe2afca5cb289a7717c413bf2df420157",
+      "finding": "Explicitly excludes shared runtime/procurement.ts from source ownership."
+    },
+    "mission61": {
+      "contract": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/mixed-source-contracts.json",
+      "ref": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "blob": "e729d03c31b9e594417465de57d064f2635dd1d3",
+      "finding": "Owns decision-host and selected CLI authority paths; neither target path is in that grant."
+    },
+    "required_route": "60/S0 shared owner assignment and integration, consult59 for runtime coordination, 45 compiler and hosted request lane. No authority is inferred from an idle or broad role label."
+  },
+  "required_hosted_qualification": {
+    "status": "NOT_RUN",
+    "request_reference": "../../ci/R2/request.json",
+    "selection": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "original_spec_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+    "budgets": {
+      "timeout_ms": 60000,
+      "expect_ms": 10000,
+      "retries": 0,
+      "workers": 1
+    },
+    "must_preserve": "All five original journeys and assertions. Record fresh W/S/run/job on the composed target. Existing R2 failure remains historical evidence, not a post-patch result.",
+    "separate_prerequisites": "Real ephemeral ClamD and other owner patches may still be required for the complete five-journey run. These two patches do not qualify scanner, imports, documents, C06 or integrated C."
+  },
+  "dependency_closure": "DEPENDENCIES.json",
+  "activation": "Only after the actual shared owner accepts and60 composes via GitHub MCP/CAS; this receipt is not release authorization or source PASS."
+}

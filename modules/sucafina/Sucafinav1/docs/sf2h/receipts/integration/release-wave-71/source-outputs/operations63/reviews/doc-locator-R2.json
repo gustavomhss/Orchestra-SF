@@ -1,0 +1,138 @@
+{
+  "schema": "sf2h.operations63.document-locator-r2.v1",
+  "status": "FIX_PREPARED_HOSTED_REVALIDATION_REQUIRED",
+  "test": {
+    "id": "OP-DOC-01",
+    "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+    "file": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "project": "chromium",
+    "timeout_ms": 60000,
+    "retry": 0,
+    "R2_result": "timedOut",
+    "R2_duration_ms": 60333
+  },
+  "R2": {
+    "source_baseline_W": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "dispatched_S": "98522c038cba67a2552890e9daf8898caf146c41",
+    "run_id": 43666919712,
+    "job_id": 132668237542,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712/job/132668237542",
+    "artifact": {
+      "id": 14142630953,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712/artifacts/14142630953",
+      "zip_bytes": 25922891,
+      "zip_sha256": "b7c84acb5f299850b4238edd7991f55a5fbe493bfd6ff8ae30f74fbe33a193b1"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/error-context.md",
+      "bytes": 19164,
+      "sha256": "047f37c85b6f449b2651eab05b419e4ab522f8a2f459f128ccdf93b775db908e",
+      "evidence": "Timeout waiting for exact getByLabel('Risk rating'); page accessibility snapshot contains a combobox named Risk rating."
+    },
+    {
+      "path": "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/test-failed-1.png",
+      "bytes": 73996,
+      "sha256": "943f21ec2133bca86756b79872db21a851e7f42bf10022b569e5a58c68b2087e",
+      "evidence": "New supplier form visibly contains the Risk rating select with Choose…; preceding inputs were filled."
+    },
+    {
+      "path": "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/trace.zip",
+      "bytes": 4741224,
+      "sha256": "41941a454df75cc4d90a222d61fb7394b67dcbad296e6a00738f69ae84fe5f5b",
+      "evidence": "0-trace.trace call@38 is the timed-out internal:label selector. Frame snapshot after@call@20 contains the exact create form and wrapped select/options below."
+    },
+    {
+      "path": "test-ci-evidence/playwright-runtime.json",
+      "bytes": 43565,
+      "sha256": "409dd22f171c3fb085c7c1a0a7c89124f24a0baa07fbdc229d59dda7a1c11141",
+      "evidence": "Original DOC identity, 60000 ms timeout, retry0 and timedOut result."
+    }
+  ],
+  "observed_dom": {
+    "form": {
+      "tag": "form",
+      "data-command": "create",
+      "data-page": "Suppliers",
+      "data-record": "",
+      "data-version": "0"
+    },
+    "label_html": "<label>Risk rating<select name=\"riskRating\"><option value=\"\" selected>Choose…</option><option value=\"Low\">Low</option><option value=\"Medium\">Medium</option><option value=\"High\">High</option></select></label>",
+    "accessible_role": "combobox",
+    "accessible_name": "Risk rating",
+    "select_name": "riskRating",
+    "intended_value": "Low"
+  },
+  "diagnosis": {
+    "cause": "The exact label selector compares the wrapping label text, which includes its nested select option text. The visible/accessible name remained Risk rating; it was not renamed to Risk.",
+    "evidence_chain": "runtime/ui.ts wraps each select and its option children in a label. The retained DOM snapshot includes Choose…/Low/Medium/High inside that label, while the page accessibility snapshot exposes the control as combobox 'Risk rating'. The locator remained unresolved until the original 60000 ms budget expired.",
+    "phase": "Before supplier creation submission and before upload, scanner admission, document extraction or confirmation.",
+    "ownership": "Operations helper locator defect; no domain/shared producer change justified.",
+    "robust_replacement": "Use the exact observed accessible role/name scoped to the same unique create form. This avoids matching option text as part of the label while preserving strict uniqueness and the same Low option selection."
+  },
+  "source_evidence": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "ref": "98522c038cba67a2552890e9daf8898caf146c41",
+      "blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/98522c038cba67a2552890e9daf8898caf146c41/packages/app-shell/e2e/sucafina/operations-support/documents.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+      "ref": "98522c038cba67a2552890e9daf8898caf146c41",
+      "blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/98522c038cba67a2552890e9daf8898caf146c41/modules/sucafina/Sucafinav1/runtime/ui.ts",
+      "finding": "fields() renders the select with all option elements nested inside its label."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "ref": "98522c038cba67a2552890e9daf8898caf146c41",
+      "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/98522c038cba67a2552890e9daf8898caf146c41/modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "finding": "Supplier field mapping is riskRating: 'Risk rating', with options empty, Low, Medium, High."
+    }
+  ],
+  "patch": {
+    "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+    "line": 43,
+    "preimage": {
+      "ref": "e1791815218eea8e804d515bf197beeb9f8c8b56",
+      "blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "sha256": "7e88c36122b43f46de8942b4f471d6dbbd15004dae9598b5f6fe3eb15c7a2c77",
+      "bytes": 16304,
+      "text": "  await create.getByLabel(\"Risk rating\", { exact: true }).selectOption(\"Low\")"
+    },
+    "postimage": {
+      "blob": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+      "sha256": "1d6f4a5a17eb31959174c7df03027c89d2425853c21a18bd8400651dbe51484d",
+      "bytes": 16321,
+      "text": "  await create.getByRole(\"combobox\", { name: \"Risk rating\", exact: true }).selectOption(\"Low\")"
+    },
+    "comparison": "-  await create.getByLabel(\"Risk rating\", { exact: true }).selectOption(\"Low\")\n+  await create.getByRole(\"combobox\", { name: \"Risk rating\", exact: true }).selectOption(\"Low\")\n",
+    "exact_one_line_replacement": true,
+    "eof": "Official preimage and postimage both end with a single LF after the closing brace. A separately materialized local baseline had an extra LF; it is not the official preimage.",
+    "preserved": [
+      "All five original nominal test identities",
+      "60000 ms test and 10000 ms expect budgets",
+      "retries0",
+      "Single create mutation and its current request oracle",
+      "riskRating Low payload assertion",
+      "All upload, evidence, confirmation and revocation assertions",
+      "Real scanner fail-closed behavior"
+    ]
+  },
+  "validation": {
+    "official_preimage_git_blob_verified": true,
+    "postimage_git_blob_verified": true,
+    "artifact_review": true,
+    "local_product_execution": false,
+    "local_browser_execution": false,
+    "new_tests_added": false,
+    "shared_edits": false,
+    "hosted_revalidation": "PENDING",
+    "next_selection": "All five original Operations journeys on the newly committed work snapshot through the hosted canonical lane.",
+    "claim": "This receipt establishes the observed R2 locator defect and prepares its correction. It does not claim a later nominal run passed or that DOC/scanner/format/C06 qualification is complete."
+  }
+}

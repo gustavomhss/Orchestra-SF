@@ -1,0 +1,22 @@
+diff --git a/modules/sucafina/Sucafinav1/src/screen-shell.ts b/modules/sucafina/Sucafinav1/src/screen-shell.ts
+index c57e1f01044d12bf5c86bb5d7d68408950a83fc1..f1573e02df562db7569f53931d7a4524a108ad4b 100644
+--- a/modules/sucafina/Sucafinav1/src/screen-shell.ts
++++ b/modules/sucafina/Sucafinav1/src/screen-shell.ts
+@@ -357,11 +357,14 @@
+       event.preventDefault()
+       if (pending.closed || form.dataset.saving === "true" || commandBlocked(form)) return
+       const errorScope = form.closest("section") || form
+-      errorScope.querySelectorAll("[data-field-error]").forEach((message) => {
++      errorScope.querySelectorAll("[data-field-error], [data-error-for]").forEach((message) => {
+         errorScope.querySelectorAll("[aria-describedby]").forEach((input) => {
+-          const ids = input.getAttribute("aria-describedby").split(/\\s+/).filter((id) => id !== message.id)
++          const described = input.getAttribute("aria-describedby").split(/\\s+/)
++          if (!described.includes(message.id)) return
++          const ids = described.filter((id) => id !== message.id)
+           if (ids.length) input.setAttribute("aria-describedby", ids.join(" ")); else input.removeAttribute("aria-describedby")
+-          if (input.dataset.fieldInvalid) { input.removeAttribute("aria-invalid"); delete input.dataset.fieldInvalid }
++          input.removeAttribute("aria-invalid")
++          delete input.dataset.fieldInvalid
+         })
+         message.remove()
+       })

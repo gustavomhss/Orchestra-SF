@@ -1,0 +1,227 @@
+{
+  "schema": "sf2h.integration71.candidate.v1",
+  "mission": 71,
+  "symbol": "C30",
+  "identity": "CONTAINING_COMMIT; actual SHA/tree recorded in external ACK and following readback",
+  "parent": "342f04688aa173914f36a81e80e6781242616e82",
+  "parent_tree": "ac40db3e52bc58b171bc1bb4f311ed0d1d13bbab",
+  "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+  "source": {
+    "mission": 63,
+    "terminal": "f0682b3ca9a792dcef2166a867aa06974e242874",
+    "terminal_tree": "8a3b0ad5c426a621a013203552c2e48dd1074e51",
+    "work": "83aabd95ab423816002a623d1a998eb51bb89173",
+    "work_tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+    "release_blob": "150bdcb7589ad921d0305bf37087cdd951ccc92a",
+    "archive_path": "source-outputs/operations63",
+    "archive_tree": "2eafc1c9cb8ad2e9e7179a9a3aa85b66a05f4860",
+    "archive_blob_count": 62
+  },
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "mode": "100644",
+      "preimage_blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+      "postimage_blob": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+      "postimage_sha256": "88dc1df43fa767fd2b42b1a7c4010b641c12c89bb8044523261ab91b71af40f4",
+      "postimage_bytes": 2376,
+      "preimage_file": "local-scanner.ts.preimage.txt",
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "458c33783954d9b8465f289690718a4fe8c34ec6",
+      "postimage_sha256": "6501cd22b27352dc048d5fa7b3bf43a216a563d0a9491399d4187e78d142a54e",
+      "postimage_bytes": 3190,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c",
+      "postimage_sha256": "834e11fa40c0b6bdb1c93de41d894335331870dfd8275490ddf6e0aa6950e7c6",
+      "postimage_bytes": 6620,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/README.md",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "1cca813f15c94cd397825a42c28ac9b9020212df",
+      "postimage_sha256": "10d58d129a667d1d2e63d1df22a56220d20d232b52d57b64bcebcbf32e5e2e0a",
+      "postimage_bytes": 5205,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/cleanup.sh",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "034be3399187c8b8683c166987795f210a7421c2",
+      "postimage_sha256": "089bf65246458a859eedecb4a57aaf4ef902ba7bbbf5cf86dd37a927d8854d12",
+      "postimage_bytes": 296,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/select.mjs",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "4b4dabacea4c2b47daec81a9de95c61b5ca78fc4",
+      "postimage_sha256": "9adb3b8253a08576be2442efb8db9f8d0f408ea048a8e29847f8e02dd9c5c9b8",
+      "postimage_bytes": 1229,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+      "postimage_sha256": "2795cfd2ddca6381d465264d706490e6bedf9c1bde6dcd4051d22c9605287349",
+      "postimage_bytes": 13972,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "66bd6df24499027328f22b598e50268023287071",
+      "postimage_sha256": "ec25fdde83ccb6f163b05053cfbaa64e860cd582230006e92c14f08baec1b596",
+      "postimage_bytes": 3857,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/tools.lock.json",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+      "postimage_sha256": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6",
+      "postimage_bytes": 2172,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "mode": "100644",
+      "preimage_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "postimage_blob": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+      "postimage_sha256": "1d6f4a5a17eb31959174c7df03027c89d2425853c21a18bd8400651dbe51484d",
+      "postimage_bytes": 16321,
+      "preimage_file": "documents.ts.preimage.txt",
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "mode": "100644",
+      "preimage_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "postimage_blob": "c229bc6e85d2474d057a21859d0d88055100a078",
+      "postimage_sha256": "a8b6b42f139929fbe6fe5aa8e5ebad5b83705dcbcc9155db60d82acc712fb53d",
+      "postimage_bytes": 16785,
+      "preimage_file": "imports.ts.preimage.txt",
+      "postimage_location": "repository path at material_work_commit"
+    }
+  ],
+  "preimage_verification": {
+    "fresh_current_three": [
+      {
+        "key": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+        "sha": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+        "match": true
+      },
+      {
+        "key": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "sha": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+        "match": true
+      },
+      {
+        "key": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "sha": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+        "match": true
+      }
+    ],
+    "new_paths_absent_at_terminal60": true,
+    "subsequent_deltas": "ACK71 docs and nine disjoint runtime59 paths only"
+  },
+  "review": "reviews/operations63.json",
+  "review_scope": {
+    "owned_source": "All 11 full postimages read; all 3 modified preimages fetched at exact target; all 8 new paths NOT_FOUND at exact target; unified complete patch reconstructed offline exactly to all 11 postimages and Git blob/SHA256 verified (artifact processing only).",
+    "scanner": "INSTREAM loopback API unchanged; clean admission waits ordered EOF, exact 11-byte response, completed local send queue; rejects malformed/extra/truncated/early replies, closes on error/timeout. No server/asset auth bypass or policy edits.",
+    "helpers": "documents.ts replaces exact Risk rating label with exact accessible combobox; imports.ts attaches eager rejection observer but returns same waiter promise. Existing requests/assertions/IDs/budgets preserved.",
+    "setup": "6 script/docs files inactive without workflow hook; fixed official package URL/size/digest, official database, two loopback owned processes, bounded startup/cleanup and discriminating controls. No workflow or CI dispatch is part of own material.",
+    "consumer_edges": "local/entry.ts and Operations installation call scanLocalFile; assets.scan boolean contract unchanged. product-authority C28 read-uncertainty change excludes all five Operations operations/human actions; shared construction still requires composed validation.",
+    "limitations": "Read review/static reconstruction are not product execution; target includes Reports C28 not qualified by source63. Source R3 22PASS and R4 1PASS4FAIL not transferred."
+  },
+  "dependency_closure": {
+    "path": "source-outputs/operations63/DEPENDENCY-CLOSURE.json",
+    "blob": "eeaffde7c08e1abd26bc5fea84ecaa55d410f2ac",
+    "review_target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "current_extra_material": "C29 runtime59; optional read root does not change scanner boolean admission, source and C28 checks remain required"
+  },
+  "complete_patch": {
+    "path": "source-outputs/operations63/owned/operations63-complete.patch",
+    "blob": "9202eeeb17e97ec09cdb994b467016b30a35be14"
+  },
+  "shared_patches": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "pre": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "post": "fee12907e72370b96aa4ddd79e6c4ebf25e2fdaa",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "45 existing lane /75 scanner successor;71 does not move workflow refs",
+      "manifest": "external/ci/MANIFEST.json"
+    },
+    {
+      "path": ".github/workflows/astra-compose-check.yml",
+      "pre": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "post": "ba41d66a3b862eed2c4252c1a56b5afe8ebaa0fb",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "45",
+      "manifest": "external/checks/MANIFEST.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "pre": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "post": "0a0dd9eb2299df05e8c6bc14cd4dc67313b64c25",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "73 exclusively",
+      "manifest": "external/procurement-ui/procurement-money.manifest.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "pre": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "post": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "75",
+      "manifest": "external/procurement-ui/field-errors.manifest.json"
+    }
+  ],
+  "holds": [
+    "Real ClamD readiness/live clean/EICAR/clean-after/ERROR/DOWN NOT_RUN",
+    "Five original journeys latest 1PASS4FAIL: money precision, duplicate FX description, import admit403, document scan422",
+    "Compiler/typechecks/guards NOT_RUN",
+    "C06 invalidation, PDF/DOCX/text extraction completeness, native parity, AM01-06 and final eight/reviews/C-G7/D-G8 remain mandatory",
+    "Import403 cause still not established by generic denial; no unsupported conclusion beyond missing scanner blocks admission"
+  ],
+  "consumer_ACK": {
+    "source63": "ACCEPTED_11_OWNED_EXACT_WITH_QUALIFICATION_HOLDS",
+    "successor75": "No ongoing75 snapshot imported; await separate release",
+    "runtime_procurement73": "sole correction owner; money presentation patch forwarded to73",
+    "checks45": "workflow patches inert; no71 workflow edits"
+  },
+  "validation": {
+    "CI_dispatches71": 0,
+    "tests71": 0,
+    "source": "22 protocol PASS; nominal1PASS4FAIL; realClamD NOT_RUN",
+    "composed": "NOT_RUN_REQUEST45_PENDING",
+    "final": "S0_ONLY"
+  },
+  "GLOBAL_RELEASE": false
+}

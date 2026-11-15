@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.operations63.ci-result.v1",
+  "status": "PASS",
+  "selection": "scanner protocol plus seven original Operations auxiliary cases",
+  "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56",
+  "work_tree": "55ca4c3ac9fced0ca17b775374950f7fc6926d27",
+  "snapshot_commit": "296b69cfe746fbac4639b9451f60563d5524fc29",
+  "snapshot_tree": "42a55e63c3b105fade4117194e40021dd36861f5",
+  "snapshot_delta": {
+    ".ci-run.json": "b88b87af02459574e5e8e1d985e33c59081f22e1"
+  },
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/local-scanner.test.ts",
+      "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "run": 43667752670,
+  "job": 132670825592,
+  "run_attempt": 1,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667752670",
+  "conclusion": "success",
+  "updated_at": "2026-11-15T02:27:31Z",
+  "tests": 22,
+  "pass": 22,
+  "fail": 0,
+  "expect_calls": 106,
+  "duration_ms": 662,
+  "groups": {
+    "original_scanner_tests": 5,
+    "new_protocol_refusal_tests": 10,
+    "original_mount_boundary": 5,
+    "original_selection": 2
+  },
+  "omni_positive_control": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+  "real_clamd_qualified": false,
+  "real_clamd_status": "NOT_RUN; service absent from authorized workflow",
+  "c28_qualified": false,
+  "transfer_to_integrated_C": false,
+  "log": "logs/R3-scanner-auxiliary.log.txt"
+}

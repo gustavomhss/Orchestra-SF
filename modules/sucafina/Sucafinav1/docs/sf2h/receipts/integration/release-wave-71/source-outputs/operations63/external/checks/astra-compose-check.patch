@@ -1,0 +1,23 @@
+--- a/.github/workflows/astra-compose-check.yml
++++ b/.github/workflows/astra-compose-check.yml
+@@ -89,6 +89,20 @@
+           set -o pipefail
+           bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-compose-evidence/sucafina-typecheck.log"
+ 
++      - name: Typecheck app shell
++        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
++        working-directory: packages/app-shell
++        run: |
++          set -o pipefail
++          bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-compose-evidence/app-typecheck.log"
++
++      - name: Typecheck Sucafina browser consumers
++        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
++        working-directory: packages/app-shell
++        run: |
++          set -o pipefail
++          bun run typecheck:sf-e2e 2>&1 | tee "$RUNNER_TEMP/astra-compose-evidence/sf-e2e-typecheck.log"
++
+       - name: Typecheck CLI consumers
+         if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
+         working-directory: apps/cli

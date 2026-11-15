@@ -1,0 +1,282 @@
+{
+  "schema": "sf2h.operations63.r4-browser-diagnosis.v1",
+  "status": "OWN_HELPER_FIXES_WITNESSED_NOMINAL_QUALIFICATION_BLOCKED",
+  "run": {
+    "id": 43668156670,
+    "attempt": 1,
+    "job_id": 132672057817,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668156670",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668156670/job/132672057817",
+    "work_sha": "83aabd95ab423816002a623d1a998eb51bb89173",
+    "snapshot_sha": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+    "branch": "ci-run-linux-operations63-83aabd95-nominal-r4"
+  },
+  "artifact": {
+    "id": 14142858448,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668156670/artifacts/14142858448",
+    "zip_sha256": "81831ebb645872ada9ef38d1d32ab10df7eca7e28987e1d2ab319ad48f7ed83c",
+    "verification": "Downloaded through GitHub MCP and digest-verified by root; diagnostic trace and JSON members were then read offline."
+  },
+  "scope": {
+    "selection": "e2e/sucafina/operations.spec.ts",
+    "config": "e2e/playwright.production.config.ts",
+    "project": "chromium",
+    "original_journeys": 5,
+    "timeout_ms": 60000,
+    "retries": 0,
+    "repeat_each": 1,
+    "passed": 1,
+    "failed": 4,
+    "skipped": 0,
+    "flaky": 0,
+    "request_environment": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "results": [
+    {
+      "id": "OP-PROC-01",
+      "status": "passed",
+      "duration_ms": 1589
+    },
+    {
+      "id": "OP-PROC-02",
+      "status": "failed",
+      "duration_ms": 15478,
+      "diagnosis_scope": "Shared Procurement dependency; analyzed separately."
+    },
+    {
+      "id": "OP-PROC-03",
+      "status": "failed",
+      "duration_ms": 16966,
+      "diagnosis_scope": "Shared Procurement dependency; analyzed separately."
+    },
+    {
+      "id": "OP-IMPORT-01",
+      "status": "failed",
+      "duration_ms": 1872,
+      "error_count": 1,
+      "stage": "import-admit"
+    },
+    {
+      "id": "OP-DOC-01",
+      "status": "failed",
+      "duration_ms": 2447,
+      "error_count": 1,
+      "stage": "private supplier upload scanner gate"
+    }
+  ],
+  "positive_fix_witnesses": {
+    "document_locator": {
+      "source_path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "source_blob": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+      "prior": "R2 stopped at exact getByLabel('Risk rating') before supplier creation.",
+      "current": "R4 completes the strict exact combobox selector, selects Low, creates the supplier successfully, and reaches the real private upload.",
+      "trace": {
+        "file": "0-trace.trace",
+        "call_id": "call@38",
+        "method": "selectOption",
+        "selector": "form[data-page=\"Suppliers\"][data-command=\"create\"] >> internal:role=combobox[name=\"Risk rating\"s]",
+        "strict": true,
+        "value_or_label": "Low",
+        "completed": true,
+        "error": null
+      },
+      "supplier_creation": {
+        "method": "POST",
+        "pathname": "/wp04/first/procurement",
+        "request_projection": {
+          "page": "Suppliers",
+          "action": "create",
+          "version": 0,
+          "values": {
+            "riskRating": "Low"
+          }
+        },
+        "response_status": 200,
+        "response_body": {
+          "ok": true,
+          "warnings": []
+        },
+        "response_resource": "resources/f92488d43bca6fa9af4905cb5492dd418336a7df.json"
+      },
+      "claim": "The original locator failure is resolved on the hosted R4 path. The complete DOC journey is not qualified."
+    },
+    "import_waiter_lifecycle": {
+      "source_path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "source_blob": "c229bc6e85d2474d057a21859d0d88055100a078",
+      "prior": "R2 admission403 produced the primary HTTP assertion failure plus page.waitForResponse: Test ended.",
+      "current": "R4 repeats admission403 and records only the original expected200/received403 assertion. No Test ended secondary rejection appears in the runtime JSON or full job log.",
+      "runtime_error_count": 1,
+      "secondary_teardown_error": false,
+      "primary_assertion_preserved": true,
+      "claim": "The same rejected-admission path now terminates without the prior unhandled waiter rejection. HTTP200 remains mandatory; no journey success is claimed."
+    }
+  },
+  "document_refusal": {
+    "request": {
+      "method": "POST",
+      "origin": "http://127.0.0.1:4174",
+      "pathname": "/wp04/first/procurement",
+      "query_keys": [
+        "page",
+        "q",
+        "upload",
+        "record",
+        "recordVersion",
+        "name"
+      ],
+      "upload_kind": "supplier",
+      "sec_fetch_site": "same-origin",
+      "cookie_present": true
+    },
+    "response": {
+      "status": 422,
+      "body": {
+        "ok": false,
+        "errors": [
+          "The scanner did not accept this file."
+        ]
+      },
+      "resource": "resources/1b53db1078c572d45b0c927f9f6d10efadfdc2af.json"
+    },
+    "producer": {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "ref": "83aabd95ab423816002a623d1a998eb51bb89173",
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "function": "prepareUpload",
+      "lines": [
+        794,
+        847
+      ],
+      "exact_refusal_lines": [
+        835,
+        838
+      ]
+    },
+    "cause": "The exact observed error is emitted only when await application.assets.services.scan(bytes, mediaType) returns false in prepareUpload. Authentication/write-role, a configured cap and bounded body reading precede this branch.",
+    "stage_boundary": "createApplication returns the prepareUpload Response before opening the final upload transaction. The later uploadAsset function and its blob/asset mutation are not reached for this rejected upload.",
+    "distinction_from_later_asset_gate": {
+      "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "later_error_text": "The file was not accepted by the scanner.",
+      "observed_later_gate": false
+    },
+    "qualification_limit": "This is an application scan-gate refusal witness. It does not establish a TCP connection to, or verdict from, real ClamD.",
+    "not_reached": [
+      "successful asset admission and authorized download",
+      "document source discovery",
+      "document schema/extraction",
+      "human confirmation",
+      "exact document evidence",
+      "source revocation"
+    ]
+  },
+  "import_refusal": {
+    "request": {
+      "method": "POST",
+      "origin": "http://127.0.0.1:4174",
+      "pathname": "/wp04/first/planner",
+      "sf_mode": "import-admit",
+      "sec_fetch_site": "same-origin",
+      "cookie_present": true
+    },
+    "response": {
+      "status": 403,
+      "body": {
+        "status": "denied"
+      },
+      "resource": "resources/7bac891f44387bd093d2cab7b9fc313ada52bb3e.json"
+    },
+    "diagnosis": "The generic admission denial repeats R2. Multiple private authority and scanner gates can return this status, and the transport intentionally omits the internal reason.",
+    "qualification_limit": "The artifact does not identify which private gate rejected first. Do not label this403 as an observed real ClamD failure or as proof of a distinct authorization defect.",
+    "related_receipt": "external/import-analysis.json",
+    "not_reached": [
+      "successful file admission",
+      "valid import preview/detail",
+      "Apply and lost-delivery recovery",
+      "receipt/refreshed receipt/reload equality",
+      "post-apply revocation"
+    ]
+  },
+  "scanner_dependency": {
+    "status": "BLOCKED_NOT_RUN_REAL_CLAMD",
+    "owner": [
+      "45",
+      "60"
+    ],
+    "observed_request_environment": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "workflow": {
+      "path": ".github/workflows/test-ci.yml",
+      "ref": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "scanner_setup_present": false,
+      "scanner_env_export_present": false
+    },
+    "composition_chain": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "ref": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+        "blob": "8230eb28f322dde255382b74280192f39844724d",
+        "behavior": "Absent SF_OPERATIONS_CLAMD_PORT becomes scanner=null."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "ref": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+        "blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+        "behavior": "assets.services.scan delegates to scanLocalFile(bytes,input.scanner)."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+        "ref": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+        "blob": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+        "behavior": "A null endpoint returns false before createConnection."
+      }
+    ],
+    "conclusion": "The authorized R4 workflow still lacks the real scanner prerequisite. The DOC response now localizes the failure to that configured application scan seam. No real daemon invocation is claimed.",
+    "prepared_patch": "external/ci/test-ci.patch",
+    "next_required_execution": "Owner45/60 integrates the bounded ephemeral service on the authorized product, then explicitly runs real-clamd.check.ts and all five original Operations journeys on the integrated snapshot.",
+    "no_fallback_clean_server": true,
+    "no_global_installation": true,
+    "azure_modified": false
+  },
+  "evidence": [
+    {
+      "path": "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/trace.zip",
+      "sha256": "f4e4403e99e478449bc9df81b4e1885a789bc375ffd78756972a7411dd66f567"
+    },
+    {
+      "path": "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/trace.zip",
+      "sha256": "5d7eccc4d7b597d873d41ffd45c8d3ea97fb3bed359805dcae82fd29c72391b9"
+    },
+    {
+      "path": "test-ci-evidence/playwright-runtime.json",
+      "bytes": 44769,
+      "sha256": "48dfc426f679f15a0bca2201a3602945b714f0e04fd11df27fbb4b5cc97b558b"
+    },
+    {
+      "path": "test-ci-evidence/request.json",
+      "bytes": 323,
+      "sha256": "0ae7bb2e200458a32083a75ae1c20b670c6b90d66ebc4b1b65607b4d729bb90b"
+    },
+    {
+      "path": "logs/R4-nominal.log.txt",
+      "finding": "Primary admission403 and private-upload422 failures only; no page.waitForResponse: Test ended."
+    }
+  ],
+  "sanitization": "Only relevant endpoint modes, role selector, riskRating Low, status/error bodies and credential presence are retained. Cookie values, enrollment credentials, idempotency values and unrelated request payloads are excluded.",
+  "validation": {
+    "offline_artifact_inspection": true,
+    "github_mcp_source_reads": true,
+    "local_product_execution": false,
+    "new_ci_execution": false,
+    "helper_or_producer_edits": false,
+    "new_owned_defect_identified": false,
+    "real_clamd": "NOT_RUN",
+    "omni_native_parity": "NOT_CLAIMED",
+    "full_operations": "FAILED_BLOCKED",
+    "transfer_to_integrated_C": false
+  }
+}

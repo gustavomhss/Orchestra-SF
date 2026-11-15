@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.operations63.inert-shared-patch.v1",
+  "id": "OPS63-PROC-FIELD-ERROR-DESCRIPTION",
+  "status": "PREPARED_NOT_APPLIED",
+  "qualification_status": "NOT_RUN",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "observed_target": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "target": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+  "mode": "100644",
+  "preimage_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+  "postimage_blob": "f1573e02df562db7569f53931d7a4524a108ad4b",
+  "preimage_sha256": "59d9c86ef6cf885b6529cfa9f8c8b5828ddaf8761a6b96b9a86ef30b625048ab",
+  "postimage_sha256": "19166a31635538554cd66bb9b489f850a2093c9a9d430f5acf91cc6ad7ce8508",
+  "patch_sha256": "39c06132831301a14f104f58a646bc3bfcf431db3fabf0beaae25d03af547694",
+  "preimage_file": "field-errors.preimage.txt",
+  "postimage_file": "field-errors.postimage.txt",
+  "patch_file": "field-errors.patch",
+  "preimage_confirmed_on_both_refs": true,
+  "preimage_confirmed_on_r2_snapshot": "98522c038cba67a2552890e9daf8898caf146c41",
+  "observed_evidence": {
+    "selection": "five-original-Operations-nominals",
+    "result": "FAIL",
+    "work_commit": "4a8906bd638a51a95ff13b4c542f62ef7203f486",
+    "work_tree": "60e5420af9e427e9047fb6cb387ebd4586148105",
+    "snapshot_commit": "98522c038cba67a2552890e9daf8898caf146c41",
+    "snapshot_tree": "04073a1d41ddc00ff322bd1f769c50dca642b7d9",
+    "run": 43666919712,
+    "job": 132668237542,
+    "run_attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712",
+    "artifact_id": 14142630953,
+    "artifact_sha256": "b7c84acb5f299850b4238edd7991f55a5fbe493bfd6ff8ae30f74fbe33a193b1",
+    "log": "../../logs/R2-nominal.log.txt",
+    "log_sha256": "54a545451c1482685c7166049875c77a5a564a94687aeda53a79ed8a435cfc89",
+    "original_result": "../../ci/R2-result.json",
+    "post_patch_status": "NOT_RUN",
+    "source_pass_transfer": false,
+    "expected": "Quote 1: no FX rate defined for JPY (Settings → Currencies)",
+    "actual": "Quote 1: no FX rate defined for JPY (Settings → Currencies) Quote 1: no FX rate defined for JPY (Settings → Currencies)",
+    "assertion": "procurement-refusal.ts:59 toHaveAccessibleDescription, exact original oracle",
+    "associated_ids": [
+      "PR-2026-0003-save-error-sourcing.quotes.0.currency",
+      "field-error-<response UUID>-0"
+    ],
+    "log_lines": [
+      1132,
+      1155
+    ],
+    "failure_scope": "The real domain response was 422 with the expected fieldErrors, the entered JPY value was preserved, and aria-invalid was true; the accessible description was duplicated.",
+    "case": "OP-PROC-03"
+  },
+  "criterion_ids": [
+    "WP04.T03.CHK.03",
+    "WP04.T03.CMP.01",
+    "WP04.CMP.02"
+  ],
+  "cause": "presentProcurementFieldErrors renders a server-side data-error-for span and associates its id through aria-describedby. Submit cleanup removes only prior data-field-error spans. showResult then appends a second span for the same current validation message.",
+  "change": "Include the existing data-error-for marker in submit error cleanup. Remove only the old message id from controls that actually reference it, clear those controls' previous invalid marker, and let the unchanged showResult associate the current 422 response exactly once.",
+  "why_complete": "The cleanup handles both server-rendered and prior response feedback at the same existing submit boundary. It preserves aria-labelledby and unrelated aria-describedby tokens, does not deduplicate by matching message text, and leaves validation and command outcomes unchanged.",
+  "unchanged": [
+    "Server-side validation and 422 payload",
+    "showResult field mapping, new error span creation and focus",
+    "aria-labelledby references",
+    "Unrelated descriptive hint IDs",
+    "Controls not associated with an old error id",
+    "Form field values, CAS version, command admission and refusal",
+    "Original browser accessible-description equality assertion",
+    "All five browser names and budgets"
+  ],
+  "risk_limit": "This is shared shell presentation code. The owner must qualify the original missing-FX journey on the composed target and review unchanged behavior for field feedback on other forms. No browser execution or compilation of this postimage has occurred.",
+  "dependency_closure": "DEPENDENCIES.json",
+  "routing": {
+    "consumer": "60 sole sf2-stack integrator",
+    "owner_assignment": "60/S0 must route to the shared UI/Procurement owner before activation",
+    "review_consult": "59 for runtime coordination; bounded mission59 does not grant these paths",
+    "compiler_and_hosted_gate": "45 via the existing authorized request lane",
+    "mission63_direct_write_authority": false,
+    "reconcile_before_application": "Fresh GitHub MCP read and CAS of current target head and target blob; never overwrite drift with this old full postimage."
+  },
+  "static_artifact_verification": {
+    "preimage_git_blob": "MATCHES_MCP",
+    "complete_postimage": true,
+    "diff_generation": "Unified diff generated from the complete UTF-8 preimage and postimage; metadata and hashes calculated offline.",
+    "product_tests": "NOT_RUN",
+    "browser_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "shared_live_files_changed": 0,
+    "remote_writes": 0,
+    "local_product_execution": false
+  }
+}

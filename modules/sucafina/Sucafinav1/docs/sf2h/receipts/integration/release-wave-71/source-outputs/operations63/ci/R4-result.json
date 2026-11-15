@@ -1,0 +1,153 @@
+{
+  "schema": "sf2h.operations63.ci-result.v1",
+  "selection": "five-original-Operations-nominals",
+  "status": "FAIL",
+  "work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+  "work_tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+  "snapshot_commit": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+  "snapshot_tree": "a42e15c2ab309f6f095d7df1b483969a312f8c08",
+  "snapshot_delta": {
+    ".ci-run.json": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a"
+  },
+  "run": 43668156670,
+  "job": 132672057817,
+  "run_attempt": 1,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668156670",
+  "artifact": {
+    "id": 14142858448,
+    "bytes": 18045742,
+    "sha256": "81831ebb645872ada9ef38d1d32ab10df7eca7e28987e1d2ab319ad48f7ed83c",
+    "expires_at": "2026-11-22T02:34:16Z",
+    "downloaded_and_digest_verified": true,
+    "retained_text_evidence": "ci/R4/",
+    "runtime_report_sha256": "48dfc426f679f15a0bca2201a3602945b714f0e04fd11df27fbb4b5cc97b558b",
+    "binary_trace_location": "original Actions artifact; no copied credentials or cookies in receipts"
+  },
+  "stats": {
+    "startTime": "2026-11-15T02:32:58.067Z",
+    "duration": 77803.16799999999,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "id": "OP-PROC-01",
+      "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "status": "passed",
+      "duration_ms": 1589,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "OP-PROC-02",
+      "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "status": "failed",
+      "duration_ms": 15478,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+        }
+      ],
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\nExpected: \u001b[32m\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\"\u001b[39m\nReceived: \u001b[31m\"Current request value: 28000 EUR; base value: 30240\u001b[7m.000000000004\u001b[27m USD; FX: 1.08 (submitted).\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\u001b[22m\n\u001b[2m    14 × locator resolved to <p data-request-money=\"PR-2026-0002\">Current request value: 28000 EUR; base value: 302…</p>\u001b[22m\n\u001b[2m       - unexpected value \"Current request value: 28000 EUR; base value: 30240.000000000004 USD; FX: 1.08 (submitted).\"\u001b[22m\n\n\n   at sucafina/operations-support/procurement-snapshot.ts:40\n\n  38 |   await requestAction(page, id, sourcing.locator('form[data-command=\"submit_sourcing\"]'), \"Submit sourcing\")\n  39 |   await expect(detail.locator(\"[data-request-summary]\")).toContainText(\"Sourcing approval\")\n> 40 |   await expect(detail.locator(\"[data-request-money]\")).toHaveText(\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\")\n     |                                                        ^\n  41 |   const pendingVersion = await form.getAttribute(\"data-version\")\n  42 |   if (!pendingVersion || !/^[1-9]\\d*$/.test(pendingVersion)) throw new Error(\"The submitted sourcing must have a positive domain version\")\n  43 |   const before = await queueIdentity(page, account, id, \"30240 USD\")\n    at sourcingSnapshot (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:40:56)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:20:5"
+      ]
+    },
+    {
+      "id": "OP-PROC-03",
+      "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "status": "failed",
+      "duration_ms": 16966,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+        }
+      ],
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAccessibleDescription\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\nExpected: \u001b[32m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[39m\nReceived: \u001b[31m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[7m Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAccessibleDescription\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to <input type=\"text\" value=\"JPY\" aria-invalid=\"true\" data-field-invalid=\"true\" name=\"sourcing.quotes.0.currency\" aria-labelledby=\"PR-2026-0003-save-label-sourcing.quotes.0.currency\" aria-describedby=\"PR-2026-0003-save-error-sourcing.quotes.0.currency field-error-6b783f72-0e87-45a5-a062-ead4bcc8698b-0\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Quote 1: no FX rate defined for JPY (Settings → Currencies) Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[22m\n\n\n   at sucafina/operations-support/procurement-refusal.ts:59\n\n  57 |   await expect(currency).toHaveValue(\"JPY\")\n  58 |   await expect(currency).toHaveAttribute(\"aria-invalid\", \"true\")\n> 59 |   await expect(currency).toHaveAccessibleDescription(message)\n     |                          ^\n  60 |   await expect(form).toHaveAttribute(\"data-version\", version)\n  61 |   await expect(detail.locator(\"[data-request-summary]\")).toContainText(\"Value unavailable\")\n  62 |   await expect(detail.locator(\"[data-request-summary]\")).not.toContainText(\"Sourcing approval\")\n    at missingFxRefusal (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:59:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:25:5"
+      ]
+    },
+    {
+      "id": "OP-IMPORT-01",
+      "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "status": "failed",
+      "duration_ms": 1872,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+        }
+      ],
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m403\u001b[39m\n\n   at sucafina/operations-support/imports.ts:18\n\n  16 |\n  17 | async function valueOf<T>(response: APIResponse | Response): Promise<T> {\n> 18 |   expect(response.status()).toBe(200)\n     |                             ^\n  19 |   const body = await response.json() as { status: string; value: T }\n  20 |   expect(body.status).toBe(\"ok\")\n  21 |   return body.value\n    at valueOf (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:18:29)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:124:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5"
+      ]
+    },
+    {
+      "id": "OP-DOC-01",
+      "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "status": "failed",
+      "duration_ms": 2447,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+        }
+      ],
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m422\u001b[39m\n\n   at sucafina/operations-support/documents.ts:73\n\n  71 |   await upload.getByRole(\"button\", { name: \"Upload document\", exact: true }).click()\n  72 |   const uploadResponse = await uploaded\n> 73 |   expect(uploadResponse.status()).toBe(200)\n     |                                   ^\n  74 |   expect(new URL(uploadResponse.url()).searchParams.get(\"recordVersion\")).toBe(String(beforeVersion))\n  75 |   expect(await uploadResponse.json()).toMatchObject({ ok: true })\n  76 |   const fileLink = page.getByRole(\"link\", { name: filename, exact: true })\n    at documentJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/documents.ts:73:35)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:35:5"
+      ]
+    }
+  ],
+  "budgets": {
+    "timeout_ms": 60000,
+    "expect_ms": 10000,
+    "workers": 1,
+    "repeat_each": 1,
+    "retries": 0
+  },
+  "original_spec_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+  "owned_fix_observations": {
+    "documents": "Risk rating selector succeeds; supplier create200 {ok:true,warnings:[]}; the journey reaches upload422 with explicit scanner-refusal error. Full document journey remains FAIL.",
+    "imports": "HTTP403 admission still fails its exact200 oracle. No secondary page.waitForResponse: Test ended error in the R4 log/runtime error list. Full import journey remains FAIL."
+  },
+  "remaining_failures": {
+    "OP-PROC-02": "Same floating tail in submitted base value; shared inert presentation patch prepared.",
+    "OP-PROC-03": "Same duplicate accessible description; shared inert shell patch prepared.",
+    "OP-IMPORT-01": "Admission403 with absent configured ClamD. Generic denial alone is not invocation telemetry.",
+    "OP-DOC-01": "Upload422 with {ok:false,errors:[The scanner did not accept this file.]}; runtime/application.ts rejects scan(false) before uploadAsset/write. This is application scanner-gate refusal, not proof of a real daemon invocation."
+  },
+  "scanner": {
+    "real_service_provisioned": false,
+    "real_service_qualified": false,
+    "adapter": "W1 strict protocol adapter is present in W2; R3 covers its exact identical blob."
+  },
+  "omni_positive_control": "NOT_OBSERVED_IN_PLAYWRIGHT_LOG; no Omni/native parity assertion",
+  "c28_qualified": false,
+  "transfer_to_integrated_C": false,
+  "native_parity_measured": false,
+  "human_timing_measured": false,
+  "notes": [
+    "All five original identities selected; runtime reports0skipped0flaky and no retries.",
+    "The only W1→W2 product change is the two browser helpers; all original assertions remain.",
+    "No service, shared UI patch, workflow, fixtures, domain or finance policy was changed to make this run pass.",
+    "This is an actual failed run; a repaired setup step does not close the remaining journey."
+  ]
+}
