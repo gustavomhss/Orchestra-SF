@@ -1,0 +1,249 @@
+diff --git a/apps/cli/src/sucafina-product/token-gate.ts b/apps/cli/src/sucafina-product/token-gate.ts
+--- a/apps/cli/src/sucafina-product/token-gate.ts
++++ b/apps/cli/src/sucafina-product/token-gate.ts
+@@ -11,6 +11,7 @@
+ import { ExecutionHost } from "@orchestra/core/session/runner"
+ import { SessionSchema } from "@orchestra/core/session/schema"
+ import type { SessionScope } from "@orchestra/core/session/scope"
++import type { SfNativeChildBound, SfNativeChildTicket } from "./native-child-admission.ts"
+ import { SessionStore } from "@orchestra/core/session/store"
+ import { SessionSubagentModels } from "@orchestra/core/session/subagent-models"
+ import { InvalidRequestReason, LLMError, LLMRequest, Model } from "@orchestra/llm"
+@@ -66,6 +67,15 @@
+   active: boolean
+ }
+ 
++/** Owned by this process's real Maestro C15 ticket; never registered by a fixture ID. */
++type ChildRecord = {
++  root: MaestroRecord
++  bound: SfNativeChildBound
++  models: Set<Model>
++  active: boolean
++  onAbort?: () => void
++}
++
+ export type SfTokenGateStorage = {
+   isSfOwned: (sessionID: SessionSchema.ID) => Effect.Effect<boolean, unknown>
+ }
+@@ -79,6 +89,10 @@
+   const maestro = new Map<SessionSchema.ID, MaestroRecord>()
+   const maestroModels = new WeakMap<Model, MaestroRecord>()
+   const maestroTickets = new WeakMap<SfMaestroGateTicket, MaestroRecord>()
++  const children = new Map<SessionSchema.ID, ChildRecord>()
++  // A Catalog Model may be shared: the actual core Session header and an active
++  // private child binding are BOTH required to match a provider request.
++  const childModels = new WeakMap<Model, Map<string, ChildRecord>>()
+   const skillIDs = new Set(normative.resident.skills.map((skill) => skill.id))
+   const operationIDs = new Set(freeze.operations.map((operation) => operation.operation))
+   const sfLineage = (store: SessionStore.Interface, sessionID: SessionSchema.ID) => Effect.gen(function* () {
+@@ -126,6 +140,35 @@
+     if (!maestroAlive(record)) return Effect.succeed(false)
+     return record.revalidate().pipe(Effect.catch(() => Effect.succeed(false)), Effect.map((ok) => ok === true && maestroAlive(record)))
+   })
++  const closeChild = (record: ChildRecord) => {
++    if (!record.active) return
++    record.active = false
++    record.bound.signal.removeEventListener("abort", record.onAbort ?? (() => {}))
++    if (children.get(record.bound.childSessionID) === record) children.delete(record.bound.childSessionID)
++    for (const model of record.models) childModels.get(model)?.delete(record.bound.childSessionID)
++    record.models.clear()
++  }
++  const childSame = (row: SessionSchema.Info | undefined, record: ChildRecord) => !!row &&
++    row.id === record.bound.childSessionID &&
++    row.parentID === record.bound.parentSessionID && !row.time.archived &&
++    row.projectID === record.root.projectId && row.agent === record.bound.targetAgentID &&
++    !!row.model && digestSfValue(sfNativeModelRef(row.model)) === digestSfValue(sfNativeModelRef(record.root.model)) &&
++    keyOf(row.location) === keyOf(record.root.location)
++  const childCheck = (store: SessionStore.Interface, record: ChildRecord) => Effect.gen(function* () {
++    if (!record.active || children.get(record.bound.childSessionID) !== record ||
++      !maestroAlive(record.root) || record.bound.signal !== record.root.request.signal ||
++      record.bound.expiresAt !== record.root.expiresAt ||
++      record.bound.contextBudgetTokens !== record.root.contextBudgetTokens ||
++      !(yield* maestroCheck(record.root))) return false
++    const parent = yield* store.get(record.bound.parentSessionID)
++    const child = yield* store.get(record.bound.childSessionID)
++    const scope = yield* store.scope(record.bound.childSessionID)
++    if (!parent || !maestroSame(parent, record.root) || !childSame(child, record) ||
++      !scope || digestSfValue(scope.scope) !== digestSfValue(record.bound.scope)) return false
++    if (!(yield* record.bound.current().pipe(Effect.catch(() => Effect.succeed(false))))) return false
++    return childSame(yield* store.get(record.bound.childSessionID), record) &&
++      maestroAlive(record.root) && (yield* maestroCheck(record.root))
++  })
+   const alive = (record: RecordState) => record.active && mount.current && sessions.get(record.admission.sessionID) === record &&
+     !record.admission.request.signal.aborted && Date.now() < Date.parse(record.binding.expiresAt) &&
+     !!locations.get(keyOf(record.location))?.models.has(record.modelMount) &&
+@@ -168,6 +211,20 @@
+           maestroModels.set(model, native)
+           return model
+         }
++        const descendant = children.get(session.id)
++        if (descendant) {
++          if (!childSame(session, descendant) || !(yield* childCheck(store, descendant)))
++            return yield* unavailable(session)
++          const model = yield* original.resolve(session)
++          if (!(yield* childCheck(store, descendant))) return yield* unavailable(session)
++          const bound = childModels.get(model) ?? new Map<string, ChildRecord>()
++          const previous = bound.get(session.id)
++          if (previous && previous !== descendant && previous.active) return yield* unavailable(session)
++          bound.set(session.id, descendant)
++          childModels.set(model, bound)
++          descendant.models.add(model)
++          return model
++        }
+         const record = sessions.get(session.id)
+         if (!record && !session.agent?.startsWith("sf_") && !(yield* sfLineage(store, session.id))) return yield* original.resolve(session)
+         if (!record || !session.model || !same(session, record) || !same(yield* store.get(session.id), record) ||
+@@ -194,14 +251,17 @@
+         mount.current = false
+         sessions.forEach((record) => { record.active = false })
+         sessions.clear()
++        for (const descendant of [...children.values()]) closeChild(descendant)
+         maestro.forEach((record) => { record.active = false })
+         maestro.clear()
+       }))
+       const classify = (request: LLMRequest) => Effect.gen(function* () {
++        const header = Object.entries(request.http?.headers ?? {}).find(([name]) => name.toLowerCase() === "x-session-id")?.[1]
++        const descendant = childModels.get(request.model)?.get(header ?? "")
++        if (descendant) return { kind: "child" as const, record: descendant }
+         const record = models.get(request.model)
+         if (record) return { kind: "sf" as const, record }
+         const native = maestroModels.get(request.model)
+-        const header = Object.entries(request.http?.headers ?? {}).find(([name]) => name.toLowerCase() === "x-session-id")?.[1]
+         // A shared Catalog Model object is not a session owner. Only the core-issued
+         // Session header may route into this private C15 capability.
+         if (native && header === native.sessionID) return { kind: "maestro" as const, record: native }
+@@ -215,6 +275,7 @@
+         return !!scope && digestSfValue(scope.scope) === digestSfValue(record.scope) &&
+           maestroSame(yield* store.get(record.sessionID), record) && maestroAlive(record)
+       })
++      const readyChild = (record: ChildRecord) => childCheck(store, record)
+       const ready = (record: RecordState) => Effect.gen(function* () {
+         if (!same(yield* store.get(record.admission.sessionID), record) || !(yield* check(record))) return false
+         return same(yield* store.get(record.admission.sessionID), record) && alive(record)
+@@ -234,8 +295,8 @@
+           const route = yield* classify(request)
+           if (route.kind === "other") return original.stream(request)
+           if (route.kind === "denied") return Stream.fail(refusal("sf-model-unbound"))
++          const valid = () => route.kind === "maestro" ? readyMaestro(route.record) :
++            route.kind === "child" ? readyChild(route.record) : ready(route.record)
+-          const record = route.record
+-          const valid = () => route.kind === "maestro" ? readyMaestro(route.record) : ready(route.record)
+           if (!(yield* valid()) || request.model.route.protocol !== "openai-responses" || request.model.route.transport.id !== "http-json")
+             return Stream.fail(refusal("sf-route-unavailable"))
+           const originalRoute = request.model.route
+@@ -244,8 +305,15 @@
+             Stream.unwrap(Effect.gen(function* () {
+               if (!(yield* valid())) return Stream.fail(refusal("sf-authority-unavailable"))
+               const guarded = HttpClient.mapRequestEffect(base, (httpRequest) =>
++                enforceSfResponseTokenBudget(httpRequest, runtime.http, {
++                  model: request.model.id,
++                  contextBudgetTokens: route.kind === "child" ? route.record.root.contextBudgetTokens :
++                    route.kind === "maestro" ? route.record.contextBudgetTokens : route.record.budget,
++                  revalidate: valid,
++                  // Every child receipt is fenced by the *original* parent C09 writer,
++                  // Request and real token-count oracle; child IDs are not credentials.
++                  persistReceipt: route.kind === "child" ? route.record.root.persistReceipt : route.record.persistReceipt,
++                }).pipe(
+-                enforceSfResponseTokenBudget(httpRequest, runtime.http, { model: request.model.id, contextBudgetTokens: route.kind === "maestro" ? route.record.contextBudgetTokens : route.record.budget,
+-                  revalidate: valid, persistReceipt: record.persistReceipt }).pipe(
+                   Effect.mapError(() => new HttpClientError.HttpClientError({ reason: new HttpClientError.TransportError({
+                     request: httpRequest, description: "SF budget gate denied request",
+                   }) })),
+@@ -322,10 +390,97 @@
+     revokeMaestro: (ticket: SfMaestroGateTicket) => {
+       const record = maestroTickets.get(ticket)
+       if (!record) return
++      for (const child of [...children.values()]) if (child.root === record) closeChild(child)
+       record.active = false
+       if (maestro.get(record.sessionID) === record) maestro.delete(record.sessionID)
+       maestroTickets.delete(ticket)
+     },
++    /**
++     * Only the private root ticket classifies SF lineage. An absent/revoked SF root
++     * is blocked, never "outside"; no caller-supplied parent ID creates a grant.
++     */
++    traceChildRoot: (parentSessionID: SessionSchema.ID) => Effect.gen(function* () {
++      const store = yield* SessionStore.Service
++      const root = maestro.get(parentSessionID)
++      if (!root || !(yield* maestroCheck(root))) {
++        return (yield* sfLineage(store, parentSessionID))
++          ? { kind: "blocked" as const } : { kind: "outside" as const }
++      }
++      const row = yield* store.get(parentSessionID)
++      const scoped = yield* store.scope(parentSessionID)
++      if (!maestroSame(row, root) || !scoped ||
++        digestSfValue(scoped.scope) !== digestSfValue(root.scope))
++        return { kind: "blocked" as const }
++      const policyVersion = digestSfValue({ scope: root.scope, model: sfNativeModelRef(root.model),
++        contextBudgetTokens: root.contextBudgetTokens, projectId: root.projectId })
++      return {
++        kind: "native-root" as const, rootSessionID: root.sessionID,
++        model: root.model, location: root.location,
++        contextBudgetTokens: root.contextBudgetTokens, policyVersion,
++        expiresAt: root.expiresAt, signal: root.request.signal,
++        current: () => Effect.gen(function* () {
++          const parent = yield* store.get(root.sessionID)
++          const scope = yield* store.scope(root.sessionID)
++          return maestroSame(parent, root) && !!scope &&
++            digestSfValue(scope.scope) === digestSfValue(root.scope) &&
++            (yield* maestroCheck(root))
++        }),
++      }
++    }),
++    /**
++     * Executed only after core TaskGovernance validated the original issued
++     * frame, Task running part, actual Permission and child Session. The gate
++     * independently re-reads source and owns the provider ticket + lifecycle.
++     */
++    registerChild: (binding: SfNativeChildBound) => Effect.gen(function* () {
++      const store = yield* SessionStore.Service
++      const root = maestro.get(binding.rootSessionID)
++      const parent = yield* store.get(binding.parentSessionID)
++      const child = yield* store.get(binding.childSessionID)
++      const scoped = yield* store.scope(binding.childSessionID)
++      const message = yield* store.message(binding.invocation.assistantMessageID)
++      const matching = message?.message.type === "assistant" ? message.message.content.filter((part) =>
++        part.type === "tool" && part.id === binding.invocation.toolCallID && part.name === "task") : []
++      const part = matching[0]
++      const granted = child ? yield* store.permissions(child.id) : []
++      if (!root || !maestroAlive(root) || children.has(binding.childSessionID) ||
++        !parent || !maestroSame(parent, root) || !child ||
++        child.parentID !== root.sessionID || !childSame(child, { root, bound: binding, active: true, models: new Set() }) ||
++        !scoped || digestSfValue(scoped.scope) !== digestSfValue(binding.scope) ||
++        !binding.scope.skills.entry.startsWith("sf-native-child-c15-provenance-") ||
++        binding.scope.skills.allow.length !== 0 || binding.scope.budgets.loads !== 0 ||
++        binding.scope.budgets.toolCalls > 4 || binding.scope.budgets.toolCalls < 1 ||
++        binding.scope.tools.some((tool) => !["read", "grep", "glob", "list"].includes(tool) ||
++          !root.scope.tools.includes(tool)) ||
++        binding.signal !== root.request.signal ||
++        binding.expiresAt !== root.expiresAt ||
++        binding.contextBudgetTokens !== root.contextBudgetTokens ||
++        digestSfValue(sfNativeModelRef(binding.model)) !== digestSfValue(sfNativeModelRef(root.model)) ||
++        !granted.some((rule) => rule.action === "task" && rule.resource === "*" && rule.effect === "deny") ||
++        !granted.some((rule) => rule.action === "external_directory" && rule.resource === "*" && rule.effect === "deny") ||
++        !message || message.sessionID !== root.sessionID || message.message.type !== "assistant" ||
++        message.message.agent !== AgentV2.defaultID ||
++        !message.message.model ||
++        digestSfValue(sfNativeModelRef(message.message.model)) !== digestSfValue(sfNativeModelRef(root.model)) ||
++        matching.length !== 1 || !part || part.type !== "tool" || part.provider?.executed ||
++        part.state.status !== "running" ||
++        part.state.input.subagent_type !== binding.targetAgentID ||
++        !(yield* binding.current().pipe(Effect.catch(() => Effect.succeed(false)))) ||
++        !(yield* maestroCheck(root))) return undefined
++      const record: ChildRecord = { root, bound: binding, models: new Set(), active: true }
++      record.onAbort = () => closeChild(record)
++      children.set(binding.childSessionID, record)
++      binding.signal.addEventListener("abort", record.onAbort, { once: true })
++      if (!(yield* childCheck(store, record))) {
++        closeChild(record)
++        return undefined
++      }
++      const ticket: SfNativeChildTicket = Object.freeze({
++        current: () => childCheck(store, record),
++        revoke: () => closeChild(record),
++      })
++      return ticket
++    }),
+     reserveSession: (sessionID: SessionSchema.ID) => { owned.add(sessionID) },
+     register: (input: { admission: SfNativeAdmission; binding: TrustedExecutionBinding; model: ModelV2.Ref; location: Location.Ref;
+       revalidate: () => Effect.Effect<boolean, unknown>; persistReceipt: (receipt: SfTokenCountReceipt) => Effect.Effect<void, unknown> }) => Effect.gen(function* () {

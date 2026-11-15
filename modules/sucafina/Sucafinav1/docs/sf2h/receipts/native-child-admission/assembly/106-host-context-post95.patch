@@ -1,0 +1,73 @@
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -3,14 +3,17 @@
+ import { createSfPersonalViews } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
+ import { createSfPersonalViewAuthority } from "./personal-view-authority.ts"
+ import path from "node:path"
++import { makeGlobalNode, makeLocationNode } from "@orchestra/core/effect/app-node"
+-import { makeGlobalNode } from "@orchestra/core/effect/app-node"
+ import { ProjectV2 } from "@orchestra/core/project"
+ import { AbsolutePath } from "@orchestra/core/schema"
++import { Context, Effect, Layer, Option, Schema } from "effect"
+-import { Effect, Layer, Option, Schema } from "effect"
+ import { Catalog } from "@orchestra/core/catalog"
+ import { LocationServiceMap } from "@orchestra/core/location-service-map"
+ import { Mcp } from "@orchestra/core/mcp"
+ import { SessionStore } from "@orchestra/core/session/store"
++import { PermissionV2 } from "@orchestra/core/permission"
++import { TaskGovernance } from "@orchestra/core/tool/task-governance"
++import { MaestroGovernanceV2 } from "../../../../modules/maestro/coordination/src/v2/governance.ts"
+ import { SessionMessage } from "@orchestra/core/session/message"
+ import { AppProcess } from "@orchestra/core/process"
+ import { ModelV2 } from "@orchestra/core/model"
+@@ -84,6 +87,7 @@
+ import { createSfTokenGate } from "./token-gate.ts"
+ import { createSfNativeHostContribution } from "./native-host.ts"
+ import { createSfNativeAuthorityProducer, createSfNativeMaestroHttp } from "./native-authority-provider.ts"
++import { createSfNativeChildAdmission } from "./native-child-admission.ts"
+ import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
+ import { createSfNativeExecution } from "./native-execution.ts"
+ import type { SfStoppedRun } from "./native-execution.ts"
+@@ -218,6 +222,31 @@
+   let nativeMaestroProducer: ReturnType<typeof createSfNativeAuthorityProducer> | undefined
+   const gate = createSfTokenGate({ upstream: ClaudeCodeHost.node, isSfOwned: (id) => Effect.tryPromise(async () =>
+     await evidence.isSfOwned(id) || await nativeMaestroProducer?.isDurablyOwned(id) === true) })
++  /**
++   * C15 child admission wraps the canonical Maestro TaskGovernance, not allowAll or
++   * a new Session/Execution engine. The private 95 token gate supplies trace and
++   * register; the independently validated original Task/core frame is required.
++   * Readiness remains OFF until 107/108 and installed runtime proofs exist.
++   */
++  if (MaestroGovernanceV2.node.kind !== "layer" || !MaestroGovernanceV2.node.implementation)
++    throw new Error("sf-native-child-canonical-governance-unavailable")
++  const nativeChildGovernance = makeLocationNode({
++    service: TaskGovernance.Service,
++    deps: [...MaestroGovernanceV2.node.dependencies, SessionStore.node, PermissionV2.node] as const,
++    layer: Layer.effect(TaskGovernance.Service, Effect.gen(function* () {
++      const upstream = Context.get(
++        yield* Layer.build(MaestroGovernanceV2.node.implementation as Layer.Layer<TaskGovernance.Service>),
++        TaskGovernance.Service,
++      )
++      const owned = createSfNativeChildAdmission({
++        upstream, store: yield* SessionStore.Service,
++        permissions: yield* PermissionV2.Service,
++        c15: { trace: gate.traceChildRoot, register: gate.registerChild },
++      })
++      yield* Effect.addFinalizer(() => Effect.sync(owned.dispose))
++      return TaskGovernance.Service.of(owned.service)
++    })),
++  })
+   const native = createSfNativeHostContribution({ registry: authority.native,
+     maestro: {
+       gate,
+@@ -927,7 +956,8 @@
+   return { identity, services: () => identity() ? services : undefined,
+     contributions: [{ id: "sucafina-host-context", nodes: [node] }, gate.contribution, native.contribution,
+       installedRoutinePublication.contribution, routinePublication.contribution,
++      routineGovernance.contribution, routineRuntime.contribution, routineRuntime.mount(product),
++      { id: "sucafina-native-child-c15", replacements: [[TaskGovernance.node, nativeChildGovernance]] }] }
+-      routineGovernance.contribution, routineRuntime.contribution, routineRuntime.mount(product)] }
+ }
+ 
+ function admissionDigest(admission: SfNativeAdmission) {

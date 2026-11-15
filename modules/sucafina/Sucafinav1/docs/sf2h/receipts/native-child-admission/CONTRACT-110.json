@@ -1,0 +1,83 @@
+{
+  "schema": "sf2h-native-child-admission-delivery-v1",
+  "mission": 110,
+  "actor": "S0-B/GPT-6 new ChatGPT session; Astra runtime not observed",
+  "lease": "native-child-browser110",
+  "global_release": false,
+  "readiness": false,
+  "watch": false,
+  "tests": "NOT_RUN",
+  "compilation": "NOT_RUN",
+  "runtime_provider_proof": false,
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "native-child-admission",
+  "code_commit": "d1f2590e3d3b17483f206385cc4f221e38cc405b",
+  "code": {
+    "path": "apps/cli/src/sucafina-product/native-child-admission.ts",
+    "blob": "13708b27201e3debb9ca9cdb64fa9ebcbd7fffd0"
+  },
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/native-child-admission/child-admission.test.ts",
+    "blob": "3b50f3273c8a28da2a0bf4d3e2cee24c45e188f5",
+    "runner": "107 Actions only"
+  },
+  "public_apis": {
+    "coreFrame": "CapabilityInvocation.require(Tool.Context,{projectID,location}); core issuer and exact Task root invocation required",
+    "task": "TaskGovernance.Interface.admit(parent,target,input,context,location?); beforeTurn(child SessionSchema.Info); settle",
+    "store": "SessionStore.get/message/scope/narrow/permissions; persisted assistant Task part state.running and !provider.executed",
+    "permissions": "TaskTool owns actual PermissionV2.assert; helper observes PermissionV2.forSession, never replies",
+    "root": "Only producer95's real human-bound C09 origin and private C15 root ticket; 110 never fabricates it",
+    "child": "SessionStore.get persisted child with same parent/project/model/location, scope written once; private 95 child ticket required",
+    "transport": "SessionRunnerModel.resolve and LLMClient.stream governed by 95 private model-session binding and oracle token budget"
+  },
+  "patches": [
+    {
+      "owner": 95,
+      "file": "apps/cli/src/sucafina-product/token-gate.ts",
+      "pre_head": "9757b5e7ee974684cff32a5a452f7dc5aefc0555",
+      "pre_blob": "5a3e39ff379d51a15f5f601ed9739191ff7071c4",
+      "post_blob": "cf7ee32b50f906bbc2013a830d2ad582bde196fb",
+      "patch_blob": "a58e8453e4c4b0252cba04fd5992a326fa4db270",
+      "hunks": 10,
+      "status": "PROPOSED_NOT_APPLIED",
+      "requires": "110 source integrated; only95 edits token-gate"
+    },
+    {
+      "owner": 106,
+      "file": "apps/cli/src/sucafina-product/host-context.ts",
+      "pre_source": "95 complete postimage, not C53 shared file",
+      "pre_blob": "acdd01117cf8c83e011dd9576c36cf38f5b173c7",
+      "post_blob": "e9a5efd8b5ed3967e765a99f9d1d144814253253",
+      "patch_blob": "5592cba9aa201e5c59e64fb703b33448a0bb39bf",
+      "hunks": 4,
+      "status": "PROPOSED_NOT_APPLIED",
+      "requires": "106 reconcile actual sf2-stack HEAD with owner95 post95 assembly and 110, preserve others"
+    }
+  ],
+  "tested_locally": false,
+  "tests_requested_from": 107,
+  "compiler_requested_from": 108,
+  "denied_by_design": [
+    "missing private root C15 ticket",
+    "other or foreign Session/model",
+    "Task not persisted/running",
+    "provider.executed hosted route",
+    "model override",
+    "Task replay/task_id without original human continuation",
+    "background Task",
+    "Task worktree",
+    "root revoked/aborted/expired",
+    "Permission pending",
+    "child scope widening",
+    "unscoped or unknown Session",
+    "uninstalled C15 gate"
+  ],
+  "holds": [
+    "No public child C15 API in owner95 current gate: patch must be integrated by95/106 and passed independent review",
+    "C09 child receipt attribution requires owner95 reconciliation before installed evidence",
+    "ExecutionHost host path denies SF descendants; no engine changes",
+    "Durable task_id continuation requires fresh human rebind, currently refused",
+    "No product Actions, real model, Permission UI or compiled source; readiness/watch OFF"
+  ],
+  "review": "S1/S2/S3 independent reviews and S0 final acceptance; synthetic component fixtures are not installed C15"
+}
