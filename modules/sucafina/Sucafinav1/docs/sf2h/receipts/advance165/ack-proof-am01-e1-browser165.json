@@ -1,0 +1,69 @@
+{
+  "schema": "sf2h.advance165.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 165,
+  "proof": "AM01",
+  "epoch": "proof-am01-e1-browser165",
+  "branch": "sf-am01-proof",
+  "state": "ACK_ACTIVE_NO_PROOF_CLAIM",
+  "prepared_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "prepared_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "actual_actor": "ChatGPT GitHub-MCP coding session",
+  "effective_model": "GPT-6",
+  "native_session_id": null,
+  "native_astra_session_claim": false,
+  "native_goal": "paused",
+  "global_release": false,
+  "input_refs": {
+    "handoff": {
+      "ref": "c5947d78329f4f0cf3666fa27d38364c67009688",
+      "blob": "001c8e38a0d5b1d8f26ce2a68ff0a5edddac9ce6",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/165.json"
+    },
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor_pack_S4": {
+      "blob": "ee5b85742dee66964decb74d9e53526c5496ac63",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4.json"
+    },
+    "root_agents": {
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    "installed_manifest": {
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8"
+    },
+    "native_harness": {
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a"
+    },
+    "native_load_test": {
+      "blob": "b95e8b8b5c281872b07164f7faa47f21f64de684"
+    },
+    "native_admission_test": {
+      "blob": "7525801e2706e6e71e0a8e3dce53c35079992859"
+    }
+  },
+  "authority": {
+    "write_allowlist": [
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/**",
+      "packages/app-shell/e2e/sucafina/native/integrated-proofs/am01/**",
+      "script/sf2h/proofs/am01/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/**"
+    ],
+    "protected": "All existing product/runtime/test helper/spec/fixtures/config and canonical WP receipts",
+    "integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/compiler-e4-browser163/PR107",
+    "dispatcher": "164/product-ci-e4-browser164/PR106",
+    "github_remote": "MCP only, CAS, force=false",
+    "no_local_execution": true
+  },
+  "proof_status": "NOT_RUN",
+  "evidence": {
+    "real_model_execution": null,
+    "profile_skill_loads": null,
+    "output_consumption": null,
+    "hosted_ci": null
+  },
+  "next_action": "Implement missing AM01 correlation and fail-closed proof qualification in exclusive paths; request integration by 162 and hosted selections by 164."
+}
