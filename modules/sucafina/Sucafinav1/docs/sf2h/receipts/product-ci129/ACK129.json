@@ -1,0 +1,70 @@
+{
+  "schema": "sf2h.product-ci129.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 129,
+  "id": "ci-after120",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "actor": {
+    "effective_model": "GPT-6",
+    "runtime_session_id": null,
+    "reason": "Not exposed by current ChatGPT/GitHub tool; no fabricated browser ID",
+    "github_actor": "gustavomhss"
+  },
+  "authority": {
+    "lease_epoch": "product-ci-e2-browser129",
+    "basis": "Direct user appointment for fresh successor129",
+    "predecessor_mission": 120,
+    "predecessor_epoch": "product-ci-browser120",
+    "predecessor_authority": "REVOKED_FOR_FRESH_SUCCESSOR_BY_S0",
+    "runtime_termination_verified": false,
+    "fence_blob": "fdabb8ccc31144bac3c2acb90989f1366936cce4"
+  },
+  "preflight": {
+    "initial_branch_head": "02d07b779e19a1cf66b8f92c1150d2e2f059392a",
+    "initial_tree": "b4fd2b7181dac4c99d0b117d6b85911aaa06e79d",
+    "mission_ref": "a0e8ad664294a7a702c994d1cb90800d37e8d4d9",
+    "mission_blob": "acc6a52f8ed9904608f051150c166c4e01b2a32d",
+    "prior_runs_file": "ci-after-c53-120/RUNS-120.json",
+    "prior_queue_file": "ci-after-c53-120/RECONCILED-QUEUE-120.json",
+    "prior_failures_file": "ci-after-c53-120/FAILURE-QUEUE-120.json",
+    "previous_inflight_run": 43726371640,
+    "previous_inflight_now": "completed/failure",
+    "previous_inflight_job": 132849072764,
+    "previous_inflight_attempt": 1,
+    "live_recent_actions": "observed no queued or in_progress in latest 100 run listing; not a proof of runtime termination"
+  },
+  "integration": {
+    "owner": 125,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "current_docs_head": "1f00d6704e9cd11b6392e775d7a594f41f8f66a4",
+    "material_C62": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+    "material_tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+    "state": "COMPOSED_UNQUALIFIED"
+  },
+  "execution": {
+    "scope": "Only GitHub MCP + Actions; source material child S with exact .ci-run.json diff",
+    "product_edits": false,
+    "workflow_edits": false,
+    "local_tests": false,
+    "dispatch_before_dedup": false,
+    "compiler_owner": 128,
+    "one_dispatcher": true,
+    "dedupe_key": "material W/tree + ordered args + runner/OS/config/env + validator/workflow/runtime + exact fixtures/selection",
+    "browser_order": [
+      "wp01/browser-startup.test.ts",
+      "creation-reload-fix/creation-browser.test.ts",
+      "creation-recovery-link/recovery-browser.test.ts",
+      "wp01/browser-lifecycle.test.ts"
+    ]
+  },
+  "gates": {
+    "native_goal": "paused",
+    "global_release": false,
+    "full_epic": false,
+    "release_proofs": "NOT_ACCEPTED"
+  },
+  "status": "ACK_PUBLISHED; PRE_DISPATCH_RECONCILIATION; NO_NEW_CI_RESULT_CLAIMED"
+}
