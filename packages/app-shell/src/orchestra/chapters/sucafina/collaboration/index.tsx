@@ -462,6 +462,12 @@ export function SfConfirmation(props: SfConfirmationProps) {
       <Show when={props.status === "revoked"}>
         <p class="sf-collab-notice sf-collab-notice-alert" role="alert">{copy.key("sf.s05.confirmation.revoked")}</p>
       </Show>
+      <Show when={props.status === "not-found" && mayDisplay(props.state)}>
+        <p class="sf-collab-notice" role="status">{copy.key("sf.common.removed")}</p>
+      </Show>
+      <Show when={props.status === "unavailable" && mayDisplay(props.state)}>
+        <p class="sf-collab-notice" role="status">{copy.key("sf.common.unavailable")}</p>
+      </Show>
       <Show when={!revoked() && mayDisplay(props.state)}>
         <Show when={props.status === "stale"}>
           <p class="sf-collab-notice" role="status">{copy.key("sf.s05.confirmation.stale")}</p>
