@@ -3,7 +3,7 @@ import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
-import type { SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
+import type { SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../../context/contracts"
 import { useSfContext } from "../../../context"
 import { encodeSfRouteRef } from "../../../navigation-state"
@@ -128,6 +128,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
   const { t } = useSfPresentation()
   const context = useSfContext()
   const navigate = useNavigate()
+  const previewIntent = crypto.randomUUID() as SfIntentRef
   const [revision, bump] = createSignal(0)
   const [store, setStore] = createStore<{
     state: SfUiState; workbench: Workbench | null; review: Review | null
@@ -340,7 +341,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
                 version: store.review!.expectedVersion, fields: before() }}
               current={{ kind: "persisted", ref: store.review!.target.id as SfRef,
                 version: store.review!.expectedVersion, fields: before() }}
-              proposed={{ kind: "draft", intentRef: chosenChange()!.changeId as SfRef as never,
+              proposed={{ kind: "draft", intentRef: previewIntent,
                 sourceRef: store.review!.target.id as SfRef,
                 sourceVersion: store.review!.expectedVersion, fields: after() }}
               effects={[]}
