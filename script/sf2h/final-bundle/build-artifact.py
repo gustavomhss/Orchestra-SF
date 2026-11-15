@@ -34,7 +34,6 @@ if c.count(sf66_start) != 1 or c.count(sf66_end) != 1:
 sf66_section = c[c.index(sf66_start):c.index(sf66_end, c.index(sf66_start))]
 sf66_markers = [
     'id: sf66_readers',
-    "runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true'",
     "steps.sf66_readers.outcome == 'success'",
     'SF66_PRODUCT_STEP_OUTCOME: ${{ steps.sf66_product_run.outcome }}',
     'python3 script/sf2h/export-visual/reader.py',
@@ -47,8 +46,8 @@ for marker in sf66_markers:
         raise SystemExit(f'SF66_SEMANTIC_DRIFT: missing or duplicated {marker}')
 if c.count('id: sf66_product_run') != 1 or c.count('sf66_exports=${sf66Exports}') != 1:
     raise SystemExit('SF66_SEMANTIC_DRIFT: producer step or validated request condition changed')
-if sf66_section.count("steps.request.outputs.sf66_exports == 'true'") != 3:
-    raise SystemExit('SF66_SEMANTIC_DRIFT: all three reader/render/upload guards required')
+if sf66_section.count("steps.request.outputs.sf66_exports == 'true'") != 3 or sf66_section.count("runner.os == 'Linux'") != 3:
+    raise SystemExit('SF66_SEMANTIC_DRIFT: all three Linux reader/render/upload guards required')
 recipes = json.loads((Path(__file__).resolve().parent / 'requests.json').read_text(encoding='utf-8'))
 required = ['CI-SF', 'CI-CLI', 'CI-APP-SRC', 'CI-APP-BROWSER', 'CI-ATLAS-BUSINESS',
             'CI-UI-OPERATIONS', 'CI-UI-DECISIONS', 'CI-UI-REPORTS']
