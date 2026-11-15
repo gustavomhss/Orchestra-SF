@@ -1,6 +1,6 @@
 import { batch } from "solid-js"
 import type {
-  SfHref, SfOwnerKey, SfOwnerSelection, SfRef, SfResolvedQuery, SfResolvedRoute,
+  SfHref, SfOwnerKey, SfOwnerSelection, SfRef, SfResolvedRoute,
   SfServerKey, SurfaceId,
 } from "@orchestra/schema/sucafina/context"
 
