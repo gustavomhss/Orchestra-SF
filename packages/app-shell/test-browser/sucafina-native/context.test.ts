@@ -8,7 +8,7 @@ import {
 import {
   parseSfInstallationSelector, readSfInstallations,
   type SfTrustedInstallationSource,
-} from "../../../../server/src/sucafina-installations"
+} from "../../../server/src/sucafina-installations"
 
 const page = "https://orchestra.example/orchestra/sf-home/context"
 const selected = (serverKey: string, projectId = "project", installationId = "installation"): SfOwnerSelection => ({
