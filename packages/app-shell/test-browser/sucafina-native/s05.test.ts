@@ -167,7 +167,12 @@ test("S05 thread preserves exact content, incarnation and version; unknown outco
     view.set("draft", "  Next owner\r\nstill exact  ")
     view.set("state", "ready")
     expect(view.host.textContent).not.toContain("Private discussion body")
-    expect(view.host.querySelector<HTMLTextAreaElement>("textarea")?.value).toBe("  Next owner\nstill exact  ")
+    const ownerDisplay = view.host.querySelector<HTMLTextAreaElement>("textarea")!.value
+    // Byte-level assertion distinguishes LF (0a) from hidden CRLF (0d 0a) in Bun diffs.
+    expect([...new TextEncoder().encode(ownerDisplay)]).toEqual([
+      ...new TextEncoder().encode("  Next owner\nstill exact  "),
+    ])
+    expect(ownerDisplay).toBe("  Next owner\nstill exact  ")
     expect(edits).toEqual(["new comment"]) // changing owner cannot synthesize an edit
     expect(posts).toHaveLength(1) // changing owner cannot replay a POST
     view.button("Post comment").click()
@@ -175,6 +180,9 @@ test("S05 thread preserves exact content, incarnation and version; unknown outco
       { threadRef: ref("thread-1"), incarnation: "incarnation-canonical", expectedVersion: 7, text: "  Keep whitespace  " },
       { threadRef: ref("thread-next"), incarnation: "incarnation-next", expectedVersion: 9,
         text: "  Next owner\r\nstill exact  " },
+    ])
+    expect([...new TextEncoder().encode(posts[1]!.text)]).toEqual([
+      ...new TextEncoder().encode("  Next owner\r\nstill exact  "),
     ])
   } finally {
     view.close()
