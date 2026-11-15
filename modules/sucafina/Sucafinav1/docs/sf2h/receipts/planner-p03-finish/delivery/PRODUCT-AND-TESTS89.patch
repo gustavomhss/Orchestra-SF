@@ -1,0 +1,836 @@
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+index 23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85..c76d9bc385a4b5102b756812b778c844f20ab733 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+@@ -106,7 +106,11 @@
+     if (again.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
+     const latest = structuredClone(again.value)
+     if (historicalRequest && (!latest?.stored || !historicalCalculationMatches(latest.current, latest.stored, historicalRequest, context) || digestSfValue(latest.current) !== digestSfValue(value.current))) return { status: "denied", reason: "historical-calculation-changed" }
+-    if (!latest || !allowedCase(latest.current, value.stored.caseRef, context, historical) || latest.current?.version !== value.current?.version || !latest.stored || digestSfValue(latest.stored) !== digestSfValue(value.stored) || !await authorizeCase(latest.current!, context).catch(() => false) || !await verifySources(latest.stored, calculation && latest.stored.kind === "scenario" ? calculationSources(latest.stored) : latest.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
++    if (!latest || !allowedCase(latest.current, value.stored.caseRef, context, historical) || latest.current?.version !== value.current?.version || !latest.stored) return { status: "denied", reason: "result-access-unavailable" }
++    // This observation is private; every external callback receives another clone.
++    // Retain only its digest until the independent final observation below.
++    const latestDigest = digestSfValue(latest.stored)
++    if (latestDigest !== digestSfValue(value.stored) || !await authorizeCase(latest.current!, context).catch(() => false) || !await verifySources(latest.stored, calculation && latest.stored.kind === "scenario" ? calculationSources(latest.stored) : latest.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+     if (calculation && latest.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(latest.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
+     if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
+     // Source replay can await domain reads. Observe the same authorized case and result
+@@ -115,8 +119,10 @@
+     if (final.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
+     const observed = structuredClone(final.value)
+     if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || digestSfValue(observed.current) !== digestSfValue(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
+-    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || digestSfValue(observed.current) !== digestSfValue(latest.current) || !observed.stored || digestSfValue(observed.stored) !== digestSfValue(latest.stored) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "result-access-unavailable" }
+-    return { status: "ok", value: structuredClone(observed.stored) }
++    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || digestSfValue(observed.current) !== digestSfValue(latest.current) || !observed.stored || digestSfValue(observed.stored) !== latestDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "result-access-unavailable" }
++    // The entire final envelope was already cloned, including unselected fields.
++    // No callback or earlier observation retains this returned graph.
++    return { status: "ok", value: observed.stored }
+   }
+   const read = (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext) => readResult(request, context, false)
+   const readForCalculation = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, false, true)
+@@ -174,11 +180,17 @@
+     const again = await observe()
+     if (again.status !== "ok") return failRemaining(unavailable())
+     const latest = structuredClone(again.value)
++    const latestDigests: (string | undefined)[] = []
+     for (const index of references.keys()) {
+       if (failures[index]) continue
+       const value = values?.[index]
+       const current = latest?.[index]
+-      if (!value || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || current.current?.version !== value.current?.version || digestSfValue(current.stored) !== digestSfValue(value.stored) || !await authorizeCase(current.current!, context).catch(() => false) || !await verifySources(current.stored, current.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) {
++      if (!value || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || current.current?.version !== value.current?.version) {
++        failures[index] = denied()
++        continue
++      }
++      latestDigests[index] = digestSfValue(current.stored)
++      if (latestDigests[index] !== digestSfValue(value.stored) || !await authorizeCase(current.current!, context).catch(() => false) || !await verifySources(current.stored, current.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) {
+         failures[index] = denied()
+         continue
+       }
+@@ -193,13 +205,24 @@
+     if (final.status !== "ok") return failRemaining(unavailable())
+     const observed = structuredClone(final.value)
+     if (!sameRequest()) return failRemaining(denied())
++    // Siblings may share a case inside each private cloned observation. Hash
++    // each object only when its final comparison is reached; never join phases.
++    const caseDigests = new WeakMap<object, string>()
++    const caseDigest = (value: unknown) => {
++      if (!value || typeof value !== "object") return digestSfValue(value)
++      const prior = caseDigests.get(value)
++      if (prior !== undefined) return prior
++      const digest = digestSfValue(value)
++      caseDigests.set(value, digest)
++      return digest
++    }
+     return references.map((_, index): PortResult<StoredDecisionResult> => {
+       const failure = failures[index]
+       if (failure) return failure
+       const value = values?.[index]
+       const previous = latest?.[index]
+       const current = observed?.[index]
+-      if (!value || !previous || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || digestSfValue(current.current) !== digestSfValue(previous.current) || digestSfValue(current.stored) !== digestSfValue(previous.stored)) return denied()
++      if (!value || !previous || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || caseDigest(current.current) !== caseDigest(previous.current) || digestSfValue(current.stored) !== latestDigests[index]) return denied()
+       return { status: "ok", value: structuredClone(current.stored) }
+     })
+   }
+@@ -269,7 +292,13 @@
+ }
+ 
+ function calculationSources(value: Extract<StoredDecisionResult, { kind: "scenario" }>) {
+-  return [...value.sourceRefs, ...value.result.sourceRefs, ...value.result.costCoverage.evaluatedSourceRefs, ...value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, refs) => refs.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
++  const seen = new Set<string>()
++  return [...value.sourceRefs, ...value.result.sourceRefs, ...value.result.costCoverage.evaluatedSourceRefs, ...value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref) => {
++    const digest = digestSfValue(ref)
++    if (seen.has(digest)) return false
++    seen.add(digest)
++    return true
++  })
+ }
+ 
+ function sameAuthority(authority: { principalRef: string; policyVersion: string; accessRevision: string }, context: TrustedDomainContext) {
+diff --git a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+index 529e29806b3faf15f88eec009c198e783f4248a3..c1634b7388216af2da62f1af0d229e2dc78affad 100644
+--- a/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts
+@@ -88,7 +88,7 @@
+       if (entry.status !== "ok") { result.push(structuredClone(entry)); continue }
+       const current = await observeCase(entry.value.stored, finalCases, context)
+       if (current.status !== "ok") { result.push(current); continue }
+-      result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: structuredClone(entry.value.value) } : { status: "stale", reason: "case-changed" })
++      result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: entry.value.value } : { status: "stale", reason: "case-changed" })
+     }
+     return result
+   }
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-fixture.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..f3f5cad776aa603610c99dec829c10d565e1d60f
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-fixture.ts
+@@ -0,0 +1,79 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { SfProductStatePort, SfStateNamespace, SfStateResult } from "../../../product/contracts/state.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
++import type { StoredDecisionResult } from "../../../product/decisions/result-store.ts"
++import { createRenewalSourceFixture } from "../wp11/renewal-source-fixture.ts"
++
++/** Real SQLite, UI admission and Planner output. Source membership is the existing
++ * explicitly synthetic renewal fixture, never an unconditional approval. */
++export async function createCalculationFixture() {
++  const fixture = await createRenewalSourceFixture("omitted")
++  try {
++    const preview = await fixture.planner.simulateScenario(fixture.scenario, fixture.context)
++    if (preview.status !== "ok") throw new Error(preview.reason)
++    const trace = { events: [] as string[], sources: [] as (readonly BusinessEvidenceRef[])[], reads: 0, next: 0 }
++    const hooks: {
++      read?: (value: SfStateResult<unknown>, namespace: SfStateNamespace, ordinal: number) => void
++      sources?: (value: Parameters<Parameters<typeof createSfDecisionResultStore>[0]["verifySources"]>[0], refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => void | Promise<void>
++    } = {}
++    const state: SfProductStatePort = {
++      ...fixture.state,
++      read: async (request, namespace, read) => {
++        trace.events.push(`read:${namespace}`)
++        const value = await fixture.state.read(request, namespace, read)
++        trace.reads += 1
++        hooks.read?.(value, namespace, trace.reads)
++        return value
++      },
++    }
++    const settings: Parameters<typeof createSfDecisionResultStore>[0] = {
++      state,
++      host: {
++        requestFor: (context) => fixture.host.requestFor(context),
++        revalidate: (context) => { trace.events.push("authority"); return fixture.host.revalidate(context) },
++      },
++      authorizeCase: async (value, context) => {
++        trace.events.push("case")
++        return value.id === fixture.caseRef.id && value.incarnation === fixture.caseRef.incarnation && value.participants.includes(context.binding.principalRef) && await fixture.host.revalidate(context)
++      },
++      verifySources: async (value, refs, context) => {
++        trace.events.push("sources")
++        trace.sources.push(structuredClone(refs))
++        const observed = await fixture.evidence.context({ refs }, context)
++        const allowed = observed.length === refs.length && observed.every((item, index) => item.state === "fresh" && item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(refs[index]))
++        await hooks.sources?.(value, refs, context)
++        return allowed
++      },
++      createId: () => `canonical-read-${++trace.next}`,
++      now: () => "2026-11-13T00:00:00Z",
++    }
++    const results = createSfDecisionResultStore(settings)
++    const saved = await results.write({ kind: "scenario", result: preview.value, caseRef: fixture.caseRef, requestDigest: digestSfValue(fixture.scenario), sourceRefs: [fixture.sourceRefs[0]!, fixture.sourceRefs[1]!, fixture.sourceRefs[0]!], idempotencyKey: "canonical-read-seed" }, fixture.context)
++    if (saved.status !== "ok" || saved.value.kind !== "scenario") throw new Error("Canonical scenario publication failed")
++    const original = structuredClone(saved.value)
++    const reset = () => { trace.events.length = 0; trace.sources.length = 0; trace.reads = 0 }
++    const replace = async (value: StoredDecisionResult) => {
++      const current = await fixture.state.read(fixture.request, "cases", () => null)
++      if (current.status !== "ok") throw new Error("Canonical state unavailable")
++      const written = await fixture.state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: `negative-control-${++trace.next}`, commandDigest: digestSfValue(value) }, async (state) => {
++        state.decisionResults![original.resultRef] = structuredClone(value)
++        return { commit: true, value: true }
++      })
++      if (written.status !== "ok" || !written.value) throw new Error("Negative control CAS failed")
++    }
++    const replaceCase = async (value: DecisionCase) => {
++      const current = await fixture.state.read(fixture.request, "cases", () => null)
++      if (current.status !== "ok") throw new Error("Canonical case unavailable")
++      const written = await fixture.state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: `case-negative-control-${++trace.next}`, commandDigest: digestSfValue(value) }, async (state) => {
++        state.cases[fixture.caseRef.id] = structuredClone(value)
++        return { commit: true, value: true }
++      })
++      if (written.status !== "ok" || !written.value) throw new Error("Negative case control CAS failed")
++    }
++    reset()
++    return { fixture, settings, results, original, trace, hooks, reset, replace, replaceCase, cleanup: fixture.cleanup }
++  } catch (error) { await fixture.cleanup(); throw error }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-sources.test.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-sources.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7013df4178b57b6ea55c55e223749904008095a0
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-sources.test.ts
+@@ -0,0 +1,205 @@
++import { expect, spyOn, test } from "bun:test"
++import { canonicalSfValue, digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createSfDecisionResultStore, readHistoricalScenarios } from "../../../product/decisions/result-store.ts"
++import { createCalculationFixture } from "./calculation-fixture.ts"
++
++test("C08 private observations keep callback order and independently mutable scalar and duplicate batch outputs", async () => {
++  const setup = await createCalculationFixture()
++  try {
++    const context = setup.fixture.context
++    const request = { kind: "scenario" as const, resultRef: setup.original.resultRef }
++    const expected = { status: "ok", value: setup.original }
++    const wire = canonicalSfValue(setup.original)
++    const caseWire = canonicalSfValue(setup.fixture.decision)
++    const hashes = { count: 0, cases: 0 }
++    const retained: { value?: Parameters<typeof setup.settings.verifySources>[0] } = {}
++    setup.hooks.sources = (value) => { retained.value = value }
++    const update = Bun.CryptoHasher.prototype.update
++    // The hash API is the only observation point for this private producer work.
++    // Exact bytes and this binding are forwarded; no result or authority is mocked.
++    const probe = spyOn(Bun.CryptoHasher.prototype, "update").mockImplementation(function (this: Bun.CryptoHasher, ...args: Parameters<typeof update>) {
++      if (args[0] === wire) hashes.count += 1
++      return update.apply(this, args)
++    })
++    const scalar = await setup.results.read(request, context).finally(() => probe.mockRestore())
++    const scalarHashes = hashes.count
++    expect(scalar).toEqual(expected)
++    expect(setup.trace.events).toEqual(["authority", "read:cases", "case", "sources", "authority", "read:cases", "case", "sources", "authority", "authority", "read:cases"])
++    expect(setup.trace.sources).toEqual([setup.original.sourceRefs, setup.original.sourceRefs])
++    expect(scalarHashes).toBeGreaterThan(0)
++    if (retained.value?.kind !== "scenario") throw new Error("Source callback was not observed")
++    retained.value.result.knownSubtotal = -24680
++    expect(scalar).toEqual(expected)
++    setup.hooks.sources = undefined
++    if (scalar.status !== "ok" || scalar.value.kind !== "scenario") throw new Error("Scenario unavailable")
++    scalar.value.result.knownSubtotal = -987654
++    expect(await setup.results.read(request, context)).toEqual(expected)
++
++    setup.reset()
++    hashes.count = 0
++    const batchProbe = spyOn(Bun.CryptoHasher.prototype, "update").mockImplementation(function (this: Bun.CryptoHasher, ...args: Parameters<typeof update>) {
++      if (args[0] === wire) hashes.count += 1
++      if (args[0] === caseWire) hashes.cases += 1
++      return update.apply(this, args)
++    })
++    const batch = await readHistoricalScenarios(setup.results, [request.resultRef, request.resultRef], context).finally(() => batchProbe.mockRestore())
++    expect(batch).toEqual([expected, expected])
++    expect(setup.trace.events).toEqual(["authority", "authority", "read:cases", "case", "sources", "authority", "case", "sources", "authority", "read:cases", "case", "sources", "authority", "authority", "case", "sources", "authority", "authority", "read:cases"])
++    expect(setup.trace.sources).toEqual(Array.from({ length: 4 }, () => setup.original.sourceRefs))
++    expect(hashes.count).toBeGreaterThan(0)
++    expect(hashes.cases).toBeGreaterThan(0)
++    if (batch[0]?.status !== "ok" || batch[0].value.kind !== "scenario" || batch[1]?.status !== "ok") throw new Error("Batch unavailable")
++    expect(batch[0].value).not.toBe(batch[1].value)
++    expect(batch[0].value.sourceRefs).not.toBe(batch[1].value.sourceRefs)
++    batch[0].value.result.knownSubtotal = -123456
++    expect(batch[1]).toEqual(expected)
++    expect(await setup.results.read(request, context)).toEqual(expected)
++    console.log("canonical-read-cost:result-digests", JSON.stringify({ scalar: scalarHashes, duplicateBatch: hashes.count, duplicateBatchCaseHashes: hashes.cases, scalarCallbacks: 11, duplicateBatchCallbacks: 19 }))
++
++    setup.reset()
++    setup.hooks.sources = async () => {
++      if (setup.trace.sources.length !== 2) return
++      const changed = structuredClone(setup.original)
++      changed.result.knownSubtotal = -13579
++      changed.resultDigest = digestSfValue(changed.result)
++      await setup.replace(changed)
++    }
++    expect(await setup.results.read(request, context)).toMatchObject({ status: "denied", reason: "result-access-unavailable" })
++    expect(setup.trace.reads).toBe(3)
++    setup.hooks.sources = undefined
++    await setup.replace(setup.original)
++    expect(await setup.results.read(request, context)).toEqual(expected)
++
++    setup.reset()
++    setup.hooks.sources = async () => {
++      if (setup.trace.sources.length !== 4) return
++      const changed = structuredClone(setup.fixture.decision)
++      changed.objective = "Changed without advancing the case version"
++      await setup.replaceCase(changed)
++    }
++    expect(await readHistoricalScenarios(setup.results, [request.resultRef, request.resultRef], context)).toEqual([
++      { status: "denied", reason: "result-access-unavailable" },
++      { status: "denied", reason: "result-access-unavailable" },
++    ])
++    expect(setup.trace.sources).toHaveLength(4)
++    expect(setup.trace.reads).toBe(3)
++    setup.hooks.sources = undefined
++    await setup.replaceCase(setup.fixture.decision)
++    expect(await setup.results.read(request, context)).toEqual(expected)
++  } finally { await setup.cleanup() }
++})
++
++test("calculation sources preserve complete reference identity, current evidence and canonical replay", async () => {
++  const setup = await createCalculationFixture()
++  try {
++    const context = setup.fixture.context
++    const request = { resultRef: setup.original.resultRef }
++    const replay = { calls: 0 }
++    const results = createSfDecisionResultStore({ ...setup.settings, verifyCalculationSources: async (value, _refs, trusted) => {
++      replay.calls += 1
++      const actual = await setup.fixture.planner.simulateScenario(setup.fixture.scenario, trusted)
++      return actual.status === "ok" && value.requestDigest === digestSfValue(setup.fixture.scenario) && digestSfValue(actual.value) === digestSfValue(value.result)
++    } })
++    const source = (await Bun.file(new URL("../../../product/decisions/result-store.ts", import.meta.url)).text()).split("\n")
++    const firstLine = source.findIndex((line) => line.startsWith("function calculationSources(")) + 1
++    const following = source.findIndex((line, index) => index >= firstLine && line.startsWith("function "))
++    const lastLine = following < 0 ? source.length : following
++    expect(firstLine).toBeGreaterThan(0)
++    const canonical = await import("../../../product/contracts/canonical.ts")
++    const originalDigest = canonical.digestSfValue
++    const calculation = { digests: 0, firstStack: "", callsites: new Set<string>() }
++    // ESM live-import observation retains the producer's exact source callsite,
++    // including unnamed/inlined filter callbacks in the original implementation.
++    const probe = spyOn(canonical, "digestSfValue").mockImplementation((value) => {
++      const stack = new Error().stack ?? ""
++      const callsite = [...stack.matchAll(/product\/decisions\/result-store\.ts:(\d+):\d+/g)].find((match) => Number(match[1]) >= firstLine && Number(match[1]) <= lastLine)
++      if (callsite) {
++        calculation.digests += 1
++        calculation.callsites.add(callsite[0])
++        if (!calculation.firstStack) calculation.firstStack = stack
++      }
++      return originalDigest(value)
++    })
++    const calculated = await results.readForCalculation(request, context).finally(() => probe.mockRestore())
++    expect(calculated).toEqual({ status: "ok", value: setup.original })
++    expect(replay.calls).toBe(2)
++    expect(setup.trace.sources).toEqual([setup.fixture.sourceRefs, setup.fixture.sourceRefs])
++    expect(calculation.digests).toBeGreaterThan(0)
++    expect(calculation.firstStack).toContain("result-store.ts")
++    console.log("canonical-read-cost:calculation-sources", JSON.stringify({
++      inputReferencesPerDerivation: setup.original.sourceRefs.length + setup.original.result.sourceRefs.length + setup.original.result.costCoverage.evaluatedSourceRefs.length + setup.original.result.costCoverage.entries.reduce((count, entry) => count + (entry.status === "pending" ? 0 : entry.evidenceRefs.length), 0),
++      distinctSourceReferences: setup.fixture.sourceRefs.length,
++      digests: calculation.digests,
++      replayCallbacks: replay.calls,
++      producerLines: { first: firstLine, last: lastLine },
++      callsites: [...calculation.callsites],
++      firstStack: calculation.firstStack,
++    }))
++
++    // Same refId/refDigest with a changed version must reach source verification.
++    // This is deliberate persisted corruption, introduced through real C08 CAS.
++    const changed = structuredClone(setup.original)
++    const reference = structuredClone(setup.fixture.sourceRefs[0]!)
++    reference.target.version += 1
++    changed.sourceRefs = [setup.fixture.sourceRefs[0]!, reference, setup.fixture.sourceRefs[0]!]
++    await setup.replace(changed)
++    setup.reset()
++    expect(await results.readForCalculation(request, context)).toMatchObject({ status: "denied", reason: "result-access-unavailable" })
++    expect(setup.trace.sources).toHaveLength(1)
++    expect(setup.trace.sources[0]).toContainEqual(reference)
++    expect(setup.trace.sources[0]).toContainEqual(setup.fixture.sourceRefs[0])
++    expect(replay.calls).toBe(2)
++
++    await setup.replace(setup.original)
++    setup.reset()
++    setup.hooks.sources = (value) => {
++      if (value.kind === "scenario") value.result.knownSubtotal = -1
++    }
++    expect(await results.readForCalculation(request, context)).toMatchObject({ status: "denied", reason: "result-access-unavailable" })
++    expect(replay.calls).toBe(2)
++    setup.hooks.sources = undefined
++
++    const refused = createSfDecisionResultStore({ ...setup.settings, verifyCalculationSources: async () => { replay.calls += 1; return false } })
++    expect(await refused.readForCalculation(request, context)).toMatchObject({ status: "unavailable", reason: "calculation-source-unproven" })
++    expect(replay.calls).toBe(3)
++    expect(await setup.results.read({ ...request, kind: "scenario" }, context)).toEqual({ status: "ok", value: setup.original })
++
++    setup.reset()
++    const revision = setup.fixture.sourceRefs[0]!.target.version
++    setup.hooks.sources = () => {
++      if (setup.trace.sources.length === 1) setup.fixture.sourceRefs[0]!.target.version += 1
++    }
++    try {
++      expect(await setup.results.readForCalculation(request, context)).toMatchObject({ status: "denied", reason: "result-access-unavailable" })
++      expect(setup.trace.sources).toHaveLength(2)
++    } finally {
++      setup.fixture.sourceRefs[0]!.target.version = revision
++      setup.hooks.sources = undefined
++    }
++  } finally { await setup.cleanup() }
++})
++
++test("final envelope getters and clone failures remain observable before scalar publication", async () => {
++  const setup = await createCalculationFixture()
++  try {
++    const request = { kind: "scenario" as const, resultRef: setup.original.resultRef }
++    const effects = { calls: 0, fail: false }
++    setup.hooks.read = (value, _namespace, ordinal) => {
++      if (ordinal !== 3 || value.status !== "ok" || !value.value || typeof value.value !== "object") return
++      Object.defineProperty(value.value, "unselected", { enumerable: true, get: () => {
++        effects.calls += 1
++        return effects.fail ? () => "uncloneable" : { observed: true }
++      } })
++    }
++    expect(await setup.results.read(request, setup.fixture.context)).toEqual({ status: "ok", value: setup.original })
++    expect(effects.calls).toBe(1)
++    setup.reset()
++    effects.fail = true
++    await expect(setup.results.read(request, setup.fixture.context)).rejects.toThrow()
++    expect(effects.calls).toBe(2)
++    expect(setup.trace.reads).toBe(3)
++    expect(setup.trace.sources).toHaveLength(2)
++    setup.hooks.read = undefined
++    expect(await setup.results.read(request, setup.fixture.context)).toEqual({ status: "ok", value: setup.original })
++  } finally { await setup.cleanup() }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-cost.test.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-cost.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8f0051c478d0ade11b044d95e2928206a008308a
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-cost.test.ts
+@@ -0,0 +1,74 @@
++import { expect, test } from "bun:test"
++import { createHash } from "node:crypto"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
++import { diagnosticExpected } from "./diagnostic-expected.ts"
++import { composeCanonicalReadDiagnostic } from "./diagnostic-fixture.ts"
++import { installCanonicalReadDiagnostic } from "./diagnostic-probe.ts"
++
++test("measures bounded canonical C08, rule and binding work without repeating P03", async () => {
++  const producerHashes = Object.fromEntries(await Promise.all(Object.entries(diagnosticExpected.producers).map(async ([path]) =>
++    [path, createHash("sha256").update(new Uint8Array(await Bun.file(new URL(`../../../${path}`, import.meta.url)).arrayBuffer())).digest("hex")],
++  )))
++  expect(producerHashes).toEqual(diagnosticExpected.producers)
++  const probe = await installCanonicalReadDiagnostic()
++  let history: Awaited<ReturnType<typeof createRenewalChoiceHistory>> | undefined
++  const outputs: Record<string, string> = {}
++  try {
++    // Clearing the spy history must preserve the original digest exception.
++    expect(() => digestSfValue(() => undefined)).toThrow("SF_CANONICAL_UNSUPPORTED")
++    const current = await probe.phase("prepare-once", () => createRenewalChoiceHistory({ training: "omitted" }))
++    history = current
++    const ports = await composeCanonicalReadDiagnostic(current, probe)
++    const phase = current.before
++    const context = current.fixture.context
++    const comparisonRequest = { scenarioRefs: [phase.baselineRef, phase.selectedRef], criteria: ["renewal-difference"] }
++    const request = { caseRef: phase.caseRef, resultRef: phase.comparisonRef }
++    const stored = await probe.phase("comparison-read", () => phase.results.read({ resultRef: phase.comparisonRef, kind: "comparison" }, context))
++    expect(stored.status).toBe("ok")
++    if (stored.status !== "ok" || stored.value.kind !== "comparison") throw new Error("Real comparison result unavailable")
++    expect(stored.value.result).toEqual(phase.comparison)
++    expect(stored.value.requestDigest).toBe(digestSfValue(comparisonRequest))
++    outputs.comparison = digestSfValue(stored.value)
++    const rule = await probe.phase("rule-resolve", () => ports.rules.resolve({ caseRef: phase.caseRef, criterionId: "renewal-difference" }, context))
++    expect(rule).toEqual({ status: "ok", value: phase.rule })
++    outputs.rule = digestSfValue(rule)
++    const evaluated = await probe.phase("rule-evaluate", () => ports.rules.evaluate({
++      caseRef: phase.caseRef, criterionId: "renewal-difference", baselineRef: phase.baselineRef, scenarioRef: phase.selectedRef,
++    }, context))
++    expect(evaluated.status).toBe("ok")
++    if (evaluated.status !== "ok") throw new Error("Real criterion evaluation unavailable")
++    const expected = phase.comparison.criterionResults.find((value) => value.criterionId === "renewal-difference")
++    expect({ state: evaluated.value.state, reason: evaluated.value.reason }).toEqual({ state: expected?.state, reason: expected?.reason })
++    outputs.evaluation = digestSfValue(evaluated.value)
++    const proofs = await probe.phase("binding-proofs", () => ports.bindings.proofs(phase.caseRef, comparisonRequest.criteria, context))
++    expect(proofs.status).toBe("ok")
++    if (proofs.status !== "ok") throw new Error("Real rule proofs unavailable")
++    // The original fixture persists this comparison but no binding. Create one through
++    // the real producer/CAS and canonical replay; never insert a fabricated proof.
++    const bound = await probe.phase("binding-create", () => ports.bindings.bind({ ...request, request: comparisonRequest, expectedRules: proofs.value }, context))
++    expect(bound.status).toBe("ok")
++    if (bound.status !== "ok") throw new Error(`Real binding creation failed:${bound.reason}`)
++    const binding = await probe.phase("binding-read", () => ports.bindings.read(request, context))
++    expect(binding).toEqual(bound)
++    outputs.binding = digestSfValue(binding)
++    const again = await probe.phase("comparison-read-again", () => phase.results.read({ resultRef: phase.comparisonRef, kind: "comparison" }, context))
++    expect(again).toEqual(stored)
++    if (again.status !== "ok") throw new Error("Second independent C08 observation unavailable")
++    expect(again.value).not.toBe(stored.value)
++    outputs.comparisonAgain = digestSfValue(again.value)
++    const report = probe.snapshot()
++    const rows = Object.entries(report.primitives)
++    // Fail closed if Bun's observer does not actually reach imported production calls.
++    expect(rows.some(([key, value]) => key.includes("|digestSfValue|") && key.includes("product/decisions/result-store.ts:") && value.calls > 0)).toBe(true)
++    expect(rows.some(([key, value]) => key.includes("|structuredClone|") && key.includes("product/host-binding/state-provider.ts:") && value.calls > 0)).toBe(true)
++    expect(rows.some(([key, value]) => key.startsWith("binding-read|") && key.includes("|digestSfValue|") && key.includes("product/decisions/criterion-comparison.ts:") && value.calls > 0)).toBe(true)
++    expect(report.pending).toBe(0)
++    console.info("[canonical-read-cost]", JSON.stringify({ schema: "sf2h.canonical-read-cost.diagnostic.v1", label: diagnosticExpected.label, producerHashes, outputs,
++      workload: { prepare: 1, comparisonReads: 2, ruleResolves: 1, ruleEvaluations: 1, proofReads: 1, bindingWrites: 1, bindingReads: 1 },
++      boundary: "Existing renewal fixture uses synthetic source declarations and human grants; SQLite/C08/Planner/rules/metric/comparison replay/binding persistence are real. This does not execute P03, select a choice, confirm training or qualify final history/revocation.", ...report }))
++  } finally {
++    probe.restore()
++    await history?.cleanup()
++  }
++}, 120000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..05621cc0d50782d19afb7fb7fd1358cfc734eb63
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
+@@ -0,0 +1,9 @@
++/** Only this manifest changes between diagnostic snapshots; test/probe bytes stay fixed. */
++export const diagnosticExpected = {
++  label: "improved",
++  producers: {
++    "product/host-binding/state-provider.ts": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
++    "product/decisions/result-store.ts": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de",
++    "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef",
++  },
++} as const
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-fixture.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-fixture.ts
+@@ -0,0 +1,87 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { sfRunSourceFence } from "../../../product/ai/run-store.ts"
++import { createCriterionComparisonBindings } from "../../../product/decisions/criterion-comparison.ts"
++import { createCriterionRuleRegistry } from "../../../product/decisions/criterion-rules.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
++import type { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
++import type { installCanonicalReadDiagnostic } from "./diagnostic-probe.ts"
++
++/** Existing fixture grants are synthetic. Sources, stored results, rules and replay remain real. */
++export async function composeCanonicalReadDiagnostic(
++  history: Awaited<ReturnType<typeof createRenewalChoiceHistory>>,
++  probe: Awaited<ReturnType<typeof installCanonicalReadDiagnostic>>,
++) {
++  const phase = history.before
++  const host = history.fixture.host
++  const revalidate = host.revalidate
++  const requestFor = host.requestFor
++  host.revalidate = (context) => probe.call("host.revalidate", () => revalidate.call(host, context))
++  host.requestFor = (context) => probe.call("host.requestFor", () => requestFor.call(host, context))
++  probe.onRestore(() => { host.revalidate = revalidate; host.requestFor = requestFor })
++  probe.persistence(history.fixture.store)
++  probe.state(history.state, "fixture.c08")
++  const writes = new WeakSet<object>()
++  const state = createSfProductState({
++    persistence: history.fixture.store, proposalCoverageWrites: writes, createId: () => "diagnostic-read-cost",
++    resolveTarget: async (_request, _snapshot, _namespace, ref) => ref === phase.caseRef.id ? { incarnation: phase.caseRef.incarnation } : undefined,
++    authorize: (request, _snapshot, namespace, mode) => probe.call(`c08.authorize.${mode}.${namespace}`, async () =>
++      request === history.fixture.request && await host.revalidate(history.fixture.context) ? history.fixture.context.binding : undefined),
++  })
++  probe.state(state, "diagnostic.c08")
++  const authorizeCase = (decision: DecisionCase, context: TrustedDomainContext) => probe.call("callback.authorizeCase", async () =>
++    decision.id === phase.caseRef.id && decision.incarnation === phase.caseRef.incarnation && decision.version === phase.caseRef.version &&
++    decision.participants.includes(context.binding.principalRef) && await host.revalidate(context))
++  const evidence = (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => probe.call("callback.evidence", async () => {
++    const observed = await phase.evidence.context({ refs }, context)
++    return observed.length === refs.length && observed.every((value, index) =>
++      value.state === "fresh" && value.accessRevision === context.binding.accessRevision && digestSfValue(value.ref) === digestSfValue(refs[index]))
++  })
++  const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
++  const rules = createCriterionRuleRegistry({
++    state, host, authorizeCase, authorizeRule: async () => false, verifySnapshot: () => false,
++    verifyEvidence: (rule, context) => evidence(rule.evidenceRefs, context),
++    readMetric: (request, context) => probe.call("callback.criterionMetric", () => {
++      if (!metrics.read) throw new Error("Canonical metric not composed")
++      return metrics.read(request, context)
++    }),
++    verifyMetric: (metric, context) => evidence(metric.evidenceRefs, context),
++    operationIdentity: () => undefined, proposalCoverageWrites: writes, now: () => "2026-11-15T00:00:00Z",
++  })
++  // No registry success is manufactured: this resolves the fixture's persisted rule,
++  // and evaluates through the same real units + Planner preview as the original fixture.
++  metrics.read = createPlannerCriterionMetric({ host, rules, units: phase.issuer, preview: phase.preview })
++  const resolveRule = rules.resolve
++  const evaluateRule = rules.evaluate
++  rules.resolve = (request, context) => probe.call("rules.resolve", () => resolveRule.call(rules, request, context))
++  rules.evaluate = (request, context) => probe.call("rules.evaluate", () => evaluateRule.call(rules, request, context))
++  const readResult = phase.results.read
++  const readCalculation = phase.results.readForCalculation
++  phase.results.read = (request, context) => probe.call("results.read", () => readResult.call(phase.results, request, context))
++  phase.results.readForCalculation = (request, context) => probe.call("results.readForCalculation", () => readCalculation.call(phase.results, request, context))
++  // readHistoricalScenario retains its exact WeakMap identity and batching behavior.
++  probe.onRestore(() => { phase.results.read = readResult; phase.results.readForCalculation = readCalculation })
++  const compare = phase.planner.compareScenarios
++  phase.planner.compareScenarios = (request, context) => probe.call("planner.compareScenarios", () => compare.call(phase.planner, request, context))
++  probe.onRestore(() => { phase.planner.compareScenarios = compare })
++  const sourceFence = await history.fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) }))
++  const bindings = createCriterionComparisonBindings({
++    state, host, rules, results: phase.results, authorizeCase,
++    verifyBinding: (binding, result, context) => probe.call("callback.verifyBinding.replay", async () => {
++      const replay = await phase.planner.compareScenarios(binding.request, context)
++      return result.kind === "comparison" && replay.status === "ok" && digestSfValue(replay.value) === result.resultDigest
++    }),
++    verifySnapshot: (snapshot) => sfRunSourceFence(snapshot) === sourceFence,
++    operationIdentity: () => "canonical-read-cost-binding", proposalCoverageWrites: writes, now: () => "2026-11-15T00:00:00Z",
++  })
++  const bind = bindings.bind
++  const readBinding = bindings.read
++  const proofs = bindings.proofs
++  bindings.bind = (request, context) => probe.call("bindings.bind", () => bind.call(bindings, request, context))
++  bindings.read = (request, context) => probe.call("bindings.read", () => readBinding.call(bindings, request, context))
++  bindings.proofs = (ref, criteria, context) => probe.call("bindings.proofs", () => proofs.call(bindings, ref, criteria, context))
++  return { state, rules, bindings }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-probe.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-probe.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..fdf2758ea7b21de74ea0e15b30f266c5e8f811b9
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-probe.ts
+@@ -0,0 +1,201 @@
++import { spyOn } from "bun:test"
++import { AsyncLocalStorage } from "node:async_hooks"
++import { createHash } from "node:crypto"
++import type { Persistence } from "../../../runtime/contract.ts"
++import type { AssetPersistence } from "../../../runtime/assets.ts"
++import type { SfProductStatePort } from "../../../product/contracts/state.ts"
++
++type Counter = { calls: number; completed: number; errors: number; inclusiveMs: number; maximumMs: number }
++type PrimitiveCounter = Counter & { exclusiveMeasuredMs: number }
++
++/** Transparent observers only: native primitive arguments, return values and errors are unchanged. */
++export async function installCanonicalReadDiagnostic() {
++  const canonical = await import("../../../product/contracts/canonical.ts")
++  const originalDigest = canonical.digestSfValue
++  const originalClone = globalThis.structuredClone
++  const scopes = new AsyncLocalStorage<{ phase: string; path: string[] }>()
++  const calls: Record<string, Counter> = {}
++  const primitives: Record<string, PrimitiveCounter> = {}
++  const stack: { childMs: number }[] = []
++  const order = createHash("sha256")
++  const examples: string[] = []
++  const memory: Record<string, { before: NodeJS.MemoryUsage; after: NodeJS.MemoryUsage }> = {}
++  const spyHistory = {
++    entryInvocations: 0, entryCallsHighWater: 0, entryResultsHighWater: 0,
++    phaseClears: 0, reportClears: 0, checkpointCallsHighWater: 0, checkpointResultsHighWater: 0,
++    residualCallsHighWater: 0, residualResultsHighWater: 0, residualCalls: 0, residualResults: 0,
++    pendingAtClearHighWater: 0,
++  }
++  const restores: (() => void)[] = []
++  let events = 0
++  let stackCaptureMs = 0
++  let pending = 0
++  let restored = false
++  const counter = (): Counter => ({ calls: 0, completed: 0, errors: 0, inclusiveMs: 0, maximumMs: 0 })
++  const event = (name: string) => {
++    events++
++    order.update(name).update("\n")
++    if (examples.length < 80) examples.push(name)
++  }
++  const call = <T>(name: string, work: () => T): T => {
++    const scope = scopes.getStore()
++    if (!scope) return work()
++    const key = `${scope.phase}|${scope.path.at(-1) ?? "root"}>${name}`
++    const row = calls[key] ??= counter()
++    row.calls++
++    event(`enter:${key}`)
++    const started = performance.now()
++    const complete = (failed: boolean) => {
++      const elapsed = performance.now() - started
++      row.completed++
++      row.errors += Number(failed)
++      row.inclusiveMs += elapsed
++      row.maximumMs = Math.max(row.maximumMs, elapsed)
++      event(`${failed ? "reject" : "exit"}:${key}`)
++    }
++    return scopes.run({ phase: scope.phase, path: [...scope.path, name] }, () => {
++      try {
++        const value = work()
++        if (value instanceof Promise) {
++          pending++
++          // Observe settlement without returning a substituted production Promise.
++          void value.then(() => { pending--; complete(false) }, () => { pending--; complete(true) })
++          return value
++        }
++        complete(false)
++        return value
++      } catch (error) { complete(true); throw error }
++    })
++  }
++  const primitive = <T>(name: string, work: () => T): T => {
++    const scope = scopes.getStore()
++    if (!scope) return work()
++    const capture = performance.now()
++    const location = (new Error().stack ?? "").split("\n").map((line) =>
++      line.match(/((?:product|runtime|src|test)\/[^():\n]+\.ts:\d+:\d+)/)?.[1])
++      .find((line) => line && !line.includes("planner-p03-finish/diagnostic-")) ?? "unattributed"
++    stackCaptureMs += performance.now() - capture
++    const key = `${scope.phase}|${scope.path.at(-1) ?? "root"}|${name}|${location}`
++    const row = primitives[key] ??= { ...counter(), exclusiveMeasuredMs: 0 }
++    row.calls++
++    const frame = { childMs: 0 }
++    stack.push(frame)
++    const started = performance.now()
++    try { return work() }
++    catch (error) { row.errors++; throw error }
++    finally {
++      const elapsed = performance.now() - started
++      stack.pop()
++      if (stack.length) stack[stack.length - 1]!.childMs += elapsed
++      row.completed++
++      row.inclusiveMs += elapsed
++      row.exclusiveMeasuredMs += elapsed - frame.childMs
++      row.maximumMs = Math.max(row.maximumMs, elapsed)
++    }
++  }
++  const clone: typeof structuredClone = function (this: unknown, ...args: Parameters<typeof structuredClone>) {
++    return primitive("structuredClone", () => Reflect.apply(originalClone, this, args))
++  } as typeof structuredClone
++  // ESM live-import spying observes the entire canonicalization plus SHA256 call.
++  // Every invocation calls the saved implementation exactly once, including throws.
++  const digest = spyOn(canonical, "digestSfValue").mockImplementation((value) => {
++    // Bun records spy arguments/results even when this observer does not. Drop
++    // prior call history before timing, preserving the installed implementation.
++    spyHistory.entryInvocations++
++    spyHistory.entryCallsHighWater = Math.max(spyHistory.entryCallsHighWater, digest.mock.calls.length)
++    spyHistory.entryResultsHighWater = Math.max(spyHistory.entryResultsHighWater, digest.mock.results.length)
++    digest.mockClear()
++    return primitive("digestSfValue", () => originalDigest(value))
++  })
++  globalThis.structuredClone = clone
++  const clearHistory = (checkpoint: "phase" | "report") => {
++    spyHistory.checkpointCallsHighWater = Math.max(spyHistory.checkpointCallsHighWater, digest.mock.calls.length)
++    spyHistory.checkpointResultsHighWater = Math.max(spyHistory.checkpointResultsHighWater, digest.mock.results.length)
++    spyHistory.pendingAtClearHighWater = Math.max(spyHistory.pendingAtClearHighWater, pending)
++    digest.mockClear()
++    spyHistory.residualCalls = digest.mock.calls.length
++    spyHistory.residualResults = digest.mock.results.length
++    spyHistory.residualCallsHighWater = Math.max(spyHistory.residualCallsHighWater, spyHistory.residualCalls)
++    spyHistory.residualResultsHighWater = Math.max(spyHistory.residualResultsHighWater, spyHistory.residualResults)
++    if (checkpoint === "phase") spyHistory.phaseClears++
++    if (checkpoint === "report") spyHistory.reportClears++
++  }
++
++  return {
++    call,
++    onRestore(restore: () => void) { restores.push(restore) },
++    async phase<T>(name: string, work: () => Promise<T>): Promise<T> {
++      if (restored || scopes.getStore()) throw new Error("Diagnostic phases must be awaited and non-overlapping")
++      const before = process.memoryUsage()
++      try { return await scopes.run({ phase: name, path: [] }, () => call(`phase.${name}`, work)) }
++      finally {
++        clearHistory("phase")
++        memory[name] = { before, after: process.memoryUsage() }
++      }
++    },
++    state(port: SfProductStatePort, label: string) {
++      const read = port.read
++      const transaction = port.transaction
++      const invokeRead = read.bind(port)
++      const invokeTransaction = transaction.bind(port)
++      const observedRead: SfProductStatePort["read"] = (request, namespace, reader) =>
++        call(`${label}.read.${namespace}`, () => invokeRead(request, namespace, reader))
++      const observedTransaction: SfProductStatePort["transaction"] = (request, command, work) =>
++        call(`${label}.transaction.${command.namespace}`, () => invokeTransaction(request, command, work))
++      // Keep reader/work identities: C08 selector and write provenance use WeakMaps/Sets.
++      port.read = observedRead
++      port.transaction = observedTransaction
++      restores.push(() => {
++        if (port.read === observedRead) port.read = read
++        if (port.transaction === observedTransaction) port.transaction = transaction
++      })
++    },
++    persistence(port: AssetPersistence & Pick<Persistence, "currentSnapshots" | "readSnapshotRoot">) {
++      const transaction = port.transaction
++      const invoke = transaction.bind(port)
++      const observed: AssetPersistence["transaction"] = (surface, work, options) =>
++        call(`persistence.transaction.${surface}`, () => invoke(surface, (snapshot, blobs) =>
++          call(`persistence.callback.${surface}`, () => work(snapshot, blobs)), options))
++      port.transaction = observed
++      restores.push(() => { if (port.transaction === observed) port.transaction = transaction })
++      const snapshots = port.currentSnapshots
++      if (snapshots) {
++        const observe = () => call("persistence.currentSnapshots", () => snapshots.call(port))
++        port.currentSnapshots = observe
++        restores.push(() => { if (port.currentSnapshots === observe) port.currentSnapshots = snapshots })
++      }
++      const root = port.readSnapshotRoot
++      if (root) {
++        const invokeRoot = root.bind(port)
++        const observe: NonNullable<Persistence["readSnapshotRoot"]> = (work, options) =>
++          call("persistence.readSnapshotRoot", () => invokeRoot(work, options))
++        port.readSnapshotRoot = observe
++        restores.push(() => { if (port.readSnapshotRoot === observe) port.readSnapshotRoot = root })
++      }
++    },
++    snapshot() {
++      clearHistory("report")
++      return {
++        calls, primitives, callbackOrder: { events, sha256: order.copy().digest("hex"), firstEvents: [...examples] },
++        memory, stackCaptureMs, pending, spyHistory: { ...spyHistory },
++        limits: [
++          "Public call durations overlap; do not sum them as exclusive CPU.",
++          "Method counters observe public boundary calls; closure-internal calls are represented by primitive source callsites, not wrapped function counts.",
++          "Primitive timing surrounds exactly the saved synchronous implementation. Stack capture is outside that timing.",
++          "exclusiveMeasuredMs subtracts nested measured primitive time; nested probe bookkeeping remains overhead.",
++          "The observer does not inspect, serialize or additionally clone payloads. Bun spy history is cleared before each digest; its framework may retain the current invocation until the next clear.",
++          "Spy-history high-water and residual counts inspect array lengths only; clear runs before native primitive timing, after each awaited phase before its memory snapshot, and before the report snapshot. Zero residuals do not establish zero in-flight retention.",
++          "Memory snapshots describe the whole observed process, including instrumentation and GC effects; they do not establish product heap, peak allocation or retained-heap bounds. No forced GC.",
++          "This is bounded producer diagnosis, not P03 or a speed-ratio assertion.",
++        ],
++      }
++    },
++    restore() {
++      if (restored) return
++      restores.reverse().forEach((restore) => restore())
++      digest.mockRestore()
++      if (globalThis.structuredClone === clone) globalThis.structuredClone = originalClone
++      restored = true
++    },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/stored-final-detachment.test.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/stored-final-detachment.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..92db0d29ae71b5342f6561640dba6016a634e189
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/stored-final-detachment.test.ts
+@@ -0,0 +1,36 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createWp13AnalysisFixture } from "../wp13/sensitivity-fixture.ts"
++
++test("final scenario snapshots remain independently mutable for duplicate results and revocation still denies", async () => {
++  const fixture = await createWp13AnalysisFixture()
++  try {
++    const resolve = fixture.scenarios.resolveMany
++    if (!resolve) throw new Error("Scenario host missing canonical batch")
++    const references = [fixture.selectedRef, fixture.baselineRef, fixture.selectedRef]
++    const first = await resolve(references, fixture.context)
++    expect(first.map((entry) => entry.status)).toEqual(["ok", "ok", "ok"])
++    if (first[0]?.status !== "ok" || first[1]?.status !== "ok" || first[2]?.status !== "ok") throw new Error("Canonical stored scenarios unavailable")
++    const secondDigest = digestSfValue(first[2])
++    const baselineDigest = digestSfValue(first[1])
++    expect(first[0].value).not.toBe(first[2].value)
++    expect(first[0].value.result).not.toBe(first[2].value.result)
++    ;(first[0].value.result as { knownSubtotal: number | null }).knownSubtotal = -987654
++    expect(digestSfValue(first[2])).toBe(secondDigest)
++    expect(digestSfValue(first[1])).toBe(baselineDigest)
++    const again = await resolve(references, fixture.context)
++    expect(again.map((entry) => entry.status)).toEqual(["ok", "ok", "ok"])
++    expect(digestSfValue(again[2])).toBe(secondDigest)
++    expect(digestSfValue(again[1])).toBe(baselineDigest)
++    if (again[0]?.status !== "ok") throw new Error("Repeated scenario unavailable")
++    expect(digestSfValue(again[0])).toBe(secondDigest)
++    const scalar = await fixture.scenarios.resolve(fixture.selectedRef, fixture.context)
++    expect(digestSfValue(scalar)).toBe(secondDigest)
++    fixture.access.allowed = false
++    const denied = await resolve(references, fixture.context)
++    expect(denied).toHaveLength(3)
++    expect(denied.every((entry) => entry.status !== "ok")).toBe(true)
++  } finally {
++    await fixture.cleanup()
++  }
++}, 120000)

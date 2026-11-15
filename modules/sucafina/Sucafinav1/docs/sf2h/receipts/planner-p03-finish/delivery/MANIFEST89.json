@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h.planner-p03-finish.complete-delivery.v1",
+  "source_branch": "planner-p03-finish",
+  "source_commit": "aa6e8299885a7d415ab9e907f68ddd9d6d300049",
+  "source_tree": "25d54e1b17c9a5decb7434d571d6fe26f4828a61",
+  "base_sha": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+  "mission": 89,
+  "lease_epoch": "planner-p03-browser89",
+  "pr": 95,
+  "origin76": {
+    "sha": "9a7fb8c3c83df886781024d6f548d6523209523f",
+    "W1": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "negative_run": 43673023213,
+    "negative_pass": 58,
+    "p03_original_run": 43673511994,
+    "p03": "FAIL_180s"
+  },
+  "product": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "preimage": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "postimage": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "unchanged_from_current_target_preimages": true,
+      "initial_commit": "900ba649088a367ca070aa6189ddcc3cf18b41c7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "preimage": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "postimage": "c1634b7388216af2da62f1af0d229e2dc78affad",
+      "unchanged_from_current_target_preimages": true,
+      "initial_commit": "900ba649088a367ca070aa6189ddcc3cf18b41c7"
+    }
+  ],
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-fixture.ts",
+      "blob": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+      "origin": "76 relocated; observer diag-probe path adjusted when i=5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-sources.test.ts",
+      "blob": "7013df4178b57b6ea55c55e223749904008095a0",
+      "origin": "76 relocated; observer diag-probe path adjusted when i=5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-cost.test.ts",
+      "blob": "8f0051c478d0ade11b044d95e2928206a008308a",
+      "origin": "76 relocated; observer diag-probe path adjusted when i=5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts",
+      "blob": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+      "origin": "76 relocated; observer diag-probe path adjusted when i=5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-fixture.ts",
+      "blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+      "origin": "76 relocated; observer diag-probe path adjusted when i=5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-probe.ts",
+      "blob": "fdf2758ea7b21de74ea0e15b30f266c5e8f811b9",
+      "origin": "76 relocated; observer diag-probe path adjusted when i=5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/stored-final-detachment.test.ts",
+      "blob": "92db0d29ae71b5342f6561640dba6016a634e189",
+      "origin": "89 new negative-control test"
+    }
+  ],
+  "delivery": {
+    "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/PRODUCT-AND-TESTS89.patch",
+    "patch_lines": 837,
+    "prepostimages": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/result-store.ts.preimage.txt",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/result-store.ts.postimage.txt",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/stored-scenarios.ts.preimage.txt",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/stored-scenarios.ts.postimage.txt"
+    ]
+  },
+  "originalP03": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "original_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "assertion_lines": 72,
+    "budget_ms": 180000,
+    "status": "UNMODIFIED"
+  },
+  "controls": {
+    "R1": {
+      "W": "900ba649088a367ca070aa6189ddcc3cf18b41c7",
+      "S": "f5bc9f431349664d2409e8f04d677d8d7910ead5",
+      "run": 43677135575,
+      "job": 132699649922,
+      "pass": 58,
+      "fail": 1,
+      "diagnostic_relocation_failure": true
+    },
+    "R2": {
+      "W": "aa6e8299885a7d415ab9e907f68ddd9d6d300049",
+      "branch": "ci-run-linux-m89-aa6e8299-diag2",
+      "S": "af1d8d09855d2644622a4db062f624ab72a8a41a",
+      "run": "PENDING"
+    }
+  },
+  "external": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/external/PORTFOLIO-ANALYSIS89.patch",
+    "state": "UNTESTED_FOR_OWNER_71",
+    "product_foreign_mutated": false
+  },
+  "remaining": "P03 dominant nested fanout not corrected by authorized minimal clones; no P03 rerun until causal dominant fix",
+  "GLOBAL_RELEASE": false
+}
