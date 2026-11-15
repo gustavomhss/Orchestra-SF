@@ -178,6 +178,11 @@
       "id": "Q01-AC03",
       "expected": "No zero-selection success and no fake approval through seed.",
       "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "Q01-P0P1",
+      "expected": "Independent P0 title save smoke + P1 admitted PR approval on web and desktop; each proves real effect, CAS/principal/context, denied actor and response-loss without replay. P0 alone is never QUALIFIED pilot.",
+      "status": "PLANNED_NOT_RUN"
     }
   ],
   "gates": {
@@ -223,6 +228,7 @@
       ],
       "consumes_outputs": [
         "U10.queue",
+        "U11.title-save",
         "U13.pr-approval"
       ],
       "scope": "Pilot only: installed web/desktop queue and persisted PR review, two real actors, unauthorized transition, owner-change/late response, response-loss lookup and no write retry. The 15-chapter matrix is written separately and qualified later.",

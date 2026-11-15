@@ -222,6 +222,11 @@
       "id": "Q02-AC03",
       "expected": "Evidence distinguishes design fixtures from installed domain acceptance; reviewer signs initial visual baseline.",
       "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "Q02-P0P1",
+      "expected": "Independent P0 title save smoke + P1 admitted PR approval on web and desktop; each proves real effect, CAS/principal/context, denied actor and response-loss without replay. P0 alone is never QUALIFIED pilot.",
+      "status": "PLANNED_NOT_RUN"
     }
   ],
   "gates": {
@@ -264,12 +269,13 @@
         "S01",
         "S03"
       ],
-      "scope": "Pilot queue and persisted PR approval only: frozen viewport/theme cases, keyboard focus/announcements, copy keys and no private stale projection. Reuses shared fixture; excludes unrelated grid/evidence/collaboration producers.",
+      "scope": "Pilot P0 title save with in-transaction owner fence and P1 real submitted PR approval: frozen viewport/theme cases, keyboard focus/announcements, copy keys and no private stale projection. Reuses shared fixture; excludes unrelated grid/evidence/collaboration producers.",
       "test_files": [
         "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts"
       ],
       "consumes_outputs": [
         "U10.queue",
+        "U11.title-save",
         "U13.pr-approval"
       ],
       "depends_qualification": [
