@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h-independent-visual-review-ack-v1",
+  "mission": 112,
+  "actor": "S1-R1 independent visual reviewer / attempt112",
+  "campaign": "sf2h-integral-20261112",
+  "branch": "export-visual-recheck",
+  "lease_epoch": "visual-review-browser112",
+  "authentication": {
+    "github_login_observed": "gustavomhss",
+    "model_effective": "GPT-6",
+    "session_id": null,
+    "session_id_note": "Session identifier not exposed by the active conversation; not fabricated"
+  },
+  "authority": {
+    "prior_state": "PREPARED_NOT_STARTED",
+    "branch_expected_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "branch_observed_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/R1/browser-112/attempt-001/",
+    "product_editor": false,
+    "ci_dispatcher": false,
+    "only_receipts": true
+  },
+  "immutable_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "inputs": {
+    "mission_blob": "d47b437f95de1f1b58c0abb4c6d0e77a24f71da6",
+    "artifact_id": 14148499941,
+    "run_id": 43682455278,
+    "source_product_c51": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "artifact_snapshot_sha": "243bb2bcb8145f18e47a5dcd5ef638e2bfc5cef0",
+    "artifact_zip_sha256": "ac15e48914aef2e5d496f48c6136901432cda499caa82f8954851d1c748461e1",
+    "manifest_sha256": "e562aeb561e48e5dd205227b44b29e3e35fbba52f8e14bdb001d9bc4cbf46fb6",
+    "c53_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "c53_delta": "529142f63683de8e4b1f7d4232f88faf8ffcef6c..180212940105e7b9ad15171b067c1c1b7841df5f",
+    "xlsx102_new_outputs": "not observed at ACK; historical XLSX files excluded from fix approval"
+  },
+  "separation": {
+    "functional": "job test step success, numeric exit not captured by reader; not FINAL",
+    "technical_render": "PDF/PNG emitted and font embedded; inspect details independently",
+    "visual": "independent page-level evaluation in progress, no global acceptance"
+  },
+  "status": "ACK_ONLY__REVIEW_IN_PROGRESS",
+  "guardrails": [
+    "No product/exporter/reader/test/workflow edits",
+    "No CI dispatch",
+    "No review of own authorship",
+    "No reusing historical XLSX as 102 fix proof",
+    "No temporary signed URL publication",
+    "No FINAL before frozen candidate and delta review"
+  ]
+}
