@@ -1,0 +1,104 @@
+{
+  "schema": "sf2h.product-ci164.checkpoint.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 164,
+  "epoch": "product-ci-e4-browser164",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "github_actor": "gustavomhss",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "predecessor": 150,
+  "predecessor_revocation": "for future writes and dispatch only; historical runs preserved",
+  "ACK_commit": "e1402875e084f833fe7c53034c7ea46fd648066d",
+  "initial_receipts_commit": "3180062426830b7965ba7d750af2dc568bbf4c52",
+  "interim_receipts_commit": "3fa51a30e0d414210b9626acee8e2f0e36f6fe70",
+  "integrator": "162/S0-C-e20-browser162 PR65",
+  "compiler": "163 PR107 separate",
+  "dispatcher": "164 PR106 only",
+  "source_fence_blob": "42172ab6fbcc68b19b9c7cdab5d4c53ef20a86bf",
+  "input_packet_blob": "b4df2c725dc7fc44a086ee083ade7af0467f412b",
+  "runs": [
+    {
+      "run": 43765725305,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "Wtree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+      "S": "84a4a4e0ba96abc0ba091fedffcc2a71d7fb4584",
+      "job": 132970248049,
+      "attempt": 1,
+      "request": "d66edcf7bc1fd75ebfea003195ea1ccf20e46a8d",
+      "conclusion": "failure",
+      "pass": 40,
+      "error": 1,
+      "selected": 6
+    },
+    {
+      "run": 43766390097,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "S": "8d5a17658eb3eda50d4fc4582a888ea11a441a1e",
+      "job": 132972329236,
+      "attempt": 1,
+      "request": "4765cdddc6076c4f804f0d262a12b47810a01ecc",
+      "conclusion": "success",
+      "pass": 49,
+      "fail": 0,
+      "selected": 5
+    },
+    {
+      "run": 43766719584,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "S": "ce21295a321dd6737c53ad2829ee325f63b1ad83",
+      "job": 132973415841,
+      "attempt": 1,
+      "request": "927daa5bcc8a896ff2052eaa8d67489c702c9f3b",
+      "conclusion": "failure",
+      "selected": 0,
+      "pass": 0,
+      "proof": "NONE_ZERO_SELECTION"
+    },
+    {
+      "run": 43766970018,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "S": "f5de1a1f5465ba0166553ea0153d2a338f41efa2",
+      "job": 132974180913,
+      "attempt": 1,
+      "request": "5458c45b1c44dd9ef43ce5aa9c2fd06f8c77658e",
+      "conclusion": "failure",
+      "selected": 4,
+      "pass": 5,
+      "fail": 3,
+      "outer_tests": 8
+    }
+  ],
+  "latest_unqualified_sf2_stack": {
+    "sha": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb",
+    "tree": "545f3125673b04c172343be3eff1da74cc125ff8"
+  },
+  "owner_prs": [
+    135,
+    129,
+    125,
+    119
+  ],
+  "owner_comment_ids": [
+    6901960914,
+    6902140680,
+    6902141131,
+    6902141608
+  ],
+  "integrator_comment_ids": [
+    6901961312,
+    6902142177
+  ],
+  "artifacts": "NONE_ALL_RUNS",
+  "omni": "no positive control; focused runs not applicable, zero selection no proof",
+  "state": "TERMINAL_HANDOFF",
+  "global_release": false,
+  "native_goal": "paused",
+  "fullEPIC_final8": "NOT_RUN_UNTIL_COHERENT_FINAL_BUNDLE",
+  "local_test_validator_parser_typecheck_build": "NOT_RUN",
+  "next_exact_action": "Owner134 PR135 fix installed Effect Schema.minLength all invalid call sites and publish source ACK; owner F03 PR129 correct coverage object and denied chart disclosure; owner S01 PR125 use existing withBrowserPlatform; owner S05 PR119 reconcile controlled textarea. Integrator162 PR65 consumes exact revised postimages with CAS into a new PRODUCT W/tree and acknowledges. CI164 alone then dispatches specific affected decisions/page-frame/s01/s05 on that new W (no unchanged checks). Compiler163 handles its distinct failing hosted run."
+}

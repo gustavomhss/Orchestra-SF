@@ -137,8 +137,8 @@
       "job": 132974180913,
       "attempt": 1,
       "workflow_id": 416464764,
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
       "Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
       "S": "f5de1a1f5465ba0166553ea0153d2a338f41efa2",
@@ -146,13 +146,71 @@
       "request_blob": "5458c45b1c44dd9ef43ce5aa9c2fd06f8c77658e",
       "branch": "ci-run-linux-sf164-browser140141-pathfix-2",
       "os": "ubuntu-24.04",
-      "bun": "PENDING",
-      "files": "PENDING",
-      "cases": "PENDING",
-      "pass": "PENDING",
-      "artifact_count": "PENDING",
-      "omni": "PENDING",
-      "proof_scope": "NOT_YET_COMPLETE"
+      "bun": "1.3.14",
+      "files": 4,
+      "cases": 8,
+      "pass": 5,
+      "artifact_count": 0,
+      "omni": "not applicable focused / no declaring test ran; zero Omni spawn; no Omni qualification",
+      "proof_scope": "CURRENT_W6d42_ONLY; S02 positive alone",
+      "cleanup_job": 132974726065,
+      "cleanup_conclusion": "success",
+      "runner": "ubuntu-24.04",
+      "fail": 3,
+      "expects": 39,
+      "artifacts": [],
+      "control": "non-applicable to focused browser selection",
+      "file_results": {
+        "page-frame.test.ts": {
+          "outer_pass": 0,
+          "outer_fail": 1,
+          "inner_pass": 7,
+          "inner_fail": 2,
+          "cause": "SfStatePanel coverage boolean drops object and denied chart emits old question label"
+        },
+        "s01.test.ts": {
+          "outer_pass": 0,
+          "outer_fail": 1,
+          "inner_pass": 0,
+          "inner_fail": 4,
+          "cause": "LanguageProvider without real PlatformProvider fixture"
+        },
+        "s02.test.ts": {
+          "outer_pass": 1,
+          "outer_fail": 0,
+          "cause": null
+        },
+        "s05.test.ts": {
+          "outer_pass": 4,
+          "outer_fail": 1,
+          "cause": "controlled textarea stale DOM draft while unavailable"
+        }
+      },
+      "log_observation": "2026-11-15T22:03:58Z",
+      "run_completed_at": "2026-11-15T22:04:10Z",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766970018"
     }
-  ]
+  ],
+  "state": "TERMINAL_ALL_FOUR; NO_PRODUCT_DISPATCH_IN_FLIGHT",
+  "summary": {
+    "runs_hosted": 4,
+    "run_results": [
+      "FAILURE",
+      "SUCCESS",
+      "FAILURE_NO_SELECTION",
+      "FAILURE"
+    ],
+    "selected_cases": 98,
+    "outer_cases_qualifying": 98,
+    "pass_observed": 94,
+    "fail_observed": 4,
+    "zero_selection_attempts": 1,
+    "product_release_pass": false,
+    "omni_positive_proof": false,
+    "no_artifacts": true,
+    "W1": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "W2": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+    "global_release": false,
+    "native_goal": "paused"
+  }
 }

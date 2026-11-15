@@ -10,60 +10,139 @@
   "goal": "paused",
   "global_release": false,
   "schema": "sf2h.product-ci164.queue.v1",
-  "in_flight": [
-    43766970018
-  ],
+  "in_flight": [],
   "no_duplicate_dispatch": true,
   "next_after_six": "Await exact terminal browser selection 43766970018. Route real browser failures by owners / PR65 without repeat; keep decisions fix pending from PR135. No broad fullEPIC/final8",
   "hold": [
     {
-      "id": "S01-browser",
-      "reason": "140 fixture and141 grid now integrated at W6d42; third corrected targeted browser run43766970018 active; previous 43766719584 0-selection NOT PASS"
+      "id": "S02 browser",
+      "status": "PASS_ONLY_AT_W6d42",
+      "reason": "S02 1 outer PASS with real platform fixture and updated grid, no identical re-dispatch"
     },
     {
       "id": "A07/A09/A12/A13/A15",
-      "reason": "DONE on W6d42 run43766390097 49/49 source-contract pass; still not final installed/release proof"
+      "status": "PASS_ONLY_AT_W6d42",
+      "reason": "49/49 and source/consumer ACK, not full release; no repeat without changed source/runtime/test"
+    },
+    {
+      "id": "A04 decisions",
+      "status": "HOLD_SOURCE_FIX",
+      "reason": "PR135 new source+162 ACK required; latest W86d retains bad blob"
+    },
+    {
+      "id": "F03/S01/S05",
+      "status": "HOLD_SOURCE_FIX",
+      "reason": "Owner PR129/125/119 deliver postimages and 162 integration ACK; latest W86d retains test/states bad blobs"
     },
     {
       "id": "WP01",
-      "reason": "Bun lifecycle ordering unresolved from 150"
+      "status": "HOLD",
+      "reason": "Bun lifecycle ordering remains external to this scoped CI"
     },
     {
       "id": "Q01/Q02",
-      "reason": "real actor/host/codec proof absent"
+      "status": "HOLD",
+      "reason": "no actual actor/host/codec proof"
+    },
+    {
+      "id": "N15/N18/N23 post-W6d42",
+      "status": "HOLD_UNQUALIFIED",
+      "reason": "new product/i18n leaves in later coherent W; need explicit consumer-ready bounded selection and ownership, no extrapolation"
     },
     {
       "id": "fullEPIC/final8",
-      "reason": "final coherent integrated bundle and AM/independent reviews still required"
+      "status": "HOLD",
+      "reason": "only after coherent final bundle, AM/independent reviews and source fixes"
     }
   ],
   "completed": [
     {
       "run": 43765725305,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
       "conclusion": "failure",
-      "status": "OWNER_FIX",
+      "status": "A04_OWNER_FIX_PENDING",
       "owner_pr": 135
     },
     {
       "run": 43766390097,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
       "conclusion": "success",
-      "status": "HISTORICAL_W6d42_SOURCE_PROOF"
+      "status": "49_PASS_FIXED_FIVE_SOURCE_CONTRACTS_ONLY"
     },
     {
       "run": 43766719584,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
       "conclusion": "failure",
-      "status": "ZERO_SELECTION_NOT_PASS"
+      "status": "ZERO_SELECTION_NOT_PASS",
+      "repaired_request_run": 43766970018
+    },
+    {
+      "run": 43766970018,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "conclusion": "failure",
+      "status": "F03_S01_S05_OWNER_FIX_PENDING_S02_POSITIVE",
+      "owners": [
+        129,
+        125,
+        119
+      ]
     }
   ],
   "owner_repair": [
     {
-      "id": "A04 decisions",
+      "owner": "134/A04 decisions",
       "pr": 135,
-      "blob": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
-      "cause": "Schema.minLength undefined at :44, 62 uses; 0 assertions",
-      "owner_comment_id": 6901960914,
+      "comment_id": 6901960914,
       "integrator_comment_id": 6901961312,
-      "need": "Owner revise all incompatible usages preserve strict parsing and negative oracles; 162 integrate actual new blob; then decisions-only recheck once"
+      "blocker": "Schema.minLength undefined 62 sites",
+      "source_path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "blob": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "first_line": 44,
+      "recheck_on_new_W": "Sucafinav1/test/native-ui-contract/decisions.test.ts"
+    },
+    {
+      "owner": "F03 shared frame/states",
+      "pr": 129,
+      "comment_id": 6902140680,
+      "integrator_comment_id": 6902142177,
+      "blocker": "boolean Show loses actual coverage at states/index.tsx:58-59; denied chart question label leaked at frame/index.tsx:283",
+      "source_blobs": [
+        "7084c442f96e3b7d0f91b66027118df6eb003ebc",
+        "06165f1ac7c6b9918a712570caa6a076559f2ec7"
+      ],
+      "recheck_on_new_W": "./test-browser/sucafina-native/page-frame.test.ts"
+    },
+    {
+      "owner": "S01 table/detail",
+      "pr": 125,
+      "comment_id": 6902141131,
+      "integrator_comment_id": 6902142177,
+      "blocker": "test S01 mounted LanguageProvider without actual PlatformProvider even after fixture140 integrated",
+      "test_path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "test_blob": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+      "first_line": 120,
+      "recheck_on_new_W": "./test-browser/sucafina-native/s01.test.ts"
+    },
+    {
+      "owner": "S05 collaboration thread",
+      "pr": 119,
+      "comment_id": 6902141608,
+      "integrator_comment_id": 6902142177,
+      "blocker": "controlled textarea remains new comment instead of canonical original draft after unavailable",
+      "source_path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "source_blob": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+      "line": 321,
+      "test_path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "test_line": 156,
+      "recheck_on_new_W": "./test-browser/sucafina-native/s05.test.ts"
     }
-  ]
+  ],
+  "state": "TERMINAL_NO_INFLIGHT",
+  "next_action_exact": "Owner134 PR135 fix installed Effect Schema.minLength all invalid call sites and publish source ACK; owner F03 PR129 correct coverage object and denied chart disclosure; owner S01 PR125 use existing withBrowserPlatform; owner S05 PR119 reconcile controlled textarea. Integrator162 PR65 consumes exact revised postimages with CAS into a new PRODUCT W/tree and acknowledges. CI164 alone then dispatches specific affected decisions/page-frame/s01/s05 on that new W (no unchanged checks). Compiler163 handles its distinct failing hosted run.",
+  "latest_sf2_stack_head": {
+    "sha": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb",
+    "tree": "545f3125673b04c172343be3eff1da74cc125ff8",
+    "not_executed": true,
+    "not_relabelled_as_W1_or_W2": true
+  }
 }

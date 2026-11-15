@@ -212,18 +212,58 @@
       "run": 43766970018,
       "attempt": 1,
       "job": 132974180913,
-      "status": "in_progress",
-      "conclusion": null,
-      "selected_test_count": "PENDING",
-      "control": "PENDING",
-      "omni": "PENDING",
-      "artifact_count": "PENDING"
+      "status": "completed",
+      "conclusion": "failure",
+      "selected_test_count": 4,
+      "control": "No Omni positive control, no delegation; path-selected app-shell tests only",
+      "omni": "NOT_APPLICABLE_FOCUSED_NO_SPAWN",
+      "artifact_count": 0,
+      "outer_cases": 8,
+      "pass": 5,
+      "fail": 3,
+      "expects": 39,
+      "cleanup_job": 132974726065,
+      "per_file": {
+        "page-frame.test.ts": "1 outer FAIL; 7/9 inner pass",
+        "s01.test.ts": "1 outer FAIL; 0/4 inner pass",
+        "s02.test.ts": "1 outer PASS",
+        "s05.test.ts": "4 outer PASS / 1 outer FAIL"
+      },
+      "relevant_fixture_blobs": {
+        "platform-fixture.ts": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+        "shared/monthly-grid/index.tsx": "dc4410482ac81171d2c779c2a93240c236a42dc2",
+        "shared/table/index.tsx": "5523d9cc6680f8461e4f2a5ef31c687a7432dfbd",
+        "page-frame.test.ts": "aa17ece934eb35f54602b6de99bcc39da39d1fed",
+        "s01.test.ts": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+        "s02.test.ts": "ea1a18fe9c5b39d6ed7c719fe8cf3f2916ab1d5e",
+        "s05.test.ts": "f7d032d5fdded022f40270727035577ae08228db"
+      }
     }
   ],
   "latest_material_observed": {
-    "W": "0a627968dc73dd9585d77ba239b76292254c4c41",
-    "tree": "f306a2e1ebea7a10e8b93c40b11e98572ec308f3",
-    "unqualified_by_these_runs": true,
-    "changes": "N15/N18/N23 new product/i18n leaves; do not relabel W"
+    "W": "86d5076dd955ee58cca485cbbbd90f240f2a0cdb",
+    "tree": "545f3125673b04c172343be3eff1da74cc125ff8",
+    "classification": "LATEST_HEAD_ONLY_NOT_PROVEN_BY_CI164; post W6d42 has N15/N18/N23 product leaves and docs consumer ACK140–145/158; no decision/F03/S01/S05 repair in those newer commits",
+    "changed_relevant_blobs": false,
+    "decisions_blob_unchanged": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+    "s01_test_blob_unchanged": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+    "F03_states_blob_unchanged": "7084c442f96e3b7d0f91b66027118df6eb003ebc",
+    "source_consumer_ack_b03b04": "aaa07e25b275a45255877e0b98ed86191b379cbc"
+  },
+  "execution_scope": "4 hosted Actions workflows: 1 required native-six, 1 scoped A07/A09/A12/A13/A15, 1 browser zero-selection (NOT PASS), 1 corrected browser exact selection. No unchanged rerun, local tests, parser, validator, typecheck or build.",
+  "workflow_config": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "app_package_blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+    "app_bunfig_blob": "747797ac5c38cf6eeba52985e7df59a05f4ed172",
+    "sucafina_package_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+    "sucafina_bunfig_blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+    "bun_lock_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "installed_bun": "1.3.14",
+    "runner": "ubuntu-24.04",
+    "env_all": {},
+    "explicit_test_selection": true,
+    "temporary_snapshot_only": ".ci-run.json"
   }
 }
