@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.mixed-source-contracts.m31-prerequisite.v1",
+  "mission": 61,
+  "state": "HELD_PREREQUISITE_REFUSAL_VERIFIED",
+  "finding": "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+  "related": [
+    "M31-FINANCIAL-APPROVAL",
+    "MI07"
+  ],
+  "owner": "S0/WP00 financial/C12 contract; authorized Procurement producer successor",
+  "W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+  "W_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+  "source_mechanism": {
+    "producer": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts#prepareDomainCommands",
+    "dependency": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts#prepareScenario",
+    "capturer": "captureSource is reached only after every real prepared command succeeds",
+    "current_refusal": {
+      "status": "needs-input",
+      "reason": "financial-approval-command-unavailable"
+    }
+  },
+  "source_test": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+  "required_owner_decision": "Define and release a compatible canonical approval/admission for the unwritten replacement amount, with its exact actor, holder, policy, target/source incarnation, case/choice/version and command digest; do not infer this authority from an existing choice or original-record approval.",
+  "original_acceptance_chain": [
+    "Original Procurement amount100",
+    "Chosen replacement150",
+    "Canonical prepare returns ok with exactly one valid command",
+    "Genuine protected original capture before later edit",
+    "Authorized original remains readable as historical across legitimate scope rotation; original content/version/fields/period retained",
+    "Broken physical lineage and authority revocation suppress the private original and grants"
+  ],
+  "bounded_continuation": "After explicit contract/producer release, compose exact authorized preimages on a new material W, add the real historical-positive and private-original negatives, then request surgical Actions with45 compiler checks and60 intake. No unchanged MI07 retry without that prerequisite.",
+  "prohibited": [
+    "Fake private archive/digest/grant",
+    "No-op or changed acceptance assertions",
+    "Approval-stage edits under61",
+    "Memory/runtime/source-lifecycle owner59 file changes",
+    "Replacing original100->choice150 journey with submit/approve/edit success"
+  ],
+  "runtime_result": {
+    "run": 43668842101,
+    "job": 132674151887,
+    "test": "real C08 Procurement preparation exposes the M31 blocker and cannot manufacture an original capture",
+    "status": "PASS_FOR_REFUSAL_ONLY",
+    "http_status": 400,
+    "producer_status": "needs-input",
+    "reason": "financial-approval-command-unavailable",
+    "archive_before": 0,
+    "archive_after": 0,
+    "prepared_changes": 0,
+    "snapshots_case_receipts": "unchanged"
+  },
+  "C17_positive": "NOT_EXERCISED_HELD",
+  "M31_closed": false,
+  "MI07_closed": false,
+  "GLOBAL_RELEASE": false,
+  "scope": "This request does not authorize a financial-policy or approval-stage edit under61. Original archived-positive and old-private-original negatives must remain absent until genuine preparation/capture exists."
+}

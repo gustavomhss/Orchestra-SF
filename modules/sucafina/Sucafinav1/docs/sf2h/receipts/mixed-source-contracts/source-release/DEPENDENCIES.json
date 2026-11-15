@@ -1,0 +1,306 @@
+{
+  "schema": "mission61-dependency-closure-v1",
+  "material_source_sha": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+  "material_source_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "base_tree": "12594fd5a48f934847db717dd872d51776484296",
+  "closure_basis": "The complete immutable material repository tree is the dependency closure, including all unchanged source, package exports, lockfile, configuration and fixtures. This receipt lists direct contract dependencies and build/runtime anchors for review; it does not claim to copy or enumerate every transitive dependency.",
+  "changed_unit": [
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "preimage": "5a0592e200e14fa801b1ed24150384070ea5298b",
+      "postimage": "a59f695365a71614f6189eb6f2c2737c83ba233d"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "preimage": "d2158a10de3473edc5f5d509f3215e84140a8382",
+      "postimage": "910701c103aba2866258adf2f3c99fc0bca28b11"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "preimage": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+      "postimage": "c6bdeb197675406c933046fb5ede19e92cc047e7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "preimage": null,
+      "postimage": "76ce8b8fb5d7e17ddc33002d239771a7260a9e65"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "preimage": null,
+      "postimage": "9a44cca3e2e34f578e7d9d76458a83068371ff44"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "preimage": null,
+      "postimage": "6089391e6aaedcedc2ca2df8d0684ee25d930c94"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+      "preimage": null,
+      "postimage": "8007eccb9dbf0813d4930f4a5b0a99657809c3fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "preimage": null,
+      "postimage": "bf80dc2fe3a31a1953ee9c45a9e8a97c7de6cf66"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "preimage": null,
+      "postimage": "50e5e76f9c82687a303c3f70d664cfd97f1d33d8"
+    }
+  ],
+  "direct_contract_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "blob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "blob": "ddc5323d714c58de2d5b47eed2563176099f15b5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+      "blob": "0ff544b39f61a26cea6d15c238a88217ef7e6130"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-inputs.ts",
+      "blob": "f2a49fc79880ccb204184c6c83e957bab97b483f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/fixture.ts",
+      "blob": "9d6a7cb0fb172d9f614a7f6b5840ccc5050d5e02"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/fixture.ts",
+      "blob": "d66efca4ffc076b6c709cec2fcccf6b024b26fb1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/choice.ts",
+      "blob": "a52426bdec23ed61fac29ba84e85e7b7d101a3f3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "blob": "24dda67176121efe50f91148d6b2291a4f975d4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "blob": "2b198e3a3f51c6c4e1abbc3a9a8cf77a18a2183d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "blob": "f65b117800e417fdcc302f362294a1af534b5af1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "blob": "13153182e357b716a12d2554654905d54fa30ee4"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/alternative-captures.ts",
+      "blob": "9e2bc584c80844b213b026351d766bd6ae5eba09"
+    },
+    {
+      "path": "apps/cli/bunfig.toml",
+      "blob": "b63db7a054a18092d613327093aaec2acba606b2"
+    },
+    {
+      "path": "apps/cli/package.json",
+      "blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "blob": "51895f3c254e6020d116ca73d4a1c690f7562169"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "blob": "ab9814817d11c0b477636ee54d1b2763d365f405"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "blob": "4f94c3355074db43dcc4acaab09e14be9150767c"
+    }
+  ],
+  "repository_anchors": [
+    {
+      "path": ".github",
+      "kind": "tree",
+      "sha": "4b2e41e6261eac6c1eba41d406f4f7dc85f3a32a"
+    },
+    {
+      "path": "AGENTS.md",
+      "kind": "blob",
+      "sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "bun.lock",
+      "kind": "blob",
+      "sha": "e3f0c6443c12dd16cb66030f75e2f71f16508098"
+    },
+    {
+      "path": "bunfig.toml",
+      "kind": "blob",
+      "sha": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb"
+    },
+    {
+      "path": "package.json",
+      "kind": "blob",
+      "sha": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+    },
+    {
+      "path": "packages",
+      "kind": "tree",
+      "sha": "3ab5ce13846296cd044f86c0f275ae785c2508bb"
+    },
+    {
+      "path": "script",
+      "kind": "tree",
+      "sha": "b9034a050b8a4016b3f7947c7d1ee1cd36f2ee5c"
+    },
+    {
+      "path": "tsconfig.json",
+      "kind": "blob",
+      "sha": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d"
+    }
+  ],
+  "ci_authority": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    }
+  ],
+  "target_checkpoint": {
+    "branch": "sf2-stack",
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "owned_product_paths_changed_since_base": [],
+    "consumed_dependency_changed": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "source_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "target_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+        "observed_delta": "Read operations now propagate identity resolution uncertainty instead of swallowing it."
+      }
+    ],
+    "integration_rule": "Explicitly authorized60 resumption/successor must reread authority and every preimage, compose all9 functional files, retain current target changes and requalify the composed tree. This source release supplies candidate-preparation authorization only; it grants no stack-writer lease.",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "material_candidate": "C28",
+    "material_sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "material_tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "docs_only_successor": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "authority60_state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "authority60_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9"
+  },
+  "direct_import_inventory": {
+    "file": "IMPORT-CLOSURE.json",
+    "postimages": 9,
+    "imports": 92,
+    "repo_targets": 44,
+    "unresolved": 0,
+    "scope": "Static direct imports; builtins and pinned external packages classified. Full immutable W3 tree pins all unchanged transitive inputs."
+  }
+}

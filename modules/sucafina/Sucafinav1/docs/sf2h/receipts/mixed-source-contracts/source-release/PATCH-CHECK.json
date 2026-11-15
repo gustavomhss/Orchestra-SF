@@ -1,0 +1,57 @@
+{
+  "schema": "sf2h.mission61.patch-text-reconstruction.v1",
+  "state": "PASS_TEXT_RECONSTRUCTION_ONLY",
+  "method": "Apply the complete unified patch to isolated exact preimage text files using local git apply --check then git apply. Hash and byte-compare all nine reconstructed postimages. No product modules/tests/typecheck/build were executed.",
+  "source_sha": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+  "source_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+  "patch_sha256": "9a6ce9d90cbffea31596aa339183a1c0b9e4c533289749cb9041891d878ef62b",
+  "preimages": 3,
+  "postimages": 9,
+  "results": [
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "postimage": "a59f695365a71614f6189eb6f2c2737c83ba233d",
+      "exact": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "postimage": "910701c103aba2866258adf2f3c99fc0bca28b11",
+      "exact": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "postimage": "c6bdeb197675406c933046fb5ede19e92cc047e7",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "postimage": "6089391e6aaedcedc2ca2df8d0684ee25d930c94",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "postimage": "50e5e76f9c82687a303c3f70d664cfd97f1d33d8",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "postimage": "76ce8b8fb5d7e17ddc33002d239771a7260a9e65",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+      "postimage": "8007eccb9dbf0813d4930f4a5b0a99657809c3fa",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "postimage": "bf80dc2fe3a31a1953ee9c45a9e8a97c7de6cf66",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "postimage": "9a44cca3e2e34f578e7d9d76458a83068371ff44",
+      "exact": true
+    }
+  ]
+}

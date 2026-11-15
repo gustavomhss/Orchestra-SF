@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h.mixed-source-contracts.compiler-request.v1",
+  "mission": 61,
+  "owner": 45,
+  "state": "PUBLISHED_REQUEST_NOT_EXECUTED",
+  "W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+  "W_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+  "branch": "mixed-source-proof",
+  "PR": 73,
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "apps/cli",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_ref": "origin/dev",
+      "reconfirm_base_at_execution": true,
+      "base_resolution": "Fetch/reconfirm actual origin/dev inside authorized Actions; no stale base SHA is asserted here."
+    }
+  ],
+  "scope": "Three authorized CLI producer files and six owned test/helpers. No public Protocol/HttpApi, generated artifacts, engine, runtime, approval stage, CI workflow or guard change.",
+  "generation": "No generation requested for this delta; inherited final-candidate generation/spawn gates remain owned by45 where applicable.",
+  "prior_interface_observation": {
+    "branch": "astra-compose",
+    "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "scoped_workflow": ".github/workflows/sf2-scoped-check.yml",
+    "state": "ABSENT_AT_REVIEW_READ_ROOT_REPORTS_RECONFIRMED_CURRENT_D317",
+    "ownership": "45 only; do not seize foreign check refs or modify workflows"
+  },
+  "acceptance_evidence": [
+    "Exact executed W/tree and any compiler snapshot S/tree",
+    "Command/cwd/effective config/toolchain/base identity",
+    "Real run/job/attempt/full logs/conclusion and counts where relevant",
+    "All findings fixed or held explicitly; no waived guard/approval labels",
+    "Receipt-only source delivery guard and current composed-candidate gates remain unexecuted; this request does not create a workflow or move owner45 refs."
+  ],
+  "dedup": "Reuse only exact source tree, command/config and valid evidence. Do not duplicate in-flight equivalent key.",
+  "results": {
+    "sucafina_typecheck": "NOT_RUN",
+    "cli_typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "ACK": "NOT_OBSERVED",
+  "source_tests_are_not_compiler_proof": true,
+  "GLOBAL_RELEASE": false,
+  "requested_at": "2026-11-15 02:53:20 UTC",
+  "source_gate_result": "Owned functional tests33PASS, selected runFAIL13 inheritedM31; does not establish typecheck/guards.",
+  "delivery_envelope_guard": {
+    "target": "CONTAINING_TERMINAL_COMMIT",
+    "command": "bun run check:guards --base origin/dev",
+    "cwd": ".",
+    "status": "NOT_RUN_OWNER45",
+    "rule": "Resolve actual terminal SHA/tree from PR73 and Git before execution. Receipt-only identity/readback is not a guard PASS or global D/G8."
+  }
+}

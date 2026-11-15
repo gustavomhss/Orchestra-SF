@@ -1,0 +1,123 @@
+{
+  "schema": "sf2h.mixed-source-contracts.terminal-authority.v1",
+  "mission": 61,
+  "state": "HANDOFF_TERMINAL_SOURCE_LEASE_ENDED_WITH_HELD_ACCEPTANCE",
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S0-C composition/authority qualification",
+  "branch": "mixed-source-proof",
+  "lease_epoch": "mixed-contracts-browser61",
+  "binding": {
+    "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "ack_sha": "2b22b080b2673c7942351b8f05c2655a038aeebb",
+    "W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "W_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+    "S": "7dc844027be65913de226178f2b11a9f682d5396",
+    "S_tree": "dfd4d27cbcf7053ace16d9053a4a24f022fe0e51",
+    "request_blob": "d0e890453415092636f1f692b05ddc08dac3a9b2",
+    "request_sha256": "7e5c32fe73dfd39aa4257365ca8729a3e584a8626e67e0a2d6948e645ee74b8c",
+    "run": 43668842101,
+    "job": 132674151887,
+    "cleanup_job": 132675184074,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101"
+  },
+  "session_model": {
+    "host_label": "GPT-6 Astra Pro",
+    "effective_provider_model_id": null,
+    "reason": "Host supplied label; no provider execution ID exposed."
+  },
+  "platform_session_id": null,
+  "source_lease": {
+    "writer": "/root",
+    "ended": true,
+    "ended_at": "Effective on successful terminal publication CAS; declaration time above and enclosing commit timestamp are provenance.",
+    "final_active_own_runs": 0,
+    "source_branch_runs": 0,
+    "run_cleanup": "All four own CI refs absent after workflow cleanup, verified through GitHub MCP.",
+    "reason": "All authorized independent implementation/proofs, full source unit and actual results are delivered. Remaining financial/native/integrated/owner45 prerequisites are explicit holds. No further source writes by61 are authorized by this terminal."
+  },
+  "final_material_candidate": {
+    "sha": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+    "selection": "ci/attempt-3/request.json",
+    "owned_tests": "33 PASS / 0 FAIL",
+    "selected_run": "43 PASS / 13 FAIL; workflow FAILURE"
+  },
+  "terminal_identity": {
+    "rule": "The terminal commit/tree are the Git objects containing this finalized receipt, identified and read back in PR73; no self SHA is precomputed.",
+    "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/TERMINAL-AUTHORITY.json",
+    "containing_commit": "CONTAINING_COMMIT",
+    "containing_tree": "CONTAINING_COMMIT_TREE"
+  },
+  "delivery": {
+    "draft_PR_number": 73,
+    "draft_PR_url": "https://github.com/gustavomhss/Orchestra-SF/pull/73",
+    "base_branch": "sf2-stack",
+    "source_release_state": "COMPLETE_BOUNDED_SOURCE_RELEASE_WITH_HELD_ACCEPTANCE",
+    "release": "SOURCE-RELEASE.json",
+    "complete_patch": "source-release/complete.patch",
+    "patch_manifest": "source-release/FILES.json",
+    "dependency_closure": "source-release/DEPENDENCIES.json",
+    "direct_import_inventory": "source-release/IMPORT-CLOSURE.json",
+    "criteria_trace": "CRITERIA.json",
+    "CI_ledger": "ci/LEDGER.json",
+    "compiler_request": "checks/REQUEST-45.json",
+    "handoff": "HANDOFF60.md"
+  },
+  "consumers": [
+    {
+      "mission": 60,
+      "role": "Historical sole sf2-stack integrator after57; lease now explicitly ended at faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "ACK": "NOT_OBSERVED",
+      "request_state": "PUBLISHED_IN_THIS_SOURCE_RELEASE",
+      "next_action": "Explicitly authorized60 resumption/successor may review this full unit, reconcile preimages and prepare a candidate. No automatic stack-writer authority or ACK is inferred."
+    },
+    {
+      "mission": 45,
+      "role": "Compiler/generation/check workflow owner",
+      "ACK": "NOT_OBSERVED",
+      "request_state": "PUBLISHED_IN_checks/REQUEST-45.json",
+      "results": "NOT_RUN"
+    },
+    {
+      "mission": "S0/WP00",
+      "role": "Financial/C12 prerequisite decision",
+      "ACK": "NOT_OBSERVED",
+      "request_state": "PUBLISHED_IN_checks/M31-S0.json"
+    }
+  ],
+  "acceptance": {
+    "source_only": true,
+    "integrated": false,
+    "full_criteria_promoted": 0,
+    "GLOBAL_RELEASE": false,
+    "C17_procurement_historical_positive": "HELD_M31",
+    "procurement_old_private_original_recreation": "HELD_M31",
+    "mixed_recorded_fallback": "SOURCE_CONTRACT_PASS",
+    "mixed_between_reads": "SOURCE_CONTRACT_PASS",
+    "M31": "OPEN",
+    "MI07": "OPEN",
+    "typecheck": "NOT_RUN_OWNER45",
+    "guards": "NOT_RUN_OWNER45"
+  },
+  "closure_declaration_at": "2026-11-15 02:56:24 UTC",
+  "activation": "Effective only after this terminal receipt is published to mixed-source-proof by successful expected-SHA CAS. The commit containing it and the subsequent readback in PR73 establish publication; no own SHA is invented inside the file.",
+  "execution": {
+    "local_product_tests": 0,
+    "local_typechecks": 0,
+    "local_builds": 0,
+    "hosted_scoped_dispatches": 4,
+    "epic_dispatches": 0,
+    "workflow_edits": 0,
+    "foreign_ref_writes": 0,
+    "source_ref_updates": "ACK, three material commits, terminal evidence publication; GitHub MCP/CAS only",
+    "dev_merge": 0,
+    "deploy": 0,
+    "financial_policy_changes": 0
+  },
+  "live_target": {
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "authority_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "state": "60_LEASE_ENDED_NO_AUTOMATIC_SUCCESSOR"
+  }
+}

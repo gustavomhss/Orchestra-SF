@@ -1,0 +1,48 @@
+{
+  "schema": "mission61.independent-cold-review.v1",
+  "reviewer": "/root/ci_authority_review",
+  "verdict": "NO_STATIC_BLOCKER_FOR_SCOPED_ACTIONS",
+  "method": "Read complete final changed source and tests; inspect diffs against GitHub MCP base and relevant real authority/BCS/source-fence contracts. No execution.",
+  "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "reviewed_sha256": {
+    "apps/cli/src/sucafina-product/scenario-operation-access.ts": "4dd40745d465fed480e5e95f7a40809f55a060997da7f34a7ba7b1cb96d58736",
+    "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts": "cd0958e9d6438c039a9ed026773eaf75c95f106051851849f7779d3596328228",
+    "apps/cli/src/sucafina-product/procurement-composite-planner.ts": "ae8250bdc2d37846e4bcd181395c6d2bd884ad6af12004490966115030e2bbf8",
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts": "d292831ac2cced4f3f7b4b62c6c57dd8cf8c02472bd39ff5dca21c277f90642a",
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts": "ac774354d38026ab65dd6e0a24e6a5804bcf790d96c810addd66676d08f5e33d",
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts": "2a5adaea8338bf26a8948743fc4af90ffd8ccaaa52ca40ef863ecc0e2247d563",
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts": "78afb88359946b997a75b73c1f9bca41874c0109c2a634f9e2877e520d9cb46f",
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts": "20e53d4435efdd62d5ebd06506a67a9587764f9180009e3f0faa229bd7b9da32",
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts": "fd0ed24fc6acaacb8e2102c151b8c1b4145a0e0253f8549d20afcca3baf0e579"
+  },
+  "findings_resolved_in_patch": [
+    "Recorded mixed verifier independently reauthorizes external Procurement after Planner observations and compares stable full resolution digests with pre-Planner observations",
+    "Request identity and method/url/header digest retained across relevant guards",
+    "Composite preview checks captured authority again after its final awaited revalidation",
+    "Direct recorded verifier regression test prevents outer source-fence masking",
+    "Final-await tests inspect producer output before the outer case guard can suppress it"
+  ],
+  "normalization": "Cloned external observations retain original/current evidence, full authority, content, differences and projection. Only checkedAt and fresh SourceRef observedAt are normalized; historical projection bytes remain exact.",
+  "real_producer_evidence_design": "Planner/Procurement sources and mixed scenario use production code. Planner protected capture uses emitFromLedger and a real pinned scanner. Identity, C08 membership, accepted-event/outbox fixture are explicitly synthetic; no private archive or source grant is seeded.",
+  "test_selection_nominal": {
+    "authority_egress": 15,
+    "recorded_fallback": 3,
+    "procurement_lifecycle": 12,
+    "capture_prerequisite": 1,
+    "total": 31,
+    "meaning": "Static declared expectation only, not actual selected/executed counts"
+  },
+  "held": [
+    "C17 Procurement historical/scope-rotation positive cannot be qualified without reachable canonical original capture; current preparation reports financial-approval-command-unavailable",
+    "M31 and MI07 remain open",
+    "No decision-host hardening justified solely by an unexercised hypothetical historical branch",
+    "No typecheck, guards, runtime PASS, native acceptance, installed-HTTP acceptance, financial approval or global release is claimed"
+  ],
+  "actions": {
+    "product_mutations": 0,
+    "remote_mutations": 0,
+    "local_tests": 0,
+    "typechecks": 0,
+    "dispatches": 0
+  }
+}

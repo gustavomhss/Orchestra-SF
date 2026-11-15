@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.mission61.source-release.v1",
+  "mission": 61,
+  "state": "COMPLETE_BOUNDED_SOURCE_RELEASE_WITH_HELD_ACCEPTANCE",
+  "binding": {
+    "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "ack_sha": "2b22b080b2673c7942351b8f05c2655a038aeebb",
+    "W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "W_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+    "S": "7dc844027be65913de226178f2b11a9f682d5396",
+    "S_tree": "dfd4d27cbcf7053ace16d9053a4a24f022fe0e51",
+    "request_blob": "d0e890453415092636f1f692b05ddc08dac3a9b2",
+    "request_sha256": "7e5c32fe73dfd39aa4257365ca8729a3e584a8626e67e0a2d6948e645ee74b8c",
+    "run": 43668842101,
+    "job": 132674151887,
+    "cleanup_job": 132675184074,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101"
+  },
+  "branch": "mixed-source-proof",
+  "draft_PR": {
+    "number": 73,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/73",
+    "base": "sf2-stack"
+  },
+  "unit": {
+    "files": 9,
+    "modified": 3,
+    "added": 6,
+    "manifest": "source-release/FILES.json",
+    "patch": "source-release/complete.patch",
+    "patch_sha256": "9a6ce9d90cbffea31596aa339183a1c0b9e4c533289749cb9041891d878ef62b",
+    "preimages": "source-release/pre/",
+    "postimages": "source-release/post/",
+    "dependencies": "source-release/DEPENDENCIES.json",
+    "imports": "source-release/IMPORT-CLOSURE.json"
+  },
+  "activation": {
+    "effective_on": "Successful CAS publication of the containing terminal receipt commit to mixed-source-proof.",
+    "permitted_now": "Prepare a coherent candidate from the complete9-file unit after explicit authority for60 resumption/successor and exact preimage reconciliation. Preserve all stated holds and rerun affected contracts on the composed tree.",
+    "not_granted": [
+      "Stack-writer lease",
+      "Automatic merge",
+      "Source-test transfer to C28 or later candidate",
+      "Financial replacement approval",
+      "C17 Procurement historical-positive acceptance",
+      "Global C/G7 or D/G8 release"
+    ]
+  },
+  "verification": {
+    "owned_tests": "33PASS0FAIL",
+    "selected_run": "43PASS13FAIL56tests588assertions",
+    "overall_workflow": "failure",
+    "omni": "pass;6actualspawns0delegated",
+    "baseline": "9PASS14FAIL; same13M31 failures plus canonical mixed guard now repaired",
+    "compiler": "REQUESTED_45_NOT_RUN",
+    "reviews": [
+      "reviews/COLD-REVIEW-W1.json",
+      "reviews/COLD-REVIEW-W3.json",
+      "reviews/RUNTIME-REVIEW-W3.json",
+      "reviews/PROCUREMENT-FINAL.json"
+    ]
+  },
+  "held": [
+    "Original C17 Procurement archive and historical scope-rotation positive",
+    "C17 Procurement old-private-original tombstone/recreation negative",
+    "M31/MI07 preparation and approval prerequisites",
+    "13 inherited consumer scenarios stop before their intended assertions",
+    "Owner45 typechecks/guards",
+    "Authorized successor/resumption and consumer60 ACK",
+    "Integrated final eight selections,AM01–06,three FINAL reviews,C/G7,D/G8"
+  ],
+  "GLOBAL_RELEASE": false
+}

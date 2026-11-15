@@ -1,0 +1,93 @@
+{
+  "schema": "mission61.readonly-ci-and-authority-review.v1",
+  "actor": "/root/ci_authority_review",
+  "role": "Read-only investigation and delegated normative-pack reading",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "control_sha_observed": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "actor_pack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "sha256": "13920c12c937ceaead61d4e7ec7ecd31689cb9a1e5027fea41fa11deb9272521",
+    "keys_fully_read": [
+      "resident",
+      "resident_ui",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_packaging",
+      "numeric_oracles",
+      "ci_plan",
+      "mandatory_appendices",
+      "execution_proofs",
+      "proof_bindings",
+      "evidence"
+    ],
+    "method": "All requested key values printed in bounded, non-truncated partitions and inspected"
+  },
+  "appendices": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "sha256": "763c71b9ef1650b3b2982aacd80051347bffc0430f3007213dc14617666e080a",
+      "read": "FULL"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "sha256": "eae73893db9a6241a1b8638ea94bd78a2f029c53de270570c89ec5593879f557",
+      "read": "FULL"
+    }
+  ],
+  "inherited_gate_queue": {
+    "file": "/workspace/scratch/bcc81f6a024b/read-cache/gate-queue-final.json",
+    "sha256": "08a66ce9550472b141da1c1d38c14459110f64bc59887dcde6bf549d32ea3248",
+    "read": "FULL_ALL_TOP_LEVEL_KEYS",
+    "method": "Inspected every key; long functional requests, request files, preserved source requests and compiler queue split into bounded non-truncated partitions",
+    "mission61_limits": [
+      "Original C17 historical positive requires a genuine reachable canonical capture",
+      "Scope rotation may change scoped incarnation but must preserve archived physical lineage",
+      "Recorded mixed fallback independently reauthorizes original Procurement and every Planner original",
+      "Same visible ID after physical tombstone/recreation cannot recover the original",
+      "Inter-observation authority, Request, lease, case or source drift yields no private result, promotion or financial effect",
+      "Comparison normalization may not remove authority or content",
+      "M31 and MI07 remain held without actual prerequisite; no fake archive or approval",
+      "No source-green transfer, duplicate dispatch, ninth final recipe or global release"
+    ]
+  },
+  "ci": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "request_validator": "script/test-ci-request.ts",
+    "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "canonical_interface": "MCP W commit, S child changing only .ci-run.json; create unique ci-run-linux-* directly at S; existing push workflow consumes request",
+    "active_minimal_request_fields": [
+      "package",
+      "runner",
+      "args",
+      "env"
+    ],
+    "package": "sucafina",
+    "execution_directory": "modules/sucafina",
+    "per_owner_max_inflight": 1,
+    "dedup_key": [
+      "product_candidate_sha",
+      "product_tree_hash",
+      "normalized_request_hash",
+      "workflow_and_validator_source_identity",
+      "effective_runtime_and_config_identity",
+      "fixture_and_test_selection_identity"
+    ]
+  },
+  "compiler": {
+    "owner": 45,
+    "branch": "astra-compose",
+    "observed_head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "scoped_interface": "NOT_OBSERVED",
+    "action": "Write exact W/tree package bun typecheck and guards request in mission61 receipts for45; no foreign check ref/workflow write"
+  },
+  "limits": {
+    "product_mutations": 0,
+    "remote_mutations": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "workflow_dispatches": 0,
+    "scope_status": "READ_ONLY_NO_PRODUCT_PASS"
+  }
+}

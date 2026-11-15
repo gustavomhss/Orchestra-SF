@@ -1,0 +1,382 @@
+{
+  "schema": "sf2h.mixed-source-contracts.criterion-trace.v1",
+  "mission": 61,
+  "state": "SCOPED_SOURCE_PROOFS_DELIVERED_WITH_EXPLICIT_HELD_CRITERIA",
+  "binding": {
+    "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "ack_sha": "2b22b080b2673c7942351b8f05c2655a038aeebb",
+    "W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "W_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+    "S": "7dc844027be65913de226178f2b11a9f682d5396",
+    "S_tree": "dfd4d27cbcf7053ace16d9053a4a24f022fe0e51",
+    "request_blob": "d0e890453415092636f1f692b05ddc08dac3a9b2",
+    "request_sha256": "7e5c32fe73dfd39aa4257365ca8729a3e584a8626e67e0a2d6948e645ee74b8c",
+    "run": 43668842101,
+    "job": 132674151887,
+    "cleanup_job": 132675184074,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101"
+  },
+  "instruction": "All earlier W/S failures and baseline evidence remain in ci/. Only the final selected source-slice observations below are qualified; full original/global criteria remain unpromoted.",
+  "findings": [
+    {
+      "id": "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+      "status": "HELD_M31_GENUINE_C08_ORIGINAL_CAPTURE_UNAVAILABLE",
+      "expected": "A genuine archived C08 Procurement original remains authorized across scoped-incarnation rotation with the same physical incarnation, returns original bytes/version/fields/period, and rejects broken lineage.",
+      "implemented_tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+          "role": "Actual producer/HTTP prerequisite refusal and absence of manufactured original"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+          "role": "Independent genuine source/grant rotation and broken-lineage discriminators; not a C17 historical-positive substitute"
+        }
+      ],
+      "observed_runtime": {
+        "run": 43668842101,
+        "source": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+        "owned_tests": 33,
+        "owned_pass": 33,
+        "owned_fail": 0,
+        "workflow_conclusion": "failure",
+        "remaining_inherited_failures": 13,
+        "details": "Actual prepareDomainCommands and HTTP refuse with needs-input/financial-approval-command-unavailable; HTTP400, archive0->0, preparedChanges0, full snapshots/case/receipts unchanged. Source/grant rotation is a separate positive."
+      },
+      "exact_gap": "prepareDomainCommands reaches canonical prepareScenario which returns needs-input/financial-approval-command-unavailable before captureSource. No C17 Procurement archived-positive or post-capture historical negative can be claimed.",
+      "owner": "S0/WP00 for explicit C12/financial-approval contract; authorized Procurement producer successor for implementation",
+      "forbidden_substitutes": [
+        "Seeded sf:procurement-evidence archive/digest/grant",
+        "Treating a choice, edit, submission or approval of the original record as approval of an unwritten replacement",
+        "Changing approval stages or Memory/runtime-owned files under mission61"
+      ],
+      "criteria": [
+        "CAMP.INV.02",
+        "CAMP.INV.04",
+        "CAMP.INV.06",
+        "WP10.T02.CMP.10",
+        "WP14.T02.CHK.03",
+        "WP14.T04.CHK.10"
+      ]
+    },
+    {
+      "id": "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+      "status": "SOURCE_CONTRACT_PASS_NOT_INTEGRATED",
+      "expected": "Stored mixed alternative reaches recorded Planner fallback for stale selectors, independently authorizes original external Procurement and every original Planner selector, preserves original amounts/case bytes and denies source drift.",
+      "implemented_tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+          "cases": [
+            "Mixed produced alternative with genuine Planner capture, stale replacement then stale base; current external Procurement independently observed",
+            "Direct recorded verifier changes Procurement after real historical Planner read; outer fence cannot mask missing internal reauthorization",
+            "Planner source drift between reads and same-visible-ID recreation deny original result"
+          ]
+        }
+      ],
+      "producer_paths": [
+        "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+        "apps/cli/src/sucafina-product/scenario-operation-access.ts"
+      ],
+      "mechanism": "Clone external observations, compare stable full-resolution digests before and after Planner reads, retain exact original selector/case/authority checks. Normalize only checkedAt and fresh source observedAt.",
+      "limits": [
+        "Planner archive uses actual emitFromLedger and named scanner, while C08 event/outbox and identity are explicit fixtures",
+        "No stale Procurement archived-positive substitute",
+        "No native session, installed HTTP journey, financial approval or full global criterion is established"
+      ],
+      "observed_runtime": {
+        "run": 43668842101,
+        "source": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+        "owned_tests": 33,
+        "owned_pass": 33,
+        "owned_fail": 0,
+        "workflow_conclusion": "failure",
+        "remaining_inherited_failures": 13,
+        "details": "Real Planner emitFromLedger capture committed with gitleaks8.30.1; actual fallbackCount1, two historical reads of each original Planner ref, six independent fresh Procurement observations; original projections and amount80 preserved. Direct recorded verifier refuses Procurement drift during Planner awaits."
+      },
+      "criteria": [
+        "CAMP.INV.02",
+        "CAMP.INV.04",
+        "CAMP.INV.06",
+        "WP10.T02.CMP.10"
+      ]
+    },
+    {
+      "id": "Q57-MIXED-TOMBSTONE-RECREATE",
+      "status": "PARTIAL_SOURCE_PASS_C17_PROCUREMENT_PRIVATE_ORIGINAL_HELD",
+      "expected": "Deleting/tombstoning a physical record and reusing its visible ID creates new physical lineage; old private original/grant is refused and legitimate scope rotation remains distinguishable.",
+      "implemented_tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+          "cases": [
+            "Canonical Procurement delete, explicit same-ID domain-row replay fixture, real lifecycle assigns new physical/source incarnation",
+            "Old source/reissue/private grant denied; current replacement source/grant succeeds; positive control precedes negative",
+            "Removed genuine original scope denies its grant while current source remains available"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+          "cases": [
+            "Mixed Planner original result and case read refuse after Planner physical source deletion/recreation"
+          ]
+        }
+      ],
+      "limits": [
+        "Same-ID Procurement recreation is an explicit isolated row-replay fixture, not a claim that the business create command reused an ID",
+        "Private C17 Procurement archived-original denial after recreation is not exercised because genuine capture remains blocked"
+      ],
+      "observed_runtime": {
+        "run": 43668842101,
+        "source": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+        "owned_tests": 33,
+        "owned_pass": 33,
+        "owned_fail": 0,
+        "workflow_conclusion": "failure",
+        "remaining_inherited_failures": 13,
+        "details": "Canonical Procurement delete plus explicitly synthetic same-visible-ID domain-row replay produces a new physical incarnation through real lifecycle. Old source/grant denied, new source/grant accepted. Real archived Planner original/case refused after physical recreation. No original C17 Procurement archive exists to qualify that variant."
+      },
+      "criteria": [
+        "CAMP.INV.04",
+        "CAMP.INV.06",
+        "WP14.T01.CHK.03",
+        "WP14.T02.CHK.11",
+        "WP14.T04.CHK.10"
+      ]
+    },
+    {
+      "id": "Q57-MIXED-REVOKE-BETWEEN-READS",
+      "status": "SOURCE_CONTRACT_PASS_NOT_INTEGRATED",
+      "expected": "Revoke or change actor, policy, exact Request, opaque lease, case/source, or abort between independent observations; no result/private projection/promotion persistence/financial effect escapes.",
+      "implemented_tests": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+          "cases": [
+            "Nine external mixed-source observation controls: revoke, actor, access, policy, Request identity, headers, lease, abort, source",
+            "Four final-await composite-producer controls inspect producer result before outer case guard",
+            "Real C08 participant membership change between case observations",
+            "Forged binding/lease clones rejected while genuine frozen context remains valid"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+          "cases": [
+            "Nine real Procurement source/grant inter-observation controls with positive initial source/grant and post-event persistent snapshots"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+          "cases": [
+            "Independent Planner drift",
+            "Procurement drift during recorded Planner reads"
+          ]
+        }
+      ],
+      "producer_paths": [
+        "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+        "apps/cli/src/sucafina-product/procurement-composite-planner.ts"
+      ],
+      "scope_limits": [
+        "No in-place mutation of a real frozen TrustedUiContext is claimed; clone substitution and actual lease finish are separate tests",
+        "C08 discriminator changes membership and checks whole case material; no independent caseVersion-only race is claimed",
+        "Zero effects are asserted on these source/component operations; no global finance application/restart acceptance is implied"
+      ],
+      "observed_runtime": {
+        "run": 43668842101,
+        "source": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+        "owned_tests": 33,
+        "owned_pass": 33,
+        "owned_fail": 0,
+        "workflow_conclusion": "failure",
+        "remaining_inherited_failures": 13,
+        "details": "Nine mixed authority/source events and nine Procurement source events fire after successful real observations; four final-await controls measure observation176 and return stale without projection inside producer. C08 membership change and opaque binding/lease substitution are denied. Exact effect scope is in reviews/RUNTIME-REVIEW-W3.json."
+      },
+      "criteria": [
+        "CAMP.INV.02",
+        "CAMP.INV.04",
+        "WP14.T02.CHK.03",
+        "WP14.T02.CHK.11",
+        "WP14.T04.CHK.03",
+        "WP14.T04.CHK.10"
+      ]
+    }
+  ],
+  "inherited_criterion_ids": [
+    "CAMP.INV.02",
+    "CAMP.INV.04",
+    "CAMP.INV.06",
+    "WP10.INV.02",
+    "WP10.T02.CMP.10",
+    "WP10.T04.CHK.01",
+    "WP10.T04.CHK.02",
+    "WP10.T04.CHK.03",
+    "WP14.T01.CHK.03",
+    "WP14.T02.CHK.03",
+    "WP14.T02.CHK.11",
+    "WP14.T04.CHK.03",
+    "WP14.T04.CHK.10"
+  ],
+  "inherited_criterion_status": "No full original criterion is promoted by this skeleton. Source-slice results, once real, must remain distinguished from the full task/global acceptance.",
+  "proof_packages_from_actor": {
+    "WP10": [
+      "E01",
+      "E16",
+      "E17",
+      "E18"
+    ],
+    "WP14": [
+      "E12"
+    ]
+  },
+  "gates": {
+    "source_owned_tests": "33_PASS_0_FAIL_ON_W3",
+    "selected_run": "FAIL_43_PASS_13_FAIL",
+    "typecheck_sucafina": "NOT_RUN_REQUESTED_OWNER45",
+    "typecheck_cli": "NOT_RUN_REQUESTED_OWNER45",
+    "guards": "NOT_RUN_REQUESTED_OWNER45",
+    "consumer60": "ACK_NOT_OBSERVED_60_LEASE_ENDED",
+    "integrated_candidate": "NOT_QUALIFIED",
+    "GLOBAL_RELEASE": false
+  },
+  "additional_producer_correction": {
+    "id": "M61-CANONICAL-PROCUREMENT-PROJECTION",
+    "status": "SOURCE_CONTRACT_PASS_NOT_INTEGRATED",
+    "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+    "mechanism": "Validate actual procurement-v1 value evidence, exact drilldown/ref/version/fields/period/currency and authority while preserving coverage for any context SourceRefs. Do not require context source refs or financial components absent from the canonical reader.",
+    "proof": "Existing mixed consumer goes from3PASS1FAIL on baseline to4PASS0FAIL. Positive canonical read,21 corruptions of copies after real observations, and real null-estimate positive all pass."
+  },
+  "criterion_trace": [
+    {
+      "id": "CAMP.INV.02",
+      "text": "Papéis, escopo de dados, holders, locks, versões esperadas e transições legais são preservados. Tornar uma ação fácil de encontrar não amplia autoridade.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+        "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+        "Q57-MIXED-REVOKE-BETWEEN-READS"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "CAMP.INV.04",
+      "text": "Nenhum conteúdo restrito reaparece em busca, contagem, comparação, gráfico, comentário, snapshot, exportação, prompt ou resultado de rotina. Ler ou aplicar revalida acesso atual.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+        "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+        "Q57-MIXED-TOMBSTONE-RECREATE",
+        "Q57-MIXED-REVOKE-BETWEEN-READS"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "CAMP.INV.06",
+      "text": "Revisão preservada permanece estável. Atualizar a origem não reescreve a reunião passada; acesso revogado não permite recuperar conteúdo privado por histórico.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+        "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+        "Q57-MIXED-TOMBSTONE-RECREATE"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "WP10.INV.02",
+      "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [],
+      "evidence": "No local product tests/typecheck/build or guard changes. Failed assertions and budgets retained; all execution through existing hosted test-ci."
+    },
+    {
+      "id": "WP10.T02.CMP.10",
+      "text": "Os 5 perfis/18 skills/8 packs e C17 estão cobertos, incluindo failure/retry/revogação.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "PARTIAL_C17_AND_GLOBAL_COVERAGE_HELD",
+      "finding_links": [
+        "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+        "Q57-MIXED-RECORDED-PLANNER-FALLBACK"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "WP10.T04.CHK.01",
+      "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [],
+      "evidence": "Distinct W1/W2/W3 and baseline identities; W/S-only request deltas verified. This source documentation envelope is not global D/G8; its guard remains owner45."
+    },
+    {
+      "id": "WP10.T04.CHK.02",
+      "text": "As suítes necessárias executam testes reais e não somente passam com zero testes coletados.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [],
+      "evidence": "Final hosted run collected56tests/588assertions;33ownedPASS,43totalPASS,13requiredFAIL retained."
+    },
+    {
+      "id": "WP10.T04.CHK.03",
+      "text": "Não rodar bun test local nem alterar guards para fugir do caminho exigido pelo repositório.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [],
+      "evidence": "No local product tests/typecheck/build or guard changes. Failed assertions and budgets retained; all execution through existing hosted test-ci."
+    },
+    {
+      "id": "WP14.T01.CHK.03",
+      "text": "Reuso de ID com nova encarnação invalida referência de modo explícito; ausência de dado não é tratada como condição satisfeita.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-MIXED-TOMBSTONE-RECREATE"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "WP14.T02.CHK.03",
+      "text": "Revogação entre busca e detalhe invalida recuperação/cache e exige rechecagem, inclusive quando o ID já foi mostrado.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+        "Q57-MIXED-REVOKE-BETWEEN-READS"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "WP14.T02.CHK.11",
+      "text": "Campo fonte revogado/encarnação substituída sai do input e não influencia título/contagem do resultado.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-MIXED-TOMBSTONE-RECREATE",
+        "Q57-MIXED-REVOKE-BETWEEN-READS"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "WP14.T04.CHK.03",
+      "text": "Revogar acesso remove informação dos sinais, detalhes e cache no consumidor real; evidência não é apenas teste da função pura.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-MIXED-REVOKE-BETWEEN-READS"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    },
+    {
+      "id": "WP14.T04.CHK.10",
+      "text": "Revogação de um campo/registro invalida todos envelopes dependentes; atualização irrelevante segue fingerprint material sem apagar escolha.",
+      "original_status": "NOT_PROMOTED",
+      "source_slice_status": "SCOPED_EVIDENCE_ONLY",
+      "finding_links": [
+        "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+        "Q57-MIXED-TOMBSTONE-RECREATE",
+        "Q57-MIXED-REVOKE-BETWEEN-READS"
+      ],
+      "evidence": "See finding-specific runtime evidence and exact scope limits; no installed/native/full-program acceptance inferred."
+    }
+  ]
+}

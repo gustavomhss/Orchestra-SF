@@ -1,0 +1,127 @@
+{
+  "schema": "mission61-procurement-final-review-v1",
+  "reviewer": "procurement_review",
+  "method": "Read actual GitHub Actions logs and local source; no local product execution, tests or typecheck; no product/test edits during this review.",
+  "verdict": "SOURCE_AND_GRANT_PROOFS_PASS; HISTORICAL_C17_ACCEPTANCE_HELD",
+  "candidate": {
+    "product_sha": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "snapshot_sha": "7dc844027be65913de226178f2b11a9f682d5396",
+    "run_id": 43668842101,
+    "job_id": 132674151887,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101",
+    "run_conclusion": "failure",
+    "totals": {
+      "pass": 43,
+      "fail": 13,
+      "tests": 56,
+      "files": 6,
+      "assertions": 588
+    },
+    "owned_tests": {
+      "pass": 33,
+      "fail": 0
+    },
+    "procurement_owned_tests": {
+      "lifecycle_pass": 12,
+      "capture_prerequisite_pass": 1,
+      "fail": 0
+    }
+  },
+  "baseline": {
+    "product_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "snapshot_sha": "449f8c51d2ee641e8d41cfa965de7c72b8443276",
+    "run_id": 43667860058,
+    "job_id": 132671155311,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667860058",
+    "totals": {
+      "pass": 9,
+      "fail": 14,
+      "tests": 23,
+      "files": 2
+    }
+  },
+  "residual_classification": {
+    "count": 13,
+    "all_names_match_baseline": true,
+    "all_fail_at": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151",
+    "actual_log_observation": "procurementScenarioFixture expects prepareDomainCommands.status == ok; receives needs-input in both runs.",
+    "classification": "PRE_EXISTING_FIXTURE_PREPARATION_PREREQUISITE_FAILURE",
+    "reason_evidence_limit": "The 13 legacy assertions print status only. The exact financial-approval-command-unavailable reason is directly witnessed by the new real producer/HTTP prerequisite test; it is not printed by those 13 assertions.",
+    "targeted_scenario_events_executed": false,
+    "tests": [
+      "fresh Procurement duplicates retain two canonical observations per guard and recompute on every case read",
+      "historical Procurement duplicates keep both independent canonical entry observations",
+      "fresh Procurement duplicate proof rejects source change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects capture change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects receipt change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects preferences change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects case change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects principal change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects period change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects clock change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects headers change after its canonical double observation",
+      "fresh Procurement duplicate proof rejects lease change after its canonical double observation",
+      "fresh Procurement proofs do not cross overlapping invocations or survive final Request header replacement"
+    ]
+  },
+  "comparison": {
+    "baseline_passing_cases_still_pass": 9,
+    "baseline_failure_now_passing": "mixed capability is transient and current case guards authorize the explicit external selector",
+    "fixed_baseline_assertion": "composite-planner.test.ts:86 expected true / received false",
+    "existing_mixed_cases_candidate": {
+      "pass": 4,
+      "fail": 0
+    },
+    "new_residual_failure_names": [],
+    "additional_runtime_errors_or_timeouts_in_candidate_test_output": [],
+    "scope_limit": "No regression is visible in the executed selection. The 13 failed fixture setups do not validate their downstream scenarios; this is not an all-suite or historical-C17 approval."
+  },
+  "procurement_witnesses": {
+    "scope_rotation": "Same physical incarnation, distinct scoped incarnations; genuine old grant initially true, then false; genuine current grant true; persisted financial data/audit unchanged.",
+    "tombstone_and_same_id": "Canonical delete succeeds and records alive=false. Explicit synthetic replay restores only the same-ID domain row through real persistence. Production lifecycle emits new physical/scoped incarnations; old read/reissue unavailable and old grant false; new source/grant positive.",
+    "broken_lineage": "Removing the genuine original scoped entry invalidates its old grant/reissue while a replacement scope on the same physical source reads successfully.",
+    "between_reads": {
+      "mutations": [
+        "revoke",
+        "actor",
+        "policy",
+        "access",
+        "request-header",
+        "lease",
+        "abort",
+        "role",
+        "source"
+      ],
+      "all_event_flags": true,
+      "private_value_returned": false,
+      "observed_outcomes": "stale for eight cases; aborted for abort case",
+      "writes_after_controlled_event": 0,
+      "source_mutation_qualification": "The intentional canonical source save changes the input before refusal; no additional write occurs after the controlled event."
+    },
+    "capture_prerequisite": {
+      "human_admission": "ok",
+      "method": "POST",
+      "direct_producer": "needs-input / financial-approval-command-unavailable",
+      "http_status": 400,
+      "http_outcome": "needs-input / financial-approval-command-unavailable",
+      "archive_count_before": 0,
+      "archive_count_after": 0,
+      "prepared_change_count": 0,
+      "historical_capture_created": false,
+      "snapshots_case_and_receipts_unchanged": true
+    }
+  },
+  "held_acceptance": [
+    "Exact historical Procurement C17 original accepted after authorized scope rotation using a genuine archived capture.",
+    "Old private Procurement historical original refused after tombstone and same-visible-ID recreation using a genuine archived capture."
+  ],
+  "held_reason": "Canonical prepareDomainCommands cannot reach original capture while M31 financial preparation returns needs-input. No historical archive, financial approval or grant was fabricated. Source/grant lifecycle positives remain separate evidence.",
+  "evidence": [
+    "delivery/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/ci/attempt-3/job.log.txt",
+    "delivery/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/ci/attempt-3/RESULTS.json",
+    "delivery/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/ci/baseline/job.log.txt",
+    "delivery/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/ci/baseline/BINDING.json",
+    "source/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+    "source/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts"
+  ]
+}
