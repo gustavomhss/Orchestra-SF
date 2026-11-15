@@ -28,6 +28,7 @@ if (process.env.SF_S01_DOM !== "1") {
 } else {
   const { createComponent, createStore, render } = await import("../lean-dom.test-helper")
   const { solidDom } = await import("../solid-dom")
+  const { withBrowserPlatform } = await import("./platform-fixture")
   const { LanguageProvider }: typeof import("@/context/language") = await import(
     solidDom("@/context/language", import.meta.dir),
   )
@@ -117,10 +118,13 @@ if (process.env.SF_S01_DOM !== "1") {
           onOpenPage() { events.push("open-page") },
         })
       : list()
-    const dispose = render(() => createComponent(LanguageProvider, {
-      locale: "en",
-      get children() { return component() },
-    }), host)
+    const dispose = render(
+      () => withBrowserPlatform(() => createComponent(LanguageProvider, {
+        locale: "en",
+        get children() { return component() },
+      })),
+      host,
+    )
     return { host, events, state, update, done: () => (dispose(), host.remove()) }
   }
 
