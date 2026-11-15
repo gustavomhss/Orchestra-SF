@@ -10,7 +10,8 @@ test("C08 private observations keep callback order and independently mutable sca
     const request = { kind: "scenario" as const, resultRef: setup.original.resultRef }
     const expected = { status: "ok", value: setup.original }
     const wire = canonicalSfValue(setup.original)
-    const hashes = { count: 0 }
+    const caseWire = canonicalSfValue(setup.fixture.decision)
+    const hashes = { count: 0, cases: 0 }
     const retained: { value?: Parameters<typeof setup.settings.verifySources>[0] } = {}
     setup.hooks.sources = (value) => { retained.value = value }
     const update = Bun.CryptoHasher.prototype.update
@@ -38,6 +39,7 @@ test("C08 private observations keep callback order and independently mutable sca
     hashes.count = 0
     const batchProbe = spyOn(Bun.CryptoHasher.prototype, "update").mockImplementation(function (this: Bun.CryptoHasher, ...args: Parameters<typeof update>) {
       if (args[0] === wire) hashes.count += 1
+      if (args[0] === caseWire) hashes.cases += 1
       return update.apply(this, args)
     })
     const batch = await readHistoricalScenarios(setup.results, [request.resultRef, request.resultRef], context).finally(() => batchProbe.mockRestore())
@@ -45,13 +47,14 @@ test("C08 private observations keep callback order and independently mutable sca
     expect(setup.trace.events).toEqual(["authority", "authority", "read:cases", "case", "sources", "authority", "case", "sources", "authority", "read:cases", "case", "sources", "authority", "authority", "case", "sources", "authority", "authority", "read:cases"])
     expect(setup.trace.sources).toEqual(Array.from({ length: 4 }, () => setup.original.sourceRefs))
     expect(hashes.count).toBeGreaterThan(0)
+    expect(hashes.cases).toBeGreaterThan(0)
     if (batch[0]?.status !== "ok" || batch[0].value.kind !== "scenario" || batch[1]?.status !== "ok") throw new Error("Batch unavailable")
     expect(batch[0].value).not.toBe(batch[1].value)
     expect(batch[0].value.sourceRefs).not.toBe(batch[1].value.sourceRefs)
     batch[0].value.result.knownSubtotal = -123456
     expect(batch[1]).toEqual(expected)
     expect(await setup.results.read(request, context)).toEqual(expected)
-    console.log("canonical-read-cost:result-digests", JSON.stringify({ scalar: scalarHashes, duplicateBatch: hashes.count, scalarCallbacks: 11, duplicateBatchCallbacks: 19 }))
+    console.log("canonical-read-cost:result-digests", JSON.stringify({ scalar: scalarHashes, duplicateBatch: hashes.count, duplicateBatchCaseHashes: hashes.cases, scalarCallbacks: 11, duplicateBatchCallbacks: 19 }))
 
     setup.reset()
     setup.hooks.sources = async () => {
@@ -65,6 +68,23 @@ test("C08 private observations keep callback order and independently mutable sca
     expect(setup.trace.reads).toBe(3)
     setup.hooks.sources = undefined
     await setup.replace(setup.original)
+    expect(await setup.results.read(request, context)).toEqual(expected)
+
+    setup.reset()
+    setup.hooks.sources = async () => {
+      if (setup.trace.sources.length !== 4) return
+      const changed = structuredClone(setup.fixture.decision)
+      changed.objective = "Changed without advancing the case version"
+      await setup.replaceCase(changed)
+    }
+    expect(await readHistoricalScenarios(setup.results, [request.resultRef, request.resultRef], context)).toEqual([
+      { status: "denied", reason: "result-access-unavailable" },
+      { status: "denied", reason: "result-access-unavailable" },
+    ])
+    expect(setup.trace.sources).toHaveLength(4)
+    expect(setup.trace.reads).toBe(3)
+    setup.hooks.sources = undefined
+    await setup.replaceCase(setup.fixture.decision)
     expect(await setup.results.read(request, context)).toEqual(expected)
   } finally { await setup.cleanup() }
 })

@@ -15,6 +15,8 @@ test("measures bounded canonical C08, rule and binding work without repeating P0
   let history: Awaited<ReturnType<typeof createRenewalChoiceHistory>> | undefined
   const outputs: Record<string, string> = {}
   try {
+    // Clearing the spy history must preserve the original digest exception.
+    expect(() => digestSfValue(() => undefined)).toThrow("SF_CANONICAL_UNSUPPORTED")
     const current = await probe.phase("prepare-once", () => createRenewalChoiceHistory({ training: "omitted" }))
     history = current
     const ports = await composeCanonicalReadDiagnostic(current, probe)

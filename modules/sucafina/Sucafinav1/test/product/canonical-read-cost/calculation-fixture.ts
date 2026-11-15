@@ -1,5 +1,6 @@
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { SfProductStatePort, SfStateNamespace, SfStateResult } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
@@ -63,7 +64,16 @@ export async function createCalculationFixture() {
       })
       if (written.status !== "ok" || !written.value) throw new Error("Negative control CAS failed")
     }
+    const replaceCase = async (value: DecisionCase) => {
+      const current = await fixture.state.read(fixture.request, "cases", () => null)
+      if (current.status !== "ok") throw new Error("Canonical case unavailable")
+      const written = await fixture.state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: `case-negative-control-${++trace.next}`, commandDigest: digestSfValue(value) }, async (state) => {
+        state.cases[fixture.caseRef.id] = structuredClone(value)
+        return { commit: true, value: true }
+      })
+      if (written.status !== "ok" || !written.value) throw new Error("Negative case control CAS failed")
+    }
     reset()
-    return { fixture, settings, results, original, trace, hooks, reset, replace, cleanup: fixture.cleanup }
+    return { fixture, settings, results, original, trace, hooks, reset, replace, replaceCase, cleanup: fixture.cleanup }
   } catch (error) { await fixture.cleanup(); throw error }
 }

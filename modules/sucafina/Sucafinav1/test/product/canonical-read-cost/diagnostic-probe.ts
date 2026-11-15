@@ -20,6 +20,12 @@ export async function installCanonicalReadDiagnostic() {
   const order = createHash("sha256")
   const examples: string[] = []
   const memory: Record<string, { before: NodeJS.MemoryUsage; after: NodeJS.MemoryUsage }> = {}
+  const spyHistory = {
+    entryInvocations: 0, entryCallsHighWater: 0, entryResultsHighWater: 0,
+    phaseClears: 0, reportClears: 0, checkpointCallsHighWater: 0, checkpointResultsHighWater: 0,
+    residualCallsHighWater: 0, residualResultsHighWater: 0, residualCalls: 0, residualResults: 0,
+    pendingAtClearHighWater: 0,
+  }
   const restores: (() => void)[] = []
   let events = 0
   let stackCaptureMs = 0
@@ -92,9 +98,28 @@ export async function installCanonicalReadDiagnostic() {
   } as typeof structuredClone
   // ESM live-import spying observes the entire canonicalization plus SHA256 call.
   // Every invocation calls the saved implementation exactly once, including throws.
-  const digest = spyOn(canonical, "digestSfValue").mockImplementation((value) =>
-    primitive("digestSfValue", () => originalDigest(value)))
+  const digest = spyOn(canonical, "digestSfValue").mockImplementation((value) => {
+    // Bun records spy arguments/results even when this observer does not. Drop
+    // prior call history before timing, preserving the installed implementation.
+    spyHistory.entryInvocations++
+    spyHistory.entryCallsHighWater = Math.max(spyHistory.entryCallsHighWater, digest.mock.calls.length)
+    spyHistory.entryResultsHighWater = Math.max(spyHistory.entryResultsHighWater, digest.mock.results.length)
+    digest.mockClear()
+    return primitive("digestSfValue", () => originalDigest(value))
+  })
   globalThis.structuredClone = clone
+  const clearHistory = (checkpoint: "phase" | "report") => {
+    spyHistory.checkpointCallsHighWater = Math.max(spyHistory.checkpointCallsHighWater, digest.mock.calls.length)
+    spyHistory.checkpointResultsHighWater = Math.max(spyHistory.checkpointResultsHighWater, digest.mock.results.length)
+    spyHistory.pendingAtClearHighWater = Math.max(spyHistory.pendingAtClearHighWater, pending)
+    digest.mockClear()
+    spyHistory.residualCalls = digest.mock.calls.length
+    spyHistory.residualResults = digest.mock.results.length
+    spyHistory.residualCallsHighWater = Math.max(spyHistory.residualCallsHighWater, spyHistory.residualCalls)
+    spyHistory.residualResultsHighWater = Math.max(spyHistory.residualResultsHighWater, spyHistory.residualResults)
+    if (checkpoint === "phase") spyHistory.phaseClears++
+    if (checkpoint === "report") spyHistory.reportClears++
+  }
 
   return {
     call,
@@ -103,7 +128,10 @@ export async function installCanonicalReadDiagnostic() {
       if (restored || scopes.getStore()) throw new Error("Diagnostic phases must be awaited and non-overlapping")
       const before = process.memoryUsage()
       try { return await scopes.run({ phase: name, path: [] }, () => call(`phase.${name}`, work)) }
-      finally { memory[name] = { before, after: process.memoryUsage() } }
+      finally {
+        clearHistory("phase")
+        memory[name] = { before, after: process.memoryUsage() }
+      }
     },
     state(port: SfProductStatePort, label: string) {
       const read = port.read
@@ -146,16 +174,18 @@ export async function installCanonicalReadDiagnostic() {
       }
     },
     snapshot() {
+      clearHistory("report")
       return {
         calls, primitives, callbackOrder: { events, sha256: order.copy().digest("hex"), firstEvents: [...examples] },
-        memory, stackCaptureMs, pending,
+        memory, stackCaptureMs, pending, spyHistory: { ...spyHistory },
         limits: [
           "Public call durations overlap; do not sum them as exclusive CPU.",
           "Method counters observe public boundary calls; closure-internal calls are represented by primitive source callsites, not wrapped function counts.",
           "Primitive timing surrounds exactly the saved synchronous implementation. Stack capture is outside that timing.",
           "exclusiveMeasuredMs subtracts nested measured primitive time; nested probe bookkeeping remains overhead.",
-          "No values are inspected, serialized, retained or cloned by the primitive observer.",
-          "Memory snapshots are descriptive process usage, not peak allocation or retained-heap bounds; no forced GC.",
+          "The observer does not inspect, serialize or additionally clone payloads. Bun spy history is cleared before each digest; its framework may retain the current invocation until the next clear.",
+          "Spy-history high-water and residual counts inspect array lengths only; clear runs before native primitive timing, after each awaited phase before its memory snapshot, and before the report snapshot. Zero residuals do not establish zero in-flight retention.",
+          "Memory snapshots describe the whole observed process, including instrumentation and GC effects; they do not establish product heap, peak allocation or retained-heap bounds. No forced GC.",
           "This is bounded producer diagnosis, not P03 or a speed-ratio assertion.",
         ],
       }
