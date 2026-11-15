@@ -1,0 +1,29 @@
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
+--- a/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
+@@ -21,6 +21,7 @@
+ import { object } from "../../runtime/contract.ts"
+ import { sfPlannerProjectionSelector } from "../integration/source-projections.ts"
+ import { sfPlannerSourceSelector } from "../integration/planner-sources.ts"
++import { isSfCapturedSourceBoundToCurrentAccess } from "./denied-read.ts"
+ import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
+ import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
+ import { sfRunSourceFence } from "../ai/run-store.ts"
+@@ -274,6 +275,17 @@
+     const selected = structuredClone(ref)
+     const request = input.host.requestFor(call)
+     const binding = digestSfValue([call.kind, call.binding])
++    // Historical classification must not issue a new viewer source before checking
++    // whether the captured source belongs to this exact current access revision.
++    if (selected.kind === "record" && (selected.target.surface === "dashboard" || selected.target.surface === "planner")) {
++      const captured = selected.target
++      const bound = await isSfCapturedSourceBoundToCurrentAccess(input.host, {
++        surface: captured.surface, type: captured.recordType, id: captured.recordId,
++        incarnation: captured.incarnation, version: captured.version,
++      }, call)
++      if (!bound) return { state: "unavailable", ref: selected,
++        accessRevision: call.binding.accessRevision, checkedAt: input.now() }
++    }
+     const found = await read(selected, call)
+     let result = found
+     if (found.state === "stale" || found.state === "unavailable") {

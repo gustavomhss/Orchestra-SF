@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h-denied-read-fix-ack-v1",
+  "number": 97,
+  "mission": "97.json",
+  "model_observed": "GPT-6",
+  "session_observed": "new chat session, opaque backend session id unavailable",
+  "account_principal": "gustavomhss",
+  "lease": "denied-read-browser97",
+  "base": "C45",
+  "expected_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "sf2_stack_observed": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "preimages": {
+    "product/integration/source-lifecycle.ts": "0e812842ad0d534998c182100a8466548d70e915",
+    "test/product/export-artifact-closure/composed-storage.test.ts": "4f268069e082f0ea463a251e7bceb27f4da74700",
+    "test/product/export-artifact-closure/fixture.ts": "d941eaf91e301ff530a174c1e92192237e3d3ef0",
+    "product/host-binding/business-context.ts": "2e7b312561f3f027ab070c61e15ecb6886fa169c"
+  },
+  "ack_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889592689",
+  "issue": "VIS88-010",
+  "egress86": "distinct, integrated in C45",
+  "historical_witness": {
+    "run_id": 43678123870,
+    "job_id": 132702648942,
+    "test": "test/product/export-artifact-closure/composed-storage.test.ts:157",
+    "expected_delta_lines": 0,
+    "observed_delta_lines": 57
+  },
+  "allowed_writes": [
+    "product/host-binding/denied-read.ts",
+    "test/product/denied-read-fix/bound-source-read.test.ts",
+    "docs/sf2h/receipts/denied-read-fix/*"
+  ],
+  "prohibited_writes": [
+    "product/host-binding/business-context.ts",
+    "runtime/local-store.ts",
+    "runtime/contract.ts",
+    "product/reviews/application.ts"
+  ],
+  "status": "PRODUCER_BOUND_PROOF_READY_OWNER_ADOPTION_PENDING",
+  "global_release": false
+}
