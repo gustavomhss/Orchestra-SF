@@ -1,0 +1,2069 @@
+{
+  "schema": "sf2h.operations63.final-results.v1",
+  "status": "MANDATORY_QUALIFICATION_BLOCKED",
+  "mission": 63,
+  "material_work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+  "material_work_tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+  "original_nominal_count": 5,
+  "latest_nominal_counts": {
+    "pass": 1,
+    "fail": 4,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "nominals": [
+    {
+      "id": "OP-PROC-01",
+      "name": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "status": "PASS",
+      "duration_ms": 1589,
+      "run": 43668156670,
+      "job": 132672057817,
+      "work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+      "snapshot_commit": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "criteria": [
+        "WP04.T03.CHK.01",
+        "WP04.T01.INV.01",
+        "WP04.T01.CMP.02"
+      ]
+    },
+    {
+      "id": "OP-PROC-02",
+      "name": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "status": "FAIL",
+      "duration_ms": 15478,
+      "run": 43668156670,
+      "job": 132672057817,
+      "work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+      "snapshot_commit": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "criteria": [
+        "WP04.T03.CHK.02",
+        "WP04.T03.CHK.03",
+        "WP04.T03.INV.02"
+      ]
+    },
+    {
+      "id": "OP-PROC-03",
+      "name": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "status": "FAIL",
+      "duration_ms": 16966,
+      "run": 43668156670,
+      "job": 132672057817,
+      "work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+      "snapshot_commit": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "criteria": [
+        "WP04.T03.CHK.03",
+        "WP04.T03.CMP.01",
+        "WP04.CMP.02"
+      ]
+    },
+    {
+      "id": "OP-IMPORT-01",
+      "name": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "status": "FAIL",
+      "duration_ms": 1872,
+      "run": 43668156670,
+      "job": 132672057817,
+      "work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+      "snapshot_commit": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "criteria": [
+        "WP06.T01.INV.01",
+        "WP06.T01.QLT.01",
+        "WP06.T02.INV.01",
+        "WP06.T02.INV.02",
+        "WP06.T02.QLT.18",
+        "WP06.T03.CHK.04",
+        "WP06.T03.INV.01",
+        "WP06.T03.INV.03",
+        "WP06.T03.QLT.02",
+        "WP06.T03.SUC.02",
+        "WP06.T04.CHK.02",
+        "WP06.T04.INV.01",
+        "WP06.T04.QLT.01"
+      ]
+    },
+    {
+      "id": "OP-DOC-01",
+      "name": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "status": "FAIL",
+      "duration_ms": 2447,
+      "run": 43668156670,
+      "job": 132672057817,
+      "work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+      "snapshot_commit": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "criteria": [
+        "WP06.T05.CHK.02",
+        "WP06.T05.CHK.19",
+        "WP06.T05.INV.01",
+        "WP06.T05.QLT.18",
+        "WP06.T05.QLT.19",
+        "WP06.T05.CMP.19",
+        "WP06.T05.SUC.19"
+      ]
+    }
+  ],
+  "scanner_protocol_and_auxiliary_counts": {
+    "pass": 22,
+    "fail": 0,
+    "expect_calls": 106,
+    "original_auxiliaries": 7,
+    "original_adapter_cases": 5,
+    "added_protocol_cases": 10
+  },
+  "scanner_protocol_and_auxiliary_cases": [
+    {
+      "name": "unconfigured scanner cannot admit a file",
+      "file": "Sucafinav1/test/local-scanner.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "INSTREAM requires exact clean verdict: stream: OK",
+      "file": "Sucafinav1/test/local-scanner.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "INSTREAM requires exact clean verdict: stream: Eicar-Signature FOUND",
+      "file": "Sucafinav1/test/local-scanner.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "INSTREAM requires exact clean verdict: stream: ERROR",
+      "file": "Sucafinav1/test/local-scanner.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "INSTREAM requires exact clean verdict: not-stream: OK",
+      "file": "Sucafinav1/test/local-scanner.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses clean prefix followed by a detection",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses clean prefix followed by an error",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses duplicate clean records",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses extra NUL after clean record",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses unterminated clean reply",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses wrong reply delimiter",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses unexpected Unicode replacement character before clean terminator",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses oversized clean-prefixed reply",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses a clean reply before the complete stream is sent",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "ClamD protocol refuses a missing or invalid loopback endpoint",
+      "file": "Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "Operations mount denies unauthenticated workbenches without changing source data",
+      "file": "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "Operations mount serves the real Planner and import/document workbenches",
+      "file": "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "Operations viewer has no human import or document mutation authority",
+      "file": "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "Operations source admission rejects an unissued selector and a revoked credential",
+      "file": "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "Operations private upload fails closed with no scanner and preserves the source",
+      "file": "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "Operations fixture recognizes the canonical dispatcher arguments without changing selection",
+      "file": "Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    },
+    {
+      "name": "Operations fixture keeps Procurement support and excludes unrelated selections",
+      "file": "Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "status": "PASS",
+      "run": 43667752670,
+      "job": 132670825592,
+      "work_commit": "e1791815218eea8e804d515bf197beeb9f8c8b56"
+    }
+  ],
+  "live_clamd_cases": [
+    {
+      "id": "CLAMD-LIVE-CLEAN-EICAR-CLEAN",
+      "name": "real ClamD INSTREAM accepts clean, rejects EICAR and accepts clean again",
+      "status": "BLOCKED_NOT_RUN"
+    },
+    {
+      "id": "CLAMD-LIVE-ERROR",
+      "name": "real ClamD size-limit error is rejected while both real daemons remain responsive",
+      "status": "BLOCKED_NOT_RUN"
+    },
+    {
+      "id": "CLAMD-LIVE-DOWN",
+      "name": "real ClamD outage fails closed after the owned error daemon is stopped",
+      "status": "BLOCKED_NOT_RUN"
+    }
+  ],
+  "runs": [
+    "ci/R1-result.json",
+    "ci/R2-result.json",
+    "ci/R3-result.json",
+    "ci/R4-result.json"
+  ],
+  "criteria_results": [
+    {
+      "id": "WP04.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.DOD.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.DOD.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.INV.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.INV.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.INV.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.QLT.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.QLT.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.CMP.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-PROC-03",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.CMP.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.CMP.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.SUC.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.SUC.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CHK.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CHK.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.DOD.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.INV.01",
+      "status": "PARTIAL_WITNESS_ONLY",
+      "witnesses": [
+        {
+          "case": "OP-PROC-01",
+          "status": "PASS",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.INV.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.QLT.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CMP.02",
+      "status": "PARTIAL_WITNESS_ONLY",
+      "witnesses": [
+        {
+          "case": "OP-PROC-01",
+          "status": "PASS",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.CMP.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T01.SUC.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.CHK.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.INV.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T02.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CHK.01",
+      "status": "PARTIAL_WITNESS_ONLY",
+      "witnesses": [
+        {
+          "case": "OP-PROC-01",
+          "status": "PASS",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CHK.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-PROC-02",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CHK.03",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-PROC-02",
+          "status": "FAIL",
+          "run": 43668156670
+        },
+        {
+          "case": "OP-PROC-03",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CHK.05",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CHK.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.DOD.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.INV.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.INV.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-PROC-02",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.INV.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.QLT.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CMP.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-PROC-03",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.CMP.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T03.SUC.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.CHK.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.CHK.05",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.INV.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T04.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CHK.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CHK.05",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CHK.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.DOD.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.INV.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.INV.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.QLT.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.CMP.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP04.T05.SUC.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.DOD.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.DOD.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.DOD.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.DOD.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.INV.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.INV.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.INV.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.INV.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.QLT.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.QLT.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.QLT.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.CMP.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.CMP.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.CMP.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.CMP.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.SUC.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.SUC.10",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.SUC.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.CHK.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.CHK.05",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.INV.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.INV.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.QLT.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T01.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CHK.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CHK.05",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CHK.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CHK.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.DOD.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.DOD.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.INV.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.INV.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.INV.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.INV.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.INV.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.QLT.18",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.QLT.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CMP.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.CMP.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.SUC.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T02.SUC.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CHK.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CHK.04",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CHK.05",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CHK.06",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CHK.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.DOD.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.INV.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.INV.03",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.INV.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.INV.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.QLT.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.QLT.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.CMP.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.SUC.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T03.SUC.60",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CHK.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CHK.04",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CHK.05",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CHK.06",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.DOD.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.INV.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.INV.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.INV.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.QLT.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-IMPORT-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.QLT.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CMP.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.CMP.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T04.SUC.02",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CHK.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CHK.02",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-DOC-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CHK.03",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CHK.20",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CHK.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CHK.19",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-DOC-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CHK.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.DOD.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.DOD.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.DOD.19",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.DOD.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.INV.01",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-DOC-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.INV.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.INV.19",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.INV.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.QLT.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.QLT.18",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-DOC-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.QLT.19",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-DOC-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.QLT.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CMP.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CMP.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CMP.19",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-DOC-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.CMP.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.SUC.01",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.SUC.18",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.SUC.19",
+      "status": "BLOCKED_OR_FAILED_WITNESS",
+      "witnesses": [
+        {
+          "case": "OP-DOC-01",
+          "status": "FAIL",
+          "run": 43668156670
+        }
+      ],
+      "full_criterion_closed": false
+    },
+    {
+      "id": "WP06.T05.SUC.40",
+      "status": "NOT_QUALIFIED_BY_M63_SELECTIONS",
+      "witnesses": [],
+      "full_criterion_closed": false
+    }
+  ],
+  "full_criteria_closed": 0,
+  "criterion_observation_rule": "A passed original nominal is a witness for its annotated slice, not proof of the full WP criterion. Historical normative matrix and receipts stay immutable.",
+  "required_remaining": [
+    {
+      "id": "M63-REAL-CLAMD",
+      "status": "BLOCKED_NOT_RUN",
+      "owner": "45 and authorized integrator",
+      "resolution": "Review/apply external/ci/MANIFEST.json plus complete owned setup, run explicit real-clamd.check.ts and inspect live evidence/cleanup."
+    },
+    {
+      "id": "M63-PROC-02-UI",
+      "status": "FAIL_SHARED_PATCH_PREPARED",
+      "owner": "S0 assigns shared owner; authorized integrator composes",
+      "resolution": "external/procurement-ui/procurement-money.manifest.json; preserve computation and original literal oracle."
+    },
+    {
+      "id": "M63-PROC-03-A11Y",
+      "status": "FAIL_SHARED_PATCH_PREPARED",
+      "owner": "S0 assigns shared owner; authorized integrator composes",
+      "resolution": "external/procurement-ui/field-errors.manifest.json; preserve validation and exact accessible-description oracle."
+    },
+    {
+      "id": "M63-IMPORT-RECOVERY",
+      "status": "BLOCKED_BEFORE_PREVIEW_APPLY",
+      "owner": "45/authorized integrator, then assigned Operations owner",
+      "resolution": "Supply actual ClamD, replay original journey to qualify real preview/single Apply/durable receipt/lost-delivery recovery."
+    },
+    {
+      "id": "M63-DOC-CONFIRM-REVOCATION",
+      "status": "BLOCKED_AT_UPLOAD_SCAN_GATE",
+      "owner": "45/authorized integrator, then assigned Operations owner",
+      "resolution": "Supply actual ClamD, replay original TXT journey including schema, exact evidence, confirmation and source revocation."
+    },
+    {
+      "id": "M63-DOCUMENT-FORMATS",
+      "status": "NOT_RUN",
+      "owner": "S0 assigns document producer/qualification owner",
+      "resolution": "Mandatory digital PDF,DOCX,text,protected/scanned/invalid/ambiguous/injection/oversize cases remain; the original TXT journey alone is not format-complete."
+    },
+    {
+      "id": "M63-C06-CONSUMERS",
+      "status": "NOT_RUN",
+      "owner": "S0 assigns C06 producers/consumer qualification",
+      "resolution": "Material/dependency changes,irrelevant changes,revocation,restoration/recreation/incarnation and scenario/dossier consumers remain unclosed; no browser elapsed time proves human/native acceptance."
+    },
+    {
+      "id": "M63-TYPECHECK-GUARDS",
+      "status": "BLOCKED_NOT_RUN",
+      "owner": "45",
+      "resolution": "REQUEST-45.json with exact source/tree/base and complete external/checks patch."
+    },
+    {
+      "id": "INTEGRATOR-AUTHORITY",
+      "status": "REQUIRES_EXPLICIT_SUCCESSOR_OR_RESUMPTION",
+      "owner": "S0",
+      "resolution": "60 published terminalleaseended at faa30fdd; fresh authorizedACK and CAS before any target write. No successor assumed."
+    },
+    {
+      "id": "GLOBAL-C-D-AM",
+      "status": "NOT_QUALIFIED",
+      "owner": "S0",
+      "resolution": "Eight selections,AM01-AM06,native/physical permissions,human timing,three independent reviews and C-G7/D-G8 remain separate mandatory campaign gates."
+    }
+  ],
+  "complete_source_unit": "owned/MANIFEST.json",
+  "complete_shared_units": [
+    "external/ci/MANIFEST.json",
+    "external/checks/MANIFEST.json",
+    "external/procurement-ui/MANIFEST.json"
+  ],
+  "native_parity_measured": false,
+  "human_timing_measured": false,
+  "integrated_C_qualified": false,
+  "GLOBAL_RELEASE": false
+}

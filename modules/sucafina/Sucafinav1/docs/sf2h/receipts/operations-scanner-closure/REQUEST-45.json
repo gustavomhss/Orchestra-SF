@@ -1,0 +1,105 @@
+{
+  "schema": "sf2h.operations63.owner45-request.v1",
+  "status": "PREPARED_FOR_OWNER_NOT_DISPATCHED",
+  "requester_mission": 63,
+  "owner": 45,
+  "consumer": 60,
+  "material_source_sha": "83aabd95ab423816002a623d1a998eb51bb89173",
+  "material_source_tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+  "dev_sha_observed_2026_11_15_0233_utc": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "check_branch_observed": "astra-check-compose",
+  "check_head_observed": "771cf5896aa504620ab35a2e44cca2606b7e18c3",
+  "check_workflow_preimage": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+  "check_patch": "external/checks/MANIFEST.json",
+  "scanner_patch": "external/ci/MANIFEST.json",
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "required": true
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck",
+      "required": true
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e",
+      "required": true
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:spawn-imports",
+      "required": true
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "required": true
+    }
+  ],
+  "existing_checks": "Preserve CLI/Atlas generation and typechecks already in the owner45 lane. No Protocol/Server HttpApi changed in the Operations63 material unit; no new client generation assertion is made.",
+  "envelope_rule": "Owner45 must reconcile the lane, its required ancestry and actual dev ref. The reviewed check workflow must already be in the declared product before making its direct-child snapshot with only .astra-compose-check.json added. Do not add a workflow and envelope together.",
+  "no_owner_takeover": true,
+  "hosted_only": true,
+  "tests": {
+    "protocol_auxiliary": {
+      "status": "PASS_AT_SOURCE_W1",
+      "work": "e1791815218eea8e804d515bf197beeb9f8c8b56",
+      "run": 43667752670,
+      "job": 132670825592,
+      "pass": 22,
+      "fail": 0,
+      "receipt": "ci/R3-result.json"
+    },
+    "live_request": {
+      "package": "sucafina",
+      "packageSelector": "packages/sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "nominal_request": {
+      "package": "app",
+      "packageSelector": "packages/app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/operations.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    }
+  },
+  "real_scanner_integration": [
+    "Compose all owned setup/test/runtime files and the external test-ci patch before snapshot creation.",
+    "Use the existing unique ci-run-linux-operations63-* namespace; do not change the request env allowlist or add scanner ports to the request.",
+    "Verify setup artifact READY, ClamAV package/official database identities, main and error daemon owned processes/listeners.",
+    "Execute real-clamd.check.ts: clean/EICAR/clean-after, actual size-limit ERROR and outage after stopping only the verified ephemeral error daemon.",
+    "Execute all five original Operations journeys on the same composed product; keep 60000 ms test,10000 ms expect,workers1,retries0,repeat1.",
+    "Archive fresh W/tree/S/tree/run/job/request/actual counts; cleanup must run always, preserve evidence, remove only owned temporary state."
+  ],
+  "unresolved": [
+    "No permission is inferred to write or move the owner45 branch.",
+    "No run from this source proves current sf2-stack or integrated C.",
+    "No Omni/native verdict observed for the Playwright R2 run; preserve controls and resolve applicable gate with owner45.",
+    "No typecheck, guard, real daemon readiness or real scanner test has run for this material source."
+  ],
+  "authority_update": {
+    "observed_stack_head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "authority60_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+    "authority60_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "required": "S0 must explicitly authorize successor/resumption and freshACK before stack integration. Consumer60 is the requested handoff addressee, not an assertion of an active lease."
+  }
+}

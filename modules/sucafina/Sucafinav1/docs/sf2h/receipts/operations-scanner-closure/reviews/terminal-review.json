@@ -1,0 +1,26 @@
+{
+  "schema": "sf2h.operations63.terminal-review.v1",
+  "reviewer_task": "/root/normative_review",
+  "review_type": "Cold read-only review of final receipts; not a campaign G7 independent acceptance review",
+  "files": [
+    "HANDOFF-FINAL.md",
+    "AUTHORITY-FINAL.json",
+    "CONSUMER-RELEASE.json",
+    "RESULTS-FINAL.json",
+    "DEPENDENCY-CLOSURE.json",
+    "REQUEST-45.json",
+    "ci/R4-result.json",
+    "reviews/R4-browser-diagnosis.json"
+  ],
+  "blocking_contradictions_found": 0,
+  "confirmed": [
+    "R4 1PASS4FAIL with exact original budgets; DOC422 is scan-gate refusal without daemon invocation; IMPORT403 private first gate remains unknown",
+    "R3 22PASS0FAIL106expect at W1; no source-green transfer",
+    "251 criteria retained:3partial witnesses,25blocked/failed witnesses,223notqualified; zero full criterion closure",
+    "Live ClamD, native parity, human timing, C and global release remain unqualified",
+    "Terminal CAS parentW2 exact; authority60 ended; no successor orACK assumed"
+  ],
+  "product_tests_executed_by_reviewer": 0,
+  "remote_mutations_by_reviewer": 0,
+  "scope_limit": "The reviewer also authored the inert Procurement patch bundle; this final document review is not claimed as an independent review of that implementation."
+}

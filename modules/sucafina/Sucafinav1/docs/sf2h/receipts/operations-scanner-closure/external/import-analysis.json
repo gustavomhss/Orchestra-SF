@@ -1,0 +1,162 @@
+{
+  "schema": "sf2h-operations63-import-analysis-v1",
+  "status": "OBSERVED_FAILURE_WITH_OWN_HELPER_FIX_AND_EXTERNAL_SCANNER_PREREQUISITE",
+  "analyzed_at": "2026-11-15",
+  "run": {
+    "id": 43666919712,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712",
+    "attempt": 1,
+    "source_sha": "98522c038cba67a2552890e9daf8898caf146c41",
+    "branch": "ci-run-linux-operations63-4a8906bd-nominal-r2",
+    "selection": "e2e/sucafina/operations.spec.ts",
+    "journey": "OP-IMPORT-01",
+    "retries": 0,
+    "timeout_ms": 60000
+  },
+  "observed": {
+    "trace_path": "packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/trace.zip",
+    "trace_sha256": "75b45ebf9e6e4460c9adbe714226a6d07fed24e9205cd41921372f8ff6bbef2b",
+    "response_resource": "resources/7bac891f44387bd093d2cab7b9fc313ada52bb3e.json",
+    "request": {
+      "method": "POST",
+      "origin": "http://127.0.0.1:4174",
+      "pathname": "/wp04/first/planner",
+      "mode": "import-admit",
+      "content_type": "multipart/form-data",
+      "sec_fetch_site": "same-origin",
+      "cookie_present": true,
+      "idempotency_key_present": true,
+      "idempotency_key_matches_host_pattern": true
+    },
+    "response": {
+      "status": 403,
+      "body": {
+        "status": "denied"
+      }
+    },
+    "prior_results": [
+      {
+        "mode": "imports",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "mode": "import-preview",
+        "method": "POST",
+        "purpose": "deliberately invalid schema control",
+        "status": 400
+      },
+      {
+        "mode": "import-targets",
+        "method": "GET",
+        "status": 200
+      }
+    ],
+    "after_admission": "No successful preview or import-detail request was issued after the rejected admission.",
+    "helper_errors": [
+      "imports.ts:18 expected 200 but received 403, called by admission assertion at line118",
+      "imports.ts:62 page.waitForResponse: Test ended, prearmed at line116 for subsequent preview/detail"
+    ],
+    "credentials": "Cookies and Idempotency-Key values are intentionally excluded; only presence and format validity are recorded.",
+    "request_environment": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "request_evidence_path": "test-ci-evidence/request.json"
+  },
+  "cause_assessment": {
+    "conclusion": "The R2 execution has a proven missing scanner configuration that makes successful admission impossible. The observed generic 403 is consistent with scanner refusal, but does not uniquely identify the first private rejection gate.",
+    "scanner_path": [
+      "R2 workflow does not provision ClamD and only exports the existing ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER and ORCHESTRA_CHANNEL request environment keys.",
+      "wp04/host.ts uses null when SF_OPERATIONS_CLAMD_PORT is absent.",
+      "operations-support/installation.ts delegates assets.scan to scanLocalFile(bytes, input.scanner).",
+      "scanLocalFile returns false for a missing endpoint.",
+      "staged-files.ts returns denied/file-not-accepted when services.scan returns false; import-http.ts exposes only status denied and maps it to HTTP403."
+    ],
+    "authority_assessment": "Observed origin, fetch-site and idempotency headers satisfy the transport checks; previous workbench and destination discovery succeed. Static review found no additional authority defect in this execution path. These observations do not prove every subsequent human/target revalidation succeeded.",
+    "inference_limit": "HTTP intentionally omits the private reason and several authority gates also produce403. No scanner invocation telemetry exists in this R2 artifact. Do not label the 403 alone as a real ClamD fail-closed proof.",
+    "required_next_step": "Integrate the owner45/60 inert ephemeral ClamD workflow patch, run explicit real-clamd.check.ts and the original five Operations journeys with the service-derived environment, then inspect the resulting hosted evidence."
+  },
+  "helper_fix": {
+    "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+    "defect": "When admission rejects, importJourney throws before awaiting already registered preview/detail waiters; context teardown then rejects those promises without a handler.",
+    "change": "Register a rejection observer immediately in waiting(), but return the same original Promise<Response>. Awaited response failures still reject; HTTP, payload, financial, receipt, revocation and all other journey assertions remain byte-for-byte unchanged.",
+    "oracle_changes": false,
+    "timeout_changes": false,
+    "retries_changes": false,
+    "preimage": {
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "also_observed_at": "98522c038cba67a2552890e9daf8898caf146c41",
+      "blob_sha": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "encoding": "utf-8",
+      "content": "import { createHash, randomUUID } from \"node:crypto\"\nimport { createRequire } from \"node:module\"\nimport { expect } from \"@playwright/test\"\nimport type { APIResponse, Page, Response, TestInfo } from \"@playwright/test\"\nimport type { ImportManifest } from \"../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts\"\nimport type { ImportDetail, ImportReceiptSummary } from \"../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts\"\nimport { login, modeURL, observation } from \"./runtime.ts\"\nimport type { Account } from \"./runtime.ts\"\n\n// ExcelJS belongs to the existing Sucafina package. Resolve there under Bun's isolated workspace linker.\nconst { Workbook } = createRequire(new URL(\"../../../../../modules/sucafina/package.json\", import.meta.url))(\"exceljs\") as typeof import(\"../../../../../modules/sucafina/node_modules/exceljs\")\n\ntype Detail = { detail: ImportDetail; digest: string; receipt?: ImportReceiptSummary }\ntype Reference = Detail & { manifest: ImportManifest }\ntype Destination = { label: string; selectionRef: string; surface: string; formats: string[] }\n\nasync function valueOf<T>(response: APIResponse | Response): Promise<T> {\n  expect(response.status()).toBe(200)\n  const body = await response.json() as { status: string; value: T }\n  expect(body.status).toBe(\"ok\")\n  return body.value\n}\n\n/** Decode the application's own export, preserving its financial values and formulas. */\nasync function exported(page: Page, account: Account, version: string) {\n  const response = await page.request.get(account.baseURL + \"/planner?download=xlsx&version=\" + encodeURIComponent(version), { maxRetries: 0 })\n  expect(response.status()).toBe(200)\n  const workbook = new Workbook()\n  await workbook.xlsx.load(new Uint8Array(await response.body()).buffer)\n  return Object.fromEntries(workbook.worksheets.map((sheet) => {\n    const rows: unknown[][] = []\n    sheet.eachRow((row) => {\n      if (sheet.name === \"Info\" && row.getCell(1).value === \"Exported\") return\n      rows.push(Array.from({ length: sheet.columnCount }, (_, column) => row.getCell(column + 1).value))\n    })\n    return [sheet.name, rows]\n  }))\n}\n\nasync function tokens(page: Page, account: Account, version: string, ids: string[]) {\n  expect((await page.goto(account.baseURL + \"/planner?page=OPEX&mode=compare&version=\" + encodeURIComponent(version)))?.status()).toBe(200)\n  const result: Record<string, number> = {}\n  for (const id of ids) {\n    const form = page.locator(`form[data-page=\"OPEX\"][data-command=\"save\"][data-record=\"${id}\"]`)\n    await expect(form).toHaveCount(1)\n    const revision = await form.getAttribute(\"data-version\")\n    expect(revision).toMatch(/^\\d+$/)\n    result[id] = Number(revision)\n  }\n  return result\n}\n\n/** PR34 15df31a: actual XLSX admission, C02 preview, one Apply, delivery loss and read-only reconciliation. */\nexport async function importJourney(page: Page, info: TestInfo) {\n  const account = await login(page, \"first\", \"journey\")\n  const name = \"Operations import \" + randomUUID()\n  const renewal = randomUUID(), fixed = randomUUID()\n  const isMode = (url: string, mode: string) => {\n    const candidate = new URL(url)\n    return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + \"/planner\" && candidate.searchParams.get(\"sf\") === mode\n  }\n  const waiting = (mode: string, method = \"GET\") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)\n  expect((await page.goto(account.baseURL + \"/planner?page=Versions\"))?.status()).toBe(200)\n  const first = page.locator('form[data-page=\"Versions\"][data-command=\"save\"][data-record=\"\"]')\n  await expect(first).toHaveCount(1)\n  const created = page.waitForResponse((response) => response.url() === page.url() && response.request().method() === \"POST\")\n  await first.getByRole(\"button\", { name: \"Create first version\", exact: true }).click()\n  expect((await created).status()).toBe(200)\n  const versionForm = page.locator('form[data-page=\"Versions\"][data-command=\"save\"]:not([data-record=\"\"])')\n  await expect(versionForm).toHaveCount(1)\n  const version = await versionForm.getAttribute(\"data-record\")\n  if (!version) throw new Error(\"The actual Planner did not expose the created version identity\")\n  const versionRow = page.getByRole(\"row\").filter({ has: versionForm })\n  await expect(versionRow).toHaveCount(1)\n  await versionRow.getByRole(\"button\", { name: \"Manage\", exact: true }).click()\n  await expect(versionRow.getByRole(\"dialog\", { name: \"Manage record\", exact: true })).toBeVisible()\n  await versionForm.getByLabel(\"Name\", { exact: true }).fill(name)\n  const renamed = page.waitForResponse((response) => response.url() === page.url() && response.request().method() === \"POST\")\n  await versionForm.getByRole(\"button\", { name: \"Save\", exact: true }).click()\n  expect((await renamed).status()).toBe(200)\n  await expect(versionForm.getByLabel(\"Name\", { exact: true })).toHaveValue(name)\n  // Seed isolated preconditions through the real domain; line creation is not claimed as UI coverage.\n  for (const [id, label, amount] of [[renewal, \"Renewal\", 72000], [fixed, \"Unchanged\", 518000]] as const) {\n    const response = await page.request.post(account.baseURL + \"/planner\", { maxRetries: 0, headers: { Origin: account.origin }, data: { page: \"OPEX\", action: \"save\", id, version: 0, values: { versionId: version, name: label, el: \"licenses\", cur: \"USD\", owner: account.principal, f0: amount } } })\n    expect(response.status()).toBe(200)\n    expect(await response.json()).toMatchObject({ ok: true })\n  }\n  const reader = await page.context().newPage()\n  const beforeTokens = await tokens(reader, account, version, [renewal, fixed])\n  const before = await exported(reader, account, version)\n  expect(before.OPEX?.filter((row) => row[0] === renewal || row[0] === fixed)).toHaveLength(6)\n  expect(before.OPEX?.filter((row) => row[0] === renewal && row[8] === \"Forecast\").map((row) => row[9])).toEqual([72000])\n  expect(before.OPEX?.filter((row) => row[0] === fixed && row[8] === \"Forecast\").map((row) => row[9])).toEqual([518000])\n  const workbook = new Workbook()\n  workbook.addWorksheet(\"OPEX\").addRows([[\"Line ID\", \"Cost element\", \"Vendor / item\", \"Currency\", \"Measure\", \"Jan\"], [renewal, \"Licenses\", \"Renewal\", \"USD\", \"Forecast\", 84000]])\n  const bytes = Buffer.from(await workbook.xlsx.writeBuffer())\n  const sourceDigest = createHash(\"sha256\").update(bytes).digest(\"hex\")\n  expect((await page.goto(modeURL(account, \"planner\", \"imports\").href))?.status()).toBe(200)\n  const root = page.locator(\"[data-import-workbench]\")\n  await expect(root).toHaveCount(1)\n  const status = root.locator(\":scope > [role='status']\")\n  await expect(status).toHaveCount(1)\n  const invalid = await page.request.post(modeURL(account, \"planner\", \"import-preview\").href, { maxRetries: 0, headers: { Origin: account.origin, \"Idempotency-Key\": randomUUID() }, data: { admittedFileRef: \"invalid-schema-probe\", format: \"xlsx\", options: { unknown: true } } })\n  expect(invalid.status()).toBe(400)\n  expect(await invalid.json()).toEqual({ status: \"invalid\" })\n  const destinations = waiting(\"import-targets\")\n  await root.getByRole(\"button\", { name: \"Find destinations\", exact: true }).click()\n  const targets = await valueOf<Destination[]>(await destinations)\n  expect(targets.filter((target) => target.label === name)).toHaveLength(1)\n  const index = targets.findIndex((target) => target.label === name)\n  expect(targets[index]).toMatchObject({ surface: \"planner\", formats: expect.arrayContaining([\"xlsx\"]) })\n  await root.getByLabel(\"Destination\", { exact: true }).selectOption(String(index))\n  await root.getByLabel(\"File\", { exact: true }).setInputFiles({ name: name + \".xlsx\", mimeType: \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\", buffer: bytes })\n  await expect(root.getByLabel(\"Create a new Planner version\", { exact: true })).not.toBeChecked()\n  await expect(root.getByLabel(\"Remove records missing from supplied sheets\", { exact: true })).not.toBeChecked()\n  const admission = waiting(\"import-admit\", \"POST\"), previewResponse = waiting(\"import-preview\", \"POST\"), detailResponse = waiting(\"import-detail\")\n  await root.getByRole(\"button\", { name: \"Preview changes\", exact: true }).click()\n  const admitted = await valueOf<{ ref: string }>(await admission)\n  const previewTransport = await previewResponse\n  expect(previewTransport.request().postDataJSON()).toEqual({ admittedFileRef: admitted.ref, format: \"xlsx\", options: {} })\n  const preview = await valueOf<ImportManifest>(previewTransport)\n  const detail = await valueOf<Detail>(await detailResponse)\n  expect(preview).toMatchObject({ sourceDigest, format: \"xlsx\", state: \"preview\", domainApplied: false, receipts: [], issues: [], context: { principalRef: account.principal, surface: \"planner\" } })\n  expect(preview.baseIdentity).toEqual([expect.objectContaining({ surface: \"planner\", type: \"planner-version\", id: version })])\n  expect(preview.commands).toHaveLength(1)\n  const command = preview.commands[0]!\n  expect(command.target).toEqual(preview.baseIdentity[0])\n  expect(command.preview.engineVersion).toBe(\"planner-runtime-v1\")\n  for (const [id, prior, next] of [[renewal, 72000, 84000], [fixed, 518000, 518000]] as const) {\n    expect(command.preview.values.filter((value) => value.id === `before:${id}:1:forecast`)).toEqual([expect.objectContaining({ value: prior, currency: \"USD\" })])\n    expect(command.preview.values.filter((value) => value.id === `after:${id}:1:forecast`)).toEqual([expect.objectContaining({ value: next, currency: \"USD\" })])\n  }\n  expect(detail.detail).toMatchObject({ manifestId: preview.id, version: preview.version, sourceDigest })\n  expect(detail.receipt).toBeUndefined()\n  expect(detail.detail.changes.filter((change) => change.path === `/versions/@id=${version}/lines/@id=${renewal}/f/0`)).toEqual([expect.objectContaining({ kind: \"changed\", before: { state: \"present\", value: 72000 }, after: { state: \"present\", value: 84000 }, source: { kind: \"file\", sheet: \"OPEX\", row: 2, column: 6, address: \"F2\", field: \"Jan\" } })])\n  await expect(status).toHaveText(\"Review the simulation, including ignored and rejected items. Apply requires your explicit action.\")\n  expect(await exported(reader, account, version)).toEqual(before)\n  expect(await tokens(reader, account, version, [renewal, fixed])).toEqual(beforeTokens)\n  const applies: string[] = [], committed: ImportManifest[] = []\n  page.on(\"request\", (request) => { if (isMode(request.url(), \"import-apply\") && request.method() === \"POST\") applies.push(request.postData() ?? \"\") })\n  // Send the real mutation once and discard only its delivery. No response is manufactured.\n  await page.route((url) => isMode(url.href, \"import-apply\"), async (route) => {\n    expect(route.request().postDataJSON()).toEqual({ manifestId: preview.id, version: preview.version })\n    committed.push(await valueOf<ImportManifest>(await route.fetch({ maxRetries: 0 })))\n    await route.abort(\"failed\")\n  }, { times: 1 })\n  const failedDelivery = page.waitForEvent(\"requestfailed\", (request) => isMode(request.url(), \"import-apply\"))\n  const recoveredResponse = waiting(\"import-reference\")\n  await root.getByRole(\"button\", { name: \"Apply reviewed import\", exact: true }).click()\n  await failedDelivery\n  const recovered = await valueOf<Reference>(await recoveredResponse)\n  expect(committed).toHaveLength(1)\n  expect(recovered.manifest).toEqual(committed[0])\n  expect(recovered.manifest.receipts).toHaveLength(1)\n  const receipt = recovered.manifest.receipts[0]!\n  expect(recovered.manifest).toEqual({ ...preview, state: \"applied\", domainApplied: true, receipts: [receipt] })\n  expect(receipt).toMatchObject({ idempotencyKey: command.idempotencyKey, commandDigest: command.commandDigest, targetIncarnation: command.target.incarnation, principalRef: account.principal, surface: \"planner\", status: \"applied\", errors: [] })\n  expect(recovered.receipt).toMatchObject({ receiptId: receipt.id, manifestId: preview.id, idempotencyKey: command.idempotencyKey, commandDigest: command.commandDigest, outcome: \"applied\" })\n  expect(recovered.receipt?.changedFields).toBeGreaterThan(0)\n  expect(recovered.detail).toEqual(detail.detail)\n  await expect(status).toHaveText(\"Confirmed receipt refreshed under your current access.\")\n  await expect(root.locator(\"[data-receipt]\")).toContainText(\"Receipt: \" + receipt.id)\n  await expect(root.locator(\"[data-receipt]\")).toContainText(\"Manifest: \" + preview.id)\n  await expect(root.locator(\"[data-receipt]\")).toContainText(\"Actor: \" + account.principal + \" · Version: \" + receipt.version)\n  const after = await exported(reader, account, version)\n  expect(after.OPEX?.filter((row) => row[0] === renewal && row[8] === \"Forecast\").map((row) => row[9])).toEqual([84000])\n  expect(after.OPEX?.filter((row) => row[0] === fixed)).toEqual(before.OPEX?.filter((row) => row[0] === fixed))\n  expect(after.OPEX?.filter((row) => row[0] === renewal || row[0] === fixed)).toHaveLength(6)\n  expect(after.OPEX?.map((row) => [row[0], row[8]])).toEqual(before.OPEX?.map((row) => [row[0], row[8]]))\n  expect(after.OPEX?.filter((row) => row[0] !== renewal || row[8] !== \"Forecast\")).toEqual(before.OPEX?.filter((row) => row[0] !== renewal || row[8] !== \"Forecast\"))\n  const priorRow = before.OPEX!.find((row) => row[0] === renewal && row[8] === \"Forecast\")!\n  const changedRow = after.OPEX!.find((row) => row[0] === renewal && row[8] === \"Forecast\")!\n  expect(changedRow.slice(0, 9)).toEqual(priorRow.slice(0, 9))\n  expect(changedRow.slice(10, 21)).toEqual(priorRow.slice(10, 21))\n  expect(changedRow[21]).toEqual({ ...(priorRow[21] as { formula: string }), result: 84000 })\n  for (const sheet of Object.keys(before).filter((name) => name !== \"OPEX\")) expect(after[sheet]).toEqual(before[sheet])\n  const afterTokens = await tokens(reader, account, version, [renewal, fixed])\n  expect(afterTokens).toEqual({ [renewal]: beforeTokens[renewal]! + 1, [fixed]: beforeTokens[fixed] })\n  const refreshed = waiting(\"import-reference\")\n  await root.getByRole(\"button\", { name: \"Refresh receipt\", exact: true }).click()\n  expect(await valueOf<Reference>(await refreshed)).toEqual(recovered)\n  const reloaded = waiting(\"import-reference\")\n  expect((await page.goto(modeURL(account, \"planner\", \"imports\", { importPreviewRef: preview.id }).href))?.status()).toBe(200)\n  expect(await valueOf<Reference>(await reloaded)).toEqual(recovered)\n  await expect(root.getByRole(\"button\", { name: \"Apply reviewed import\", exact: true })).toBeDisabled()\n  expect(applies).toEqual([JSON.stringify({ manifestId: preview.id, version: preview.version })])\n  expect(await exported(reader, account, version)).toEqual(after)\n  expect(await tokens(reader, account, version, [renewal, fixed])).toEqual(afterTokens)\n  const viewerPage = await page.context().newPage()\n  const viewer = await login(viewerPage, \"viewer\", \"journey\")\n  // Sign out in the same operator's reader tab while the workbench retains the previously valid reference.\n  const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + \"/auth/logout\" && response.request().method() === \"POST\")\n  await reader.getByRole(\"button\", { name: \"Sign out\", exact: true }).click()\n  expect((await signedOut).status()).toBe(204)\n  const denied = waiting(\"import-reference\")\n  await root.getByRole(\"button\", { name: \"Refresh receipt\", exact: true }).click()\n  const deniedResponse = await denied\n  expect(deniedResponse.status()).toBe(403)\n  expect(await deniedResponse.json()).toEqual({ status: \"denied\" })\n  await expect(status).toHaveText(\"Access changed. The previous preview is no longer available.\")\n  for (const selector of [\"[data-context]\", \"[data-impact]\", \"[data-changes]\", \"[data-receipt]\"]) await expect(root.locator(selector)).toBeEmpty()\n  await expect(root.getByRole(\"button\", { name: \"Apply reviewed import\", exact: true })).toBeDisabled()\n  expect(applies).toHaveLength(1)\n  const visibleAfterRevocation = await exported(viewerPage, viewer, version)\n  expect(visibleAfterRevocation.OPEX).toEqual(after.OPEX)\n  await observation(info, \"operations-import-real-receipt\", { version, renewal, fixed, sourceDigest, manifest: recovered.manifest, receipt: recovered.receipt, beforeTokens, afterTokens, applyRequests: applies.length, recovery: \"real Apply response delivery lost; automatic GET, Refresh receipt, reload\", revocation: \"same credential logged out; cached reference denied\" })\n  await reader.close()\n  await viewerPage.close()\n}\n"
+    },
+    "validation": {
+      "static_review": "Only waiting() lifecycle handling changed; every call site awaits the original promise on its success path.",
+      "local_product_tests": "NOT_RUN",
+      "hosted_retest": "PENDING",
+      "static_content_check": "PASS: preserved preimage Git blob; exact one-block replacement; all existing assertions and statements outside waiting() unchanged."
+    },
+    "postimage_blob_sha": "c229bc6e85d2474d057a21859d0d88055100a078",
+    "postimage_sha256": "a8b6b42f139929fbe6fe5aa8e5ebad5b83705dcbcc9155db60d82acc712fb53d",
+    "patch": "--- a/packages/app-shell/e2e/sucafina/operations-support/imports.ts\n+++ b/packages/app-shell/e2e/sucafina/operations-support/imports.ts\n@@ -59,7 +59,13 @@\n     const candidate = new URL(url)\n     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + \"/planner\" && candidate.searchParams.get(\"sf\") === mode\n   }\n-  const waiting = (mode: string, method = \"GET\") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)\n+  const waiting = (mode: string, method = \"GET\") => {\n+    const response = page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)\n+    // Admission can fail before the later preview/detail responses exist. Observe teardown\n+    // rejection eagerly; returning the original promise preserves every awaited failure.\n+    void response.catch(() => undefined)\n+    return response\n+  }\n   expect((await page.goto(account.baseURL + \"/planner?page=Versions\"))?.status()).toBe(200)\n   const first = page.locator('form[data-page=\"Versions\"][data-command=\"save\"][data-record=\"\"]')\n   await expect(first).toHaveCount(1)\n"
+  },
+  "shared_dependency": {
+    "owner": "mission45/mission60",
+    "patch": "external/ci/test-ci.patch",
+    "workflow_modification_during_analysis": false,
+    "external_services_installed": false,
+    "azure_modified": false
+  },
+  "omni_observation": {
+    "owner": "mission45",
+    "verdict": "NOT_PROVEN_IN_R2",
+    "detail": "R2 log exposes Omni setup/environment but no actual omni positive control verdict. Existing Playwright branch does not preload the Bun Omni control. Do not promote this browser run to an Omni or native parity PASS; keep the existing controls and qualify the Bun lane separately."
+  },
+  "sources": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "ref": "98522c038cba67a2552890e9daf8898caf146c41",
+      "blob_sha": "8230eb28f322dde255382b74280192f39844724d"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "ref": "98522c038cba67a2552890e9daf8898caf146c41",
+      "blob_sha": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "d60be2f87aa210c9700fba276932a6f443264e4f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "53a1f34779598545cde83295c8ff98b861fabb72"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "0d42f5242acd3d1c93bc110422285b96975b8ea0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261"
+    }
+  ]
+}

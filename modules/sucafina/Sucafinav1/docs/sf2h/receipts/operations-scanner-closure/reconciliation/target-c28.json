@@ -1,0 +1,252 @@
+{
+  "schema": "sf2h.operations63.target-reconciliation.v1",
+  "status": "STATIC_DELTA_REVIEW_COMPLETE_TARGET_EXECUTION_UNQUALIFIED",
+  "mission": "63",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_baseline": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "published_operations63_work_snapshot": "e1791815218eea8e804d515bf197beeb9f8c8b56",
+  "target_branch": "sf2-stack",
+  "target_commit": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "target_unit": "Reports48 held C28 validation candidate",
+  "compare": {
+    "url": "https://github.com/gustavomhss/Orchestra-SF/compare/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85...d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "merge_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "changed_paths": 252,
+    "mission63_owned_path_intersection": []
+  },
+  "review_method": "Pinned GitHub MCP file reads and complete product-authority source comparison; related runtime import/call-path inspection. No shared source was copied into the Operations worktree, no remote write, no product test or CI dispatch was performed by this reviewer.",
+  "direct_producer_delta": {
+    "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+    "before_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+    "published_operations63_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+    "target_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+    "complete_diff_reviewed": true,
+    "changes": "One authorization hunk replaces catch-to-undefined for sf_review_prepare and sf-read:/sf-human: actions present in collaborationReads with direct await resolve(request), allowing uncertainty to reach their producer/HTTP boundary. Other operations retain catch-to-undefined.",
+    "unchanged": "No imports, grant structure, principal resolution, state target authorization, native admission or write policy changed in this producer. Explicit undefined remains a denial.",
+    "nominal_operations_classification": [
+      {
+        "operation": "sf_request_read",
+        "use": "Procurement queue/C02",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf_import_preview",
+        "use": "Import discover/admit-target/preview/detail/reference",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf_document_extract",
+        "use": "Document sources/admission/extract/schema-list/candidates",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf_knowledge_search",
+        "use": "Document search",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf_evidence_get",
+        "use": "Document evidence open",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf-human:imports.admit",
+        "use": "Import admission",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf-human:imports.apply",
+        "use": "Explicit import Apply",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf-human:documents.schema",
+        "use": "Explicit document schema",
+        "new_read_branch": false
+      },
+      {
+        "operation": "sf-human:documents.confirm",
+        "use": "Explicit document confirmation",
+        "new_read_branch": false
+      }
+    ]
+  },
+  "related_shared_drift": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "before_blob": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+      "target_blob": "bde64fb8cb1a25e8f10eb979ed5ff111cdb2042e",
+      "effect": "Adds strict read source/recipient/context probes that preserve unavailable evidence separately from explicit refusal. Legacy write probes remain distinct.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "before_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "target_blob": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4",
+      "effect": "Wires strict read probes into recipient thread/history/directory readers. No new synchronous initialization work in the changed lines.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+      "before_blob": "2d5cc3832da8d26ad1e30978f6f49c80191620c3",
+      "target_blob": "438cbf76c6b230ed5a9b3328ef67cbecc73106c6",
+      "effect": "Separates explicit lost authority/retargeting from unavailable reads and content drift; revalidates source scope before returning.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+      "before_blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+      "target_blob": "59a923fbf7f04b212b24cd4c32f09d67620bccda",
+      "effect": "Separates read uncertainty and content drift from explicit denial; readVersion and edit egress preserve current source scope. Operations does not supply threadHistoryWrites.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+      "before_blob": "5d3ad37709fff05625877ecd90768d7253ce3735",
+      "target_blob": "134b3bb6dd682c23eceb2c525ba35aa0c0584c39",
+      "effect": "Prevents the canonical fallback from overriding denial, stale content or explicitly inconclusive thread reads.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "before_blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+      "target_blob": "b7f69a1b71e40af5204280054cb83d0c2e2970c6",
+      "effect": "Revalidates retained read scope and distinguishes stale content/unavailable reads from denied authority; sameThreadReadScope added.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "before_blob": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+      "target_blob": "5123063a55dbb7ab8935ff95e432b8bf1a77fd0d",
+      "effect": "Preserves non-ok review read outcomes and throws for uncertain context reads; isReviewThreadContext used by Operations transitives is unchanged.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "before_blob": "62db836fd93e349f19d007e1933396420a3540ff",
+      "target_blob": "1290845a260606bd6e2b30594ba4247724ed7290",
+      "effect": "Adds strict optional read-access/evidence callbacks and classifies review reads. Operations does not create a review service; reviewProjectionEvidence imported by thread-context is unchanged.",
+      "operations_exposure": "Loaded through createOperationsInstallation -> createSfBusinessServices -> createCollaborationHost and its transitive imports; changed collaboration/review request behaviors are not invoked by the five Operations journeys."
+    }
+  ],
+  "unchanged_pinned_dependencies": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "blob": "d60be2f87aa210c9700fba276932a6f443264e4f"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "blob": "53a1f34779598545cde83295c8ff98b861fabb72"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/document-services.ts",
+      "blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+      "blob": "0da7d51672dc2519019f7880806d61c529456aa9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "blob": "91784d3ea3358565e19b62922c8867f134af9ac4"
+    }
+  ],
+  "composition_assessment": {
+    "conclusion": "No concrete Operations semantic regression or Operations-owned repair is established by the C28 delta. Static expectation is unchanged nominal behavior, with a real shared module-load/construction delta that still requires composed-snapshot validation.",
+    "routes": "The Operations application mounts documentHttp and importHttp plus procurementQueueView. It does not mount Collaboration/Review HTTP or the extended installed Reports browser.",
+    "grants": {
+      "namespaces": [
+        "documents",
+        "receipts"
+      ],
+      "operations": [
+        "sf_request_read",
+        "sf_import_preview",
+        "sf_document_extract",
+        "sf_knowledge_search",
+        "sf_evidence_get"
+      ],
+      "human_actions": [
+        "imports.admit",
+        "imports.apply",
+        "documents.schema",
+        "documents.confirm"
+      ]
+    },
+    "absent_capabilities": [
+      "collaboration/review routes and grants",
+      "threadHistoryWrites",
+      "native Session/provider admission"
+    ],
+    "c28_coverage": "The Operations five and seven auxiliaries cannot qualify C28 read-uncertainty behavior; Reports48/C28 qualification remains with its owners."
+  },
+  "evidence_scope": {
+    "R2": "The running five-nominal R2 request was acknowledged on source baseline 7e1a36e; its outcome remains evidence for that exact dispatched snapshot. This receipt does not report or change its terminal outcome.",
+    "target_runs": "NONE_BY_THIS_REVIEWER",
+    "transfer_green_to_c28": false,
+    "transfer_c28_green_to_operations": false,
+    "source_pass_implies_integrated_pass": false
+  },
+  "required_qualification": [
+    {
+      "owner": "60",
+      "action": "Acknowledge the target/shared delta and compose the complete Operations63 unit on the intended target. Do not overwrite C28 shared producers with the old Operations baseline, and do not merge or rebase from this receipt alone."
+    },
+    {
+      "owner": "60/45",
+      "action": "Provision the real, ephemeral ClamD capability through the reviewed workflow dependency before requesting scanner-dependent qualification. Keep the request allowlist and Operations budgets unchanged."
+    },
+    {
+      "owner": "60/63",
+      "action": "On the composed work snapshot, record a fresh W/S/run/job and run the original seven Operations auxiliaries plus all five original Operations journeys with their original identities, 60000 ms test timeout, 10000 ms expect timeout and retries 0. This resolves the shared construction and authorization regression risk."
+    },
+    {
+      "owner": "60/63",
+      "action": "Qualify the scanner protocol selection and real-clamd.check.ts clean/EICAR/clean-after, real error and owned-daemon outage controls against that composed scanner adapter and service; no historical source-only result closes the integrated scanner criterion."
+    },
+    {
+      "owner": "60/Reports48",
+      "action": "Keep C28 held until its own required Reports validation is accepted. The new authority-boundary.test.ts demonstrates the intended uncertainty-versus-denial distinction in source, but it was only read here; neither that source nor Operations results are a C28 PASS."
+    }
+  ],
+  "immutable_limits": [
+    "No scanner replacement or synthetic clean verdict.",
+    "No change to the five nominal identities, selection, timeout, retries or oracle.",
+    "No new direct shared-product patch is justified by this static delta review.",
+    "C06 material confirmation, PDF/DOCX/text completeness, native/installed/Entra and human timing gates remain independent and unclosed by this reconciliation."
+  ],
+  "mutations": {
+    "new_receipt_only": true,
+    "shared_product_files": 0,
+    "owned_product_files": 0,
+    "remote_writes": 0,
+    "test_dispatches": 0
+  }
+}

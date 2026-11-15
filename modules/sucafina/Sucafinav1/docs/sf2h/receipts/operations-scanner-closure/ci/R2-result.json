@@ -1,0 +1,143 @@
+{
+  "schema": "sf2h.operations63.ci-result.v1",
+  "selection": "five-original-Operations-nominals",
+  "status": "FAIL",
+  "work_commit": "4a8906bd638a51a95ff13b4c542f62ef7203f486",
+  "work_tree": "60e5420af9e427e9047fb6cb387ebd4586148105",
+  "snapshot_commit": "98522c038cba67a2552890e9daf8898caf146c41",
+  "snapshot_tree": "04073a1d41ddc00ff322bd1f769c50dca642b7d9",
+  "snapshot_delta": {
+    ".ci-run.json": "049559c31c300a62c5d3a2d2d90801d06eddc758"
+  },
+  "run": 43666919712,
+  "job": 132668237542,
+  "run_attempt": 1,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666919712",
+  "artifact": {
+    "id": 14142630953,
+    "bytes": 25922891,
+    "sha256": "b7c84acb5f299850b4238edd7991f55a5fbe493bfd6ff8ae30f74fbe33a193b1",
+    "expires_at": "2026-11-22T02:19:48Z",
+    "downloaded_and_digest_verified": true,
+    "retained_text_evidence": "ci/R2/",
+    "binary_trace_location": "original Actions artifact; no copied credentials or cookies in receipts"
+  },
+  "stats": {
+    "startTime": "2026-11-15T02:17:39.016Z",
+    "duration": 129431.27799999999,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "id": "OP-PROC-01",
+      "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "status": "passed",
+      "duration_ms": 1326,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "OP-PROC-02",
+      "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "status": "failed",
+      "duration_ms": 14288,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+        }
+      ],
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\nExpected: \u001b[32m\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\"\u001b[39m\nReceived: \u001b[31m\"Current request value: 28000 EUR; base value: 30240\u001b[7m.000000000004\u001b[27m USD; FX: 1.08 (submitted).\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0002\"]').locator('[data-request-money]')\u001b[22m\n\u001b[2m    14 × locator resolved to <p data-request-money=\"PR-2026-0002\">Current request value: 28000 EUR; base value: 302…</p>\u001b[22m\n\u001b[2m       - unexpected value \"Current request value: 28000 EUR; base value: 30240.000000000004 USD; FX: 1.08 (submitted).\"\u001b[22m\n\n\n   at sucafina/operations-support/procurement-snapshot.ts:40\n\n  38 |   await requestAction(page, id, sourcing.locator('form[data-command=\"submit_sourcing\"]'), \"Submit sourcing\")\n  39 |   await expect(detail.locator(\"[data-request-summary]\")).toContainText(\"Sourcing approval\")\n> 40 |   await expect(detail.locator(\"[data-request-money]\")).toHaveText(\"Current request value: 28000 EUR; base value: 30240 USD; FX: 1.08 (submitted).\")\n     |                                                        ^\n  41 |   const pendingVersion = await form.getAttribute(\"data-version\")\n  42 |   if (!pendingVersion || !/^[1-9]\\d*$/.test(pendingVersion)) throw new Error(\"The submitted sourcing must have a positive domain version\")\n  43 |   const before = await queueIdentity(page, account, id, \"30240 USD\")\n    at sourcingSnapshot (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:40:56)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:20:5"
+      ]
+    },
+    {
+      "id": "OP-PROC-03",
+      "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "status": "failed",
+      "duration_ms": 15636,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+        }
+      ],
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAccessibleDescription\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\nExpected: \u001b[32m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[39m\nReceived: \u001b[31m\"Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[7m Quote 1: no FX rate defined for JPY (Settings → Currencies)\u001b[27m\"\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAccessibleDescription\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('details[id=\"PR-2026-0003\"]').locator('section[id=\"PR-2026-0003-sourcing\"]').locator('form[data-command=\"save\"]').locator('[name=\"sourcing.quotes.0.currency\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to <input type=\"text\" value=\"JPY\" aria-invalid=\"true\" data-field-invalid=\"true\" name=\"sourcing.quotes.0.currency\" aria-labelledby=\"PR-2026-0003-save-label-sourcing.quotes.0.currency\" aria-describedby=\"PR-2026-0003-save-error-sourcing.quotes.0.currency field-error-a8f89090-aab9-4c66-802b-7e8af04c81c2-0\"/>\u001b[22m\n\u001b[2m       - unexpected value \"Quote 1: no FX rate defined for JPY (Settings → Currencies) Quote 1: no FX rate defined for JPY (Settings → Currencies)\"\u001b[22m\n\n\n   at sucafina/operations-support/procurement-refusal.ts:59\n\n  57 |   await expect(currency).toHaveValue(\"JPY\")\n  58 |   await expect(currency).toHaveAttribute(\"aria-invalid\", \"true\")\n> 59 |   await expect(currency).toHaveAccessibleDescription(message)\n     |                          ^\n  60 |   await expect(form).toHaveAttribute(\"data-version\", version)\n  61 |   await expect(detail.locator(\"[data-request-summary]\")).toContainText(\"Value unavailable\")\n  62 |   await expect(detail.locator(\"[data-request-summary]\")).not.toContainText(\"Sourcing approval\")\n    at missingFxRefusal (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:59:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:25:5"
+      ]
+    },
+    {
+      "id": "OP-IMPORT-01",
+      "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "status": "failed",
+      "duration_ms": 1647,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+        }
+      ],
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m403\u001b[39m\n\n   at sucafina/operations-support/imports.ts:18\n\n  16 |\n  17 | async function valueOf<T>(response: APIResponse | Response): Promise<T> {\n> 18 |   expect(response.status()).toBe(200)\n     |                             ^\n  19 |   const body = await response.json() as { status: string; value: T }\n  20 |   expect(body.status).toBe(\"ok\")\n  21 |   return body.value\n    at valueOf (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:18:29)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:118:26)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5",
+        "Error: page.waitForResponse: Test ended.\n\n   at sucafina/operations-support/imports.ts:62\n\n  60 |     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + \"/planner\" && candidate.searchParams.get(\"sf\") === mode\n  61 |   }\n> 62 |   const waiting = (mode: string, method = \"GET\") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)\n     |                                                          ^\n  63 |   expect((await page.goto(account.baseURL + \"/planner?page=Versions\"))?.status()).toBe(200)\n  64 |   const first = page.locator('form[data-page=\"Versions\"][data-command=\"save\"][data-record=\"\"]')\n  65 |   await expect(first).toHaveCount(1)\n    at waiting (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:62:58)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:116:72)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5"
+      ]
+    },
+    {
+      "id": "OP-DOC-01",
+      "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "status": "timedOut",
+      "duration_ms": 60333,
+      "retry": 0,
+      "timeout_ms": 60000,
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+        }
+      ],
+      "errors": [
+        "\u001b[31mTest timeout of 60000ms exceeded.\u001b[39m",
+        "Error: locator.selectOption: Test timeout of 60000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form[data-page=\"Suppliers\"][data-command=\"create\"]').getByLabel('Risk rating', { exact: true })\u001b[22m\n\n\n   at sucafina/operations-support/documents.ts:43\n\n  41 |     [\"Currency\", \"USD\"],\n  42 |   ]) await create.getByLabel(label!, { exact: true }).fill(value!)\n> 43 |   await create.getByLabel(\"Risk rating\", { exact: true }).selectOption(\"Low\")\n     |                                                           ^\n  44 |   const creation = commandResponse(page, \"create\")\n  45 |   await create.getByRole(\"button\", { name: \"Create supplier\", exact: true }).click()\n  46 |   const created = await creation\n    at documentJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/documents.ts:43:59)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:35:5"
+      ]
+    }
+  ],
+  "budgets": {
+    "timeout_ms": 60000,
+    "expect_ms": 10000,
+    "workers": 1,
+    "repeat_each": 1,
+    "retries": 0
+  },
+  "test_selection_identity": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+  "original_spec_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+  "real_clamd_provisioned": false,
+  "real_clamd_qualified": false,
+  "source_is_W1_scanner": false,
+  "c28_qualified": false,
+  "transfer_to_integrated_C": false,
+  "native_parity_measured": false,
+  "human_timing_measured": false,
+  "notes": [
+    "Runtime results contain 0 skipped and 0 flaky. The selection-only discovery JSON represents unexecuted listing and is not a skip waiver.",
+    "OP-PROC-01 proof is limited to its actual original criteria; C06 material confirmation is NOT_EXERCISED in its attachment.",
+    "PROC-02 and PROC-03 expose shared UI defects; exact browser expectations remain unchanged.",
+    "IMPORT stage403 and DOC locator timeout require artifact-level diagnosis; no scanner conclusion inferred from HTTP status alone.",
+    "This run predates the W1 scanner change."
+  ]
+}

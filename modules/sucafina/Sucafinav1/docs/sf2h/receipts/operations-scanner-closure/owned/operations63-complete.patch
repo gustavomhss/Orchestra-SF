@@ -1,0 +1,743 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/local-scanner.ts b/modules/sucafina/Sucafinav1/runtime/local-scanner.ts
+--- a/modules/sucafina/Sucafinav1/runtime/local-scanner.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-scanner.ts
+@@ -6,8 +6,9 @@
+   if (endpoint.host !== "127.0.0.1" || !Number.isInteger(endpoint.port) || endpoint.port < 1 || endpoint.port > 65535) return false
+   return new Promise<boolean>((resolve) => {
+     const socket = createConnection({ host: endpoint.host, port: endpoint.port })
++    const expected = Buffer.from("stream: OK\0")
+     const output: Buffer[] = []
+-    const finished = { value: false, offset: -1 }
++    const finished = { value: false, offset: -1, received: 0 }
+     const finish = (clean: boolean) => {
+       if (finished.value) return
+       finished.value = true
+@@ -18,12 +19,16 @@
+     const deadline = setTimeout(() => finish(false), 30000)
+     socket.on("error", () => finish(false))
+     socket.on("close", () => finish(false))
++    // Non-session INSTREAM ends at EOF. A clean prefix cannot hide another
++    // record, a truncated reply or a response sent before the complete upload.
++    socket.on("end", () => finish(finished.offset > bytes.length && finished.received === expected.length))
+     socket.on("data", (chunk) => {
++      if (finished.offset <= bytes.length) return finish(false)
++      finished.received += chunk.length
++      if (finished.received > expected.length) return finish(false)
+       output.push(chunk)
+       const response = Buffer.concat(output)
+-      if (response.length > 4096) return finish(false)
+-      const end = response.indexOf(0)
+-      if (end >= 0) finish(response.subarray(0, end).toString("utf8") === "stream: OK")
++      if (!response.equals(expected.subarray(0, response.length))) finish(false)
+     })
+     const send = () => {
+       if (finished.value) return
+@@ -48,3 +53,4 @@
+     socket.on("drain", send)
+   })
+ }
++
+diff --git a/modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts b/modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts
+new file mode 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts
+@@ -0,0 +1,77 @@
++import { expect, test } from "bun:test"
++import { once } from "node:events"
++import { createServer } from "node:net"
++import type { Socket } from "node:net"
++import { scanLocalFile } from "../../../runtime/local-scanner.ts"
++
++// These adversarial peers exercise refusal only. They are never installed as
++// an Operations scanner and cannot substitute for real-clamd.check.ts.
++for (const [name, reply] of [
++  ["clean prefix followed by a detection", "stream: OK\0stream: Eicar-Signature FOUND\0"],
++  ["clean prefix followed by an error", "stream: OK\0stream: ERROR\0"],
++  ["duplicate clean records", "stream: OK\0stream: OK\0"],
++  ["extra NUL after clean record", "stream: OK\0\0"],
++  ["unterminated clean reply", "stream: OK"],
++  ["wrong reply delimiter", "stream: OK\n"],
++  ["unexpected Unicode replacement character before clean terminator", "stream: OK\ufffd\0"],
++  ["oversized clean-prefixed reply", "stream: OK\0" + "x".repeat(4096)],
++] as const) {
++  test("ClamD protocol refuses " + name, async () => {
++    const f = await peer(reply)
++    try {
++      expect(await scanLocalFile(new Uint8Array([1, 2, 3]), f.endpoint)).toBe(false)
++      expect(Buffer.concat(f.received)).toEqual(Buffer.concat([
++        Buffer.from("zINSTREAM\0"), Buffer.from([0, 0, 0, 3, 1, 2, 3, 0, 0, 0, 0]),
++      ]))
++    } finally { await f.close() }
++  })
++}
++
++test("ClamD protocol refuses a clean reply before the complete stream is sent", async () => {
++  const f = await peer("stream: OK\0", true)
++  try {
++    // The peer does not consume the upload; the sender encounters real socket
++    // backpressure before this payload can complete. No clock or mock is used.
++    expect(await scanLocalFile(new Uint8Array(16 * 1024 * 1024), f.endpoint)).toBe(false)
++  } finally { await f.close() }
++})
++
++test("ClamD protocol refuses a missing or invalid loopback endpoint", async () => {
++  const bytes = new Uint8Array([1])
++  expect(await scanLocalFile(bytes, null)).toBe(false)
++  for (const port of [0, -1, 65536, 1.5, Number.NaN]) {
++    expect(await scanLocalFile(bytes, { host: "127.0.0.1", port })).toBe(false)
++  }
++})
++
++async function peer(reply: string, early = false) {
++  const sockets = new Set<Socket>()
++  const received: Buffer[] = []
++  const server = createServer((socket) => {
++    sockets.add(socket)
++    socket.once("close", () => sockets.delete(socket))
++    // A refusal can close the connection while the adversarial peer is writing.
++    socket.on("error", () => socket.destroy())
++    if (early) {
++      socket.pause()
++      socket.end(reply)
++      return
++    }
++    socket.on("data", (chunk) => {
++      received.push(chunk)
++      const wire = Buffer.concat(received)
++      if (wire.length === 21) socket.end(reply)
++    })
++  })
++  server.listen(0, "127.0.0.1")
++  await once(server, "listening")
++  const address = server.address()
++  if (!address || typeof address === "string") throw new Error("SCANNER_PROTOCOL_PEER_NOT_LISTENING")
++  return {
++    endpoint: { host: "127.0.0.1" as const, port: address.port }, received,
++    close: async () => {
++      sockets.forEach((socket) => socket.destroy())
++      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()))
++    },
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts b/modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts
+new file mode 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts
+@@ -0,0 +1,121 @@
++import { expect, test } from "bun:test"
++import { createHash } from "node:crypto"
++import { readFile, readlink, realpath } from "node:fs/promises"
++import { createConnection } from "node:net"
++import path from "node:path"
++import { scanLocalFile } from "../../../runtime/local-scanner.ts"
++
++// Mandatory live selection. Missing service/configuration fails; no skip, mock
++// scanner or synthetic signature database can make this selection green.
++test("real ClamD INSTREAM accepts clean, rejects EICAR and accepts clean again", async () => {
++  const main = endpoint("SF_OPERATIONS_CLAMD_PORT")
++  expect(process.env.GITHUB_RUN_ID).toMatch(/^\d+$/)
++  expect((await exchange(main.port, Buffer.from("zPING\0"))).toString()).toBe("PONG\0")
++  const version = (await exchange(main.port, Buffer.from("zVERSIONCOMMANDS\0"))).toString()
++  expect(version).toMatch(/^ClamAV \d+\.\d+\.\d+\//)
++  expect(version).toContain("INSTREAM")
++  const clean = new TextEncoder().encode("Operations63 clean stream control\n".repeat(8192))
++  const eicar = Buffer.from("WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=", "base64")
++  expect(eicar.length).toBe(68)
++  expect(createHash("md5").update(eicar).digest("hex")).toBe("44d88612fea8a8f36de82e1278abb02f")
++  expect(await scanLocalFile(clean, main)).toBe(true)
++  expect(await scanLocalFile(eicar, main)).toBe(false)
++  expect(await scanLocalFile(clean, main)).toBe(true)
++  console.info("OPERATIONS63_REAL_CLAMD " + JSON.stringify({
++    sha: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID, version: version.replaceAll("\0", ""),
++    clean_bytes: clean.length, eicar_bytes: eicar.length, clean: true, eicar: false, clean_after: true,
++  }))
++})
++
++test("real ClamD size-limit error is rejected while both real daemons remain responsive", async () => {
++  const main = endpoint("SF_OPERATIONS_CLAMD_PORT")
++  const limited = endpoint("SF_OPERATIONS_CLAMD_ERROR_PORT")
++  expect(limited.port).not.toBe(main.port)
++  const bytes = Buffer.alloc(2048, 42)
++  const header = Buffer.alloc(4)
++  header.writeUInt32BE(bytes.length)
++  // ClamD rejects the declared chunk length before reading its body. Sending
++  // only that header observes its real ERROR without unread-body TCP resets.
++  const response = (await exchange(limited.port, Buffer.concat([
++    Buffer.from("zINSTREAM\0"), header,
++  ]))).toString()
++  expect(response).toContain("INSTREAM size limit exceeded")
++  expect(response).toMatch(/ERROR\0$/)
++  expect(await scanLocalFile(bytes, limited)).toBe(false)
++  expect((await exchange(limited.port, Buffer.from("zPING\0"))).toString()).toBe("PONG\0")
++  expect(await scanLocalFile(bytes, main)).toBe(true)
++  console.info("OPERATIONS63_REAL_ERROR " + JSON.stringify({ response, admitted: false, main_clean: true }))
++})
++
++test("real ClamD outage fails closed after the owned error daemon is stopped", async () => {
++  const evidence = process.env.SF_OPERATIONS_SCANNER_EVIDENCE
++  const temporary = process.env.RUNNER_TEMP
++  if (!evidence || !temporary) throw new Error("OPERATIONS63_REQUIRES_VERIFIED_JOB_LOCAL_SERVICE_RECEIPT")
++  const receipt = JSON.parse(await readFile(path.join(evidence, "service.json"), "utf8"))
++  expect(receipt.run_id).toBe(process.env.GITHUB_RUN_ID)
++  expect(receipt.run_attempt).toBe(process.env.GITHUB_RUN_ATTEMPT)
++  expect(receipt.github_sha).toBe(process.env.GITHUB_SHA)
++  const directory = await realpath(receipt.work_directory)
++  expect(directory.startsWith(await realpath(temporary) + path.sep)).toBe(true)
++  expect(await realpath(evidence)).toBe(path.join(directory, "evidence"))
++  const service = receipt.error
++  expect(Number.isInteger(service.pid) && service.pid > 1 && service.pid !== process.pid).toBe(true)
++  expect(service.pid).not.toBe(receipt.main.pid)
++  expect(service.port).toBe(endpoint("SF_OPERATIONS_CLAMD_ERROR_PORT").port)
++  expect((await exchange(service.port, Buffer.from("zPING\0"))).toString()).toBe("PONG\0")
++  const executable = await realpath(service.executable)
++  expect(executable.startsWith(directory + path.sep)).toBe(true)
++  expect(await readlink(`/proc/${service.pid}/exe`)).toBe(executable)
++  const config = await realpath(service.config)
++  expect(config.startsWith(directory + path.sep)).toBe(true)
++  expect((await readFile(`/proc/${service.pid}/cmdline`, "utf8")).split("\0")).toContain("--config-file=" + config)
++  const stat = await readFile(`/proc/${service.pid}/stat`, "utf8")
++  expect(stat.slice(stat.lastIndexOf(")") + 2).split(" ")[19]).toBe(String(service.start_time))
++  process.kill(service.pid, "SIGTERM")
++  const deadline = Date.now() + 30000
++  while (true) {
++    const observation = await exchange(service.port, Buffer.from("zPING\0")).then(
++      () => "running", (error: NodeJS.ErrnoException) => error.code,
++    )
++    if (observation === "ECONNREFUSED") break
++    if (Date.now() >= deadline) throw new Error("OPERATIONS63_OWNED_CLAMD_DID_NOT_STOP")
++    await Bun.sleep(25)
++  }
++  expect(await scanLocalFile(new Uint8Array([1]), endpoint("SF_OPERATIONS_CLAMD_ERROR_PORT"))).toBe(false)
++  expect(await scanLocalFile(new Uint8Array([1]), endpoint("SF_OPERATIONS_CLAMD_PORT"))).toBe(true)
++  console.info("OPERATIONS63_REAL_DOWN " + JSON.stringify({ pid: service.pid, connection_refused: true, admitted: false, main_clean: true }))
++})
++
++function endpoint(name: string) {
++  const value = process.env[name]
++  if (!value || !/^\d+$/.test(value)) throw new Error("OPERATIONS63_REAL_CLAMD_NOT_PROVISIONED:" + name)
++  const port = Number(value)
++  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("OPERATIONS63_INVALID_CLAMD_PORT:" + name)
++  return { host: "127.0.0.1" as const, port }
++}
++
++function exchange(port: number, command: Buffer) {
++  return new Promise<Buffer>((resolve, reject) => {
++    const chunks: Buffer[] = []
++    const state = { bytes: 0, done: false }
++    const socket = createConnection({ host: "127.0.0.1", port })
++    const finish = (error?: Error) => {
++      if (state.done) return
++      state.done = true
++      clearTimeout(deadline)
++      socket.destroy()
++      if (error) { reject(error); return }
++      resolve(Buffer.concat(chunks))
++    }
++    const deadline = setTimeout(() => finish(new Error("CLAMD_CONTROL_DEADLINE")), 30000)
++    socket.on("connect", () => socket.write(command))
++    socket.on("data", (chunk) => {
++      state.bytes += chunk.length
++      if (state.bytes > 8192) { finish(new Error("CLAMD_CONTROL_RESPONSE_LIMIT")); return }
++      chunks.push(chunk)
++    })
++    socket.on("end", () => finish())
++    socket.on("error", (error) => finish(error))
++    socket.on("close", () => finish(new Error("CLAMD_CONTROL_CLOSED_WITHOUT_EOF")))
++  })
++}
+diff --git a/script/sf2h/operations-scanner/README.md b/script/sf2h/operations-scanner/README.md
+new file mode 100644
+--- /dev/null
++++ b/script/sf2h/operations-scanner/README.md
+@@ -0,0 +1,41 @@
++# Operations63 — ephemeral ClamD qualification service
++
++These scripts are a bounded GitHub Actions setup for the existing `test-ci` lane. They do not install a package or service on the host. They are inactive until45/60 reviews and materializes the complete workflow patch under `docs/sf2h/receipts/operations-scanner-closure/external/ci/`.
++
++## Exact activation
++
++The branch must match `ci-run-linux-operations63-*`, the normalized request must use `ORCHESTRA_CHANNEL=prod`, and its selection must be exactly one of:
++
++- `sucafina`, `modules/sucafina`, Bun, `Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts`. The normal uploader suffix `--timeout 120000` is accepted; no other args are accepted for this capability.
++- `app`, `packages/app-shell`, Playwright, `e2e/sucafina/operations.spec.ts`, production config `e2e/playwright.production.config.ts`.
++
++The seven existing auxiliary tests and protocol tests do not activate a scanner. The live check is an explicit mandatory CI selection; its `.check.ts` suffix avoids silently requiring this external service in unrelated Bun suites. Absence of the service is a failed prerequisite, never a skip or a clean verdict.
++
++The request env allowlist remains unchanged. Setup publishes the service's own loopback ports through `GITHUB_ENV` only after it has validated its package, official database, processes, listening sockets and discriminating daemon controls:
++
++| Variable | Meaning |
++| --- | --- |
++| `SF_OPERATIONS_CLAMD_PORT` | Main daemon on `127.0.0.1:3310`, INSTREAM limit16MiB |
++| `SF_OPERATIONS_CLAMD_ERROR_PORT` | Error control daemon on `127.0.0.1:3311`, INSTREAM limit1KiB |
++| `SF_OPERATIONS_SCANNER_STATE` | One directory created by `mktemp` beneath the job's `RUNNER_TEMP` |
++| `SF_OPERATIONS_SCANNER_EVIDENCE` | Its `evidence` subdirectory; no enrollment credentials or business records |
++
++The live product check reads `service.json` and validates run/attempt/SHA, realpath, PID executable/config/start time before stopping only the error daemon for the final DOWN proof. The main daemon remains available to the five original browser journeys. Cleanup tolerates an already stopped daemon and rejects a reused or foreign PID.
++
++## Package and relocation
++
++`tools.lock.json` pins the official ClamAV1.5.4 Linuxx86_64 package URL, size and SHA256 observed from Cisco-Talos release metadata through GitHub MCP. The setup downloads only that URL, checks both byte length and SHA256, and uses `dpkg-deb --extract`; it never invokes package installation, a maintainer script, systemd, sudo or a global service command.
++
++Upstream `INSTALL.md`, `CMakeLists.txt` and the daemon/tool CMake files establish the default `/usr/local` layout and a build-time RPATH. Relocation is not assumed to work: setup sets `LD_LIBRARY_PATH` only for each downloaded tool, checks `ldd` for unresolved libraries, requires both tools to report the pinned version, and supplies explicit config/database/`CVDCertsDirectory` paths. Missing tools, certificates, shared libraries or incompatible runtime are recorded setup failures. The actual downloaded asset has not been executed by the author of this change.
++
++FreshClam runs once with the official mirror and database signature verification, using only the extracted package certificates and a private job directory. Main, daily and bytecode databases must all exist and their byte counts/SHA256s are recorded. `TestDatabases yes` remains enabled; both daemons use `OfficialDatabaseOnly yes`. No synthetic signature database or fallback endpoint exists. Rate limits, unavailable downloads, DNS or blocked egress remain real blockers.
++
++## Service evidence and cleanup
++
++Both daemons run in foreground mode as children of this job. The scripts record executable, PID, config and `/proc` start time; loopback listening socket inodes must belong to those PIDs. Readiness is bounded independently of journey budgets. Setup performs direct PING/VERSION and INSTREAM clean/EICAR/clean-after controls on each daemon, plus a real stream-limit error on the error daemon. These are provisioning controls: the separate product check must call `scanLocalFile`, and the browser journeys must still pass through the real application.
++
++`setup.json` starts at `STARTING`, becomes `READY` only after those observations, and preserves failures. It never claims that product qualification ran. The owner workflow uploads only the evidence subtree, including package identity, version/loader diagnostics, config digests, official DB digests, exact process/socket identities and real control responses.
++
++The cleanup step runs with `always()`. It sends TERM and, only if needed after a bounded wait, KILL to PIDs whose executable, start time and config still match this job. It removes only this setup's extracted package/database/temp files and preserves logs and receipts. No Orchestra process, unrelated ClamD, user directory or global service is touched.
++
++Two full signature databases are resident at once. The hosted runner must have sufficient RAM; OOM is a setup failure. This definition does not claim that Docker, networking, memory, release downloads or ClamD have been successfully exercised on the current candidate.
+diff --git a/script/sf2h/operations-scanner/cleanup.sh b/script/sf2h/operations-scanner/cleanup.sh
+new file mode 100644
+--- /dev/null
++++ b/script/sf2h/operations-scanner/cleanup.sh
+@@ -0,0 +1,8 @@
++#!/usr/bin/env bash
++set -euo pipefail
++if [ -z "${SF_OPERATIONS_SCANNER_STATE:-}" ]; then
++  echo "Operations scanner setup did not allocate a service."
++  exit 0
++fi
++script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
++node "$script_dir/service.mjs" cleanup "$SF_OPERATIONS_SCANNER_STATE"
+diff --git a/script/sf2h/operations-scanner/select.mjs b/script/sf2h/operations-scanner/select.mjs
+new file mode 100644
+--- /dev/null
++++ b/script/sf2h/operations-scanner/select.mjs
+@@ -0,0 +1,17 @@
++import { appendFileSync, readFileSync } from "node:fs"
++
++// The workflow owns this capability. No request-supplied endpoint or new env key is admitted.
++const request = JSON.parse(readFileSync(".ci-run.json", "utf8"))
++const branch = process.env.GITHUB_REF_NAME ?? ""
++const args = request.args ?? []
++const liveFile = "Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts"
++const liveArgs = args[0]?.replace(/^\.\//, "") === liveFile &&
++  (args.length === 1 || (args.length === 3 && args[1] === "--timeout" && args[2] === "120000"))
++const live = request.package === "sucafina" && request.directory === "modules/sucafina" &&
++  request.runner === "bun" && liveArgs && request.config === undefined
++const nominal = request.package === "app" && request.directory === "packages/app-shell" &&
++  request.runner === "playwright" && request.config === "e2e/playwright.production.config.ts" &&
++  args.length === 1 && args[0] === "e2e/sucafina/operations.spec.ts"
++const selected = /^ci-run-linux-operations63-[a-z0-9-]+$/.test(branch) &&
++  request.env?.ORCHESTRA_CHANNEL === "prod" && (live || nominal)
++appendFileSync(process.env.GITHUB_OUTPUT, `selected=${selected}\nkind=${selected ? (live ? "live" : "nominal") : "none"}\n`)
+diff --git a/script/sf2h/operations-scanner/service.mjs b/script/sf2h/operations-scanner/service.mjs
+new file mode 100644
+--- /dev/null
++++ b/script/sf2h/operations-scanner/service.mjs
+@@ -0,0 +1,263 @@
++import { createHash } from "node:crypto"
++import { createReadStream, existsSync, mkdirSync, readFileSync, readdirSync, readlinkSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs"
++import { createConnection } from "node:net"
++import { userInfo } from "node:os"
++import path from "node:path"
++import { fileURLToPath } from "node:url"
++
++const [action, directory, detail] = process.argv.slice(2)
++const root = realpathSync(directory)
++const temporary = realpathSync(process.env.RUNNER_TEMP)
++if (path.dirname(root) !== temporary || !/^sf-operations63-\d+-\d+\.[A-Za-z0-9]+$/.test(path.basename(root)))
++  throw new Error("OPERATIONS_SCANNER_STATE_OUTSIDE_JOB")
++const lock = JSON.parse(readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "tools.lock.json"), "utf8"))
++const evidence = path.join(root, "evidence")
++const save = (name, value) => writeFileSync(path.join(evidence, name), JSON.stringify(value, null, 2) + "\n")
++const read = (name) => JSON.parse(readFileSync(path.join(evidence, name), "utf8"))
++const pause = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds))
++const executable = path.join(root, "root/usr/local/sbin/clamd")
++const configuration = (kind) => path.join(root, `clamd-${kind}.conf`)
++
++async function hash(filename) {
++  const digest = createHash("sha256")
++  for await (const chunk of createReadStream(filename)) digest.update(chunk)
++  return digest.digest("hex")
++}
++
++function observation(pid) {
++  try {
++    const status = readFileSync(`/proc/${pid}/stat`, "utf8")
++    if (status.slice(status.lastIndexOf(")") + 2).startsWith("Z ")) return undefined
++    return {
++      pid,
++      executable: readlinkSync(`/proc/${pid}/exe`),
++      startTime: status.slice(status.lastIndexOf(")") + 2).split(" ")[19],
++      arguments: readFileSync(`/proc/${pid}/cmdline`, "utf8").split("\0").filter(Boolean),
++    }
++  } catch (error) {
++    if (error.code === "ENOENT" || error.code === "ESRCH") return undefined
++    throw error
++  }
++}
++
++function ownedPort(kind, current) {
++  const address = `0100007F:${lock.services[kind].port.toString(16).toUpperCase().padStart(4, "0")}`
++  const listener = readFileSync("/proc/net/tcp", "utf8").trim().split("\n").slice(1)
++    .map((line) => line.trim().split(/\s+/)).find((fields) => fields[1] === address && fields[3] === "0A")
++  if (!listener) return undefined
++  const inode = listener[9]
++  const descriptors = readdirSync(`/proc/${current.pid}/fd`)
++  for (const descriptor of descriptors) {
++    try {
++      if (readlinkSync(`/proc/${current.pid}/fd/${descriptor}`) === `socket:[${inode}]`) return inode
++    } catch (error) {
++      if (error.code !== "ENOENT") throw error
++    }
++  }
++  throw new Error(`OPERATIONS_SCANNER_PORT_NOT_OWNED:${kind}`)
++}
++
++function ownedProcess(kind) {
++  const pidFile = path.join(root, "pids", `${kind}.pid`)
++  if (!existsSync(pidFile)) return undefined
++  const pid = Number(readFileSync(pidFile, "utf8").trim())
++  if (!Number.isSafeInteger(pid) || pid < 2) throw new Error("OPERATIONS_SCANNER_PID_INVALID")
++  const current = observation(pid)
++  if (!current) return undefined
++  const receiptFile = path.join(evidence, `process-${kind}.json`)
++  const receipt = existsSync(receiptFile) ? JSON.parse(readFileSync(receiptFile, "utf8")) : undefined
++  if (current.executable !== executable || !current.arguments.includes(`--config-file=${configuration(kind)}`) ||
++      (receipt && receipt.startTime !== current.startTime))
++    throw new Error(`OPERATIONS_SCANNER_PROCESS_OWNERSHIP_MISMATCH:${kind}`)
++  return current
++}
++
++async function exchange(port, command, bytes, declaredLength) {
++  return new Promise((resolve, reject) => {
++    const socket = createConnection({ host: "127.0.0.1", port })
++    const chunks = []
++    const state = { done: false }
++    const finish = (error, value) => {
++      if (state.done) return
++      state.done = true
++      clearTimeout(timer)
++      socket.destroy()
++      if (error) reject(error)
++      else resolve(value)
++    }
++    const timer = setTimeout(() => finish(new Error("CLAMD_CONTROL_TIMEOUT")), 5000)
++    socket.on("error", (error) => finish(error))
++    socket.on("close", () => finish(new Error("CLAMD_CONTROL_CLOSED_WITHOUT_COMPLETE_FRAME")))
++    socket.on("data", (chunk) => {
++      chunks.push(chunk)
++      const response = Buffer.concat(chunks)
++      if (response.length > 4096) return finish(new Error("CLAMD_CONTROL_RESPONSE_TOO_LARGE"))
++    })
++    // One command outside IDSESSION has one complete record followed by EOF.
++    // Do not accept an early clean prefix if the daemon later reports another record or closes abnormally.
++    socket.on("end", () => {
++      const response = Buffer.concat(chunks)
++      const end = response.indexOf(0)
++      if (end < 0 || end !== response.length - 1) return finish(new Error("CLAMD_CONTROL_INVALID_RECORD"))
++      finish(undefined, response.subarray(0, end).toString("utf8"))
++    })
++    socket.on("connect", () => {
++      socket.write(Buffer.from(`z${command}\0`))
++      if (bytes === undefined && declaredLength === undefined) return
++      const header = Buffer.alloc(4)
++      header.writeUInt32BE(declaredLength ?? bytes.length)
++      socket.write(header)
++      // ClamD rejects an oversized length before reading its body. Do not leave
++      // unread data behind on this diagnostic socket and turn its error frame into a TCP reset.
++      if (bytes === undefined) return
++      socket.write(bytes)
++      socket.write(Buffer.alloc(4))
++    })
++  })
++}
++
++if (action === "initialize") {
++  mkdirSync(evidence, { recursive: true })
++  save("tools.lock.json", lock)
++  save("setup.json", {
++    schema: "sf2h.operations63.scanner-setup.v1", status: "STARTING", root,
++    productSnapshot: process.env.GITHUB_SHA, runId: process.env.GITHUB_RUN_ID,
++    runAttempt: process.env.GITHUB_RUN_ATTEMPT, branch: process.env.GITHUB_REF_NAME,
++    startedAt: new Date().toISOString(), syntheticDatabase: false, productQualification: "NOT_RUN",
++  })
++} else if (action === "package") {
++  const filename = path.join(root, "clamav.deb")
++  const actual = { bytes: statSync(filename).size, sha256: await hash(filename) }
++  save("package.json", { source: lock.asset.url, expected: lock.asset, actual })
++  if (actual.bytes !== lock.asset.size || actual.sha256 !== lock.asset.sha256)
++    throw new Error("OPERATIONS_SCANNER_PACKAGE_IDENTITY_MISMATCH")
++} else if (action === "configuration") {
++  for (const tool of ["clamd", "freshclam"]) {
++    const version = readFileSync(path.join(evidence, `${tool}-version.txt`), "utf8").trim()
++    if (!version.startsWith(`ClamAV ${lock.version}/`) && version !== `ClamAV ${lock.version}`)
++      throw new Error(`OPERATIONS_SCANNER_VERSION_MISMATCH:${tool}`)
++  }
++  const certs = path.join(root, "root/usr/local/etc/certs")
++  const account = userInfo().username
++  if (!/^[A-Za-z0-9_-]+$/.test(account)) throw new Error("OPERATIONS_SCANNER_ACCOUNT_INVALID")
++  writeFileSync(path.join(root, "freshclam.conf"), [
++    `DatabaseDirectory ${root}/database`, `CVDCertsDirectory ${certs}`,
++    `DatabaseOwner ${account}`, "DatabaseMirror database.clamav.net",
++    "DNSDatabaseInfo current.cvd.clamav.net", "MaxAttempts 1", "ConnectTimeout 20",
++    "ReceiveTimeout 60", "TestDatabases yes", "LogTime yes",
++    `UpdateLogFile ${evidence}/freshclam.log`, "Foreground yes", "",
++  ].join("\n"))
++  for (const kind of ["main", "error"]) {
++    writeFileSync(configuration(kind), [
++      `DatabaseDirectory ${root}/database`, `CVDCertsDirectory ${certs}`,
++      "OfficialDatabaseOnly yes", "TCPAddr 127.0.0.1", `TCPSocket ${lock.services[kind].port}`,
++      `StreamMaxLength ${lock.services[kind].stream_max_length}`, "MaxScanSize 33554432",
++      "MaxFileSize 16777216", "AlertExceedsMax yes", "MaxThreads 2", "MaxQueue 4",
++      "ReadTimeout 30", "CommandReadTimeout 10", "SelfCheck 0", "ConcurrentDatabaseReload no",
++      "ExitOnOOM yes", "Foreground yes", `PidFile ${root}/pids/${kind}-daemon.pid`,
++      `TemporaryDirectory ${root}/tmp`, `LogFile ${evidence}/clamd-${kind}.log`,
++      "LogFileMaxSize 2M", "LogTime yes", "LogClean yes", "",
++    ].join("\n"))
++    writeFileSync(path.join(evidence, `clamd-${kind}.conf.txt`), readFileSync(configuration(kind)))
++  }
++  writeFileSync(path.join(evidence, "freshclam.conf.txt"), readFileSync(path.join(root, "freshclam.conf")))
++  save("configuration.json", {
++    services: lock.services,
++    files: await Promise.all(["freshclam.conf", "clamd-main.conf", "clamd-error.conf"].map(async (name) => ({
++      path: name, sha256: await hash(path.join(root, name)),
++    }))),
++    processScopedLibraryPath: ["root/usr/local/lib", "root/usr/local/lib64"],
++    credentialsUsed: false, globalInstallation: false,
++  })
++} else if (action === "databases") {
++  const database = path.join(root, "database")
++  const files = readdirSync(database).filter((name) => /^(main|daily|bytecode)\.(cvd|cld)$/.test(name))
++  for (const name of lock.database.required) {
++    if (files.filter((file) => file.startsWith(name + ".")).length !== 1)
++      throw new Error(`OPERATIONS_SCANNER_OFFICIAL_DATABASE_MISSING:${name}`)
++  }
++  save("databases.json", {
++    origin: lock.database.mirror, freshclamCompleted: true, testDatabasesEnabled: true,
++    officialDatabaseOnly: true, syntheticDatabase: false,
++    files: await Promise.all(files.map(async (name) => ({ name, bytes: statSync(path.join(database, name)).size,
++      sha256: await hash(path.join(database, name)) }))),
++  })
++} else if (action === "process") {
++  if (!["main", "error"].includes(detail)) throw new Error("OPERATIONS_SCANNER_KIND_INVALID")
++  // An exec can still be settling immediately after the shell records $!.
++  await pause(100)
++  const current = ownedProcess(detail)
++  if (!current) throw new Error(`OPERATIONS_SCANNER_PROCESS_EXITED:${detail}`)
++  save(`process-${detail}.json`, current)
++} else if (action === "ready") {
++  const deadline = Date.now() + lock.bounds_seconds.readiness * 1000
++  const ready = new Map()
++  while (Date.now() < deadline && ready.size < 2) {
++    for (const kind of ["main", "error"]) {
++      const current = ownedProcess(kind)
++      if (!current) throw new Error(`OPERATIONS_SCANNER_PROCESS_EXITED:${kind}`)
++      if (ready.has(kind)) continue
++      const inode = ownedPort(kind, current)
++      if (!inode) continue
++      const port = lock.services[kind].port
++      const result = await exchange(port, "PING").catch(() => undefined)
++      if (result !== "PONG") continue
++      const version = await exchange(port, "VERSION")
++      if (!version.startsWith(`ClamAV ${lock.version}/`)) throw new Error(`OPERATIONS_SCANNER_WIRE_VERSION_MISMATCH:${kind}`)
++      ready.set(kind, { port, ping: result, version, listen_inode: inode })
++    }
++    if (ready.size < 2) await pause(1000)
++  }
++  if (ready.size !== 2) throw new Error("OPERATIONS_SCANNER_READINESS_EXPIRED")
++  const clean = Buffer.from("Operations63 real daemon control\n")
++  const eicar = Buffer.from("X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*")
++  const controls = []
++  for (const kind of ["main", "error"]) {
++    const port = lock.services[kind].port
++    const accepted = await exchange(port, "INSTREAM", clean)
++    const rejected = await exchange(port, "INSTREAM", eicar)
++    const after = await exchange(port, "INSTREAM", clean)
++    controls.push({ kind, clean: accepted, eicar: rejected, cleanAfter: after })
++    save("daemon-controls.json", { scope: "Direct ClamD provisioning controls, not the product adapter or browser journeys", controls })
++    if (accepted !== "stream: OK" || !/EICAR.*FOUND$/i.test(rejected) || after !== "stream: OK")
++      throw new Error(`OPERATIONS_SCANNER_DISCRIMINATING_CONTROL_FAILED:${kind}`)
++  }
++  const sizeError = await exchange(lock.services.error.port, "INSTREAM", undefined, 2048)
++  if (!/INSTREAM size limit exceeded.*ERROR/i.test(sizeError)) throw new Error("OPERATIONS_SCANNER_SIZE_ERROR_NOT_OBSERVED")
++  save("daemon-controls.json", { scope: "Direct ClamD provisioning controls, not the product adapter or browser journeys", controls, sizeError })
++  save("service.json", {
++    run_id: process.env.GITHUB_RUN_ID, run_attempt: process.env.GITHUB_RUN_ATTEMPT,
++    github_sha: process.env.GITHUB_SHA, work_directory: root,
++    ...Object.fromEntries(["main", "error"].map((kind) => {
++      const current = ownedProcess(kind)
++      if (!current) throw new Error(`OPERATIONS_SCANNER_PROCESS_EXITED:${kind}`)
++      return [kind, { pid: current.pid, port: lock.services[kind].port, host: "127.0.0.1",
++        executable: current.executable, config: configuration(kind), start_time: current.startTime,
++        listen_inode: ownedPort(kind, current) }]
++    })),
++  })
++  save("setup.json", { ...read("setup.json"), status: "READY", completedAt: new Date().toISOString(),
++    services: Object.fromEntries(ready), controls: "PASS_DAEMON_ONLY", productQualification: "NOT_RUN" })
++} else if (action === "fail") {
++  save("setup.json", { ...read("setup.json"), status: "FAILED", exitCode: Number(detail), failedAt: new Date().toISOString(),
++    productQualification: "BLOCKED_SETUP" })
++} else if (action === "cleanup") {
++  const results = []
++  for (const kind of ["main", "error"]) {
++    const current = ownedProcess(kind)
++    if (!current) { results.push({ kind, status: "ABSENT" }); continue }
++    process.kill(current.pid, "SIGTERM")
++    const deadline = Date.now() + lock.bounds_seconds.cleanup * 1000
++    while (Date.now() < deadline && ownedProcess(kind)) await pause(100)
++    if (ownedProcess(kind)) {
++      process.kill(current.pid, "SIGKILL")
++      await pause(100)
++    }
++    if (ownedProcess(kind)) throw new Error(`OPERATIONS_SCANNER_CLEANUP_FAILED:${kind}`)
++    results.push({ kind, pid: current.pid, startTime: current.startTime, status: "STOPPED" })
++  }
++  save("cleanup.json", { at: new Date().toISOString(), results, state: "STOPPED", evidencePreserved: true })
++  for (const name of ["root", "database", "tmp", "clamav.deb"]) rmSync(path.join(root, name), { recursive: true, force: true })
++} else {
++  throw new Error("OPERATIONS_SCANNER_ACTION_INVALID")
++}
+diff --git a/script/sf2h/operations-scanner/setup.sh b/script/sf2h/operations-scanner/setup.sh
+new file mode 100644
+--- /dev/null
++++ b/script/sf2h/operations-scanner/setup.sh
+@@ -0,0 +1,65 @@
++#!/usr/bin/env bash
++set -euo pipefail
++umask 077
++
++# This file prepares only an ephemeral hosted job. It never installs a package or system service.
++test "${GITHUB_ACTIONS:-}" = true
++test "${GITHUB_REPOSITORY:-}" = gustavomhss/Orchestra-SF
++test "${RUNNER_OS:-}" = Linux
++test "${RUNNER_ARCH:-}" = X64
++[[ "${GITHUB_REF_NAME:-}" =~ ^ci-run-linux-operations63-[a-z0-9-]+$ ]]
++[[ "${GITHUB_RUN_ID:-}" =~ ^[0-9]+$ && "${GITHUB_RUN_ATTEMPT:-}" =~ ^[0-9]+$ ]]
++test -d "${RUNNER_TEMP:?}"
++test -f "${GITHUB_ENV:?}"
++for command in curl sha256sum dpkg-deb ldd timeout node rg; do
++  command -v "$command" >/dev/null || { echo "OPERATIONS_SCANNER_TOOL_MISSING:$command" >&2; exit 2; }
++done
++script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
++state=$(mktemp -d "$RUNNER_TEMP/sf-operations63-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.XXXXXX")
++[[ "$state" != *[[:space:]]* ]] || { echo OPERATIONS_SCANNER_PATH_HAS_WHITESPACE >&2; exit 2; }
++mkdir -p "$state/evidence" "$state/database" "$state/root" "$state/pids" "$state/tmp"
++node "$script_dir/service.mjs" initialize "$state"
++printf 'SF_OPERATIONS_SCANNER_STATE=%s\nSF_OPERATIONS_SCANNER_EVIDENCE=%s/evidence\n' "$state" "$state" >> "$GITHUB_ENV"
++trap 'status=$?; if [ "$status" -ne 0 ]; then node "$script_dir/service.mjs" fail "$state" "$status" || true; node "$script_dir/service.mjs" cleanup "$state" || true; fi; exit "$status"' EXIT
++
++url=$(node -e 'process.stdout.write(JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")).asset.url)' "$script_dir/tools.lock.json")
++digest=$(node -e 'process.stdout.write(JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")).asset.sha256)' "$script_dir/tools.lock.json")
++curl --fail --show-error --silent --location --proto '=https' --proto-redir '=https' \
++  --connect-timeout 20 --max-time 180 "$url" -o "$state/clamav.deb"
++printf '%s  %s\n' "$digest" "$state/clamav.deb" | sha256sum --check --strict > "$state/evidence/package-sha256.txt"
++node "$script_dir/service.mjs" package "$state"
++dpkg-deb --info "$state/clamav.deb" > "$state/evidence/package-info.txt"
++dpkg-deb --extract "$state/clamav.deb" "$state/root"
++prefix="$state/root/usr/local"
++clamd="$prefix/sbin/clamd"
++freshclam="$prefix/bin/freshclam"
++test -x "$clamd" && test -x "$freshclam" || { echo OPERATIONS_SCANNER_RELOCATED_TOOLS_MISSING >&2; exit 2; }
++test -d "$prefix/etc/certs" || { echo OPERATIONS_SCANNER_RELOCATED_CERTIFICATES_MISSING >&2; exit 2; }
++library_path="$prefix/lib:$prefix/lib64"
++for tool in "$clamd" "$freshclam"; do
++  name=$(basename "$tool")
++  LD_LIBRARY_PATH="$library_path" ldd "$tool" > "$state/evidence/$name-ldd.txt"
++  if rg -q 'not found' "$state/evidence/$name-ldd.txt"; then
++    echo "OPERATIONS_SCANNER_DYNAMIC_DEPENDENCY_MISSING:$name" >&2
++    exit 2
++  fi
++  LD_LIBRARY_PATH="$library_path" "$tool" --version > "$state/evidence/$name-version.txt"
++done
++node "$script_dir/service.mjs" configuration "$state"
++if ! LD_LIBRARY_PATH="$library_path" timeout --signal=TERM --kill-after=5s 300s "$freshclam" \
++  --config-file="$state/freshclam.conf" --stdout > "$state/evidence/freshclam-output.log" 2>&1; then
++  echo OPERATIONS_SCANNER_OFFICIAL_DATABASE_UNAVAILABLE >&2
++  exit 2
++fi
++node "$script_dir/service.mjs" databases "$state"
++
++# Foreground mode keeps each recorded PID the actual daemon; cleanup validates executable/start time.
++for kind in main error; do
++  LD_LIBRARY_PATH="$library_path" "$clamd" --foreground --config-file="$state/clamd-$kind.conf" \
++    > "$state/evidence/clamd-$kind-output.log" 2>&1 &
++  printf '%s\n' "$!" > "$state/pids/$kind.pid"
++  node "$script_dir/service.mjs" process "$state" "$kind"
++done
++node "$script_dir/service.mjs" ready "$state"
++printf 'SF_OPERATIONS_CLAMD_PORT=3310\nSF_OPERATIONS_CLAMD_ERROR_PORT=3311\n' >> "$GITHUB_ENV"
++echo "Operations scanner service ready; product qualification remains a separate required test."
+diff --git a/script/sf2h/operations-scanner/tools.lock.json b/script/sf2h/operations-scanner/tools.lock.json
+new file mode 100644
+--- /dev/null
++++ b/script/sf2h/operations-scanner/tools.lock.json
+@@ -0,0 +1,42 @@
++{
++  "schema": "sf2h.operations63.scanner-tools.v1",
++  "version": "1.5.4",
++  "platform": "linux-x86_64",
++  "asset": {
++    "name": "clamav-1.5.4.linux.x86_64.deb",
++    "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
++    "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
++    "size": 105819396,
++    "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
++    "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
++  },
++  "source_commit": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
++  "source_tag_object": "2cbd122d3a401b9bded52ef6bf201bff605af474",
++  "source_files": {
++    "CMakeLists.txt": "7ebb1c3834057707042ab5564689f3807a47f0e6",
++    "INSTALL.md": "5fc4bf7116c7a4183714a05eb88a57d8c37c20b8",
++    "clamd/CMakeLists.txt": "0ad10506520625052b6f219daad5064145c6de8c",
++    "freshclam/CMakeLists.txt": "1aad53091e712a24052e937945bc8e5306b4b3ac",
++    "etc/clamd.conf.sample": "73be60eae8a266743e75b668dd606eb20436f067",
++    "etc/freshclam.conf.sample": "cc437ebf4a97884cfb7d3395ec213181a14e0de3"
++  },
++  "relocation": {
++    "prefix": "usr/local",
++    "clamd": "sbin/clamd",
++    "freshclam": "bin/freshclam",
++    "certificates": "etc/certs",
++    "library_paths": ["lib", "lib64"],
++    "note": "Upstream defaults to /usr/local and build-time RPATH. Setup uses process-scoped LD_LIBRARY_PATH, explicit database/certificate/config paths, and rejects missing dynamic dependencies or relocated tools that cannot report the pinned version. No claim that the unexecuted package has already relocated successfully."
++  },
++  "database": {
++    "mirror": "database.clamav.net",
++    "required": ["main", "daily", "bytecode"],
++    "official_only": true,
++    "synthetic_database_allowed": false
++  },
++  "services": {
++    "main": { "host": "127.0.0.1", "port": 3310, "stream_max_length": 16777216 },
++    "error": { "host": "127.0.0.1", "port": 3311, "stream_max_length": 1024 }
++  },
++  "bounds_seconds": { "download": 180, "freshclam": 300, "readiness": 180, "cleanup": 10 }
++}
+diff --git a/packages/app-shell/e2e/sucafina/operations-support/documents.ts b/packages/app-shell/e2e/sucafina/operations-support/documents.ts
+--- a/packages/app-shell/e2e/sucafina/operations-support/documents.ts
++++ b/packages/app-shell/e2e/sucafina/operations-support/documents.ts
+@@ -40,7 +40,7 @@
+     ["Payment terms", "Net 45"],
+     ["Currency", "USD"],
+   ]) await create.getByLabel(label!, { exact: true }).fill(value!)
+-  await create.getByLabel("Risk rating", { exact: true }).selectOption("Low")
++  await create.getByRole("combobox", { name: "Risk rating", exact: true }).selectOption("Low")
+   const creation = commandResponse(page, "create")
+   await create.getByRole("button", { name: "Create supplier", exact: true }).click()
+   const created = await creation
+diff --git a/packages/app-shell/e2e/sucafina/operations-support/imports.ts b/packages/app-shell/e2e/sucafina/operations-support/imports.ts
+--- a/packages/app-shell/e2e/sucafina/operations-support/imports.ts
++++ b/packages/app-shell/e2e/sucafina/operations-support/imports.ts
+@@ -59,7 +59,13 @@
+     const candidate = new URL(url)
+     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/planner" && candidate.searchParams.get("sf") === mode
+   }
+-  const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
++  const waiting = (mode: string, method = "GET") => {
++    const response = page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
++    // Admission can fail before the later preview/detail responses exist. Observe teardown
++    // rejection eagerly; returning the original promise preserves every awaited failure.
++    void response.catch(() => undefined)
++    return response
++  }
+   expect((await page.goto(account.baseURL + "/planner?page=Versions"))?.status()).toBe(200)
+   const first = page.locator('form[data-page="Versions"][data-command="save"][data-record=""]')
+   await expect(first).toHaveCount(1)

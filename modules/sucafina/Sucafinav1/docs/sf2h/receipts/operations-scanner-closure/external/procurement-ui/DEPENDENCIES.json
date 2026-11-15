@@ -1,0 +1,168 @@
+{
+  "schema": "sf2h.operations63.procurement-ui-dependencies.v1",
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "observed_target": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "status": "STATIC_REVIEW_ONLY_NOT_RUN",
+  "new_imports": [],
+  "new_runtime_dependencies": [],
+  "direct_imports": [
+    {
+      "path": "runtime/procurement.ts",
+      "imports": [
+        {
+          "import": "node:crypto",
+          "path": "node:crypto",
+          "base_blob": null,
+          "target_blob": null,
+          "unchanged": true
+        },
+        {
+          "import": "../src/procurement.ts",
+          "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+          "base_blob": "eb486f52910425e9ca06d1f11ce18c90528ff36c",
+          "target_blob": "eb486f52910425e9ca06d1f11ce18c90528ff36c",
+          "unchanged": true
+        },
+        {
+          "import": "../src/requests.ts",
+          "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+          "base_blob": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+          "target_blob": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+          "unchanged": true
+        },
+        {
+          "import": "../src/form.ts",
+          "path": "modules/sucafina/Sucafinav1/src/form.ts",
+          "base_blob": "5c2ceed59b5af1a0e2958e93c2267bee9e72a0dc",
+          "target_blob": "5c2ceed59b5af1a0e2958e93c2267bee9e72a0dc",
+          "unchanged": true
+        },
+        {
+          "import": "../src/procurement-screen.ts",
+          "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+          "base_blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+          "target_blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+          "unchanged": true
+        },
+        {
+          "import": "../src/initial-settings.ts",
+          "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+          "base_blob": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+          "target_blob": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+          "unchanged": true
+        },
+        {
+          "import": "../src/supplier.ts",
+          "path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+          "base_blob": "dd9ac04145e11b8d614de33e5251424b3c31c922",
+          "target_blob": "dd9ac04145e11b8d614de33e5251424b3c31c922",
+          "unchanged": true
+        },
+        {
+          "import": "../src/screen-shell.ts",
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "base_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+          "target_blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+          "unchanged": true
+        },
+        {
+          "import": "./contract.ts",
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "base_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "target_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "unchanged": true
+        },
+        {
+          "import": "../product/procurement/guided-request.ts",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+          "base_blob": "0d69e6456fe7124dfd3e788abf1b17bc6b7ad500",
+          "target_blob": "0d69e6456fe7124dfd3e788abf1b17bc6b7ad500",
+          "unchanged": true
+        },
+        {
+          "import": "../product/procurement/monetary.ts",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+          "base_blob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+          "target_blob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+          "unchanged": true
+        },
+        {
+          "import": "../product/procurement/queue-view.ts",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+          "base_blob": "a03998f3b87df91c6c84b198f2b51aa9c391bcd2",
+          "target_blob": "a03998f3b87df91c6c84b198f2b51aa9c391bcd2",
+          "unchanged": true
+        },
+        {
+          "import": "./ui.ts",
+          "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+          "base_blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+          "target_blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+          "unchanged": true
+        }
+      ]
+    },
+    {
+      "path": "src/screen-shell.ts",
+      "imports": [
+        {
+          "import": "../product/ui/shell-state.ts",
+          "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+          "base_blob": "74ccb3c50dcadd85878987870f0e388926898d53",
+          "target_blob": "74ccb3c50dcadd85878987870f0e388926898d53",
+          "unchanged": true
+        },
+        {
+          "import": "../product/ui/shell-command.ts",
+          "path": "modules/sucafina/Sucafinav1/product/ui/shell-command.ts",
+          "base_blob": "0b139ed2c8bc2371c7a5933e00eaa970876d55b8",
+          "target_blob": "0b139ed2c8bc2371c7a5933e00eaa970876d55b8",
+          "unchanged": true
+        },
+        {
+          "import": "../product/ui/shell-preview.ts",
+          "path": "modules/sucafina/Sucafinav1/product/ui/shell-preview.ts",
+          "base_blob": "73c2ce48454e4291fcc4d6c9e2b554317d820f2a",
+          "target_blob": "73c2ce48454e4291fcc4d6c9e2b554317d820f2a",
+          "unchanged": true
+        },
+        {
+          "import": "./nav.ts",
+          "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+          "base_blob": "412d55047a1b6dda686ce1054c15b20307217577",
+          "target_blob": "412d55047a1b6dda686ce1054c15b20307217577",
+          "unchanged": true
+        }
+      ]
+    }
+  ],
+  "semantic_producers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "blob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+      "role": "Unchanged computed and frozen monetary facts. No rounding, mutation or snapshot change."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "role": "Unchanged requestValue arithmetic and approval view rules."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+      "blob": "a03998f3b87df91c6c84b198f2b51aa9c391bcd2",
+      "role": "Unchanged canonical C02 queue presentation, source references, versions and digests."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+      "blob": "0d69e6456fe7124dfd3e788abf1b17bc6b7ad500",
+      "role": "Existing server-side error marker data-error-for, aria-labelledby and aria-describedby. Marker contract is consumed by cleanup only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-command.ts",
+      "blob": "0b139ed2c8bc2371c7a5933e00eaa970876d55b8",
+      "role": "Unchanged 422 fieldErrors response and command recovery path."
+    }
+  ],
+  "composition": "The patches introduce no imports, exports, schemas, package changes or build configuration. They can be reviewed independently. The money renderer imports esc from screen-shell.ts; the accessibility patch preserves that export and changes only its embedded submit cleanup. Both full postimages are supplied.",
+  "closure_limit": "This is the direct-import and changed-contract closure for two presentation-only patches, not a claim to enumerate every transitive dependency of the application. Consumer60 must reconcile the actual target and compose/qualify through45 before acceptance."
+}

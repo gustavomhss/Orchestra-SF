@@ -1,0 +1,14 @@
+{
+  "schema": "sf2h.operations63.patch-verification.v1",
+  "scope": "Static patch reconstruction only; no product tests",
+  "status": "PASS",
+  "patch_sha256": "0031229265e49a1866a624e8deadb74a556cec1393860f5388cf15fa014fde39",
+  "preimage_blobs_checked": 3,
+  "new_files_checked": 8,
+  "all_postimages_exact": 11,
+  "method": "git apply --check and apply in isolated temporary preimage tree, followed by Git blob hashing",
+  "material_work_commit": "83aabd95ab423816002a623d1a998eb51bb89173",
+  "typecheck": "NOT_RUN",
+  "guards": "NOT_RUN",
+  "real_clamd": "NOT_RUN"
+}

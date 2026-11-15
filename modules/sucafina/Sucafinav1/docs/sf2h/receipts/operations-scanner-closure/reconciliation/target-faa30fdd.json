@@ -1,0 +1,282 @@
+{
+  "schema": "sf2h.operations63.target-reconciliation.v1",
+  "status": "DOCUMENTATION_ONLY_TARGET_DELTA_RECONCILED",
+  "mission": "63",
+  "repository": "gustavomhss/Orchestra-SF",
+  "previous_target": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "current_target": {
+    "branch": "sf2-stack",
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "readback_ref_sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+  },
+  "current_control": {
+    "branch": "sf2-control",
+    "sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "changed": false
+  },
+  "previous_reconciliation": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/reconciliation/target-c28.json",
+  "previous_reconciliation_edited": false,
+  "source": {
+    "branch": "operations-scanner-proof",
+    "W": "83aabd95ab423816002a623d1a998eb51bb89173",
+    "tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+    "parent": "e1791815218eea8e804d515bf197beeb9f8c8b56",
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "R4": {
+      "S": "30bb3c1126163d40906d54aaeef9af3c3b956f4d",
+      "branch": "ci-run-linux-operations63-83aabd95-nominal-r4",
+      "run_id": 43668156670,
+      "job_id": 132672057817,
+      "status_at_review_start": "RUNNING_AS_REPORTED_BY_ROOT",
+      "terminal_outcome_assessed_here": false
+    }
+  },
+  "comparison": {
+    "url": "https://github.com/gustavomhss/Orchestra-SF/compare/d088708276b48f896ad4e0ecd2a95cb73dc413b1...faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "merge_base": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "commits": [
+      {
+        "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "message": "docs(sucafina): hand off mission60 with C28 validation inputs and retained holds [skip ci]",
+        "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d"
+      }
+    ],
+    "changed_paths": 30,
+    "all_changes_are_new_receipts": true,
+    "all_changes_under": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/",
+    "own_path_intersection": [],
+    "shared_runtime_or_test_changes": [],
+    "workflow_or_tooling_changes": [],
+    "AGENTS_or_package_configuration_changes": [],
+    "unchanged_producer_boundary": "product/integration/product-authority.ts remains target blob 8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0. The eight related shared drifts reviewed for C28 remain unchanged by this commit."
+  },
+  "changed_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+      "status": "added",
+      "blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md",
+      "status": "added",
+      "blob": "85b12d52c641a113c4e9b653fdb6b9f1dea8b9b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/candidates-final.json",
+      "status": "added",
+      "blob": "340a00f43459041e260eb1cadd2f86f34be73bf9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/communication-final.json",
+      "status": "added",
+      "blob": "f3b35f69bab263428be2b95ccf8e116ff44c1818"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/consumer-acks-final.json",
+      "status": "added",
+      "blob": "0f6363330696ff55bc7ac33ee670c15a63c346b6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/dependency-closure-final.json",
+      "status": "added",
+      "blob": "4b0456690ed32e15eea476b3d2885687ec4afa5b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/errata-final.json",
+      "status": "added",
+      "blob": "dcefa3fbfa60b3fbd126d5a03c7db8ff9516953a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/finding-routing-final.json",
+      "status": "added",
+      "blob": "663b1c8c3e5e6bb79a79b1ccd1a78f1e6894213c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/future-source-inputs.json",
+      "status": "added",
+      "blob": "f6d7e1132c33d108ed04bf5c0c94dc1de98fcb9f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json",
+      "status": "added",
+      "blob": "29420a3dd7ec3c5c635125b12c57e84dfdf58dd6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/pending-owners-final.json",
+      "status": "added",
+      "blob": "5fca39dcfbd1376a7ba02ab8750800a2308ce229"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-manifest-01.json",
+      "status": "added",
+      "blob": "1fe32b6eedb1624c45b35df5e8f693dfa3d39ca3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-manifest-C28.json",
+      "status": "added",
+      "blob": "6db999349464518f0558ff0c40d1aba4a5ec4672"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-manifest-terminal.json",
+      "status": "added",
+      "blob": "9201d162781c98ccdfe438b2e80ee12bdc1bad85"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-readback-01.json",
+      "status": "added",
+      "blob": "e1028e60e0cc8a96bf25f9173a5f8519e31b3864"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-readback-C28.json",
+      "status": "added",
+      "blob": "df784ff244b4266df0f8d334499b7d8281d46c5a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/read-coverage-final.json",
+      "status": "added",
+      "blob": "f14777bf0c5722fd5602003bc0bd4ef7c3418089"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/control-posterior.json",
+      "status": "added",
+      "blob": "7fa4a7317a2a04354cc36fb3c0067404e6eda568"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/control65-70-final.json",
+      "status": "added",
+      "blob": "5d80a7f3ee6301a5e495dae3c23e617542908968"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/decisions52-final.json",
+      "status": "added",
+      "blob": "0dba9ae60f01a9d5d6dac8d5ff1231b60637b641"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/runtime59-final.json",
+      "status": "added",
+      "blob": "af7c79a535534479dbb6723a539923dccedb2e3e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/runtime59-latest.json",
+      "status": "added",
+      "blob": "6c2f7f0d13009887648b3b3227e28a11cff87120"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/requests/decisions52-nominal06.json.txt",
+      "status": "added",
+      "blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/requests/reports48-boundary01.json.txt",
+      "status": "added",
+      "blob": "8812d55584bccb47b21f65a113f985f2cd57eef8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/requests/reports48-nominal06.json.txt",
+      "status": "added",
+      "blob": "b216b474fff3eb0dbb720678080899908fab5a0c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reviews/final-document-review.json",
+      "status": "added",
+      "blob": "b6305de8f0b6283ea31c368229e84b6e20bd7cb0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/source-census-final.json",
+      "status": "added",
+      "blob": "a7165e25dfe518c468e9a3f553622d6bf946883b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/source-output-manifest-final.json",
+      "status": "added",
+      "blob": "b924900a40298c5a9fa8f7420bd252bacb4a25cd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/validation-inputs-final.json",
+      "status": "added",
+      "blob": "e3a4bdf1b55fbbd2d14d447117e2a5d05b6ef12c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/verification-final.json",
+      "status": "added",
+      "blob": "052070ce8b768ff5888ce3f9ca3b6e076b06807c"
+    }
+  ],
+  "read_scope": {
+    "all_thirty_paths_and_blob_metadata_reviewed": true,
+    "complete_added_document_contents_reviewed": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md",
+        "blob": "85b12d52c641a113c4e9b653fdb6b9f1dea8b9b7",
+        "source": "Complete added-file patch returned by pinned GitHub MCP comparison"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+        "blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+        "source": "Complete added-file patch returned by pinned GitHub MCP comparison"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/verification-final.json",
+        "blob": "052070ce8b768ff5888ce3f9ca3b6e076b06807c",
+        "source": "Complete added-file patch returned by pinned GitHub MCP comparison"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/source-output-manifest-final.json",
+        "blob": "b924900a40298c5a9fa8f7420bd252bacb4a25cd",
+        "source": "Complete added-file patch returned by pinned GitHub MCP comparison"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/consumer-acks-final.json",
+        "blob": "0f6363330696ff55bc7ac33ee670c15a63c346b6",
+        "source": "Complete added-file patch returned by pinned GitHub MCP comparison"
+      }
+    ],
+    "scope_limit": "The remaining receipt contents, large validation input manifests and unrelated repository files were not reread. The complete path delta establishes no executable/configuration change; the five terminal/authority documents establish the relevant delivery boundary."
+  },
+  "authority_boundary": {
+    "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+    "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "lease_epoch": "S0-C-e12-browser60",
+    "material_candidate": {
+      "name": "C28",
+      "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+      "qualification": "HOLD_NOT_RUN"
+    },
+    "GLOBAL_RELEASE": false,
+    "checks_owner": "45",
+    "epic_AM_acceptance_owner": "S0",
+    "successor": "No automatic successor or automatic continuation of lease60 is named. An authorized continuation/successor must reconcile actual HEAD, terminal, current control and releases before new ACK/CAS.",
+    "operations63_effect": "Continue the authorized source63 work and publish its reviewable draft PR/handoff. Address the integration handoff to the mission60 record and an authorized integrator/successor; do not infer that an ended lease has consumed63 or that this documentation commit releases63 material."
+  },
+  "impact": {
+    "new_product_effect": "NONE",
+    "new_tests_required_solely_by_this_documentation_delta": false,
+    "new_shared_patch_required": false,
+    "retry_same_selection_justified_by_new_target_SHA_alone": false,
+    "C28_reconciliation_remains_applicable": true,
+    "C28_composed_validation_remains_required": true,
+    "source_R4_scope": "Any R4 outcome belongs to its own W/S/run/job. It does not execute target C28/faa30fdd or establish integration qualification.",
+    "handoff_census": "The new mission60 handoff explicitly treats its earlier census61-64 at 7e1a36e as historical. It is not evidence that Operations63 is still at that baseline or that the newer source commits were consumed.",
+    "qualification_holds": "C28 functional/runtime HOLD, source-vs-integrated separation, real ClamD integration, original five/seven controls, C06/formats/native/installed/AM and final gates remain in force."
+  },
+  "required_next_boundary": [
+    "Use faa30fddb7e7b61696b66fd069f51cf18c51125f as the latest observed PR base/target reconciliation pin while preserving the earlier C28 receipt as history.",
+    "Preserve exact Operations63 source qualification identities and results; no source green is transferred to the target.",
+    "The authorized integrator must reconcile the terminal60 authority, consume complete released units with exact preimages and shared CI dependency review, then qualify the composed snapshot according to the existing gates.",
+    "No extra technical rerun is requested merely for this receipt-only target commit."
+  ],
+  "mutations": {
+    "new_receipt_only": true,
+    "older_receipts_changed": 0,
+    "product_files_changed": 0,
+    "shared_files_copied": 0,
+    "remote_writes": 0,
+    "tests_executed": 0,
+    "CI_dispatches": 0
+  }
+}
