@@ -127,7 +127,7 @@ def validate(root: Path, launch: Path | None):
     launch_state = "NO_LAUNCH_RECORD"
     if launch:
         record = read(launch)
-        required = ["material_sha", "material_tree", "planning_sha", "canonical_sha", "s0_authority", "integrator_71_ack", "current_integrator_ack", "current_integrator_authority", "current_integrator_lease", "integrator_identity", "integrator_branch", "dispatcher_45_ack", "product_ci_101_ack", "compiler_45_ack", "leases", "source_family_blobs", "contract_blobs", "observed_actor_slots", "observed_runner_slots", "owner_releases"]
+        required = ["material_sha", "material_tree", "planning_sha", "canonical_sha", "s0_authority", "integrator_71_ack", "current_integrator_ack", "current_integrator_authority", "current_integrator_lease", "integrator_mission", "integrator_identity", "integrator_branch", "current_s0_control_sha", "coordinator_actor", "coordinator_mode", "dispatcher_45_ack", "product_ci_101_ack", "compiler_45_ack", "leases", "source_family_blobs", "contract_blobs", "observed_actor_slots", "observed_runner_slots", "owner_releases"]
         missing = [k for k in required if k not in record or record[k] in (None, "", [], {})]
         if missing:
             failures.append(f"launch record lacks factual fields: {missing}")
@@ -142,13 +142,28 @@ def validate(root: Path, launch: Path | None):
             "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
             "01efff55ee289cd897f912b9ae96c893b966e658",
             "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+            "d083b422b6a587f47873abde4d866e35017ff8b8",
+            "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+            "49dded7b4fa955ff2e0282f9ef2ffd59ddd277b3",
+            "806278627986f808afe71f53408fe31b77752894",
         }
-        ensure(record.get("current_integrator_ack") not in historical_integrator_refs, "current integrator ACK cannot reuse ended 71/100 authority")
-        ensure(record.get("s0_control_assignment_sha") == "8819df6169abd94aaa89d50a21f113e5596d2aae", "S0 assignment pin not current; re-pin control")
-        ensure(record.get("prepared_integrator_mission") == 105, "expected S0-prepared integrator mission105; re-pin if superseded")
+        ensure(record.get("current_integrator_ack") not in historical_integrator_refs, "current integrator ACK cannot reuse ended 71/100/105/106 authority")
+        ensure(sha40(record.get("current_integrator_ack")), "current integrator ACK must be a full Git SHA")
+        ensure(sha40(record.get("current_s0_control_sha")), "current S0 control pin must be a full Git SHA; verify live externally")
+        mission = record.get("integrator_mission")
+        ensure(type(mission) is int and mission > 106, "current integrator mission must supersede terminated 71/100/105/106")
+        mode = record.get("coordinator_mode")
+        ensure(mode in ("read-only", "shared-writer"), "coordinator mode must be read-only or shared-writer")
+        if mode == "shared-writer":
+            ensure(bool(record.get("coordinator_lease")) and
+                   record.get("coordinator_actor") == record.get("integrator_identity") and
+                   record.get("coordinator_lease") == record.get("current_integrator_lease"),
+                   "C00 shared writer must match current integrator actor and lease")
+        elif mode == "read-only":
+            ensure(record.get("coordinator_lease") in (None, ""), "read-only C00 cannot claim a material writer lease")
         ensure(record.get("product_ci_101_ack") != record.get("compiler_45_ack"), "101 product CI and 45 compiler ACK must be distinct")
         ensure(record.get("product_ci_101_ack") != record.get("dispatcher_45_ack"), "historical dispatcher45 cannot authorize product CI101")
-        ensure(record.get("current_integrator_lease") not in ("S0-C-e13-browser71", "S0-C-e14-browser100"), "current integrator lease cannot reuse ended 71/100 lease")
+        ensure(record.get("current_integrator_lease") not in ("S0-C-e13-browser71", "S0-C-e14-browser100", "S0-C-e15-browser105", "S0-C-e16-browser106"), "current integrator lease cannot reuse ended 71/100/105/106 lease")
         previous = record.get("prior_integrator_terminals", {})
         if not isinstance(previous, dict):
             failures.append("prior_integrator_terminals must be an object")
@@ -215,7 +230,7 @@ def validate(root: Path, launch: Path | None):
             for right_owner, right_path in active_claims[i + 1:]:
                 if left_owner != right_owner and intersects(left_path, right_path):
                     failures.append(f"active lease write collision {left_owner}:{left_path} <> {right_owner}:{right_path}")
-        warnings.append("The validator cannot cryptographically prove S0/71/45 authority, release status, current material SHA, active leases or CI; verify externally. No GO is issued.")
+        warnings.append("The validator cannot prove live S0 ref, integrator authority, owner releases or lease occupancy; verify all externally. No GO is issued.")
         launch_state = "FORMAT_CHECK_ONLY_NOT_AUTHORIZATION"
     else:
         warnings.append("No actual material C, external ACKs/leases, runners or live producer releases were supplied; execution is NOT authorized.")

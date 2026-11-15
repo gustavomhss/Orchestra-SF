@@ -123,12 +123,12 @@ test("UX20 strict: original 1610 canonical criteria and both graphs", { timeout:
   assert.equal(report.product_tests_executed, false);
 });
 
-test("UX20 adversarial: all 12 launch-input regressions", { timeout: 200_000 }, () => {
-  const result = invokePython("12 adversarial cases", [
+test("UX20 adversarial: all 21 launch-input regressions", { timeout: 200_000 }, () => {
+  const result = invokePython("21 adversarial cases", [
     "-m", "unittest", "discover",
     "-s", path.join(execution, "parallel-20"),
     "-p", "test_*.py", "-v",
   ]);
-  assert.match(result.stderr, /Ran 12 tests\b/);
+  assert.match(result.stderr, /Ran 21 tests\b/);
   assert.match(result.stderr, /\bOK\b/);
 });

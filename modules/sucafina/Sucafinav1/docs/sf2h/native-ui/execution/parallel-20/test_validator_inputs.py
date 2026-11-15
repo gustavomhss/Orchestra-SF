@@ -42,11 +42,16 @@ class LaunchInputTests(unittest.TestCase):
             "material_tree": "b" * 40,
             "s0_authority": "SYNTHETIC_NOT_AUTHORIZED",
             "integrator_71_ack": "historical71",
-            "current_integrator_ack": "synthetic-successor-ack",
+            "current_integrator_ack": "e" * 40,
             "current_integrator_authority": "synthetic-S0-assignment",
             "current_integrator_lease": "synthetic-successor-lease",
             "integrator_identity": "synthetic-integrator",
             "integrator_branch": "synthetic-branch",
+            "integrator_mission": 114,
+            "current_s0_control_sha": "f" * 40,
+            "coordinator_actor": "synthetic-coordinator",
+            "coordinator_mode": "read-only",
+            "coordinator_lease": None,
             "dispatcher_45_ack": "synthetic-legacy45",
             "product_ci_101_ack": "synthetic-product101",
             "compiler_45_ack": "synthetic-compiler45",
@@ -150,6 +155,74 @@ class LaunchInputTests(unittest.TestCase):
         code, body = self.execute(record)
         self.assertNotEqual(code, 0)
         self.assertTrue(any("must be distinct" in x for x in body["errors"]), body)
+
+    def test_historical_105_ack_is_rejected(self):
+        record = self.fixture()
+        record["current_integrator_ack"] = "d083b422b6a587f47873abde4d866e35017ff8b8"
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("ended 71/100/105/106" in x for x in body["errors"]), body)
+
+    def test_historical_105_lease_is_rejected(self):
+        record = self.fixture()
+        record["current_integrator_lease"] = "S0-C-e15-browser105"
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("ended 71/100/105/106" in x for x in body["errors"]), body)
+
+    def test_historical_106_ack_is_rejected(self):
+        record = self.fixture()
+        record["current_integrator_ack"] = "49dded7b4fa955ff2e0282f9ef2ffd59ddd277b3"
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("ended 71/100/105/106" in x for x in body["errors"]), body)
+
+    def test_historical_106_lease_is_rejected(self):
+        record = self.fixture()
+        record["current_integrator_lease"] = "S0-C-e16-browser106"
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("ended 71/100/105/106" in x for x in body["errors"]), body)
+
+    def test_terminal_mission_105_is_rejected(self):
+        record = self.fixture()
+        record["integrator_mission"] = 105
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("must supersede terminated" in x for x in body["errors"]), body)
+
+    def test_invalid_current_s0_sha_is_rejected(self):
+        record = self.fixture()
+        record["current_s0_control_sha"] = "historic"
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("current S0 control pin" in x for x in body["errors"]), body)
+
+    def test_shared_writer_mismatched_actor_is_rejected(self):
+        record = self.fixture()
+        record["coordinator_mode"] = "shared-writer"
+        record["coordinator_lease"] = record["current_integrator_lease"]
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("C00 shared writer must match" in x for x in body["errors"]), body)
+
+    def test_shared_writer_missing_lease_is_rejected(self):
+        record = self.fixture()
+        record["coordinator_mode"] = "shared-writer"
+        record["coordinator_actor"] = record["integrator_identity"]
+        code, body = self.execute(record)
+        self.assertNotEqual(code, 0)
+        self.assertTrue(any("C00 shared writer must match" in x for x in body["errors"]), body)
+
+    def test_shared_writer_same_actor_and_lease_is_format_only(self):
+        record = self.fixture()
+        record["coordinator_mode"] = "shared-writer"
+        record["coordinator_actor"] = record["integrator_identity"]
+        record["coordinator_lease"] = record["current_integrator_lease"]
+        code, body = self.execute(record)
+        self.assertEqual(code, 0, body)
+        self.assertEqual(body["launch"], "FORMAT_CHECK_ONLY_NOT_AUTHORIZATION")
+        self.assertFalse(body["authorized_to_write_product"])
 
     def test_invalid_git_blob_digest_is_rejected(self):
         record = self.fixture()
