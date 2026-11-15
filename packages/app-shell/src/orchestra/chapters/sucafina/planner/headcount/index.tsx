@@ -173,7 +173,10 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
           const handle = drafts.get(JSON.stringify([next.selection.year, next.data.selectedVersion?.id ?? "", row.id]))
           handle?.receiveRemote({ baseVersion: row.revision, value: toPositionForm(row) })
         }
-        setState({ page: next, phase: next.data.positions.length ? "ready" : "empty", error: "" })
+        const requested = "positionRef" in props.route.params ? props.route.params.positionRef : undefined
+        const absent = requested && !next.data.positions.some(row => row.id === requested)
+        setState({ page: next, phase: absent ? "not-found" :
+          next.data.positions.length ? "ready" : "empty", error: "" })
       } catch (error) {
         if (!abort.signal.aborted) {
           console.error("N19 Headcount read failed", error instanceof Error ? error.name : "unknown")
@@ -381,7 +384,8 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
           resultState() === "denied" ? "sf.common.noAccess" :
           resultState() === "session-expired" ? "sf.common.loginAgain" :
           resultState() === "outcome-unknown" ? "sf.common.operationUnknown" :
-          resultState() === "invalid" ? "sf.common.fieldErrorSummary" : "sf.common.unavailable")}
+          resultState() === "invalid" ? "sf.common.fieldErrorSummary" :
+          resultState() === "not-found" ? "sf.u08.notFound" : "sf.common.unavailable")}
         onRetryRead={() => reload()}
       >
         <Show when={state.page}>
