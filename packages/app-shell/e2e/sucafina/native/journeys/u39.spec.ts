@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
-import { nativeDashboardCommandTarget, nativeInstalledFixture, nativeJourneyEntryHref, observeNativeBinding, requireNativeJourney } from "../fixture.ts"
+import { armHeldResponse, armLostResponse, requestRealRevocation, nativeDashboardCommandTarget, nativeInstalledFixture, nativeJourneyEntryHref, observeNativeBinding, requireNativeJourney } from "../fixture.ts"
 import type { InstalledNativeHarness } from "../fixture.ts"
 
 /**
@@ -647,6 +647,494 @@ nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-prod
     const after = await originalPage(page, nativeHarness)
     expect(asRecord(after.deviations[sourceKind + "-" + id + "-2026-7])?.flag).toBe("dev-red")
     expect(after.versions[deviationKey]).toBeGreaterThan(priorVersion as number)
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+  })
+})
+
+
+/**
+ * 206 negative/state/accessibility additions. All tests are declared even
+ * when a private installed case is not provisioned. In those situations they
+ * fail with F04_REQUIRED_... rather than marking a scenario skipped/passed.
+ */
+function requireRegisteredLiveCase(
+  nativeHarness: InstalledNativeHarness,
+  caseName: string,
+): void {
+  const selected = nativeHarness.selected
+  if (!selected || selected.suite !== (surfaceId === "CAP04" ? "U39" : "U40") ||
+      !selected.selections.some((entry) => entry.caseId === caseName)) {
+    throw new Error("F04_REQUIRED_" + surfaceId + "_SELECTED_LIVE_CASE_" + caseName)
+  }
+}
+
+function reportableIds(source: SourcePage) {
+  return source.owners.map((owner) => String(owner.id))
+}
+
+nativeInstalledFixture.describe("206 " + surfaceId + " · FULL states, identities, failures and accessibility", () => {
+  nativeInstalledFixture("206-AC02 filter survives list/detail/back, source record remains selected and source metadata is original", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("filtered")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "83")
+    const owners = surface.locator(".sf-budget-owners")
+    const search = owners.getByRole("searchbox", { name: "Name" })
+    await search.fill(name)
+    await expect(ownerRow(surface, name)).toHaveCount(1)
+    const detail = await openOwner(surface, name, id)
+    const source = await originalPage(page, nativeHarness)
+    const metadata = detail.locator('[data-sf-field="source-version"]')
+    await expect(metadata).toContainText(String(ownerVersion(source, id)))
+    await expect(detail.locator(".sf-budget-source")).toContainText(sourceCollection + ":" + id)
+    await detail.getByRole("button", { name: "Back", exact: true }).click()
+    await expect(search, "NAV-01 should retain filters across the original route ref").toHaveValue(name)
+    await expect(ownerRow(surface, name)).toHaveCount(1)
+    await search.fill("__N206_CANNOT_MATCH_ANY_ORIGINAL_SOURCE__")
+    await expect(surface.locator('[data-sf-state="filtered-empty"]')).toBeVisible()
+    await expect(surface.locator('[data-sf-state="empty"]')).toHaveCount(0)
+    await expect(search).toHaveValue("__N206_CANNOT_MATCH_ANY_ORIGINAL_SOURCE__")
+    await search.fill("")
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+  })
+
+  nativeInstalledFixture("206-AC02 a genuinely empty original collection is empty, not filtered-empty, partial or not-found", async ({ page, nativeHarness }) => {
+    // 199 must provision an isolated producer collection with 0 original rows.
+    // A filter-empty search over a populated producer is NEVER this scenario.
+    requireRegisteredLiveCase(nativeHarness, "empty")
+    const surface = await requireAdmittedSurface(page, nativeHarness, "read")
+    const source = await originalPage(page, nativeHarness)
+    if (source.owners.length !== 0) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_GENUINE_ZERO_ROW_COLLECTION")
+    }
+    await expect(surface.locator('[data-sf-state="empty"]')).toBeVisible()
+    await expect(surface.locator('[data-sf-state="filtered-empty"]')).toHaveCount(0)
+    await expect(surface.locator('[data-sf-state="not-found"]')).toHaveCount(0)
+    await expect(surface.locator(".sf-budget-owners tr[data-sf-row]")).toHaveCount(0)
+  })
+
+  nativeInstalledFixture("206-AC02 not-found deep link is distinct from empty and never resurrects a removed record", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("removed")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "12")
+    await openOwner(surface, name, id)
+    const actualResolvedHref = page.url()
+    const before = await originalPage(page, nativeHarness)
+    expect(reportableIds(before)).toContain(id)
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+    await page.goto(actualResolvedHref)
+    await expect(surface.locator('[data-sf-state="not-found"]')).toBeVisible()
+    await expect(surface.locator('[data-sf-state="filtered-empty"]')).toHaveCount(0)
+    await expect(surface.locator(".sf-budget-detail")).toHaveCount(0)
+    expect(reportableIds(await originalPage(page, nativeHarness))).not.toContain(id)
+  })
+
+  nativeInstalledFixture("206-AC01 authorized producer source link and 2026 identity, with CAP04-only import control", async ({ page, nativeHarness }) => {
+    requireRegisteredLiveCase(nativeHarness, "source")
+    const surface = await requireAdmittedSurface(page, nativeHarness, "read")
+    const original = await originalPage(page, nativeHarness)
+    const selected = original.owners.filter((owner) =>
+      typeof owner.name === "string" && String(owner.name).trim() && owner.id !== undefined)
+    if (!selected.length) throw new Error("F04_REQUIRED_" + surfaceId + "_SOURCE_LINK_ORIGINAL_RECORD")
+    const source = selected[0]!
+    const detail = await openOwner(surface, String(source.name), String(source.id))
+    const originalRef = sourceCollection + ":" + String(source.id)
+    await expect(detail.locator(".sf-budget-source")).toContainText(originalRef)
+    const current = await observeNativeBinding(page, nativeHarness.manifest.target)
+    const linked = current.destinations.find((destination) =>
+      destination.capabilityId === "CAP03" && destination.canRead)
+    if (!linked) throw new Error("F04_REQUIRED_" + surfaceId + "_ORIGINAL_AUTHORIZED_CAP03_SOURCE_LINK")
+    const link = detail.getByRole("button", { name: "View source", exact: true })
+    await expect(link).toBeEnabled()
+    await link.click()
+    await expect(page).toHaveURL(/\/orchestra\/sf-dashboard\/budget\?/)
+    const href = new URL(page.url())
+    expect(href.searchParams.get("year")).toBe("2026")
+    // The route carries only the real owner selection; no copied private data.
+    expect(href.searchParams.get("project") ?? nativeHarness.manifest.target.projectId)
+      .toBe(nativeHarness.manifest.target.projectId)
+    await page.goto(nativeJourneyEntryHref(nativeHarness.manifest.target, surfaceId, 2026))
+    await expect(surface).toBeVisible()
+    if (surfaceId === "CAP05") {
+      await expect(surface.getByRole("link", { name: "Import Excel", exact: true })).toHaveCount(0)
+    } else {
+      const permissions = await originalPage(page, nativeHarness)
+      const importControl = surface.getByRole("link", { name: "Import Excel", exact: true })
+      if (permissions.allowedActionIds.includes("import")) {
+        await expect(importControl).toBeVisible()
+        await expect(importControl).toHaveAttribute("href", /\/orchestra\/sf-imports\/new/)
+      } else {
+        await expect(importControl).toHaveCount(0)
+      }
+    }
+  })
+
+  nativeInstalledFixture("206-AC02 real read-only principal sees source but no enabled mutation or private false affordance", async ({ page, nativeHarness }) => {
+    requireRegisteredLiveCase(nativeHarness, "readonly")
+    const surface = await requireAdmittedSurface(page, nativeHarness, "read")
+    const real = await observeNativeBinding(page, nativeHarness.manifest.target)
+    const readOnly = real.destinations.find((entry) => entry.capabilityId === surfaceId)
+    if (!readOnly?.canRead || readOnly.allowedActionIds.includes("save")) {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_Genuine_READ_ONLY_PRINCIPAL")
+    }
+    const source = await originalPage(page, nativeHarness)
+    await expect(surface.getByRole("button", { name: newButtonName, exact: true })).toBeDisabled()
+    const rows = surface.locator(".sf-budget-owners tr[data-sf-row]")
+    await expect(rows).toHaveCount(source.owners.length)
+    await expect(rows.locator('button[data-sf-action="edit"]:not([disabled])')).toHaveCount(0)
+    await expect(rows.locator('button[data-sf-action="delete"]:not([disabled])')).toHaveCount(0)
+    const observation: import("@playwright/test").Request[] = []
+    const listener = (request: import("@playwright/test").Request) => {
+      if (originalCommandMatches(request, nativeHarness)) observation.push(request)
+    }
+    page.on("request", listener)
+    try {
+      const search = surface.locator(".sf-budget-owners").getByRole("searchbox", { name: "Name" })
+      await search.fill("__N206_FILTER_DOES_NOT_GRANT_WRITE__")
+      await expect(surface.locator('[data-sf-state="filtered-empty"]')).toBeVisible()
+      await search.fill("")
+      expect(observation).toHaveLength(0)
+    } finally { page.off("request", listener) }
+  })
+
+  nativeInstalledFixture("206-AC02 denied original Microsoft actor never renders private rows, draft or edit, and denial is not empty", async ({ page, nativeHarness }) => {
+    requireRegisteredLiveCase(nativeHarness, "denied")
+    const { manifest } = nativeHarness
+    await page.goto(nativeJourneyEntryHref(manifest.target, surfaceId, 2026))
+    const denied = await requireNativeJourney({
+      page, manifest, actor: "denied", capabilityId: surfaceId, intent: "denied", year: 2026,
+    })
+    expect(denied.canRead).toBe(false)
+    const live = await observeNativeBinding(page, manifest.target)
+    expect(live.stamp.principalRef).toBe(manifest.actors.denied)
+    await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-owners tr[data-sf-row]'))
+      .toHaveCount(0)
+    await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-editor')).toHaveCount(0)
+    await expect(page.locator('[data-sf-budget="' + surfaceId + '"] [data-sf-state="empty"]')).toHaveCount(0)
+    await expect.poll(async () =>
+      page.locator('[data-sf-state="denied"], [data-sf-state="session-expired"]').count(),
+    ).toBeGreaterThan(0)
+  })
+
+  nativeInstalledFixture("206-AC02 real producer revocation while editing erases private draft after a new host read", async ({ page, nativeHarness }) => {
+    requireRegisteredLiveCase(nativeHarness, "revoked")
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const source = await originalPage(page, nativeHarness)
+    const owner = source.owners.find((row) => typeof row.name === "string" && !!String(row.name).trim())
+    if (!owner) throw new Error("F04_REQUIRED_" + surfaceId + "_REAL_REVOCABLE_SOURCE_RECORD")
+    const name = String(owner.name)
+    const detail = await openOwner(surface, name, String(owner.id))
+    await detail.getByRole("button", { name: "Edit", exact: true }).click()
+    const unpublished = budgetScenario("REVOKED_PRIVATE_DRAFT")
+    const form = surface.locator(".sf-budget-form")
+    await form.getByRole("textbox", { name: recordName }).fill(unpublished)
+    await expect(form).toContainText(recordName)
+    const driver = nativeHarness as InstalledNativeHarness & Readonly<{
+      revokeViaOriginalProducer?: (input: { capabilityId: string; principalRef: string }) => Promise<{ committed: boolean }>
+    }>
+    if (typeof driver.revokeViaOriginalProducer !== "function") {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_REAL_PRIVILEGED_REVOCATION_DRIVER_199")
+    }
+    const proof = await requestRealRevocation({
+      page, manifest: nativeHarness.manifest, capabilityId: surfaceId,
+      revokeViaProducer: () => driver.revokeViaOriginalProducer!({
+        capabilityId: surfaceId, principalRef: source.principalRef,
+      }),
+    })
+    expect(["PRODUCER_ACCESS_REVOCATION_OBSERVED", "PRODUCER_AUTHENTICATION_REVOKED"])
+      .toContain(proof.phase)
+    await page.reload({ waitUntil: "domcontentloaded" })
+    await expect(page.getByText(unpublished)).toHaveCount(0)
+    await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-editor')).toHaveCount(0)
+    await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-owners tr[data-sf-row]'))
+      .toHaveCount(0)
+    await expect.poll(async () =>
+      page.locator('[data-sf-state="denied"], [data-sf-state="session-expired"]').count(),
+    ).toBeGreaterThan(0)
+  })
+
+  nativeInstalledFixture("206-AC02 real 409 with concurrent authenticated editor blocks stale review; no optimistic overwrite", async ({ page, nativeHarness }) => {
+    requireRegisteredLiveCase(nativeHarness, "stale")
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const current = await originalPage(page, nativeHarness)
+    const owner = current.owners.find((row) => typeof row.name === "string" && !!String(row.name).trim())
+    if (!owner) throw new Error("F04_REQUIRED_" + surfaceId + "_CONCURRENT_SOURCE_RECORD")
+    const ownerId = String(owner.id)
+    const initialVersion = ownerVersion(current, ownerId)
+    const detail = await openOwner(surface, String(owner.name), ownerId)
+    await detail.getByRole("button", { name: "Edit", exact: true }).click()
+    const form = surface.locator(".sf-budget-form")
+    const draftName = budgetScenario("STALER")
+    await form.getByRole("textbox", { name: recordName }).fill(draftName)
+    const driver = nativeHarness as InstalledNativeHarness & Readonly<{
+      advanceViaSecondAuthenticatedWriter?: (input: { capabilityId: string; recordId: string; expectedVersion: number }) =>
+        Promise<{ sourceVersion: number }>
+    }>
+    if (typeof driver.advanceViaSecondAuthenticatedWriter !== "function") {
+      throw new Error("F04_REQUIRED_" + surfaceId + "_SECOND_ORIGINAL_PRODUCER_WRITER_199")
+    }
+    const conflict = await driver.advanceViaSecondAuthenticatedWriter({
+      capabilityId: surfaceId, recordId: ownerId, expectedVersion: initialVersion,
+    })
+    const changed = await originalPage(page, nativeHarness)
+    expect(ownerVersion(changed, ownerId)).toBe(conflict.sourceVersion)
+    expect(conflict.sourceVersion).toBeGreaterThan(initialVersion)
+    // A stale reviewed command must be rejected by the original producer (409)
+    // or by the source-version gate; both prohibit an unversioned overwrite.
+    const actions: import("@playwright/test").Request[] = []
+    const observe = (request: import("@playwright/test").Request) => {
+      if (originalCommandMatches(request, nativeHarness)) actions.push(request)
+    }
+    page.on("request", observe)
+    try {
+      await reviewForm(surface)
+      const review = surface.locator('[data-component="sf-change-review"]')
+      const save = review.getByRole("button", { name: "Save", exact: true })
+      if (await save.isEnabled()) {
+        const pending = page.waitForResponse((response) =>
+          originalCommandMatches(response.request(), nativeHarness) &&
+          asRecord(response.request().postDataJSON())?.action === "save")
+        await save.click()
+        const response = await pending
+        expect(response.status()).toBe(409)
+      } else {
+        await expect(save).toBeDisabled()
+        expect(actions).toHaveLength(0)
+      }
+      expect(exactOwner(await originalPage(page, nativeHarness), ownerId).name).not.toBe(draftName)
+    } finally { page.off("request", observe) }
+  })
+
+  nativeInstalledFixture("206-AC02 validation error does not dispatch and preserves missing, zero and original editor text", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("validation")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "0")
+    const detail = await openOwner(surface, name, id)
+    const posts: import("@playwright/test").Request[] = []
+    const monitor = (request: import("@playwright/test").Request) => {
+      if (originalCommandMatches(request, nativeHarness)) posts.push(request)
+    }
+    page.on("request", monitor)
+    try {
+      await detail.getByRole("button", { name: "Apply year amount", exact: true }).click()
+      let form = surface.locator(".sf-budget-form")
+      const amount = form.getByRole("spinbutton", { name: "Year amount" })
+      await amount.fill("-1")
+      await form.getByRole("button", { name: "Review changes" }).click()
+      await expect(surface.locator('[data-component="sf-change-review"]')).toHaveCount(0)
+      await expect(amount).toHaveValue("-1")
+      await expect(form.getByRole("alert")).toBeVisible()
+      await form.getByRole("button", { name: "Cancel", exact: true }).click()
+      const row = detail.locator(".sf-budget-months tr[data-sf-month='11']")
+      await row.getByRole("button", { name: "Save month", exact: true }).click()
+      form = surface.locator(".sf-budget-form")
+      await form.getByRole("spinbutton", { name: "budget", exact: true }).fill("")
+      await form.getByRole("spinbutton", { name: "actual", exact: true }).fill("0")
+      await form.getByRole("spinbutton", { name: "forecast", exact: true }).fill("5")
+      await form.getByRole("button", { name: "Review changes" }).click()
+      await expect(surface.locator('[data-component="sf-change-review"]')).toHaveCount(0)
+      await expect(form.getByRole("spinbutton", { name: "budget", exact: true })).toHaveValue("")
+      await expect(form.getByRole("spinbutton", { name: "actual", exact: true })).toHaveValue("0")
+      expect(posts).toHaveLength(0)
+      await form.getByRole("button", { name: "Cancel" }).click()
+    } finally { page.off("request", monitor) }
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+  })
+
+  nativeInstalledFixture("206-AC02 real held producer POST is visibly submitting/pending, double confirmation cannot dispatch", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("pending")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "121")
+    const detail = await openOwner(surface, name, id)
+    await detail.getByRole("button", { name: "Edit", exact: true }).click()
+    const form = surface.locator(".sf-budget-form")
+    await form.getByRole("spinbutton", { name: "Annual budget" }).fill("122")
+    await reviewForm(surface)
+    await expect(surface.locator(".sf-budget-editor")).toHaveAttribute("data-sf-draft-phase", "reviewing")
+    const held = await armHeldResponse(page, nativeDashboardCommandTarget(nativeHarness.manifest, surfaceId))
+    try {
+      const review = surface.locator('[data-component="sf-change-review"]')
+      await review.getByRole("button", { name: "Save", exact: true }).click()
+      await expect.poll(() => held.observations().attempts).toBe(1)
+      // Separate UI phase from a ready list: leaving the form editable or
+      // rendering a second enabled Confirm is a product defect for 189.
+      await expect(surface.locator(".sf-budget-editor")).toHaveAttribute("data-sf-draft-phase", "submitting")
+      await expect(surface.locator(".sf-budget-editor [role='status']")).toBeVisible()
+      await expect(surface.locator(".sf-budget-editor").getByRole("button", { name: "Save", exact: true })).toBeDisabled()
+      expect(held.observations().producerStatus).toBe(200)
+      held.release()
+      await expect.poll(async () => exactOwner(await originalPage(page, nativeHarness), id).budget).toBe(122)
+      await expect(surface.locator(".sf-budget-editor")).toHaveCount(0)
+      expect(held.observations().attempts).toBe(1)
+    } finally {
+      held.release()
+      await held.dispose()
+    }
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+  })
+
+  nativeInstalledFixture("206-AC02 lost response remains outcome-unknown until original authorized refetch, never auto-retry", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("lost")
+    const before = await originalPage(page, nativeHarness)
+    const posts: import("@playwright/test").Request[] = []
+    const monitor = (request: import("@playwright/test").Request) => {
+      if (originalCommandMatches(request, nativeHarness)) posts.push(request)
+    }
+    await surface.getByRole("button", { name: newButtonName, exact: true }).click()
+    const form = surface.locator(".sf-budget-form")
+    await form.getByRole("textbox", { name: recordName }).fill(name)
+    await form.getByRole("spinbutton", { name: "Annual budget" }).fill("36")
+    await reviewForm(surface)
+    const lost = await armLostResponse(page, nativeDashboardCommandTarget(nativeHarness.manifest, surfaceId))
+    page.on("request", monitor)
+    try {
+      await surface.locator('[data-component="sf-change-review"]')
+        .getByRole("button", { name: "Save", exact: true }).click()
+      const receipt = surface.locator('[data-component="sf-receipt-view"][data-state="outcome-unknown"]')
+      await expect(receipt).toBeVisible()
+      await expect(receipt.locator('[data-outcome="unconfirmed"]')).toBeVisible()
+      await expect(receipt.locator('[data-receipt="producer"]')).toHaveCount(0)
+      const observation = lost.observations()
+      expect(observation.attempts).toBe(1)
+      expect(observation.producerStatus).toBe(200)
+      // The real producer may commit while its response is lost. The independent
+      // original GET, not this status or a manufactured receipt, is the oracle.
+      await expect.poll(async () =>
+        (await originalPage(page, nativeHarness)).owners.filter((row) => row.name === name).length,
+      ).toBe(1)
+      await receipt.getByRole("button", { name: "Check outcome", exact: true }).click()
+      await expect(receipt.locator('[data-outcome="unconfirmed"]')).toBeVisible()
+      expect(posts).toHaveLength(1)
+      const after = await originalPage(page, nativeHarness)
+      expect(after.owners.length).toBe(before.owners.length + 1)
+      expect(after.owners.find((row) => row.name === name)?.budget).toBe(36)
+    } finally {
+      page.off("request", monitor)
+      await lost.dispose()
+    }
+    // Do not issue an unreviewed compensating mutation while the draft intent
+    // is unresolved. Fixture/200 owns disposing the isolated private dataset.
+  })
+
+  nativeInstalledFixture("206-AC02 late original GET after different installation/project never leaks prior draft or owner", async ({ page, nativeHarness }) => {
+    requireRegisteredLiveCase(nativeHarness, "late")
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const original = await originalPage(page, nativeHarness)
+    const owner = original.owners.find((row) => typeof row.name === "string" && !!String(row.name).trim())
+    if (!owner) throw new Error("F04_REQUIRED_" + surfaceId + "_ORIGINAL_OWNER_FOR_LATE_READ")
+    const privateName = String(owner.name)
+    await openOwner(surface, privateName, String(owner.id))
+    const wrong = nativeHarness.manifest.wrongProject
+    if (wrong.projectId === nativeHarness.manifest.target.projectId) {
+      throw new Error("F04_REQUIRED_DISTINCT_PROJECT_FOR_OWNER_CHANGE")
+    }
+    const wrongHref = new URL(nativeJourneyEntryHref(nativeHarness.manifest.target, surfaceId, 2026))
+    wrongHref.searchParams.set("server", wrong.serverKey)
+    wrongHref.searchParams.set("project", wrong.projectId)
+    wrongHref.searchParams.set("installation", wrong.installationId)
+    const target = nativeHarness.manifest.target
+    const held = await armHeldResponse(page, {
+      origin: target.publicOrigin,
+      pathname: target.mount + "/api/ui/pages/" + surfaceId,
+      method: "GET",
+      query: { year: "2026" },
+    })
+    try {
+      await page.reload({ waitUntil: "domcontentloaded" })
+      await expect.poll(() => held.observations().attempts).toBe(1)
+      await page.goto(wrongHref.toString(), { waitUntil: "domcontentloaded" })
+      held.release()
+      await expect(page).toHaveURL(wrongHref.toString())
+      await expect(page.getByText(privateName, { exact: true })).toHaveCount(0)
+      await expect(page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-editor')).toHaveCount(0)
+      const sourceRows = page.locator('[data-sf-budget="' + surfaceId + '"] .sf-budget-owners tr[data-sf-row]')
+      await expect(sourceRows.filter({ hasText: privateName })).toHaveCount(0)
+      expect(held.observations().attempts).toBe(1)
+    } finally {
+      held.release()
+      await held.dispose()
+    }
+  })
+
+  nativeInstalledFixture("206-AC03 complete forms, actions and keyboard at 320/768/1024/1280/1440 plus 200/400 percent reflow", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("a11y")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "505")
+    const detail = await openOwner(surface, name, id)
+    const ownerRowId = detail.locator(".sf-budget-source")
+    await expect(ownerRowId).toContainText(sourceCollection + ":" + id)
+    const months = detail.getByRole("region", { name: "Annual Entry", exact: true })
+    await expect(months).toHaveAttribute("tabindex", "0")
+    await expect(months.locator("tr[data-sf-month]")).toHaveCount(12)
+    for (const width of [320, 768, 1024, 1280, 1440]) {
+      await page.setViewportSize({ width, height: 900 })
+      await expect(surface.getByRole("heading", { name: title })).toBeVisible()
+      await expect(surface.getByRole("button", { name: newButtonName, exact: true })).toBeEnabled()
+      await expect(surface.locator(".sf-budget-owners").getByRole("searchbox", { name: "Name" })).toBeEditable()
+      for (const label of ["Edit", "Delete", "Apply annual entry", "Apply year amount"]) {
+        await expect(detail.getByRole("button", { name: label, exact: true })).toBeEnabled()
+      }
+      const source = await originalPage(page, nativeHarness)
+      expect(source.owners.some((row) => String(row.id) === id)).toBe(true)
+      const widthState = await surface.evaluate((element) => ({
+        clientWidth: element.clientWidth, scrollWidth: element.scrollWidth,
+      }))
+      expect(widthState.scrollWidth, "no chapter overflow at " + width)
+        .toBeLessThanOrEqual(widthState.clientWidth + 1)
+    }
+    await months.focus()
+    await expect(months).toBeFocused()
+    await page.keyboard.press("ArrowRight")
+    const monthRow = detail.locator(".sf-budget-months tr[data-sf-month='2']")
+    await expect(monthRow.getByRole("button", { name: "Save month" })).toBeEnabled()
+    await expect(monthRow.getByRole("button", { name: "Save deviation" })).toBeEnabled()
+
+    // Inspect every editable field/label/action, without submitting commands.
+    await detail.getByRole("button", { name: "Edit", exact: true }).click()
+    let form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("textbox", { name: recordName, exact: true })).toBeEditable()
+    await expect(form.getByRole("spinbutton", { name: "Annual budget" })).toBeEditable()
+    await form.getByRole("textbox", { name: recordName }).focus()
+    await expect(form.getByRole("textbox", { name: recordName })).toBeFocused()
+    await page.keyboard.press("Tab")
+    await expect(form.getByRole("spinbutton", { name: "Annual budget" })).toBeFocused()
+    await form.getByRole("button", { name: "Cancel" }).click()
+    await monthRow.getByRole("button", { name: "Save month" }).click()
+    form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("spinbutton", { name: "Month" })).toHaveAttribute("readonly", "")
+    for (const field of ["budget", "actual", "forecast"]) {
+      await expect(form.getByRole("spinbutton", { name: field, exact: true })).toBeEditable()
+    }
+    await form.getByRole("button", { name: "Cancel" }).click()
+    await monthRow.getByRole("button", { name: "Save deviation" }).click()
+    form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("combobox", { name: "Flag" })).toBeEnabled()
+    await expect(form.getByRole("textbox", { name: "Deviation notes" })).toBeEditable()
+    await form.getByRole("button", { name: "Cancel" }).click()
+    await detail.getByRole("button", { name: "Apply annual entry" }).click()
+    form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("spinbutton", { name: "Annual Entry ÷12" })).toBeEditable()
+    await expect(form.getByRole("combobox", { name: "Field" })).toBeEnabled()
+    await form.getByRole("button", { name: "Cancel" }).click()
+    await detail.getByRole("button", { name: "Apply year amount" }).click()
+    form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("spinbutton", { name: "Year amount" })).toBeEditable()
+    await form.getByRole("button", { name: "Cancel" }).click()
+
+    for (const [width, fontSize] of [[768, "200%"], [320, "400%"]] as const) {
+      await page.setViewportSize({ width, height: 900 })
+      await page.evaluate((value) => { document.documentElement.style.fontSize = value }, fontSize)
+      await expect(detail).toBeVisible()
+      await expect(months).toBeVisible()
+      await expect(detail.getByRole("button", { name: "Apply annual entry" })).toBeVisible()
+      await expect(monthRow.getByRole("button", { name: "Save month" })).toBeVisible()
+      const sizes = await surface.evaluate((element) => ({
+        width: element.clientWidth, scroll: element.scrollWidth,
+      }))
+      expect(sizes.scroll, "reflow must not conceal actions at " + width + "/" + fontSize)
+        .toBeLessThanOrEqual(sizes.width + 1)
+    }
+    await page.evaluate(() => { document.documentElement.style.removeProperty("font-size") })
     await deleteRealOwner(page, nativeHarness, surface, name, id)
   })
 })
