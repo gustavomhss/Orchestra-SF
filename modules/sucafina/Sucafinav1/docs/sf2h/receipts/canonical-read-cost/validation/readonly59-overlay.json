@@ -1,0 +1,136 @@
+{
+  "schema": "sf2h.canonical-read-cost.validation-overlay.v1",
+  "source76Base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "role": "VALIDATION_ONLY_NOT_SOURCE76_WRITES",
+  "requiredRelease59": {
+    "material": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+    "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+    "sourcePR": 72
+  },
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "bytes": 4774,
+        "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+        "sha256": "809bdbfe8b1efd05e4c0a3d8b78eea726c729d1767e8c4569fa6a31e78bb1c7a"
+      },
+      "postimage": {
+        "bytes": 5363,
+        "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+        "sha256": "4e44c93060c70ddebd1f85ecbe78b4ecaca311e19985df4c610c84529085cbee"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "bytes": 32899,
+        "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "sha256": "1f4b260f41c1d6aa521f9e127c912cdaff5aac903525de7a8d49b3d145b0f192"
+      },
+      "postimage": {
+        "bytes": 35607,
+        "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "sha256": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "bytes": 15333,
+        "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+        "sha256": "0936904cb37246dfa9df990580a87ac1398a5bc31c725e5ec2e136a2ab1ae915"
+      },
+      "postimage": {
+        "bytes": 15748,
+        "blob": "0e812842ad0d534998c182100a8466548d70e915",
+        "sha256": "52116581fb89dd0065a1fbfe6a82829fe306faa09c46135aa06775ff21ca6f9d"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "bytes": 4193,
+        "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "sha256": "9982156692099d6f9663794186c8398632a5c33abd3615809cfe8ec6e8e409a1"
+      },
+      "postimage": {
+        "bytes": 4757,
+        "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+        "sha256": "5d1b5706c68b4ac9489fb9cb5c58aa9f050994329e9361306892599fe71ccbc1"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "bytes": 7414,
+        "blob": "35741770154ccea55944674239e5b29cadc3abb6",
+        "sha256": "537af7091d6b55bc3f383265b1049b8ef2f6debb19d75fa8051d165ff413b707"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "bytes": 11882,
+        "blob": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+        "sha256": "13f6495ecd0475d75d38cb91dce6b23ec62e46ff310d8ae63fad9c39f6d96f2c"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "bytes": 16782,
+        "blob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+        "sha256": "e5816b6a9aa73bbea88efcde2223afc65e45c1199b2669d460e7bc2edf3e0e3e"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "bytes": 6279,
+        "blob": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+        "sha256": "4c38ea40691c6fdf24b387d5422272eedbc5dffba4d9a196c284402f9ea8f4a2"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "bytes": 9435,
+        "blob": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+        "sha256": "12772949b77ceba728dd1d3584ad021beebeedc4fa59c99eff64ff5dbba00d94"
+      }
+    }
+  ],
+  "notes": [
+    "All four modified paths match source76 preimages; five test files are absent at source76 base.",
+    "Compose all nine released59 postimages by blob identity only on validation child V; keep canonical-read-cost source branch limited to authorized76 paths.",
+    "V is not an integrated71 candidate and does not claim that historical59 PASS certifies this composition.",
+    "P03 and original fixture blobs remain unchanged; source76 tests require the declared59 dependency for readonly capability typing.",
+    "No edits to runtime72, executor65, portfolio analysis/production, source61 or Atlas69."
+  ],
+  "status": "BASELINE_NOT_RUN"
+}
