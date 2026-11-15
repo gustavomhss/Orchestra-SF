@@ -1,0 +1,157 @@
+{
+  "schema": "sf2h.next30.packet.v1",
+  "slot": "N03",
+  "role": "new-implementer",
+  "lane": "adapter",
+  "title": "Bindings finos: Rotinas, Schedule e residentes",
+  "execution_state": "PREPARED_NOT_STARTED",
+  "authorization": false,
+  "actor": null,
+  "lease": null,
+  "branch_hint": "sf-ux-n03",
+  "source": {
+    "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "work_order_blobs": {
+      "A09": "22099144af454eb73117c2424752831bf82461ba"
+    },
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "live_material": "REPIN_BY_114_AT_LAUNCH"
+  },
+  "scope": [
+    {
+      "order": "A09",
+      "output": "complete",
+      "title": "Bindings finos: Rotinas, Schedule e residentes",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A09.json",
+      "surfaces": [],
+      "operation_refs": [
+        "contract-catalog.json#/operations/projection.routine",
+        "contract-catalog.json#/operations/routines.catalog",
+        "contract-catalog.json#/operations/routines.prepare-admission",
+        "contract-catalog.json#/operations/routines.read-admission",
+        "contract-catalog.json#/operations/routines.read-run",
+        "contract-catalog.json#/operations/routines.run",
+        "contract-catalog.json#/operations/schedules.create",
+        "contract-catalog.json#/operations/schedules.list",
+        "contract-catalog.json#/operations/schedules.pause",
+        "contract-catalog.json#/operations/schedules.read",
+        "contract-catalog.json#/operations/schedules.read-run",
+        "contract-catalog.json#/operations/schedules.update"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/routines.ts",
+          "symbol": "SfRoutines",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/routines.ts",
+          "symbol": "createSfRoutinesClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+          "symbol": "createSfRoutinesHandlers",
+          "signature": "(deps:SfNativeHostDependencies) => readonly SfProjectionHandler[]; only routine projection and the closed routines/schedules operation IDs in the catalog/CONTRACTS §5.4, preserving original producers and admissions."
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A09-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A09-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A09-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A09.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/host-types",
+          "contract-catalog.json#/sources/ports",
+          "contract-catalog.json#/sources/routine-services",
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [
+          "Operational routines/Native41/Relay/Schedule qualification remains HOLD until actual installed native producer bindings, current grants and canonical handoffs pass; artifact/adapter readiness is separate."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    }
+  ],
+  "write_paths": [
+    "packages/schema/src/sucafina/routines.ts",
+    "packages/client/src/sucafina/routines.ts",
+    "apps/cli/src/sucafina-product/native-ui/routines.ts",
+    "packages/schema/src/sucafina/routines/**",
+    "packages/client/src/sucafina/routines/**",
+    "apps/cli/src/sucafina-product/native-ui/routines/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+  ],
+  "protected_paths": [
+    "any path owned by active other writer",
+    "shared registries/composition/global i18n/generated/producer code under 114"
+  ],
+  "test_files": [
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N03/",
+  "handoff_to": "114 only",
+  "compiler": "119 only",
+  "tests": "120 via GitHub Actions only",
+  "note": "Thin adapter only: schema/client/host to existing authorized producer. No recreated backend, business logic, mock-success or client Core/Server import. Read COMMON.md."
+}

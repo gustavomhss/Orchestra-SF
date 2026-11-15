@@ -1,0 +1,152 @@
+{
+  "schema": "sf2h.native-ui.parallel20.live-structural-audit.v1",
+  "date": "2026-11-15",
+  "repository": "gustavomhss/Orchestra-SF",
+  "plan_head_observed": "7d36eaaee37823855101f2923e76026d329d3dc2",
+  "plan_branch": "ux-20-dispatch",
+  "canonical_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_expected_criteria": 1610,
+  "method": {
+    "kind": "GitHub-connector content readback and in-process JavaScript assertions, not original Python validators",
+    "python_env": "local GitHub checkout unavailable; Desktop Commander device offline and container cannot resolve github.com",
+    "review_independence": "NOT_PERFORMED: same assistant authored recent plan delta",
+    "material_product_tests": "NOT_RUN_ON_CURRENT_UX_PLAN",
+    "ci_dispatches": 0,
+    "branches_created": 0,
+    "product_files_changed": 0
+  },
+  "validation": {
+    "core": {
+      "assertions_passed": 23,
+      "assertions_failed": 0,
+      "orders": 78,
+      "operations": 305,
+      "surfaces": 70,
+      "routes": 165,
+      "first_wave_cards": 20,
+      "first_wave_path_claims": 138,
+      "first_wave_collisions": 0,
+      "registered_regressions": 12
+    },
+    "all_work_orders": {
+      "batches": [
+        {
+          "orders": 13,
+          "claims": 105,
+          "dep_references": 30,
+          "canonical_task_references": 39,
+          "source_references": 27,
+          "errors": 0
+        },
+        {
+          "orders": 13,
+          "claims": 91,
+          "dep_references": 52,
+          "canonical_task_references": 51,
+          "source_references": 42,
+          "errors": 0
+        },
+        {
+          "orders": 13,
+          "claims": 44,
+          "dep_references": 170,
+          "canonical_task_references": 22,
+          "source_references": 38,
+          "errors": 0
+        },
+        {
+          "orders": 13,
+          "claims": 46,
+          "dep_references": 172,
+          "canonical_task_references": 33,
+          "source_references": 26,
+          "errors": 0
+        },
+        {
+          "orders": 13,
+          "claims": 42,
+          "dep_references": 180,
+          "canonical_task_references": 27,
+          "source_references": 27,
+          "errors": 0
+        },
+        {
+          "orders": 13,
+          "claims": 39,
+          "dep_references": 446,
+          "canonical_task_references": 20,
+          "source_references": 16,
+          "errors": 0
+        }
+      ],
+      "orders_checked": 78,
+      "total_path_claims": 367,
+      "errors": 0,
+      "checked_fields": [
+        "order IDs",
+        "required work-order keys",
+        "path safety",
+        "nonempty owned/acceptance",
+        "entrypoints inside owns",
+        "partial output owns inside parent",
+        "integration/qualification references resolve",
+        "contract authoring locks resolve",
+        "canonical task refs in trace index",
+        "source and operation refs resolve",
+        "within-batch path collisions"
+      ]
+    },
+    "global_claims_delta": {
+      "baseline": "PR76 strict historical PASS (361 claims, no collisions)",
+      "changed_work_orders": 23,
+      "top_level_owns_changed_only": "I00",
+      "new_i00_paths": 6,
+      "other_work_orders_checked": 77,
+      "other_claims_checked_against_new_i00": 322,
+      "new_cross_owner_collisions": 0,
+      "result": "NO_NEW_OWNERSHIP_COLLISIONS_RELATIVE_TO_HISTORICALLY_PASSING_BASELINE"
+    },
+    "graphs_delta": {
+      "work_orders_changed": 23,
+      "top_level_integration_dependency_changes": 0,
+      "top_level_qualification_dependency_changes": 0,
+      "historical_graph_baseline": "PR76 strict documentary graph PASS",
+      "current_full_graph_python": "NOT_RUN",
+      "inference": "same top-level dependency edges; no introduced top-level graph cycle relative to passing baseline"
+    },
+    "official_validate_dispatch_py": "NOT_RUN",
+    "official_validate_plan_py_strict_with_campaign": "NOT_RUN",
+    "python_adversarial_unittests_12": "NOT_RUN",
+    "typescript_parser_typecheck": "NOT_RUN",
+    "independent_n0_review": "NOT_RUN",
+    "full_1610_pointer_revalidation": "NOT_RUN: immutable canonical Git blob identified but content not returned by connector"
+  },
+  "external_runtime_snapshot": {
+    "observed_s0_control": "8819df6169abd94aaa89d50a21f113e5596d2aae",
+    "integrator105_ack": "d083b422b6a587f47873abde4d866e35017ff8b8",
+    "integrator105_lease": "S0-C-e15-browser105",
+    "integrator105_scope": "active sole material stack integration, NOT automatic UX20 authority",
+    "stack_material_observed": {
+      "id": "C53",
+      "sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd"
+    },
+    "product_ci": "101 exclusive, earlier C51 4 success 2 failures",
+    "compiler_guard": "45 exclusive",
+    "p03": "OPEN_FAIL",
+    "global_release": false
+  },
+  "decision": {
+    "documentary_structure": "PASS_ON_GITHUB_CONTENT",
+    "ready_for_local_preflight": "YES",
+    "ready_for_N0_independent_review": "YES",
+    "authoring_go": "NO",
+    "reason": [
+      "official Python validators and 12 regression tests not run on checkout",
+      "independent N0 not completed",
+      "no 20-lane live actor/branch/lease/matching C00 current stack authority evidence",
+      "new product C requires source family re-pin and qualified owner releases"
+    ],
+    "no_executable_claim": true
+  }
+}

@@ -1,0 +1,483 @@
+{
+  "schema": "sf2h.next30.packet.v1",
+  "slot": "N29",
+  "role": "new-implementer",
+  "lane": "native-ui",
+  "title": "Rotinas, Schedule e residentes",
+  "execution_state": "PREPARED_NOT_STARTED",
+  "authorization": false,
+  "actor": null,
+  "lease": null,
+  "branch_hint": "sf-ux-n29",
+  "source": {
+    "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "work_order_blobs": {
+      "U27": "07db86407768b430a1113bd1dd70fb76391f517f",
+      "U34": "4cb9939ab0e89860377026cbd420a9c1918816c2",
+      "U35": "8c53ef7ac0e66259d568392743a4b3ed557cb5e9"
+    },
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "live_material": "REPIN_BY_114_AT_LAUNCH"
+  },
+  "scope": [
+    {
+      "order": "U27",
+      "output": "complete",
+      "title": "Catálogo e execução de rotinas",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U27.json",
+      "surfaces": [
+        "UI64",
+        "UI65"
+      ],
+      "operation_refs": [
+        "contract-catalog.json#/operations/projection.routine",
+        "contract-catalog.json#/operations/routines.catalog",
+        "contract-catalog.json#/operations/routines.prepare-admission",
+        "contract-catalog.json#/operations/routines.read-admission",
+        "contract-catalog.json#/operations/routines.read-run",
+        "contract-catalog.json#/operations/routines.run"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/index.tsx",
+          "symbol": "SfRoutineCatalogView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/index.tsx",
+          "symbol": "SfRoutineRunView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "i18n_exports": [
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u27.ts",
+          "en_symbol": "SF_U27_COPY",
+          "pt_br_symbol": "SF_U27_COPY_BR",
+          "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U27-AC01",
+          "expected": "Routine admission/recipe/run/result/cancel/needs-input state uses actual services and contributions; no fake Task or success through an unavailable provider.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U27-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U27-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U27.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "surface-specs",
+          "ui-change-review",
+          "ui-evidence",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "UI64",
+          "UI65"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/ports",
+          "contract-catalog.json#/sources/routine-services",
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-evidence",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A09",
+        "S01",
+        "S03",
+        "S04"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02",
+          "F03",
+          "A09",
+          "S01",
+          "S03",
+          "S04"
+        ],
+        "external": [
+          "Canonical producer releases and original blockers remain mandatory for qualification.",
+          "contract-catalog.json#/families/intelligence/resources/routine-admission/availability: runtime-producer-gated. Prove the actual installed/current-grant producer and preserve the canonical HOLD where applicable; unavailable UI and ARTIFACT_READY never satisfy operational acceptance."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    },
+    {
+      "order": "U34",
+      "output": "complete",
+      "title": "Recorrência e Schedule",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U34.json",
+      "surfaces": [
+        "UI66"
+      ],
+      "operation_refs": [
+        "contract-catalog.json#/operations/schedules.create",
+        "contract-catalog.json#/operations/schedules.list",
+        "contract-catalog.json#/operations/schedules.pause",
+        "contract-catalog.json#/operations/schedules.read",
+        "contract-catalog.json#/operations/schedules.read-run",
+        "contract-catalog.json#/operations/schedules.update"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/index.tsx",
+          "symbol": "SfSchedulesView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "i18n_exports": [
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u34.ts",
+          "en_symbol": "SF_U34_COPY",
+          "pt_br_symbol": "SF_U34_COPY_BR",
+          "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U34-AC01",
+          "expected": "Create/list/pause/readRun use real current grants and original timezone/occurrence semantics. Update requires schedules.read returning current authorized detail for the same scheduleRef/version; no form reconstructed from list rows or cached create payload. Missing detail reader shows schedule-detail-port-unavailable and disables only dependent edit/update; producer-gated operational HOLD remains.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U34-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U34-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U34.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "surface-specs",
+          "ui-change-review",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "UI66"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/host-types",
+          "contract-catalog.json#/sources/ports"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-change-review",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A09",
+        "S01",
+        "S03"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02",
+          "F03",
+          "A09",
+          "S01",
+          "S03"
+        ],
+        "external": [
+          "Canonical producer releases and original blockers remain mandatory for qualification.",
+          "contract-catalog.json#/families/intelligence/resources/schedules/availability: runtime-producer-gated. Prove the actual installed/current-grant producer and preserve the canonical HOLD where applicable; unavailable UI and ARTIFACT_READY never satisfy operational acceptance.",
+          "Schedule update/detail qualification also requires the actual canonical producer to publish nativeUiProducts.scheduleDetails.read; type/seam availability alone is not that producer. Same owner/ref/current version must be proved."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    },
+    {
+      "order": "U35",
+      "output": "complete",
+      "title": "Residentes e contribuições",
+      "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U35.json",
+      "surfaces": [
+        "UI70"
+      ],
+      "operation_refs": [
+        "contract-catalog.json#/operations/projection.residents"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/index.tsx",
+          "symbol": "SfResidentsView",
+          "signature": "(props: SfSurfaceProps) => JSX.Element",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "i18n_exports": [
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u35.ts",
+          "en_symbol": "SF_U35_COPY",
+          "pt_br_symbol": "SF_U35_COPY_BR",
+          "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+        }
+      ],
+      "acceptance_cases": [
+        {
+          "id": "U35-AC01",
+          "expected": "Five profiles/18 skills/8 packs/39 operations show actual load/contribution status and authorized diagnostics; presence is not execution.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U35-AC02",
+          "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "U35-AC03",
+          "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/U35.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "surface-specs",
+          "ui-evidence",
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [
+          "UI70"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/host-types",
+          "contract-catalog.json#/sources/resident-types"
+        ]
+      },
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-evidence",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-table",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02",
+        "F03",
+        "A15",
+        "S01",
+        "S04"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02",
+          "F03",
+          "A15",
+          "S01",
+          "S04"
+        ],
+        "external": [
+          "Canonical producer releases and original blockers remain mandatory for qualification.",
+          "contract-catalog.json#/families/intelligence/resources/residents/availability: runtime-producer-gated. Prove the actual installed/current-grant producer and preserve the canonical HOLD where applicable; unavailable UI and ARTIFACT_READY never satisfy operational acceptance."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      }
+    }
+  ],
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u27.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u27.spec.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u34.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u34.spec.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u35.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u35.spec.ts"
+  ],
+  "protected_paths": [
+    "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+    "any active writer's paths W01–W19 or outside this packet"
+  ],
+  "test_files": [
+    "packages/app-shell/e2e/sucafina/native/journeys/u27.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u34.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u35.spec.ts"
+  ],
+  "critical_invariants": "Admissão/run/needs-input/cancel real; Schedule e agent runs sem execuções fantasmas nem mensagens disparadas; estados e fontes verificáveis.",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N29/",
+  "handoff_to": "114 only",
+  "compiler": "119 only",
+  "tests": "120 via GitHub Actions only",
+  "notes": "Implement actual Solid native Orchestra UI using current components/providers and existing mock reference. Each source order's full acceptance remains mandatory. Read next30/COMMON.md and full individual work orders."
+}
