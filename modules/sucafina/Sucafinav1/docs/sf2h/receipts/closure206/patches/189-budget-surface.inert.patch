@@ -1,0 +1,126 @@
+--- a/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx
+@@ -33,5 +33,11 @@
+ export type SfBudgetSurfaceProps = Readonly<{ capability: BudgetCapability; route: SfBudgetRoute }>
+ 
+ const months = Array.from({ length: 12 }, (_, index) => index + 1)
++// Keep list presentation state in memory only, scoped to the F01 owner's
++// draft-registry object AND the capability. Never serialize name searches in
++// URLs, a shared singleton, another installation or the original producer.
++const budgetViewByOwner = new WeakMap<object, Map<BudgetCapability, {
++  filter: string; sort: SfSort
++}>>()
+ const LABELS = [
+   "name", "annualBudget", "month", "budget", "actual", "forecast",
+@@ -83,4 +89,23 @@
+   })
+   const [editing, setEditing] = createSignal<Editing>()
+   const [layoutMode, setLayoutMode] = createSignal<"single" | "split" | "split-context">("single")
++  let activeSubmissionRef: SfOperationRef | undefined
++  const rememberView = (partial: Partial<{ filter: string; sort: SfSort }>) => {
++    const registry = context.ready()?.drafts
++    if (!registry) return
++    const perSurface = budgetViewByOwner.get(registry) ?? new Map()
++    const prior = perSurface.get(props.capability) ?? { filter: "", sort: { kind: "none" } as SfSort }
++    perSurface.set(props.capability, { ...prior, ...partial })
++    budgetViewByOwner.set(registry, perSurface)
++  }
++  createEffect(() => {
++    const registry = context.ready()?.drafts
++    const remembered = registry ? budgetViewByOwner.get(registry)?.get(props.capability) : undefined
++    setView("filter", remembered?.filter ?? "")
++    setView("sort", remembered?.sort ?? { kind: "none" })
++  })
++  const editPhase = (editor: Editing) => {
++    const draft = editor.draft.snapshot()
++    return draft.availability === "active" ? draft.phase : draft.availability
++  }
+   const year = () => props.route.query.year ?? 2026 // pinned application.ts defaults to 2026
+@@ -229,6 +254,14 @@
+   })
+   createEffect<number | undefined>((prior) => {
+     const generation = context.generation()
+-    if (prior !== undefined && generation !== prior) setEditing(undefined)
++    if (prior !== undefined && generation !== prior) {
++      // Old outstanding mutations must not update the successor owner.
++      activeSubmissionRef = undefined
++      setEditing(undefined)
++      setView("busy", false)
++      setView("confirmDiscard", false)
++      setView("error", undefined)
++      setView("message", undefined)
++    }
+     return generation
+   })
+@@ -452,6 +485,7 @@
+     editor.draft.setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: editor.version })
+     if (editor.draft.snapshot().availability !== "active" || editor.draft.snapshot().pendingOperation?.operationRef !== operationRef) return
+     editor.draft.setPhase("submitting")
++    activeSubmissionRef = operationRef
+     setView("busy", true)
+     setView("error", undefined)
+     try {
+@@ -502,5 +536,10 @@
+       }
+     } finally {
+       abort.abort()
+-      setView("busy", false)
++      // A late response/finally from a previous owner or an older intent
++      // cannot clear the successor command's busy state.
++      if (activeSubmissionRef === operationRef) {
++        activeSubmissionRef = undefined
++        if (context.ready() === ready) setView("busy", false)
++      }
+     }
+@@ -615,7 +654,13 @@
+         onReconcileRead={() => setView("reload", (v) => v + 1)}
+       />
+     }
+-    if (snapshot.phase === "reviewing" || editor.action === "delete") {
++    if (snapshot.phase === "reviewing" || snapshot.phase === "submitting" || editor.action === "delete") {
+       const base = reviewBase(editor)
+-      return <SfChangeReview
++      return <>
++        <Show when={snapshot.phase === "submitting"}>
++          <p class="sf-budget-status" role="status" aria-live="polite">
++            {t(sfCommonKey("sf.common.loading"))}
++          </p>
++        </Show>
++        <SfChangeReview
+         operation={{ ref: editor.operationRef, label: { key: editor.action === "delete" ? key("delete") : key("save") }, scope: { kind: "data", text: editor.owner?.name ?? t(primaryKey()) } }}
+@@ -630,5 +675,6 @@
+         onRevise={() => { editor.draft.setPhase("dirty"); setView("error", undefined) }}
+         onCancel={closeEditor}
+         onReconcile={() => setView("reload", (v) => v + 1)}
+-      />
++        />
++      </>
+     }
+@@ -733,6 +779,10 @@
+           <div class="sf-budget-body">
+             <section class="sf-budget-owners" aria-label={t(titleKey())}>
+               <label for={formId + "-filter"}>{t(key("filter"))}</label>
+-              <input id={formId + "-filter"} type="search" value={view.filter} onInput={(event) => setView("filter", event.currentTarget.value)} />
++              <input id={formId + "-filter"} type="search" value={view.filter} onInput={(event) => {
++                const filter = event.currentTarget.value
++                setView("filter", filter)
++                rememberView({ filter })
++              }} />
+               <Show when={view.filter.trim() && filtered().length === 0}>
+                 <SfStatePanel state="filtered-empty" messageKey={sfCommonKey("sf.common.filterEmpty")} />
+@@ -744,6 +794,6 @@
+                 selectedKey={selected() ? asRef(selected()!.id) : undefined}
+                 sort={view.sort}
+                 page={{ kind: "none", total: view.page?.owners?.length ?? null }}
+-                onSort={(next) => setView("sort", next)}
++                onSort={(next) => { setView("sort", next); rememberView({ sort: next }) }}
+                 onPage={() => setView("reload", (value) => value + 1)}
+                 onSelect={(recordRef) => navigate(listHref("detail", String(recordRef)))}
+@@ -771,6 +821,6 @@
+           </div>
+         </SfStatePanel>
+         <Show when={context.state().status === "ready" && view.page && editing() ? editing() : undefined} keyed>
+-          {(editor) => <section class="sf-budget-editor" data-sf-action={editor.action}>{editorView(editor)}</section>}
++          {(editor) => <section class="sf-budget-editor" data-sf-action={editor.action} data-sf-draft-phase={editPhase(editor)}>{editorView(editor)}</section>}
+         </Show>
+       </SfPageFrame>
