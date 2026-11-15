@@ -1,0 +1,16 @@
+{
+  "schema": "sf2h.p03-causal-closure.delta99.v1",
+  "source_commit_before": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+  "failure_run": 43681302722,
+  "failure_job": 132712328135,
+  "cleanup_job": 132713426597,
+  "snapshot": "c9c38cbf92844dcbdfbdc543fb6b378b241817f4",
+  "original_p03_test_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+  "assertions_total": 72,
+  "assertions_observed": 24,
+  "elapsed_ms": 180013.41,
+  "reason": "portfolio-selection-changed",
+  "status": "FAIL_TIMED_OUT",
+  "hypothesis": "Remaining inclusive verifier projectionDigest observed at operation-verifier.ts:94 cost dominant in R1 bounded: two SHA256 digests per independent projection observation, 1272 digest calls across verifier phases. Keep source projection and evidence SHA256; remove digest-only equality by comparing byte-identical canonical normalization (strictly stronger than hash equality).",
+  "constraints": "No timeout, fixture, oracle, security gates, replay or proof reduction; no reuse between observations; requalify with same bounded work and original P03 only after causal change."
+}
