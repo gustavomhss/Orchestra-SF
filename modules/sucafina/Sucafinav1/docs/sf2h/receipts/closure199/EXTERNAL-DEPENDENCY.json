@@ -1,0 +1,92 @@
+{
+  "schema": "sf2h.closure199.external-dependencies.v1",
+  "mission": 199,
+  "epoch": "native-closure-e1-browser199",
+  "source": {
+    "integratedCandidate": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+    "f04Producer": "187@96c01020db59d9b4f8d44300638418d67ee11fea"
+  },
+  "status": "CODE_PREPARED_EXPORTED_PRECONDITIONS_NOT_RUN",
+  "record_is_single_authoritative_blocker": "sf2h.closure199.INSTALLED_HOST_AND_PACKAGED_DESKTOP_DEPENDENCY",
+  "blocked": [
+    "INSTALLED_U15",
+    "INSTALLED_U39",
+    "INSTALLED_U40",
+    "D01_REAL_PACKAGED_ELECTRON"
+  ],
+  "externally_unavailable": {
+    "location": "Authorized GitHub Actions runner under sole CI dispatcher 191, not this GitHub-only authoring session. No private installed host, browser, Microsoft actor contexts, packaged binary or authenticated runtime was exposed for current execution.",
+    "non_secret_configuration": [
+      {
+        "key": "SF_NATIVE_CANDIDATE_SHA",
+        "input": "exact 40-character Git commit of 191-accepted integrated product; F04 manifest and D01 packaged binary provenance must both match; no static fake SHA"
+      },
+      {
+        "key": "SF_NATIVE_INSTALLED_MANIFEST",
+        "input": "absolute private 0600 file under same root owned by runner; register.ts produces after current Microsoft principal and approved connection verification"
+      },
+      {
+        "key": "SF_NATIVE_BROWSER_ENDPOINT_FILE",
+        "input": "absolute private 0600 file in same 0700 runner root; endpoint of preexisting approved loopback CDP browser that has separate Microsoft-authenticated BrowserContexts; no new browser or context"
+      },
+      {
+        "key": "SF_NATIVE_D01_PACKAGED_ATTESTATION",
+        "input": "absolute private 0600 file inside runner root; attest-d01.ts writes sha256 and exact C provenance after a real packaged artifact was downloaded/installed"
+      },
+      {
+        "key": "GITHUB_ACTIONS and GITHUB_RUN_ID",
+        "input": "official 191 Actions runner values; never forge in this session"
+      },
+      {
+        "key": "F01 per-suite selected routes",
+        "input": "real SfResolvedRoute results from the installed F01 route producer (CAP14, CAP04, CAP05), original encoded refs/year, and exact source record IDs verified against authorized domain projection/versions"
+      },
+      {
+        "key": "Orchestra approved connection",
+        "input": "actual main-owned serverKey/projectId/transportIdentity and registry approval with correct discovery/public/shell origins, including distinct wrongServer/wrongProject/wrongInstallation negative targets; not a URL used as authorization"
+      },
+      {
+        "key": "Microsoft actor contexts",
+        "input": "requester, holder, denied, optional dashboardAdmin signed in separately via legitimate existing provider; no usernames, principals, tokens, cookies, grants, storageState or password files committed"
+      },
+      {
+        "key": "packaged desktop artifact",
+        "input": "real Electron executable path under isolated hosted root, actual SHA256 from candidate and source build Actions metadata, and working broker/partition/login in packaged main process"
+      }
+    ],
+    "absent_action": "191 must provide authorized existing host adapter callbacks `liveMicrosoftActorPages`, `resolveApprovedConnection`, `resolveOriginalF01Route`, `originalSourceRowId`, and preregister actual private 0600 endpoint; connect to registerInstalledProofFromHost then consumeInstalledSuiteFromHost; separately attest packaged D01 binary and dispatch real tests only after 189 integrates config and broker. No GitHub-only author can invoke a Microsoft session."
+  },
+  "causal_integration_defects": [
+    {
+      "owner": 189,
+      "location": "apps/desktop/src/main/index.ts + apps/desktop/src/main/ipc.ts (outside 199 write_paths)",
+      "evidence": "preimage apps/desktop/src/main/ipc.ts blob babb1249587caf085909ed6316bbd0b9f968ce3c; apps/desktop/src/main/sucafina/index.ts blob a3f09c2a9006c016d51c660043d1189bb2df4c29 defines createSfDesktopBroker but main/ipc currently does not instantiate it",
+      "required_action": "main bootstrap must register the exact real createSfDesktopBroker with actual available SfOperationBindings, official main-owned connection and enrollment providers, original renderer origin and window ownership, before D01; no mock or invented codec."
+    },
+    {
+      "owner": 189,
+      "location": "packages/app-shell/e2e/playwright.production.config.ts",
+      "evidence": "base blob e2b615a50c3907bbe21fd6158be47fcebf477679 starts build && serve as webServer for native suite and retain-on-failure trace",
+      "required_action": "apply full inert diff INERT-189-PLAYWRIGHT-PRODUCTION.patch after comparing preimage; avoid app/web start and secret-bearing browser artifacts for F04/D01; no 199 direct edit"
+    },
+    {
+      "owner": 194,
+      "location": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+      "evidence": "commit f956939313132c307381714859792db366db19e8 blob 01e56d1ac9cb3930f2c0486e15328e136a0a3e04 imports nativeInstalledFixture but calls original Playwright test()",
+      "required_action": "change U15 spec declarations to nativeInstalledFixture or alias const test=nativeInstalledFixture and remove the original test import; preserve all six cases and live source assertions. Mission 199 cannot modify 194 specs."
+    },
+    {
+      "owner": 188,
+      "location": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+      "evidence": "exact 187 closure blob 0f2463a8e6dcc201f5a8a630172e3d88c7bb3d91 kept unchanged",
+      "required_action": "reconcile causal scratch guard result and pre/post blobs in guard's ownership, do not rename scratch.ts or bypass guard"
+    }
+  ],
+  "not_attempted": [
+    "No local code, tests, typecheck, build, validator, workflow, CI, server restart, Azure provisioning or launch of Orchestra desktop were performed.",
+    "No authentic sessions or producer receipts available to this author; no D01 PASS or installed UI PASS can be claimed."
+  ],
+  "environment_integrity": "No cookies, tokens, passwords, secrets or principals are present in this committed file.",
+  "accepted_product_C": false,
+  "globalRelease": false
+}
