@@ -76,9 +76,9 @@ function fail(reason: string, state: SfUiState = "unavailable"): OpResult<never>
 }
 function transportResult(result: Readonly<{
   kind: "transport-error"; reason: string
-}> | Readonly<{ kind: "response"; status: number; body: unknown }>): OpResult<unknown> {
+}> | Readonly<{ kind: "response"; status: number; body: unknown }>, write = false): OpResult<unknown> {
   if (result.kind === "transport-error") return fail(result.reason,
-    result.reason === "outcome-unknown" ? "outcome-unknown" :
+    (result.reason === "outcome-unknown" || (write && ["network", "timeout", "aborted"].includes(result.reason))) ? "outcome-unknown" :
       result.reason === "aborted" ? "stale" : "unavailable")
   if (result.status !== 200 && result.status !== 201) return fail("producer-status-" + result.status,
     result.status === 401 ? "session-expired" : result.status === 403 ? "denied" :
@@ -174,7 +174,7 @@ export async function sfPortfolioEvaluate(
   if (!sfPortfolioReady(context, id, "portfolio")) return fail("portfolio-evaluate-not-admitted", "denied")
   const input = Schema.decodeUnknownEither(SfPortfolio.operations[id].input)({ caseRef, request })
   if (Either.isLeft(input)) return fail("portfolio-evaluate-input-mismatch", "invalid")
-  const result = transportResult(await createSfPortfolioClient(transport)[id](input.right, { signal, idempotencyKey }))
+  const result = transportResult(await createSfPortfolioClient(transport)[id](input.right, { signal, idempotencyKey }), true)
   if (result.status !== "ok") return result
   if (!record(result.value) || !string(result.value.portfolioResultRef) || !record(result.value.caseRef) ||
     result.value.caseRef.id !== caseRef.id || result.value.caseRef.incarnation !== caseRef.incarnation ||
