@@ -1,0 +1,44 @@
+{
+  "schema": "sf2h.closure186.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 186,
+  "epoch": "closure-e1-browser186",
+  "status": "ACK_PRECHECK_COMPLETE_AUTHORING_START",
+  "branch": "sf-ux-n13",
+  "pr": 150,
+  "conversation_model": "GPT-6",
+  "separate_astra_session_id": null,
+  "session_id_provenance": "NOT_EXPOSED_BY_TOOL_OR_RUNTIME",
+  "actor_provenance": "GitHub operations initiated in this ChatGPT conversation; GitHub account login is not a native session identity",
+  "source": {
+    "prepared_head": "9d0e41d003800a8da2f7d60f67433fdf71d88916",
+    "prepared_tree": "ada65562adf6999f5bc2dc4ab5b62c411a110353",
+    "package_blob": "0065a34651b8772b344a40579481ee64f6a05093",
+    "fence_blob": "30a1a9a8d575751271a712f1ea8e4f00a001d5a9",
+    "u39_preblob": "b70dbe0afe080421bfc1a3b78abdefa3b8abe85c",
+    "u40_preblob": "4ec12656bff8ba284a53810a73b9e863a7a62cb4",
+    "f04_producer_branch": "sf-ux-w05",
+    "f04_producer_head": "d300e495d309c1083a35e34755b04cf3c6f06ae5",
+    "f04_fixture_blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+    "f04_readiness_blob": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+    "contracts_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "producer_budget_model_blob": "a21b1fc6b3cdceec6e666d8d7d8fa760911f2668",
+    "producer_budget_surface_blob": "ed94efe4d919eb80e4592057170d03c4b2348eb6",
+    "integrator_consumer_observed": "913b6b8f143e6c3e869eee293d02f04259c7cdd1"
+  },
+  "fence": "ux-native-n13-e1 REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS; current epoch closure-e1-browser186; history preserved",
+  "readonly_validation": "Guard163 actual run 43766055614/job 132971280139 failure; js-test-skipped exact U39/U40. No new local tests or gates invoked",
+  "scope": {
+    "writes": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure186/**"
+    ],
+    "integrator": 162,
+    "fixture_owner": 187,
+    "validation_authority": "162 must appoint supported successor to terminal 163/164 handoffs"
+  },
+  "commitment": "Require F04 private installed manifest and real contextual read/write admission, never environment flags granting access; missing prerequisite fails and is not qualification",
+  "native_goal": "PAUSED",
+  "global_release": false
+}
