@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h.native-ui.author.ack.v1",
+  "mission": "UX20-W04",
+  "order": "F03",
+  "title": "Composição comum de página e estados",
+  "output": "F03",
+  "state": "PREFLIGHT_ACK_PUBLISHED_WAITING_FOR_114_PER_OUTPUT_ADMISSION",
+  "model": {
+    "requested": "Astra",
+    "actual": "GPT-6",
+    "sessionId": null,
+    "sessionIdReason": "Not exposed in this ChatGPT/GitHub session",
+    "githubActor": "gustavomhss"
+  },
+  "branch": "sf-ux-w04",
+  "cohortBase": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "cohortTree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "productBase": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "productBaseTree": "647b024075265fc76d6253c99bec00a82618f816",
+  "lease": {
+    "epoch": "ux-native-w04-e1",
+    "state": "RESERVED_NOT_ACTIVE",
+    "admissionAuthority": "S0-C-e17-browser114",
+    "perOutputAdmission": "REQUESTED_NOT_CONFIRMED",
+    "ownershipCollision": "NONE_OBSERVED_F03_EXCLUSIVE_PATHS",
+    "doesNotClaimGo": true
+  },
+  "canonical": {
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "nativeNormative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "nativeDocs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+  },
+  "frozen": {
+    "surfaceSpecs": "d62847af81dffdc129312e71e69692081fd74b75",
+    "uiFrame": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "componentSignatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "componentContracts": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "surfaceManifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "contractCatalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "routeSignatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "contracts": "94553a3119826ef1c44271966233dd58042ddd70"
+  },
+  "semanticDrift": {
+    "protocolExpected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "protocolActual": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "delta": "Two coordinator/CI routing sentences differ: 105/101/45 listed in current file; COMMON campaign overlay explicitly replaces with 114/120/119; no F03 signature/semantics difference.",
+    "disposition": "OBSERVED_DOCUMENTARY_ROUTING_DRIFT; defer re-pin authority to 114; no product semantic weakening"
+  },
+  "sources": {
+    "MxPage": "packages/app-shell/src/orchestra/chapters/kit.tsx@cd9d473065562fa08ba87db9c35db141d64e4198",
+    "MxKit": "packages/app-shell/src/orchestra/chapters/kit.css@d90cfcf2b4b5063931b663fe74bb7b8a4bec85fe",
+    "language": "packages/app-shell/src/context/language.tsx@77fe29d4628cc51984b54a9bf5ce030ac2ba2c0c",
+    "orchestraI18nSharedPreimage": "packages/app-shell/src/i18n/orchestra.ts@2eeaa42e02a45b3301fc765c6c92635af5101079"
+  },
+  "allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+    "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W04/**"
+  ],
+  "ownedProductPreimages": "ABSENT_FOR_ALL_F03_ENTRYPOINTS_IN_COHORT",
+  "sharedPatchPolicy": "No edit to src/i18n/orchestra.ts; deliver exact pre/post patch for integrator 114",
+  "exports": [
+    "SfPageFrame",
+    "SfStatePanel",
+    "SfContextBar",
+    "SfChartFrame",
+    "SfRunState"
+  ],
+  "criteria": [
+    "WP01.T02",
+    "WP01.T03",
+    "F03-AC01",
+    "F03-AC02"
+  ],
+  "runners": {
+    "productCI": "120 only via GitHub Actions",
+    "compilerGuards": "119 only via GitHub Actions",
+    "local": "NOT_RUN"
+  },
+  "scope": [
+    "No second sidebar or visual identity",
+    "No client fetch/business arithmetic/permission inference",
+    "Five viewport classes and 200%/400% reflow",
+    "All seven existing themes and en/pt-BR",
+    "One primary CTA and typed callbacks"
+  ],
+  "requestedAction": "114: acknowledge same I00/C00 lease; verify family pins + preimages and issue explicit F03/W04 per-output admission or concrete BLOCKED_*; no default/silence GO.",
+  "globalRelease": false
+}
