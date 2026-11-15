@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h-vis88-010-prepost-v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 97,
+  "lease": "denied-read-browser97",
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_C45": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "source_W": "d369e23f495e41a861f0ebc47b6334d166ddf1d1",
+  "source_tree": "a608f764ac0513ab29b097f0dfb3067188094525",
+  "tree_parent_C45": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+  "source_changed_paths": {
+    "product/host-binding/denied-read.ts": {
+      "pre": null,
+      "post": "5314a3cea74752c194cd56a890ec0908d3b9272f",
+      "change": "new owned pure check, no persistence mutation"
+    },
+    "test/product/denied-read-fix/bound-source-read.test.ts": {
+      "pre": null,
+      "post": "50dd7e88b4611302b8d97d6c383087508a62351e",
+      "change": "new targeted real SQLite fixture controls"
+    },
+    "docs/sf2h/receipts/denied-read-fix/ACK-97.json": {
+      "pre": null,
+      "post": "434c4532eb5bcb23bff99969efcd07f5e1568562",
+      "change": "published branch receipt"
+    },
+    "docs/sf2h/receipts/denied-read-fix/OWNER-BUSINESS-CONTEXT-97.patch": {
+      "pre": null,
+      "post": "0ba633e2badd806889dc3bd73df8c05adc5da0bb",
+      "change": "complete owner patch, not integrated"
+    },
+    "docs/sf2h/receipts/denied-read-fix/HANDOFF-OWNER-97.md": {
+      "pre": null,
+      "post": "0001e5e3ee4e9f09a5cadc0ef6695d6d2876d4f2",
+      "change": "owner handoff for integrator 71"
+    }
+  },
+  "original_test": {
+    "path": "test/product/export-artifact-closure/composed-storage.test.ts",
+    "pre_blob": "4f268069e082f0ea463a251e7bceb27f4da74700",
+    "post_blob": "4f268069e082f0ea463a251e7bceb27f4da74700",
+    "reason": "do not relax 157 expect(await f.durable()).toEqual(initial)"
+  },
+  "original_fixture": {
+    "path": "test/product/export-artifact-closure/fixture.ts",
+    "pre_blob": "d941eaf91e301ff530a174c1e92192237e3d3ef0",
+    "post_blob": "d941eaf91e301ff530a174c1e92192237e3d3ef0"
+  },
+  "lifecycle": {
+    "path": "product/integration/source-lifecycle.ts",
+    "pre_blob": "0e812842ad0d534998c182100a8466548d70e915",
+    "post_blob": "0e812842ad0d534998c182100a8466548d70e915",
+    "decision": "no modification: legitimate readScopedSource is a source issuing operation; changing all viewer sources here would suppress authorized captures"
+  },
+  "external_owner": {
+    "path": "product/host-binding/business-context.ts",
+    "pre_blob": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+    "stack_same_blob_observed": true,
+    "stack_head_observed": "b02ac1251c754620c5d8ab98cfd0c1d51315da27",
+    "patch_path": "docs/sf2h/receipts/denied-read-fix/OWNER-BUSINESS-CONTEXT-97.patch",
+    "patch_blob": "0ba633e2badd806889dc3bd73df8c05adc5da0bb",
+    "post_blob_after_adoption": null,
+    "authority": "71 or explicitly authorized original business-context owner, not mission97"
+  },
+  "user_constraints": [
+    "no local-store / runtime contract / auth85 / application86 / other-owner changes",
+    "no tests locally",
+    "no force, merge, deploy, Azure or restart",
+    "CI requests through dispatcher45 only"
+  ],
+  "global_release": false
+}

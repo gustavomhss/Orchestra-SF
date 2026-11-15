@@ -1,0 +1,57 @@
+{
+  "schema": "sf2h-vis88-010-validation-v1",
+  "mission": 97,
+  "source_W": "d369e23f495e41a861f0ebc47b6334d166ddf1d1",
+  "source_tree": "a608f764ac0513ab29b097f0dfb3067188094525",
+  "current_S": null,
+  "current_run": null,
+  "current_job": null,
+  "current_CI": "NOT_RUN; request delivered to 45 only; original consumer patch not adopted",
+  "historical": {
+    "run_id": 43678123870,
+    "run_attempt": 1,
+    "job_id": 132702648942,
+    "S": "a952f1b3ce48b15473f4b07810e79efd05d759fd",
+    "W": null,
+    "workflow": ".github/workflows/test-ci.yml",
+    "conclusion": "failure",
+    "test": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts:157",
+    "assertion": "expect(await f.durable()).toEqual(initial)",
+    "expected_delta": 0,
+    "actual_added_lines": 57,
+    "meaning": "metadata scope entries created under downgraded canWrite:false; this historical run predates the mission97 code and is not PASS evidence",
+    "egress86": "different failure; C45 already includes corrected egress86"
+  },
+  "request": {
+    "dispatcher": "45 sole authority; do not dispatch independently",
+    "package": "sucafina",
+    "packageSelector": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "os": "linux",
+    "args": [
+      "Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+      "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts"
+    ],
+    "constraints": [
+      "deduplicate by source/tree/selection/runner/config/fixture",
+      "test original remains unchanged",
+      "rerun composed candidate when external owner patch adopted",
+      "no EPIC, no local product tests",
+      "record actual W/S/run/job and assertions from hosted result"
+    ],
+    "notified_in": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889699684"
+  },
+  "observed_without_tests": {
+    "source_code_reads": "DONE",
+    "preimage_and_branch_CAS": "DONE",
+    "source_lifecycle_mutation_intended": false,
+    "source_proof_runtime": "NOT_RUN",
+    "original_oracle_after_fix": "NOT_RUN",
+    "retry_reopen_other_principal_controls": "AUTHORED_NOT_RUN",
+    "positive_viewer_issue_and_legitimate_domain_write_controls": "AUTHORED_NOT_RUN",
+    "source_version_and_tombstone_controls": "AUTHORED_NOT_RUN",
+    "authorization_after_review_consumer": "OWNER_ADOPTION_PENDING",
+    "typecheck": "NOT_RUN"
+  }
+}

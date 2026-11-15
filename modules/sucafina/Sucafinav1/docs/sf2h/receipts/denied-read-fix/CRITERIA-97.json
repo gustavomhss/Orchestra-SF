@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h-vis88-010-criteria-v1",
+  "mission": 97,
+  "source_W": "d369e23f495e41a861f0ebc47b6334d166ddf1d1",
+  "review_self_approval": false,
+  "counters": {
+    "all_wps_preserved": 15,
+    "all_tasks_preserved": 74,
+    "all_contracts_preserved": 17,
+    "all_criteria_preserved": 1610
+  },
+  "criteria": [
+    {
+      "id": "VIS88-010.A",
+      "description": "test original snapshot unchanged after denied viewer downgrade",
+      "status": "OPEN",
+      "why": "original assertions untouched but owner consumer adoption and CI PASS outstanding"
+    },
+    {
+      "id": "VIS88-010.B",
+      "description": "all unauthorized reads must not issue/revive/version durable source metadata",
+      "status": "PARTIAL",
+      "why": "new negative gate is read-only; current producer owner does not call it yet"
+    },
+    {
+      "id": "VIS88-010.C",
+      "description": "preserve allowed captures for viewer and initial author",
+      "status": "AUTHORED_NOT_RUN",
+      "why": "test deliberately exercises allowed viewer discovery/issuance"
+    },
+    {
+      "id": "VIS88-010.D",
+      "description": "preserve source physical incarnation, version progression, revocation/tombstone and ReadSnapshotRoot",
+      "status": "NOT_RUN",
+      "why": "readonly guard does not edit source-lifecycle, original snapshot root left in place, exercise not yet executed"
+    },
+    {
+      "id": "VIS88-010.E",
+      "description": "test retry, reopen, principal crossover and revocation",
+      "status": "AUTHORED_NOT_RUN",
+      "why": "new fixture test authored; requires dispatcher45"
+    },
+    {
+      "id": "VIS88-010.F",
+      "description": "owner patch complete/prepost reviewed, reconciled and integrated into sf2-stack",
+      "status": "PENDING_OWNER_71"
+    },
+    {
+      "id": "VIS88-010.G",
+      "description": "S/W/run/job evidence of real hosted tests on integrated source",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "VIS88-010.H",
+      "description": "independent cold recheck by R2/R3 against integrated candidate",
+      "status": "REQUESTED_PENDING",
+      "references": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/97#issuecomment-6889690901",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/98#issuecomment-6889691239"
+      ]
+    },
+    {
+      "id": "VIS88-010.I",
+      "description": "no GLOBAL_RELEASE absent all gates",
+      "status": "HELD",
+      "global_release": false
+    }
+  ],
+  "dependencies": [
+    {
+      "owner": "71/assigned business-context writer",
+      "action": "adopt minimal exact patch after HEAD/preimage reconciliation",
+      "status": "PENDING"
+    },
+    {
+      "owner": "45",
+      "action": "deduplicated surgical hosted Actions, result S/run/job",
+      "status": "PENDING"
+    },
+    {
+      "owner": "92/R2 and 93/R3",
+      "action": "independent source + runtime recheck after integrated consumer",
+      "status": "PENDING"
+    }
+  ]
+}
