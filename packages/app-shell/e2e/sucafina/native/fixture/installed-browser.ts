@@ -19,8 +19,8 @@ export type InstalledBrowserSession = Readonly<{
 
 const actorNames = ["requester", "holder", "denied", "dashboardAdmin"] as const
 
-async function privateEndpoint(manifest: NativeManifest): Promise<string> {
-  const root = await requirePrivateNativeRoot(manifest.scratchRoot)
+async function privateEndpoint(rootPath: string): Promise<string> {
+  const root = await requirePrivateNativeRoot(rootPath)
   const file = process.env.SF_NATIVE_BROWSER_ENDPOINT_FILE
   if (!file || !path.isAbsolute(file) || path.dirname(path.resolve(file)) !== root)
     throw new Error("F04_HOSTED_PRIVATE_CDP_ENDPOINT_FILE_REQUIRED")
@@ -45,13 +45,19 @@ function onShell(page: Page, manifest: NativeManifest) {
   catch { return false }
 }
 
+/** Attach a browser which was launched and authenticated by the authorized host,
+ * before the first F04 manifest can exist. Never launch/restart a browser here.
+ */
+export async function attachHostedNativeBrowser(scratchRoot: string): Promise<Browser> {
+  const endpoint = await privateEndpoint(scratchRoot)
+  try { return await chromium.connectOverCDP(endpoint, { timeout: 30000 }) }
+  catch { throw new Error("F04_APPROVED_HOST_BROWSER_NOT_CONNECTED") }
+}
+
 /** Re-attach only; this must NOT create a Playwright BrowserContext. */
 export async function connectNativeInstalledBrowser(): Promise<InstalledBrowserSession> {
   const manifest = await readNativeManifest()
-  const endpoint = await privateEndpoint(manifest)
-  let browser: Browser
-  try { browser = await chromium.connectOverCDP(endpoint, { timeout: 30000 }) }
-  catch { throw new Error("F04_APPROVED_HOST_BROWSER_NOT_CONNECTED") }
+  const browser = await attachHostedNativeBrowser(manifest.scratchRoot)
   try {
     const found: Partial<Record<NativeActor, BrowserContext>> = {}
     const contexts = browser.contexts()
