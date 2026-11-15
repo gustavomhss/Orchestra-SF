@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.causal-fix182.hosted-request.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 182,
+  "epoch": "native-fix-e1-browser182",
+  "after": "ONLY_AFTER_162_MATERIALIZES_FULL_F03_CORRECTION_ON_NEW_COHERENT_W_WITH_SOURCE_PREIMAGES_RECONCILED",
+  "source_material_head": "2304f06ce4a1269034ba7db94211c639878b3d1a",
+  "source_tree": "bc8e570705e64c5ce6ff31151f74cbcf4351f273",
+  "consumer_baseline_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "consumer_proposed_tree": "82c14e013244c2466885f22f97f9529bc3012a72",
+  "compiler163": {
+    "owner": 163,
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "epoch": "compiler-e4-browser163",
+    "requests": [
+      "hosted bun typecheck in packages/app-shell after integration on recorded new W SHA/tree",
+      "existing check:guards --base origin/dev on same W; retain gates and warnings, no waivers",
+      "SDK generation only if actual modified public HttpApi requires it; F03 presentation-only fix itself does not"
+    ],
+    "reason": "old W690 run43766055614 failed app typecheck and guards; changing F03 cannot inherit unrelated green",
+    "do_not_repeat_unchanged_failed_input": true
+  },
+  "ci164": {
+    "owner": 164,
+    "branch": "sf-ci-validation",
+    "pr": 106,
+    "epoch": "product-ci-e4-browser164",
+    "exact_existing_runner": "bun",
+    "cwd": "packages/app-shell",
+    "os": "ubuntu-24.04",
+    "selector": [
+      "./test-browser/sucafina-native/page-frame.test.ts"
+    ],
+    "recommended_invocation": "bun run test:ci app ./test-browser/sucafina-native/page-frame.test.ts --os linux",
+    "previous_run": 43766970018,
+    "previous_job": 132974180913,
+    "previous_W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+    "previous_Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+    "dedup": "must inspect current requests/runs; run only changed selected test on new genuinely different product material W/tree after 162 integrates",
+    "forbidden": [
+      "replay old unchanged input",
+      "re-run S01/S02/S05 from this F03 mission",
+      "extra dispatcher",
+      "local tests",
+      "relax browser assertions, timeout or Platform140 fixture"
+    ]
+  },
+  "outcomes": {
+    "local_tests": "NOT_RUN_BY_POLICY",
+    "hosted_on_postimage": "NOT_RUN",
+    "compiler_on_postimage": "NOT_RUN",
+    "full_epic": "NOT_RUN",
+    "final_eight": "NOT_RUN"
+  },
+  "native_goal": "paused",
+  "global_release": false
+}
