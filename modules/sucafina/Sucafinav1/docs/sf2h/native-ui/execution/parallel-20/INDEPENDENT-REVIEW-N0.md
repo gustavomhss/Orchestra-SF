@@ -45,3 +45,5 @@ NÃO executar Python, unittest, Node, Bun, typecheck ou qualquer teste localment
 
 ## Evidência Actions concluída antes do parecer N0
 Run [43706901262](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43706901262) / job132789826273 / W 87b536aca6ff3e444c468362c991decb23e104b4: documental PASS (3 Node, 12 Python, 1.610 critérios e hash canônico). Primeiro run 43706300252 permanece FAIL, corrigido causalmente. O reviewer independente ainda deve reexaminar o snapshot e os logs, verificar contratos/segurança/owners e publicar parecer próprio. Não é autoaprovação.
+
+**Revisão adversarial de controle (autor do delta, não independente):** em PR99@1a9ac1a0, `validate_dispatch.py` foi corrigido para impedir que ACK/leases ENDED 105/106 sejam reutilizados como atuais, exigir control SHA/live successor verificado externamente e aplicar igualdade de actor+lease para C00 em modo compartilhado. `test_validator_inputs.py` tem **21 casos** (9 novos) e o runner Actions passa a inspecionar sintaxe das três assinaturas TS. O run verde #43706901262 é HISTÓRICO, não valida esse código. **N0 independente ainda não ocorreu; `authoring_GO=false`.**

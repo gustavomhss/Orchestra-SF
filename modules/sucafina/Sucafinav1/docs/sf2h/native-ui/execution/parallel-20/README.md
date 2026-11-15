@@ -67,3 +67,5 @@ As revisões finais R01/R02/R03 seguem no candidato completo corrigido, com orig
 
 **GitHub Actions final:** run [43706901262](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43706901262) / job 132789826273 SUCCESS. 3/3 Node, 12/12 regressões Python, validate_dispatch PASS, validate_plan --strict PASS, 1.610/1.610 canonical pointers e blob 71b56906 verificados; 78 ordens, 367 claims, ambos grafos 78/78. Nenhum teste local. [Recibo verificável](ACTIONS-PREFLIGHT-RESULT-20261115.json).
 **N0 independente, S0 e leases de UX20 ainda pendentes. Nenhum writer recebeu GO.**
+
+**Revisão adversarial de controle (autor do delta, não independente):** em PR99@1a9ac1a0, `validate_dispatch.py` foi corrigido para impedir que ACK/leases ENDED 105/106 sejam reutilizados como atuais, exigir control SHA/live successor verificado externamente e aplicar igualdade de actor+lease para C00 em modo compartilhado. `test_validator_inputs.py` tem **21 casos** (9 novos) e o runner Actions passa a inspecionar sintaxe das três assinaturas TS. O run verde #43706901262 é HISTÓRICO, não valida esse código. **N0 independente ainda não ocorreu; `authoring_GO=false`.**

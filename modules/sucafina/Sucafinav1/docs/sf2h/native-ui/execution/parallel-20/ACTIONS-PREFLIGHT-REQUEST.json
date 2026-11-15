@@ -4,7 +4,9 @@
     "repository": "gustavomhss/Orchestra-SF",
     "branch": "ux-20-dispatch",
     "immutable_canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
-    "design_source_head_before_adapter": "805d7f798dddd138009d9ddf05544cd88360a0a4"
+    "design_source_head_before_adapter": "805d7f798dddd138009d9ddf05544cd88360a0a4",
+    "previous_approved_head": "805d7f798dddd138009d9ddf05544cd88360a0a4",
+    "next_validation_parent_sha": "1a9ac1a0cf089fa6e574c59883e8f66c18d50800"
   },
   "workflow": "test-ci.yml",
   "method": "ci-run-linux-<request-id> temporary snapshot pushed to existing workflow, cleanup by existing job; do not create a new workflow/controller",
@@ -20,9 +22,10 @@
   },
   "authorized_scope": "documentation-only preflight; product CI 101 and compiler/guards 45 retain their separate authority",
   "assertions": [
-    "validate_dispatch.py --root execution",
-    "validate_plan.py --strict with immutable canonical campaign",
-    "test_validator_inputs.py 12 regressions"
+    "validate_dispatch.py document-only on snapshot",
+    "validate_plan.py --strict with exact SHA-pinned immutable canonical campaign",
+    "21 adversarial launch-input unittest regressions",
+    "TypeScript parser diagnostics empty for host-signatures.ts, component-signatures.ts, route-signatures.ts"
   ],
   "run_constraints": [
     "ONLY GitHub Actions",
@@ -32,11 +35,11 @@
     "One causal request, source SHA+tree+normalized request evidence",
     "Do not claim GO on green preflight; N0 independent review and leases still required"
   ],
-  "status": "ACTIONS_DOCUMENTARY_VALIDATED_NO_WRITER_GO",
+  "status": "NEW_GUARD_AND_TS_PARSER_NOT_RUN",
   "actions_run": null,
   "actions_job": null,
   "actions_attempt": null,
-  "verdict": "PASS_DOCUMENT_STRUCTURE_3_NODE_12_PYTHON_NO_LAUNCH",
+  "verdict": "NOT_RUN_ON_THIS_SOURCE",
   "canonical_materialization": {
     "strategy": "GitHub Actions only: git fetch exact pinned canonical commit, git show exact campaign blob into ephemeral temp file",
     "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
@@ -58,5 +61,14 @@
     "head_sha": "87b536aca6ff3e444c468362c991decb23e104b4",
     "result": "SUCCESS",
     "evidence_file": "ACTIONS-PREFLIGHT-RESULT-20261115.json"
-  }
+  },
+  "legacy_pass": {
+    "run_id": 43706901262,
+    "job_id": 132789826273,
+    "snapshot_sha": "87b536aca6ff3e444c468362c991decb23e104b4",
+    "regressions": 12,
+    "status": "HISTORICAL_PASS_BEFORE_LAUNCH_GUARD_FIX"
+  },
+  "new_tests_count": 21,
+  "global_release": false
 }

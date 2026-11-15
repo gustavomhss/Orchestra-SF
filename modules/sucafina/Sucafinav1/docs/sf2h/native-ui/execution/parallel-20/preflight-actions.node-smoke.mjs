@@ -132,3 +132,20 @@ test("UX20 adversarial: all 21 launch-input regressions", { timeout: 200_000 }, 
   assert.match(result.stderr, /Ran 21 tests\b/);
   assert.match(result.stderr, /\bOK\b/);
 });
+
+test("UX20 normative TypeScript signature files parse without errors", { timeout: 60_000 }, async () => {
+  requireActions();
+  const module = await import("typescript");
+  const ts = module.default ?? module;
+  for (const name of ["host-signatures.ts", "component-signatures.ts", "route-signatures.ts"]) {
+    const filename = path.join(execution, name);
+    const source = ts.createSourceFile(filename, readFileSync(filename, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const diagnostics = source.parseDiagnostics.map((d) => ({
+      code: d.code,
+      start: d.start,
+      message: ts.flattenDiagnosticMessageText(d.messageText, " | "),
+    }));
+    assert.deepEqual(diagnostics, [], name + " contains TypeScript syntax errors");
+    console.log("UX20 normative signature parsed: " + name);
+  }
+});
