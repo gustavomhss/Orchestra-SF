@@ -101,7 +101,6 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
       console.error("Sucafina preserved review successor read failed", error instanceof Error ? error.name : "unknown")
       setStore("updateStatus", "unavailable")
     }
-    onCleanup(() => controller.abort())
   }
   return (
     <SfPageFrame

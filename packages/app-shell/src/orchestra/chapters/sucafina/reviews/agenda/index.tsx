@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
+import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
@@ -120,7 +120,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     if (store.ownerKey !== state.ownerKey) {
       setStore({ ownerKey: state.ownerKey, selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
     }
-    const source = store.sourcePage
+    const source = untrack(() => store.sourcePage)
     void discover(source)
     onCleanup(() => {
       if (owner.generation() !== generation) {
@@ -245,18 +245,18 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       }}
     >
       <div class="sf-n28" data-sf-surface="UI47" data-phase={store.phase}>
+        <form class="sf-n28-form" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
+          <label for={uid + "-page"}>{t("sf.u25.source")}</label>
+          <input id={uid + "-page"} class="mx-input" value={store.sourcePage}
+            onInput={(event) => setStore("sourcePage", event.currentTarget.value)}
+            required maxlength="200" autocomplete="off" />
+          <button class="mx-btn" type="submit">{t("sf.u25.find")}</button>
+        </form>
         <SfStatePanel
           state={store.status}
           messageKey={key(store.message || (store.status === "empty" ? "sf.u25.noSections" : "sf.common.unavailable"))}
           onRetryRead={store.phase !== "outcome-unknown" ? () => { void discover(store.sourcePage) } : undefined}
         >
-          <form class="sf-n28-form" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
-            <label for={uid + "-page"}>{t("sf.u25.source")}</label>
-            <input id={uid + "-page"} class="mx-input" value={store.sourcePage}
-              onInput={(event) => setStore("sourcePage", event.currentTarget.value)}
-              required maxlength="200" autocomplete="off" />
-            <button class="mx-btn" type="submit">{t("sf.u25.find")}</button>
-          </form>
           <label class="sf-n28-field" for={uid + "-filter"}>{t("sf.u25.filter")}
             <input id={uid + "-filter"} type="search" value={store.filter}
               onInput={(event) => setStore("filter", event.currentTarget.value)} />
