@@ -1,0 +1,2819 @@
+{
+  "schema": "sf2h.native-ui.authoring-admission.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "authority": "S0, user-appointed campaign supervisor in original thread; not C00/114 impersonation",
+  "user_instruction": "vamos por as sessoes que estao paradas pra andar",
+  "operational_delta": "S0 grants per-output authoring directly after reconciling real author ACKs and exclusive paths. Supersedes the additional campaign-overlay requirement to wait for 114 admission before writing these exclusive leaves. 114 retains sole stack integration, shared paths, source-family change integration and acceptance. No normative contract, criterion, trust boundary or host permission is weakened.",
+  "scope": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "stack_observed": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+    "stack_delta": "three C58 integration receipts only; no product/source change"
+  },
+  "checks": {
+    "author_acks_read": 19,
+    "claims_checked": 115,
+    "cross_author_collisions": 0,
+    "author_checks_not_product_tests": true,
+    "product_tests": "NOT_RUN",
+    "session_runtime_liveness": "not exposed by browser GitHub ACK; no active worker count claimed"
+  },
+  "routing": {
+    "integrator": "114 / S0-C-e17-browser114 / PR65",
+    "product_ci": "120 / PR106",
+    "compiler": "119 / PR107"
+  },
+  "protections": [
+    "Same existing author and branch; no new competing writer or force update.",
+    "Author only exact packet write_paths/test_write_grants/receipt_prefix. Shared indexes/composition/generated remain114.",
+    "Author independently against frozen contracts; missing producers gate integration/qualification. No stubs/permissive schemas/copied backends.",
+    "Preserve source-family deltas and current auth/revocation/financial semantics. Real contract/owner conflict is scoped, not global authoring barrier.",
+    "Surgical tests at unit completion via120; compiler119; no local tests, premature epic, duplicate dispatcher.",
+    "Native Goal remains paused; native revoked writers remain revoked. Browser authoring admission does not resume a session or install controller.",
+    "Terminal author must resume same session with this receipt and confirm current branch before new write; a different session needs fenced handoff, never take over by silence.",
+    "No GLOBAL_RELEASE; original final acceptance and UX scope intact."
+  ],
+  "outputs": [
+    {
+      "seat": "W01",
+      "order": "D01",
+      "output": "D01",
+      "branch": "sf-ux-w01",
+      "lease_epoch": "ux-native-w01-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "be2542c7be588c2bdbf6734daf663bc020a8846b",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W01/ACK-W01.json",
+        "ref": "be2542c7be588c2bdbf6734daf663bc020a8846b",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "campaign": "sf2h-integral-20261112",
+          "seat": "W01",
+          "order": "D01",
+          "output": "D01",
+          "actor": {
+            "github_login": "gustavomhss",
+            "model_actual": "GPT-6",
+            "model_requested_label": "Astra",
+            "session_id": "not exposed"
+          },
+          "state": "ACK_PUBLISHED_AWAITING_INTEGRATOR114_PER_OUTPUT_ADMISSION",
+          "permission": "SESSION_START_ONLY_NO_PRODUCT_WRITE_YET",
+          "branch": "sf-ux-w01",
+          "observed_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "observed_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "material_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "material_tree": "647b024075265fc76d6253c99bec00a82618f816",
+          "lease": {
+            "epoch": "ux-native-w01-e1",
+            "state": "RESERVED_PENDING_114_ADMISSION",
+            "integrator": "S0-C-e17-browser114",
+            "pr": 65
+          },
+          "write_paths": [
+            "apps/desktop/src/main/sucafina/**",
+            "apps/desktop/src/preload/sucafina.ts",
+            "apps/desktop/src/renderer/sucafina.ts",
+            "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+          ],
+          "test_write_grants": [
+            "packages/app-shell/test-browser/sucafina-native/w01-d01.test.ts"
+          ],
+          "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W01/",
+          "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "ux_normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+          "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+          "frozen_contracts": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+            "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+            "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a"
+          },
+          "consumed_contract_families": [
+            "ctx",
+            "transport"
+          ],
+          "producer_pins": [
+            {
+              "source": "entry",
+              "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+              "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+              "delta": "modified since historical catalog; current C58 installation composition read; preserve operator/microsoft prepare"
+            },
+            {
+              "source": "identity",
+              "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+              "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+              "delta": "modified since historical catalog; current durable revocation/auth read; no historical restoration"
+            },
+            {
+              "source": "server-routes",
+              "path": "packages/server/src/routes.ts",
+              "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+              "delta": "same as historical"
+            },
+            {
+              "source": "owned-serve",
+              "path": "apps/desktop/src/main/owned-serve.ts",
+              "blob": "08a84d3b8b6021f6590eb33e5ece22bc3d76d518",
+              "delta": "same as historical; integration change belongs 114"
+            },
+            {
+              "source": "downloads",
+              "path": "apps/desktop/src/main/response-download.ts",
+              "blob": "cd869d37c96453d7692c83be51386bd559314449",
+              "delta": "same as historical; reuse existing path"
+            }
+          ],
+          "integration_dependencies": [
+            "F02",
+            "114/I00 shared composition",
+            "approved installed identity/return-intents"
+          ],
+          "ci_responsible": 120,
+          "compiler_responsible": 119,
+          "checks": "NOT_RUN; zero local validation",
+          "new_api_exports": [
+            "createSfDesktopBroker",
+            "createSfDesktopPreloadCapability",
+            "createSfDesktopCapability",
+            "attachSfNativeEnrollment"
+          ],
+          "constraints": {
+            "no_second_integrator": true,
+            "no_local_tests": true,
+            "no_merge": true,
+            "no_deploy": true,
+            "no_azure": true,
+            "GLOBAL_RELEASE": false
+          },
+          "admission_question": "114: confirm D01 ctx+transport semantic repin and grant bounded ux-native-w01-e1 product authoring on these write_paths; acknowledge this ACK before product mutation",
+          "source_document": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/campaign-overlay/packets/W01.json"
+        }
+      },
+      "write_paths": [
+        "apps/desktop/src/main/sucafina/**",
+        "apps/desktop/src/preload/sucafina.ts",
+        "apps/desktop/src/renderer/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+      ],
+      "test_write_grants": [
+        "packages/app-shell/test-browser/sucafina-native/w01-d01.test.ts"
+      ],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W01/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "entry": {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "identity": {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "server-routes": {
+          "path": "packages/server/src/routes.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "owned-serve": {
+          "path": "apps/desktop/src/main/owned-serve.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "08a84d3b8b6021f6590eb33e5ece22bc3d76d518",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "08a84d3b8b6021f6590eb33e5ece22bc3d76d518",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "downloads": {
+          "path": "apps/desktop/src/main/response-download.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "cd869d37c96453d7692c83be51386bd559314449",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "cd869d37c96453d7692c83be51386bd559314449",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W02",
+      "order": "F01",
+      "output": "F01",
+      "branch": "sf-ux-w02",
+      "lease_epoch": "ux-native-w02-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "0a4a59468b145a7566b81e9c99e98c12fcfab24c",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W02/ACK-F01-W02.json",
+        "ref": "0a4a59468b145a7566b81e9c99e98c12fcfab24c",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.ux20.author-ack.v1",
+          "seat": "W02",
+          "order": "F01",
+          "output": "foundation-context-transport/F01",
+          "requested_model": "Astra",
+          "effective_model": "GPT-6",
+          "session_id": null,
+          "session_id_status": "not exposed by host",
+          "actor": "gustavomhss (GitHub connector; ChatGPT GPT-6)",
+          "branch": "sf-ux-w02",
+          "base_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "base_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "product_tree": "647b024075265fc76d6253c99bec00a82618f816",
+          "lease": "ux-native-w02-e1",
+          "lease_status": "ACK_PUBLISHED_USER_AUTHORIZED_INDEPENDENT_AUTHORING; 114 PER_OUTPUT_INTEGRATION_ADMISSION_NOT_OBSERVED",
+          "integrator": {
+            "actor": "S0-C-e17-browser114",
+            "branch": "sf2-stack",
+            "pr": 65,
+            "status": "ACTIVE per ACK-114 and QUEUE-114-C58"
+          },
+          "authoring": {
+            "source": "direct W02 user instruction",
+            "collisions": "none observed in frozen cohort claims",
+            "writes_exclusive": true,
+            "integrator_confirmation": "pending; no invented approval"
+          },
+          "allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/context/**",
+            "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/**",
+            "packages/schema/src/sucafina/context.ts",
+            "packages/client/src/sucafina/context.ts",
+            "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+            "packages/protocol/src/groups/sucafina.ts",
+            "packages/server/src/sucafina-installations.ts",
+            "packages/server/src/handlers/sucafina.ts",
+            "apps/cli/src/sucafina-product/native-ui/context.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W02/"
+          ],
+          "contracts": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+          },
+          "protocol_drift": {
+            "expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "present": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+            "kind": "documentary-two-lines-stale coordinator 105/101/45",
+            "resolution": "COMMON.md overlay explicitly replaces with 114/120/119; no product contract change"
+          },
+          "source_bindings": {
+            "entry": {
+              "product_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+              "historical_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+              "delta": "authMaintenance start/dispose; identity/bootstrap order must remain"
+            },
+            "identity": {
+              "product_blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+              "historical_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+              "delta": "durable auth lifecycle issuance/revocation; no fallback/grants"
+            },
+            "server_routes": {
+              "product_blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+              "delta": "unchanged"
+            }
+          },
+          "semantic_rule": "CONTRACTS §2.1 select=ids|location overrides generic F01 work order wording; explicit URL A never inherits B",
+          "gates": {
+            "CI": "120 only via GitHub Actions",
+            "typecheck_guards": "119 only",
+            "local_tests": false,
+            "merge": false,
+            "deploy": false,
+            "azure": false
+          },
+          "acceptance": "ACK ONLY; NOT INTEGRATED/QUALIFIED; ready state to be assessed per-output",
+          "handoff": "F01 independent artifacts proposed on this branch; I00 owns shared registrations and composition"
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/**",
+        "packages/schema/src/sucafina/context.ts",
+        "packages/client/src/sucafina/context.ts",
+        "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+        "packages/protocol/src/groups/sucafina.ts",
+        "packages/server/src/sucafina-installations.ts",
+        "packages/server/src/handlers/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/context.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W02/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "entry": {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "identity": {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "server-routes": {
+          "path": "packages/server/src/routes.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W03",
+      "order": "F02",
+      "output": "F02",
+      "branch": "sf-ux-w03",
+      "lease_epoch": "ux-native-w03-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "7c5d2e859ed8b675cd9c9355d0978673cc5349ca",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/ACK.json",
+        "ref": "7c5d2e859ed8b675cd9c9355d0978673cc5349ca",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "mission_id": "UX20-W03",
+          "order": "F02",
+          "output": "F02",
+          "actor": "new ChatGPT GPT-6 session, user-invoked W03",
+          "requested_label": "Astra",
+          "effective_model": "GPT-6",
+          "github_actor": "gustavomhss",
+          "session_id": null,
+          "session_id_reason": "not exposed by current ChatGPT/GitHub connector",
+          "branch": "sf-ux-w03",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "shared_cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "shared_cohort_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "source_pins": {
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+            "identity": {
+              "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+              "blob_current": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+              "blob_historical": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+              "delta": "durable authentication issue/revoke and current revocation fence; use C58 producer, never restore historical"
+            }
+          },
+          "locked_contract_blobs": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81"
+          },
+          "required_families": [
+            "ctx",
+            "domain-read",
+            "transport"
+          ],
+          "allowlist": [
+            "packages/client/src/sucafina/transport.ts",
+            "packages/client/src/sucafina/transport/**",
+            "packages/schema/src/sucafina/common.ts",
+            "apps/cli/src/sucafina-product/native-ui/router.ts",
+            "apps/cli/src/sucafina-product/native-ui/transport/**",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/**"
+          ],
+          "integration_owner": "114/S0-C-e17-browser114/sf2-stack/PR65",
+          "testing_owner": "120/PR106",
+          "compiler_owner": "119/PR107",
+          "lease": {
+            "epoch": "ux-native-w03-e1",
+            "state": "ACK_PUBLISHED_AWAITING_114_PER_OUTPUT_ADMISSION",
+            "user_authorization": "explicit W03 instruction in current conversation",
+            "not_claimed": "114 admission/approval/active lease not observed"
+          },
+          "expected_dependency": "F01 (authoring independent on frozen ctx, integration and qualification require real producer)",
+          "boundaries": {
+            "generated": false,
+            "shared_paths": false,
+            "backend_parallel": false,
+            "local_tests": false,
+            "merge": false,
+            "deploy": false,
+            "azure": false
+          },
+          "verification": {
+            "branch_at_ack": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+            "contract_catalog_operations": 305,
+            "source_identity_delta_reviewed": true,
+            "ci": "NOT_RUN"
+          },
+          "status": "PREFLIGHT_ACK_NOT_ARTIFACT_READY"
+        }
+      },
+      "write_paths": [
+        "packages/client/src/sucafina/transport.ts",
+        "packages/client/src/sucafina/transport/**",
+        "packages/schema/src/sucafina/common.ts",
+        "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "apps/cli/src/sucafina-product/native-ui/transport/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "identity": {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        }
+      }
+    },
+    {
+      "seat": "W04",
+      "order": "F03",
+      "output": "F03",
+      "branch": "sf-ux-w04",
+      "lease_epoch": "ux-native-w04-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "c3f567ac57d8d124573fc7762f4e681414797604",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W04/ACK.json",
+        "ref": "c3f567ac57d8d124573fc7762f4e681414797604",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author.ack.v1",
+          "mission": "UX20-W04",
+          "order": "F03",
+          "title": "Composição comum de página e estados",
+          "output": "F03",
+          "state": "PREFLIGHT_ACK_PUBLISHED_WAITING_FOR_114_PER_OUTPUT_ADMISSION",
+          "model": {
+            "requested": "Astra",
+            "actual": "GPT-6",
+            "sessionId": null,
+            "sessionIdReason": "Not exposed in this ChatGPT/GitHub session",
+            "githubActor": "gustavomhss"
+          },
+          "branch": "sf-ux-w04",
+          "cohortBase": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "cohortTree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "productBase": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "productBaseTree": "647b024075265fc76d6253c99bec00a82618f816",
+          "lease": {
+            "epoch": "ux-native-w04-e1",
+            "state": "RESERVED_NOT_ACTIVE",
+            "admissionAuthority": "S0-C-e17-browser114",
+            "perOutputAdmission": "REQUESTED_NOT_CONFIRMED",
+            "ownershipCollision": "NONE_OBSERVED_F03_EXCLUSIVE_PATHS",
+            "doesNotClaimGo": true
+          },
+          "canonical": {
+            "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "nativeNormative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "nativeDocs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+          },
+          "frozen": {
+            "surfaceSpecs": "d62847af81dffdc129312e71e69692081fd74b75",
+            "uiFrame": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "componentSignatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "componentContracts": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "surfaceManifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+            "contractCatalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "routeSignatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+            "contracts": "94553a3119826ef1c44271966233dd58042ddd70"
+          },
+          "semanticDrift": {
+            "protocolExpected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "protocolActual": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+            "delta": "Two coordinator/CI routing sentences differ: 105/101/45 listed in current file; COMMON campaign overlay explicitly replaces with 114/120/119; no F03 signature/semantics difference.",
+            "disposition": "OBSERVED_DOCUMENTARY_ROUTING_DRIFT; defer re-pin authority to 114; no product semantic weakening"
+          },
+          "sources": {
+            "MxPage": "packages/app-shell/src/orchestra/chapters/kit.tsx@cd9d473065562fa08ba87db9c35db141d64e4198",
+            "MxKit": "packages/app-shell/src/orchestra/chapters/kit.css@d90cfcf2b4b5063931b663fe74bb7b8a4bec85fe",
+            "language": "packages/app-shell/src/context/language.tsx@77fe29d4628cc51984b54a9bf5ce030ac2ba2c0c",
+            "orchestraI18nSharedPreimage": "packages/app-shell/src/i18n/orchestra.ts@2eeaa42e02a45b3301fc765c6c92635af5101079"
+          },
+          "allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/**",
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+            "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W04/**"
+          ],
+          "ownedProductPreimages": "ABSENT_FOR_ALL_F03_ENTRYPOINTS_IN_COHORT",
+          "sharedPatchPolicy": "No edit to src/i18n/orchestra.ts; deliver exact pre/post patch for integrator 114",
+          "exports": [
+            "SfPageFrame",
+            "SfStatePanel",
+            "SfContextBar",
+            "SfChartFrame",
+            "SfRunState"
+          ],
+          "criteria": [
+            "WP01.T02",
+            "WP01.T03",
+            "F03-AC01",
+            "F03-AC02"
+          ],
+          "runners": {
+            "productCI": "120 only via GitHub Actions",
+            "compilerGuards": "119 only via GitHub Actions",
+            "local": "NOT_RUN"
+          },
+          "scope": [
+            "No second sidebar or visual identity",
+            "No client fetch/business arithmetic/permission inference",
+            "Five viewport classes and 200%/400% reflow",
+            "All seven existing themes and en/pt-BR",
+            "One primary CTA and typed callbacks"
+          ],
+          "requestedAction": "114: acknowledge same I00/C00 lease; verify family pins + preimages and issue explicit F03/W04 per-output admission or concrete BLOCKED_*; no default/silence GO.",
+          "globalRelease": false
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+        "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W04/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {}
+    },
+    {
+      "seat": "W05",
+      "order": "F04",
+      "output": "F04",
+      "branch": "sf-ux-w05",
+      "lease_epoch": "ux-native-w05-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "de1938a20654bc77dbefbba31f0e1085e0d0583f",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/ACK-W05.json",
+        "ref": "de1938a20654bc77dbefbba31f0e1085e0d0583f",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.writer-ack.v1",
+          "seat": "W05",
+          "order": "F04",
+          "mission_id": "UX20-W05",
+          "status": "ACK_PUBLISHED_OUTPUT_ADMISSION_REQUESTED",
+          "session": {
+            "requested_label": "Astra",
+            "effective_model": "GPT-6",
+            "actual_session_id": null,
+            "actual_session_id_reason": "not exposed by ChatGPT/GitHub connector",
+            "github_actor": "gustavomhss",
+            "role": "independent F04 author, not C00/114"
+          },
+          "branch": {
+            "name": "sf-ux-w05",
+            "verified_preflight_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+            "verified_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+            "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+            "product_tree": "647b024075265fc76d6253c99bec00a82618f816"
+          },
+          "lease": {
+            "reserved_epoch": "ux-native-w05-e1",
+            "state": "ACK_POSTED_NOT_YET_ADMITTED_BY_114",
+            "integrator": "S0-C-e17-browser114",
+            "integrator_pr": 65
+          },
+          "source": {
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+            "source_pins": "2008d5cfe2ac9e4b196defe8386ce643eb3bbc5d",
+            "packet_blob": "a2f864c1e5507f9bc1d498606bdebe56e882ee6d",
+            "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+            "order_blob": "1b25898e583e1eb247a3eec889d0da4e6bb61ab3"
+          },
+          "contract_locks": {
+            "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+            "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+          },
+          "protocol_delta": {
+            "expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "observed": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+            "changed_lines": [
+              15,
+              53
+            ],
+            "classification": "stale 105/101/45 dispatcher references in prepared branch; COMMON.md specifically replaces them with 114/120/119; no F04 schema/fixture contract change",
+            "normative_used": "0151a8e6cbb0da2118e058142af801ba7cf72094"
+          },
+          "write_allowlist": [
+            "packages/app-shell/e2e/sucafina/native/fixture/**",
+            "packages/app-shell/e2e/sucafina/native/fixture.ts",
+            "packages/app-shell/test-browser/sucafina-native/fixture/**",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/**"
+          ],
+          "dependencies": {
+            "authoring_locks": [
+              "ctx",
+              "surface-specs",
+              "transport",
+              "ui-frame"
+            ],
+            "integration": [
+              "F01",
+              "F02"
+            ],
+            "qualification": [
+              "F01",
+              "F02",
+              "D01 for desktop pilot",
+              "current C real installed host"
+            ],
+            "shared_registry_owner": "114"
+          },
+          "evidence": {
+            "test_execution": "NOT_RUN",
+            "typecheck": "NOT_RUN",
+            "guards": "NOT_RUN",
+            "registered_specs": "NOT_INSTALLED",
+            "real_producer_ready": "NOT_ASSERTED",
+            "source_family_repin": "PENDING_RELEVANT_SOURCE_INSPECTION"
+          },
+          "admission": {
+            "user_authorized_session": true,
+            "cohort_prepared": true,
+            "integrator_lease_observed": true,
+            "per_output_go_by_114": false,
+            "product_write_permitted": false
+          },
+          "limits": {
+            "no_local_tests": true,
+            "no_dispatch": true,
+            "no_merge": true,
+            "no_deploy": true,
+            "no_azure": true,
+            "no_secondary_backend": true,
+            "no_generated_write": true
+          }
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/e2e/sucafina/native/fixture/**",
+        "packages/app-shell/e2e/sucafina/native/fixture.ts",
+        "packages/app-shell/test-browser/sucafina-native/fixture/**"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {}
+    },
+    {
+      "seat": "W06",
+      "order": "S01",
+      "output": "S01",
+      "branch": "sf-ux-w06",
+      "lease_epoch": "ux-native-w06-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "a49ea45db5957ac5c1c4f12a24afd7ce1ab57721",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W06/ACK.json",
+        "ref": "a49ea45db5957ac5c1c4f12a24afd7ce1ab57721",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.executor-ack.v1",
+          "mission_id": "UX20-W06",
+          "seat": "W06",
+          "order": "S01",
+          "output": "S01",
+          "status": "ACK_PUBLISHED_AUTHORING_PREFLIGHT",
+          "actor": "ChatGPT GitHub connector acting with authorized user gustavomhss",
+          "actual_model": "GPT-6",
+          "requested_model": "Astra",
+          "session_id": "not-exposed",
+          "branch": "sf-ux-w06",
+          "branch_head_before_ack": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "branch_tree_before_ack": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "cohort_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "reserved_lease_epoch": "ux-native-w06-e1",
+          "user_authorized": true,
+          "integrator": "114; S0-C-e17-browser114; sf2-stack PR65",
+          "integrator_ack_status": "not independently verified on launch HEAD; do not infer from silence",
+          "per_output_admission": "requested; independent frozen-contract authorship only; 114 owns INTEGRATED admission",
+          "allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-s01.ts",
+            "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W06/**"
+          ],
+          "locks": {
+            "ui-frame": "FROZEN",
+            "ui-table": "FROZEN"
+          },
+          "consumed_frozen_blobs": {
+            "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+            "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+          },
+          "source_note": "S01 has no surface or source binding pins, and no producer data/API/host writes; uses frozen component signatures plus app-shell existing Mx, Solid and locale primitives.",
+          "constraints": [
+            "no shared registries",
+            "no local tests or compiler/guards",
+            "no merge/deploy/Azure",
+            "no generated code edits",
+            "GitHub connector only; CAS expected-head force false"
+          ],
+          "tests": "NOT_RUN; requested only through coordinator120 after F03 composition",
+          "compiler": "NOT_RUN; assigned coordinator119"
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s01.ts",
+        "packages/app-shell/test-browser/sucafina-native/s01.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W06/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {}
+    },
+    {
+      "seat": "W07",
+      "order": "S02",
+      "output": "S02",
+      "branch": "sf-ux-w07",
+      "lease_epoch": "ux-native-w07-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "8b08ea04e7710c2a1cbb2f046d82f92ead02a752",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/ACK-W07.json",
+        "ref": "8b08ea04e7710c2a1cbb2f046d82f92ead02a752",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "mission": "UX20-W07",
+          "order": "S02",
+          "output": "SfMonthlyGrid",
+          "state": "ACK_REAL_PREFLIGHT_RECORDED_PENDING_114_PER_OUTPUT_ADMISSION",
+          "actor": "ChatGPT GPT-6 W07 author session",
+          "requested_label": "Astra",
+          "effective_model": "GPT-6",
+          "runtime_session_id": null,
+          "runtime_session_id_reason": "not exposed",
+          "github_actor": "gustavomhss",
+          "branch": "sf-ux-w07",
+          "branch_base": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "branch_base_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "reserved_lease_epoch": "ux-native-w07-e1",
+          "lease_state": "RESERVED_NOT_ACTIVE_UNTIL_114_ADMISSION",
+          "integrator": "114 S0-C-e17-browser114",
+          "dispatcher": "120",
+          "compiler": "119",
+          "checks": {
+            "branch_initial_head_verified": true,
+            "existing_w07_pr": false,
+            "ownership_overlap_observed": false,
+            "source_contracts_frozen": true,
+            "per_output_114_admission_observed": false,
+            "live_product_code_started": false
+          },
+          "write_allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+            "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/**"
+          ],
+          "sources": {
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+            "packet_blob": "f5ea25aad4c62a72606e002023d8d0cb65fcd5a8",
+            "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+            "workorder_blob": "08605acceb598f8dab17bef9e5415d6a3c556526",
+            "component_signatures_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "component_contracts_blob": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "component_locks_blob": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "surface_specs_blob": "d62847af81dffdc129312e71e69692081fd74b75",
+            "planner_http_blob": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+            "monthly_edit_blob": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+            "monthly_host_blob": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5"
+          },
+          "invariants": [
+            "pure UI no Domain/Server imports",
+            "month IDs 0..11 only; A02 maps to host 1..12 exactly once",
+            "producer preview/apply owns parsing/revision/CAS/partial outcomes",
+            "no local testing",
+            "no merge, deploy, or Azure"
+          ],
+          "admission_question": "114 must publish explicit S02/W07 output admission binding this actor/lease/branch/frozen input before product writes; 114 ACK from C53 predates UX cohort and is not treated as S02 admission",
+          "test_status": "NOT_RUN"
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+        "packages/app-shell/test-browser/sucafina-native/s02.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {}
+    },
+    {
+      "seat": "W08",
+      "order": "S03",
+      "output": "S03",
+      "branch": "sf-ux-w08",
+      "lease_epoch": "ux-native-w08-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "9484a49d8a47976f3bbfffe92797574a90deaadd",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/ACK-W08.json",
+        "ref": "9484a49d8a47976f3bbfffe92797574a90deaadd",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "mission": "UX20-W08",
+          "order": "S03",
+          "output": "S03",
+          "state": "ACK_PUBLISHED_AWAITING_EXPLICIT_114_OUTPUT_ADMISSION",
+          "actual_actor": "ChatGPT GPT-6 through GitHub connector (authenticated writer gustavomhss)",
+          "requested_model": "Astra",
+          "effective_model": "GPT-6",
+          "session_id": null,
+          "branch": "sf-ux-w08",
+          "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "lease_epoch": "ux-native-w08-e1",
+          "lease_state": "RESERVED_NOT_ACTIVE",
+          "coordinator": "same S0-C-e17-browser114; no second C00",
+          "sources": {
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+            "cohort": "f8e442616c96651f3b26013b34b8ce697860e3e2"
+          },
+          "contracts": {
+            "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+            "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+          },
+          "drift": {
+            "branch_protocol_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+            "frozen_protocol_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "classification": "DOCUMENTARY_ROUTING_ONLY",
+            "note": "Two sentences cite superseded 105/101/45; current COMMON and S0 intake explicitly route 114/120/119. No S03 contract change."
+          },
+          "source_bindings": [],
+          "source_read_scope": "No source-bound producers; consume frozen ctx, transport, ui-change-review, ui-frame only.",
+          "write_allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/**",
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/**",
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+            "packages/app-shell/test-browser/sucafina-native/s03.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/**"
+          ],
+          "dependency_integration": [
+            "F03",
+            "I00 composition of S03+F01+F02"
+          ],
+          "test_owner": "120 only, GitHub Actions",
+          "compiler_owner": "119 only",
+          "forbidden": [
+            "Local tests, parser, typecheck",
+            "Shared registry writes",
+            "Manual generated code edits",
+            "Merge/deploy/Azure",
+            "Automatic mutation retry",
+            "Invented receipt"
+          ],
+          "admission": "PENDING_EXPLICIT_SAME_114_OUTPUT_APPROVAL"
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+        "packages/app-shell/test-browser/sucafina-native/s03.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {}
+    },
+    {
+      "seat": "W09",
+      "order": "S04",
+      "output": "S04",
+      "branch": "sf-ux-w09",
+      "lease_epoch": "ux-native-w09-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "0b70f9e106163c4c531b1be4aad36225baeeff86",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/ACK.json",
+        "ref": "0b70f9e106163c4c531b1be4aad36225baeeff86",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.W09.ack.v1",
+          "mission": "UX20-W09",
+          "order": "S04",
+          "seat": "W09",
+          "request": "User started new S04 author session on existing sf-ux-w09 branch",
+          "actor": {
+            "effective_model": "GPT-6",
+            "requested_label": "Astra",
+            "runtime_session_id": null,
+            "runtime_session_id_reason": "not exposed to this ChatGPT session",
+            "github_identity": "gustavomhss"
+          },
+          "branch": {
+            "name": "sf-ux-w09",
+            "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+            "initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+            "material_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+            "material_tree": "647b024075265fc76d6253c99bec00a82618f816"
+          },
+          "authority": {
+            "user_session_start": "AUTHORIZED",
+            "output_admission": "REQUESTED_NOT_VERIFIED",
+            "lease_epoch": "ux-native-w09-e1",
+            "lease_state": "RESERVED_NOT_ACTIVE",
+            "integrator": "same S0-C-e17-browser114",
+            "integrator_pr": 65,
+            "integrator_ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after106-114/ACK-114.json",
+            "intake": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/INTAKE-20261115.json",
+            "no_writer_collision_observed": true
+          },
+          "allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/**",
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+            "packages/app-shell/test-browser/sucafina-native/s04.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/"
+          ],
+          "observed_entrypoint_preimages": {
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx": null,
+            "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx": null,
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts": null,
+            "packages/app-shell/test-browser/sucafina-native/s04.test.ts": null
+          },
+          "source": {
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "ux_normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "order_blob": "be403965717e79dd84d7ecbffcce2808bb77cbbc",
+            "packet_blob": "fce5b46700b432aaa93181f9b214e475bb5e9846",
+            "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+            "instructions": {
+              "AGENTS.md": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+              "packages/app-shell/AGENTS.md": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+            },
+            "producers": {
+              "modules/sucafina/Sucafinav1/runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+              "modules/sucafina/Sucafinav1/product/interface/document-http.ts": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+              "apps/desktop/src/main/response-download.ts": "cd869d37c96453d7692c83be51386bd559314449"
+            },
+            "contracts": {
+              "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+              "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+              "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+              "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+              "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+              "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+              "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+              "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+            },
+            "protocol": {
+              "normative_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+              "branch_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+              "delta": "only historical CI/coordinator name text; COMMON overlay routes 114/120/119; no component contract drift observed"
+            }
+          },
+          "owns": [
+            "SfEvidencePanel",
+            "SfAttachmentField"
+          ],
+          "dependencies": {
+            "integration": [
+              "F03",
+              "A06"
+            ],
+            "qualification": [
+              "F03",
+              "A06"
+            ]
+          },
+          "execution": {
+            "product_mutations": "NOT_STARTED_WAITING_FOR_PER_OUTPUT_ADMISSION",
+            "local_tests": "NOT_RUN_PROHIBITED",
+            "actions_tests": "NOT_REQUESTED_BEFORE_INTEGRATION",
+            "compiler": "NOT_REQUESTED_BEFORE_INTEGRATION",
+            "merge": false,
+            "deploy": false,
+            "Azure": false,
+            "global_release": false
+          }
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+        "packages/app-shell/test-browser/sucafina-native/s04.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {}
+    },
+    {
+      "seat": "W10",
+      "order": "S05",
+      "output": "S05",
+      "branch": "sf-ux-w10",
+      "lease_epoch": "ux-native-w10-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "00f7092ddfa94dd6fe49516f8e8d2ee85fcc5f3c",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/ACK.json",
+        "ref": "00f7092ddfa94dd6fe49516f8e8d2ee85fcc5f3c",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "mission_id": "UX20-W10",
+          "work_order_id": "S05",
+          "output_id": "S05",
+          "seat": "W10",
+          "actor": {
+            "kind": "new-user-chat-session",
+            "requested_model": "Astra",
+            "actual_model": "GPT-6",
+            "session_id": "not-exposed",
+            "name": "W10"
+          },
+          "authority": {
+            "integrator": "114 / S0-C-e17-browser114",
+            "branch": "sf2-stack",
+            "admission": "REQUESTED_PER_OUTPUT_NOT_YET_CONFIRMED",
+            "controller_created": false,
+            "dispatcher_created": false
+          },
+          "branch": {
+            "name": "sf-ux-w10",
+            "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+            "tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+            "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4"
+          },
+          "lease": {
+            "epoch": "ux-native-w10-e1",
+            "status": "ACK_PUBLISHED_RESERVATION_PENDING_114_ADMISSION"
+          },
+          "write_paths": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+            "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/**"
+          ],
+          "source_pins": {
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+            "collaboration_http": "ccae839a2bc35634554a2ac2721d345671c16f77",
+            "collaboration_routes": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+            "source_material": "C58"
+          },
+          "contract_blobs": {
+            "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "component_contracts": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "component_locks": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "contracts": "94553a3119826ef1c44271966233dd58042ddd70",
+            "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "surface_specs": "d62847af81dffdc129312e71e69692081fd74b75",
+            "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+            "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "execution_protocol_expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "execution_protocol_observed": "4a50abfee84335d2ca4db7e3351af144248c9fd1"
+          },
+          "drift": {
+            "protocol": "two authority/dispatcher nomenclature lines differ (15,53), S05 public contracts unaffected; COMMON overrides legacy 101/45 with 120/119",
+            "source": "collaboration/http.ts and http-routes.ts same blob as locked C58; no producer implementation imported into browser"
+          },
+          "authoring_dependencies": [
+            "ctx",
+            "domain-read",
+            "reviews",
+            "ui-collaboration",
+            "ui-frame"
+          ],
+          "integration_dependency": "F03",
+          "surfaces": [
+            "UI51",
+            "UI52",
+            "UI53"
+          ],
+          "consumer": "U44",
+          "preflight": "S05 public props/types frozen; source restrictions verified; lease activation awaits 114 intake",
+          "tests": {
+            "policy": "GitHub Actions only; runner120",
+            "state": "NOT_RUN"
+          },
+          "no_external_messages": true
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+        "packages/app-shell/test-browser/sucafina-native/s05.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W10/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {}
+    },
+    {
+      "seat": "W11",
+      "order": "A03",
+      "output": "A03",
+      "branch": "sf-ux-w11",
+      "lease_epoch": "ux-native-w11-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "8cd3ae38f68ab89b47970d68cad4a642db440c59",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W11/ACK.json",
+        "ref": "8cd3ae38f68ab89b47970d68cad4a642db440c59",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "missionId": "UX20-W11",
+          "seat": "W11",
+          "workOrderId": "A03",
+          "actor": "ChatGPT GPT-6 (current connector session)",
+          "requestedModel": "Astra",
+          "actualModel": "GPT-6",
+          "sessionId": "not-exposed",
+          "branch": "sf-ux-w11",
+          "cohortHead": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "cohortTree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "productBase": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "authority": {
+            "userAuthorised": true,
+            "source": "explicit W11 prompt 2026-11-15",
+            "integrator": "114 / S0-C-e17-browser114 / sf2-stack PR65",
+            "otherOwners": [
+              "120 product CI",
+              "119 compiler/guards"
+            ],
+            "authoringLease": "ux-native-w11-e1",
+            "integratorOutputAdmission": "PENDING_114_ACK; never infer from silence",
+            "noSecondDispatcher": true
+          },
+          "scope": {
+            "allowedWrites": [
+              "packages/schema/src/sucafina/procurement.ts",
+              "packages/schema/src/sucafina/procurement/**",
+              "packages/client/src/sucafina/procurement.ts",
+              "packages/client/src/sucafina/procurement/**",
+              "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+              "apps/cli/src/sucafina-product/native-ui/procurement/**",
+              "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+              "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W11/**"
+            ],
+            "sharedWrites": false,
+            "generatedWrites": false
+          },
+          "contractPins": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75"
+          },
+          "consumedFamilies": [
+            "ctx",
+            "procurement",
+            "transport"
+          ],
+          "sourceDeltaReview": [
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+              "baseBlob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+              "currentBlob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+              "semantic": "download/asset visibility and post-generation egress reauthorization; no backport; retain original Request/auth"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+              "baseBlob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+              "currentBlob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+              "semantic": "request existence/visibility checked before CAS to avoid leakage; presentation toPrecision(15) formatting; preserve finance math"
+            },
+            {
+              "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+              "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+              "semantic": "unchanged"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+              "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+              "semantic": "unchanged"
+            }
+          ],
+          "intendedOutput": "Author independent real A03 code against frozen pins; no claims of F01/F02 presence, installed qualification or I00 admission.",
+          "gates": {
+            "localTests": "NOT_RUN_BY_DESIGN",
+            "ci": "120_ONLY",
+            "compiler": "119_ONLY",
+            "noMergeDeploy": true
+          }
+        }
+      },
+      "write_paths": [
+        "packages/schema/src/sucafina/procurement.ts",
+        "packages/client/src/sucafina/procurement.ts",
+        "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+        "packages/schema/src/sucafina/procurement/**",
+        "packages/client/src/sucafina/procurement/**",
+        "apps/cli/src/sucafina-product/native-ui/procurement/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W11/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "application": {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "procurement-scenario": {
+          "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP24": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "renderer-CAP25": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "renderer-CAP26": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "renderer-CAP27": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "renderer-CAP28": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "sourcing": {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "de85660b664826163c2e157ec382b97a425bb10d",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W12",
+      "order": "U10",
+      "output": "U10.queue",
+      "branch": "sf-ux-w12",
+      "lease_epoch": "ux-native-w12-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "1c824c00a439b6189d880ce8be0d833f8b0681c1",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W12/ACK.json",
+        "ref": "1c824c00a439b6189d880ce8be0d833f8b0681c1",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.ux20.author-ack.v1",
+          "mission_id": "UX20-W12",
+          "seat": "W12",
+          "work_order": "U10",
+          "output": "U10.queue",
+          "requested_model": "Astra",
+          "actual_model": "GPT-6",
+          "session_id": null,
+          "session_status": "not exposed by host",
+          "actor": "ChatGPT GPT-6 via GitHub connector; authenticated GitHub actor gustavomhss",
+          "branch": "sf-ux-w12",
+          "cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "cohort_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "product_tree": "647b024075265fc76d6253c99bec00a82618f816",
+          "lease_epoch": "ux-native-w12-e1",
+          "lease_status": "ACK_PUBLISHED_USER_AUTHORIZED_INDEPENDENT_AUTHORING; 114 per-output INTEGRATION_ADMISSION pending",
+          "authority": {
+            "user_authorized": true,
+            "integrator": "114 / S0-C-e17-browser114 / sf2-stack PR65",
+            "integrator_ack": "observed ACK-114.json on sf2-stack; no W12-specific admission observed",
+            "product_ci": "120 only",
+            "compiler_guards": "119 only",
+            "no_second_integrator": true
+          },
+          "allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/**",
+            "packages/app-shell/test-browser/sucafina-native/w12-queue.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W12/**"
+          ],
+          "contracts": {
+            "bi": "FROZEN",
+            "ctx": "FROZEN",
+            "procurement": "FROZEN",
+            "surface-specs": "FROZEN",
+            "ui-bi": "FROZEN",
+            "ui-frame": "FROZEN",
+            "ui-table": "FROZEN",
+            "blobs": {
+              "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+              "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+              "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+              "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+              "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+              "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+              "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+              "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+              "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24"
+            }
+          },
+          "protocol_drift": {
+            "expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "actual": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+            "kind": "documentary stale coordinator 105/101/45 references",
+            "resolution": "COMMON.md campaign overlay and user instruction select 114/120/119; no contract semantics altered"
+          },
+          "sources": [
+            {
+              "name": "procurement-scenario",
+              "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+              "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+              "status": "SAME_BLOB"
+            },
+            {
+              "name": "renderer-CAP24",
+              "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+              "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+              "old_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+              "status": "REVIEWED_RELEVANT_DELTA",
+              "semantic": "visibility before existence/CAS; toPrecision(15) display formatting; no restoration"
+            },
+            {
+              "name": "sourcing",
+              "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+              "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+              "status": "SAME_BLOB"
+            }
+          ],
+          "scope": "Only current-holder queue (U10.queue), states/filters/selection/context/source navigation; overview and shared i18n/registry excluded",
+          "authoring": "frozen interfaces; no local tests; no mocks or fake producer",
+          "tests": "NOT_RUN",
+          "compiler": "NOT_RUN",
+          "integration": "PENDING_114_OUTPUT_ADMISSION",
+          "qualification": "NOT_RUN"
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/**"
+      ],
+      "test_write_grants": [
+        "packages/app-shell/test-browser/sucafina-native/w12-queue.test.ts"
+      ],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W12/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "procurement-scenario": {
+          "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP24": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "sourcing": {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "de85660b664826163c2e157ec382b97a425bb10d",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W13",
+      "order": "U13",
+      "output": "U13.pr-approval",
+      "branch": "sf-ux-w13",
+      "lease_epoch": "ux-native-w13-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "e990014c4d6954e69d6b56864506963a97ef09e7",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W13/ACK.json",
+        "ref": "e990014c4d6954e69d6b56864506963a97ef09e7",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "missionId": "UX20-W13",
+          "seat": "W13",
+          "workOrderId": "U13",
+          "outputId": "U13.pr-approval",
+          "actor": "ChatGPT GPT-6 (current GitHub connector session)",
+          "requestedModel": "Astra",
+          "actualModel": "GPT-6",
+          "sessionId": "not-exposed",
+          "branch": "sf-ux-w13",
+          "cohortHead": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "cohortTree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "productBase": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "authority": {
+            "userAuthorized": true,
+            "source": "explicit W13 prompt 2026-11-15",
+            "integrator": "114 / S0-C-e17-browser114 / sf2-stack PR65",
+            "ciOwner": 120,
+            "compilerOwner": 119,
+            "authoringLease": "ux-native-w13-e1",
+            "integratorOutputAdmission": "PENDING_114_ACK; never infer from silence",
+            "exclusiveIntegrator": true
+          },
+          "scope": {
+            "allowedWrites": [
+              "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/**",
+              "packages/app-shell/test-browser/sucafina-native/w13-pr-approval.test.ts",
+              "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W13/**"
+            ],
+            "sharedWrites": false,
+            "generatedWrites": false
+          },
+          "contractPins": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+          },
+          "consumedFamilies": [
+            "ctx",
+            "procurement",
+            "surface-specs",
+            "ui-change-review",
+            "ui-frame",
+            "ui-table"
+          ],
+          "sourceDeltaReview": [
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+              "historicalBlob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+              "currentBlob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+              "semantic": "Additional egress/download authorization; original decodeCommand, authentication and safeFailure remain authoritative; no source writes"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+              "historicalBlob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+              "currentBlob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+              "semantic": "Visibility/existence precedes CAS and queue/monetary presentation changed; original approve/reject holder and version gates preserved; no finance calculation fork"
+            }
+          ],
+          "intendedOutput": "Only P1 submitted PR approval; independently author against frozen contracts; no U13.complete, no title-save, no C12 receipts; admission/integration/qualification must be checked by 114/120/119",
+          "gates": {
+            "localTests": "NOT_RUN_BY_DESIGN",
+            "ci": "120_ONLY",
+            "compiler": "119_ONLY",
+            "noMergeDeployAzure": true
+          }
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/**"
+      ],
+      "test_write_grants": [
+        "packages/app-shell/test-browser/sucafina-native/w13-pr-approval.test.ts"
+      ],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W13/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "application": {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "renderer-CAP26": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        }
+      }
+    },
+    {
+      "seat": "W14",
+      "order": "A01",
+      "output": "A01",
+      "branch": "sf-ux-w14",
+      "lease_epoch": "ux-native-w14-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "d400a79822330b68a8c5d13a026f7e164ba7ab06",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W14/ACK.json",
+        "ref": "d400a79822330b68a8c5d13a026f7e164ba7ab06",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "seat": "W14",
+          "order": "A01",
+          "output": "A01",
+          "intent": "USER_AUTHORIZED_NEW_SESSION",
+          "actor": "ChatGPT GPT-6, new conversation execution",
+          "requested_model": "Astra",
+          "actual_model": "GPT-6",
+          "session_id": null,
+          "session_id_reason": "ChatGPT runtime does not expose session identifier to connector",
+          "repository": "gustavomhss/Orchestra-SF",
+          "branch": "sf-ux-w14",
+          "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "integrator": "S0-C-e17-browser114 (existing only), PR65",
+          "test_dispatcher": "120",
+          "compiler_guards": "119",
+          "reserved_lease": "ux-native-w14-e1",
+          "lease_state": "ACK_PUBLISHED_AWAITING_114_PER_OUTPUT_ADMISSION",
+          "allowlist": [
+            "packages/schema/src/sucafina/domain.ts",
+            "packages/schema/src/sucafina/domain/**",
+            "packages/client/src/sucafina/domain.ts",
+            "packages/client/src/sucafina/domain/**",
+            "apps/cli/src/sucafina-product/native-ui/domain.ts",
+            "apps/cli/src/sucafina-product/native-ui/domain/**",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W14/**"
+          ],
+          "consumed_contracts": {
+            "ctx": "FROZEN",
+            "transport": "FROZEN",
+            "domain-read": "FROZEN"
+          },
+          "contract_blobs": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+          },
+          "source_bindings": {
+            "application": {
+              "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+              "changed": true,
+              "review": "IN_PROGRESS"
+            },
+            "dashboard": {
+              "blob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+              "changed": true,
+              "review": "IN_PROGRESS"
+            },
+            "entry": {
+              "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+              "changed": true,
+              "review": "IN_PROGRESS"
+            },
+            "budget": {
+              "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+              "changed": false
+            },
+            "portfolio": {
+              "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+              "changed": false
+            }
+          },
+          "dependencies": {
+            "authoring": [
+              "ctx",
+              "domain-read",
+              "transport"
+            ],
+            "integration": [
+              "F01",
+              "F02"
+            ],
+            "qualification": [
+              "F01",
+              "F02"
+            ]
+          },
+          "requested_admission": "A01 independent authoring against frozen contracts; do not mark integrated until F01/F02 real",
+          "status": "ACK_ONLY_NOT_ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+          "test_execution": "NOT_RUN",
+          "global_release": false
+        }
+      },
+      "write_paths": [
+        "packages/schema/src/sucafina/domain.ts",
+        "packages/client/src/sucafina/domain.ts",
+        "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "packages/schema/src/sucafina/domain/**",
+        "packages/client/src/sucafina/domain/**",
+        "apps/cli/src/sucafina-product/native-ui/domain/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W14/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "application": {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "dashboard": {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "entry": {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "renderer-CAP01": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP03": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP04": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP05": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP09": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP10": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP13": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP14": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP15": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP16": {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W15",
+      "order": "A02",
+      "output": "A02",
+      "branch": "sf-ux-w15",
+      "lease_epoch": "ux-native-w15-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "72c72efda4617c734780712ac09b9909bbac25e8",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W15/ACK.json",
+        "ref": "72c72efda4617c734780712ac09b9909bbac25e8",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "mission_id": "UX20-W15",
+          "order": "A02",
+          "output": "A02",
+          "actor": "New ChatGPT GPT-6 session, user-invoked W15",
+          "requested_label": "Astra",
+          "effective_model": "GPT-6",
+          "github_actor": "gustavomhss",
+          "session_id": null,
+          "session_id_reason": "not exposed to ChatGPT through the active GitHub connector",
+          "branch": "sf-ux-w15",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "shared_cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "shared_cohort_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "locked_contract_blobs": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+          },
+          "source_pins": {
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+            "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+            "application": {
+              "current": "a0deff8a3b272019f472aa2f93499d1940a78370",
+              "historical": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+              "semantic_delta": "C58 added Procurement quote/signed-po download visibility checks and export reauthorization; no planner command/monthly schema modification; no restore"
+            },
+            "planner_http": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+            "forecast_http": "b814872f18556d1137820cfb33c46048066a1c6e",
+            "renderer_planner": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+            "monthly_edit": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+            "monthly_host": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5"
+          },
+          "contract_families": [
+            "ctx",
+            "planner",
+            "transport"
+          ],
+          "catalog_owned_operations": 39,
+          "allowlist": [
+            "packages/schema/src/sucafina/planner.ts",
+            "packages/client/src/sucafina/planner.ts",
+            "apps/cli/src/sucafina-product/native-ui/planner.ts",
+            "packages/schema/src/sucafina/planner/**",
+            "packages/client/src/sucafina/planner/**",
+            "apps/cli/src/sucafina-product/native-ui/planner/**",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W15/**"
+          ],
+          "integration_owner": "114/S0-C-e17-browser114/sf2-stack/PR65",
+          "testing_owner": "120/PR106",
+          "compiler_owner": "119/PR107",
+          "lease": {
+            "epoch": "ux-native-w15-e1",
+            "state": "ACK_PUBLISHED_AWAITING_114_PER_OUTPUT_ADMISSION",
+            "user_authorization": "explicit W15 instruction",
+            "not_claimed": "No independent 114 per-output grant or current integrated producer baseline has been verified"
+          },
+          "dependencies": {
+            "authoring": "FROZEN ctx/planner/transport",
+            "integration": [
+              "F01",
+              "F02"
+            ],
+            "qualification": [
+              "F01",
+              "F02"
+            ],
+            "missing_producer_behaviour": "No stubs or synthetic receipts"
+          },
+          "restrictions": {
+            "no_local_tests": true,
+            "no_merge": true,
+            "no_deploy": true,
+            "no_azure": true,
+            "no_generated_edits": true,
+            "no_shared_path_edits": true
+          },
+          "status": "PREFLIGHT_ACK_NOT_ARTIFACT_READY"
+        }
+      },
+      "write_paths": [
+        "packages/schema/src/sucafina/planner.ts",
+        "packages/client/src/sucafina/planner.ts",
+        "apps/cli/src/sucafina-product/native-ui/planner.ts",
+        "packages/schema/src/sucafina/planner/**",
+        "packages/client/src/sucafina/planner/**",
+        "apps/cli/src/sucafina-product/native-ui/planner/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W15/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "application": {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "forecast": {
+          "path": "modules/sucafina/Sucafinav1/product/interface/forecast-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "b814872f18556d1137820cfb33c46048066a1c6e",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "b814872f18556d1137820cfb33c46048066a1c6e",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "planner": {
+          "path": "modules/sucafina/Sucafinav1/product/interface/planner-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP17": {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP18": {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP19": {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP20": {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP21": {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP22": {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP23": {
+          "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W16",
+      "order": "A04",
+      "output": "A04",
+      "branch": "sf-ux-w16",
+      "lease_epoch": "ux-native-w16-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "74838faff3b672b1a2702934877bac333baa7817",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/ACK.json",
+        "ref": "74838faff3b672b1a2702934877bac333baa7817",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author.ack.v1",
+          "seat": "W16",
+          "mission_id": "UX20-W16",
+          "work_order_id": "A04",
+          "output_id": "A04",
+          "state": "ACK_PUBLISHED_PREFLIGHT_ADMISSION_PENDING",
+          "actor": "GPT-6 via ChatGPT GitHub connector",
+          "requested_label": "Astra",
+          "effective_model": "GPT-6",
+          "runtime_session_id": null,
+          "runtime_session_id_reason": "not exposed by this ChatGPT/GitHub connector",
+          "github_actor": "gustavomhss",
+          "repository": "gustavomhss/Orchestra-SF",
+          "branch": "sf-ux-w16",
+          "pr_base": "sf2-stack",
+          "branch_initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "branch_initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_source_commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "lease_epoch": "ux-native-w16-e1",
+          "lease_state": "ACK_ONLY; per-output admission from current114 not yet observed",
+          "integrator": {
+            "actor": "S0-C-e17-browser114",
+            "pr": 65,
+            "known_ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after106-114/ACK-114.json",
+            "last_observed_sf2_stack_head": "2105c17b51fd9cb5131418c116433a05f9479cb7"
+          },
+          "write_allowlist": [
+            "packages/schema/src/sucafina/decisions.ts",
+            "packages/client/src/sucafina/decisions.ts",
+            "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+            "packages/schema/src/sucafina/decisions/**",
+            "packages/client/src/sucafina/decisions/**",
+            "apps/cli/src/sucafina-product/native-ui/decisions/**",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/**"
+          ],
+          "locked_contract_blobs": {
+            "contracts": "94553a3119826ef1c44271966233dd58042ddd70",
+            "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "execution_protocol": "0151a8e6cbb0da2118e058142af801ba7cf72094"
+          },
+          "source_bindings": {
+            "choice": {
+              "blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+              "delta": "SAME_BLOB"
+            },
+            "decision-apply": {
+              "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+              "delta": "SAME_BLOB"
+            },
+            "decision-controls": {
+              "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+              "delta": "SAME_BLOB"
+            },
+            "portfolio": {
+              "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+              "delta": "SAME_BLOB"
+            },
+            "workbench": {
+              "blob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+              "historical_blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+              "delta": "Bounded readRequestBody 65536, fatal UTF-8, sf_case_draft optional X-SF-Creation-Scope binding fence; conflict/needs-input status mapped without flattening. Do not restore historical source."
+            }
+          },
+          "checks": {
+            "operation_count": 21,
+            "authoring_locks": [
+              "ctx",
+              "decisions",
+              "transport"
+            ],
+            "depends_integration": [
+              "F01",
+              "F02"
+            ],
+            "depends_qualification": [
+              "F01",
+              "F02"
+            ],
+            "source_drift_reviewed": true,
+            "contracts_frozen": true,
+            "per_output_admission": "NOT_OBSERVED",
+            "s0_native_ui_intake": "NOT_OBSERVED_ON_BRANCH"
+          },
+          "boundaries": {
+            "local_tests": false,
+            "external_messages": false,
+            "shared_paths": false,
+            "force": false,
+            "merge": false,
+            "deploy": false,
+            "azure": false,
+            "generation": false
+          },
+          "next": "Request A04 per-output admission from 114 before product writes. Independent source/contract analysis may proceed; never claim ARTIFACT_READY until exact code and receipt exist."
+        }
+      },
+      "write_paths": [
+        "packages/schema/src/sucafina/decisions.ts",
+        "packages/client/src/sucafina/decisions.ts",
+        "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+        "packages/schema/src/sucafina/decisions/**",
+        "packages/client/src/sucafina/decisions/**",
+        "apps/cli/src/sucafina-product/native-ui/decisions/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "choice": {
+          "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "decision-apply": {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "decision-controls": {
+          "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "portfolio": {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "workbench": {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        }
+      }
+    },
+    {
+      "seat": "W17",
+      "order": "A05",
+      "output": "A05",
+      "branch": "sf-ux-w17",
+      "lease_epoch": "ux-native-w17-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "50a3f3c94b1c702742f7b24289b26977bc002b81",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/ACK.json",
+        "ref": "50a3f3c94b1c702742f7b24289b26977bc002b81",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "mission_id": "UX20-W17",
+          "order_id": "A05",
+          "seat": "W17",
+          "actor": "ChatGPT session via authenticated GitHub connector",
+          "requested_model": "Astra",
+          "effective_model": "GPT-6",
+          "session_id": null,
+          "session_id_reason": "Not exposed by ChatGPT/GitHub connection",
+          "github_actor": "gustavomhss",
+          "branch": "sf-ux-w17",
+          "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "lease_epoch": "ux-native-w17-e1",
+          "lease_status": "ACK_PUBLISHED_AWAITING_I00_OUTPUT_ADMISSION",
+          "integrator": "S0-C-e17-browser114",
+          "integrator_ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after106-114/ACK-114.json",
+          "scope": "A05 portfolio adapter only",
+          "write_paths": [
+            "packages/schema/src/sucafina/portfolio.ts",
+            "packages/client/src/sucafina/portfolio.ts",
+            "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+            "packages/schema/src/sucafina/portfolio/**",
+            "packages/client/src/sucafina/portfolio/**",
+            "apps/cli/src/sucafina-product/native-ui/portfolio/**",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+          ],
+          "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/",
+          "output": "A05",
+          "consumed_locks": [
+            "ctx",
+            "portfolio",
+            "transport"
+          ],
+          "frozen_blobs": {
+            "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+            "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+          },
+          "producer": {
+            "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+            "observed_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+            "expected_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+            "delta": "SAME_BLOB"
+          },
+          "protocol_document_delta": {
+            "expected_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+            "observed_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+            "lines": [
+              15,
+              53
+            ],
+            "impact": "Editorial references to earlier controller/validator roles. campaign-overlay/COMMON.md assigns 114/120/119; no change to portfolio operations or field contracts."
+          },
+          "checks": {
+            "local_tests": "NOT_RUN",
+            "actions": "NOT_RUN",
+            "typecheck": "NOT_RUN",
+            "guards": "NOT_RUN"
+          },
+          "admission": "PENDING_EXPLICIT_PER_OUTPUT_I00_RECORD",
+          "forbidden": [
+            "shared registries",
+            "other writers paths",
+            "new engine",
+            "mock success",
+            "merge",
+            "deploy",
+            "Azure",
+            "local tests"
+          ]
+        }
+      },
+      "write_paths": [
+        "packages/schema/src/sucafina/portfolio.ts",
+        "packages/client/src/sucafina/portfolio.ts",
+        "apps/cli/src/sucafina-product/native-ui/portfolio.ts",
+        "packages/schema/src/sucafina/portfolio/**",
+        "packages/client/src/sucafina/portfolio/**",
+        "apps/cli/src/sucafina-product/native-ui/portfolio/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W17/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "portfolio": {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W18",
+      "order": "A06",
+      "output": "A06",
+      "branch": "sf-ux-w18",
+      "lease_epoch": "ux-native-w18-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "db9a83f40a7d2fa0da8362a0a72ad66d10eec597",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/ACK.json",
+        "ref": "db9a83f40a7d2fa0da8362a0a72ad66d10eec597",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.author-ack.v1",
+          "mission_id": "UX20-W18",
+          "order": "A06",
+          "actor": "new independent ChatGPT GPT-6 session; requested label Astra",
+          "effective_model": "GPT-6",
+          "runtime_session_id": null,
+          "runtime_session_id_reason": "not exposed by interface",
+          "github_actor": "gustavomhss",
+          "branch": "sf-ux-w18",
+          "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+          "initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+          "material_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "lease_epoch": "ux-native-w18-e1",
+          "lease_state": "ACK_PUBLISHED_ADMISSION_REQUESTED_NOT_YET_GRANTED",
+          "sole_integrator": "S0-C-e17-browser114",
+          "integrator_branch": "sf2-stack",
+          "integrator_pr": 65,
+          "product_tests_owner": 120,
+          "compiler_owner": 119,
+          "allowlist": [
+            "packages/schema/src/sucafina/files.ts",
+            "packages/client/src/sucafina/files.ts",
+            "apps/cli/src/sucafina-product/native-ui/files.ts",
+            "packages/schema/src/sucafina/files/**",
+            "packages/client/src/sucafina/files/**",
+            "apps/cli/src/sucafina-product/native-ui/files/**",
+            "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/**"
+          ],
+          "contract_refs": [
+            "ctx",
+            "files",
+            "transport"
+          ],
+          "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+          "host_signatures_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+          "contract_doc_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+          "protocol_blob_at_cohort": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+          "protocol_normative_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+          "protocol_delta": "Two obsolete dispatcher/mission-number lines modified in UX docs; COMMON.md supersedes with 114/120/119. No changes in A06 operation semantics.",
+          "source_pins": {
+            "application": {
+              "old": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+              "current": "a0deff8a3b272019f472aa2f93499d1940a78370",
+              "delta": "Added authorization on procurement request asset read/upload; post-export reauthorization and public digest CAS; deny local: actor. Preserve; no source changes."
+            },
+            "imports": {
+              "current": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+              "changed": false
+            },
+            "documents": {
+              "current": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+              "changed": false
+            },
+            "document-scenario": {
+              "current": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95",
+              "changed": false
+            }
+          },
+          "requested_state": "READY_FOR_AUTHORING per A06 and selected 25 operations; 114 must explicitly admit and confirm no collision before product mutation",
+          "source_guard": "Fail closed on scanner unavailable or stale/denied; no local service calls, mocks, alternate producer or permissions.",
+          "tests": "NOT_RUN; Actions120 after integration, compiler119 only",
+          "release": false
+        }
+      },
+      "write_paths": [
+        "packages/schema/src/sucafina/files.ts",
+        "packages/client/src/sucafina/files.ts",
+        "apps/cli/src/sucafina-product/native-ui/files.ts",
+        "packages/schema/src/sucafina/files/**",
+        "packages/client/src/sucafina/files/**",
+        "apps/cli/src/sucafina-product/native-ui/files/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "application": {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "document-scenario": {
+          "path": "modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "documents": {
+          "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "imports": {
+          "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    },
+    {
+      "seat": "W19",
+      "order": "U11",
+      "output": "U11.title-save",
+      "branch": "sf-ux-w19",
+      "lease_epoch": "ux-native-w19-e1",
+      "state": "READY_FOR_AUTHORING_SAME_ACK_ACTOR",
+      "observed_head": "f71165493e6c7676a275d75f728882188651e1bb",
+      "ack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/ACK.json",
+        "ref": "f71165493e6c7676a275d75f728882188651e1bb",
+        "actual_identity": {
+          "schema": "sf2h.native-ui.w19.ack.v1",
+          "mission": "UX20-W19",
+          "order": "U11",
+          "output": "U11.title-save",
+          "state": "PREFLIGHT_ACK_ADMISSION_REQUESTED",
+          "actual": {
+            "model": "GPT-6",
+            "requested_label": "Astra",
+            "session_id": "not_exposed",
+            "github_actor": "gustavomhss"
+          },
+          "branch": "sf-ux-w19",
+          "cohort": {
+            "head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+            "tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+            "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+            "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+            "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+          },
+          "lease": {
+            "epoch": "ux-native-w19-e1",
+            "state": "RESERVED_NOT_ACTIVE",
+            "admission": "REQUESTED_FROM_114",
+            "integrator": "S0-C-e17-browser114",
+            "output": "U11.title-save"
+          },
+          "allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+            "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/**"
+          ],
+          "forbidden": [
+            "shared registries",
+            "generated SDK",
+            "backend/producer edits",
+            "other U11 outputs",
+            "tests run locally",
+            "merges",
+            "deploys"
+          ],
+          "contracts": {
+            "CONTRACTS": "94553a3119826ef1c44271966233dd58042ddd70",
+            "COMPONENT_CONTRACTS": "5e53813bff5c4f515f9122393e308ad5336b041a",
+            "SURFACE_SPECS": "d62847af81dffdc129312e71e69692081fd74b75",
+            "component_signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+            "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+            "route_signatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+            "component_locks": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+            "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+            "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+            "execution_protocol": {
+              "expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+              "observed": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+              "delta": "old 105/101/45 dispatcher references vs live 114/120/119; cohort COMMON overrides; core P0/fence unchanged"
+            }
+          },
+          "source_pins": {
+            "application": {
+              "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+              "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+              "delta": "C58 strengthens export reauthorization and private asset visibility; title-save legacy post still uses original transaction and return envelope; native fence not yet installed at cohort base; I00 owns composition"
+            },
+            "rendererCAP25": {
+              "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+              "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+              "delta": "C58 changes visibility before CAS to 404 for inaccessible requests; PR edit remains draft/pr_rejected and createdBy/admin; saved version requests:id increments only on success; financial display precision separate"
+            },
+            "scenario": {
+              "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+              "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+              "delta": "unchanged"
+            },
+            "sourcing": {
+              "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+              "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+              "delta": "unchanged"
+            }
+          },
+          "scope": "Existing draft/pr_rejected PR, authorized projection/domain.command.CAP25.save with values.pr.title only, source-provided versions['requests:'+id].version, native owner expectation fenced within application transaction, no submission/approval/receipt C12, no automatic retry after ambiguous response",
+          "dependency_state": {
+            "authorship": "Independent leaf against frozen contracts allowed; per-output 114 admission requested",
+            "integration": "F01 F02 F03 A03 S01 S03 and U10.queue composition required; not claimed installed",
+            "qualification": "120 Actions test selection and 119 compiler/guards NOT_RUN"
+          },
+          "handoff_target": "114;120 Actions,119 compiler/guards"
+        }
+      },
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/title/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u11.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts"
+      ],
+      "test_write_grants": [],
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W19/",
+      "contracts": {
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+        "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+      },
+      "source_binding_pins": {
+        "application": {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "procurement-scenario": {
+          "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        },
+        "renderer-CAP25": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+          "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+          "historical_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "changed": true,
+          "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+        },
+        "sourcing": {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+          "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+          "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+          "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "historical_blob": "de85660b664826163c2e157ec382b97a425bb10d",
+          "changed": false,
+          "semantic_delta_status": "SAME_BLOB"
+        }
+      }
+    }
+  ],
+  "global_release": false
+}
