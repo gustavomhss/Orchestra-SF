@@ -38,7 +38,7 @@ test("M69 raw public and private-consumer recall reject scanner and ledger proje
       await readOriginalRaw(f, call)
       requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
       expect(await consumeCapturedDocument(f, call)).toBe(true)
-      for (const fault of ["scanner-receipt-digest", "content-addressed-entry-without-ledger-change"] as const) {
+      for (const fault of ["scanner-receipt-digest", "scanner-name", "scanner-version", "content-addressed-entry-without-ledger-change"] as const) {
         const changed = await f.app.store.transaction("dashboard", async (snapshot) => {
           const state = object(snapshot.data.__sfProductV1)
           const atlas = object(state.atlas)
@@ -57,10 +57,17 @@ test("M69 raw public and private-consumer recall reject scanner and ledger proje
           if (fault === "scanner-receipt-digest") {
             envelopes[eventId] = { ...envelope, scannerReceipt: { ...envelope.scannerReceipt,
               digest: digestSfValue({ fault: "M69 scanner digest differs from the actual committed record" }) } }
+          } else if (fault === "scanner-name") {
+            envelopes[eventId] = { ...envelope, scannerReceipt: { ...envelope.scannerReceipt,
+              name: `${envelope.scannerReceipt.name}-m69-different-scanner` } }
+          } else if (fault === "scanner-version") {
+            envelopes[eventId] = { ...envelope, scannerReceipt: { ...envelope.scannerReceipt,
+              version: `${envelope.scannerReceipt.version}-m69-different-version` } }
           } else {
             // Explicit storage corruption, never a publication: produce a valid
-            // content-addressed Atlas event so the remaining oracle is its
-            // relationship with the unchanged authorized case ledger.
+            // content-addressed Atlas event while the authorized case ledger
+            // and original durable receipt remain unchanged. The complete
+            // publication/ledger checks must refuse this inconsistent pair.
             const replacement: MemoryRecord = { ...record, entry: { ...record.entry,
               lesson: "M69 corrupted lesson absent from the accepted case ledger" } }
             const generated = [...versioned([replacement])][0]
@@ -83,7 +90,18 @@ test("M69 raw public and private-consumer recall reject scanner and ledger proje
         expect(corrupted).not.toEqual(before)
         expect(corrupted.counts).toEqual(before.counts)
         expect(corrupted.versions).toEqual(before.versions)
+        expect(corrupted.outbox).toEqual(before.outbox)
+        expect(corrupted.receipts).toEqual(before.receipts)
         expect(changed.corrupted.originals).toEqual(changed.intact.originals)
+        if (fault === "scanner-name" || fault === "scanner-version") {
+          const scanner = object(object(object(changed.corrupted.envelopes)[eventId]).scannerReceipt)
+          const originalScanner = object(object(object(changed.intact.envelopes)[eventId]).scannerReceipt)
+          const field = fault === "scanner-name" ? "name" : "version"
+          expect(typeof scanner[field]).toBe("string")
+          expect(String(scanner[field]).trim().length).toBeGreaterThan(0)
+          expect(scanner[field]).not.toBe(originalScanner[field])
+          expect({ ...scanner, [field]: originalScanner[field] }).toEqual(originalScanner)
+        }
         const normalized = structuredClone(corrupted)
         object(normalized.atlas)[changed.owner] = changed.intact
         expect(normalized).toEqual(before)
@@ -113,14 +131,15 @@ test("M69 raw public and private-consumer recall reject scanner and ledger proje
           returnedRawRecords: raw.status === "ok" ? raw.records.length : 0,
           returnedPublicRecords: publicRecall.kind === "returned" ? publicRecall.value.length : 0,
           atlasWireRemainsValid: true, ledgerDigest: digestSfValue(ledger), originalsPreserved: true,
+          durableReceiptAndOutboxPreserved: true,
           restoredEventId: f.receipt.eventId, restoredRecordDigest: f.receipt.recordDigest,
           counts: before.counts, nativeSessionWitness: false,
         }))
       }
     })
-    // Both explicit faults and both restoration positives run before the
-    // baseline counterexample is asserted, so one escape cannot hide the other.
-    expect(observations).toHaveLength(2)
+    // All four explicit faults and their restoration positives run before the
+    // final negative assertions, so one escape cannot hide the other faults.
+    expect(observations).toHaveLength(4)
     for (const observation of observations) {
       expect(observation.raw).toEqual({ status: "unavailable" })
       requireRecallDenied(observation.public)

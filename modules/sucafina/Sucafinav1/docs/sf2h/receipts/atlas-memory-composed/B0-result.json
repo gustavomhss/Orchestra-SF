@@ -1,0 +1,194 @@
+{
+  "schema": "sf2h.atlas-memory-composed.execution.v1",
+  "mission": 69,
+  "phase": "B0_BASELINE",
+  "W": "9a62c4fe2071e7d2065c46e157e8a98eeddfda46",
+  "Wtree": "0b908ecc89c1a0e36d71e38bdfab527567cc7f26",
+  "S": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
+  "Stree": "6eef8f7bf808daf8686725efa40877a2ae298d62",
+  "run": {
+    "id": 43667468344,
+    "status": "completed",
+    "conclusion": "failure",
+    "head": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
+    "created": "2026-11-15T02:22:21Z",
+    "updated": "2026-11-15T02:27:37Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667468344"
+  },
+  "testJob": 132669931229,
+  "cleanupJob": 132671188766,
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "snapshotDifference": [
+    ".ci-run.json"
+  ],
+  "productUnchangedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "result": {
+    "conclusion": "failure",
+    "passed": 0,
+    "failed": 5,
+    "expects": 232,
+    "seconds": 212.92,
+    "omni": {
+      "verdict": "pass",
+      "spawns": 10,
+      "delegated": 0,
+      "nonce": "f33c8871ff630218f23b9da91b9b833b"
+    }
+  },
+  "artifacts": [],
+  "artifactPolicy": "Bun request does not require a ZIP artifact; exact job logs are retained by GitHub. Evidence excerpt is adjacent.",
+  "proofs": [
+    {
+      "marker": "SF_MEMORY_M69_RAW_LAST_AUTHORITY_CAPTURE",
+      "result": "ok",
+      "returnedRecords": 1,
+      "lastRealRevalidation": 2426,
+      "sameCallAndRequest": true,
+      "fault": "committed-capture-corruption",
+      "originalRestored": true,
+      "auditDigest": "7926f39a9b1e8d2d05ad5e278db16c050b27f472d97ec142b226ecee0dbc6aa8",
+      "counts": {
+        "events": 1,
+        "envelopes": 1,
+        "outbox": 1,
+        "receipts": 0,
+        "settled": 1,
+        "scans": 1
+      },
+      "nativeSessionWitness": false
+    },
+    {
+      "marker": "SF_MEMORY_M69_RAW_LAST_DOCUMENT_CASE",
+      "result": "ok",
+      "returnedRecords": 1,
+      "lastRealDocumentResolution": 2,
+      "sourceWasFresh": true,
+      "fault": "committed-case-revision",
+      "ledgerDigest": "5b274d2bac80084e362b3cdfce3e41f806b60bcca00dec77ad5406d92e18db18",
+      "originalRestored": true,
+      "auditDigest": "d0a6ce8e920a6fc8e78c6c5b0a386cd343e39f10ca856c1cf29908fb5e69a173",
+      "counts": {
+        "events": 1,
+        "envelopes": 1,
+        "outbox": 1,
+        "receipts": 0,
+        "settled": 1,
+        "scans": 1
+      },
+      "nativeSessionWitness": false
+    },
+    {
+      "marker": "SF_MEMORY_M69_PUBLIC_POST_CONTEXT_CAPTURE",
+      "result": "returned",
+      "returnedRecords": 1,
+      "realContextReads": 21,
+      "sourceWasFresh": true,
+      "fault": "committed-capture-corruption",
+      "originalRestored": true,
+      "eventId": "dfe2450d876f7c9c0af32926f6df02f257e3922700b3af2afaaded6589afe51a",
+      "recordDigest": "79c8a4ea89e9c82360410bac552b790383fd21a3ae51d6b10d2a6d1c79f6aba6",
+      "auditDigest": "b67309b41ea81aff914f613e87a1375b2f5b16d32b6c5518d83b399abcb02c22",
+      "counts": {
+        "events": 1,
+        "envelopes": 1,
+        "outbox": 1,
+        "receipts": 0,
+        "settled": 1,
+        "scans": 1
+      },
+      "nativeSessionWitness": false
+    },
+    {
+      "marker": "SF_MEMORY_M69_PUBLIC_SELECTION_FENCE",
+      "result": "rejected",
+      "returnedRecords": 0,
+      "selectionChangedAfterRealContext": true,
+      "originalRestored": true,
+      "eventId": "82d89e1a8610aebbbf836766062ac9e3753960eb2aa409dabd959d843266808f",
+      "recordDigest": "bdb19bd18872583b17fb8f4b1e371e694d2485cc1f3845dcc96ebfc765319683",
+      "auditDigest": "03ecdea21918efe93d3d217dc7d5d82af0982b3fbcbd4573c95e99c800630a94",
+      "counts": {
+        "events": 1,
+        "envelopes": 1,
+        "outbox": 1,
+        "receipts": 0,
+        "settled": 1,
+        "scans": 1
+      },
+      "nativeSessionWitness": false
+    },
+    {
+      "marker": "SF_MEMORY_M69_RECORD_INTEGRITY",
+      "fault": "scanner-receipt-digest",
+      "raw": "ok",
+      "public": "returned",
+      "privateConsumer": true,
+      "returnedRawRecords": 1,
+      "returnedPublicRecords": 1,
+      "atlasWireRemainsValid": true,
+      "ledgerDigest": "7d298a1aec2969c115fd890d279438633f2a3685897f71d47200dbc2c125b6d8",
+      "originalsPreserved": true,
+      "restoredEventId": "cc54235693b12606c92e61cb946a2c918dbd4f86dd8dcb26548abb66a84bfc49",
+      "restoredRecordDigest": "6d59e29698109d995937d63c024948c2838030dbfd6e01976ab6bb78f17f6903",
+      "counts": {
+        "events": 1,
+        "envelopes": 1,
+        "outbox": 1,
+        "receipts": 0,
+        "settled": 1,
+        "scans": 1
+      },
+      "nativeSessionWitness": false
+    },
+    {
+      "marker": "SF_MEMORY_M69_RECORD_INTEGRITY",
+      "fault": "content-addressed-entry-without-ledger-change",
+      "raw": "ok",
+      "public": "returned",
+      "privateConsumer": true,
+      "returnedRawRecords": 1,
+      "returnedPublicRecords": 1,
+      "atlasWireRemainsValid": true,
+      "ledgerDigest": "7d298a1aec2969c115fd890d279438633f2a3685897f71d47200dbc2c125b6d8",
+      "originalsPreserved": true,
+      "restoredEventId": "cc54235693b12606c92e61cb946a2c918dbd4f86dd8dcb26548abb66a84bfc49",
+      "restoredRecordDigest": "6d59e29698109d995937d63c024948c2838030dbfd6e01976ab6bb78f17f6903",
+      "counts": {
+        "events": 1,
+        "envelopes": 1,
+        "outbox": 1,
+        "receipts": 0,
+        "settled": 1,
+        "scans": 1
+      },
+      "nativeSessionWitness": false
+    }
+  ],
+  "interpretation": {
+    "validFailureTests": 4,
+    "oracleDefect": {
+      "test": "public selection fence",
+      "observed": "SF_MEMORY_READ_UNAVAILABLE",
+      "expected": "SF_MEMORY_AUTHORITY_UNAVAILABLE",
+      "classification": "TEST_ORACLE_ERROR_NOT_A_LEAK",
+      "disposition": "Final own test calibrated to last real context; baseline history preserved."
+    },
+    "sourcePass": false,
+    "globalRelease": false,
+    "observedFaultEscapes": 5
+  }
+}

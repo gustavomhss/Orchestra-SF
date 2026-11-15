@@ -1,0 +1,88 @@
+{
+  "schema": "sf2h.atlas-memory-composed.selection.v1",
+  "mission": 69,
+  "phase": "F1_FIXED_QUALIFICATION",
+  "state": "PREPARED_NOT_RUN",
+  "parent": "9a62c4fe2071e7d2065c46e157e8a98eeddfda46",
+  "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "targetObserved": {
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "ownProductOverlap": [],
+    "changedDependency": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+    "claim": "Source tests remain bound to the authorized source base. New target must qualify its own composed tree."
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "./Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "expectedTests": 26,
+  "groups": [
+    {
+      "scope": "new own composed recall/integrity/current authority",
+      "files": 4,
+      "tests": 6
+    },
+    {
+      "scope": "complete correction40 preservation",
+      "files": 4,
+      "tests": 18
+    },
+    {
+      "scope": "complete Atlas35 legitimate publication/reopen/process restart/consumer",
+      "files": 1,
+      "tests": 2
+    }
+  ],
+  "changes": [
+    "Bind durable publication scanner identity and record digest to original outbox receipt",
+    "Remap Atlas task entry from actual authorized ledger event",
+    "Close raw and public recall after the final source/case/authority await within C08",
+    "Consume private same-reader/same-call observations once and pin complete groups/selection",
+    "Close rank observation tail within own path; downstream consumer tails remain explicit shared-path gaps",
+    "Preserve empty public selection with current authority; keep lease/request/header fences",
+    "Delegate installed settled replay directly to protected canonical40 path"
+  ],
+  "testChangesAfterB0": [
+    "Calibrate public selection fault to its last actual context; earlier B0 error-message failure is not a leak proof",
+    "Add scanner name/version tampering as separate faults",
+    "Add actual two-case publications, empty selection and same-call/group integrity",
+    "Own composed fixture changes only locator enumeration and export name from exact fixture40"
+  ],
+  "preservation": {
+    "correction40": true,
+    "original35": true,
+    "ACommittedBPending": true,
+    "nonrecursiveCaseForEvidence": true,
+    "MI07": "HELD_UNCHANGED_PRE_CAPTURE_FINANCIAL_BLOCK",
+    "mixed61": "NOT_DUPLICATED",
+    "runtime59": "READ_ONLY",
+    "budgets": "Original per-test and process budgets unchanged; no skips or filters"
+  },
+  "gaps": {
+    "capabilityHandlerTail": "EXTERNAL_PATH_OWNER_PATCH_PENDING",
+    "caseRecallTail": "EXTERNAL_PATH_OWNER_PATCH_PENDING",
+    "dispatcherBridge": "EXTERNAL_OWNER_NATIVE64_NOT_RUN",
+    "compilerGuards": "45_REQUEST_NOT_RUN_BY69",
+    "renderedUi": "NOT_RUN",
+    "nativeSessionV2": "NOT_RUN",
+    "globalRelease": false
+  }
+}

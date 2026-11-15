@@ -80,23 +80,32 @@ test("M69 public recall binds its selection across real source context and prese
     const selection = { caseRefs: [{ ...f.caseRef }], query: "supplier" }
     const selectionDigest = digestSfValue(selection)
     const context = f.atlas.context.context
-    const observation = { changed: false, sourcesWereFresh: false }
+    const observation = { reads: 0, target: 0, changed: false, sourcesWereFresh: false }
     try {
       await f.ui("sf_decision_recall", selection, async (call) => {
         requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
         f.atlas.context.context = async (incoming, trusted) => {
           const resolved = await context(incoming, trusted)
-          if (trusted === call && !observation.changed) {
+          if (trusted !== call) return resolved
+          observation.reads += 1
+          if (observation.target > 0 && observation.reads === observation.target) {
             observation.sourcesWereFresh = resolved.length > 0 && resolved.every((item) => item.state === "fresh")
             selection.caseRefs[0]!.incarnation = `${f.caseRef.incarnation}:changed-after-context`
             observation.changed = true
           }
           return resolved
         }
+        // Case authorization also calls context. Calibrate the complete public
+        // read on this same call, then mutate only its final real context.
+        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
+        expect(observation.reads).toBeGreaterThan(0)
+        observation.target = observation.reads
+        observation.reads = 0
         const result = await settleRecall(f.atlas.context.recall(selection, call))
         f.atlas.context.context = context
         expect(observation.changed).toBe(true)
         expect(observation.sourcesWereFresh).toBe(true)
+        expect(observation.reads).toBe(observation.target)
         expect(digestSfValue(selection)).not.toBe(selectionDigest)
         expect(await f.audit()).toEqual(before)
         selection.caseRefs[0]!.incarnation = f.caseRef.incarnation
@@ -105,7 +114,7 @@ test("M69 public recall binds its selection across real source context and prese
         expect(await f.audit()).toEqual(before)
         console.info("SF_MEMORY_M69_PUBLIC_SELECTION_FENCE", JSON.stringify({
           result: result.kind, returnedRecords: result.kind === "returned" ? result.value.length : 0,
-          selectionChangedAfterRealContext: true, originalRestored: true,
+          realContextReads: observation.reads, selectionChangedAfterLastRealContext: true, originalRestored: true,
           eventId: f.receipt.eventId, recordDigest: f.receipt.recordDigest,
           auditDigest: digestSfValue(before), counts: before.counts, nativeSessionWitness: false,
         }))
