@@ -1,0 +1,346 @@
+{
+  "schema": "sf2h.closure185-188.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "mission": 187,
+  "title": "F04 — harness instalado e identidades reais",
+  "branch": "sf-ux-w05",
+  "order": "F04",
+  "kind": "author",
+  "files": [
+    "packages/app-shell/e2e/sucafina/native/fixture/**",
+    "packages/app-shell/e2e/sucafina/native/fixture.ts",
+    "packages/app-shell/test-browser/sucafina-native/fixture/**"
+  ],
+  "pr": 120,
+  "previous": "ux-native-w05-e2",
+  "epoch": "closure-e1-browser187",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/",
+  "expected_head": "d300e495d309c1083a35e34755b04cf3c6f06ae5",
+  "fence": {
+    "schema": "sf2h.closure-185-187-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 187,
+    "branch": "sf-ux-w05",
+    "previous_epoch": "ux-native-w05-e2",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "next_epoch": "closure-e1-browser187",
+    "previous_head": "d2ea82b411c1f56a7acab854c4224da0acbbe685",
+    "paths": [
+      "packages/app-shell/e2e/sucafina/native/fixture/**",
+      "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "packages/app-shell/test-browser/sucafina-native/fixture/**"
+    ],
+    "authority": "S0 under user explicit request advance more independent sessions now",
+    "reason": "Actual guard163finding js-test-skipped and real installedharness prerequisite gaps",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrativeauthorityfence,notprocesskill/tokenrevocation;lateactivityreconcilewithoutreset/force,nodeathbysilence.",
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "source_base": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "write_paths": [
+    "packages/app-shell/e2e/sucafina/native/fixture/**",
+    "packages/app-shell/e2e/sucafina/native/fixture.ts",
+    "packages/app-shell/test-browser/sucafina-native/fixture/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/**"
+  ],
+  "protected_paths": [
+    "Allruntime/auth/engine/registry/sharedI00/generated/testsoutsideallowlist,source165–184.162onlyintegrator,nootherbranchwrites."
+  ],
+  "routing": {
+    "integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/PR107 terminalhandoff; requestfreshsupportedhandoffthroughS0wheninputsready,nochatwakeclaim",
+    "product_ci": "164/PR106 terminalhandoff; durablecurrentrequests preserved,same singledispatcher until explicit successor",
+    "fixture_owner": 187,
+    "skip_authors": [
+      185,
+      186
+    ],
+    "guard_reviewer": 188
+  },
+  "full_work_orders": [
+    {
+      "id": "F04",
+      "title": "Harness instalado e corpus isolado",
+      "kind": "foundation",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "priority": 1,
+      "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+      "owns": [
+        "packages/app-shell/e2e/sucafina/native/fixture/**",
+        "packages/app-shell/e2e/sucafina/native/fixture.ts",
+        "packages/app-shell/test-browser/sucafina-native/fixture/**"
+      ],
+      "may_write_shared_registry": false,
+      "canonical": {
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "task_refs": [
+          "WP00.T03",
+          "WP10.T01",
+          "WP10.T04"
+        ],
+        "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+      },
+      "surfaces": [],
+      "exports": [
+        "nativeInstalledFixture",
+        "nativeCorpus"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes": {
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport",
+          "ui-frame"
+        ],
+        "producer_exports": [
+          {
+            "order": "F01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F02",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          }
+        ],
+        "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+        "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+        "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+        "operation_refs": [],
+        "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+      },
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F04.json"
+        ],
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "deliver": [
+        "Prepare installed real-domain fixture with distinct actors, server/project/install boundaries, persistent scratch roots and deterministic corpus; no global services.",
+        "Emit exact production-config registration patch to I00 and readiness probes for web/desktop.",
+        "Expose controlled response loss/delay/revocation injections around real producers; never replace financial/ACL/scanner logic with passing stubs.",
+        "Materialize isolated real-producer P0/P1 data: PR draft title and CAS, then submitted PR under current holder; denied second actor, owner transition, unknown response, no fake receipt or mock authority."
+      ],
+      "acceptance_cases": [
+        {
+          "id": "F04-AC01",
+          "expected": "Selected native specs are actually collected; real installation/mount is reachable from production shell.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "F04-AC02",
+          "expected": "Fixture preserves canonical numeric oracles, identities and budgets; every run isolates storage.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "F04-AC03",
+          "expected": "Desktop readiness is recorded separately and requires D01 before desktop pilot qualification.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "handoff": {
+        "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+        "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+        "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+      }
+    }
+  ],
+  "predecessor_context": {
+    "schema": "sf2h.native-ui.writer-ack.v1",
+    "mission_id": "UX20-W05-R2",
+    "seat": "W05",
+    "order": "F04",
+    "status": "ACK_REAL_SUCCESSOR_E2_AUTHORING",
+    "actor": {
+      "github": "gustavomhss",
+      "effective_model": "GPT-6",
+      "requested_model": "Astra (label only)",
+      "actual_session_id": null,
+      "reason": "ChatGPT session identifier unavailable to current actor; no invented ID"
+    },
+    "branch": {
+      "name": "sf-ux-w05",
+      "pr": 120,
+      "observed_head": "a55c868cb3fce003ed7ea285c58a6712d3cd7301",
+      "expected_head": "a55c868cb3fce003ed7ea285c58a6712d3cd7301",
+      "head_relation": "IDENTICAL",
+      "base": "sf2-stack"
+    },
+    "fence": {
+      "epoch": "ux-native-w05-e2",
+      "previous_epoch": "ux-native-w05-e1",
+      "previous_epoch_state": "REVOKED_FOR_FUTURE_ACCEPTANCE",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/S0-FENCE-e2.json",
+      "blob": "800425c9d934fcb9dd43a9cb7bb4aea675ddadd8",
+      "runtime_termination_claimed": false
+    },
+    "authorization": {
+      "s0_admission": "8852ed4a060f6eb3b49c142b894852d0af49740f",
+      "exclusive_product_paths": [
+        "packages/app-shell/e2e/sucafina/native/fixture/**",
+        "packages/app-shell/e2e/sucafina/native/fixture.ts",
+        "packages/app-shell/test-browser/sucafina-native/fixture/**"
+      ],
+      "receipts": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W05/**",
+      "shared_owner": 114,
+      "ci_owner": 120,
+      "compiler_owner": 119
+    },
+    "inputs": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "common_blob": "e0fdcacb55cf56f3a6f813bdbe4ba2474169111e",
+      "order_blob": "1b25898e583e1eb247a3eec889d0da4e6bb61ab3",
+      "contract_blobs": {
+        "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+        "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+        "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+        "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+        "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+        "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81"
+      }
+    },
+    "proof": {
+      "tests": "NOT_RUN",
+      "typecheck": "NOT_RUN",
+      "compiler": "NOT_RUN",
+      "desktop": "NOT_PROVEN",
+      "native_installed": "NOT_PROVEN",
+      "domain_fixture_is_not_installed_auth_proof": true
+    },
+    "limits": [
+      "no local test/validator/typecheck",
+      "no fake authorization",
+      "no force/reset/rebase",
+      "no merge/deploy/Goal resume"
+    ],
+    "lease_terminal": "PENDING_ARTIFACT_HANDOFF"
+  },
+  "goal": "Completar harnessF04 com instalaçãoisolada e identidade realparajornadas, semstub ou servidorparalelo.",
+  "actions": [
+    "LerfullF04 epredecessorW05e2/source+propostos;reusarcreateNativeScratch/readNativeManifest/proveNativeWebReadiness eprovisionadoreslegítimos jáexistentes. Testes sóGitHubActions,nãoiniciarprocessona máquinausuario.",
+    "Implementar asconexões de manifest/readiness/auth/fixtureselection/faults noallowlist: instalação/clonesisolados,2identidades/grantsatuaiscompreparaçãooficialdomínio, IDs/period/version admitidos, negativadenied/stale/revoked e lostresponse por seamreal autorizado. Nãocopiarsessões/cookies/tokens/SAP/tenantrealnemforjarprincipal.",
+    "Sóseprocessohospedadofizerparteharnessexistente usarProcess/ChildProcessSpawner/Omnisemnovoallowlist/globalservice;não iniciar/reiniciarservidor/desktopusuario. Se desktopElectronindisponível, stateNOT_RUN_D01 eprepararexataseleçãopara164,semwebcomodesktop.",
+    "Fornecer185CAP14URLs/fields e186CAP04/05pré-requisitos no protócoloprivadoexistente. Qualificações165–170usammesmaauthlegítima, semfuncáops criargrantslocalmente.",
+    "Responderguardagent-scratch dofixturescratch.ts genuinamente: módulodeharnesslegítimo nãoélogdescartável. Dar188evidênciasdo propósito/importconsumers e propostaapenasdefilename/modulecleanupseforsemanticamentecorreta; nãoesconderarquivo/ignorarregra parafalsoPASS. Guardrevisorpreparaexceçãoaprovávelse necessário.",
+    "Sharedservermount/config/workflow pertencem162/163/164. Entregar factory/fixturesreais epatchesinertesexatos paraI00compre/post e comandosdeexecuçãohostedconcretos, continuarnegativasindependentes e nãoapenasnotasdeinstalação."
+  ],
+  "guard_finding": "agent-scratch fixture/scratch.ts atW690; distinguishrealreusabletestsource fromagentoutput",
+  "guard_skill": "https://github.com/gustavomhss/Orchestra-SF/blob/913b6b8f143e6c3e869eee293d02f04259c7cdd1/.orchestra/skills/guardrail-usage/SKILL.md",
+  "actual_evidence": {
+    "run": 43766055614,
+    "job": 132971280139,
+    "artifact": 14182790522,
+    "counts": {
+      "gate": 66,
+      "warn": 141
+    },
+    "gate_rules": {
+      "agent-scratch": 56,
+      "js-test-skipped": 10
+    },
+    "not_final_accepted_C": true
+  },
+  "read_first": [
+    "ApplicableAGENTS,fixedsf2h-planSTART/WORKFLOW/COMMON andpertinentfullcriteria/contracts;thiscompletepack/workorders+allmandatoryattachments",
+    "Actualsource/dependencies/predecessorhandoff/current162consumerpreimages. Narrowcurrentallowlistprevailsoverhistoricalbroaderpackpaths.",
+    "Fullguards163record/logs throughGitHubMCPwithoutprintingsecrets;existingharnessandskippedspecs beforeediting. Useonlyrealproofs."
+  ],
+  "rules": [
+    "Nova sessão browser,samebranchkeepallhistory. ConfirmHEAD/fenceepoch/inputs andACKactualmodel/sessiononlyifexposed; noauthority/runtimefromGHactorname. PREPAREDnotstarted.",
+    "Oneauthorperpath,162onlyproductintegrator.185/186specsonly187harnessonly188readonlyreview.173–184sourcewritersand165–172proofs/producerskeepownauthority; don'tduplicate.",
+    "No localtest/parser/validator/typecheck/build orunauthorizedruntime/desktop/serverrestart.163compiler164productCI ownhostedchecks. No duplicateCI/suites/runner/workflow orprematureepic. Submitdurableexactrequests,notinventchatwakeorPASS.",
+    "RemoteGitHubMCP/CAS/forcefalseonly;nogh/gitpush/devmerge/deploy/Azure/enginechange/newinfra/globals/credentials/humanPermissionbypass/Goalcontroller.",
+    "ExecuteindependentworknowuntilcodePRorconcretereviewablepatch;notanotherplan/report-onlyfor185–187.188isindependentreviewandmustproduceactualper-filecausaldisposition+patch/provenance,notblanketwaiver.",
+    "ExactsourceSHA/tree/blobprepost/allowlist/criterionmap,actualevidenceorNOT_RUN,consumer162 ACKpending andnextactionmandatory. Missingauthfixture/scanner/desktopnotgreen; originalfullscopepreserved.",
+    "FinalGLOBAL_RELEASErequiresall15WP74tasks17contracts1610criteria+sameC8CI/epic/AM/3FINAL+Dvalid+actualC/G7D/G8+remoteproof. Neitherremovingskip norapprovalreportisnativeproductproof."
+  ]
+}

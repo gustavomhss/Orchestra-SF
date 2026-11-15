@@ -1,0 +1,153 @@
+{
+  "schema": "sf2h.closure185-188.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "mission": 188,
+  "title": "Guardrails — revisar gates e preservar evidências",
+  "branch": "sf-guard-evidence",
+  "kind": "independent-guard-review",
+  "files": [],
+  "epoch": "closure-e1-browser188",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure188/",
+  "expected_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "source_base": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure188/**"
+  ],
+  "protected_paths": [
+    "ALLproduct/tests/helpers/CI/guardrule/approval/allowlist/normativeplanpaths; reviewonly,noactualdeletions.162materializes accepted exactinertpatch."
+  ],
+  "routing": {
+    "integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/PR107 terminalhandoff; requestfreshsupportedhandoffthroughS0wheninputsready,nochatwakeclaim",
+    "product_ci": "164/PR106 terminalhandoff; durablecurrentrequests preserved,same singledispatcher until explicit successor",
+    "fixture_owner": 187,
+    "skip_authors": [
+      185,
+      186
+    ],
+    "guard_reviewer": 188
+  },
+  "full_work_orders": [],
+  "goal": "Revisar independentemente os66gates163 e preparar correção/arquivamento legítimos, preservando provas e política.",
+  "actions": [
+    "LerFULLguardrail-usage ecatálogo/rulesbase, GUARDS-163.json eartifact14182790522 guards.log. Inventariar66gates:56agent-scratch (55logs+1F04helper),10skipped encaminhados185/186. Nãoalterarregistro para56/zeroreclassificadoscomoPASS.",
+    "SóREADONLYproduto/guardengine/allowlist eósiactionlogs; writesapenaspróprioreceiptprefix. Registrarporarquivo/rule actualC/W,gitblob/commit,path, papel/test/evidencelinks e consumidores; nãoprintarloginteiropossíveiscredenciais. Nãoatribuircredenciaisnovas oucopiarpayloadsensível.",
+    "Classificar55logs individualmente: artefatodetrabalho descartável vsprovaobrigatória vsuserfile. Paradescartável, fornecerpatchDELETEinerteapenaspathsverificados eproveniênciaimutável/blobhash/oldcommitURL mantidarecuperávelparahistória+evidências. Nenhum arquivoapagado oumovidosóparaevadirguardsemresolvercausa/perderecibo.",
+    "F04scratch.tséfontedeharnessprodutotest,nãolog. Revisarlegitimidade/importscom187;proporajustefuncionaldeempacotamento/nomeou registrarfalsopositivo/exceptionpackagecomsourceandrule. Nãoautorizarohelperapenasporopinião;resultadoguardcontinuaabertoatéexecução/decisãolegítima.",
+    "Nãoeditar/reduzirguardrules/scriptguards/ignores/labels/GUARDRAIL_APPROVED/env/selection/allowlist. ApenasMaestrorealpodeaprovarsegundoAGENTS; nãocriaragentehomônimo nemautoaprovarexceçãodeautor. Prepararconcretereviewablechanges/justificativaseficarpendente,semcontornarpedido/hostreview.",
+    "EntregarPRdereceipts+patchinertocompleto para162 preservarC/D,anexarreferênciasoriginais erequererguardnovo163(sucessorapenasquandonecessário). C/G7eD/G8checkoutreaisguardseparados,nãoprovaembranchdecontrole. NãoFINALreleaseapprove."
+  ],
+  "guard_finding": {
+    "schema": "sf2h.compiler163.guards.v1",
+    "mission": 163,
+    "epoch": "compiler-e4-browser163",
+    "campaign": "sf2h-integral-20261112",
+    "compiler_branch": "sf-compiler-checks",
+    "compiler_pr": 107,
+    "integrator": 162,
+    "integrator_pr": 65,
+    "product_tests_owner": 164,
+    "product_tests_pr": 106,
+    "source_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+    "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "workflow_sha": "5491c9300126da663a4097a678b587a5d74dc125",
+    "workflow_blob": "c417627108fcd183ee8d7ab91243ec6795bdc926",
+    "run_id": 43766055614,
+    "job_id": 132971280139,
+    "attempt": 1,
+    "artifact_id": 14182790522,
+    "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522",
+    "global_release": false,
+    "native_goal": "paused",
+    "command": "bun run check:guards --base origin/dev",
+    "exit_code": 1,
+    "base": {
+      "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+    },
+    "counts": {
+      "gate": 66,
+      "warn": 141,
+      "gate_rules": {
+        "agent-scratch": 56,
+        "js-test-skipped": 10
+      },
+      "warn_rules": {
+        "test-timeout-raised": 88,
+        "dep-new-added": 22,
+        "ts-double-cast": 12,
+        "binary-added": 11,
+        "large-file": 4,
+        "test-globalthis": 2,
+        "local-abs-path": 1,
+        "js-empty-catch": 1
+      }
+    },
+    "gate_evidence": {
+      "historical_55_scratch_logs": "55 historical *.log, require independent genuine determination; do not delete/waive to fabricate green",
+      "additional_scratch": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+      "skipped": {
+        "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts": [
+          28,
+          44,
+          80,
+          90,
+          103,
+          119
+        ],
+        "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts": [
+          22,
+          49
+        ],
+        "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts": [
+          22,
+          49
+        ]
+      }
+    },
+    "full_unredacted_log": "guards.log in https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522",
+    "waiver": "NONE",
+    "self_approval": false,
+    "guard_oracle_unchanged": true,
+    "action_to_source": "Report 10 skipped tests to respective suite producers; scratch/log gates to independent reviewer, without suppression; guard failure remains open"
+  },
+  "guard_skill": "https://github.com/gustavomhss/Orchestra-SF/blob/913b6b8f143e6c3e869eee293d02f04259c7cdd1/.orchestra/skills/guardrail-usage/SKILL.md",
+  "actual_evidence": {
+    "run": 43766055614,
+    "job": 132971280139,
+    "artifact": 14182790522,
+    "counts": {
+      "gate": 66,
+      "warn": 141
+    },
+    "gate_rules": {
+      "agent-scratch": 56,
+      "js-test-skipped": 10
+    },
+    "not_final_accepted_C": true
+  },
+  "read_first": [
+    "ApplicableAGENTS,fixedsf2h-planSTART/WORKFLOW/COMMON andpertinentfullcriteria/contracts;thiscompletepack/workorders+allmandatoryattachments",
+    "Actualsource/dependencies/predecessorhandoff/current162consumerpreimages. Narrowcurrentallowlistprevailsoverhistoricalbroaderpackpaths.",
+    "Fullguards163record/logs throughGitHubMCPwithoutprintingsecrets;existingharnessandskippedspecs beforeediting. Useonlyrealproofs."
+  ],
+  "rules": [
+    "Nova sessão browser,samebranchkeepallhistory. ConfirmHEAD/fenceepoch/inputs andACKactualmodel/sessiononlyifexposed; noauthority/runtimefromGHactorname. PREPAREDnotstarted.",
+    "Oneauthorperpath,162onlyproductintegrator.185/186specsonly187harnessonly188readonlyreview.173–184sourcewritersand165–172proofs/producerskeepownauthority; don'tduplicate.",
+    "No localtest/parser/validator/typecheck/build orunauthorizedruntime/desktop/serverrestart.163compiler164productCI ownhostedchecks. No duplicateCI/suites/runner/workflow orprematureepic. Submitdurableexactrequests,notinventchatwakeorPASS.",
+    "RemoteGitHubMCP/CAS/forcefalseonly;nogh/gitpush/devmerge/deploy/Azure/enginechange/newinfra/globals/credentials/humanPermissionbypass/Goalcontroller.",
+    "ExecuteindependentworknowuntilcodePRorconcretereviewablepatch;notanotherplan/report-onlyfor185–187.188isindependentreviewandmustproduceactualper-filecausaldisposition+patch/provenance,notblanketwaiver.",
+    "ExactsourceSHA/tree/blobprepost/allowlist/criterionmap,actualevidenceorNOT_RUN,consumer162 ACKpending andnextactionmandatory. Missingauthfixture/scanner/desktopnotgreen; originalfullscopepreserved.",
+    "FinalGLOBAL_RELEASErequiresall15WP74tasks17contracts1610criteria+sameC8CI/epic/AM/3FINAL+Dvalid+actualC/G7D/G8+remoteproof. Neitherremovingskip norapprovalreportisnativeproductproof."
+  ]
+}
