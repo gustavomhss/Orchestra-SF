@@ -1,0 +1,338 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/application.ts b/modules/sucafina/Sucafinav1/runtime/application.ts
+index 81f4698..a0deff8 100644
+--- a/modules/sucafina/Sucafinav1/runtime/application.ts
++++ b/modules/sucafina/Sucafinav1/runtime/application.ts
+@@ -711,7 +711,7 @@ async function serveDownload(
+ ): Promise<Response> {
+   const query = new URL(request.url).searchParams
+   const kind = query.get("download") ?? ""
+-  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor }>(async (snapshot) => {
++  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor; sourceDigest: string }>(async (snapshot) => {
+     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+     if (!principal || !principal.id || principal.id.startsWith("local:"))
+       return { commit: false, value: reply("Authentication required", 401) }
+@@ -767,7 +767,7 @@ async function serveDownload(
+         })
+     return {
+       commit: readsMembers && rows(snapshot.data.members).length > 0,
+-      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor },
++      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor, sourceDigest: downloadSnapshotDigest(snapshot) },
+     }
+   })
+   if (prepared instanceof Response)
+@@ -781,6 +781,21 @@ async function serveDownload(
+   request.signal.throwIfAborted()
+   const file = await download(kind, prepared.snapshot, prepared.actor, environment, query)
+   request.signal.throwIfAborted()
++  // Re-authorize AFTER generation. Neither a captured actor nor a completed export authorizes egress.
++  const current = await transaction(async (snapshot) => {
++    const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
++    if (!principal || !principal.id || principal.id.startsWith("local:")) return { commit: false, value: 403 }
++    const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
++    const actor: Actor = { id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles }
++    if (JSON.stringify(actor) !== JSON.stringify(prepared.actor)) return { commit: false, value: 403 }
++    return { commit: false, value: downloadSnapshotDigest(snapshot) === prepared.sourceDigest ? 200 : 409 }
++  })
++  request.signal.throwIfAborted()
++  if (current !== 200)
++    return new Response(request.method === "HEAD" ? null : current === 403 ? "Access denied" : "Export source changed; download again.", {
++      status: current,
++      headers: { "Cache-Control": "no-store" },
++    })
+   if (!file.ok)
+     return request.method === "HEAD"
+       ? new Response(null, {
+@@ -797,6 +812,10 @@ async function serveDownload(
+     },
+   })
+ }
++/** The captured public surface and its versions, not private product state or read audits, define legacy export provenance. */
++function downloadSnapshotDigest(snapshot: Snapshot) {
++  return createHash("sha256").update(JSON.stringify({ data: publicSfData(snapshot.data), versions: snapshot.versions })).digest("hex")
++}
+ function canViewProcurementRequest(snapshot: Snapshot, actor: { id: string; roles: string[] }, id: string) {
+   const records = object(object(snapshot.data.store).requests)
+   if (!Object.hasOwn(records, id)) return false
+diff --git a/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts b/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts
+index d622fa8..5c25f10 100644
+--- a/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts
++++ b/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts
+@@ -476,7 +476,7 @@ test("request ownership, self-approval flag and independent record versions are
+       },
+       env,
+     ),
+-  ).toMatchObject({ ok: false, status: 403 })
++  ).toMatchObject({ ok: false, status: 404 })
+   expect(state).toEqual(before)
+   expect(
+     domain.execute(state, owner, { page: "Requests", action: "submit_pr", id, version: 1, values: { pr } }, env).ok,
+diff --git a/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts b/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts
+new file mode 100644
+index 0000000..382a03b
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts
+@@ -0,0 +1,138 @@
++import { expect, test } from "bun:test"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import JSZip from "jszip"
++import { SaxesParser } from "saxes"
++import { createApplication } from "../../../runtime/application.ts"
++import type { Persistence } from "../../../runtime/contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { emptyMap, resolve } from "../../../src/identity.ts"
++
++const captured = "EA86-CAPTURED-PUBLIC-DOCX"
++const changed = "EA86-CHANGED-PUBLIC-DOCX"
++const privateMarker = "EA86-PRIVATE-NOT-FOR-EXPORT"
++
++for (const scenario of ["grant-revoked", "session-revoked", "source-changed", "private-only-drift", "head-grant-revoked"] as const) {
++  test(`EA86 egress: ${scenario} after initial SQLite read, before response`, async () => {
++    const directory = await mkdtemp(join(await realpath(tmpdir()), "sf86-egress-"))
++    await chmod(directory, 0o700)
++    const store = await openLocalStore(directory)
++    let sessionActive = true
++    let armed = false
++    let mutations = 0
++    let authCalls = 0
++    try {
++      await store.transaction("dashboard", async (snapshot) => {
++        snapshot.data.roleMap = emptyMap().map((row) => ({
++          ...row,
++          entra: row.surface === "dashboard" && row.role === "admin" ? "sf86-admin-grant" : null,
++          version: 1,
++          by: "synthetic-fixture",
++        }))
++        snapshot.data.hotTopics = [{ id: "source86", action: captured, status: "open", priority: "normal" }]
++        snapshot.versions["hotTopics:source86"] = { version: 1, by: "synthetic-fixture" }
++        return { commit: true, value: undefined }
++      })
++      // This wrapper delegates the real SQLite transaction verbatim. Only its completion
++      // schedules the external grant/session/source change; the producer remains unchanged.
++      const persistence: Persistence = {
++        ...store,
++        transaction: async (surface, work, options) => {
++          const result = await store.transaction(surface, work, options)
++          if (!armed || surface !== "dashboard" || !result || typeof result !== "object" ||
++              !("snapshot" in result) || !("actor" in result)) return result
++          armed = false
++          mutations += 1
++          if (scenario === "session-revoked") {
++            sessionActive = false
++            return result
++          }
++          await store.transaction(surface, async (latest) => {
++            if (scenario === "grant-revoked" || scenario === "head-grant-revoked") {
++              latest.data.roleMap = (latest.data.roleMap as ReturnType<typeof emptyMap>).map((row) => ({
++                ...row,
++                entra: row.surface === "dashboard" && row.role === "admin" ? null : row.entra,
++              }))
++            }
++            if (scenario === "source-changed") {
++              latest.data.hotTopics = [{ id: "source86", action: changed, status: "open", priority: "normal" }]
++              latest.versions["hotTopics:source86"] = { version: 2, by: "synthetic-fixture" }
++            }
++            if (scenario === "private-only-drift") latest.data.__sfProductV1 = { secret: privateMarker }
++            return { commit: true, value: undefined }
++          })
++          return result
++        },
++      }
++      const serve = createApplication("/sf", {
++        persistence,
++        authenticate: async (request, context) => {
++          authCalls += 1
++          if (!context || !sessionActive || request.headers.get("x-sf86-session") !== "synthetic") return null
++          return resolve("synthetic-owner", [...context.roleMap], (group) => group === "sf86-admin-grant")
++        },
++        environment: async () => ({ at: "2026-11-15T00:00:00Z", id: () => "synthetic86", directory: [] }),
++        domains: { dashboard: [], planner: [], procurement: [] },
++        maxJsonBytes: 4096,
++      })
++      const request = (method: "GET" | "HEAD" = "GET") => new Request(
++        "https://sf86.invalid/sf/dashboard?download=docx&year=2026&title=Captured%20egress&topic=Hot%20Topics%20%26%20Actions",
++        { method, headers: { "x-sf86-session": "synthetic" } },
++      )
++      const control = await serve(request())
++      expect(control?.status).toBe(200)
++      if (!control) throw new Error("Positive export control is missing")
++      expect(await docxText(new Uint8Array(await control.arrayBuffer()))).toContain(captured)
++      const before = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++      const initialAuthCalls = authCalls
++      armed = true
++      const response = await serve(request(scenario === "head-grant-revoked" ? "HEAD" : "GET"))
++      expect(mutations).toBe(1)
++      expect(authCalls - initialAuthCalls).toBe(2)
++      if (!response) throw new Error("No HTTP response at export egress")
++      const body = new Uint8Array(await response.arrayBuffer())
++      if (scenario === "private-only-drift") {
++        expect(response.status).toBe(200)
++        const text = await docxText(body)
++        expect(text).toContain(captured)
++        expect(text).not.toContain(privateMarker)
++        expect(response.headers.get("content-disposition")).toContain("attachment")
++      } else {
++        expect(response.status).toBe(scenario === "source-changed" ? 409 : 403)
++        expect(response.headers.get("content-disposition")).toBeNull()
++        expect(response.headers.get("cache-control")).toBe("no-store")
++        expect(new TextDecoder().decode(body)).not.toContain(captured)
++        expect(new TextDecoder().decode(body)).not.toContain(privateMarker)
++        if (scenario === "head-grant-revoked") expect(body.length).toBe(0)
++      }
++      const current = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++      if (scenario === "session-revoked") expect(current).toEqual(before)
++      if (scenario === "source-changed") {
++        expect(current.versions["hotTopics:source86"]?.version).toBe(2)
++        const fresh = await serve(request())
++        expect(fresh?.status).toBe(200)
++        if (!fresh) throw new Error("Fresh download missing")
++        expect(await docxText(new Uint8Array(await fresh.arrayBuffer()))).toContain(changed)
++      }
++      if (scenario === "grant-revoked" || scenario === "head-grant-revoked") {
++        const next = await serve(request())
++        expect(next?.status).toBe(403)
++      }
++    } finally {
++      await store.dispose()
++      await rm(directory, { recursive: true, force: true })
++    }
++  }, 30000)
++}
++
++async function docxText(bytes: Uint8Array) {
++  const archive = await JSZip.loadAsync(bytes)
++  const document = archive.file("word/document.xml")
++  if (!document) throw new Error("Missing main DOCX document")
++  const content: string[] = []
++  const parser = new SaxesParser({ xmlns: false })
++  parser.on("text", (value) => content.push(value))
++  parser.write(await document.async("string")).close()
++  return content.join("\n")
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts b/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts
+new file mode 100644
+index 0000000..f4cedb5
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts
+@@ -0,0 +1,25 @@
++import { createHash } from "node:crypto"
++import { mkdir } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++
++export const exportEvidenceDirectory = join(process.env.RUNNER_TEMP ?? tmpdir(), "sf66-export-artifacts")
++
++/** Synthetic test corpus only. The file and digest describe the exact generated
++ * bytes consumed by the test, for a separate hosted reader/rendering job. */
++export async function recordExportEvidence(input: { caseId: string; name: string; mediaType: string; bytes: Uint8Array; observations: Record<string, unknown> }) {
++  if (!/^[a-z0-9-]+$/.test(input.caseId) || !input.name || /[/\\\0\r\n]/.test(input.name)) throw new Error("Invalid export evidence name")
++  await mkdir(exportEvidenceDirectory, { recursive: true, mode: 0o700 })
++  const file_name = `${input.caseId}-${input.name}`
++  const manifest = { case_id: input.caseId, file_name, format: input.name.split(".").at(-1)?.toLowerCase(), media_type: input.mediaType,
++    sha256: createHash("sha256").update(input.bytes).digest("hex"), byte_count: input.bytes.length, observations: input.observations }
++  await Bun.write(join(exportEvidenceDirectory, file_name), input.bytes)
++  await Bun.write(join(exportEvidenceDirectory, `${input.caseId}.manifest.json`), JSON.stringify(manifest, null, 2) + "\n")
++  console.log("SF66_EXPORT_EVIDENCE " + JSON.stringify(manifest))
++  const encoded = Buffer.from(input.bytes).toString("base64")
++  const size = 12_000
++  const total = Math.ceil(encoded.length / size)
++  for (let index = 0; index < total; index++) console.log("SF66_EXPORT_BYTES " + JSON.stringify({ case_id: input.caseId, format: manifest.format,
++    sha256: manifest.sha256, index, total, data: encoded.slice(index * size, (index + 1) * size) }))
++  return manifest
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts b/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts
+new file mode 100644
+index 0000000..4b35069
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts
+@@ -0,0 +1,89 @@
++import { expect, test } from "bun:test"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import JSZip from "jszip"
++import { SaxesParser } from "saxes"
++import { createApplication } from "../../../runtime/application.ts"
++import type { Persistence } from "../../../runtime/contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { emptyMap, resolve } from "../../../src/identity.ts"
++import { recordExportEvidence } from "./evidence.ts"
++
++test("EA66-LEGACY-EGRESS revocation after the authenticated SQLite read must suppress generated bytes", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf66-legacy-egress-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  const marker = "EA66-SYNTHETIC-AUTHORIZED-NOTE"
++  const session = { active: true, authenticatedReads: 0 }
++  const scheduling = { revoke: false, revocations: 0 }
++  try {
++    await store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.roleMap = emptyMap().map((row) => ({ ...row, entra: row.surface === "dashboard" && row.role === "admin" ? "egress-admin-group" : null, version: 1, by: "synthetic-fixture" }))
++      snapshot.data.hotTopics = [{ id: "egress-source", action: marker, status: "open", priority: "normal" }]
++      snapshot.versions["hotTopics:egress-source"] = { version: 1, by: "synthetic-fixture" }
++      return { commit: true, value: undefined }
++    })
++    const before = await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
++    // Scheduling-only wrapper: the real SQLite callback and returned material are untouched.
++    // Revocation occurs after the authorization/read transaction has actually completed.
++    const persistence: Persistence = { ...store, transaction: async (surface, work, options) => {
++      const result = await store.transaction(surface, work, options)
++      if (scheduling.revoke && surface === "dashboard" && result !== null && typeof result === "object" && "snapshot" in result && "actor" in result) {
++        scheduling.revoke = false
++        scheduling.revocations += 1
++        session.active = false
++      }
++      return result
++    } }
++    const application = createApplication("/sucafina", {
++      persistence,
++      authenticate: async (request, context) => {
++        if (!session.active || request.headers.get("x-sf66-session") !== "synthetic-egress-session" || !context) return null
++        session.authenticatedReads += 1
++        return resolve("synthetic-egress-owner", [...context.roleMap], (group) => group === "egress-admin-group")
++      },
++      environment: async () => ({ at: "2026-11-14T12:00:00Z", id: () => "synthetic-egress-id", directory: [] }),
++      domains: { dashboard: [], planner: [], procurement: [] },
++      maxJsonBytes: 1024,
++    })
++    const request = () => new Request("https://example.test/sucafina/dashboard?download=docx&year=2026&title=Egress%20report&topic=Hot%20Topics%20%26%20Actions", { headers: { "x-sf66-session": "synthetic-egress-session" } })
++    const control = await application(request())
++    if (!control || control.status !== 200) throw new Error(`Authorized DOCX control unavailable: ${control?.status}`)
++    const controlBytes = new Uint8Array(await control.arrayBuffer())
++    expect(await containsMarker(controlBytes, marker)).toBe(true)
++    expect(session.authenticatedReads).toBeGreaterThan(0)
++    await recordExportEvidence({ caseId: "legacy-egress-control", name: "Egress_report.docx", mediaType: control.headers.get("content-type") ?? "", bytes: controlBytes,
++      observations: { syntheticCorpus: true, authorizedControl: true, sqlite: true, currentSession: session.active } })
++
++    scheduling.revoke = true
++    const response = await application(request())
++    if (!response) throw new Error("Legacy export route unavailable")
++    const bytes = new Uint8Array(await response.arrayBuffer())
++    const leaked = response.status === 200 && await containsMarker(bytes, marker)
++    if (response.status === 200) await recordExportEvidence({ caseId: "legacy-egress-revoked", name: "Egress_report.docx", mediaType: response.headers.get("content-type") ?? "", bytes,
++      observations: { syntheticCorpus: true, sqlite: true, revokedAfterAuthorizedRead: scheduling.revocations === 1, status: response.status, generatedContentLeaked: leaked, criterionVerdict: "FAIL" } })
++    const afterRevocation = await application(request())
++    expect(afterRevocation?.status).toBe(401)
++    expect(scheduling.revocations).toBe(1)
++    expect(session.active).toBe(false)
++    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))).toEqual(before)
++    console.info("SF66_LEGACY_EGRESS", JSON.stringify({ status: response.status, sessionRevoked: !session.active, revocations: scheduling.revocations, generatedContentLeaked: leaked, nextRequestStatus: afterRevocation?.status }))
++    expect(response.status).toBe(403)
++    expect(leaked).toBe(false)
++  } finally {
++    await store.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++}, 30000)
++
++async function containsMarker(bytes: Uint8Array, marker: string) {
++  const archive = await JSZip.loadAsync(bytes)
++  const document = archive.file("word/document.xml")
++  if (!document) throw new Error("Generated bytes are not a DOCX main document")
++  const parts: string[] = []
++  const reader = new SaxesParser({ xmlns: false })
++  reader.on("text", (value) => parts.push(value))
++  reader.write(await document.async("string")).close()
++  return parts.join("\n").includes(marker)
++}

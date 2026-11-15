@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h.export-egress-privacy.trace.v1",
+  "change_groups": [
+    {
+      "id": "EGRESS-86",
+      "criteria": [
+        "EA66-LEGACY-EGRESS-REVOCATION",
+        "CAMP.INV.04",
+        "WP04.INV.03"
+      ],
+      "paths": [
+        "runtime/application.ts",
+        "test/product/export-egress-privacy/*"
+      ],
+      "cases": [
+        "EA66 unchanged legacy repro",
+        "EA86 persisted grant revoke403",
+        "session revoke403",
+        "source mutation409",
+        "private-only source drift200",
+        "HEAD revoke403 no body"
+      ],
+      "result": "SOURCE_PASS_NOT_COMPOSED"
+    },
+    {
+      "id": "PRIVACY-73-LEGACY",
+      "criteria": [
+        "M70-ISO-01",
+        "WP04.INV.01",
+        "WP04.INV.02",
+        "WP04.T05.CHK.05"
+      ],
+      "paths": [
+        "test/procurement-runtime.test.ts"
+      ],
+      "cases": [
+        "Exactly one hidden-request403→404",
+        "visible dual-role403 preserved",
+        "complete unfiltered 17 legacy tests",
+        "all 27 M73 source tests"
+      ],
+      "result": "SOURCE_PASS_NOT_COMPOSED"
+    }
+  ],
+  "scope": {
+    "WP": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "plan_unchanged": true,
+    "global_acceptance": false
+  },
+  "mandatory": [
+    "84 independent source/composition recheck",
+    "71 composed-candidate intake/ACK",
+    "45 compiler/typecheck/guards",
+    "75 ClamD and installed operations",
+    "eight final selections/AM01–AM06/three FINAL reviews/C-G7 D-G8"
+  ],
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "sf2h.export-egress-privacy.dependencies.v1",
+  "source_commit": "e890d8cd79138dcb036a980c877319708dd220ac",
+  "source_tree": "0dbb975c39c771caa0f7126566c6b79fcb417148",
+  "inheritance": "All runtime dependencies and the original createApplication/download/C08/SQLite implementations are inherited from E73 branch; no dependency code or workflow changed by mission86.",
+  "direct_boundary": [
+    "runtime/application.ts -> runtime/downloads.ts (real producers)",
+    "runtime/application.ts -> src/identity.ts / runtime/admin.ts (roles resolved under fresh SQLite transaction)",
+    "runtime/application.ts -> product/integration/public-state.ts (exclude private __sfProductV1)",
+    "runtime/application.ts -> runtime/contract.ts and runtime/local-store.ts",
+    "test/product/export-egress-privacy/legacy-egress.test.ts -> real createApplication/openLocalStore/resolve and unchanged evidence.ts",
+    "test/product/export-egress-privacy/egress-boundary.test.ts -> real createApplication/openLocalStore/resolve and JSZip/Saxes parser"
+  ],
+  "owned_material_paths": [
+    "modules/sucafina/Sucafinav1/runtime/application.ts",
+    "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts",
+    "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts"
+  ],
+  "prohibited_not_touched": [
+    "runtime/procurement.ts",
+    "runtime/entra-client.ts",
+    "runtime/host.ts",
+    "runtime/downloads.ts",
+    ".github/workflows/*",
+    "local-store.ts",
+    "runtime/assets.ts",
+    "financial policies",
+    "transport74",
+    "auth85"
+  ],
+  "target_observation": {
+    "branch": "sf2-stack",
+    "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "application_blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+    "legacy_test_blob": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+    "state": "PREIMAGE_RECONCILED_NOT_COMPOSED_BY86"
+  }
+}
