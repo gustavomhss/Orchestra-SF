@@ -1,0 +1,1435 @@
+{
+  "schema": "sf2h.native-ui.remaining63.batch.v1",
+  "cohort": 2,
+  "batch": 1,
+  "source_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "ids": [
+    "N021",
+    "N022",
+    "N023",
+    "N024",
+    "N025",
+    "N026",
+    "N027",
+    "N028",
+    "N029"
+  ],
+  "cards": [
+    {
+      "card_id": "N021",
+      "cohort": 2,
+      "sequence": 21,
+      "role": "author",
+      "work_order_id": "A07",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Reuniões e relatórios",
+      "work_order_priority": 3,
+      "work_order_blob": "0b9fa87792ad8039ca2878421eeeb8dedfc0f232",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A07.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/reviews.ts",
+        "packages/client/src/sucafina/reviews.ts",
+        "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+        "packages/schema/src/sucafina/reviews/**",
+        "packages/client/src/sucafina/reviews/**",
+        "apps/cli/src/sucafina-product/native-ui/reviews/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "reviews",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "reviews",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A07.json"
+        ],
+        "contracts": [
+          "ctx",
+          "reviews",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/dashboard",
+          "contract-catalog.json#/sources/extended"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "symbol": "SfReviews",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/reviews.ts",
+          "symbol": "createSfReviewsClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+          "symbol": "createSfReviewsProjectionHandlers",
+          "signature": "CONTRACTS.md: exact new projection IDs only, preserving producer Request/auth and original typed shapes"
+        }
+      ],
+      "exports": [
+        "SfReviews",
+        "createSfReviewsClient",
+        "createSfReviewsProjectionHandlers"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A07-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A07-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A07-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T03",
+        "WP07.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N021 — Bindings finos: Reuniões e relatórios / A07 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A07. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A07.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A07.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, reviews, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/dashboard, contract-catalog.json#/sources/extended.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/reviews.ts; packages/client/src/sucafina/reviews.ts; apps/cli/src/sucafina-product/native-ui/reviews.ts; packages/schema/src/sucafina/reviews/**; packages/client/src/sucafina/reviews/**; apps/cli/src/sucafina-product/native-ui/reviews/**; modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A07-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A07-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A07-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP07.T01, WP07.T02, WP07.T03, WP07.T04 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N022",
+      "cohort": 2,
+      "sequence": 22,
+      "role": "author",
+      "work_order_id": "A08",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Visualizações BI",
+      "work_order_priority": 3,
+      "work_order_blob": "3dd786fe80aac782a7956f0ec869015613d2bac0",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A08.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/bi.ts",
+        "packages/client/src/sucafina/bi.ts",
+        "apps/cli/src/sucafina-product/native-ui/bi.ts",
+        "packages/schema/src/sucafina/bi/**",
+        "packages/client/src/sucafina/bi/**",
+        "apps/cli/src/sucafina-product/native-ui/bi/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "bi",
+        "ctx",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "bi",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A08.json"
+        ],
+        "contracts": [
+          "bi",
+          "ctx",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/extended"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/bi.ts",
+          "symbol": "SfBi",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/bi.ts",
+          "symbol": "createSfBiClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "exports": [
+        "SfBi",
+        "createSfBiClient"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A08-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A08-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A08-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP05.T01",
+        "WP05.T02",
+        "WP05.T03",
+        "WP05.T04",
+        "WP05.T05"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N022 — Bindings finos: Visualizações BI / A08 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A08. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A08.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A08.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): bi, ctx, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/extended.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/bi.ts; packages/client/src/sucafina/bi.ts; apps/cli/src/sucafina-product/native-ui/bi.ts; packages/schema/src/sucafina/bi/**; packages/client/src/sucafina/bi/**; apps/cli/src/sucafina-product/native-ui/bi/**; modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A08-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A08-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A08-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP05.T01, WP05.T02, WP05.T03, WP05.T04, WP05.T05 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N023",
+      "cohort": 2,
+      "sequence": 23,
+      "role": "author",
+      "work_order_id": "A09",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Rotinas, Schedule e residentes",
+      "work_order_priority": 3,
+      "work_order_blob": "22099144af454eb73117c2424752831bf82461ba",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A09.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/routines.ts",
+        "packages/client/src/sucafina/routines.ts",
+        "apps/cli/src/sucafina-product/native-ui/routines.ts",
+        "packages/schema/src/sucafina/routines/**",
+        "packages/client/src/sucafina/routines/**",
+        "apps/cli/src/sucafina-product/native-ui/routines/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "intelligence",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [
+          "Operational routines/Native41/Relay/Schedule qualification remains HOLD until actual installed native producer bindings, current grants and canonical handoffs pass; artifact/adapter readiness is separate."
+        ],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A09.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/host-types",
+          "contract-catalog.json#/sources/ports",
+          "contract-catalog.json#/sources/routine-services",
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/routines.ts",
+          "symbol": "SfRoutines",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/routines.ts",
+          "symbol": "createSfRoutinesClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+          "symbol": "createSfRoutinesHandlers",
+          "signature": "(deps:SfNativeHostDependencies) => readonly SfProjectionHandler[]; only routine projection and the closed routines/schedules operation IDs in the catalog/CONTRACTS §5.4, preserving original producers and admissions."
+        }
+      ],
+      "exports": [
+        "SfRoutines",
+        "createSfRoutinesClient",
+        "createSfRoutinesHandlers"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A09-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A09-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A09-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP09.T01",
+        "WP09.T06",
+        "WP09.T07",
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N023 — Bindings finos: Rotinas, Schedule e residentes / A09 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A09. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A09.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A09.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, intelligence, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/host-types, contract-catalog.json#/sources/ports, contract-catalog.json#/sources/routine-services, contract-catalog.json#/sources/workbench.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/routines.ts; packages/client/src/sucafina/routines.ts; apps/cli/src/sucafina-product/native-ui/routines.ts; packages/schema/src/sucafina/routines/**; packages/client/src/sucafina/routines/**; apps/cli/src/sucafina-product/native-ui/routines/**; modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A09-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A09-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A09-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP09.T01, WP09.T06, WP09.T07, WP10.T06, WP10.T07 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N024",
+      "cohort": 2,
+      "sequence": 24,
+      "role": "author",
+      "work_order_id": "A10",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Pessoas e Talent",
+      "work_order_priority": 3,
+      "work_order_blob": "79ff46b34b69110c35b2d5fe66149456218a468d",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A10.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/people.ts",
+        "packages/client/src/sucafina/people.ts",
+        "apps/cli/src/sucafina-product/native-ui/people.ts",
+        "packages/schema/src/sucafina/people/**",
+        "packages/client/src/sucafina/people/**",
+        "apps/cli/src/sucafina-product/native-ui/people/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A10.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/renderer-CAP02",
+          "contract-catalog.json#/sources/renderer-CAP06",
+          "contract-catalog.json#/sources/renderer-CAP07",
+          "contract-catalog.json#/sources/renderer-CAP08"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/people.ts",
+          "symbol": "SfPeople",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/people.ts",
+          "symbol": "createSfPeopleClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/people.ts",
+          "symbol": "createSfPeopleProjectionHandlers",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "exports": [
+        "SfPeople",
+        "createSfPeopleClient",
+        "createSfPeopleProjectionHandlers"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A10-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A10-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A10-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP02.T01",
+        "WP02.T02"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N024 — Bindings finos: Pessoas e Talent / A10 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A10. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A10.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A10.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, domain-read, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/application, contract-catalog.json#/sources/renderer-CAP02, contract-catalog.json#/sources/renderer-CAP06, contract-catalog.json#/sources/renderer-CAP07, contract-catalog.json#/sources/renderer-CAP08.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/people.ts; packages/client/src/sucafina/people.ts; apps/cli/src/sucafina-product/native-ui/people.ts; packages/schema/src/sucafina/people/**; packages/client/src/sucafina/people/**; apps/cli/src/sucafina-product/native-ui/people/**; modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A10-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A10-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A10-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP02.T01, WP02.T02 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N025",
+      "cohort": 2,
+      "sequence": 25,
+      "role": "author",
+      "work_order_id": "A11",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Operações, segurança, riscos e performance",
+      "work_order_priority": 3,
+      "work_order_blob": "f57b5e6005aae63d9371b7a10d6da20284db6552",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A11.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/operations.ts",
+        "packages/client/src/sucafina/operations.ts",
+        "apps/cli/src/sucafina-product/native-ui/operations.ts",
+        "packages/schema/src/sucafina/operations/**",
+        "packages/client/src/sucafina/operations/**",
+        "apps/cli/src/sucafina-product/native-ui/operations/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A11.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/renderer-CAP11",
+          "contract-catalog.json#/sources/renderer-CAP12"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/operations.ts",
+          "symbol": "SfOperations",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/operations.ts",
+          "symbol": "createSfOperationsClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/operations.ts",
+          "symbol": "createSfOperationsProjectionHandlers",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "exports": [
+        "SfOperations",
+        "createSfOperationsClient",
+        "createSfOperationsProjectionHandlers"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A11-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A11-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A11-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP02.T01",
+        "WP02.T02"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N025 — Bindings finos: Operações, segurança, riscos e performance / A11 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A11. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A11.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A11.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, domain-read, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/application, contract-catalog.json#/sources/renderer-CAP11, contract-catalog.json#/sources/renderer-CAP12.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/operations.ts; packages/client/src/sucafina/operations.ts; apps/cli/src/sucafina-product/native-ui/operations.ts; packages/schema/src/sucafina/operations/**; packages/client/src/sucafina/operations/**; apps/cli/src/sucafina-product/native-ui/operations/**; modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A11-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A11-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A11-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP02.T01, WP02.T02 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N026",
+      "cohort": 2,
+      "sequence": 26,
+      "role": "author",
+      "work_order_id": "A12",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Trabalho, busca e visões pessoais",
+      "work_order_priority": 3,
+      "work_order_blob": "5d5f2f35151ac81f23853c1f465ce48215241dde",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A12.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/work.ts",
+        "packages/client/src/sucafina/work.ts",
+        "apps/cli/src/sucafina-product/native-ui/work.ts",
+        "packages/schema/src/sucafina/work/**",
+        "packages/client/src/sucafina/work/**",
+        "apps/cli/src/sucafina-product/native-ui/work/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A12.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/views",
+          "contract-catalog.json#/sources/work-item",
+          "contract-catalog.json#/sources/workbench"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/work.ts",
+          "symbol": "SfWork",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/work.ts",
+          "symbol": "createSfWorkClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+          "symbol": "createSfWorkProjectionHandlers",
+          "signature": "CONTRACTS.md: exact new projection IDs only, preserving producer Request/auth and original typed shapes"
+        }
+      ],
+      "exports": [
+        "SfWork",
+        "createSfWorkClient",
+        "createSfWorkProjectionHandlers"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A12-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A12-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A12-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A12-V2",
+          "expected": "Real product-backed schemaVersion 2 union + legacy unchanged, lazy migration and state persistence tested under two owners, CAS conflict and revocation; no alternative store.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP01.T04",
+        "WP08.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N026 — Bindings finos: Trabalho, busca e visões pessoais / A12 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A12. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A12.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A12.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, domain-read, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/views, contract-catalog.json#/sources/work-item, contract-catalog.json#/sources/workbench.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/work.ts; packages/client/src/sucafina/work.ts; apps/cli/src/sucafina-product/native-ui/work.ts; packages/schema/src/sucafina/work/**; packages/client/src/sucafina/work/**; apps/cli/src/sucafina-product/native-ui/work/**; modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A12-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A12-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A12-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action. | A12-V2 Real product-backed schemaVersion 2 union + legacy unchanged, lazy migration and state persistence tested under two owners, CAS conflict and revocation; no alternative store.. Tasks canônicas: WP01.T04, WP08.T04 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N027",
+      "cohort": 2,
+      "sequence": 27,
+      "role": "author",
+      "work_order_id": "A13",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Relações, threads e confirmações",
+      "work_order_priority": 3,
+      "work_order_blob": "302557f6902ce43ce97b6545b51a36ae3b9ab570",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A13.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/collaboration.ts",
+        "packages/client/src/sucafina/collaboration.ts",
+        "apps/cli/src/sucafina-product/native-ui/collaboration.ts",
+        "packages/schema/src/sucafina/collaboration/**",
+        "packages/client/src/sucafina/collaboration/**",
+        "apps/cli/src/sucafina-product/native-ui/collaboration/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A13.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/collaboration-routes"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/collaboration.ts",
+          "symbol": "SfCollaboration",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/collaboration.ts",
+          "symbol": "createSfCollaborationClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "exports": [
+        "SfCollaboration",
+        "createSfCollaborationClient"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A13-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A13-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A13-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T03",
+        "WP08.T06"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N027 — Bindings finos: Relações, threads e confirmações / A13 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A13. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A13.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A13.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, domain-read, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/collaboration-routes.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/collaboration.ts; packages/client/src/sucafina/collaboration.ts; apps/cli/src/sucafina-product/native-ui/collaboration.ts; packages/schema/src/sucafina/collaboration/**; packages/client/src/sucafina/collaboration/**; apps/cli/src/sucafina-product/native-ui/collaboration/**; modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A13-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A13-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A13-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP08.T01, WP08.T02, WP08.T03, WP08.T06 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N028",
+      "cohort": 2,
+      "sequence": 28,
+      "role": "author",
+      "work_order_id": "A14",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Memória e reavaliação",
+      "work_order_priority": 3,
+      "work_order_blob": "fa129ade1b3d7343568a334400dcd5dd5024e7bb",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A14.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/memory.ts",
+        "packages/client/src/sucafina/memory.ts",
+        "apps/cli/src/sucafina-product/native-ui/memory.ts",
+        "packages/schema/src/sucafina/memory/**",
+        "packages/client/src/sucafina/memory/**",
+        "apps/cli/src/sucafina-product/native-ui/memory/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "intelligence",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A14.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/memory"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/memory.ts",
+          "symbol": "SfMemory",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/memory.ts",
+          "symbol": "createSfMemoryClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "exports": [
+        "SfMemory",
+        "createSfMemoryClient"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A14-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A14-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A14-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP14.T01",
+        "WP14.T02",
+        "WP14.T03",
+        "WP14.T04",
+        "WP14.T05"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N028 — Bindings finos: Memória e reavaliação / A14 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A14. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A14.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A14.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, intelligence, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/memory.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/memory.ts; packages/client/src/sucafina/memory.ts; apps/cli/src/sucafina-product/native-ui/memory.ts; packages/schema/src/sucafina/memory/**; packages/client/src/sucafina/memory/**; apps/cli/src/sucafina-product/native-ui/memory/**; modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A14-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A14-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A14-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP14.T01, WP14.T02, WP14.T03, WP14.T04, WP14.T05 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    },
+    {
+      "card_id": "N029",
+      "cohort": 2,
+      "sequence": 29,
+      "role": "author",
+      "work_order_id": "A15",
+      "output_id": null,
+      "work_order_title": "Bindings finos: Análise contextual assíncrona",
+      "work_order_priority": 3,
+      "work_order_blob": "dbe6517a6d7068d3706868e323dfeeb7e7b7d617",
+      "source_mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A15.json",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "actor": null,
+      "session": null,
+      "branch": null,
+      "lease": null,
+      "owns_exact_or_prefix": [
+        "packages/schema/src/sucafina/analyses.ts",
+        "packages/client/src/sucafina/analyses.ts",
+        "apps/cli/src/sucafina-product/native-ui/analyses.ts",
+        "packages/schema/src/sucafina/analyses/**",
+        "packages/client/src/sucafina/analyses/**",
+        "apps/cli/src/sucafina-product/native-ui/analyses/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts"
+      ],
+      "partial_owns": [],
+      "completion_residual_owns": [],
+      "authoring_locks": [
+        "ctx",
+        "intelligence",
+        "transport"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "intelligence",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes_outputs": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A15.json"
+        ],
+        "contracts": [
+          "ctx",
+          "intelligence",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/analysis-base",
+          "contract-catalog.json#/sources/analysis-host",
+          "contract-catalog.json#/sources/host-types",
+          "contract-catalog.json#/sources/resident-types"
+        ]
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/analyses.ts",
+          "symbol": "SfAnalyses",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/analyses.ts",
+          "symbol": "createSfAnalysesClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/analyses.ts",
+          "symbol": "createSfAnalysesProjectionHandlers",
+          "signature": "(deps:SfNativeHostDependencies) => readonly SfProjectionHandler[]; only projection.residents, sanitized installed/granted producer fields per CONTRACTS §5.4. Analysis operations preserve existing JSON HTTP."
+        }
+      ],
+      "exports": [
+        "SfAnalyses",
+        "createSfAnalysesClient",
+        "createSfAnalysesProjectionHandlers"
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A15-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A15-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A15-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "canonical_task_refs": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "first_wave_handoff_required": null,
+      "independence_required": false,
+      "prompt": "CARTA N029 — Bindings finos: Análise contextual assíncrona / A15 (onda sugerida 2).\n\nRepositório gustavomhss/Orchestra-SF. A primeira onda C00/W01-W19 é IMUTÁVEL; este card trata apenas A15. Contrato UX normativo cbac654784714f68779ae1434d30e6ea8970c4d1, campanha canônica dbf9547211d9b0fade619790de7c19c0869b7c7d.\n\nAntes de escrever: AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A15.json e SOMENTE EXECUTION-PROTOCOL.md, manifest.json, host-signatures.ts, work-orders/A15.json + locks/superfícies/fontes vinculadas ao caso. O checkout, branch, source hashes, produtor, atores e leases devem ser conferidos em HEAD vivo; não herdar ACK/lease terminal71/100/105/106 ou integração da outra sessão. Sem GO S0 por output, ator/sessão/branch/lease real, source blobs/preimages, contratos FROZEN e ownership livre: responder BLOCKED_AUTHORIZATION, sem escrita. Se C00 não é a MESMA identidade/lease do integrador material S0, C00 é somente leitura.\n\nLOCKS DE AUTORIA (assinaturas fixas, sem decisões): ctx, intelligence, transport. Integração requer outputs: F01, F02. A qualificação exige F01, F02 e serviços atuais no mesmo C. Fontes: contract-catalog.json#/sources/analysis-base, contract-catalog.json#/sources/analysis-host, contract-catalog.json#/sources/host-types, contract-catalog.json#/sources/resident-types.\n\nESCITA EXCLUSIVA: packages/schema/src/sucafina/analyses.ts; packages/client/src/sucafina/analyses.ts; apps/cli/src/sucafina-product/native-ui/analyses.ts; packages/schema/src/sucafina/analyses/**; packages/client/src/sucafina/analyses/**; apps/cli/src/sucafina-product/native-ui/analyses/**; modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts. Nenhuma edição dos registries compartilhados, auth, policies, SQL, engine, CI, outro owner. Fragmentos de registro para I00 com pre/post hash; nunca autoaplicar em shared paths.\n\nENTREGA: implementar exatamente operações, outputs e entradas typed da ficha, casos fonte incluindo negativos, ausência/null/zero e versões/CAS; sem stub/Any/body genérico. Critérios observáveis: A15-AC01 Every output field maps to an authorized producer field; absent/null/zero and versions are retained. | A15-AC02 Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump. | A15-AC03 All API calls preserve operation key and expected versions; source change invalidates affected read/action.. Tasks canônicas: WP12.T01, WP12.T02, WP12.T03, WP12.T04 e todos os checks/axiomas herdados.\n\nTestes de produto apenas GitHub Actions pelo owner CI autorizado (historicamente 101; confirmar S0 vigente); compiler/typecheck/guards somente owner autorizado (historicamente 45). Worker propõe seleção modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts; não dispara CI nem testa localmente.\n\nAo finalizar: ARTIFACT_READY com HEAD/tree/pre-post SHA, tests efetivos vs NOT_RUN, exports, ids/superfícies/critério, consumidor, blockers, handoff e lease terminal. Falta de produtor => BLOCKED_INTEGRATION/QUALIFICATION sem falsificar PASS. Sem merge/deploy/Azure/GLOBAL_RELEASE."
+    }
+  ],
+  "go": false
+}
