@@ -1,0 +1,179 @@
+{
+  "schema": "sf2h.compiler163.hosted-request.v1",
+  "mission": 163,
+  "epoch": "compiler-e4-browser163",
+  "owner": "compiler163",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "state": "DISPATCHED_RUNNING_NOT_PASS",
+  "run_id": 43766055614,
+  "job_id": 132971280139,
+  "run_attempt": 1,
+  "workflow_id": 419078062,
+  "workflow_path": ".github/workflows/sf-compiler-c53.yml",
+  "workflow_commit": "5491c9300126da663a4097a678b587a5d74dc125",
+  "workflow_blob": "c417627108fcd183ee8d7ab91243ec6795bdc926",
+  "source": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "integrator": 162,
+    "source_branch": "sf2-stack",
+    "source_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+    "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "source_base_b45": "b45aa6211c433c6837622617ad02fb2c0c3fe8e4",
+    "source_base_tree": "4d08c0ea5d03e3bd8f5f066a9e37803e6ce0344a",
+    "post_dispatch_newer_stack": "6d42d6752497fc37be59c64a72b272a3d0860961",
+    "newer_stack_changes_excluded": "140–142 source/test leaves not in pinned W; no silent cross-W proof"
+  },
+  "ordered_selection": [
+    [
+      "e2e-inventory",
+      ".",
+      "node verify-e2e-typecheck.mjs --inventory"
+    ],
+    [
+      "guards",
+      ".",
+      "bun run check:guards --base origin/dev"
+    ],
+    [
+      "sdk-generate",
+      "packages/client",
+      "bun run generate"
+    ],
+    [
+      "sdk-diff-capture",
+      ".",
+      "git diff --binary generated/generated-effect (hosted disposable checkout)"
+    ],
+    [
+      "typecheck-schema",
+      "packages/schema",
+      "bun typecheck"
+    ],
+    [
+      "typecheck-protocol",
+      "packages/protocol",
+      "bun typecheck"
+    ],
+    [
+      "typecheck-server",
+      "packages/server",
+      "bun typecheck"
+    ],
+    [
+      "typecheck-client",
+      "packages/client",
+      "bun typecheck"
+    ],
+    [
+      "typecheck-sucafina",
+      "modules/sucafina",
+      "bun typecheck"
+    ],
+    [
+      "typecheck-core",
+      "packages/core",
+      "bun typecheck"
+    ],
+    [
+      "typecheck-cli",
+      "apps/cli",
+      "bun typecheck"
+    ],
+    [
+      "typecheck-app",
+      "packages/app-shell",
+      "bun typecheck"
+    ],
+    [
+      "sf-e2e-showConfig",
+      "packages/app-shell",
+      "bun run typecheck:sf-e2e --showConfig"
+    ],
+    [
+      "sf-e2e-listFiles",
+      "packages/app-shell",
+      "bun run typecheck:sf-e2e --listFiles --pretty false"
+    ],
+    [
+      "sf-e2e-verify",
+      ".",
+      "node verify-e2e-typecheck.mjs on real hosted configs/diagnostics"
+    ],
+    [
+      "spawn-imports",
+      ".",
+      "bun run check:spawn-imports"
+    ]
+  ],
+  "runtime": {
+    "target_runner": "ubuntu-24.04",
+    "setup_action_blob": "e2cda5b54676d4d1c35785aaef7aa69d66944597",
+    "pinned_lock_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+    "actual_versions": "TO_BE_READ_FROM_HOSTED_ARTIFACT",
+    "prior_c64_bun": "1.3.14_HISTORIC_NOT_THIS_W"
+  },
+  "config_blobs": {
+    "packages/client/script/build.ts": "99ae2184b9c13f6175d7ba8e3025068bee07ee4f",
+    "tooling/httpapi-codegen/src/index.ts": "78a9b9e0521c8128d0896af8bba15ad318e30edf",
+    "packages/app-shell/tsconfig.sf-e2e.json": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1",
+    "script/guards/run.ts": "24c89b6fdbce07d778d2d1520ff4680d51c8c0f3",
+    "script/spawn-allowlist.json": "532e0a09e7ca43777ec6f9792f9429bb73148348",
+    ".github/workflows/test-ci.yml": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "script/sf2h/final-bundle/requests.json": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+    ".github/workflows/sf2-epic.yml": "b332d777e4465469e9e4869e29f4339a95853d21"
+  },
+  "producer_blobs": {
+    "packages/schema/src/sucafina/context.ts": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+    "packages/protocol/src/groups/sucafina.ts": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+    "packages/schema/src/sucafina/decisions/source-contracts.ts": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+    "packages/schema/src/sucafina/reviews.ts": "0ec7bf14691c82c179c9291c167616d84b6c39bb",
+    "packages/schema/src/sucafina/work.ts": "ef6f3ef73966caf976e1bd816984356eedd6e007",
+    "packages/schema/src/sucafina/routines.ts": "9b6429dd66be4419e4f9d2b4f397a5485986170c",
+    "apps/cli/src/sucafina-product/native-ui/router.ts": "17db52d914ca49934953e1161461b03856eb29c5",
+    "apps/cli/src/sucafina-product/native-ui/procurement.ts": "59013743317453a390e8092b2c8a49713eaf17cc",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx": "5523d9cc6680f8461e4f2a5ef31c687a7432dfbd",
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx": "638ca5f806f1d11b8549972ba5559b4913ba4e6b",
+    "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx": "ddd1b441f869e6824d6919827b9c53faa17f84ac"
+  },
+  "fixture_blobs": {
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts": "d0d54dca9245feb151f9f6cf6015f344cfe741e2",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": "70fbd980e1a8bb18b27095c88488386f62227253",
+    "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts": "134a2b5c3c968b86a6061af994c2ba2a10e64a75"
+  },
+  "dedup": {
+    "prior_c64_run": 43738074189,
+    "prior_c64_W": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "same_fingerprint_prior_run_found": false,
+    "previous_runs_in_flight": 0,
+    "excluded_unchanged": [
+      "bundle-build",
+      "bundle-requests",
+      "typecheck-atlas",
+      "atlas-generated-before",
+      "atlas-generate",
+      "atlas-generated-after",
+      "atlas-generated-diff"
+    ],
+    "final_epic_or_full8": "NOT_DISPATCHED"
+  },
+  "bundle_reuse": {
+    "status": "HISTORICAL_GENUINE_ARTIFACT_SAME_INPUT_BLOBS",
+    "artifact": 14171118214,
+    "generated_yaml_sha256": "c6c0e2583a5be2bb393d3db832232c6625ceb28370bf1f7f815eb3a661b77394",
+    "generated_yaml_bytes": 57314,
+    "patch_sha256": "559b5b34a69ace7ee69b641909a4fa7da28d033a4a13980dc4ed950574d2dd03",
+    "source_builder_blob": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2",
+    "owner_to_consume": "162 only, preimage/CAS"
+  },
+  "restrictions": {
+    "global_release": false,
+    "goal": "paused",
+    "product_tests": "164 only",
+    "no_local_product_test_parser_validator_typecheck_build": true,
+    "manual_generated_edit": false,
+    "force": false,
+    "devmerge": false
+  }
+}
