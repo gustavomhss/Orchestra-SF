@@ -118,7 +118,8 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     try {
       const digest = await sha256({ action: props.operationId, value, version: expectedVersion,
         recordId: props.recordId, year: props.year, month: props.month })
-      if (!allowed() || active()?.baseVersion !== expectedVersion) {
+      if (!props.admitted || parsed() !== value || active()?.baseVersion !== expectedVersion ||
+        active()?.pendingOperation || active()?.conflict) {
         setFeedback("conflict");return
       }
       draft().setPending({ operationRef, idempotencyKey, payloadDigest: digest,
