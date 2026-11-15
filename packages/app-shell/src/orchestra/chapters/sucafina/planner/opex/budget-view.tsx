@@ -76,8 +76,6 @@ const monthlyCoverage = () => ({
   state: "complete" as const, summary: gridMsg("sf.u07.source"), reasons: [],
   knownCount: 1, expectedCount: 1,
 })
-const readableState = (phase: SfUiState) => phase === "ready" || phase === "partial" ||
-  phase === "empty" || phase === "filtered-empty" || phase === "conflict"
 
 export function SfBudgetView(props: BudgetSurface): JSX.Element {
   const owner = useSfContext()
