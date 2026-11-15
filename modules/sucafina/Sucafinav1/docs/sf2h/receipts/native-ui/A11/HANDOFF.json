@@ -1,0 +1,102 @@
+{
+  "schema": "sf2h.native-ui.A11.handoff.v1",
+  "owner": "A11",
+  "branch": "sf-ux-a11",
+  "lease": "ux-native-a11-e1",
+  "status": "IMPLEMENTED_COMMITTED_PR_OPEN__NOT_QUALIFIED",
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A11/ACK.json",
+    "commit": "371da8d1af7350a468ef334034ad3589c95a4868"
+  },
+  "implementation": {
+    "commit": "5c199631ebdb42c8b8b90931d72f7f37a888a43e",
+    "exclusivePaths": [
+      "packages/schema/src/sucafina/operations.ts",
+      "packages/client/src/sucafina/operations.ts",
+      "apps/cli/src/sucafina-product/native-ui/operations.ts",
+      "apps/cli/src/sucafina-product/native-ui/operations/projection.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A11/REGISTRY-FRAGMENT.json"
+    ]
+  },
+  "pullRequest": {
+    "number": 143,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/143",
+    "base": "sf2-stack",
+    "head": "sf-ux-a11",
+    "reviewState": "open",
+    "mergeExecuted": false,
+    "diffNote": "GitHub three-dot PR diff currently includes 163 files due preexisting campaign documentation on the branch; A11 implementation itself changes only six exclusive paths plus ACK/receipts. The verified merge-base is C58 422f1ed and current sf2-stack base is 45edb285. I00/114 owns integration review; no reset, rebase, merge or force performed."
+  },
+  "operations": {
+    "expected": 16,
+    "implemented": 16,
+    "pages": [
+      "domain.page.CAP11",
+      "domain.page.CAP12"
+    ],
+    "legacyCommands": 14,
+    "capabilities": {
+      "CAP11": "IT Operations",
+      "CAP12": "IT Security KPIs"
+    },
+    "schemas": "SfOperations.operations with exact catalog operationIds; closed Command.values, source JSON legacy failure, per CAP GET status union",
+    "client": "createSfOperationsClient exact transport.execute operation bindings, no dispatcher",
+    "host": "createSfOperationsProjectionHandlers with original authenticated dashboard Domain.view, context/admission and version revalidation",
+    "versions": "ops:Y-M;ops-list:opsCats;ops-list:opsHmItems;security:Y-M;secActions:id;secIncidents:id;secPhishing:id",
+    "auth": "never expose internal snapshot, private actor data, version.by or unrelated keys",
+    "semantics": "null vs zero vs absent, historical KPI/month selection, current campaigns/actions, year-limited incidents, source heat/closure/phish functions",
+    "mutation": "14 original existing-http POST commands only; producer owns CAS, permissions, validation, persistence and safeFailure"
+  },
+  "sourceReview": {
+    "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "pinnedRenderer": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+    "pinnedApplication": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "appDifference": "from historical blob 4edac56; C58 introduced procurement attachment checks and source digest revalidation for exports, no CAP11/CAP12 command or read shape drift",
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1"
+  },
+  "sharedTo114": {
+    "fragment": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A11/REGISTRY-FRAGMENT.json",
+    "records": 16,
+    "requiredWritesBy114": [
+      "packages/schema/src/sucafina/operation-registry.ts",
+      "packages/schema/src/sucafina/index.ts",
+      "packages/schema/package.json",
+      "packages/client/package.json",
+      "apps/cli/src/sucafina-product/native-ui/router.ts or I00 route composition"
+    ],
+    "importantF02Finding": "Current F02 transport predecodes input with Schema.decodeUnknownOption(operation.input)(input), default stripping excess before operation codec. Need strict onExcessProperty:error at that call so unknown Command.keys and values are refused, not silently stripped. See fragment sharedPatch. Do not modify F02 from A11.",
+    "hostGate": "I00 should only register projection handlers once F01 context and F02 transport are composed, and original native-command owner fence is installed on legacy POST handler"
+  },
+  "qualification": {
+    "localTests": "NOT_RUN",
+    "remoteCI": "PENDING_120",
+    "compiler": "PENDING_119",
+    "installedAuth": "NOT_PROVEN",
+    "desktopAuth": "NOT_PROVEN",
+    "newProductionBinding": "NOT_INSTALLED_BY_A11",
+    "suggestedTests": [
+      "16-ID codec/metadata parity",
+      "CAP11 source allowed-action and month CAS after profile revocation",
+      "CAP12 current action vs year scoped incident version",
+      "GET projection denied/missing and stale source",
+      "unknown extra input rejected on F02 before payload serialization",
+      "import-month confirmation and separate list versions",
+      "409 safeFailure and outcome-unknown without auto retry",
+      "Microsoft authenticated browser/desktop workflow"
+    ]
+  },
+  "prohibitionsObserved": [
+    "No local tests",
+    "No edits outside A11 exclusive paths",
+    "No native producer mutation",
+    "No merge in dev",
+    "No deploy/Azure",
+    "No resumed Goal"
+  ],
+  "nextOwners": {
+    "sharedAndIntegration": 114,
+    "actionsCI": 120,
+    "compilerGuards": 119
+  }
+}
