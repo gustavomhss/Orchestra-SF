@@ -1,0 +1,44 @@
+{
+  "schema": "sf2h.203.surgical-requests.v1",
+  "mission": 203,
+  "source_pr": 189,
+  "source_handoff_commit": "2c5fed0121965d931415db0b31d946ecdb193106",
+  "notices_do_not_ack_or_wake": true,
+  "ci_dispatched_by_203": false,
+  "notices": [
+    {
+      "mission": 189,
+      "pr": 65,
+      "comment_id": 6903381187,
+      "depends_on": "S0-FENCE/source CAS",
+      "role": "sole integrator",
+      "action": "consume four source blobs and authorized test; apply shared patches only as inert CAS proposals after preimages and ownership"
+    },
+    {
+      "mission": 190,
+      "pr": 107,
+      "comment_id": 6903381709,
+      "depends_on": "189 consumed current source with A12/Work reconciled",
+      "role": "sole compiler",
+      "action": "run surgical package typechecks for Client and transitive Schema/CLI; report exact diagnostics, no generated edit"
+    },
+    {
+      "mission": 200,
+      "pr": 106,
+      "comment_id": 6903382105,
+      "depends_on": "189 consumed source plus inert router/legacy test patch",
+      "role": "sole product CI dispatcher",
+      "action": "surgically select Client F02 new regression and existing F02 contract plus required transitive web/desktop; no full suite"
+    },
+    {
+      "mission": 203,
+      "pr": 189,
+      "comment_id": 6903404023,
+      "depends_on": "none",
+      "role": "source author",
+      "action": "receipt/NOT_RUN update; no CI dispatch"
+    }
+  ],
+  "validation": "NOT_RUN",
+  "global_release": false
+}
