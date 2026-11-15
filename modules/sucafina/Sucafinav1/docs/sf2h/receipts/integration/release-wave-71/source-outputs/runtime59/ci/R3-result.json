@@ -1,0 +1,188 @@
+{
+  "schema": "sf2h.runtime-readonly-root.ci-ledger.v1",
+  "mission": 59,
+  "run": "R3_ORIGINAL_P03",
+  "state": "FAIL_P03_HELD",
+  "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "W_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "S": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+  "S_tree": "4973eb89b9794f72a6b29d5384c230ede56343ec",
+  "S_parent": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "S_only_delta": ".ci-run.json",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_hash": {
+    "algorithm": "sha256",
+    "value": "b419f1644413b9714ff2ffac74b6c368938197bc12981458c90dccd3b22cec62",
+    "serialization": "UTF-8 JSON.stringify(request,null,2) + LF, identical to .ci-run.json"
+  },
+  "branch": "ci-run-linux-m59p03",
+  "run_id": 43666746009,
+  "job_id": 132667701820,
+  "attempt": 1,
+  "event": "push",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666746009",
+  "dispatched_at": "2026-11-15 02:13:23 UTC",
+  "dedup": [
+    {
+      "status": "queued",
+      "total_count": 0,
+      "runs": [],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    },
+    {
+      "status": "in_progress",
+      "total_count": 1,
+      "runs": [
+        {
+          "id": 43665180272,
+          "name": "test-ci",
+          "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+          "branch": "ci-run-linux-m59r1",
+          "event": "push",
+          "status": "in_progress"
+        }
+      ],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    },
+    {
+      "status": "waiting",
+      "total_count": 0,
+      "runs": [],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    },
+    {
+      "status": "pending",
+      "total_count": 0,
+      "runs": [],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    }
+  ],
+  "material_gate": {
+    "commit": "1b861df306260deed5e6af8a8e49e5da45c11b67",
+    "blob": "04eb1568d6af89a7fbe9c8d1207e423ae5747f13",
+    "tests": "R2 130PASS /0FAIL /25064expect",
+    "independent_review": "cold_review59 confirms sufficient safety/material proof; no unfulfilled source-owned precondition"
+  },
+  "original_file": {
+    "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "assertion_lines": 72,
+    "individual_timeout_ms": 180000,
+    "byte_identical_to_C27": true
+  },
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "checks45": "REQUESTED_NOT_RUN_BY59",
+  "local_product_tests": 0,
+  "epic": 0,
+  "P03_attempts59": 1,
+  "GLOBAL_RELEASE": false,
+  "product_candidate_sha": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "product_tree_hash": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "ci_snapshot_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+  "ci_snapshot_parent": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "normalized_request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "expected_selection": [
+    "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+  ],
+  "selected_files": [
+    "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+  ],
+  "selected_test_count": 1,
+  "job_ids": [
+    132667701820,
+    132668819048
+  ],
+  "job_head_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+  "job_heads": [
+    {
+      "job_id": 132667701820,
+      "head_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24"
+    },
+    {
+      "job_id": 132668819048,
+      "head_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24"
+    }
+  ],
+  "queue_seconds": 2,
+  "setup_seconds": 81,
+  "test_seconds": 180,
+  "artifact_seconds": 0,
+  "duration_definitions": "Second-resolution Actions timestamps; queue=run created to test-job start; setup=job start to Run tests; test=Run tests step; both upload steps skipped so artifact time0. Bun's exact per-case and overall durations below.",
+  "conclusion": "failure",
+  "result": {
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "expect_calls": 24,
+    "test_files": 1,
+    "test_cases": 1,
+    "bun_elapsed_seconds": 180.16,
+    "case_elapsed_ms": 180009.39,
+    "fixture_deadline_elapsed_ms": 180002,
+    "original_deadline_ms": 180000,
+    "original_assertion_lines_preserved": 72,
+    "remaining_assertions_not_proved": true,
+    "reported_error": {
+      "status": "stale",
+      "reason": "portfolio-analysis-changed"
+    },
+    "reported_at": "semantic-union-source-scenario.test.ts:50 after evaluateAndStore at49"
+  },
+  "omni_control": {
+    "nonce": "3a28692e228e7a5282558ded5c0bbb67",
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "spawn": 0,
+    "delegated": 0,
+    "proof": "No omni behavior proved"
+  },
+  "artifacts": [],
+  "artifacts_query": "GET /actions/runs/43666746009/artifacts?per_page=100 returned total_count0",
+  "cleanup": {
+    "job_id": 132668819048,
+    "conclusion": "success",
+    "branch_deleted": true,
+    "completed_at": "2026-11-15T02:17:59Z"
+  },
+  "evidence": {
+    "job_log": "R3-job.log",
+    "path": "mission59/evidence/R3-job.log",
+    "bytes": 72850,
+    "characters": 72848,
+    "sha256": "f19e3234093530602fdc3b5a680d9418b2834ddff736a779ff3f6f7ebcc1141f",
+    "git_blob": "5a6b2b6a84a9f5c4361dd1649932611beecccae9"
+  },
+  "repeat": "HELD; no unchanged repeat dispatched",
+  "runtime": {
+    "bun": "1.3.14",
+    "bun_commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "runner": "ubuntu-24.04",
+    "arch": "x64"
+  },
+  "completed_at": "2026-11-15T02:18:00Z"
+}

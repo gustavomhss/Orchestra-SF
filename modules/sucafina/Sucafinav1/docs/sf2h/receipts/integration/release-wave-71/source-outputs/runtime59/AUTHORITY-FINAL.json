@@ -1,0 +1,81 @@
+{
+  "schema": "sf2h.runtime-readonly-root.authority-final.v1",
+  "mission": 59,
+  "epoch": "runtime-readonly-browser59",
+  "state": "TERMINATED_SOURCE_QUALIFIED_P03_FAIL_GATES_PENDING",
+  "active": false,
+  "lease": "ENDED",
+  "effective_on": "Successful CAS publishing the commit containing this file; exact terminal commit/tree reported by subsequent readback in PR72",
+  "terminal_commit": "CONTAINING_COMMIT",
+  "expected_parent": "648499843124aebcb97111e1e671b1fe5009ea59",
+  "branch": "runtime-read-scope",
+  "PR": 72,
+  "sole_remote_writer": "Root59; no continuing source writer after this terminal publication",
+  "product_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "product_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "source_tests": {
+    "state": "PASS_SELECTED_SCOPE",
+    "run": 43665988509,
+    "pass": 130,
+    "fail": 0,
+    "expect_calls": 25064,
+    "files": 15
+  },
+  "P03": {
+    "state": "FAIL_HELD",
+    "run": 43666746009,
+    "attempts59": 1,
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "expect_calls": 24,
+    "case_elapsed_ms": 180009.39,
+    "deadline_ms": 180000
+  },
+  "CI_dispatches": 3,
+  "local_product_tests": 0,
+  "epic": 0,
+  "checks45": "REQUESTED_NOT_RUN_BY59",
+  "consumer_release": "CONSUMER-RELEASE.json",
+  "requested_handoff": 57,
+  "consumer_ACK59": "REQUESTED_NOT_OBSERVED_FOR_TERMINAL_RELEASE",
+  "observed_external_succession": "Mission60/ACK60 after57 terminal recorded as observation, not custody assigned by59; actual next integrator reconciles own authority.",
+  "helpers": "All helpers read/scratch-only and complete; their authorship exclusions are in reviews/QUALIFICATION.json; no helper remote source lease",
+  "prohibited_actions_taken": {
+    "stack_writes": 0,
+    "control_writes": 0,
+    "dev_merge": 0,
+    "deploy": 0,
+    "Azure_changes": 0,
+    "engine_policy_changes": 0,
+    "external_messages": 0,
+    "new_controller_or_goal": 0
+  },
+  "campaign": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "continuation": "No autonomous59 source/test continuation. A new producer mission must reconcile actual heads, releases and authority; silence does not revive56/58/59. Integrators/check owners keep their own scope.",
+  "GLOBAL_RELEASE": false,
+  "observed_external_stack_terminal": {
+    "head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "authority60_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+    "material_C28": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "next_integrator": "Needs its own reconciled authority; neither57 nor60 is revived by59"
+  },
+  "owned_runs_active": 0,
+  "owned_runs_queued": 0,
+  "all_owned_runs_terminal": true,
+  "obsolete_R1": {
+    "run": 43665180272,
+    "conclusion": "cancelled",
+    "cleanup": "success",
+    "qualified": false
+  },
+  "reconciliation": "reconciliation/TERMINAL-PRECHECK.json"
+}

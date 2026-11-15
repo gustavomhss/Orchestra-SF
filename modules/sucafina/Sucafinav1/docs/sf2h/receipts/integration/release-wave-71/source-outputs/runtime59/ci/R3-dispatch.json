@@ -1,0 +1,95 @@
+{
+  "schema": "sf2h.runtime-readonly-root.ci-ledger.v1",
+  "mission": 59,
+  "run": "R3_ORIGINAL_P03",
+  "state": "IN_PROGRESS",
+  "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "W_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "S": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+  "S_tree": "4973eb89b9794f72a6b29d5384c230ede56343ec",
+  "S_parent": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "S_only_delta": ".ci-run.json",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_hash": {
+    "run": "R3",
+    "bytes": 259,
+    "sha256": "b419f1644413b9714ff2ffac74b6c368938197bc12981458c90dccd3b22cec62",
+    "blob": "f368e4c41c5d05311001960c0af04d282e4fa552"
+  },
+  "branch": "ci-run-linux-m59p03",
+  "run_id": 43666746009,
+  "job_id": 132667701820,
+  "attempt": 1,
+  "event": "push",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666746009",
+  "dispatched_at": "2026-11-15 02:13:23 UTC",
+  "dedup": [
+    {
+      "status": "queued",
+      "total_count": 0,
+      "runs": [],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    },
+    {
+      "status": "in_progress",
+      "total_count": 1,
+      "runs": [
+        {
+          "id": 43665180272,
+          "name": "test-ci",
+          "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+          "branch": "ci-run-linux-m59r1",
+          "event": "push",
+          "status": "in_progress"
+        }
+      ],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    },
+    {
+      "status": "waiting",
+      "total_count": 0,
+      "runs": [],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    },
+    {
+      "status": "pending",
+      "total_count": 0,
+      "runs": [],
+      "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "selection": "originalP03"
+    }
+  ],
+  "material_gate": {
+    "commit": "1b861df306260deed5e6af8a8e49e5da45c11b67",
+    "blob": "04eb1568d6af89a7fbe9c8d1207e423ae5747f13",
+    "tests": "R2 130PASS /0FAIL /25064expect",
+    "independent_review": "cold_review59 confirms sufficient safety/material proof; no unfulfilled source-owned precondition"
+  },
+  "original_file": {
+    "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "assertion_lines": 72,
+    "individual_timeout_ms": 180000,
+    "byte_identical_to_C27": true
+  },
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "checks45": "REQUESTED_NOT_RUN_BY59",
+  "local_product_tests": 0,
+  "epic": 0,
+  "P03_attempts59": 1,
+  "GLOBAL_RELEASE": false
+}

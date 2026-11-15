@@ -1,0 +1,259 @@
+{
+  "run_id": 43665180272,
+  "jobs": [
+    {
+      "id": 132662845733,
+      "name": "test (ubuntu-24.04)",
+      "head_sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-11-15T01:53:29Z",
+      "completed_at": "2026-11-15T02:38:44Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-15T01:53:29Z",
+          "completed_at": "2026-11-15T01:53:30Z"
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-15T01:53:30Z",
+          "completed_at": "2026-11-15T01:53:37Z"
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3,
+          "started_at": "2026-11-15T01:53:37Z",
+          "completed_at": "2026-11-15T01:53:37Z"
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-15T01:53:37Z",
+          "completed_at": "2026-11-15T01:53:37Z"
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-15T01:53:37Z",
+          "completed_at": "2026-11-15T01:53:42Z"
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-15T01:53:42Z",
+          "completed_at": "2026-11-15T01:53:42Z"
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-15T01:53:42Z",
+          "completed_at": "2026-11-15T01:53:42Z"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-15T01:53:42Z",
+          "completed_at": "2026-11-15T01:54:24Z"
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-11-15T01:54:24Z",
+          "completed_at": "2026-11-15T01:54:25Z"
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-15T01:54:25Z",
+          "completed_at": "2026-11-15T01:54:25Z"
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-15T01:54:25Z",
+          "completed_at": "2026-11-15T01:54:25Z"
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-15T01:54:25Z",
+          "completed_at": "2026-11-15T01:54:35Z"
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-11-15T01:54:35Z",
+          "completed_at": "2026-11-15T01:54:35Z"
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-11-15T01:54:35Z",
+          "completed_at": "2026-11-15T01:54:35Z"
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-15T01:54:35Z",
+          "completed_at": "2026-11-15T01:54:35Z"
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-15T01:54:35Z",
+          "completed_at": "2026-11-15T01:54:35Z"
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-15T01:54:35Z",
+          "completed_at": "2026-11-15T01:55:07Z"
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-11-15T01:55:07Z",
+          "completed_at": "2026-11-15T01:55:07Z"
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-11-15T01:55:07Z",
+          "completed_at": "2026-11-15T01:55:08Z"
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "number": 20,
+          "started_at": "2026-11-15T01:55:08Z",
+          "completed_at": "2026-11-15T02:38:41Z"
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-11-15T02:38:41Z",
+          "completed_at": "2026-11-15T02:38:41Z"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22,
+          "started_at": "2026-11-15T02:38:41Z",
+          "completed_at": "2026-11-15T02:38:41Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42,
+          "started_at": "2026-11-15T02:38:41Z",
+          "completed_at": "2026-11-15T02:38:41Z"
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43,
+          "started_at": "2026-11-15T02:38:41Z",
+          "completed_at": "2026-11-15T02:38:41Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-11-15T02:38:41Z",
+          "completed_at": "2026-11-15T02:38:42Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-11-15T02:38:42Z",
+          "completed_at": "2026-11-15T02:38:42Z"
+        }
+      ]
+    },
+    {
+      "id": 132673862032,
+      "name": "cleanup",
+      "head_sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-15T02:38:46Z",
+      "completed_at": "2026-11-15T02:38:52Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-15T02:38:47Z",
+          "completed_at": "2026-11-15T02:38:47Z"
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-15T02:38:47Z",
+          "completed_at": "2026-11-15T02:38:51Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-15T02:38:52Z",
+          "completed_at": "2026-11-15T02:38:52Z"
+        }
+      ]
+    }
+  ]
+}

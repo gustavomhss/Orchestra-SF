@@ -79,6 +79,13 @@ export type Persistence = {
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
+  // Internal root-only scope, not source admission or business authorization.
+  // Consumers must still use their canonical transaction(surface, work) inside it
+  // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
+  // Fresh SQL, independent copies, abort/lifetime fences and joined readers are
+  // required. Any attempted write poisons the root even when its error is caught.
+  // Older adapters omit this capability and retain their existing transaction path.
+  readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>
 }
 
 export function object(value: unknown): Record<string, unknown> {

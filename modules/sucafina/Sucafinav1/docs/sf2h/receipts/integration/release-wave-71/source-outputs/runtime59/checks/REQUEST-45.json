@@ -1,0 +1,99 @@
+{
+  "schema": "sf2h.runtime-readonly-root.check-request.v1",
+  "mission": 59,
+  "owner": 45,
+  "state": "REQUESTED_NOT_RUN_BY59",
+  "PR": 72,
+  "candidate": {
+    "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+    "branch": "runtime-read-scope",
+    "source_base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a"
+  },
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "argv": [
+        "bun",
+        "typecheck"
+      ],
+      "purpose": "Additive Persistence capability, Source wrapper types, Portfolio generic return and new tests"
+    },
+    {
+      "cwd": ".",
+      "argv": [
+        "bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev"
+      ],
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    }
+  ],
+  "interface": "Use owner45's existing authorized hosted interface; do not seize astra-check-compose or invent a workflow. Mission59 owns surgical test-ci only.",
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "bytes": 5363,
+      "sha256": "4e44c93060c70ddebd1f85ecbe78b4ecaca311e19985df4c610c84529085cbee",
+      "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "bytes": 35607,
+      "sha256": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33",
+      "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "bytes": 15748,
+      "sha256": "52116581fb89dd0065a1fbfe6a82829fe306faa09c46135aa06775ff21ca6f9d",
+      "blob": "0e812842ad0d534998c182100a8466548d70e915"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "bytes": 4757,
+      "sha256": "5d1b5706c68b4ac9489fb9cb5c58aa9f050994329e9361306892599fe71ccbc1",
+      "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+      "bytes": 7414,
+      "sha256": "537af7091d6b55bc3f383265b1049b8ef2f6debb19d75fa8051d165ff413b707",
+      "blob": "35741770154ccea55944674239e5b29cadc3abb6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "bytes": 11882,
+      "sha256": "13f6495ecd0475d75d38cb91dce6b23ec62e46ff310d8ae63fad9c39f6d96f2c",
+      "blob": "1d0ca64fb5c181e4a08321758871c0d0b874802d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+      "bytes": 16782,
+      "blob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+      "sha256": "e5816b6a9aa73bbea88efcde2223afc65e45c1199b2669d460e7bc2edf3e0e3e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+      "bytes": 6279,
+      "sha256": "4c38ea40691c6fdf24b387d5422272eedbc5dffba4d9a196c284402f9ea8f4a2",
+      "blob": "0dac654465c7ad43e025d10f660ecad297cc5c1c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+      "bytes": 9435,
+      "sha256": "12772949b77ceba728dd1d3584ad021beebeedc4fa59c99eff64ff5dbba00d94",
+      "blob": "6b0e7ae0e7dea667570ccee65175b8a9089a171e"
+    }
+  ],
+  "generated_protocol_change": false,
+  "atlas_change": false,
+  "limits": "59 did not execute local tests, typechecks or guards. Source test-ci results are a different gate and do not substitute these checks. 45 must pin its exact input/configuration and publish actual results.",
+  "GLOBAL_RELEASE": false,
+  "supersedes": {
+    "W": "ba393316f7c7350cdd519068808baafb7edb2393",
+    "reason": "Same four product blobs; disposal test ordering corrected for the pinned Bun matcher without changing its oracle"
+  }
+}

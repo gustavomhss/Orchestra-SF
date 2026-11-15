@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.runtime-readonly-root.ci-ledger.v1",
+  "mission": 59,
+  "run": "R1",
+  "state": "IN_PROGRESS",
+  "W": "ba393316f7c7350cdd519068808baafb7edb2393",
+  "W_tree": "9da06e22fae4445e174771d678934a0bebe4838a",
+  "S": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+  "S_tree": "fc8fedc05cdc5e6ad6cb299754ea0fc32ab4829e",
+  "S_parent": "ba393316f7c7350cdd519068808baafb7edb2393",
+  "S_only_delta": ".ci-run.json",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+      "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+      "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+      "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+      "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+      "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+      "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+      "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+      "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+      "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+      "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "branch": "ci-run-linux-m59r1",
+  "run_id": 43665180272,
+  "job_id": 132662845733,
+  "attempt": 1,
+  "dedup": [
+    {
+      "status": "queued",
+      "total_count": 0,
+      "runs": []
+    },
+    {
+      "status": "in_progress",
+      "total_count": 0,
+      "runs": []
+    },
+    {
+      "status": "waiting",
+      "total_count": 0,
+      "runs": []
+    },
+    {
+      "status": "pending",
+      "total_count": 0,
+      "runs": []
+    }
+  ],
+  "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+  "local_product_tests": 0,
+  "epic": 0,
+  "P03": 0,
+  "source_pass": false,
+  "GLOBAL_RELEASE": false
+}

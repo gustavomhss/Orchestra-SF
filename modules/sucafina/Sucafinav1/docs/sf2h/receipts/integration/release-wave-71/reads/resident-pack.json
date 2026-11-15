@@ -1,0 +1,48 @@
+{
+  "schema": "sf-mission71-distributed-normative-read-v1",
+  "reader": "/root/review_native64",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor_pack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "read_fields": [
+      "resident",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_ui",
+      "resident_packaging"
+    ],
+    "read_scope": "Entire values of assigned fields, including nested profiles/skills/packs/routes/proofs and packaging rules; not entire pack (other fields assigned to parent/other readers).",
+    "assigned_projection": {
+      "profiles": 5,
+      "skills": 9,
+      "packs": 8,
+      "operations": 33,
+      "routes": 33,
+      "proofs": 6
+    },
+    "campaign_obligation": "5 profiles / 18 skills / 8 packs / 39 operations / AM01–AM06. Actor projection is a subset, never replacement for the full campaign."
+  },
+  "appendix": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+    "blob": "033737b1051b23443e633df7874c550629bf55a1",
+    "entire_file_read": true,
+    "lines": 260
+  },
+  "constraints_for71": [
+    "Every integration preserves canonical IDs, contracts C01–C17, source ownership and exact typed producer/consumer edges. Descriptor/catalog/file existence is not actual skill load, handler execution or installed consumption.",
+    "C15: 5 distinct SF profiles, deny-all permission floors with explicit sf operations/own reserved skills. sf_maestro is not native maestro. Real SkillV2 reserved-source bytes and parsed-instruction digests, SessionV2.skill context message and actual model are required; no fabricated receipts.",
+    "Native reviewer needs new session/run, cannot fork or reuse analytic session; source reviews do not replace independent final campaign reviews.",
+    "C16: one logical sucafina-workbench, private per-call Client/Server transport and host-owned CallLease. Exact original Request/principal/session/case/profile/loaded skill/operation intersection; max5min; homonym provider-conflict; revalidation at dispatch and egress; cancellation/generation/revoke invalidate.",
+    "All39 operations need a positive real profile+loaded-skill route and canonical producer/consumer parity in UI/native/MCP. Refusing everything, catalog rows or synthetic context cannot satisfy AM02.",
+    "C07: routines.run needs current native admission. interactive may prepare/run only with actual human/admission authority; host-bound routine-result denies prepare/run even via direct call/retry. Human response creates a new versioned run. Schedule requires separate live per-occurrence admission.",
+    "C17: source refs are selectors under current authorization; no actor/owner in model args. Source replacement/revocation suppresses all derived evidence including title/count. Historical content requires current authorized historical scope and identified differences.",
+    "Atlas uses task/project kinds, host-derived business owners and opaque string references; no added template fields, raw BusinessEvidenceRef template, engineering PR/logbook/owner or repo-backed business store.",
+    "Atlas DurableMemory façade stays synchronous over the private staging snapshot inside existing async serializable dashboard transaction. Canonical versioned/respawn/read/emit + real scanner; commit success before committed receipt; exact retry receipt, conflict on changed payload, restart proofs required.",
+    "Scanner clean/hit/unavailable remain distinct. No always-clean implementation. Atlas packaging keeps exact external memory-emit ./scanner.js edge to public native-memory, additive bound scanner exports, no guard/allowlist bypass or hand-written generated code.",
+    "Product outputs persist canonical versions/provenance and require actual consumer action after reload. UI exposes factual contribution/source/next action; failures/needs-input/stale stay explicit and retain human work.",
+    "AM01–AM06, full5/18/8/39 witnesses, eight final selections, C/G7,D/G8 and final reviews remain mandatory. NO_TEST/CI_DISPATCH in71 supersedes legacy execution commands; queue checks to45 and final acceptance toS0."
+  ],
+  "integration64_consequence": "The reviewed64 source and inert host patch may compose without enabling external origin/C15/human/Task-Relay/reload/readiness/Schedule capabilities or claiming integrated/AM PASS.",
+  "mutations": "NONE_REMOTE; scratch analysis only"
+}

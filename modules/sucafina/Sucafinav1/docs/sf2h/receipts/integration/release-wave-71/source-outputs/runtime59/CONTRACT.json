@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.runtime-readonly-root.contract.v1",
+  "mission": 59,
+  "state": "FROZEN_BEFORE_DEPENDENT_EDITS",
+  "signature": "Persistence.readSnapshotRoot?: <T>(work: () => Promise<T>, options?: TransactionOptions) => Promise<T>",
+  "purpose": "Internal optional SQL snapshot-root primitive. It supplies a readonly scope, NOT source admission, host authorization or an alternative business read API.",
+  "producer": "Existing openLocalStore; existing operation(true), queue, BEGIN IMMEDIATE and SQLite connection. No second store or new mutable transaction semantics.",
+  "consumer": {
+    "path": "product/portfolio/read-snapshot.ts",
+    "anchor": "dashboard",
+    "sequence": "Retain canonical persistence.transaction('dashboard', original callback, options) as run. If capability exists, await readSnapshotRoot.call(persistence, run, options); otherwise await run(). Root resolution, including poison/readers/abort rejection, precedes existing final egress fence.",
+    "unchanged": "Pin readSnapshotRoot identity along with transaction/currentSnapshots, host/request/context/incoming. Preserve all currentSnapshots observations, callback count checks, nested joining, final host revalidation and no external awaited callback after root resolution."
+  },
+  "wrappers": {
+    "path": "product/integration/source-lifecycle.ts",
+    "forwarding": "Add optional capability to input/output Pick and forward only when underlying adapter supports it. Forwarding opens scope only. Consumer always executes wrapper.transaction inside it.",
+    "admission": "Dashboard requireSourceIdentities and guard creation remain in the exact canonical transaction. Every nested surface transaction retains its own guards. Do not require all three source metadata unconditionally: partial metadata is admissible when old flow never observes that surface.",
+    "current_choice": "Source(Fence(LocalStore)) and direct Fence(LocalStore) preserve track/authorizeSnapshot/publication because the consumer ALWAYS invokes canonical transaction. Never invoke work directly as a replacement for wrapper.transaction.",
+    "authority": "Internal scope/currentSnapshots do not authorize business access. No endpoint exposes the primitive; all59 business integration uses original transactions and host fences."
+  },
+  "semantics": {
+    "callback": "Once, after all three fresh SQL observations/validation in existing dashboard,planner,procurement order; no snapshot/blob argument and no commit result.",
+    "scope": "Root only. Nested calls reject through operation(true), poison the enclosing root even if swallowed, and allocate no new SQL root/memo budget. readPortfolioSnapshot joins only its existing matching own scope.",
+    "copies": "All surfaces stay private. Only initial-memo-hit immutable plans get fresh factories, including Dashboard. Misses keep validated private graphs and defensive clones. Each nested transaction/currentSnapshots returns an independent graph. Mutating detached copies is allowed and never becomes stored or shared state.",
+    "writes": "Nested transaction commit:true, transactionAll, blob put/remove and secrets put/take/remove reject and poison, including swallowed failures. All other existing direct write operations continue through operation(true). No COMMIT in new root.",
+    "lifetime": "Existing requireScope/parent signal fences and reader counter. Root closes and clears its private snapshots/copy references in finally; final signal, poison and unjoined-reader checks must pass before success. Captured descendants remain invalid; dispose drains admitted operations and refuses new admissions.",
+    "data": "Retain v1 codec/validation, getter/prototype/cycle/error behavior of mutable paths. No projection of opaque C08 callbacks and no target substitution.",
+    "fallback": "Absent capability executes the old transaction path. Do not claim that legacy/custom adapters acquire new atomicity/readonly semantics."
+  },
+  "memory": {
+    "shared": "At most three materialization plans and 8,388,608 UTF-16 string units (16MiB string content)",
+    "root": "Only initial memo hits captured; at most one additional initial-memo string budget across eviction. No nested root. New root clears private graph/getter and copy references at close.",
+    "limits": "Not a bound on heap, decoded graphs, temporary allocations or copies retained by callers. Existing 128 depth/200000 nodes/4096 undefined-path optimization thresholds and fallback remain."
+  },
+  "qualification": {
+    "composition": "Real SQLite + canonical createCurrentChoiceFence and createSfSourcePersistence, not mock guard replacements",
+    "cases": [
+      "Partial/corrupt source metadata, each surface and retained Dashboard anchor",
+      "Fresh SQL across connections, changed/deleted/corrupt unrequested payloads",
+      "Detached-copy target/sibling alias/mutation isolation",
+      "Caught nested commit, transactionAll, blob and secret writes",
+      "Root/nested abort, dangling readers, captured capabilities, dispose",
+      "Request/context/method and installation/project drift; final revalidation",
+      "Codec errors and optimization limits; complete unfiltered Finance34/56 regressions",
+      "Legacy/capability equivalent work, callback/observation/authorization counts; bounded structural copy-cost measurement"
+    ],
+    "timing": "Descriptive only. Never add nested inclusive spans as CPU or claim runtime explains the full historical timeout.",
+    "P03": "Only after safe material work reduction. Original file, 72 assertions/order/full fixture and 180000ms unchanged; one justified attempt, no promise of PASS."
+  },
+  "rejected": [
+    "Dashboard-to-Procurement anchor substitution",
+    "Closed result projection for opaque C08 callbacks",
+    "Cache/skip/reuse of independent observations, authorization or replay",
+    "Modify mutable transactions, financial policy, foreign paths or stack57"
+  ],
+  "review": "contract_review59 agreed the scope-only primitive plus ALWAYS canonical transaction fixes direct-Fence forwarding risk without foreign edits; normative_ci59 read complete norms.",
+  "checks_owner": 45,
+  "GLOBAL_RELEASE": false
+}

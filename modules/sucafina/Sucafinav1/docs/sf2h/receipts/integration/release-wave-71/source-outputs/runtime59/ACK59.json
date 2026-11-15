@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.runtime-readonly-root.authority.v1",
+  "mission": 59,
+  "epoch": "runtime-readonly-browser59",
+  "state": "ACK59_ACCEPTED_ISOLATED_SOURCE_WRITER",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "runtime-read-scope",
+  "expected_parent": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+  "expected_tree": "31be8f81803b77f03e9089e09118f78218b26262",
+  "authority": {
+    "user_instruction": true,
+    "control": "3b10ec2c0dcc89fccde5520e66e4dca38f48ae3c",
+    "mission_blob": "6719755c2510dc60c9d0c4abedc4ebf3e8e78bec"
+  },
+  "reconciliation": {
+    "prepared_branch_unchanged": true,
+    "runtime56_terminal": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+    "runtime56_authority_blob": "73e17bd7485b534bc03218e04163203e240ec235",
+    "portfolio58_terminal": "00813b2ebacf5b0cd1c69d871c7a757ac323ebb4",
+    "portfolio58_authority_blob": "e5050a0f4f30d8a21a9dbb0d47dbba9cb238366f",
+    "stack_head": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "stack_authority_blob": "5f2009672caed4b729924e88033b639fae8df7ee",
+    "stack_material": "C27",
+    "integrator": 57,
+    "integrator_state": "terminal lease ended; stack ownership reserved, no takeover",
+    "checks_owner": 45,
+    "reports_owner": 48,
+    "decisions_owner": 52,
+    "source_PRs_observed": 0
+  },
+  "reading": {
+    "root_AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "nested_AGENTS": "none in runtime/product/test/docs subtrees and no modules/AGENTS.md or modules/sucafina/AGENTS.md",
+    "START": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW": "043205bee6031b4517a98591b3588fca0ab12925",
+    "COMMON": "d61f32af03fe10747a50274233f953af044decf6",
+    "S0C": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "appendices": [
+      "ded082688fce327def0b48968fa3b89a5831029c",
+      "033737b1051b23443e633df7874c550629bf55a1",
+      "907750ae7c945e5f303480cc6e14f11bb1696eb9"
+    ],
+    "scope": "Full normative pack and appendices read by normative_ci59/read_resident_pack; root and contract_review59 read full mission, 58 diagnosis/reviews, current runtime/contracts/wrappers and handoffs. Code-source indexes do not assert recursive reading of every referenced file."
+  },
+  "source_blobs": {
+    "runtime": "666259511ad459629ef52f48aca20b231b0dff4b",
+    "contract": "9e9bac976b503409de65868a366f352ca1e65071",
+    "source_wrapper": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+    "consumer": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+    "current_choice_fence": "db487cd1b6263835302e9bcf80499d18531aa592",
+    "entry": "0591ee43590b6db4f7b574b071eaada8346ccc1f"
+  },
+  "precedence": "Mission59 explicitly grants the new readonly scope and preserves existing multi-surface observations; historical COMMON allocation/CAMP.INV.11 does not remove the current runtime behavior or expand any other writer scope.",
+  "writer": "Root59 only remote writer; helpers may write assigned scratch test/review files, never refs",
+  "contract": "CONTRACT.json, frozen in this documentation commit before dependent edits",
+  "validation": {
+    "product_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN_OWNER45",
+    "guards": "NOT_RUN_OWNER45",
+    "P03": "HISTORICAL_FAIL; retry only after safe material discriminant",
+    "local_product_tests": 0,
+    "epic": 0
+  },
+  "remote": "GitHub MCP create_tree/create_commit/update_ref expected_sha force:false",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,135 @@
+{
+  "schema": "sf2h.runtime-readonly-root.cost.v1",
+  "rowsPerSurface": 160,
+  "observations": 6,
+  "persisted": [
+    {
+      "surface": "dashboard",
+      "characters": 41800,
+      "sha256": "c717d99c17ad6a69b0fe4b221ce92b7b7f78136e031e8abd842bf02e7d8dad48"
+    },
+    {
+      "surface": "planner",
+      "characters": 41156,
+      "sha256": "40f316843f4b881638ba5103acc3c22123aae435deb76c042d919b9e0ed94001"
+    },
+    {
+      "surface": "procurement",
+      "characters": 42444,
+      "sha256": "9e0c53d6c8e904874a9043a9f6eaee6abbbd8181dc1d018bbcb64466340c4a55"
+    }
+  ],
+  "work": {
+    "callbacks": 25,
+    "nested": {
+      "dashboard": 12,
+      "planner": 6,
+      "procurement": 6
+    },
+    "observations": 6,
+    "consumedRows": {
+      "dashboard": 2880,
+      "planner": 1920,
+      "procurement": 1920
+    },
+    "digest": 8329440,
+    "order": "4251558a1da56a05ed819d58553863913c6ce219ab7952e8f88a26186f896532",
+    "metrics": {
+      "snapshots": 9,
+      "authorizations": 27,
+      "revalidations": 27,
+      "transactions": {
+        "dashboard": 13,
+        "planner": 6,
+        "procurement": 6
+      },
+      "callbacks": {
+        "dashboard": 13,
+        "planner": 6,
+        "procurement": 6
+      },
+      "events": "8e23912be41935178630d3065d987fa0c32efd9a427bcafe7ec7c904c48c6285"
+    }
+  },
+  "samples": [
+    {
+      "variant": "legacy",
+      "elapsedMs": 61.767202
+    },
+    {
+      "variant": "capability",
+      "elapsedMs": 52.94714099999999
+    },
+    {
+      "variant": "capability",
+      "elapsedMs": 50.213212999999996
+    },
+    {
+      "variant": "legacy",
+      "elapsedMs": 65.73564599999997
+    },
+    {
+      "variant": "legacy",
+      "elapsedMs": 63.72601199999997
+    },
+    {
+      "variant": "capability",
+      "elapsedMs": 51.35737000000006
+    },
+    {
+      "variant": "capability",
+      "elapsedMs": 49.640748999999914
+    },
+    {
+      "variant": "legacy",
+      "elapsedMs": 62.395174999999995
+    }
+  ],
+  "structural": {
+    "legacy": {
+      "descriptors": 21582,
+      "markedObjects": {
+        "dashboard": 10560,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 120,
+      "parseCharacters": 2607840,
+      "wireParses": 0
+    },
+    "capability": {
+      "descriptors": 0,
+      "markedObjects": {
+        "dashboard": 0,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 186,
+      "parseCharacters": 4042152,
+      "wireParses": 0
+    }
+  },
+  "legacy": {
+    "samples": [
+      61.767202,
+      65.73564599999997,
+      63.72601199999997,
+      62.395174999999995
+    ],
+    "min": 61.767202,
+    "median": 63.06059349999998,
+    "max": 65.73564599999997
+  },
+  "capability": {
+    "samples": [
+      52.94714099999999,
+      50.213212999999996,
+      51.35737000000006,
+      49.640748999999914
+    ],
+    "min": 49.640748999999914,
+    "median": 50.78529150000003,
+    "max": 52.94714099999999
+  },
+  "limitations": "One hosted runner, four AB/BA pairs, descriptive timing only; no elapsed-time/ratio assertion, heap estimate, P03 result or clone-only CPU claim. Structural probe excludes root admission and final publication, keeps real wrappers, and is restored before reporting."
+}

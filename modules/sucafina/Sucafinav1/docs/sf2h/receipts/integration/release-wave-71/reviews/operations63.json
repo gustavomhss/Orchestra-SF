@@ -1,0 +1,298 @@
+{
+  "schema": "sf2h.integration71.operations63.static-review.v1",
+  "reviewer": "/root/review_operations_auth",
+  "remote_writes": 0,
+  "product_tests": 0,
+  "CI_dispatches": 0,
+  "target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "terminal": "f0682b3ca9a792dcef2166a867aa06974e242874",
+  "terminal_tree": "8a3b0ad5c426a621a013203552c2e48dd1074e51",
+  "material": "83aabd95ab423816002a623d1a998eb51bb89173",
+  "material_tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+  "pr": 78,
+  "verdict": "READY_TO_COMPOSE_OWNED_UNIT_WITH_QUALIFICATION_HOLDS",
+  "release": "MATERIAL_RELEASED_FOR_REVIEW_QUALIFICATION_HELD",
+  "authority": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "review": {
+    "owned_source": "All 11 full postimages read; all 3 modified preimages fetched at exact target; all 8 new paths NOT_FOUND at exact target; unified complete patch reconstructed offline exactly to all 11 postimages and Git blob/SHA256 verified (artifact processing only).",
+    "scanner": "INSTREAM loopback API unchanged; clean admission waits ordered EOF, exact 11-byte response, completed local send queue; rejects malformed/extra/truncated/early replies, closes on error/timeout. No server/asset auth bypass or policy edits.",
+    "helpers": "documents.ts replaces exact Risk rating label with exact accessible combobox; imports.ts attaches eager rejection observer but returns same waiter promise. Existing requests/assertions/IDs/budgets preserved.",
+    "setup": "6 script/docs files inactive without workflow hook; fixed official package URL/size/digest, official database, two loopback owned processes, bounded startup/cleanup and discriminating controls. No workflow or CI dispatch is part of own material.",
+    "consumer_edges": "local/entry.ts and Operations installation call scanLocalFile; assets.scan boolean contract unchanged. product-authority C28 read-uncertainty change excludes all five Operations operations/human actions; shared construction still requires composed validation.",
+    "limitations": "Read review/static reconstruction are not product execution; target includes Reports C28 not qualified by source63. Source R3 22PASS and R4 1PASS4FAIL not transferred."
+  },
+  "material_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "mode": "100644",
+      "preimage_blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+      "postimage_blob": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+      "postimage_sha256": "88dc1df43fa767fd2b42b1a7c4010b641c12c89bb8044523261ab91b71af40f4",
+      "postimage_bytes": 2376,
+      "preimage_file": "local-scanner.ts.preimage.txt",
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "458c33783954d9b8465f289690718a4fe8c34ec6",
+      "postimage_sha256": "6501cd22b27352dc048d5fa7b3bf43a216a563d0a9491399d4187e78d142a54e",
+      "postimage_bytes": 3190,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c",
+      "postimage_sha256": "834e11fa40c0b6bdb1c93de41d894335331870dfd8275490ddf6e0aa6950e7c6",
+      "postimage_bytes": 6620,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/README.md",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "1cca813f15c94cd397825a42c28ac9b9020212df",
+      "postimage_sha256": "10d58d129a667d1d2e63d1df22a56220d20d232b52d57b64bcebcbf32e5e2e0a",
+      "postimage_bytes": 5205,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/cleanup.sh",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "034be3399187c8b8683c166987795f210a7421c2",
+      "postimage_sha256": "089bf65246458a859eedecb4a57aaf4ef902ba7bbbf5cf86dd37a927d8854d12",
+      "postimage_bytes": 296,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/select.mjs",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "4b4dabacea4c2b47daec81a9de95c61b5ca78fc4",
+      "postimage_sha256": "9adb3b8253a08576be2442efb8db9f8d0f408ea048a8e29847f8e02dd9c5c9b8",
+      "postimage_bytes": 1229,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+      "postimage_sha256": "2795cfd2ddca6381d465264d706490e6bedf9c1bde6dcd4051d22c9605287349",
+      "postimage_bytes": 13972,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "66bd6df24499027328f22b598e50268023287071",
+      "postimage_sha256": "ec25fdde83ccb6f163b05053cfbaa64e860cd582230006e92c14f08baec1b596",
+      "postimage_bytes": 3857,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/tools.lock.json",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+      "postimage_sha256": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6",
+      "postimage_bytes": 2172,
+      "preimage_file": null,
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "mode": "100644",
+      "preimage_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "postimage_blob": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+      "postimage_sha256": "1d6f4a5a17eb31959174c7df03027c89d2425853c21a18bd8400651dbe51484d",
+      "postimage_bytes": 16321,
+      "preimage_file": "documents.ts.preimage.txt",
+      "postimage_location": "repository path at material_work_commit"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "mode": "100644",
+      "preimage_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "postimage_blob": "c229bc6e85d2474d057a21859d0d88055100a078",
+      "postimage_sha256": "a8b6b42f139929fbe6fe5aa8e5ebad5b83705dcbcc9155db60d82acc712fb53d",
+      "postimage_bytes": 16785,
+      "preimage_file": "imports.ts.preimage.txt",
+      "postimage_location": "repository path at material_work_commit"
+    }
+  ],
+  "shared_disposition": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "pre": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "post": "fee12907e72370b96aa4ddd79e6c4ebf25e2fdaa",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "45 existing lane /75 scanner successor;71 does not move workflow refs",
+      "manifest": "external/ci/MANIFEST.json"
+    },
+    {
+      "path": ".github/workflows/astra-compose-check.yml",
+      "pre": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "post": "ba41d66a3b862eed2c4252c1a56b5afe8ebaa0fb",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "45",
+      "manifest": "external/checks/MANIFEST.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "pre": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "post": "0a0dd9eb2299df05e8c6bc14cd4dc67313b64c25",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "73 exclusively",
+      "manifest": "external/procurement-ui/procurement-money.manifest.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "pre": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "post": "f1573e02df562db7569f53931d7a4524a108ad4b",
+      "status": "INERT_NOT_APPLIED",
+      "owner": "75",
+      "manifest": "external/procurement-ui/field-errors.manifest.json"
+    }
+  ],
+  "holds": [
+    "Real ClamD readiness/live clean/EICAR/clean-after/ERROR/DOWN NOT_RUN",
+    "Five original journeys latest 1PASS4FAIL: money precision, duplicate FX description, import admit403, document scan422",
+    "Compiler/typechecks/guards NOT_RUN",
+    "C06 invalidation, PDF/DOCX/text extraction completeness, native parity, AM01-06 and final eight/reviews/C-G7/D-G8 remain mandatory",
+    "Import403 cause still not established by generic denial; no unsupported conclusion beyond missing scanner blocks admission"
+  ],
+  "routing70": [
+    {
+      "id": "M70-AUTH-01",
+      "severity": "P2",
+      "owner": 72,
+      "branch": "auth-retention-fix",
+      "criteria": [
+        "mission70.acceptance[0] (session/storage)",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "state": "OPEN_NO_RELEASE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts (auth secrets maintenance contract only)",
+        "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts (auth lifecycle maintenance only)",
+        "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/"
+      ]
+    },
+    {
+      "id": "M70-ISO-01",
+      "severity": "P2",
+      "owner": 73,
+      "branch": "procurement-privacy-fix",
+      "criteria": [
+        "CAMP.INV.04",
+        "CAMP.CMP.02",
+        "CAMP.CMP.03",
+        "C03",
+        "C08",
+        "WP10.T03.QLT.40"
+      ],
+      "state": "OPEN_NO_RELEASE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/procurement.ts (visibility-before-public-response and numeric presentation only; nofinancialpolicy/stage changes)",
+        "modules/sucafina/Sucafinav1/runtime/application.ts (public visibility/error boundary only)",
+        "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/"
+      ]
+    },
+    {
+      "id": "M70-HTTP-01",
+      "severity": "P2",
+      "owner": 74,
+      "branch": "http-body-limit-fix",
+      "criteria": [
+        "mission70.acceptance[1] (Node/Effect body seam)",
+        "C08",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "state": "OPEN_NO_RELEASE",
+      "paths": [
+        "apps/cli/src/sucafina-product/installation.ts",
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/runtime/request-body.ts (newboundedexistingtransporthelper)",
+        "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/"
+      ]
+    }
+  ],
+  "census": {
+    "auth-retention-fix": {
+      "head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "release": "NO_NEW_MATERIAL_OR_ACK_OBSERVED"
+    },
+    "procurement-privacy-fix": {
+      "head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "release": "NO_NEW_MATERIAL_OR_ACK_OBSERVED"
+    },
+    "http-body-limit-fix": {
+      "head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "release": "NO_NEW_MATERIAL_OR_ACK_OBSERVED"
+    },
+    "operations-scanner-proof": {
+      "head": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "release": "63_TERMINAL_ONLY_75_NOT_STARTED"
+    },
+    "canonical-read-cost": {
+      "head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "release": "NO_NEW_MATERIAL_OR_ACK_OBSERVED"
+    }
+  },
+  "gates70": [
+    {
+      "id": "M70-G01",
+      "status": "NOT_PROVEN",
+      "title": "Microsoft/B2B e ingresso HTTPS reais sem prova admitida",
+      "criteria": [
+        "mission70.acceptance[1]",
+        "CAMP.CMP.03"
+      ]
+    },
+    {
+      "id": "M70-G02",
+      "status": "NOT_PROVEN",
+      "title": "Source CI49 não qualifica C27 nem POST Node com corpo",
+      "criteria": [
+        "C08",
+        "WP10.QLT.40",
+        "WP10.T03.CHK.03",
+        "mission70.acceptance[1]"
+      ]
+    },
+    {
+      "id": "M70-G03",
+      "status": "HOLD_INERT_NOT_INSTALLED",
+      "title": "Admission53 não está ligada à transação HTTP canônica",
+      "criteria": [
+        "C01",
+        "C03",
+        "C08",
+        "C12",
+        "CAMP.INV.02"
+      ]
+    }
+  ],
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "sf2h.runtime-readonly-root.test-deadlock.v1",
+  "mission": 59,
+  "run": 43665180272,
+  "job": 132662845733,
+  "run_state": "IN_PROGRESS_NOT_QUALIFIED",
+  "cause": "New post-dispose test evaluated expect(running).rejects.toThrow before resolving its own barrier. Bun 1.3.14's matcher synchronously waits for that promise, so the next release statement cannot execute.",
+  "evidence": {
+    "bun_commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "path": "src/test_runner/expect.zig",
+    "blob": "8f3cda8d8556ce39000ae31a3ca6f5de898f9a8c",
+    "line": 183,
+    "method": "processPromise -> globalThis.bunVM().waitForPromise(promise)",
+    "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/test_runner/expect.zig"
+  },
+  "correction": "Attach a rejection observer without invoking a matcher. Admit root, start external dispose, resolve barrier, then await the exact same rejects.toThrow oracle. No timeout/assertion/fixture weakening.",
+  "preimage": "93d0c84699c09bd35a2d73890112630bf20c5832",
+  "postimage": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+  "product_delta": 0,
+  "source_tests": "NOT_RUN_ON_CORRECTED_INPUT",
+  "cancellation": "No GitHub MCP workflow cancellation capability is exposed; source59 does not add a cancellation workflow, use shell credentials or alter runner budgets. Observe this isolated run to its existing terminal timeout; it is excluded from qualification.",
+  "GLOBAL_RELEASE": false
+}

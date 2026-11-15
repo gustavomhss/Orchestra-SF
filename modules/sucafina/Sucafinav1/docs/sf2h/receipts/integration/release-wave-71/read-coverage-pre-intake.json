@@ -1,0 +1,138 @@
+{
+  "schema": "sf2h.integration71.read-coverage.v1",
+  "mission": 71,
+  "phase": "BEFORE_FIRST_PRODUCT_INTAKE",
+  "authority": {
+    "control_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "package_blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+    "ACK71": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "predecessor": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "predecessor_authority": "HANDOFF_TERMINAL_LEASE_ENDED"
+  },
+  "normative": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "root_full": [
+      "START.md",
+      "WORKFLOW.md",
+      "execution/COMMON.md"
+    ],
+    "full_actor_pack": {
+      "path": "execution/actors/S0-C.json",
+      "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+      "keys_total": 38,
+      "keys_read": 38,
+      "missing": [],
+      "read_distribution": {
+        "root": [
+          "provenance",
+          "job_id",
+          "actor",
+          "session",
+          "assignment",
+          "branch_provenance",
+          "common",
+          "write_authority",
+          "allocation",
+          "physical_slot",
+          "review_assignment",
+          "review_sources_read_only",
+          "reference_context_rule",
+          "mandatory_appendices",
+          "code_sources",
+          "source_receipt_index",
+          "workflow",
+          "coverage_source",
+          "selection_pointers",
+          "criterion_ids",
+          "completion"
+        ],
+        "runtime_reader": [
+          "work_packages",
+          "contracts",
+          "incoming_outgoing_handoffs",
+          "task_output_dependencies",
+          "consumer_edges",
+          "coverage",
+          "dependency_context"
+        ],
+        "operations_reader": [
+          "proof_bindings",
+          "evidence",
+          "execution_proofs",
+          "numeric_oracles",
+          "ci_plan"
+        ],
+        "native_reader": [
+          "resident",
+          "resident_handoff_interfaces",
+          "resident_gate_requirements",
+          "resident_ui",
+          "resident_packaging"
+        ]
+      }
+    },
+    "appendices": [
+      {
+        "path": "specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "read": "FULL"
+      },
+      {
+        "path": "specs/atlas-packaging.md",
+        "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+        "read": "FULL"
+      },
+      {
+        "path": "specs/execution-reconciliation.md",
+        "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+        "read": "FULL"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "entire_file_read": true,
+        "lines": 260
+      }
+    ]
+  },
+  "predecessor60": {
+    "full_reads": [
+      "HANDOFF.md",
+      "AUTHORITY.json",
+      "errata-final.json",
+      "source-census-final.json",
+      "dependency-closure-final.json",
+      "pending-owners-final.json",
+      "finding-routing-final.json",
+      "gate-queue-final.json"
+    ],
+    "gatequeue_all_fields_read": true,
+    "immutable_blob_pins": {
+      "AUTHORITY.json": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+      "errata-final.json": "dcefa3fbfa60b3fbd126d5a03c7db8ff9516953a",
+      "source-census-final.json": "a7165e25dfe518c468e9a3f553622d6bf946883b",
+      "dependency-closure-final.json": "4b0456690ed32e15eea476b3d2885687ec4afa5b",
+      "pending-owners-final.json": "5fca39dcfbd1376a7ba02ab8750800a2308ce229",
+      "finding-routing-final.json": "663b1c8c3e5e6bb79a79b1ccd1a78f1e6894213c",
+      "gate-queue-final.json": "29420a3dd7ec3c5c635125b12c57e84dfdf58dd6"
+    },
+    "pending_records": 56,
+    "preserved_historical_digests": 56,
+    "findings_before70": 38,
+    "new_findings70": 3,
+    "functional_items_closed": 0,
+    "full_historical_dependency_graph": "Referenced immutable Reports48 graph remains original; this read does not claim exhaustive code inspection of every unrelated transitive dependency."
+  },
+  "product_reviews": {
+    "runtime59": "reviews/runtime59.json",
+    "operations63": "reviews/operations63.json",
+    "native64": "reviews/native64.json"
+  },
+  "limitations": [
+    "Distributed source inspection, exact text/patch/blob checks, not an independent FINAL review or product execution.",
+    "No tests/typechecks/builds/guards/CI/AM dispatch/workflow ref movement in71.45 owns checks;S0 epic/final acceptance.",
+    "Full assigned155 criteria preserve larger campaign15WP/74tasks/17contracts/1610criteria and5profiles/18skills/8packs/39operations."
+  ],
+  "GLOBAL_RELEASE": false
+}

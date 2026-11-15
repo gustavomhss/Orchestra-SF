@@ -1,0 +1,92 @@
+{
+  "schema": "sf2h.runtime-readonly-root.review-final.v1",
+  "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "state": "NO_REMAINING_SOURCE_BLOCKER_IN_REVIEW_SCOPE",
+  "roles": [
+    {
+      "agent": "root59",
+      "role": "Product implementation, cost test and release; author, not independent reviewer"
+    },
+    {
+      "agent": "contract_review59",
+      "role": "Contract/wrapper design analysis and static review",
+      "authored": [
+        "canonical-fixture.ts",
+        "wrappers.test.ts"
+      ],
+      "exclusion": "Not an independent review of those authored test files"
+    },
+    {
+      "agent": "normative_ci59",
+      "role": "Full normative pack and CI constraints/ledger review",
+      "authored": [
+        "runtime.test.ts",
+        "freshness.test.ts"
+      ],
+      "exclusion": "Not an independent code review of authored tests"
+    },
+    {
+      "agent": "read_resident_pack",
+      "role": "Read-only delegated normative appendices",
+      "exclusion": "No product qualification claim"
+    },
+    {
+      "agent": "cold_review59",
+      "role": "Independent cold review of all4 product and5 test files, defect/fix verification and R2 evidence qualification",
+      "authored": [],
+      "tests_executed": 0,
+      "remote_mutations": 0
+    }
+  ],
+  "findings": [
+    {
+      "id": "DIRECT_FENCE_FORWARDING",
+      "severity": "HIGH",
+      "state": "FIXED_BEFORE_EDITS",
+      "resolution": "Internal scope only; original canonical Dashboard transaction always executes, including direct Fence."
+    },
+    {
+      "id": "DISPOSE_SWALLOWED_WRITE",
+      "severity": "HIGH",
+      "state": "FIXED_IN_W1_VERIFIED_R2",
+      "resolution": "Readonly-tagged roots poison on refused post-dispose write/admission;5 deterministic barrier cases passed."
+    },
+    {
+      "id": "COLD_TEST_WARMED_MEMO",
+      "severity": "MEDIUM",
+      "state": "FIXED_BEFORE_W1_VERIFIED_R2",
+      "resolution": "Different writer and freshly opened store before cold observation."
+    },
+    {
+      "id": "BUN_MATCHER_BARRIER_DEADLOCK",
+      "severity": "HIGH_TEST_HARNESS",
+      "state": "FIXED_IN_W2_VERIFIED_R2",
+      "resolution": "Release barrier before invoking synchronous Bun .rejects matcher; same oracle and timeout; R1 preserved separately."
+    },
+    {
+      "id": "ATTRIBUTION_BOUNDARIES",
+      "severity": "DOCUMENTATION",
+      "state": "RECORDED",
+      "resolution": "Native timings span entire helper call; inner probes exclude root admission/publication; parsing rises55%; no SQL-count/heap/P03 extrapolation."
+    },
+    {
+      "id": "P03_FIXTURE_PATH",
+      "severity": "DOCUMENTATION",
+      "state": "RECORDED",
+      "resolution": "Original P03 uses LocalStore directly; R2 provides separate real Source/CurrentChoice conformance. Do not credit P03 with wrappers it does not execute."
+    }
+  ],
+  "R2": {
+    "run": 43665988509,
+    "conclusion": "success",
+    "independent_verification": "Exact S parent and only .ci-run delta checked; logs read; fixed P03 blob checked independently; sufficient material change for one original P03"
+  },
+  "limits": [
+    "Not compiler/guards45",
+    "Not the three campaign FINAL reviews or G7/G8",
+    "No GLOBAL_RELEASE",
+    "P03 outcome separately recorded"
+  ],
+  "GLOBAL_RELEASE": false
+}

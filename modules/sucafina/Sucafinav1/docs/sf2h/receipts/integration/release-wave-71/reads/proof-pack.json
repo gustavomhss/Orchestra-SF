@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.integration71.distributed-read.v1",
+  "reader": "/root/review_operations_auth",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "pack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "fields": [
+      "proof_bindings",
+      "evidence",
+      "execution_proofs",
+      "numeric_oracles",
+      "ci_plan"
+    ],
+    "field_counts": {
+      "proof_bindings": 155,
+      "execution_proofs": 6,
+      "numeric_oracles": 7
+    },
+    "read": "FULL_ASSIGNED_FIELDS"
+  },
+  "annexes": [
+    {
+      "path": "specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "read": "FULL"
+    },
+    {
+      "path": "specs/atlas-packaging.md",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "read": "FULL"
+    },
+    {
+      "path": "specs/execution-reconciliation.md",
+      "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+      "read": "FULL"
+    }
+  ],
+  "constraints71": [
+    "Mission71 supersedes historical dispatch/CI responsibilities: no testing/build/guard/workflow ref dispatch;45 checks and S0 epic/final acceptance. Static artifact inspections never PASS product.",
+    "Preserve15WPs74tasks17contracts1610criteria/T0. Readiness increments allowed; source PASS cannot close integrated criteria or final candidate.",
+    "155 proof bindings across WP10/WP14 all retained with original IDs; AM01–06 six independent scopes, five profiles/eighteen skills/eight packs39 routes exact witnessed consumption.",
+    "C06 immutable observedSourceVersion and separate current evaluation; scoped fingerprints not global hash; absent/null/zero/incarnation/revocation/cross-scope changes distinct; no duplicate review on irrelevant changes.",
+    "C10 coverage inventory omission derives pending; unique components sum once; training40000 inversion250000 vs240000 and choice history immutable.",
+    "Atlas business boundary actual factories, native scanner separate; no new spawn imports/allowlist/engine changes, exact external resolver three-condition edge, generated JS/d.ts only by canonical generator; guard postgeneration required via45.",
+    "Final eight minimum CI selections and extra affected gates refer same C; APP-SRC/APP-BROWSER separate; W/S lineage, exact normalized request selection/environment and artifact/Omni mandatory; D append-only evidence and own G8 guard, no relabeling C tests to D.",
+    "No freeing authority by silence or inactive-looking branch; terminal/release and consumer ACKs needed; reviewer70 is not FINAL campaign reviewers.",
+    "Preexisting regression doesn't waive gates; unchanged timeout retry unjustified; unknown impact extends validation or blocks claim, not construction."
+  ]
+}

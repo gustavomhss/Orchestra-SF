@@ -1,0 +1,12 @@
+{
+  "schema": "sf2h.runtime-readonly-root.contract-addendum.v1",
+  "mission": 59,
+  "parent_contract_blob": "58cd64234660108427251251925a261750639930",
+  "state": "FROZEN_BEFORE_DISPOSAL_DEPENDENT_EDIT",
+  "finding": "External dispose closes lifecycle while an admitted root drains. Legacy operation() rejects a later write as disposed before poisoning. A swallowed rejection would let a readonly root report success, contrary to the explicit poison contract.",
+  "decision": "Tag only new readonly roots. A direct write attempted after disposal still poisons that admitted readonly root before rejecting. A newly invoked canonical transaction after disposal also invalidates readonly-root success, because its read/write callback is no longer admissible; that callback is not executed.",
+  "preserved": "Existing mutable-root behavior and all original transactions remain semantically unchanged. An admitted readonly root with no new post-dispose admission can drain. Closed/captured roots cannot borrow a later generation.",
+  "qualification": "Deterministic barriers: root admitted, external dispose starts, write/transaction attempts caught, root rejects and dispose drains; no persistent effect. No timing sleeps.",
+  "source": "cold_review59 static counterexample; root accepted before edits",
+  "GLOBAL_RELEASE": false
+}
