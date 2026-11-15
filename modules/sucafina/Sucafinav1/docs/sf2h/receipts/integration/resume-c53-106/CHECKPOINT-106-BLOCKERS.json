@@ -1,0 +1,273 @@
+{
+  "schema": "sf2h.integration106.checkpoint.external-blockers.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_status": "CONTINUING_LATE",
+  "fixed_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "actor": "S0-C-e16-browser106",
+  "effective_model": "GPT-6",
+  "runtime_session_id": null,
+  "git_actor": "gustavomhss",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "pr_draft": true,
+  "predecessor": {
+    "actor": "S0-C-e15-browser105",
+    "terminal_head": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "terminal_authority": "ENDED_BY_INTEGRATOR105"
+  },
+  "ack106": {
+    "sha": "49dded7b4fa955ff2e0282f9ef2ffd59ddd277b3",
+    "tree": "c9300001a547aec83829fc27762d45e075042860",
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/resume-c53-106/ACK-106.json",
+    "blob": "f52b3873a44645aa9d17e5015041b172bc99e334",
+    "cas": "SUCCESS_NONFORCE_EXPECTED_HEAD",
+    "readback": "EXACT",
+    "file_delta": "ONE_RECEIPT_ONLY"
+  },
+  "last_material": {
+    "name": "C53",
+    "sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "status": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED",
+    "product_ci": "NOT_RUN",
+    "compiler_guards": "NOT_RUN",
+    "global_release": false
+  },
+  "preserved": {
+    "C52": {
+      "sha": "751741abf263fff6f002907c53fcbac973ccde63",
+      "mission": 103,
+      "source_W": "e957f66b00a3b05265e42d46e1d88201dea3e770",
+      "origin_blob": "0d34ddeb14e9da525d6acc4960a54f35be18d577",
+      "registry_blob": "b5a92ee1653873463e85e2445919c85828c7ef4d",
+      "native_readiness": "OFF"
+    },
+    "C53": {
+      "mission": 104,
+      "source_W": "2356b2a453087784d3e2dbb191252e4c04e1c151",
+      "http_blob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+      "new_spec_blob": "e5e3783efa011f80ca4e9ac9467776bc9bca2b19",
+      "original_oracle_blob": "566e765f201d1a45677c0c52c75eb92ecb16d482",
+      "native_103": "UNCHANGED"
+    },
+    "materials_before_C52": "PRESERVED_FROM_C51_AND_EARLIER",
+    "maps_49_55_72_and_archive": "UNCHANGED",
+    "receipts_prior": "APPEND_ONLY_UNCHANGED",
+    "result_store76": "NOT_REAPPLIED",
+    "source_branches": "NO_WRITES_BY_106"
+  },
+  "owner_reconciliation": [
+    {
+      "mission": 95,
+      "pr": 104,
+      "branch": "native-host-provider",
+      "head": "9757b5e7ee974684cff32a5a452f7dc5aefc0555",
+      "state": "NO_EXPLICIT_COMPLETE_REAL_C15_RELEASE",
+      "missing": "legitimate native Request/Session/Task/Permission producer and installed proof, children/budgets",
+      "next": "95 and 110 must furnish owner-admitted complete patch, W/tree/prepost, Actions result; native readiness OFF",
+      "consumable": false
+    },
+    {
+      "mission": 96,
+      "pr": 103,
+      "branch": "creation-reload-fix",
+      "head": "3ef1bbf2188275f5bc6ebaeed162a069ad3ae351",
+      "state": "SHARED_UI_HOST_PATCH_PROPOSED_NOT_COMPOSED_NO_OWNER47_ADMISSION",
+      "owner_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-reload-fix/OWNER-52-100-CURRENT.json",
+      "target_preimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "pre": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+          "proposed_post": "1776ccbd83a9dbb49d2f4926e0de1152db7fb847",
+          "current_match": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+          "pre": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+          "proposed_post": "c00afe5f9bec072c6236441e1b650327d26853ea",
+          "current_match": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "pre": "bd7df025e12aa457898f48fcf9634273ec5be381",
+          "proposed_post": "5431ad92cde1e1e2454b46380ae54b8a1e38ec40",
+          "current_match": true
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "pre": "f03ab621e96cfda23456be73bba2d24f24754d36",
+          "proposed_post": "f5b74dda1cd7893226e8de928000891b55d87747",
+          "current_match": true
+        }
+      ],
+      "missing": "owner47 explicit handoff/ACK and full UI/browser/recovery consumer composition with source111 adapter; preserve C49/90/103 and HotTopic87",
+      "consumable": false
+    },
+    {
+      "mission": 102,
+      "pr": 105,
+      "branch": "xlsx-print-layout",
+      "doc_head": "e6c524ad6a6196bde1bf69e3f7cdbf049ab086c4",
+      "source_W": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "source_tree": "a30bf96023767bb27fc803060f0653554bf34286",
+      "state": "SOURCE_READY_FOR_HOSTED_VALIDATION_NOT_VISUALLY_ACCEPTED",
+      "target_preimages": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+          "pre": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+          "post": "567042ed8fadf2f1354947a60df8ababe332ae1d",
+          "current_match": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+          "pre": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+          "post": "ac73b9edc44bd5c8a616ce583084969d2a69e771",
+          "current_match": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/print-layout.test.ts",
+          "pre": null,
+          "post": "041ed70f302f0b0f4d13c6e8bea07f19e85f4c49",
+          "absent": true
+        }
+      ],
+      "missing": "107 W102 two source CI Actions runs and true PDF/PNG+9-sheet visual independent91/93; historical C51 reader cannot substitute",
+      "consumable": false
+    },
+    {
+      "mission": 99,
+      "pr": 95,
+      "branch": "planner-p03-finish",
+      "head": "54cff4caf3cbd1d94751009bcfa9564622e926b3",
+      "state": "P03_ORIGINAL_F2_FAIL",
+      "run": 43682515795,
+      "job": 132715983023,
+      "witness": "180000ms and stale portfolio-selection-changed; 72 assertions unchanged",
+      "next": "99/109 causal patch, then 107 original test after dedup; do not reapply result-store76",
+      "consumable": false
+    },
+    {
+      "mission": 52,
+      "pr": 40,
+      "branch": "astra-wp11",
+      "head": "3cce0806f4e958b2282afae5717e4948e270745a",
+      "source_W": "12521803d615e6b9861b30cfae4a0ba1d1229f09",
+      "state": "BOUNDED_HANDOFF_TO_47_READY_FOR_OWNER_REVIEW_NOT_INTEGRATED",
+      "lease": "ENDED_BY_MISSION52_BOUNDED_HANDOFF",
+      "run": 43690414521,
+      "source_journeys": {
+        "pass": [
+          "J1",
+          "J3",
+          "J4",
+          "J5"
+        ],
+        "fail": [
+          "J2 Requests GET 503 procurement-queue-unavailable before financial form"
+        ]
+      },
+      "patches": {
+        "owned": 10,
+        "shared_inert": 21,
+        "unit_inert": 5
+      },
+      "missing": "owner47 review/admission, finance M31/MI07, 83 criteria and checks02 failure; source PASS not integrated",
+      "consumable": false
+    },
+    {
+      "mission": 111,
+      "branch": "creation-recovery-link",
+      "head": "b3e6f81fa0542f7c5328956db5dfa0ef34859c92",
+      "state": "SOURCE_CONTRIBUTION_IN_PROGRESS_NO_TERMINAL_RELEASE",
+      "owned_new_file": "apps/cli/src/sucafina-product/creation-recovery-http.ts",
+      "next": "111/owner47 release+tests+consumer ack; no partial host installation",
+      "consumable": false
+    },
+    {
+      "mission": 110,
+      "branch": "native-child-admission",
+      "head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "state": "NO_SOURCE_RELEASE",
+      "consumable": false
+    },
+    {
+      "mission": 109,
+      "branch": "p03-boundary-probe",
+      "head": "190da9e2b891d4e0997c556c51be94b2f20c0b53",
+      "state": "ACK109_ONLY_CAUSAL_PROBE_IN_PROGRESS",
+      "consumable": false
+    }
+  ],
+  "validation": {
+    "product_dispatcher": {
+      "mission": 107,
+      "branch": "sf-ci-validation",
+      "ack_head": "ee388adfed081a3a7cf77a1652319d26a5918be9",
+      "ack_blob": "f8553b2ce1e784b6aaf707d4cc6991767a8ac7c3",
+      "state": "ACKED_PRE_DISPATCH_AT_LAST_READ",
+      "C53_native_seven": "NOT_RUN",
+      "C53_first_save_four": "NOT_RUN",
+      "XLSX_W102": "NOT_RUN",
+      "authority": "SOLE_PRODUCT_CI_107_AFTER_101"
+    },
+    "compiler_guards": {
+      "mission": 108,
+      "branch": "sf-compiler-checks",
+      "last_observed_head": "fe3fbb73019667cfb2bc95e78299064cf4b63549",
+      "ack_blob": "d2dcd165d3427361cce78a3f3b9d051673d6003f",
+      "state": "ACKED_TOOLING_COMMITTED_NO_RESULTS_OBSERVED",
+      "old_45_authority": "NO_ACTIVE_ACK_OBSERVED"
+    },
+    "historical_C51": {
+      "runs": [
+        "43682386656",
+        "43682448571",
+        "43682451927",
+        "43682453714",
+        "43682455278",
+        "43682450677"
+      ],
+      "scoped_success": 4,
+      "failed": 2,
+      "no_transfer_to_C53": true
+    },
+    "final": {
+      "candidate_C_frozen": false,
+      "eight_selectors": "NOT_RUN",
+      "epic_suites": "NOT_RUN",
+      "AM01_AM06": "NOT_PROVEN",
+      "R1_R2_R3_FINAL": "NOT_SIGNED",
+      "G7_C": "OPEN",
+      "G8_D": "OPEN",
+      "GLOBAL_RELEASE": false
+    }
+  },
+  "routing": {
+    "comment_PR65_ACK106": 6893447448,
+    "comment_PR106_to107": 6893515097,
+    "comment_PR47_owner52_96": 6893524374,
+    "comment_PR103_to96": 6893541499,
+    "comment_PR105_to102": 6893542052,
+    "reviewers": "91/92/93 preliminary only, 112/113 preliminary not FINAL"
+  },
+  "operational_constraints": [
+    "Only GitHub MCP/CAS expected-head/force=false",
+    "No material C54 without owner-qualified release",
+    "No local tests, no Actions product dispatch by106",
+    "No source writer takeover, no whole branch merges",
+    "No dev/control merge, Azure, deploy, engines, secrets, restart, scheduler, Goal",
+    "UX20/sidebar belongs user",
+    "No rollback/oracle/timeout relaxation, no fabricated PASS"
+  ],
+  "external_blocker_proof": "At last observed remote source heads, zero complete owner-admitted material intake units remain. All candidates either depend on owner47/95/99/111 release, 107 real hosted CI/visual or 108 gates. No source W is silently promoted.",
+  "next_action": "On explicit new integrator appointment, verify latest sf2-stack HEAD and this terminal, reconcile 107/108 real runs, owner47/95/99/111 terminal releases and missing owner ACKs, consume exact qualified deltas with CAS/checkpoint per material; preserve C53 and all gates until complete."
+}
