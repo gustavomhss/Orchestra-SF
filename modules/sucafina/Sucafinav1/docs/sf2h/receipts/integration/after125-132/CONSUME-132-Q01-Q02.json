@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.integration132.qualification-sources.v1",
+  "epoch": "S0-C-e19-browser132",
+  "preimage_head": "0efd4289f3c05cc2e79d125938deb7388bbc956c",
+  "source_branches": {
+    "Q01": "sf-qual-navigation",
+    "Q02": "sf-qual-presentation"
+  },
+  "sources": [
+    {
+      "case": "Q01",
+      "pr": 154,
+      "path": "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+      "preimage": null,
+      "postimage": "dda7b627d4368e14b189fd1c8048f38eec92e142"
+    },
+    {
+      "case": "Q01",
+      "pr": 154,
+      "path": "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+      "preimage": null,
+      "postimage": "87e3f69baa2ba3fbd3a9224d69d771b95ad2296d"
+    },
+    {
+      "case": "Q01",
+      "pr": 154,
+      "path": "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+      "preimage": null,
+      "postimage": "fc7e432358fded4f809cdd80b5d1b65569d703a0"
+    },
+    {
+      "case": "Q01",
+      "pr": 154,
+      "path": "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts",
+      "preimage": null,
+      "postimage": "291717f643345c7c277c0b58b394d9135ba3c830"
+    },
+    {
+      "case": "Q01",
+      "pr": 154,
+      "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+      "preimage": null,
+      "postimage": "c67324ac5e233c8c0182aac276ec5dc1b1215354"
+    },
+    {
+      "case": "Q02",
+      "pr": 151,
+      "path": "packages/app-shell/e2e/sucafina/native/accessibility.spec.ts",
+      "preimage": null,
+      "postimage": "d46a8ea74f73d2fd4d2a75f44f0c7c7ebb4f54ed"
+    },
+    {
+      "case": "Q02",
+      "pr": 151,
+      "path": "packages/app-shell/e2e/sucafina/native/localization.spec.ts",
+      "preimage": null,
+      "postimage": "958f16a4fe7ff9269864a5567b4e10f7f491b2f8"
+    },
+    {
+      "case": "Q02",
+      "pr": 151,
+      "path": "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts",
+      "preimage": null,
+      "postimage": "186deb142e53694161cfab2679098c04b872dbf3"
+    },
+    {
+      "case": "Q02",
+      "pr": 151,
+      "path": "packages/app-shell/e2e/sucafina/native/visual.spec.ts",
+      "preimage": null,
+      "postimage": "707f51bdd3e85a67b4ec5a207f063411fea6aeae"
+    }
+  ],
+  "coverage": "Q01 navigation/isolation/compatibility/transport/pilot; Q02 visual/a11y/localization/pilot",
+  "status": "AUTHORING_INTEGRATED_ONLY",
+  "producers": "NOT_PROVEN",
+  "test_execution": "NOT_RUN_129",
+  "approval": "NOT_PROVEN",
+  "release": false
+}
