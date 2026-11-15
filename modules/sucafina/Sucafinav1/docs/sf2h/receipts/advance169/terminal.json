@@ -1,0 +1,179 @@
+{
+  "schema": "sf2h.am05.terminal.v1",
+  "mission": 169,
+  "proof": "AM05",
+  "qualification_not_final": true,
+  "epoch": "proof-am05-e1-browser169",
+  "pr": {
+    "number": 175,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/175",
+    "base": "sf2-stack",
+    "head": "sf-am05-proof",
+    "draft": true
+  },
+  "source": {
+    "expected_initial_head": "690a34cdd81c12d7311f3717c19679b950276161",
+    "initial_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "package_commit": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "package_blob": "48c66d29bf648864c48c42cfcfe7b0a7a35d7793",
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "chain": {
+    "ack": {
+      "sha": "1a5a5d74a4c0891dce643ea28917e247f768f2d1",
+      "tree": "2a67f4a5f9df8ebe611200a004bded0957c9494e",
+      "parent": "690a34cdd81c12d7311f3717c19679b950276161"
+    },
+    "code": {
+      "sha": "609477b54ff45d0d18d6f9a439cfef8aae1285c2",
+      "tree": "dba11bd4e577a79a7b5e89660b1ec73768c0899c",
+      "parent": "1a5a5d74a4c0891dce643ea28917e247f768f2d1"
+    },
+    "terminal_commit": "IN_THIS_FILE_PARENT_CODE; see PR after publication",
+    "force": false
+  },
+  "code_patch": {
+    "source_preimage": "absent at initial HEAD",
+    "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+    "blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+    "bytes": 4784,
+    "case": "real scanner clean + benign canary hit + real timeout + absence against real createMemoryEmit and SF staged DurableMemory",
+    "product_source_modified": false,
+    "existing_tests_modified": false
+  },
+  "receipts": {
+    "ack_blob": "9a516483587a20b0ce60a2b6d16633e1c6db3d2d",
+    "coverage_blob": "72526c48cea0f228cd0ffc782fa8c3187e7e4977",
+    "requests_blob": "e76557e2b8917d0a4af0940cb66ce9d272d2ac81"
+  },
+  "producer_sources": [
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+      "role": "existing real exports/packaging"
+    },
+    {
+      "path": "modules/atlas/boundary/script/build.ts",
+      "blob": "69d8473a2dd08704d7aaf8bf36a2930cb8de3e31",
+      "role": "existing canonical generator"
+    },
+    {
+      "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+      "blob": "06f8085df12d57baf7973d0df500da3e366dc29a",
+      "role": "existing canonical Atlas factories"
+    },
+    {
+      "path": "modules/atlas/packages/adapter-io/src/scanner.ts",
+      "blob": "02fb7a3206dea948bf171bd649a0119bf8482fbe",
+      "role": "actual scanner runner"
+    },
+    {
+      "path": "modules/atlas/packages/adapter-io/src/native-bound.ts",
+      "blob": "fb3d542eb22e9b8dc9a139ce1ff98189812d6e0d",
+      "role": "actual pinned scanner exports"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+      "role": "actual Atlas-C09 writer and reader"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "role": "actual durable snapshot adapter"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "role": "real native scan probe adapter"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "12d6b27c52e29ac0cb8ccc65fba63ad20ddbc4ef",
+      "role": "actual BusinessEvidenceRef/case continuity resolver"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "role": "document blob/segment/ref authorization"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+      "role": "real owner/memoryKind mapping"
+    }
+  ],
+  "baseline_generated": [
+    {
+      "path": "modules/atlas/boundary/src/generated/native-memory.js",
+      "blob": "820a3010be24a817edae7ff26299919d448ad4bf"
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/native-memory.d.ts",
+      "blob": "bc73667c5513e622ff2b5f4f553605fb3532b395"
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+      "blob": "cfc144ffec16c1eec41b7350ae8c8d47452088c0"
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+      "blob": "7331e839a166dd9690610b99ec6b595aec50c6e5"
+    }
+  ],
+  "guard_allowlist_blob": "532e0a09e7ca43777ec6f9792f9429bb73148348",
+  "covered_by_existing_tests_without_duplication": [
+    "modules/atlas/boundary/test/business-memory-ports.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/source-access-document.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts"
+  ],
+  "execution_state": {
+    "all_criteria": "NOT_RUN",
+    "new_test": "NOT_RUN",
+    "hosted_ci": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "atlas_scan": "NOT_RUN",
+    "native_runtime": "NOT_RUN",
+    "model": "NOT_RUN",
+    "authenticated_session": "NOT_RUN",
+    "consumer_reopen": "NOT_RUN",
+    "independent_final_review": "NOT_RUN",
+    "same_C_final_eight_ci": "NOT_RUN",
+    "evidence_uris": [],
+    "effective_chat_model": "GPT-6",
+    "effective_native_model": null,
+    "native_session_id": null,
+    "backend_id": null,
+    "runner_id": null,
+    "scanner_path": null,
+    "scanner_version": null,
+    "integrated_product_candidate_sha": null,
+    "ci_snapshot_sha": null
+  },
+  "required_next": [
+    "162 cherry-picks/applies exact blobs in PR175 to sole sf2-stack C without merging/replacing other sources, records accepted SHA/tree and consumer ACK",
+    "163 on accepted same-C executes canonical generator, dts, AST exact scanner external, typecheck and unchanged spawn guard, hashes all four real generated files; disclose logs",
+    "164 only after 162/163 coherent candidate executes exact, deduped request groups in requests-163-164.json via hosted test:ci and collects scanner path/version, actual logs/durations/CI snapshot SHA and focused source/consumer receipts",
+    "S3-R3 independently reviews C candidate AM05 and all remaining final gates without promoting NOT_RUN",
+    "No Goal resume/global release until same-C final 8 CI, Epic, all AM01–AM06, 3 independent FINAL, D and guards"
+  ],
+  "external_mutations": {
+    "github_ref_updates": 2,
+    "github_pull_requests": 1,
+    "other_branches_changed": false,
+    "local_test_runs": 0,
+    "runner_dispatches": 0,
+    "goal_paused": true
+  },
+  "global_release": false
+}
