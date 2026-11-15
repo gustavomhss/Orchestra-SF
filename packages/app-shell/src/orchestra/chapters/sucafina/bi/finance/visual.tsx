@@ -36,7 +36,14 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
       onOpenSource={props.onOpenSource}
     >
       <div class="sf-bi-figure" data-sf-bi-view={props.viewId} data-sf-bi-state={model().state}>
-        <For each={model().series}>
+        <Show when={props.viewId === "BI06" && model().rows.some((row) => row.value === null)}>
+          <p class="sf-bi-unknown-aging" role="status">
+            {t(sfBiKey("sf.u21.unknownAging"))}: {model().rows.filter((row) => row.value === null).length}
+          </p>
+        </Show>
+        <For each={props.viewId === "BI08"
+          ? model().series.filter((series) => series.points.some((point) => point.value.kind === "known"))
+          : model().series}>
           {(series) => {
             const rows = () => model().rows.filter((row) => series.points.some((point) => point.id === row.id))
             const extent = () => Math.max(1, ...rows().flatMap((row) => row.value === null ? [] : [Math.abs(row.value)]))
@@ -96,6 +103,33 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
               <p role={plan().reconciliation === "reconciled" ? "status" : "alert"}>
                 {t(sfBiKey(props.copy + ".reconciliation." + plan().reconciliation))}
               </p>
+              <div class="sf-bi-waterfall-region">
+                <table class="sf-bi-waterfall-table">
+                  <caption>{t(sfBiKey(props.copy + ".waterfall"))}</caption>
+                  <thead><tr>
+                    <th scope="col">{t(sfBiKey(props.copy + ".column.series"))}</th>
+                    <th scope="col">{t(sfBiKey(props.copy + ".waterfall.start"))}</th>
+                    <th scope="col">{t(sfBiKey(props.copy + ".waterfall.delta"))}</th>
+                    <th scope="col">{t(sfBiKey(props.copy + ".waterfall.end"))}</th>
+                  </tr></thead>
+                  <tbody><For each={plan().segments}>
+                    {(segment) => {
+                      const value = (id: string) => assigned().get(id)
+                      const shown = (id: string) => {
+                        const item = value(id)
+                        return fmt(item?.evidenceState !== "absent" && typeof item?.value === "number"
+                          ? item.value : null)
+                      }
+                      return <tr data-sf-waterfall-row={segment.componentValueId}>
+                        <th scope="row">{segment.label}</th>
+                        <td>{shown(segment.startValueId)}</td>
+                        <td>{shown(segment.componentValueId)}</td>
+                        <td>{shown(segment.endValueId)}</td>
+                      </tr>
+                    }}
+                  </For></tbody>
+                </table>
+              </div>
               <ol class="sf-bi-steps">
                 <For each={plan().segments}>
                   {(segment) => {

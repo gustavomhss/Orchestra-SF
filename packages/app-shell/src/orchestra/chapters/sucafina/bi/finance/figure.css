@@ -14,3 +14,8 @@
 .sf-bi-steps button { min-block-size: 2.75rem; }
 .sf-bi-limitations ul { margin: .5rem 0 0; padding-inline-start: 1.5rem; }
 @media (max-width: 35rem) { .sf-bi-series { padding: .5rem; } .sf-bi-steps li { display: list-item; } .sf-bi-steps span { display: block; } }
+
+.sf-bi-waterfall-region { max-inline-size: 100%; overflow-x: auto; }
+.sf-bi-waterfall-table { inline-size: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.sf-bi-waterfall-table th, .sf-bi-waterfall-table td { border-block-end: 1px solid var(--border, currentColor); text-align: start; padding: .5rem; }
+.sf-bi-unknown-aging { overflow-wrap: anywhere; font-weight: 600; }
