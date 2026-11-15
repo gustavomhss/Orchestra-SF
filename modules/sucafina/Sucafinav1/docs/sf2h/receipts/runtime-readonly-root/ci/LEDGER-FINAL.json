@@ -1,0 +1,926 @@
+{
+  "schema": "sf2h.runtime-readonly-root.ledger-final.v1",
+  "mission": 59,
+  "explicit_dispatches": 3,
+  "owned_runs_active": 0,
+  "owned_runs_queued": 0,
+  "all_owned_runs_terminal": true,
+  "all_snapshot_cleanup_jobs_success": true,
+  "dedup": "R1/R2 have identical request hashes but different material W because W2 corrects a proven harness defect; R3 uses qualified W2 with a distinct one-file original P03 request. No repeated identical W/request/platform key; all dispatch censuses retained.",
+  "runs": [
+    {
+      "schema": "sf2h.runtime-readonly-root.ci-ledger.v1",
+      "mission": 59,
+      "run": "R1",
+      "state": "CANCELLED_OBSOLETE_TEST_HARNESS_EXCLUDED",
+      "W": "ba393316f7c7350cdd519068808baafb7edb2393",
+      "W_tree": "9da06e22fae4445e174771d678934a0bebe4838a",
+      "S": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+      "S_tree": "fc8fedc05cdc5e6ad6cb299754ea0fc32ab4829e",
+      "S_parent": "ba393316f7c7350cdd519068808baafb7edb2393",
+      "S_only_delta": ".ci-run.json",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+          "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+          "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "branch": "ci-run-linux-m59r1",
+      "run_id": 43665180272,
+      "job_id": 132662845733,
+      "attempt": 1,
+      "dedup": [
+        {
+          "status": "queued",
+          "total_count": 0,
+          "runs": []
+        },
+        {
+          "status": "in_progress",
+          "total_count": 0,
+          "runs": []
+        },
+        {
+          "status": "waiting",
+          "total_count": 0,
+          "runs": []
+        },
+        {
+          "status": "pending",
+          "total_count": 0,
+          "runs": []
+        }
+      ],
+      "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "local_product_tests": 0,
+      "epic": 0,
+      "P03": 0,
+      "source_pass": false,
+      "GLOBAL_RELEASE": false,
+      "product_candidate_sha": "ba393316f7c7350cdd519068808baafb7edb2393",
+      "product_tree_hash": "9da06e22fae4445e174771d678934a0bebe4838a",
+      "ci_snapshot_sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+      "ci_snapshot_parent": "ba393316f7c7350cdd519068808baafb7edb2393",
+      "request_hash": {
+        "algorithm": "sha256",
+        "value": "e314fa32c95102476bfdc9e8e034a2706c37361be42d97c24a47ae1807e920e1",
+        "serialization": "UTF-8 JSON.stringify(request,null,2) + LF, identical to .ci-run.json"
+      },
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+          "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+          "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "expected_selection": [
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+        "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts"
+      ],
+      "selected_files": [
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts"
+      ],
+      "selected_test_count": null,
+      "selection_limit": "Ten file headers and71 result lines were observed; no final Bun selection/assertion summary was emitted. Do not infer a completed15-file/130-test selection.",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43665180272",
+      "event": "push",
+      "job_ids": [
+        132662845733,
+        132673862032
+      ],
+      "job_head_sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+      "job_heads": [
+        {
+          "job_id": 132662845733,
+          "head_sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946"
+        },
+        {
+          "job_id": 132673862032,
+          "head_sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946"
+        }
+      ],
+      "queue_seconds": 3,
+      "setup_seconds": 99,
+      "test_seconds": 2613,
+      "artifact_seconds": 0,
+      "duration_definitions": "Second-resolution Actions timestamps; queue=run creation to job start; setup=job start to Run tests; test=Run tests step. Both artifact uploads explicitly skipped.",
+      "conclusion": "cancelled",
+      "job_conclusion": "cancelled",
+      "created_at": "2026-11-15T01:53:26Z",
+      "job_started_at": "2026-11-15T01:53:29Z",
+      "job_completed_at": "2026-11-15T02:38:44Z",
+      "completed_at": "2026-11-15T02:38:53Z",
+      "workflow_timeout_minutes": 45,
+      "cancellation": {
+        "observed": "GitHub run/job/Run tests conclusions cancelled; log says The operation was canceled. Job wall45m15s under the existing45min configuration.",
+        "requested_by59": false,
+        "tool_availability": "No workflow cancellation operation exposed by GitHub MCP;59 did not bypass the interface or alter the timeout.",
+        "attribution": "Timing is consistent with the configured job limit; API conclusion is cancelled, not a fabricated timed_out verdict."
+      },
+      "partial_observation": {
+        "pass_result_lines": 66,
+        "fail_result_lines": 5,
+        "observed_result_lines": 71,
+        "file_headers": 10,
+        "by_file": {
+          "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts": {
+            "pass": 7,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts": {
+            "pass": 11,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts": {
+            "pass": 5,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts": {
+            "pass": 7,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts": {
+            "pass": 1,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts": {
+            "pass": 2,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts": {
+            "pass": 11,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts": {
+            "pass": 1,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts": {
+            "pass": 3,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts": {
+            "pass": 18,
+            "fail": 5
+          }
+        },
+        "expect_calls": null,
+        "bun_final_summary": false
+      },
+      "failure_evidence": {
+        "test_names": [
+          "(fail) a transaction refused after concurrent dispose still poisons its admitted readonly root when caught [120001.07ms]",
+          "(fail) a transaction-all refused after concurrent dispose still poisons its admitted readonly root when caught [120001.12ms]",
+          "(fail) a secret-put refused after concurrent dispose still poisons its admitted readonly root when caught [120000.14ms]",
+          "(fail) a secret-take refused after concurrent dispose still poisons its admitted readonly root when caught [120001.15ms]",
+          "(fail) a secret-remove refused after concurrent dispose still poisons its admitted readonly root when caught [120001.26ms]"
+        ],
+        "case_deadline_ms": 120000,
+        "static_cause": "Parameterised post-dispose test registers Bun .rejects matcher before releasing its barrier; exact pinned Bun matcher synchronously waits. Five per-case timeouts and later orphan bun cancellation are observed. W2 changes test order only, same assertions/deadlines; R2 verifies all corrected cases.",
+        "fix_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+        "source_product_blobs_unchanged_between_W1_W2": true
+      },
+      "omni_control": {
+        "nonce": "d9325e8314b66a776dddc967acca6195",
+        "verdict": null,
+        "reason": "No final omni positive-control verdict emitted before cancellation; no omni proof claimed"
+      },
+      "artifacts": [],
+      "artifacts_query": "GET /actions/runs/43665180272/artifacts?per_page=100 returned total_count0",
+      "cleanup": {
+        "job_id": 132673862032,
+        "conclusion": "success",
+        "branch_deleted": true,
+        "completed_at": "2026-11-15T02:38:52Z"
+      },
+      "evidence": {
+        "job_log": "R1-job.log",
+        "path": "mission59/evidence/R1-job.log",
+        "bytes": 89896,
+        "characters": 89894,
+        "sha256": "555932bf6900dd29f7326c2e8f10b28441e96bf63d78c18e7122a7617b2015cd",
+        "git_blob": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce"
+      },
+      "qualified": false,
+      "raw_log": "R1-job.log"
+    },
+    {
+      "schema": "sf2h.runtime-readonly-root.ci-ledger-addendum.v1",
+      "mission": 59,
+      "run": "R2",
+      "state": "PASS_SELECTED_SCOPE",
+      "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "W_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+      "S": "8ac14c407824626adbe53f8eeec82d6572ee1630",
+      "S_tree": "035be0ea1f2657cdfcde2c5ce4de2866adaac649",
+      "S_parent": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "S_only_delta": ".ci-run.json",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+          "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+          "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "branch": "ci-run-linux-m59r2",
+      "run_id": 43665988509,
+      "job_id": 132665341557,
+      "attempt": 1,
+      "dedup": [
+        {
+          "status": "queued",
+          "total_count": 0,
+          "runs": [],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe"
+        },
+        {
+          "status": "in_progress",
+          "total_count": 1,
+          "runs": [
+            {
+              "id": 43665180272,
+              "name": "test-ci",
+              "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+              "branch": "ci-run-linux-m59r1",
+              "event": "push",
+              "status": "in_progress"
+            }
+          ],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe"
+        },
+        {
+          "status": "waiting",
+          "total_count": 0,
+          "runs": [],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe"
+        },
+        {
+          "status": "pending",
+          "total_count": 0,
+          "runs": [],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe"
+        }
+      ],
+      "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "local_product_tests": 0,
+      "epic": 0,
+      "P03": 0,
+      "source_pass": true,
+      "GLOBAL_RELEASE": false,
+      "reason": "Material test-order fix; R1's different W/S is explicitly excluded, not adopted as same-key validation",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43665988509",
+      "conclusion": "success",
+      "started_at": "2026-11-15T02:04:00Z",
+      "completed_at": "2026-11-15T02:05:52Z",
+      "result": {
+        "pass": 130,
+        "fail": 0,
+        "expect_calls": 25064,
+        "files": 15,
+        "elapsed_seconds": 4.38,
+        "filtered": 0,
+        "by_file": {
+          "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts": {
+            "pass": 5,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts": {
+            "pass": 23,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts": {
+            "pass": 1,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts": {
+            "pass": 35,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts": {
+            "pass": 5,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts": {
+            "pass": 11,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts": {
+            "pass": 7,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts": {
+            "pass": 7,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts": {
+            "pass": 3,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts": {
+            "pass": 7,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts": {
+            "pass": 1,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts": {
+            "pass": 11,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts": {
+            "pass": 1,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts": {
+            "pass": 2,
+            "fail": 0
+          },
+          "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts": {
+            "pass": 11,
+            "fail": 0
+          }
+        }
+      },
+      "runtime": {
+        "bun": "1.3.14",
+        "bun_commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "platform": "linux",
+        "arch": "x64",
+        "runner": "ubuntu-24.04",
+        "runner_version": "2.338.2",
+        "image_version": "20261111.127.1"
+      },
+      "omni": {
+        "nonce": "cfc545ca3fd7206f5f848a078427c736",
+        "verdict": "not applicable (focused: no declaring test ran)",
+        "spawn": 0,
+        "delegated": 0,
+        "proof": "This run proves nothing about omni"
+      },
+      "cleanup": {
+        "job_id": 132665818764,
+        "conclusion": "success",
+        "branch_deleted": true,
+        "completed_at": "2026-11-15T02:05:56Z"
+      },
+      "evidence": {
+        "job_log": "R2-job.log",
+        "path": "mission59/evidence/R2-job.log",
+        "bytes": 98644,
+        "characters": 98642,
+        "sha256": "2abc383beddb8ef92af796abdbb6d4c9a39d702e88a826fb0d3129cbec61ca52",
+        "git_blob": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6"
+      },
+      "checks45": "REQUESTED_NOT_RUN_BY59",
+      "obsolete_R1": "Distinct W/S still active; excluded from qualification. No cancellation API exposed.",
+      "supersedes": "No result superseded; adds explicit normative ledger fields to R2-result.json",
+      "product_candidate_sha": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "product_tree_hash": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+      "ci_snapshot_sha": "8ac14c407824626adbe53f8eeec82d6572ee1630",
+      "ci_snapshot_parent": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "request_hash": {
+        "algorithm": "sha256",
+        "value": "e314fa32c95102476bfdc9e8e034a2706c37361be42d97c24a47ae1807e920e1",
+        "serialization": "UTF-8 JSON.stringify(request,null,2) + LF, identical to .ci-run.json"
+      },
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+          "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+          "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+          "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+          "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+          "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "expected_selection": [
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+        "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts"
+      ],
+      "selected_files": [
+        "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts"
+      ],
+      "selected_test_count": 130,
+      "event": "push",
+      "ref": "refs/heads/ci-run-linux-m59r2",
+      "job_ids": [
+        132665341557,
+        132665818764
+      ],
+      "job_head_sha": "8ac14c407824626adbe53f8eeec82d6572ee1630",
+      "job_heads": [
+        {
+          "job_id": 132665341557,
+          "head_sha": "8ac14c407824626adbe53f8eeec82d6572ee1630"
+        },
+        {
+          "job_id": 132665818764,
+          "head_sha": "8ac14c407824626adbe53f8eeec82d6572ee1630"
+        }
+      ],
+      "queue_seconds": 2,
+      "setup_seconds": 106,
+      "test_seconds": 5,
+      "artifact_seconds": 0,
+      "duration_definitions": "Second-resolution Actions timestamps: queue=run.created_at to test-job.started_at; setup=test-job.started_at to Run tests.started_at; test=Run tests step wall; artifact=0 because both upload steps are explicitly skipped. Bun reports4.38s within test step; these are not CPU measurements.",
+      "omni_control": {
+        "nonce": "cfc545ca3fd7206f5f848a078427c736",
+        "verdict": "not applicable (focused: no declaring test ran)",
+        "spawn": 0,
+        "delegated": 0,
+        "proof": "This run proves nothing about omni"
+      },
+      "artifacts": [],
+      "artifacts_query": "GET /actions/runs/43665988509/artifacts?per_page=100 returned total_count=0",
+      "raw_log": "R2-job.log"
+    },
+    {
+      "schema": "sf2h.runtime-readonly-root.ci-ledger.v1",
+      "mission": 59,
+      "run": "R3_ORIGINAL_P03",
+      "state": "FAIL_P03_HELD",
+      "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "W_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+      "S": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+      "S_tree": "4973eb89b9794f72a6b29d5384c230ede56343ec",
+      "S_parent": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "S_only_delta": ".ci-run.json",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_hash": {
+        "algorithm": "sha256",
+        "value": "b419f1644413b9714ff2ffac74b6c368938197bc12981458c90dccd3b22cec62",
+        "serialization": "UTF-8 JSON.stringify(request,null,2) + LF, identical to .ci-run.json"
+      },
+      "branch": "ci-run-linux-m59p03",
+      "run_id": 43666746009,
+      "job_id": 132667701820,
+      "attempt": 1,
+      "event": "push",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43666746009",
+      "dispatched_at": "2026-11-15 02:13:23 UTC",
+      "dedup": [
+        {
+          "status": "queued",
+          "total_count": 0,
+          "runs": [],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+          "selection": "originalP03"
+        },
+        {
+          "status": "in_progress",
+          "total_count": 1,
+          "runs": [
+            {
+              "id": 43665180272,
+              "name": "test-ci",
+              "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+              "branch": "ci-run-linux-m59r1",
+              "event": "push",
+              "status": "in_progress"
+            }
+          ],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+          "selection": "originalP03"
+        },
+        {
+          "status": "waiting",
+          "total_count": 0,
+          "runs": [],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+          "selection": "originalP03"
+        },
+        {
+          "status": "pending",
+          "total_count": 0,
+          "runs": [],
+          "candidate_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+          "selection": "originalP03"
+        }
+      ],
+      "material_gate": {
+        "commit": "1b861df306260deed5e6af8a8e49e5da45c11b67",
+        "blob": "04eb1568d6af89a7fbe9c8d1207e423ae5747f13",
+        "tests": "R2 130PASS /0FAIL /25064expect",
+        "independent_review": "cold_review59 confirms sufficient safety/material proof; no unfulfilled source-owned precondition"
+      },
+      "original_file": {
+        "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+        "assertion_lines": 72,
+        "individual_timeout_ms": 180000,
+        "byte_identical_to_C27": true
+      },
+      "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "checks45": "REQUESTED_NOT_RUN_BY59",
+      "local_product_tests": 0,
+      "epic": 0,
+      "P03_attempts59": 1,
+      "GLOBAL_RELEASE": false,
+      "product_candidate_sha": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "product_tree_hash": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+      "ci_snapshot_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+      "ci_snapshot_parent": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "expected_selection": [
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+      ],
+      "selected_files": [
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+      ],
+      "selected_test_count": 1,
+      "job_ids": [
+        132667701820,
+        132668819048
+      ],
+      "job_head_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+      "job_heads": [
+        {
+          "job_id": 132667701820,
+          "head_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24"
+        },
+        {
+          "job_id": 132668819048,
+          "head_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24"
+        }
+      ],
+      "queue_seconds": 2,
+      "setup_seconds": 81,
+      "test_seconds": 180,
+      "artifact_seconds": 0,
+      "duration_definitions": "Second-resolution Actions timestamps; queue=run created to test-job start; setup=job start to Run tests; test=Run tests step; both upload steps skipped so artifact time0. Bun's exact per-case and overall durations below.",
+      "conclusion": "failure",
+      "result": {
+        "pass": 0,
+        "fail": 1,
+        "error": 1,
+        "expect_calls": 24,
+        "test_files": 1,
+        "test_cases": 1,
+        "bun_elapsed_seconds": 180.16,
+        "case_elapsed_ms": 180009.39,
+        "fixture_deadline_elapsed_ms": 180002,
+        "original_deadline_ms": 180000,
+        "original_assertion_lines_preserved": 72,
+        "remaining_assertions_not_proved": true,
+        "reported_error": {
+          "status": "stale",
+          "reason": "portfolio-analysis-changed"
+        },
+        "reported_at": "semantic-union-source-scenario.test.ts:50 after evaluateAndStore at49"
+      },
+      "omni_control": {
+        "nonce": "3a28692e228e7a5282558ded5c0bbb67",
+        "verdict": "not applicable (focused: no declaring test ran)",
+        "spawn": 0,
+        "delegated": 0,
+        "proof": "No omni behavior proved"
+      },
+      "artifacts": [],
+      "artifacts_query": "GET /actions/runs/43666746009/artifacts?per_page=100 returned total_count0",
+      "cleanup": {
+        "job_id": 132668819048,
+        "conclusion": "success",
+        "branch_deleted": true,
+        "completed_at": "2026-11-15T02:17:59Z"
+      },
+      "evidence": {
+        "job_log": "R3-job.log",
+        "path": "mission59/evidence/R3-job.log",
+        "bytes": 72850,
+        "characters": 72848,
+        "sha256": "f19e3234093530602fdc3b5a680d9418b2834ddff736a779ff3f6f7ebcc1141f",
+        "git_blob": "5a6b2b6a84a9f5c4361dd1649932611beecccae9"
+      },
+      "repeat": "HELD; no unchanged repeat dispatched",
+      "runtime": {
+        "bun": "1.3.14",
+        "bun_commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "runner": "ubuntu-24.04",
+        "arch": "x64"
+      },
+      "completed_at": "2026-11-15T02:18:00Z",
+      "raw_log": "R3-job.log"
+    }
+  ],
+  "configurations": [
+    {
+      "path": "package.json",
+      "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "bunfig.toml",
+      "blob": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "blob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "tsconfig.json",
+      "blob": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "script/test-guard.ts",
+      "blob": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": "script/test-omni-control.ts",
+      "blob": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete retrieved; selected relevant configuration inspected"
+    },
+    {
+      "path": ".github/actions/setup-bun/action.yml",
+      "blob": "e2cda5b54676d4d1c35785aaef7aa69d66944597",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "complete"
+    },
+    {
+      "path": ".github/actions/ripgrep/action.yml",
+      "blob": "7c63713ca98e75672489d16f9dc5e68f00311f23",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": ".github/actions/omni-binaries/action.yml",
+      "blob": "26e6b752b0383fbd4b55afa5b026240a447562bf",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/module-registry.json",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "packages/core/test/fixture/omni-expect.ts",
+      "blob": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "packages/core/src/flag/flag.ts",
+      "blob": "98dc57a53f2fec5baa7afdd316758d9aa744f0c7",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "packages/core/src/omni.ts",
+      "blob": "94a19789cef782806a80432c9a86f28bccbdecac",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/test-ci-upload.ts",
+      "blob": "4c9281e63e5ad1bdabce5ed8f00a6cbe4fb24d37",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/test-ci-queue.ts",
+      "blob": "d629bc63b4a7405af27374982c19847c3e346169",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/test-ci-paths.ts",
+      "blob": "b6977405d4dd8b2db95f3926f2a0322fd511357e",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "script/test-ci-repository.ts",
+      "blob": "3f6e062e3fb5a7e4a1d250b437cc070e4ff4b81a",
+      "equal_C27_by_complete_compare": true,
+      "content_scope": "blob identity with first line only"
+    },
+    {
+      "path": "bun.lock",
+      "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "equal_C27": true,
+      "content_scope": "tree identity only; lock contents not exhaustively read"
+    },
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "equal_C27": true,
+      "content_scope": "read earlier in this mission"
+    }
+  ],
+  "local_product_tests": 0,
+  "local_typechecks": 0,
+  "local_guard_runs": 0,
+  "epic": 0,
+  "P03_attempts59": 1,
+  "source_status": "PASS_R2_SELECTED_SCOPE",
+  "P03_status": "FAIL_HELD",
+  "checks45": "REQUESTED_NOT_RUN_BY59",
+  "GLOBAL_RELEASE": false
+}

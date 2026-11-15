@@ -1,0 +1,455 @@
+{
+  "schema": "sf2h.runtime-readonly-root.final-manifest.v1",
+  "mission": 59,
+  "state": "TERMINAL_SOURCE_PACKAGE",
+  "terminal_commit": "CONTAINING_COMMIT",
+  "terminal_tree": "CONTAINING_COMMIT_TREE",
+  "expected_parent": "648499843124aebcb97111e1e671b1fe5009ea59",
+  "source_base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+  "product_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "product_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "source_branch": "runtime-read-scope",
+  "PR": 72,
+  "atomic_material": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "mode": "100644",
+      "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "sha256": "4e44c93060c70ddebd1f85ecbe78b4ecaca311e19985df4c610c84529085cbee",
+      "bytes": 5363
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "sha256": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33",
+      "bytes": 35607
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "mode": "100644",
+      "blob": "0e812842ad0d534998c182100a8466548d70e915",
+      "sha256": "52116581fb89dd0065a1fbfe6a82829fe306faa09c46135aa06775ff21ca6f9d",
+      "bytes": 15748
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "mode": "100644",
+      "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+      "sha256": "5d1b5706c68b4ac9489fb9cb5c58aa9f050994329e9361306892599fe71ccbc1",
+      "bytes": 4757
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+      "mode": "100644",
+      "blob": "35741770154ccea55944674239e5b29cadc3abb6",
+      "sha256": "537af7091d6b55bc3f383265b1049b8ef2f6debb19d75fa8051d165ff413b707",
+      "bytes": 7414
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "mode": "100644",
+      "blob": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+      "sha256": "13f6495ecd0475d75d38cb91dce6b23ec62e46ff310d8ae63fad9c39f6d96f2c",
+      "bytes": 11882
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+      "mode": "100644",
+      "blob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+      "sha256": "e5816b6a9aa73bbea88efcde2223afc65e45c1199b2669d460e7bc2edf3e0e3e",
+      "bytes": 16782
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+      "mode": "100644",
+      "blob": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+      "sha256": "4c38ea40691c6fdf24b387d5422272eedbc5dffba4d9a196c284402f9ea8f4a2",
+      "bytes": 6279
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+      "mode": "100644",
+      "blob": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+      "sha256": "12772949b77ceba728dd1d3584ad021beebeedc4fa59c99eff64ff5dbba00d94",
+      "bytes": 9435
+    }
+  ],
+  "product_and_tests_manifest": "delivery/MANIFEST.json",
+  "patches": [
+    {
+      "path": "delivery/source-and-tests.patch",
+      "bytes": 67570,
+      "blob": "028f6bf1bca295b051ca422e8d5158e6b4bcc6e0",
+      "sha256": "ed9f06725f1ed76c3ebf9dc94ecb4c77bb0d6dc35ec10e276222199eb92eb4fa"
+    },
+    {
+      "path": "delivery/product.patch",
+      "bytes": 13044,
+      "blob": "ed63a66bdbd55e136105c21459769a1d4e1b6052",
+      "sha256": "a773c1162f74d033d19e67bcdc5a586543da0f811c164eac7c97da989ef37eef"
+    }
+  ],
+  "reconstruction": "delivery/patch-check.json",
+  "dependency_closure": {
+    "path": "delivery/dependency-closure.json",
+    "blob": "dba42c87fd3fc02e39e56e6722e69c7e10ae07d5",
+    "scope": "Atomic selected patch/direct edges and pinned baseline/config; no recursive entire-repository audit",
+    "correction": "TransactionOptions imported symbol corrected transparently; earlier receipt retained in648499 history"
+  },
+  "receipts": [
+    {
+      "path": "ACK59.json",
+      "mode": "100644",
+      "blob": "7e3dbb6f3175dfef4271772598c3357bf1809f61",
+      "bytes": 3471,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "AUTHORITY-FINAL.json",
+      "mode": "100644",
+      "blob": "b306e9299f28e786c921abd44326c8f7d1b78042",
+      "bytes": 3021,
+      "sha256": "0a17df75301c87e13586d4548543ef0ff332391bd02ad33c609d7805eafda70e",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "checks/P03-expect-sequence.txt",
+      "mode": "100644",
+      "blob": "8ce0388a7756a2e9a4e76ae2906abbface9b17c6",
+      "bytes": 7908,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "checks/P03-preservation.json",
+      "mode": "100644",
+      "blob": "1e037c96acac7c0ec046015e884c66cc45d9b28a",
+      "bytes": 1615,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "checks/REQUEST-45.json",
+      "mode": "100644",
+      "blob": "23b7b056043c931aa892e6aa184446b99a7b9552",
+      "bytes": 3878,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/LEDGER-FINAL.json",
+      "mode": "100644",
+      "blob": "6d0e8dc1da54f122ff1c95908a9664851e05ab0f",
+      "bytes": 39469,
+      "sha256": "072b6b82ebc7cb222a823ec1ba58c333cb29f699e3d6b9a61d891fbccf006d9e",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "ci/R1-deadlock.json",
+      "mode": "100644",
+      "blob": "ba6135ba283d4ea62a5f5fb211e7ebbaa60b4ff4",
+      "bytes": 1479,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R1-dispatch.json",
+      "mode": "100644",
+      "blob": "f03fa9b8ae1d8c7cb1c994f68a6f037842da2601",
+      "bytes": 2477,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R1-job.log",
+      "mode": "100644",
+      "blob": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+      "bytes": 89896,
+      "sha256": "555932bf6900dd29f7326c2e8f10b28441e96bf63d78c18e7122a7617b2015cd",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "ci/R1-jobs.json",
+      "mode": "100644",
+      "blob": "6401db676b10080f7a14b1141ff38f5cdfc072ac",
+      "bytes": 7969,
+      "sha256": "3e0a6a1048edab47c8f45f1a460479557e5b9bd288182395a05668f23aedd301",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "ci/R1-request.json",
+      "mode": "100644",
+      "blob": "567f065937a6b1227479ec8e86a0acbc1073f93d",
+      "bytes": 1315,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R1-result.json",
+      "mode": "100644",
+      "blob": "9f2cd2250bd27fe36501c23c9152e6f65247ee98",
+      "bytes": 11503,
+      "sha256": "53a74030c143bc25fbf7743ba0d22b9f8ece3786326a723868e39c5167eaa555",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "ci/R2-dispatch.json",
+      "mode": "100644",
+      "blob": "de489d122c599ee109d67965c04b0d0480476d94",
+      "bytes": 3089,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R2-job.log",
+      "mode": "100644",
+      "blob": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+      "bytes": 98644,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R2-jobs.json",
+      "mode": "100644",
+      "blob": "1aad643619c5206def477b81ace9a96375d6563f",
+      "bytes": 7841,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R2-ledger-addendum.json",
+      "mode": "100644",
+      "blob": "cc2a896cb0de12020173c1803895f6d0753d9c9f",
+      "bytes": 5902,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R2-result.json",
+      "mode": "100644",
+      "blob": "3ec3bbe1882fafb19cb7240e22a1425744ae8fc2",
+      "bytes": 6396,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R3-dispatch.json",
+      "mode": "100644",
+      "blob": "116971c49a119a3507c7d82d4b6e195391daae39",
+      "bytes": 2919,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R3-job.log",
+      "mode": "100644",
+      "blob": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+      "bytes": 72850,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R3-jobs.json",
+      "mode": "100644",
+      "blob": "d28289f9074887f6d2b26c43ca464fc40e8bc24e",
+      "bytes": 7965,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "ci/R3-result.json",
+      "mode": "100644",
+      "blob": "71df6b782788a327c8368fa160f92040c96b18e6",
+      "bytes": 6045,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "CONSUMER-RELEASE.json",
+      "mode": "100644",
+      "blob": "6ab5c38380cb9ad81123022af416d18e55798000",
+      "bytes": 8139,
+      "sha256": "7785885342d7edc609aae09cf87f142d8e2e6e316f617d6ba14f9218cdbcf2c4",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "CONTRACT-ADDENDUM-01.json",
+      "mode": "100644",
+      "blob": "58506ec0e19d8424df06b6a5cd2f5e7d28b5879b",
+      "bytes": 1328,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "CONTRACT.json",
+      "mode": "100644",
+      "blob": "58cd64234660108427251251925a261750639930",
+      "bytes": 6169,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/dependency-closure.json",
+      "mode": "100644",
+      "blob": "dba42c87fd3fc02e39e56e6722e69c7e10ae07d5",
+      "bytes": 55406,
+      "sha256": "1f173e04428a4bfc20ee4455266272117138a6178e3e3e41699b4cd040e82186",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "delivery/MANIFEST.json",
+      "mode": "100644",
+      "blob": "8831e0ee2a12f409bb855796a311ca54ed4189e9",
+      "bytes": 5342,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/patch-check.json",
+      "mode": "100644",
+      "blob": "f81d4cd95d469f8414d78f3039899bcd096ff3a2",
+      "bytes": 2195,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/product--integration--source-lifecycle.ts.postimage.txt",
+      "mode": "100644",
+      "blob": "0e812842ad0d534998c182100a8466548d70e915",
+      "bytes": 15748,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/product--integration--source-lifecycle.ts.preimage.txt",
+      "mode": "100644",
+      "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "bytes": 15333,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/product--portfolio--read-snapshot.ts.postimage.txt",
+      "mode": "100644",
+      "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+      "bytes": 4757,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/product--portfolio--read-snapshot.ts.preimage.txt",
+      "mode": "100644",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "bytes": 4193,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/product.patch",
+      "mode": "100644",
+      "blob": "ed63a66bdbd55e136105c21459769a1d4e1b6052",
+      "bytes": 13044,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/runtime--contract.ts.postimage.txt",
+      "mode": "100644",
+      "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "bytes": 5363,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/runtime--contract.ts.preimage.txt",
+      "mode": "100644",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "bytes": 4774,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/runtime--local-store.ts.postimage.txt",
+      "mode": "100644",
+      "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "bytes": 35607,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/runtime--local-store.ts.preimage.txt",
+      "mode": "100644",
+      "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "bytes": 32899,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "delivery/source-and-tests.patch",
+      "mode": "100644",
+      "blob": "028f6bf1bca295b051ca422e8d5158e6b4bcc6e0",
+      "bytes": 67570,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "findings/MATERIAL-QUALIFICATION.json",
+      "mode": "100644",
+      "blob": "04eb1568d6af89a7fbe9c8d1207e423ae5747f13",
+      "bytes": 5698,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "findings/P03-RESULT.json",
+      "mode": "100644",
+      "blob": "82924a64e6b864646f182107a571033c7e0ab7a9",
+      "bytes": 8973,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "findings/R2-COST.json",
+      "mode": "100644",
+      "blob": "e66a9a83850dbeeb2c44baa1e92dda518edba0b7",
+      "bytes": 3217,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "HANDOFF-FINAL.md",
+      "mode": "100644",
+      "blob": "b171d3474f7c7e3ab7466152401347d7c5f9cf59",
+      "bytes": 11508,
+      "sha256": "ad0af33a366ed3e136cabb639e75d8accdf42d9a1aa0bfa5c192c838712758e4",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "reconciliation/CONTROL-AND-STACK.json",
+      "mode": "100644",
+      "blob": "1d6db235134aa540bd5e3c91ffa62dbe274e8c9b",
+      "bytes": 2581,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "reconciliation/TERMINAL-PRECHECK.json",
+      "mode": "100644",
+      "blob": "15dbb8f33f1fe8f3c615fb681ea796d629bf142c",
+      "bytes": 13565,
+      "sha256": "734c8c9c1118d9f8fef4e06f0f91fe1b90b31ecd54f50a865e7eb9d1f58c8660",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "reviews/P03.json",
+      "mode": "100644",
+      "blob": "9ce7d5f68e4d9fad9c4d2d33567ce093764910df",
+      "bytes": 1951,
+      "sha256": "3ef1797628606980c509e47ed053e1b343d6e63bd51c953eeef65985626db4f4",
+      "identity_source": "Exact terminal entry bytes; verify remote tree/readback after publication"
+    },
+    {
+      "path": "reviews/QUALIFICATION.json",
+      "mode": "100644",
+      "blob": "568ade3d6f21b221ff39d4cd13a89c05e095995b",
+      "bytes": 3341,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    },
+    {
+      "path": "reviews/STATIC.json",
+      "mode": "100644",
+      "blob": "07c2d1064a984df9f1b52cadd264fc6d39955eac",
+      "bytes": 2337,
+      "identity_source": "GitHub tree at preterminal source648499843124aebcb97111e1e671b1fe5009ea59"
+    }
+  ],
+  "self_entry": {
+    "path": "FINAL-MANIFEST.json",
+    "identity": "Its own content-addressed identity is in the containing Git tree and remote readback; no impossible self-hash is embedded"
+  },
+  "receipt_count_including_self": 47,
+  "receipt_bytes_excluding_self": 716690,
+  "CI": {
+    "explicit_dispatches": 3,
+    "source_tests": "R2 PASS130/0/25064/15files",
+    "P03": "R3 FAIL0pass/1fail/1error/24calls/180009.39ms, original72lines/180000ms preserved",
+    "obsolete_R1": "cancelled,5per-case timeouts, no complete Bun summary; excluded",
+    "all_runs_terminal": true,
+    "cleanup_all_success": true,
+    "ledger": "ci/LEDGER-FINAL.json"
+  },
+  "checks45": "REQUESTED_NOT_RUN",
+  "consumer_handoff": "HANDOFF-FINAL.md",
+  "consumer_release": "CONSUMER-RELEASE.json",
+  "authority": "AUTHORITY-FINAL.json",
+  "limits": "Source PASS is scoped. P03,45 gates, composed stack qualification and global acceptance remain open. Requested57 handoff plus later60 terminal authority observation; no received final ACK or stack takeover.",
+  "GLOBAL_RELEASE": false
+}

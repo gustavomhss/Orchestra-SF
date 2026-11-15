@@ -511,7 +511,7 @@
     "verdict": "PASS_STATIC_ATOMIC_PATCH_CLOSURE_ONLY",
     "new_runtime_production_import_edges": 0,
     "new_type_only_production_import_edges": 1,
-    "new_type_edge": "product/portfolio/read-snapshot.ts -> runtime/contract.ts (Persistence), included in the same four-file product bundle",
+    "new_type_edge": "product/portfolio/read-snapshot.ts -> runtime/contract.ts (TransactionOptions), included in the same four-file product bundle",
     "semantic_or_performance_PASS": false,
     "GLOBAL_RELEASE": false
   },
@@ -1386,5 +1386,22 @@
         "kind": "type"
       }
     ]
+  },
+  "correction_provenance": {
+    "kind": "FACTUAL_IMPORTED_SYMBOL_NAME_CORRECTION",
+    "reported_by": "cold_review59 during final evidence QA",
+    "corrected_by": "contract_review59",
+    "previous_receipt": {
+      "sha256": "cd461b28c06da5d9b09651d51f55368832662fa2c8129c8b294f0f8c19f13b4b",
+      "blob": "77c5c6750782c20a17c31ef850bf616a724003de"
+    },
+    "prior_receipt_history_commit_prefix_reported_by_coordinator": "648499",
+    "source_commit": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "source_blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+    "source_path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+    "verified_declaration": "import type { TransactionOptions } from \"../../runtime/contract.ts\"",
+    "correction": "The descriptive conclusion incorrectly named Persistence. The exact W2 source imports TransactionOptions. Corrected only that symbol name and added this provenance.",
+    "retained_evidence": "All code and patch hashes, import-edge paths/kinds/counts, baseline/config identities, authorship exclusions and static-only verdict are unchanged.",
+    "verification": "Exact W2 source read through GitHub MCP and the matching local final source; no code edits, product execution, tests, typecheck, dispatch or remote mutation."
   }
 }
