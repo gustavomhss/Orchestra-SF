@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.auth72.terminal-authority.v1",
+  "state": "TERMINAL_SOURCE_RELEASE_CHECKS_AND_COMPOSED_VALIDATION_PENDING",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "scope_unchanged": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "mission": 72,
+  "branch": "auth-retention-fix",
+  "PR": 84,
+  "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "ACK": "4fe627efa6b5b727087da9f8c33a564bd4b9acb4",
+  "source_W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+  "source_tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+  "lease": {
+    "epoch": "auth-retention-browser72",
+    "state": "ENDED_ON_TERMINAL_RECEIPT_PUBLICATION",
+    "write_intent": "No further product writes or CI dispatch planned. Any later material change must publish a new W and invalidate affected evidence explicitly."
+  },
+  "identity": {
+    "session_id": null,
+    "model_effective": null,
+    "developer_declared_model": "GPT-6 Astra Pro",
+    "backend_identity_limit": "No verifiable runtime/session identifier was exposed; none invented."
+  },
+  "release": {
+    "consumer": 71,
+    "kind": "Selective coherent source + prepared owner-only composition inputs",
+    "source_status": "HOSTED_SURGICAL_REGRESSIONS_PASS_WITH_TWO_INHERITED_SKIPS",
+    "independent_source_recheck": "NO_OPEN_BLOCKING_FINDING_SOURCE_AND_R1",
+    "integrated_acceptance": false,
+    "terminal_commit_locator": "Commit containing this file; exact terminal SHA/tree pinned in final PR84 description and PR65 handoff comment."
+  },
+  "next_authority": {
+    "45": "Compiler/guards through existing exclusive interface.",
+    "71": "Reconcile actual target; preserve readonly59; compose; run exact-candidate regression; ACK intake.",
+    "S0": "Independent integrated review and FINAL campaign acceptance."
+  },
+  "constraints_honored": {
+    "github_mcp_only_remote": true,
+    "CAS_no_force": true,
+    "source_branch_only_product_writes": true,
+    "foreign_proposals_inert": true,
+    "local_product_execution": false,
+    "new_workflows": false,
+    "full_epic": false,
+    "deploy": false,
+    "server_restart": false,
+    "tenant_operations": false,
+    "financial_domain_changes": false,
+    "readonly_contract_edits": false
+  },
+  "required_pending": [
+    "45 receipt for source compiler/guards",
+    "71 applied readonly59 composition and installed lifecycle/fixture map validation",
+    "Independent cold recheck on final composed candidate",
+    "Inherited final campaign gates"
+  ],
+  "GLOBAL_RELEASE": false,
+  "handoff": "HANDOFF72.md",
+  "finding": "M70-AUTH-01",
+  "independent_finding": "CR72-01 resolved beforeW; R1 regression PASS"
+}

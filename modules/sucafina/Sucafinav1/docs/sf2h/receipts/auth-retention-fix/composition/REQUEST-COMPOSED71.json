@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.auth72.composed71.request.v1",
+  "status": "NOT_DISPATCHED",
+  "requester": 72,
+  "owner": 71,
+  "purpose": "Qualify auth72 retention/races on the actual readonly59-composed LocalStore plus installed Microsoft entry/CLI composition.",
+  "source72": {
+    "sha": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45"
+  },
+  "readonly59": {
+    "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+    "complete_bundle_required": true
+  },
+  "existing_source_evidence": {
+    "run": 43671466268,
+    "job": 132682240447,
+    "conclusion": "success",
+    "pass": 138,
+    "skip": 2,
+    "fail": 0,
+    "not_composition_proof": true
+  },
+  "actual_composed_W": null,
+  "actual_composed_tree": null,
+  "runner_S": null,
+  "run": null,
+  "job": null,
+  "ci_payload": "composed-ci-request.json",
+  "runner": "bun",
+  "os": "linux",
+  "explicit_file_count": 14,
+  "selection": {
+    "auth72_source_suites": 5,
+    "auth72_source_cases": 24,
+    "existing_microsoft_session_suites": 1,
+    "existing_microsoft_session_cases_at_W1": 24,
+    "readonly59_suites": 4,
+    "new_readonly_composition_suites": 1,
+    "new_readonly_composition_cases": 2,
+    "existing_microsoft_installed_and_routes_suites": 3
+  },
+  "parameters": {
+    "timeout_ms": 120000,
+    "timeout_increased": false,
+    "name_filter": null,
+    "environment": {},
+    "new_workflow": false
+  },
+  "preconditions": [
+    "Reconcile actual target71 HEAD and apply full readonly59 bundle plus source72 without replacing readonly59's four LocalStore changes.",
+    "Install the inert readonly-composed.test.ts with the existing own72 fixture into the actual composed test path.",
+    "Apply the owner fixture-pointer update and regenerate the Microsoft49 composition map from all three actual installed canonical files.",
+    "If74 or any contribution changes entry/installation/serve, reconcile every map pre/post hash against actual target bytes; preserve original49 lineage and all archive integrity checks.",
+    "Coordinate/deduplicate via existing Actions request lane; bind S to actual composed W with .ci-run.json as sole S delta."
+  ],
+  "canonical_map_paths": [
+    "modules/sucafina/Sucafinav1/local/entry.ts",
+    "apps/cli/src/sucafina-product/installation.ts",
+    "apps/cli/src/commands/handlers/serve.ts"
+  ],
+  "helper_limit": "Original build-map72.py only replaces entry and assumes both CLI files are unchanged C28; do not use those assumptions if74 or target71 changes a CLI file.",
+  "node_runner_required": false,
+  "node_runner_reason": "microsoft-node.test.ts imports bun:test and uses Bun APIs with @effect/platform-node. The node runner accepts only *.node-smoke.mjs.",
+  "excluded_absent_material_changes": [
+    "local-identity.test.ts",
+    "local-store.test.ts",
+    "microsoft-entra-client.test.ts",
+    "microsoft-configuration.test.ts",
+    "operator-identity.test.ts"
+  ],
+  "evidence_to_record": [
+    "actual W/tree and S parent/delta",
+    "normalized request",
+    "real run/job logs and test count",
+    "nonce-bound Omni verdict",
+    "actual artifacts list",
+    "cleanup and runner ref state"
+  ],
+  "no_claims": [
+    "composed PASS before execution",
+    "native Node binary execution",
+    "compiler/guards45 PASS",
+    "tenant proof",
+    "global FINAL acceptance"
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "schema": "sf2h.auth72.source-manifest.v1",
+  "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+  "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "sha256": "f2d00caedd14b3c1f9dd25aca416a7ec02af08aaca8195fe1536d24316eb5e9b",
+        "bytes": 16747
+      },
+      "postimage": {
+        "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+        "sha256": "cfdea480c3ed807546c055440c76b7e72e3ea223f0750748040e51bd22261f4c",
+        "bytes": 18923
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "sha256": "1f4b260f41c1d6aa521f9e127c912cdaff5aac903525de7a8d49b3d145b0f192",
+        "bytes": 32899
+      },
+      "postimage": {
+        "blob": "7cca20a0fc9741c0b57bda9684e5e69fedcc027b",
+        "sha256": "0bfe5a276c24bb9c6a31fc12090b472fa16c98efd0d9a5e852487d345d34100e",
+        "bytes": 32432
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "sha256": "d7f7fd24f13c767d9871008392d313e52c36a981160da3069ad727bf1d3fb079",
+        "bytes": 2576
+      },
+      "postimage": {
+        "blob": "d82b40928a235f2d249e45e59732f281dfded97f",
+        "sha256": "1f607243ba2d0cde805e4faf3ebb749da1a30db98f7dccd258646e34abb12347",
+        "bytes": 3784
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "blob": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+        "sha256": "66499d3021695f63a61178d516aad8e0fe9363cffa7c8de388952ec7dd75c981",
+        "bytes": 18419
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": {
+        "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
+        "bytes": 25080
+      },
+      "postimage": {
+        "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+        "sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
+        "bytes": 25564
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "blob": "a26bfa284dd7713d2204ff48628181a95743cbd1",
+        "sha256": "f95dd984247b20043e0b9b17ff9f29a5d1321780e354b040981271cc76ad55f7",
+        "bytes": 8040
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "blob": "f0b23f1dcbc3529cd215ac6d58b9caf351be5e77",
+        "sha256": "dbf2a7edf01d5cd84dd3a5dfbfc4ca052548132811d1057c618e42732da58c9b",
+        "bytes": 6407
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "blob": "5cef79fa21cf23094ce554360f48a67f699295ba",
+        "sha256": "40f22275f32a77bb233f35c89897b022d0fb5add19b62dff2697375586ddab9f",
+        "bytes": 2473
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+        "sha256": "a1a3444cd522b3b762cb989a84396f129007e52249b98c82f6c42e5910db6381",
+        "bytes": 8378
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "blob": "531a79bcc0ad1398ea04dd150f26bf0eb421cbf6",
+        "sha256": "65fbe474d1407534fd0075d04de6fd6c6df503c502f3f3bfde5f9228c22a2f5b",
+        "bytes": 5913
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "blob": "7b443c1ab5ac4177c49c4f922a823df10a160d38",
+        "sha256": "5da94492a46865e6a813092e326fc2edf8e93d5a9561cc245025d8b66c7e19cd",
+        "bytes": 2299
+      }
+    }
+  ],
+  "apply": "Integrate the complete coherent unit. Reconcile LocalStore with readonly59 using composition/readonly59. Do not overwrite target from this branch. No deletion/mode change.",
+  "tests": "24 new source tests plus existing declared regressions; logs/ledger own W/S identity."
+}

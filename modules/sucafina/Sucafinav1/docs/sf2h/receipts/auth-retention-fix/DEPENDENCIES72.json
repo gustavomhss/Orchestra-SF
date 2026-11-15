@@ -1,0 +1,137 @@
+{
+  "schema": "sf2h.auth72.dependency-closure.v1",
+  "source": {
+    "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "manifest": "owned/MANIFEST.json",
+    "complete_patch": "owned/source-and-tests.patch",
+    "product_only_patch": "owned/product.patch"
+  },
+  "closure_definition": "Complete changed-source/test unit and all additional integration inputs required by72. Unchanged repository dependencies are pinned by W1/tree; this is not a repository-wide transitive SBOM.",
+  "owned_unit": [
+    "runtime/local-identity.ts",
+    "runtime/local-store.ts",
+    "runtime/local-contract.ts",
+    "runtime/auth-maintenance.ts",
+    "local/entry.ts",
+    "test/product/auth-retention-fix/fixture.ts",
+    "test/product/auth-retention-fix/unknown-handles.test.ts",
+    "test/product/auth-retention-fix/retention.test.ts",
+    "test/product/auth-retention-fix/capacity.test.ts",
+    "test/product/auth-retention-fix/races.test.ts",
+    "test/product/auth-retention-fix/maintenance.test.ts"
+  ],
+  "new_packages": [],
+  "modified_lockfiles": [],
+  "modified_workflows": [],
+  "public_contract_or_server_http_api_changed": false,
+  "unchanged_critical_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "ref": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "blob": "51895f3c254e6020d116ca73d4a1c690f7562169"
+    }
+  ],
+  "fixture_scope": "Own test helper uses the existing cryptographic OIDC fixture (RS256/JWKS/PKCE/nonce/confidential profile/Graph). Synthetic identities declared; no tenant-native proof.",
+  "readonly59": {
+    "owner": 59,
+    "consumer": 71,
+    "release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+    "tested_W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "files": [
+      {
+        "path": "runtime/contract.ts",
+        "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+        "action": "Preserve59 exact API;72 does not edit."
+      },
+      {
+        "path": "runtime/local-store.ts",
+        "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "action": "Use prepared auth-on-readonly59.patch, not source72 replacement."
+      },
+      {
+        "path": "product/integration/source-lifecycle.ts",
+        "blob": "0e812842ad0d534998c182100a8466548d70e915",
+        "action": "Preserve59."
+      },
+      {
+        "path": "product/portfolio/read-snapshot.ts",
+        "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+        "action": "Preserve59."
+      }
+    ],
+    "tests": "Existing59 canonical-fixture and runtime/freshness/wrappers/cost tests at the59 release, plus materialize our two in-memory-auth/readonly tests from composition/readonly59/readonly-composed.test.ts.txt.",
+    "patch_manifest": "composition/readonly59/manifest.json",
+    "expected_composed_store": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+    "status": "INERT_NOT_APPLIED_NOT_RUN_BY_72"
+  },
+  "microsoft49_composition": {
+    "consumer": 71,
+    "manifest": "composition/composition-pointer-manifest.json",
+    "patch": "composition/composition-pointer-and-map.patch",
+    "action": "Existing fixture checks byte pins for entry and CLI. Preserve archives/assertions; retarget only its composition-map pointer to this new map after reconciling actual composed bytes. If74 changes CLI/entry, regenerate map honestly and rerun.",
+    "foreign_fixture": "test/microsoft-login/integration-fixture.ts",
+    "status": "INERT_NOT_APPLIED_NOT_RUN_BY_72"
+  },
+  "other_owners": {
+    "45": "Compiler/check interface remains exclusive.",
+    "48": "Reports preserved.",
+    "52": "Decisions preserved.",
+    "71": "Only sf2-stack writer after succession ACK.",
+    "74": "Transport/CLI changes must be composed with auth-only lifecycle hunks in entry.",
+    "S0": "FINAL acceptance/eight selections/AM/reviews/C-G7D-G8 retained."
+  },
+  "target_observation": "TARGET-RECONCILIATION72.json; observed C32 has exact59 store and C28 preimages for other shared auth/composition paths. Consumer must re-read actual HEAD/authority/blobs immediately before CAS.",
+  "limitations": [
+    "Fresh independent auth reads do not grant business writes inside readonly roots.",
+    "readonly59 keeps BEGIN IMMEDIATE: a second writer cannot commit while that root holds the SQLite lock; tests must release Graph/root before awaiting queued logout.",
+    "Source R1 proves24 own regressions+declared existing cases. It does not qualify the applied target, entry installation, compiler, Microsoft tenant or global campaign."
+  ],
+  "complete_composed_proposal": {
+    "patch": "composition/COMPOSED-C32.patch",
+    "manifest": "composition/COMPOSED-C32-MANIFEST.json",
+    "status": "INERT_OWNER_PATCH_NOT_APPLIED_NOT_RUN",
+    "file_count": 14
+  }
+}

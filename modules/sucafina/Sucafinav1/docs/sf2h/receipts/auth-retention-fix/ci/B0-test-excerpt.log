@@ -1,0 +1,39 @@
+2026-11-15T03:12:43.0637403Z bun test v1.3.14 (0d9b296a)
+2026-11-15T03:12:43.0703673Z 
+2026-11-15T03:12:43.0704231Z Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts:
+2026-11-15T03:12:43.1677125Z 13 |     const result = await f.logout(cookies)
+2026-11-15T03:12:43.1677554Z 14 |     expect(result?.status).toBe(204)
+2026-11-15T03:12:43.1678005Z 15 |     expect(result!.headers.getSetCookie()).toHaveLength(2)
+2026-11-15T03:12:43.1678689Z 16 |     expect(result!.headers.getSetCookie().every((cookie) => cookie.includes("Max-Age=0"))).toBe(true)
+2026-11-15T03:12:43.1679223Z 17 |   }
+2026-11-15T03:12:43.1680000Z 18 |   expect({ tables: f.authenticationRows(), payloads: f.payloadCounts() }).toEqual(before)
+2026-11-15T03:12:43.1680553Z                                                                                ^
+2026-11-15T03:12:43.1680980Z error: expect(received).toEqual(expected)
+2026-11-15T03:12:43.1681177Z 
+2026-11-15T03:12:43.1681257Z   {
+2026-11-15T03:12:43.1681427Z     "payloads": {
+2026-11-15T03:12:43.1681597Z -     "bytes": 221,
+2026-11-15T03:12:43.1681968Z -     "rows": 1,
+2026-11-15T03:12:43.1682153Z +     "bytes": 253,
+2026-11-15T03:12:43.1682333Z +     "rows": 33,
+2026-11-15T03:12:43.1682536Z       "sessions": 0,
+2026-11-15T03:12:43.1682743Z     },
+2026-11-15T03:12:43.1682929Z     "tables": {
+2026-11-15T03:12:43.1683202Z -     "authentication_payloads": 1,
+2026-11-15T03:12:43.1683527Z +     "authentication_payloads": 33,
+2026-11-15T03:12:43.1683782Z     },
+2026-11-15T03:12:43.1683960Z   }
+2026-11-15T03:12:43.1684071Z 
+2026-11-15T03:12:43.1684171Z - Expected  - 3
+2026-11-15T03:12:43.1684408Z + Received  + 3
+2026-11-15T03:12:43.1684533Z 
+2026-11-15T03:12:43.1685160Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts:18:75)
+2026-11-15T03:12:43.1703134Z (fail) same-origin logout with never-issued syntactic handles allocates no persistent authentication state [79.05ms]
+2026-11-15T03:12:43.2712792Z 
+2026-11-15T03:12:43.2713889Z omni positive control [802dae79048c698af38724eee69e6470]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T03:12:43.2714872Z  0 pass
+2026-11-15T03:12:43.2715113Z  1 filtered out
+2026-11-15T03:12:43.2715315Z  1 fail
+2026-11-15T03:12:43.2715559Z  50 expect() calls
+2026-11-15T03:12:43.2715828Z Ran 1 test across 1 file. [208.00ms]
+2026-11-15T03:12:43.2762175Z ##[error]Process completed with exit code 1.

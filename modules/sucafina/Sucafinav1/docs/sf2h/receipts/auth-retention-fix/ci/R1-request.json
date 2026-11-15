@@ -1,0 +1,22 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+    "./Sucafinav1/test/local-identity.test.ts",
+    "./Sucafinav1/test/local-store.test.ts",
+    "./Sucafinav1/test/microsoft-session.test.ts",
+    "./Sucafinav1/test/microsoft-entra-client.test.ts",
+    "./Sucafinav1/test/microsoft-configuration.test.ts",
+    "./Sucafinav1/test/operator-identity.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}

@@ -1,0 +1,203 @@
+{
+  "schema": "sf2h.auth72.target-reconciliation.v1",
+  "state": "READ_ONLY_PINNED_RECONCILIATION_NOT_APPLIED_NOT_COMPOSED_TESTED",
+  "recorded_at": "2026-11-15 03:20:51 UTC",
+  "mission": 72,
+  "source": {
+    "branch": "auth-retention-fix",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "base_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "ACK": "4fe627efa6b5b727087da9f8c33a564bd4b9acb4",
+    "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "remote_source_branch_observed_at_W": true,
+    "remote_five_product_blobs_match_owned_manifest": true,
+    "comparison": "https://github.com/gustavomhss/Orchestra-SF/compare/faa30fddb7e7b61696b66fd069f51cf18c51125f...22b4e97cfbb22703eeedb34af3b33ba74d323806"
+  },
+  "target": {
+    "branch": "sf2-stack",
+    "PR": 65,
+    "initial_requested_sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "initial_requested_tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "latest_observed_sha": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+    "latest_observed_tree": "87c3d65399a71f4bbf72c8714f7ee02e662b24e7",
+    "candidate": "C32",
+    "authority": {
+      "owner": 71,
+      "lease_epoch": "S0-C-e13-browser71",
+      "ACK71_blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+      "scope": "ACK71 plus subsequent candidate receipts read; no terminal/superseding authority observed in inspected target deltas."
+    },
+    "auth72_not_integrated": true
+  },
+  "material_since_C28": [
+    {
+      "candidate": "C29",
+      "commit": "342f04688aa173914f36a81e80e6781242616e82",
+      "unit": "Released runtime59 readonly root, contract, SourcePersistence forwarding, Portfolio reader and tests.",
+      "effect_on_auth72": "LocalStore preimage changed from C28 to post59."
+    },
+    {
+      "candidate": "C30",
+      "commit": "947a4add941893c8247b95a5ce6386468313838b",
+      "unit": "Released operations63 scanner unit and auxiliary support.",
+      "effect_on_auth72": "No direct auth72 path overlap."
+    },
+    {
+      "candidate": "C31",
+      "commit": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "unit": "Released native64 admission/host unit with activation held.",
+      "effect_on_auth72": "No change to auth72 owned paths or Microsoft fixture/installation/serve composition preimages."
+    },
+    {
+      "candidate": "C32",
+      "commit": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+      "unit": "Released mixed61 operation access/composite planner unit and tests.",
+      "effect_on_auth72": "Three product files outside auth72 changed; all seven shared/auth-composition pins were re-read and remain equal to C31."
+    }
+  ],
+  "comparisons": [
+    {
+      "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "head": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/faa30fddb7e7b61696b66fd069f51cf18c51125f...7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "commits": 4
+    },
+    {
+      "base": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "head": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/7e64ed4f2e59e0baabcc8655b8067ff9eb847665...3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+      "commits": 1
+    }
+  ],
+  "shared_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "base72_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "source72_blob": "7cca20a0fc9741c0b57bda9684e5e69fedcc027b",
+      "target_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "target_matches_source72_preimage": false,
+      "action": "Use composition/readonly59/auth-on-readonly59.patch against exact post59 preimage; do not install source72 LocalStore wholesale."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "base72_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "source72_blob": "d82b40928a235f2d249e45e59732f281dfded97f",
+      "target_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "target_matches_source72_preimage": true,
+      "action": "Auth72 owned delta preimage still matches this observed target; reconcile again before CAS."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "base72_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "source72_blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+      "target_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "target_matches_source72_preimage": true,
+      "action": "Auth72 owned delta preimage still matches this observed target; reconcile again before CAS."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "base72_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "source72_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "target_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "target_matches_source72_preimage": true,
+      "action": "Auth72 owned delta preimage still matches this observed target; reconcile again before CAS."
+    }
+  ],
+  "readonly59": {
+    "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+    "terminal_local_store_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+    "target_local_store_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+    "exact_composition_preimage_match": true,
+    "artifact": "composition/readonly59/manifest.json",
+    "prepared_preimage": {
+      "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "sha256": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33",
+      "bytes": 35607
+    },
+    "prepared_postimage": {
+      "blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+      "sha256": "6b1f46d45dd77c73d266d4955daeabca6f0174daebd14f320add49801fb21b2f",
+      "bytes": 35140
+    },
+    "complete_patch": {
+      "blob": "a5ccd872e5622471c809d366581f01cbe92ebd8e",
+      "sha256": "3a1c0f09e91fb1cd83b93986421901880f423a7fd8d4a28f97795b3ec32ff867",
+      "bytes": 6042
+    },
+    "status": "Existing inert patch preimage matches both terminal59 and observed C32; no application or composed execution performed here.",
+    "required_preserved_dependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "blob": "0e812842ad0d534998c182100a8466548d70e915"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287"
+      }
+    ],
+    "readonly_semantic_limit": "readSnapshotRoot retains existing BEGIN IMMEDIATE/write admission. Do not claim another store can commit logout while that root owns its lock. Preserve readOnly/dispose poison and immediate same-instance cancellation fence."
+  },
+  "composition_pointer": {
+    "artifact": "composition/composition-pointer-manifest.json",
+    "preimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "target_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "matches_existing_pointer_patch_manifest": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "target_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "matches_existing_pointer_patch_manifest": true
+      },
+      {
+        "path": "apps/cli/src/commands/handlers/serve.ts",
+        "target_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "matches_existing_pointer_patch_manifest": true
+      }
+    ],
+    "entry_preimage_unchanged": true,
+    "status": "Pointer/map patch remains inert. Current observed target pins match its declared preimages; source72 entry replacement requires the new map and fixture pointer together.",
+    "later74_rule": "If mission74 or another authorized release changes entry/installation/serve or fixture, regenerate the current composition map from actual composed bytes. Preserve Microsoft49 archives and composition55 map."
+  },
+  "integration71_receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/findings70-routing.json",
+      "blob": "280b4b8be816afd95f29d5b390e5c581930b8f01",
+      "finding": "M70-AUTH-01",
+      "route": "Owner72; await explicit terminal release; preserve post59 LocalStore; independent re-review required."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C29-runtime59.json",
+      "blob": "45bc614b3550b3e36ec99712cbeaae7d0c5d766f",
+      "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C32-mixed61.json",
+      "blob": "432dd1314ea4087fc7103d109bc12155cc440c03",
+      "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN"
+    }
+  ],
+  "consumer_requirements": [
+    "71 must re-read its actual HEAD, authority, these preimages, complete auth72 delta and later74 composition changes again immediately before target CAS.",
+    "Apply one coherent auth72 unit; select reconciled LocalStore postimage over post59 rather than replacing it with C28+72. Preserve all other released59/63/64/61 code and receipts.",
+    "SourceW test results do not qualify C32 plus auth72. Request only the authorized composed checks/regressions with45 and preserve independent re-review requirement.",
+    "This read-only receipt neither changes authority nor releases installed/product/global acceptance. Inherited P03, financial M31/MI07, Microsoft live, native activation and final campaign holds remain."
+  ],
+  "execution": {
+    "remote_reads": "GitHub MCP",
+    "remote_writes": 0,
+    "product_edits": 0,
+    "patch_applications": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}
+

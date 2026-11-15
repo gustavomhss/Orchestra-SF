@@ -1,0 +1,25 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+    "./Sucafinav1/test/microsoft-session.test.ts",
+    "./Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+    "./Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+    "./Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+    "./Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+    "./Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+    "./Sucafinav1/test/microsoft-composition.test.ts",
+    "./Sucafinav1/test/microsoft-node.test.ts",
+    "./Sucafinav1/test/microsoft-routes.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}
