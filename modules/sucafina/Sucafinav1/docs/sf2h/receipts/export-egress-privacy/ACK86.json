@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.export-egress-privacy.ack86.v1",
+  "mission": 86,
+  "state": "ACK_ACCEPTED_PRE_PRODUCT_WRITES",
+  "campaign": "sf2h-integral-20261112",
+  "branch": "procurement-privacy-fix",
+  "pr": 86,
+  "lease_epoch": "egress-privacy-browser86",
+  "predecessor": {
+    "mission": 73,
+    "lease": "ENDED",
+    "terminal_sha": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+    "terminal_tree": "e4565e316afbfec64bd576fb2ca08a5f5cf2fa6c"
+  },
+  "authority": {
+    "source_writer": "mission86, user explicitly delegated this successor",
+    "target_writer": 71,
+    "scope": "runtime/application.ts export-byte-egress only; test/procurement-runtime.test.ts exactly one invisible-request status; new test/product/export-egress-privacy/*; own docs/sf2h/receipts/export-egress-privacy/*"
+  },
+  "source_base_sha": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+  "target_observed_sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+  "source_blob": {
+    "runtime/application.ts": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+    "test/procurement-runtime.test.ts": "d622fa8463ee6d05a5c03de6517381045b6f0241"
+  },
+  "actor_pack": "S2-A",
+  "actor_pack_blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+  "model": {
+    "declared": "GPT-6",
+    "provider_receipt": null,
+    "effective_model_verified": false
+  },
+  "session_id": null,
+  "criteria": [
+    "EA66-LEGACY-EGRESS-REVOCATION",
+    "M70-ISO-01",
+    "CAMP.INV.04",
+    "WP04.INV.03",
+    "WP04.T01.CHK.01",
+    "WP04.T05.CHK.05"
+  ],
+  "commit_limits": "GitHub MCP Git-data/CAS only, actions narrow test-ci snapshot; no engine/policy/finance/auth/transport edits; no deployment or merge",
+  "status_note": "Acknowledgment only. No validation or source modification claimed.",
+  "GLOBAL_RELEASE": false
+}
