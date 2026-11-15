@@ -1,0 +1,19 @@
+/* N16 U30: the product's responsive native record workspace. */
+.sf-u30-root,.sf-u30-panels,.sf-u30-list,.sf-u30-detail { min-width: 0; overflow-wrap: anywhere; }
+.sf-u30-panels { display: grid; grid-template-columns: minmax(18rem,2fr) minmax(24rem,3fr); gap:1rem; }
+.sf-u30-filters { display: flex; flex-wrap:wrap; align-items:end; gap:.75rem; margin-block:1rem; }
+.sf-u30-filters label { flex:1 1 12rem; }
+.sf-u30-filters label,.sf-u30-editor label { display:grid; gap:.35rem; min-width:0; }
+.sf-u30-filters input,.sf-u30-filters select,.sf-u30-editor input,.sf-u30-editor select,.sf-u30-editor textarea {
+  width:100%;max-width:100%;padding:.5rem;border-radius:.4rem;border:1px solid var(--border, currentColor);
+  background:var(--panel, transparent); color:inherit; font:inherit;min-height:2.75rem;
+}
+.sf-u30-editor { display:grid;gap:.75rem;min-width:0;margin-block:1rem; }
+.sf-u30-editor textarea { min-height:6rem;resize:vertical; }
+.sf-u30-definition { display:grid;grid-template-columns:minmax(8rem,1fr) minmax(0,2fr);gap:.4rem .8rem; }
+.sf-u30-definition dt { font-weight:600; }
+.sf-u30-definition dd { margin:0;overflow-wrap:anywhere; }
+.sf-u30-actions { display:flex;flex-wrap:wrap;gap:.5rem;margin-block:1rem; }
+.sf-u30-error { overflow-wrap:anywhere; }
+@media (max-width:1023px) { .sf-u30-panels { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:479px) { .sf-u30-definition { grid-template-columns:minmax(0,1fr); } }
