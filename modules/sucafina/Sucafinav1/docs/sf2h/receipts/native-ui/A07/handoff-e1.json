@@ -1,0 +1,358 @@
+{
+  "schema": "sf2h-native-ui-handoff-v1",
+  "worker": "A07",
+  "branch": "sf-ux-a07",
+  "epoch": "ux-native-a07-e1",
+  "basePin": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "materialPin": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A07/ACK-e1.json",
+    "commit": "f1f3929a77b5fd1f2beeae87b750767a3cdb7d67"
+  },
+  "codeCommits": [
+    "229b6e29b146e78dc5f9e8e2ab23d916c24fe01f",
+    "2a715e604ab3187680d6b5663831ec60f2d52ed5"
+  ],
+  "status": "ARTIFACT_READY_PENDING_I00_INTEGRATION_AND_119_120_QUALIFICATION",
+  "localTests": "NOT_RUN_PER_ORDER",
+  "localCompiler": "NOT_RUN_PER_ORDER",
+  "CI120": "PENDING",
+  "compiler119": "PENDING",
+  "installedDesktop": "NOT_PROVEN",
+  "livePrincipalAuth": "NOT_PROVEN",
+  "Goal": "PAUSED_UNTOUCHED",
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/reviews.ts",
+      "blob": "4ce7a3e9bae14d1179c4b6d580aad4b20e98b8fd",
+      "exports": [
+        "SfReviews",
+        "dashboard.dashboard-agenda",
+        "dashboard.dashboard-capture",
+        "dashboard.dashboard-history",
+        "dashboard.dashboard-review",
+        "dashboard.dashboard-review-preserve",
+        "projection.review",
+        "reviews.export.docx",
+        "reviews.export.pptx",
+        "reviews.review-source",
+        "reviews.review-update"
+      ]
+    },
+    {
+      "path": "packages/client/src/sucafina/reviews.ts",
+      "blob": "44e81eed03b55299bf19697a45b8e8132b047c4d",
+      "exports": [
+        "createSfReviewsClient"
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+      "blob": "920ea5f414dfc87c939cbc12cff88d28481bf95a",
+      "exports": [
+        "createSfReviewsProjectionHandlers"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts",
+      "blob": "a461b0422910f966498c06b58c0d67072fdc9ce0",
+      "tests": "auth-boundary-negative-schema, no local execution"
+    }
+  ],
+  "operations": [
+    {
+      "operationId": "dashboard.dashboard-agenda",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "sf": "dashboard-agenda"
+      },
+      "effect": "preview",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "existing-real-producer-requires-I00-codec-installation"
+    },
+    {
+      "operationId": "dashboard.dashboard-capture",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "sf": "dashboard-capture"
+      },
+      "effect": "mutation",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "existing-real-producer-requires-I00-codec-installation"
+    },
+    {
+      "operationId": "dashboard.dashboard-history",
+      "method": "GET",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "sf": "dashboard-history"
+      },
+      "effect": "read",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "existing-real-producer-requires-I00-codec-installation"
+    },
+    {
+      "operationId": "dashboard.dashboard-review",
+      "method": "GET",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "sf": "dashboard-review"
+      },
+      "effect": "read",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "existing-real-producer-requires-I00-codec-installation"
+    },
+    {
+      "operationId": "dashboard.dashboard-review-preserve",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "sf": "dashboard-review-preserve"
+      },
+      "effect": "mutation",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "existing-real-producer-requires-I00-codec-installation"
+    },
+    {
+      "operationId": "projection.review",
+      "method": "GET",
+      "pathTemplate": "{mount}/api/ui/projections/review",
+      "fixedQuery": {},
+      "effect": "read",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "new-authenticated-projection-requires-I00-route"
+    },
+    {
+      "operationId": "reviews.export.docx",
+      "method": "GET",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "Generate Report",
+        "download": "docx"
+      },
+      "effect": "read",
+      "responseMode": "navigation",
+      "code": "schema+client",
+      "installed": "HTML-review-workspace-navigation-requires-I00/F01"
+    },
+    {
+      "operationId": "reviews.export.pptx",
+      "method": "GET",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "Generate Report",
+        "download": "pptx"
+      },
+      "effect": "read",
+      "responseMode": "navigation",
+      "code": "schema+client",
+      "installed": "HTML-review-workspace-navigation-requires-I00/F01"
+    },
+    {
+      "operationId": "reviews.review-source",
+      "method": "GET",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "sf": "review-source"
+      },
+      "effect": "read",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "existing-real-producer-requires-I00-codec-installation"
+    },
+    {
+      "operationId": "reviews.review-update",
+      "method": "GET",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "sf": "review-update"
+      },
+      "effect": "read",
+      "responseMode": "json",
+      "code": "schema+client",
+      "installed": "existing-real-producer-requires-I00-codec-installation"
+    }
+  ],
+  "noBackendChanges": true,
+  "noSharedWrites": true,
+  "noDeployment": true,
+  "noMerge": true,
+  "sourcePins": {
+    "dashboard": {
+      "preflight": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "currentC58": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+      "drift": "Unrelated draft-read/draft-outcome added; read authority interruption returns unavailable(503), not evidence of denied(403)"
+    },
+    "extended": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+    "reviewCycle": "6960533cbb8cb128ec4e6d90583903107b5eeb0c",
+    "reviewHistory": "built-in C08 protected review reads",
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1"
+  },
+  "integrator114": {
+    "onlyOwnerFor": [
+      "packages/schema/package.json",
+      "packages/client/package.json",
+      "packages/schema/src/sucafina/index.ts",
+      "packages/schema/src/sucafina/operation-registry.ts",
+      "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "host-context.services.productHttp"
+    ],
+    "schemaPackageExport": {
+      "./sucafina/reviews": "./src/sucafina/reviews.ts"
+    },
+    "clientPackageExport": {
+      "./sucafina/reviews": "./src/sucafina/reviews.ts"
+    },
+    "bindings": "Inject exact named SfReviews codecs into F02 SfOperationBindings by source-verified encode/decode; do not use permissive unknown casts; keep absent bindings contract-unavailable before network.",
+    "metadata": [
+      {
+        "operationId": "dashboard.dashboard-agenda",
+        "method": "POST",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "sf": "dashboard-agenda"
+        },
+        "effect": "preview",
+        "responseMode": "json"
+      },
+      {
+        "operationId": "dashboard.dashboard-capture",
+        "method": "POST",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "sf": "dashboard-capture"
+        },
+        "effect": "mutation",
+        "responseMode": "json"
+      },
+      {
+        "operationId": "dashboard.dashboard-history",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "sf": "dashboard-history"
+        },
+        "effect": "read",
+        "responseMode": "json"
+      },
+      {
+        "operationId": "dashboard.dashboard-review",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "sf": "dashboard-review"
+        },
+        "effect": "read",
+        "responseMode": "json"
+      },
+      {
+        "operationId": "dashboard.dashboard-review-preserve",
+        "method": "POST",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "sf": "dashboard-review-preserve"
+        },
+        "effect": "mutation",
+        "responseMode": "json"
+      },
+      {
+        "operationId": "projection.review",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/projections/review",
+        "fixedQuery": {},
+        "effect": "read",
+        "responseMode": "json"
+      },
+      {
+        "operationId": "reviews.export.docx",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "page": "Generate Report",
+          "download": "docx"
+        },
+        "effect": "read",
+        "responseMode": "navigation"
+      },
+      {
+        "operationId": "reviews.export.pptx",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "page": "Generate Report",
+          "download": "pptx"
+        },
+        "effect": "read",
+        "responseMode": "navigation"
+      },
+      {
+        "operationId": "reviews.review-source",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "sf": "review-source"
+        },
+        "effect": "read",
+        "responseMode": "json"
+      },
+      {
+        "operationId": "reviews.review-update",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "fixedQuery": {
+          "sf": "review-update"
+        },
+        "effect": "read",
+        "responseMode": "json"
+      }
+    ],
+    "route": "Install createSfReviewsProjectionHandlers({origin,mount,authority,business,reviews,persistence}) as one SfProjectionHandler in mountSfNativeProjections. This factory returns {operationId:'projection.review',handle(request)} and uses original Request/readScope. Mount BEFORE business handler per F02.",
+    "noCopy": "Do not implement source rules in browser, forward private domain state, or promote HTML review prepare into Office binary/receipt.",
+    "exportNavigation": "Current GET page=Generate Report&download=docx|pptx accepts repeated topic[] plus year and title; returns HTML review selection workspace, not DOCX/PPTX bytes. F02 JSON transport rejects navigation mode and its query encoder cannot encode repeated topic. Integrator must wire F01 safe same-owner navigation to existing HTML review workspace and separate real report artifact/download producer (review-report/review-download) before qualifying actual Office exports.",
+    "outcomeRecovery": "No auto-retry of review preserve/capture after unknown response. F02 holds pending mutation keys; recover only via original authorized producer and evidence."
+  },
+  "assessment": {
+    "WP07.T01": "typed agenda/sections; no client-side snapshot recompute",
+    "WP07.T02": "protected preserved C08 read, source period and previousReviewRef",
+    "WP07.T03": "historical projection and guarded successor preparation; no synthetic current-vs-historical delta",
+    "WP07.T04": "formats typed but real DOCX/PPTX binary NOT proven; navigation/Office artifact integration blocked"
+  },
+  "qualificationRequests": {
+    "119": "Compile/typecheck introduced four files against integrated F01/F02 and shared package exports; guard schema annotations/DTOs, registry signatures, no URL HTML parsing.",
+    "120": "Run only Actions surgical reviews.test.ts + relevant existing dashboard/review-source/review-update/report workspace/end-to-end contract tests. Do not interpret pure fixture success as installation auth/desktop proof."
+  },
+  "blockers": [
+    {
+      "id": "A07-B01",
+      "kind": "integration",
+      "owner": "114",
+      "text": "F01/F02 are separate branches; shared package exports/registry/route not mounted here"
+    },
+    {
+      "id": "A07-B02",
+      "kind": "product",
+      "owner": "114",
+      "text": "DOCX/PPTX entries are HTML review-preparation navigation, not byte producers. Report completion requires canonical artifact download, current reauth and pagination evidence."
+    },
+    {
+      "id": "A07-B03",
+      "kind": "qualify",
+      "owner": "119/120",
+      "text": "No compiler or tests locally by order; source and synthetic contracts are not authenticated installation proof"
+    },
+    {
+      "id": "A07-B04",
+      "kind": "drift",
+      "owner": "114",
+      "text": "C58 dashboard read denial-vs-unavailable semantics require 120 regression qualification"
+    }
+  ]
+}
