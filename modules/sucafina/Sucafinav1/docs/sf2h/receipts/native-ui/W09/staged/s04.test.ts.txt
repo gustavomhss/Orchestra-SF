@@ -2,7 +2,8 @@
 // packages/app-shell/test-browser/sucafina-native/s04.test.ts
 // Pure component-boundary guard coverage; NOT hosted/installed F03+A06 qualification.
 import { expect, test } from "bun:test"
-import type { SfAttachment, SfAttachmentFieldProps, SfFileAdmission } from "@/orchestra/chapters/sucafina/shared/evidence/types"
+import type { SfAttachment, SfAttachmentFieldProps, SfCopyKey, SfFileAdmission } from "@/orchestra/chapters/sucafina/shared/evidence/types"
+import type { SfRef, SfFileSelectionRef } from "@orchestra/schema/sucafina/context"
 import {
   canAdmitSelected,
   canRequestDownload,
@@ -10,28 +11,28 @@ import {
 } from "@/orchestra/chapters/sucafina/shared/attachments/guards"
 
 const acceptedFormats: SfAttachmentFieldProps["acceptedFormats"] = [
-  { mediaType: "application/pdf", extensions: [".pdf"], label: { key: "sf.common.source" as never } },
+  { mediaType: "application/pdf", extensions: [".pdf"], label: { key: "sf.common.source" as SfCopyKey } },
 ]
 const limit = { maxBytes: 2048, maxFiles: 2 }
 const selected: SfFileAdmission = {
-  kind: "selected", selectionRef: "selection-opaque" as never,
+  kind: "selected", selectionRef: "selection-opaque" as SfFileSelectionRef,
   fileName: "source.pdf", bytes: 256, mediaType: "application/pdf",
 }
 const file = (status: SfAttachment["status"], canDownload = true, canRemoveReference = true): SfAttachment => ({
-  ref: "asset-opaque" as never, version: 3, fileName: "source.pdf",
+  ref: "asset-opaque" as SfRef, version: 3, fileName: "source.pdf",
   mediaType: "application/pdf", bytes: 256, status, canDownload, canRemoveReference,
 })
 
 test("S04: selected is not admitted; only explicit accepted selection can request admission", () => {
   expect(canAdmitSelected({ kind: "idle" }, acceptedFormats, limit, [])).toBe(false)
   expect(canAdmitSelected(selected, acceptedFormats, limit, [])).toBe(true)
-  expect(canAdmitSelected({ kind: "admitting", selectionRef: "selection-opaque" as never }, acceptedFormats, limit, [])).toBe(false)
-  expect(canAdmitSelected({ kind: "admitted", attachmentRef: "asset-opaque" as never }, acceptedFormats, limit, [])).toBe(false)
+  expect(canAdmitSelected({ kind: "admitting", selectionRef: "selection-opaque" as SfCopyKey }, acceptedFormats, limit, [])).toBe(false)
+  expect(canAdmitSelected({ kind: "admitted", attachmentRef: "asset-opaque" as SfCopyKey }, acceptedFormats, limit, [])).toBe(false)
 })
 
 test("S04: blocked, scanner-unavailable and failed never become admission successes", () => {
   for (const kind of ["blocked", "scanner-unavailable", "failed"] as const) {
-    expect(canAdmitSelected({ kind, reason: { key: "sf.common.unavailable" as never } }, acceptedFormats, limit, [])).toBe(false)
+    expect(canAdmitSelected({ kind, reason: { key: "sf.common.unavailable" as SfCopyKey } }, acceptedFormats, limit, [])).toBe(false)
   }
 })
 
@@ -41,7 +42,7 @@ test("S04: every configured limit and every format predicate is fail-closed", ()
   expect(canAdmitSelected({ ...selected, mediaType: "text/plain" }, acceptedFormats, limit, [])).toBe(false)
   expect(canAdmitSelected({ ...selected, bytes: 2049 }, acceptedFormats, limit, [])).toBe(false)
   expect(canAdmitSelected({ ...selected, bytes: -1 }, acceptedFormats, limit, [])).toBe(false)
-  expect(canAdmitSelected(selected, { ...acceptedFormats }.length ? acceptedFormats : [], { ...limit, maxBytes: 0 }, [])).toBe(false)
+  expect(canAdmitSelected(selected, acceptedFormats, { ...limit, maxBytes: 0 }, [])).toBe(false)
   expect(canAdmitSelected(selected, acceptedFormats, { ...limit, maxFiles: 0 }, [])).toBe(false)
   expect(canAdmitSelected(selected, acceptedFormats, limit, [file("admitted"), file("admitted")])).toBe(false)
 })
