@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.planner-p03-finish.ack.v1",
+  "mission": 89,
+  "state": "ACK_IN_PROGRESS",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "b9935108fccc20776c60e5536a9eeddcbbaa3c83",
+  "branch": "planner-p03-finish",
+  "lease_epoch": "planner-p03-browser89",
+  "session": {
+    "identity": "New standalone ChatGPT conversation (Astra requested)",
+    "model_observed": "GPT-6",
+    "effective_provider_model_attestation": null,
+    "session_id": null,
+    "github_authenticated_actor": "gustavomhss",
+    "github_actor_id": 228147811,
+    "transport": "GitHub connected MCP (CAS, no force)",
+    "agents_spawned": 0
+  },
+  "observed_before_ack": {
+    "head": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+    "tree": "6975ec3f93801e081f14091343f6c2f2d1b57252",
+    "sf2_stack": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "sf2_stack_delta": "two commits; no modifications to assigned product paths",
+    "planner_blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+    "result_store_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+    "mission76_source": "9a7fb8c3c83df886781024d6f548d6523209523f",
+    "release76_material": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "release76_material_result_store_blob": "c76d9bc385a4b5102b756812b778c844f20ab733"
+  },
+  "inputs_read": [
+    "mission89 complete",
+    "root AGENTS.md",
+    "dbf9547: sf2h-plan START, WORKFLOW, execution/COMMON, execution/actors/S4-B",
+    "release76 AUTHORITY-FINAL/HANDOFF-71/FINDINGS76/B2-R1-CAUSAL76/P03-REVIEW/P03 receipt/MANIFEST/EXTERNAL-CANDIDATE",
+    "current product and current original P03 plus adjacent consumers"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/"
+  ],
+  "p03_baseline": {
+    "status": "FAIL_HELD",
+    "run": 43673511994,
+    "job": 132688523969,
+    "elapsed_ms": 180011.68,
+    "expect_lines": 72,
+    "timeout_ms": 180000,
+    "reason": "portfolio-analysis-changed",
+    "clone_candidate_r1_ms": 135.134518,
+    "dominant_inclusive_counts": "4678 verifier calls, 12026 C08 case reads, 146500 host revalidations",
+    "cause": "NEEDS_CAUSAL_DISCRIMINATION"
+  },
+  "constraints": {
+    "test_execution": "GitHub Actions existing test:ci/request; no local tests",
+    "owner_71": "sole sf2-stack writer",
+    "owner_45": "dispatcher/checks",
+    "forbidden_writes": [
+      "local-store/auth85",
+      "cost-coverage80",
+      "application86",
+      "transport74/79",
+      "consumers52",
+      "engines/policies"
+    ],
+    "P03_fixture_and_assertions": "unchanged",
+    "GLOBAL_RELEASE": false
+  },
+  "next": "Qualify existing76 negative controls and causal driver first; apply safe owned patches and run selective hosted controls; original P03 after qualified change, no identical reruns."
+}
