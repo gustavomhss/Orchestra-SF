@@ -1,14 +1,14 @@
 {
   "schema": "sf2h.native-ui.author-ack.v1",
-  "mission_id": "UX20-W15",
+  "mission_id": "UX20-W15-R2",
   "order": "A02",
   "output": "A02",
-  "actor": "New ChatGPT GPT-6 session, user-invoked W15",
+  "actor": "ChatGPT GPT-6 successor session explicitly invoked for W15/A02 e2",
   "requested_label": "Astra",
   "effective_model": "GPT-6",
   "github_actor": "gustavomhss",
   "session_id": null,
-  "session_id_reason": "not exposed to ChatGPT through the active GitHub connector",
+  "session_id_reason": "Chat session ID not exposed by the GitHub connector",
   "branch": "sf-ux-w15",
   "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
   "shared_cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
@@ -54,10 +54,12 @@
   "testing_owner": "120/PR106",
   "compiler_owner": "119/PR107",
   "lease": {
-    "epoch": "ux-native-w15-e1",
-    "state": "ACK_PUBLISHED_AWAITING_114_PER_OUTPUT_ADMISSION",
-    "user_authorization": "explicit W15 instruction",
-    "not_claimed": "No independent 114 per-output grant or current integrated producer baseline has been verified"
+    "epoch": "ux-native-w15-e2",
+    "state": "AUTHORING_ACK_PUBLISHED",
+    "authoring_grant": "S0 per-output authoring for exclusive W15 leaves only",
+    "expected_head": "d7785e020d9661e1557840838c321fe83e8c5ed4",
+    "shared_owner": "114",
+    "no_second_actor_confirmed": "No incompatible commit observed between fence and ACK; browser lifecycle unavailable"
   },
   "dependencies": {
     "authoring": "FROZEN ctx/planner/transport",
@@ -79,5 +81,11 @@
     "no_generated_edits": true,
     "no_shared_path_edits": true
   },
-  "status": "PREFLIGHT_ACK_NOT_ARTIFACT_READY"
+  "status": "AUTHORING_E2",
+  "ack_epoch": "ux-native-w15-e2",
+  "supersedes_epoch": "ux-native-w15-e1",
+  "fenced_input_head": "d7785e020d9661e1557840838c321fe83e8c5ed4",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W15/S0-FENCE-e2.json",
+  "s0_authoring_admission": "8852ed4a060f6eb3b49c142b894852d0af49740f",
+  "caveat": "P03 and hosted proof not approved; no completion, integration or release claim"
 }
