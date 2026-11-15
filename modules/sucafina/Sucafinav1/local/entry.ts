@@ -3,6 +3,7 @@ import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createModule } from "../index.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
+import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
 import { createEntraClient } from "../runtime/entra-client.ts"
 import { createOperatorIdentity } from "../runtime/operator-identity.ts"
 import { documentHtml, esc, pageMain } from "../src/screen-shell.ts"
@@ -98,10 +99,13 @@ export async function createConfiguredInstallation(
       ...(operator && services.jobs ? { maintenance: services.jobs.status().error ? "degraded" : services.jobs.status().lastSuccess ? "active" : "starting" } : {}),
     }), { headers: { "Cache-Control": "no-store", "Content-Type": "application/json" } })
   }
-  if (!client && !operator) return {
-    mount: config.mount,
-    handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
-    dispose: () => store.dispose(),
+  if (!client && !operator) {
+    const authMaintenance = startAuthMaintenance({ secrets: store.secrets })
+    return {
+      mount: config.mount,
+      handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
+      dispose: async () => { await authMaintenance.dispose(); await store.dispose() },
+    }
   }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
@@ -156,6 +160,9 @@ export async function createConfiguredInstallation(
     maxJsonBytes: 2 * 1024 * 1024,
     assets,
   })
+  // Started only after composition succeeds, outside request/business scopes.
+  // Auth retention runs for Microsoft too, independently of operator backup jobs.
+  const authMaintenance = startAuthMaintenance({ secrets: store.secrets })
   return {
     mount: config.mount,
     ...(runtime ? { host: runtime.contributions } : {}),
@@ -242,7 +249,7 @@ export async function createConfiguredInstallation(
       return localChrome(response)
 
     },
-    async dispose() { await jobs.dispose(); await store.dispose() },
+    async dispose() { await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
   }
 
   function localChrome(response: Response) {
