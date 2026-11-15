@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer, webUtils } from "electron"
 import type { ElectronAPI, WslServersEvent } from "./types"
 import type { UpdaterState } from "@orchestra/app/updater"
 import { RESPONSE_DOWNLOAD_CHUNK_BYTES } from "./response-download"
+import { createSfDesktopPreloadCapability } from "./sucafina"
 
 let responseDownloadWriting = false
 
@@ -64,6 +65,7 @@ const api: ElectronAPI = {
   killSidecar: () => ipcRenderer.invoke("kill-sidecar"),
   installCli: () => ipcRenderer.invoke("install-cli"),
   awaitInitialization: () => ipcRenderer.invoke("await-initialization"),
+  sucafina: createSfDesktopPreloadCapability(ipcRenderer),
   wslServers: {
     getState: () => ipcRenderer.invoke("wsl-servers-get-state"),
     subscribe: (cb) => {

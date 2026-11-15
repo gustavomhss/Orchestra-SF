@@ -6,7 +6,7 @@
 import { Option, Schema } from "effect"
 import { SfOperationId, type SfOperationBindings, type SfOperationCodec, type SfWireDecodeResult } from "@orchestra/schema/sucafina/common"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
-import { SfExpectedContextBinding, SfContextResult } from "@orchestra/schema/sucafina/context"
+import { SfExpectedContextBinding, SfContextResult, SfInstallationSelector, SfInstallationList } from "@orchestra/schema/sucafina/context"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { SfPeople } from "@orchestra/schema/sucafina/people"
 import { SfOperations } from "@orchestra/schema/sucafina/operations"
@@ -68,11 +68,18 @@ export const SfNativeOperationBindings: SfOperationBindings = (() => {
       bindings.set(key, codec(source))
     }
   }
-  add({ "ctx.context": {
-    operationId: "ctx.context",
-    input: SfExpectedContextBinding,
-    output: SfContextResult,
-  } })
+  add({
+    "ctx.context": {
+      operationId: "ctx.context",
+      input: SfExpectedContextBinding,
+      output: SfContextResult,
+    },
+    "ctx.installations": {
+      operationId: "ctx.installations",
+      input: SfInstallationSelector,
+      output: SfInstallationList,
+    },
+  })
   add(SfDomain.operations)
   add(SfPeople.operations)
   add(SfOperations.operations)

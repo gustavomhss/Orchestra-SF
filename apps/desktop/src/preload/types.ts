@@ -13,6 +13,7 @@ import type { UpdaterState } from "@orchestra/app/updater"
 import type { DesktopNativeBundle } from "@orchestra/app/i18n/desktop-native"
 import type { NativeTitlebarFrame } from "@orchestra/app/native-titlebar"
 import type { ResponseDownloadAPI } from "./response-download"
+import type { SfDesktopCapability } from "@orchestra/client/sucafina/transport"
 export type {
   WslDistroProbe,
   WslInstalledDistro,
@@ -168,6 +169,8 @@ export type ElectronAPI = import("@orchestra/app/app-dock-linux").AppDockLinuxAP
   killSidecar: () => Promise<void>
   installCli: () => Promise<string>
   awaitInitialization: () => Promise<ServerReadyData>
+  /** Optional installed desktop connection; no renderer-supplied credentials are authorized here. */
+  sucafina: SfDesktopCapability
   wslServers: WslServersAPI
   updater: UpdaterAPI
   consumeInitialDeepLinks: () => Promise<string[]>

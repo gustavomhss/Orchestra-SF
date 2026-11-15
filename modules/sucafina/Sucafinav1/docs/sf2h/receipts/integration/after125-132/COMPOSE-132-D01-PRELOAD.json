@@ -1,0 +1,27 @@
+{
+  "schema": "sf2h.integration132.desktop-preload.v1",
+  "epoch": "S0-C-e19-browser132",
+  "preimage_head": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+  "paths": [
+    {
+      "path": "apps/desktop/src/preload/types.ts",
+      "preimage": "c71515ffd200e521782378943377faa3f59f5667",
+      "postimage": "READ_BACK_AFTER_CAS"
+    },
+    {
+      "path": "apps/desktop/src/preload/index.ts",
+      "preimage": "d03c62bb17ae88d31b0e74c7be65b27226e68536",
+      "postimage": "READ_BACK_AFTER_CAS"
+    },
+    {
+      "path": "packages/client/src/sucafina/bindings.ts",
+      "preimage": "d753d8c1fcc3121f5f806299dd0747017ac34fb7",
+      "postimage": "READ_BACK_AFTER_CAS"
+    }
+  ],
+  "wiring": "Reuse single contextBridge, existing seven IPC methods, exposed typed preload Sucafina only",
+  "discovery": "ctx.installations uses published F01 selector/list codecs, original broker still requires main approved connection",
+  "release": false,
+  "typecheck": "NOT_RUN_128",
+  "ci": "NOT_RUN_129"
+}
