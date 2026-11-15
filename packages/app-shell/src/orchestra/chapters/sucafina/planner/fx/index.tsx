@@ -9,8 +9,9 @@ import type { SF_COMMON_COPY } from "@/i18n/orchestra-chapters/sf-common"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { useSfContext } from "../../context"
+import type { SfIntentRef } from "@orchestra/schema/sucafina/context"
 import type {
-  SfEditScopeKey, SfIntentRef, SfRef, SfSurfaceProps, SfPublicDraftController,
+  SfEditScopeKey, SfRef, SfSurfaceProps, SfPublicDraftController,
 } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
