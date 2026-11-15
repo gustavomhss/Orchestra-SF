@@ -1,0 +1,64 @@
+{
+  "schema": "sf2h.native-ui.w05.ci-selection-request.v1",
+  "state": "PROPOSED_NOT_DISPATCHED",
+  "producer": "W05",
+  "owner_actions": 120,
+  "owner_compiler": 119,
+  "integrator": 114,
+  "candidate": {
+    "source_material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "native_composed": "NOT_AVAILABLE",
+    "installed_host": "NOT_AVAILABLE"
+  },
+  "rules": {
+    "no_local_tests": true,
+    "no_epic": true,
+    "no_second_dispatcher": true,
+    "no_automatic_dispatch": true,
+    "dedupe_requests": true,
+    "source_runs_do_not_qualify_native": true
+  },
+  "selections": [
+    {
+      "kind": "component-only",
+      "status": "NOT_COLLECTED",
+      "paths": [
+        "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/w19-title-save.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/w13-pr-approval.test.ts"
+      ],
+      "gate": "Owners F01/F02/F03/W19/W13 publish; 114 composes their exact paths. Component-only results never imply native app installation."
+    },
+    {
+      "kind": "real-installed-browser",
+      "status": "NOT_COLLECTED_NOT_INSTALLED",
+      "paths": [
+        "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u10.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u11.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts"
+      ],
+      "gate": "114 real host/session/registry and F01/F02/F03/A03/S01/S03 plus released journeys Q01/Q02/U10/U11/U13, actual Playwright production mount; preserve source actor/holder/CAS and response-loss proofs."
+    },
+    {
+      "kind": "desktop-distinct",
+      "status": "NOT_RUN",
+      "paths": [
+        "apps/desktop/src/main/sucafina/broker.test.ts"
+      ],
+      "gate": "D01 production main/preload/renderer plus real packaged Electron/Microsoft identity, origin oc://renderer and callback; unit spec alone cannot prove native desktop."
+    }
+  ],
+  "approval": "After product branch merged by 114 into one material C, 120 reconciles existing run dedupe and dispatches only what is installed/eligible. 119 checks compiler/guards on same C. No W05 Actions dispatch.",
+  "evidence": {
+    "component": "NOT_RUN",
+    "browser": "NOT_RUN",
+    "desktop": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "all_criteria": "NOT_QUALIFIED"
+  }
+}

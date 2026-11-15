@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.native-ui.w05.source-repin.v1",
+  "branch": "sf-ux-w05",
+  "authoritative_product": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "cohort": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "contract_proof": {
+    "matching_blobs": 9,
+    "protocol_expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "protocol_observed": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "only_changed_lines": [
+      15,
+      53
+    ],
+    "effect": "Obsolete 105/101/45 naming; apply frozen normative protocol plus cohort COMMON 114/120/119. No F04 signature change observed.",
+    "go_from_114": "NOT_OBSERVED"
+  },
+  "sources": {
+    "modules/sucafina/Sucafinav1/runtime/procurement.ts": {
+      "historical": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "C58": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "semantic": "Visibility is tested before CAS and existence disclosure, create has separate CAS slot; 404 when not visible. Preserve title change on draft, current version and actual approval holder."
+    },
+    "modules/sucafina/Sucafinav1/runtime/application.ts": {
+      "historical": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "C58": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "semantic": "Consumer/asset egress and authority changes; no returning to historical public/download behavior."
+    },
+    "modules/sucafina/Sucafinav1/local/entry.ts": {
+      "historical": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "C58": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "semantic": "Auth maintenance and owned real host lifecycle; do not use synthetic legacy WP04 browser as installed native proof."
+    },
+    "modules/sucafina/Sucafinav1/runtime/operator-identity.ts": {
+      "historical": "4845de24285df2459991da7d9895aad95eb93b19",
+      "C58": "4845de24285df2459991da7d9895aad95eb93b19",
+      "semantic": "Same blob; genuine operator identity has durable single-use enrollment, session store and logout revocation."
+    },
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts": {
+      "C58": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6"
+    },
+    "modules/sucafina/Sucafinav1/runtime/local-configuration.ts": {
+      "C58": "9fd36deee7a2ef4b3584faa7f49b682d0304741f"
+    },
+    "modules/sucafina/Sucafinav1/local/enroll.ts": {
+      "C58": "6c1728044af046bf2472144f4d8ecfef58ce982c"
+    },
+    "modules/sucafina/Sucafinav1/src/procurement.ts": {
+      "C58": "eb486f52910425e9ca06d1f11ce18c90528ff36c"
+    },
+    "modules/sucafina/porta/act.ts": {
+      "C58": "fe257cef702f6459d510d823d18377da34888dbf"
+    },
+    "modules/sucafina/Sucafinav1/src/initial-settings.ts": {
+      "C58": "7682bb517a77ef812dbd4626790f1453cc5c0100"
+    },
+    "packages/app-shell/e2e/playwright.production.config.ts": {
+      "C58": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "owner": "114_ONLY"
+    }
+  },
+  "auth_blocker": {
+    "evidence": "prepareOperatorAccess() uses requireLocalOperator(config.localOperator ?? process.getuid()) and local-operator is a real OS account identity; it does not provision four distinct authorized principals on one real installed target.",
+    "impact": "W05's domain-only seed uses actor arguments but cannot be used as installation/auth authority proof. P1 negative+positive holder must be tested through a legitimately enrolled multi-actor host/session setup by I00.",
+    "state": "BLOCKED_REAL_MULTI_ACTOR_TEST_ADMISSION"
+  },
+  "verified_scope": "Source blobs read without local tests; no product operation or endpoint was executed."
+}
