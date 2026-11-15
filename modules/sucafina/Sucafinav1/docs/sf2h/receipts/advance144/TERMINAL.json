@@ -1,0 +1,282 @@
+{
+  "schema": "sf2h.advance144.terminal.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 144,
+  "slot": "N18",
+  "title": "Planner overview, versions and comparison",
+  "branch": "sf-ux-n18",
+  "epoch": "ux-native-n18-e2",
+  "status": "ARTIFACT_READY_CHECKS_NOT_RUN",
+  "branch_authority_terminal": "AUTHOR_WRITES_CLOSED_FOR_THIS_EPOCH",
+  "previous_epoch": "ux-native-n18-e1",
+  "old_runtime_terminated_claim": false,
+  "actor": {
+    "github_login": "gustavomhss",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_exposed": false
+  },
+  "source": {
+    "packet_commit": "81fbb8364ca474db8f718faad20c9235519e98fe",
+    "packet_blob": "fb367a45c7fbe524128067a30f610581f3ce83de",
+    "fence_blob": "0174a256fe7bc53077d05fd222f0fc2b0cf139a8",
+    "work_orders": {
+      "U06": "40d843e4892929641f90b48520dbba08b1f06207",
+      "U46": "7d59e709a0bb4a70fc66d180ee17493c99bb96a5"
+    },
+    "producer": {
+      "application": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "planner": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "forecast": "b814872f18556d1137820cfb33c46048066a1c6e"
+    }
+  },
+  "git": {
+    "prepared_head": "317ee8af52917c9755fdba5b68901ce79efc1723",
+    "ack_commit": "ce26081cbcddde20eeb2d0eefb2b92b7ced6aaf7",
+    "ack_blob": "4275630cdea072a03218a07fc5e6fed30b2d9a91",
+    "material_commits": [
+      "24c036c172fef95edeb1a34113d32df77bf821f8",
+      "de41cf1e04e4b0899544a8b2a9af93604a00feb0",
+      "0d7597d0858f0e571f16d79dd0ccc36799074a75",
+      "61526191b67ede9a50f82b6973e7e9946e93172f",
+      "2ba9f0c96598b8d89bc47eab7cd70da8c7941ccb"
+    ],
+    "material_head": "2ba9f0c96598b8d89bc47eab7cd70da8c7941ccb",
+    "material_tree": "c9963affedbaabf7ce068384e44d09620fb82750",
+    "commit_method": "GitHub MCP git-objects create + update_ref expected_sha force:false",
+    "force": false,
+    "reset": false,
+    "changes": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/index.tsx",
+        "preimage_blob": "7adc277dc5bd3ab6b25bd2dea8859199942bae06",
+        "postimage_blob": "382886a44bd21a44c68d3f656f515b1701c3dc20",
+        "changed": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/overview.css",
+        "preimage_blob": "0bcab3cf79c21d1d8c77fd2c9ac63ed8e5e7fde0",
+        "postimage_blob": "0bcab3cf79c21d1d8c77fd2c9ac63ed8e5e7fde0",
+        "changed": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+        "preimage_blob": "b5da0890283f8f8c0a1e7f08de33ed04a247cc8b",
+        "postimage_blob": "6b6d4d59e174e346e349aff7ecde33a6b89336b5",
+        "changed": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/model.ts",
+        "preimage_blob": "c5f654637ba24fcd078e2445dd7d795ca3b784e0",
+        "postimage_blob": "c5f654637ba24fcd078e2445dd7d795ca3b784e0",
+        "changed": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/versions.css",
+        "preimage_blob": "295861176a0182f03f672964daa138bad06c5c10",
+        "postimage_blob": "295861176a0182f03f672964daa138bad06c5c10",
+        "changed": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+        "preimage_blob": "8e5fdc7787c95e7cae8e596bf65459975f58b8aa",
+        "postimage_blob": "59c6111e5f6998da1d3365db1e40735532edfca8",
+        "changed": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/compare.css",
+        "preimage_blob": "31c4aa047567dae244f327bf75d1847be29f5a2c",
+        "postimage_blob": "31c4aa047567dae244f327bf75d1847be29f5a2c",
+        "changed": false
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u06.ts",
+        "preimage_blob": "4f4875fcb48a357bc36398dc54d75fd4f8afd5d4",
+        "postimage_blob": "4f4875fcb48a357bc36398dc54d75fd4f8afd5d4",
+        "changed": false
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u46.ts",
+        "preimage_blob": "93ef95161d4db47dcf48758ad32d634924341c1f",
+        "postimage_blob": "93ef95161d4db47dcf48758ad32d634924341c1f",
+        "changed": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u06.spec.ts",
+        "preimage_blob": "af4f9a2640d6a3fb71c10e78a91d182ac166c5fe",
+        "postimage_blob": "af4f9a2640d6a3fb71c10e78a91d182ac166c5fe",
+        "changed": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u46.spec.ts",
+        "preimage_blob": "5795c3603ca8810df64ec2893757d22b36af0f3b",
+        "postimage_blob": "c23568fcb4e35835ff93f88a90dad3e2f7777e5d",
+        "changed": true
+      }
+    ]
+  },
+  "pull_request": {
+    "number": 172,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/172",
+    "base": "sf2-stack",
+    "draft": true,
+    "merge_permitted": false,
+    "observed_compare": {
+      "base_head": "8094e599e3d18609e269548d24619a3246fbc735",
+      "ahead_by": 10,
+      "behind_by": 21,
+      "changed_paths": 205
+    },
+    "path_scoped_integration_required": true
+  },
+  "exports": {
+    "views": [
+      {
+        "symbol": "SfPlannerOverviewView",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/index.tsx",
+        "route": "CAP17:entry"
+      },
+      {
+        "symbol": "SfPlannerVersionsView",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+        "route": "CAP23:entry/new/detail"
+      },
+      {
+        "symbol": "SfPlannerCompareView",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+        "route": "CAP23:compare"
+      }
+    ],
+    "copy": [
+      {
+        "symbols": [
+          "SF_U06_COPY",
+          "SF_U06_COPY_BR"
+        ],
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u06.ts"
+      },
+      {
+        "symbols": [
+          "SF_U46_COPY",
+          "SF_U46_COPY_BR"
+        ],
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u46.ts"
+      }
+    ],
+    "installed_journeys": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u06.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u46.spec.ts"
+    ],
+    "source_only_client_operations": [
+      "domain.page.CAP17",
+      "domain.page.CAP23",
+      "domain.command.CAP23.save",
+      "domain.command.CAP23.copy",
+      "domain.command.CAP23.official",
+      "domain.command.CAP23.lock",
+      "domain.command.CAP23.unlock",
+      "domain.command.CAP23.delete"
+    ],
+    "import_consumer": "U20 original /orchestra/sf-imports/new; no parallel mutation"
+  },
+  "implementation": {
+    "U06": "Explicit version/period identity check, guarded CAP23 comparison, U20 import authorization, distinct not-found/empty, preserved nullable money/monthly 0.",
+    "U46": "Producer zero CAS on absent keys, unchanged year omission for official/locked name edits, dirty-only save, authorizing review, exact creation/copy result ref+readback, state transition CAS checks, delete safe route, frozen command selectors and no automatic mutation retry.",
+    "comparison": "Two producer-bound CAP17 summary reads for distinct same-year versions, read-only 12-month figures, missing/null preserved, partial and not-found states, no browser financial recomputation",
+    "existing_authored_material_preserved": true
+  },
+  "criteria": [
+    {
+      "id": "U06-AC01",
+      "authoring": "IMPLEMENTED_IN_SOURCE",
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "U06-AC02",
+      "authoring": "IMPLEMENTED_IN_SOURCE",
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "U06-AC03",
+      "authoring": "EXISTING_PLUS_OWNED_JOURNEY",
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "U46-AC01",
+      "authoring": "IMPLEMENTED_WITH_SOURCE_PROVENANCE_LIMIT",
+      "verification": "NOT_RUN",
+      "issue": "Source CAP17 MoneySummary lacks origin/inherited-budget attribution; never infer a forecast lineage from numeric values."
+    },
+    {
+      "id": "U46-AC02",
+      "authoring": "IMPLEMENTED_IN_SOURCE",
+      "verification": "NOT_RUN"
+    },
+    {
+      "id": "U46-AC03",
+      "authoring": "EXISTING_PLUS_NEW_INSTALLED_JOURNEYS",
+      "verification": "NOT_RUN"
+    }
+  ],
+  "verification": {
+    "code_blob_and_branch_CAS": "CONFIRMED_BY_GITHUB_MCP",
+    "source_semantics_inspection": "READ_ONLY_SOURCE_CONFIRMED",
+    "compiler_149": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "installed_browser_journeys_150": "NOT_RUN",
+    "local_tests": "NOT_RUN_BY_POLICY",
+    "CI": "NOT_RUN",
+    "producer_end_to_end": "NOT_RUN",
+    "visual_200pct_400pct": "NOT_RUN",
+    "proof_not_pass": true,
+    "global_release": false,
+    "native_goal": "paused"
+  },
+  "findings": [
+    {
+      "id": "N18-F01",
+      "severity": "BLOCKING_INTEGRATION",
+      "summary": "Branch diverged from current sf2-stack; direct PR diff has historical unrelated paths. Do not merge the entire branch.",
+      "next": "132 apply only these exact 11 material leaf blob paths plus advance144 receipts after preimage reconciliation."
+    },
+    {
+      "id": "N18-F02",
+      "severity": "BLOCKING_QUALIFICATION",
+      "summary": "No current installed compiler/test result for this material. No PASS claimed.",
+      "next": "149 compile/SDK then 150 focused installed journeys on exact coherent candidate."
+    },
+    {
+      "id": "N18-F03",
+      "severity": "CONTRACT_LIMIT",
+      "summary": "CAP17 MoneySummary has nullable totals/monthly values but no source field indicating inherited-budget provenance; numeric comparison cannot label inherited figures without source truth.",
+      "next": "132/A02 confirm authoritative provenance exposure if explicit inherited labels are required; keep existing read-only comparison and null/0 distinction."
+    },
+    {
+      "id": "N18-F04",
+      "severity": "DEPENDENCY",
+      "summary": "U20 controls import admission/applies; N18 routes through authorized existing imports UI, not an alternative planner importer.",
+      "next": "132 compose U20, F01/F02/F03/A02/S01/S03 and verify import target admission in installed app."
+    },
+    {
+      "id": "N18-F05",
+      "severity": "CONTRACT_LIMIT",
+      "summary": "planner.forecast.prepare is listed in historical U46 operation refs, but U46 compare has no admitted caseRef/review action for it; no speculative dispatch.",
+      "next": "132/A02 confirm whether an additional producer-bound compare preparation workflow is required before release."
+    }
+  ],
+  "next_action_for_132": "On sf2-stack current HEAD, fetch 144 material_head 2ba9f0c96598b8d89bc47eab7cd70da8c7941ccb by GitHub MCP. Apply only receipt.git.changes paths exactly matching postimage blobs, reconcile preimage differences surgically without reset/force, wire CAP17/CAP23 native exports and en/pt-BR copy via existing registry, preserve U20 imports and no extra engine/controller. Request 149/PR107 compiler checks then 150/PR106 targeted browser and integration tests. Treat any missing proof or source provenance as NOT_RUN/BLOCKED; keep PR172 draft/Goal paused/global release false.",
+  "routing": {
+    "integrator": "132/PR65",
+    "compiler": "149/PR107",
+    "ci": "150/PR106",
+    "old_history_not_authority": [
+      "114",
+      "125",
+      "119",
+      "120"
+    ]
+  },
+  "protected_paths_written": [],
+  "foreign_writer_overwritten": false,
+  "release_authorization": false
+}
