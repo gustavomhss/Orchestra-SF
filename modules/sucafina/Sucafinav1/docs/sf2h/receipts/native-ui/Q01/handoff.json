@@ -1,0 +1,347 @@
+{
+  "schema": "sf2h.q01.qualification-author-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 126,
+  "work_order": "Q01",
+  "lease_epoch": "native-q01-e1",
+  "branch": "sf-qual-navigation",
+  "head_at_ack": "ef88762b673b6875d1012fd55f74681688b05853",
+  "author": {
+    "github_actor": "gustavomhss",
+    "model": "GPT-6",
+    "session_id": null,
+    "source": "GitHub connector authenticated actor; runtime session ID not exposed"
+  },
+  "title": "Q01: navegação, isolamento, compatibilidade, transporte integrado, piloto P0/P1",
+  "status": {
+    "Q01_pilot": "ARTIFACT_READY_NOT_QUALIFIED",
+    "Q01_complete": "ARTIFACT_READY_NOT_QUALIFIED",
+    "global_release": false,
+    "local_tests": "NOT_RUN_USER_PROHIBITION",
+    "hosted_ci": "NOT_RUN_129_ONLY",
+    "compiler": "NOT_RUN_128_ONLY",
+    "actual_job_id": null
+  },
+  "source_pins": {
+    "mission": "a0e8ad664294a7a702c994d1cb90800d37e8d4d9",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "product_baseline": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+    "source_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "operation_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "source_evidence": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/CONTRACTS.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/SURFACE-SPECS.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/criteria-trace.json"
+    ]
+  },
+  "output_paths": [
+    {
+      "output": "Q01.pilot",
+      "path": "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts",
+      "preimage": null,
+      "postimage": "94b428893c5f0c4e3fb8f45f5a8900fcffacb681",
+      "cases": [
+        "Q01-P0-PR-TITLE-CAS-LOST",
+        "Q01-P1-HOLDER",
+        "Q01-P1-DENIED"
+      ],
+      "contracts": [
+        "F01.routeRefCodec",
+        "F02.catalog.transport",
+        "F04.nativeInstalledFixture",
+        "F04.armLostResponse",
+        "A03.CAP25/CAP26"
+      ],
+      "criteria": [
+        "Q01-P0P1",
+        "Q01-AC02",
+        "Q01-AC03",
+        "WP10.T02",
+        "WP10.T04"
+      ]
+    },
+    {
+      "output": "Q01.complete",
+      "path": "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+      "preimage": null,
+      "postimage": "fc7e432358fded4f809cdd80b5d1b65569d703a0",
+      "cases": [
+        "Q01-CHAPTER-<15 frozen chapterId>",
+        "Q01-NAV-NEGATIVE",
+        "Q01-NAV-<surfaceId>-<route.kind> (165 test.steps)"
+      ],
+      "contracts": [
+        "F01.navigation-state",
+        "F04.nativeInstalledFixture",
+        "I00.frozen.surface-manifest"
+      ],
+      "criteria": [
+        "Q01-AC01",
+        "Q01-AC03",
+        "WP01.T01",
+        "WP10.T02"
+      ]
+    },
+    {
+      "output": "Q01.complete",
+      "path": "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+      "preimage": null,
+      "postimage": "80975b7c557f9dfe883e82ec1a92cb82059338f1",
+      "cases": [
+        "Q01-ISO-REAL-ACTOR-requester",
+        "Q01-ISO-REAL-ACTOR-holder",
+        "Q01-ISO-REAL-ACTOR-denied",
+        "Q01-ISO-CROSS-OWNER",
+        "Q01-ISO-LOGOUT",
+        "Q01-ISO-LATE-READ"
+      ],
+      "contracts": [
+        "F01.ctx",
+        "F04.nativeInstalledFixture",
+        "F04.armHeldResponse"
+      ],
+      "criteria": [
+        "Q01-AC02",
+        "WP10.T02"
+      ]
+    },
+    {
+      "output": "Q01.complete",
+      "path": "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+      "preimage": null,
+      "postimage": "e73ecdff7aba5d4812a5da59b5666d473f12a27d",
+      "cases": [
+        "Q01-COMPAT-DASHBOARD",
+        "Q01-COMPAT-REQUESTS",
+        "Q01-COMPAT-APPROVALS",
+        "Q01-COMPAT-HISTORY",
+        "Q01-COMPAT-KEYBOARD",
+        "Q01-COMPAT-VIEWPORT-{320,768,1024,1280,1440}",
+        "Q01-COMPAT-DOWNLOAD",
+        "Q01-COMPAT-REFLOW"
+      ],
+      "contracts": [
+        "F04.nativeInstalledFixture",
+        "I00.SfPageFrame",
+        "Legacy.installed.producer"
+      ],
+      "criteria": [
+        "Q01-AC02",
+        "WP01.T01",
+        "WP10.T02"
+      ]
+    },
+    {
+      "output": "Q01.complete",
+      "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+      "preimage": null,
+      "postimage": "c67324ac5e233c8c0182aac276ec5dc1b1215354",
+      "cases": [
+        "Q01-TRANSPORT-REGISTRY",
+        "Q01-TRANSPORT-GUEST",
+        "Q01-TRANSPORT-INVALID-OWNER",
+        "Q01-TRANSPORT-STALE-FENCE",
+        "Q01-TRANSPORT-PILOT-ROUTES"
+      ],
+      "contracts": [
+        "F02.createSfTransport",
+        "I00.SfOperationRegistry",
+        "F04.readNativeManifest",
+        "I00.contract-catalog"
+      ],
+      "criteria": [
+        "Q01-AC02",
+        "Q01-AC03",
+        "WP10.T04"
+      ]
+    }
+  ],
+  "output_counts": {
+    "exact_owned_proof_files": 5,
+    "chapter_cases": 15,
+    "frozen_surface_rows": 70,
+    "frozen_route_templates": 165,
+    "playwright_cases": 37,
+    "bun_test_cases": 5,
+    "expected_collected_cases_total": 42
+  },
+  "issue_matrix": [
+    {
+      "id": "Q01-AC01",
+      "evidence": [
+        "navigation.spec.ts:15 chapter test cases and 165 registered route steps",
+        "navigation.spec.ts:negative malformed/duplicate/owner selectors"
+      ],
+      "observed_status": "NOT_RUN",
+      "limitation": "Parameterized aliases without real authorized source links are negative-only; cannot count positive business-record visit until populated installed producer"
+    },
+    {
+      "id": "Q01-AC02",
+      "evidence": [
+        "isolation.spec.ts:requester/holder/denied actual principal fences, cross-context, logout, held producer GET",
+        "compatibility.spec.ts:legacy, keyboard, history, 320/768/1024/1280/1440, download, 200% text",
+        "transport-integration.test.ts:guest request and closed metadata"
+      ],
+      "observed_status": "NOT_RUN",
+      "limitation": "D01 Electron/desktop, real producer revocation callback and per-actor runner auth are not yet supplied; no PASS claim"
+    },
+    {
+      "id": "Q01-AC03",
+      "evidence": [
+        "navigation.spec.ts:frozen 15/70/165 registry guard",
+        "transport-integration.test.ts:exact 305-operation metadata guard, unauthenticated rejection",
+        "pilot-isolation.spec.ts:original holder and CAS required"
+      ],
+      "observed_status": "NOT_RUN",
+      "limitation": "No synthetic approval, manifest actor names are not authentication"
+    },
+    {
+      "id": "Q01-P0P1",
+      "evidence": [
+        "pilot-isolation.spec.ts:single P0 save with F04 delivery loss and original-authorized-CAS read, P1 holder approval and denied actor",
+        "F04 source-native corpus only for producer seed"
+      ],
+      "observed_status": "NOT_RUN",
+      "limitation": "P1 desktop and real per-actor session admission not observed; P0 is not proof of approval or global pilot qualification"
+    }
+  ],
+  "canonical_trace": {
+    "WP01.T01": [
+      "NUI01",
+      "NUI13",
+      "R02",
+      "J08",
+      "WP01.T01.CHK.01"
+    ],
+    "WP10.T02": [
+      "NUI01",
+      "NUI02",
+      "NUI04",
+      "NUI14",
+      "NUI16",
+      "R41",
+      "RA01",
+      "RA02",
+      "RA03",
+      "RA04",
+      "RA05",
+      "RA06",
+      "J08"
+    ],
+    "WP10.T04": [
+      "NUI16",
+      "R41",
+      "RA05",
+      "J08"
+    ]
+  },
+  "dependencies": {
+    "authoring": "FROZEN_CTX_SURFACE_TRANSPORT",
+    "integration": [
+      "F01",
+      "F02",
+      "D01",
+      "F04",
+      "I00/125 shared wiring",
+      "U10.queue",
+      "U11.title-save",
+      "U13.pr-approval"
+    ],
+    "qualification": "47 U work orders and D01/F01/F02/F04, same candidate C; 129 dispatcher then 128 compiler"
+  },
+  "blockers": [
+    {
+      "kind": "BLOCKED_INTEGRATION",
+      "scope": "Q01.pilot and Q01.complete positive web",
+      "cause": "F04 public fixture exists in sf2-stack but is absent on author branch until 125 integrates; actual installed manifest and cookie-authenticated browser context not observed",
+      "unblock": "125 same-C integration + F04 real host + 129 authenticated runner"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "scope": "Q01-P0P1 actors",
+      "cause": "F04 manifest names requester/holder/denied but does not authenticate them; tests explicitly demand real separate sessions",
+      "unblock": "129 execute authentic requester/holder/denied contexts; 125 supply existing approved harness wiring, not a new provider"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "scope": "Q01-P0P1 native producer",
+      "cause": "A03 CAP25/CAP26 admitted projections and U10/U11/U13 button mounts not verified in this author lane",
+      "unblock": "125 integrate admitted producers; 128 compile and 129 execute exact P0/P1 cases"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "scope": "Q01-AC02 revocation",
+      "cause": "No authorized producer revocation command/callback is published in public F04 nativeInstalledFixture; logout is tested but NOT passed off as revocation",
+      "unblock": "F04/125 surface genuine authorized producer revoke through existing public contract; assign patch back to Q01 if spec change needed"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "scope": "Q01-AC02 desktop",
+      "cause": "F04 desktop proof explicitly NOT_RUN_D01_REAL_ELECTRON_REQUIRED",
+      "unblock": "D01 actual Electron broker installed, 129 desktop automation/evidence from real production candidate"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "scope": "Q01-AC01 positive aliases",
+      "cause": "Some 82 dynamic route templates require genuine record refs and admitted links; test uses invalid-link negative when none found, never calls this a successful business record",
+      "unblock": "125/129 provide native source-backed seeded rows and positive refs for each dynamic alias"
+    }
+  ],
+  "runner_request": {
+    "owner": 129,
+    "after": "125 admitted integration + F04 real private installed manifest + 128 compiler-authorized check",
+    "existing_dispatcher_only": true,
+    "test_paths": [
+      "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+      "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts"
+    ],
+    "expected_collected_cases": {
+      "playwright": 37,
+      "bun": 5,
+      "total": 42,
+      "asserted_15_chapters": true,
+      "registered_route_steps": 165
+    },
+    "environment_contract": [
+      "GITHUB_ACTIONS=true",
+      "SF_NATIVE_INSTALLED_MANIFEST=<real existing host private file>",
+      "SF_NATIVE_CANDIDATE_SHA=<real same-C commit>",
+      "3 genuinely authenticated actor sessions for requester, holder, denied"
+    ],
+    "required_reports": [
+      "actual job id",
+      "same-C source and snapshot SHA",
+      "Playwright list of nonzero test cases",
+      "Bun selected test suite outcomes",
+      "public per-case failures / reasons",
+      "revised observed status; never infer PASS from this receipt"
+    ],
+    "prohibited": [
+      "no new workflow/dispatcher",
+      "no author-initiated tests or Actions",
+      "no automatic write retry",
+      "no synthetic auth/approval",
+      "no dev merge/deploy/Goal"
+    ]
+  },
+  "changes_to_shared_paths": [],
+  "commit_chain": {
+    "ack": "749d82449002b29ae433d9ba72450ce32676ef17",
+    "pilot": "11548acead6e85986aad327b946e29feb6fb95f3",
+    "complete": "7329aafaaa6124a12c5ae054e4b5daca58f5d19f",
+    "download": "9934f82026cbbfac151e9667a9fbe053f5e23e9a"
+  },
+  "handoff": {
+    "consumer": 125,
+    "ci_owner": 129,
+    "compiler": 128,
+    "lease_terminal": "ARTIFACT_READY_HANDOFF",
+    "merge_permission": false,
+    "requalify_after_integration": true
+  }
+}
