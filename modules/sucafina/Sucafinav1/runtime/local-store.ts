@@ -111,7 +111,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
 
   type ReadScope = {
-    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number }
+    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number; readOnly?: true }
     parent?: ReadScope
     open: boolean
     signal?: AbortSignal
@@ -129,7 +129,13 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   const active = new Set<Promise<unknown>>()
   const queue = { tail: undefined as Promise<void> | undefined }
   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
-    if (lifecycle.closed) return Promise.reject(new Error("Local store is disposed"))
+    if (lifecycle.closed) {
+      const scope = context.getStore()
+      // An admitted readonly root may drain during disposal, but a rejected
+      // write must not disappear when its caller catches the disposed error.
+      if (write && scope?.root.readOnly) scope.root.poisoned = true
+      return Promise.reject(new Error("Local store is disposed"))
+    }
     const inherited = context.getStore()
     if (inherited) {
       try {
@@ -183,6 +189,45 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
 
   return {
+    readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
+      operation(true, async (db) => {
+        const copies: Partial<Record<Surface, () => Snapshot>> = {}
+        const read = (surface: Surface) => {
+          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          // Keep the same SQL order and changed-payload admission as mutable
+          // roots. No target escapes here, so every initial memo hit can copy.
+          const source = observeSnapshot(surface, row?.payload)
+          if (source.copy) copies[surface] = source.copy
+          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
+          return () => {
+            if (observed.value) return observed.value
+            observed.value = observed.materialize!()
+            observed.materialize = undefined
+            return observed.value
+          }
+        }
+        const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        const snapshots = {
+          get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
+          get procurement() { return observed.procurement() },
+        }
+        const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
+        try {
+          const value = await context.run(scope, work)
+          requireScope(scope)
+          if (scope.root.poisoned) throw new Error("Nested local write attempted")
+          if (scope.root.readers) throw new Error("Nested local read still active")
+          return value
+        } finally {
+          scope.open = false
+          // This root never exposes its private observations. Closed descendants
+          // need neither their graphs/getters nor the initial memo's copy plans.
+          scope.root.snapshots = {}
+          delete copies.dashboard
+          delete copies.planner
+          delete copies.procurement
+        }
+      }, transactionOptions?.signal),
     currentSnapshots: () => {
       const scope = context.getStore()
       if (!scope) return undefined
@@ -199,7 +244,12 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
       const parent = context.getStore()
       if (parent) return (async () => {
-        if (lifecycle.closed) throw new Error("Local store is disposed")
+        if (lifecycle.closed) {
+          // No callback can be admitted after disposal to establish read-only
+          // intent. Invalidate only the new readonly root, not mutable roots.
+          if (parent.root.readOnly) parent.root.poisoned = true
+          throw new Error("Local store is disposed")
+        }
         requireScope(parent)
         transactionOptions?.signal?.throwIfAborted()
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }

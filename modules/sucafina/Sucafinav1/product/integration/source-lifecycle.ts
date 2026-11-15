@@ -20,12 +20,12 @@ export type SfSourceIdentityInput = { recordType: string; recordId: string; inpu
 
 /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
 export function createSfSourcePersistence(input: {
-  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots">
+  persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot">
   enumerate: (surface: Surface, snapshot: Snapshot) => readonly SfSourceIdentityInput[]
   createId: () => string
   purpose?: "business-restore"
   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
-}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
+}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
     requireSourceIdentities(snapshot)
     const scope = structuredClone(requested)
@@ -74,8 +74,12 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
     }
   }
-  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
+  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "readSnapshotRoot"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
     ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
+    // Scope forwarding does not admit a source. Callers still enter transaction
+    // below, preserving source guards and any underlying CurrentChoice fence.
+    ...(input.persistence.readSnapshotRoot ? { readSnapshotRoot: <T>(work: () => Promise<T>, options?: TransactionOptions) =>
+      input.persistence.readSnapshotRoot!(work, options) } : {}),
     resolveScopedSource: async (surface, incarnation, authorize) => {
       const scope = await input.persistence.transaction(surface, async (snapshot) => {
         requireSourceIdentities(snapshot)
