@@ -56,7 +56,13 @@ function selectedHref(manifest: NativeManifest, suite: NativeInstalledSuite, rou
   const installed = new URL(manifest.target.chapterHref, manifest.target.shellOrigin)
   const entry = new URL(nativeJourneyEntryHref(manifest.target, spec.capabilityId,
     suite === "U15" ? undefined : 2026))
-  requireValue(installed.href === entry.href, "F04_SUITE_MUST_HAVE_EXACT_INSTALLED_CHAPTER_BINDING")
+  requireValue(suite === "U15"
+    ? installed.origin === entry.origin && installed.search === entry.search &&
+      (installed.pathname === entry.pathname ||
+        installed.pathname.startsWith(entry.pathname + "/")) &&
+      !installed.hash && !installed.username && !installed.password
+    : installed.href === entry.href,
+    "F04_SUITE_MUST_HAVE_EXACT_INSTALLED_CHAPTER_BINDING")
   if (suite !== "U15") {
     requireValue(route.kind === "entry" && url.href === entry.href && Object.keys(route.params).length === 0,
       "F04_BUDGET_F01_ENTRY_YEAR_2026_REQUIRED")
@@ -410,7 +416,12 @@ export function nativeSuiteFromChapter(manifest: NativeManifest): NativeInstalle
   return (Object.keys(specs) as NativeInstalledSuite[]).find((suite) => {
     const route = nativeJourneyEntryHref(manifest.target, specs[suite].capabilityId,
       suite === "U15" ? undefined : 2026)
-    return chapter.href === route
+    if (suite !== "U15") return chapter.href === route
+    const entry = new URL(route)
+    return chapter.origin === entry.origin && chapter.search === entry.search &&
+      !chapter.hash && !chapter.username && !chapter.password &&
+      (chapter.pathname === entry.pathname ||
+        chapter.pathname.startsWith(entry.pathname + "/"))
   })
 }
 
