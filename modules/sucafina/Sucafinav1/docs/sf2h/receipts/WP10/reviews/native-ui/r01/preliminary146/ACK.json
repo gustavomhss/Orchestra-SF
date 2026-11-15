@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.review.preliminary146.ack.v1",
+  "mission": 146,
+  "order": "PRE-R01",
+  "review_phase": "PRELIMINARY_NOT_FINAL",
+  "epoch": "pre-r01-e1-browser146",
+  "logical_actor": "PRE-R01",
+  "actual_actor": "ChatGPT connected to GitHub as gustavomhss",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-review-functional",
+  "expected_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "observed_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "observed_tree": "c792f5d0d3be378ca86aea09bcabdd8781734d8f",
+  "source_packet_sha": "81fbb8364ca474db8f718faad20c9235519e98fe",
+  "packet_blob": "e5a7918d1de331142e1875c5ac876a5cc49641c6",
+  "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "observed_composed_material": {
+    "initial": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "latest_observed": "5e6633857e53eadcb4f2bcf762d90172fb3ae6a0",
+    "release_candidate": "NOT_FROZEN"
+  },
+  "reads": [
+    "AGENTS.md@d8f14f8",
+    "sf2h-plan/START.md@dbf9547",
+    "sf2h-plan/execution/COMMON.md@dbf9547",
+    "sf2h/native-ui/execution/EXECUTION-PROTOCOL.md@cbac654",
+    "sf2h/native-ui/execution/work-orders/R01.json@cbac654",
+    "original PR100/97/98 findings",
+    "latest composed source and newly delivered UI PR metadata"
+  ],
+  "scope": "Read-only product/UX/functional review. No tests/parser/typecheck/validator; no product or workflow modification.",
+  "allowed_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r01/preliminary146/",
+  "duplicate_policy": "Deduplicate 100/97/98; findings by exact source/blob/line",
+  "integrator": "132/PR65",
+  "compiler": "149/PR107",
+  "ci": "150/PR106",
+  "final_approval_authorized": false,
+  "global_release": false,
+  "goal": "paused",
+  "state": "ACK_PUBLISHED_PRELIMINARY_IN_PROGRESS"
+}
